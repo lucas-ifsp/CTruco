@@ -1,4 +1,4 @@
-package com.bueno.truco.domain.entity.deck;
+package com.bueno.truco.domain.entities.deck;
 
 import java.util.List;
 import java.util.Objects;
