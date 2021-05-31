@@ -1,4 +1,4 @@
-package com.bueno.truco.domain.entity.deck;
+package com.bueno.truco.domain.entities.deck;
 
 public enum Suit {
     DIAMONDS("Diamonds"),
