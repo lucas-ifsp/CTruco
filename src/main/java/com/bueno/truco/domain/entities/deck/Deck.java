@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TrucoDeck {
+public class Deck {
     private final List<Card> cards = new ArrayList<>();
 
-    public TrucoDeck() {
+    public Deck() {
         generateSortedDeck();
     }
 

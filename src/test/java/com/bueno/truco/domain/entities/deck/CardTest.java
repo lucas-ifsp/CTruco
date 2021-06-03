@@ -3,46 +3,49 @@ package com.bueno.truco.domain.entities.deck;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class CardTest {
 
     @Test
-    void shouldCreateCard(){
+    void shouldCreateValidCard(){
         Card card = new Card(7, Suit.SPADES);
         Assertions.assertEquals(7, card.getRank());
         Assertions.assertEquals(Suit.SPADES, card.getSuit());
     }
 
-    @Test
-    void shouldCreateCardFromRankName(){
-        Card card = new Card( '7', Suit.SPADES);
-        Assertions.assertEquals(7, card.getRank());
-        card = new Card( 'K', Suit.SPADES);
-        Assertions.assertEquals(13, card.getRank());
-    }
-
-    @Test
-    void shouldConvertToString(){
-        Assertions.assertEquals("7 of Spades", new Card(7, Suit.SPADES).toString());
-    }
-
-    @Test
-    void shouldToStringAQJK(){
-        Assertions.assertEquals("A of Hearts", new Card(1, Suit.HEARTS).toString());
-        Assertions.assertEquals("Q of Hearts", new Card(11, Suit.HEARTS).toString());
-        Assertions.assertEquals("J of Hearts", new Card(12, Suit.HEARTS).toString());
-        Assertions.assertEquals("K of Hearts", new Card(13, Suit.HEARTS).toString());
-    }
-
     @ParameterizedTest
-    @ValueSource(ints = {-1, 0, 14})
-    void shouldNotCreateCardWithInvalidRank(int rank){
+    @ValueSource(ints = {-1, 8, 9, 10, 14})
+    void shouldNotCreateInvalidCard(int rank){
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Card(rank, Suit.CLUBS));
     }
 
     @Test
-    void shouldCorrectlyBeEquals(){
+    void shouldNotAcceptNullSuit(){
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Card(7, null));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"7,7", "A,1", "Q,11", "J,12", "K,13", "k,13"})
+    void shouldCreateCardFromValidRankName(char rankName, int rankValue){
+        Card card = new Card(rankName, Suit.SPADES);
+        Assertions.assertEquals(rankValue, card.getRank());
+    }
+
+    @Test
+    void shouldNotCreateCardFromInvalidRankName(){
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Card('P', Suit.CLUBS));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"7,7 of Hearts", "1,A of Hearts", "11,Q of Hearts", "12,J of Hearts", "13,K of Hearts"})
+    void shouldCorrectlyToString(int rank, String toString){
+        Assertions.assertEquals(toString, new Card(rank, Suit.HEARTS).toString());
+    }
+
+    @Test
+    void shouldSameCardBeEquals(){
         Assertions.assertEquals(new Card(1, Suit.DIAMONDS), new Card(1, Suit.DIAMONDS));
     }
 }
