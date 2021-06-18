@@ -43,4 +43,16 @@ class DeckTest {
         Assertions.assertNotEquals(firstEight, trucoDeck.take(8));
     }
 
+    @Test
+    void shouldDealMultipleCardsCorrectly() {
+        List<Card> cards = trucoDeck.take(3);
+        Assertions.assertEquals(3, cards.size());
+    }
+
+    @Test
+    void shouldDealOneCardsCorrectly() {
+        Card card = trucoDeck.takeOne();
+        Assertions.assertNotNull(card);
+    }
+
 }

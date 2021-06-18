@@ -28,6 +28,10 @@ public class Deck {
         return cards.size();
     }
 
+    public Card takeOne() {
+        return take(1).get(0);
+    }
+
     public List<Card> take(int numberOfCards) {
         List<Card> cardsTaken = new ArrayList<>(cards.subList(0, numberOfCards));
         cards.removeAll(cardsTaken);
@@ -37,4 +41,6 @@ public class Deck {
     public void shuffle() {
         Collections.shuffle(cards);
     }
+
+
 }

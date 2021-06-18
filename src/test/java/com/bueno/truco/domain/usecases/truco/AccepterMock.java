@@ -1,20 +1,17 @@
-package com.bueno.truco.domain.usecases.hand;
+package com.bueno.truco.domain.usecases.truco;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.player.Player;
 
-import java.util.List;
+public class AccepterMock extends Player {
 
-public class PlayerMock extends Player {
-
-    public PlayerMock(String id, List<Card> cards){
+    public AccepterMock(String id){
         super("Mock - " + id);
-        setCards(cards);
     }
 
     @Override
     public Card playCard() {
-        return cards.remove(0);
+        return null;
     }
 
     @Override
@@ -26,4 +23,7 @@ public class PlayerMock extends Player {
     public int getTrucoResponse(int newHandPoints) {
         return 0;
     }
+
+
+
 }

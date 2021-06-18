@@ -2,24 +2,13 @@ package com.bueno.truco.domain.usecases.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
-import org.junit.jupiter.api.AfterEach;
+import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PlayHandUseCaseTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void shouldWinHandWinningFirstTwoRounds(){
