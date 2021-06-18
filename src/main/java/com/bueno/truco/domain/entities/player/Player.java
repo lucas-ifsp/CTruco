@@ -23,7 +23,7 @@ public abstract class Player {
 
     public abstract Card playCard();
 
-    public final void incrementScoreBy(int value){
+    public void incrementScoreBy(int value){
         if(isValidScoreIncrement(value))
             throw new InvalidTrucoScoreIncrementException("Invalid value increment for player score!");
         this.score = Math.min(MAX_SCORE, value + score);
@@ -33,16 +33,16 @@ public abstract class Player {
         return value != 1 && value != 3 && value != 6 && value != 9 && value != 12;
     }
 
-    public final String getId() {
+    public String getId() {
         return id;
     }
 
-    public final int getScore() {
+    public int getScore() {
         return score;
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
