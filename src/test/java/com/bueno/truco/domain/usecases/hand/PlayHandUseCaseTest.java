@@ -3,17 +3,32 @@ package com.bueno.truco.domain.usecases.hand;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.usecases.game.PlayGameUseCase;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class PlayHandUseCaseTest {
+
+    @Mock
+    private Player p1;
+    @Mock
+    private Player p2;
 
     @Test
     void shouldWinHandWinningFirstTwoRounds(){
-        Player p1 = new PlayerMock("B", List.of(new Card(5, Suit.DIAMONDS), new Card(5, Suit.SPADES), new Card(5, Suit.HEARTS)));
-        Player p2 = new PlayerMock("A", List.of(new Card(4, Suit.DIAMONDS), new Card(4, Suit.SPADES), new Card(4, Suit.HEARTS)));
+        when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
+        when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card(6, Suit.DIAMONDS));
         HandResult result = hand.play();
         Assertions.assertEquals(p1, result.getWinner().orElse(null));
@@ -21,8 +36,8 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldWinHandTyingFirstAndWinningSecond(){
-        Player p1 = new PlayerMock("A", List.of(new Card(4, Suit.DIAMONDS), new Card(4, Suit.SPADES), new Card(4, Suit.HEARTS)));
-        Player p2 = new PlayerMock("B", List.of(new Card(4, Suit.CLUBS), new Card(5, Suit.SPADES), new Card(5, Suit.HEARTS)));
+        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
+        when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card(6, Suit.DIAMONDS));
         HandResult result = hand.play();
         Assertions.assertEquals(p2, result.getWinner().orElse(null));
@@ -30,8 +45,8 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldWinHandWinningFirstAndTyingSecond(){
-        Player p1 = new PlayerMock("A", List.of(new Card(5, Suit.DIAMONDS), new Card(4, Suit.SPADES), new Card(4, Suit.HEARTS)));
-        Player p2 = new PlayerMock("B", List.of(new Card(6, Suit.CLUBS), new Card(4, Suit.DIAMONDS), new Card(5, Suit.HEARTS)));
+        when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
+        when(p2.playCard()).thenReturn(new Card(6, Suit.CLUBS)).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.HEARTS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card(4, Suit.CLUBS));
         HandResult result = hand.play();
         Assertions.assertEquals(p1, result.getWinner().orElse(null));
@@ -39,8 +54,8 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldDrawHandWithThreeTiedRounds(){
-        Player p1 = new PlayerMock("A", List.of(new Card(4, Suit.DIAMONDS), new Card(5, Suit.SPADES), new Card(6, Suit.HEARTS)));
-        Player p2 = new PlayerMock("B", List.of(new Card(4, Suit.CLUBS), new Card(5, Suit.DIAMONDS), new Card(6, Suit.CLUBS)));
+        when(p1.playCard()).thenReturn(new Card(4, Suit.CLUBS)).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(6, Suit.CLUBS));
+        when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(6, Suit.HEARTS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card(7, Suit.DIAMONDS));
         HandResult result = hand.play();
         Assertions.assertTrue(result.getWinner().isEmpty());
@@ -48,8 +63,8 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldWinHandByBestOfThree(){
-        Player p1 = new PlayerMock("A", List.of(new Card(4, Suit.DIAMONDS), new Card(7, Suit.SPADES), new Card('Q', Suit.HEARTS)));
-        Player p2 = new PlayerMock("B", List.of(new Card(5, Suit.CLUBS), new Card(6, Suit.DIAMONDS), new Card('Q', Suit.CLUBS)));
+        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn( new Card('Q', Suit.HEARTS));
+        when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card(7, Suit.DIAMONDS));
         HandResult result = hand.play();
         Assertions.assertEquals(p2, result.getWinner().orElse(null));
@@ -57,8 +72,8 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldWinWinningFirstAndTyingThird(){
-        Player p1 = new PlayerMock("A", List.of(new Card(4, Suit.DIAMONDS), new Card(7, Suit.SPADES), new Card('Q', Suit.HEARTS)));
-        Player p2 = new PlayerMock("B", List.of(new Card(5, Suit.CLUBS), new Card(6, Suit.DIAMONDS), new Card('Q', Suit.CLUBS)));
+        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn(new Card('Q', Suit.HEARTS));
+        when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
         PlayHandUseCase hand = new PlayHandUseCase(p1, p2, new Card('Q', Suit.DIAMONDS));
         HandResult result = hand.play();
         Assertions.assertEquals(p2, result.getWinner().orElse(null));
