@@ -2,7 +2,6 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
 
-import java.util.List;
 import java.util.Optional;
 
 public class Round {
@@ -31,4 +30,8 @@ public class Round {
         return card1.compareValueTo(card2, vira) > 0 ? Optional.of(card1) : Optional.of(card2);
     }
 
+    @Override
+    public String toString() {
+        return "vira = " + vira + ", card1=" + card1 + ", card2=" + card2 ;
+    }
 }

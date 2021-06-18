@@ -1,5 +1,7 @@
 package com.bueno.truco.domain.usecases.hand;
 
+import com.bueno.truco.domain.entities.player.Player;
+
 import java.util.Optional;
 
 public class HandResult {
@@ -14,5 +16,14 @@ public class HandResult {
 
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    @Override
+    public String toString() {
+        return "winner=" + winner +  ", points=" + points;
     }
 }
