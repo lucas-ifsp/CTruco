@@ -5,103 +5,120 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
+//TODO ver possível bug em shouldHandWorthSixPointsWithBestPlayerHaving6Points
+@ExtendWith(MockitoExtension.class)
 class RequestTrucoUseCaseTest {
 
     private RequestTrucoUseCase sut;
-    private Player runner;
-    private Player accepter;
-    private Player caller;
-    private Player callerRunner;
+
+    @Mock
+    private Player p1;
+    @Mock
+    private Player p2;
 
     @BeforeEach
     void setUp() {
         sut = new RequestTrucoUseCase();
-        runner = new RunnerMock("Runner");
-        accepter = new AccepterMock("Accepter");
-        caller = new CallerMock("Caller");
-        callerRunner = new CallerRunnerMock("CallerRunner");
     }
 
     @AfterEach
     void tearDown() {
         sut = null;
-        runner = null;
-        accepter = null;
-        caller = null;
-        callerRunner = null;
     }
 
     @Test
     void shouldCallerBeWinnerOfOnePoint(){
-        TrucoResult result = sut.handle(caller, runner, 1);
-        Assertions.assertEquals(new TrucoResult(1, caller), result);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
+        TrucoResult result = sut.handle(p1, p2, 1);
+        Assertions.assertEquals(new TrucoResult(1, p1), result);
     }
 
     @Test
     void shouldCallerBeWinnerOfThreePoints(){
-        TrucoResult result = sut.handle(caller, runner, 3);
-        Assertions.assertEquals(new TrucoResult(3, caller), result);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
+        TrucoResult result = sut.handle(p1, p2, 3);
+        Assertions.assertEquals(new TrucoResult(3, p1), result);
     }
 
     @Test
     void shouldReturnNoWinnerForCallStatingOn12(){
-        TrucoResult result = sut.handle(caller, runner, 12);
+        when(p1.requestTruco()).thenReturn(true);
+        TrucoResult result = sut.handle(p1, p2, 12);
         Assertions.assertEquals(new TrucoResult(12, null), result);
     }
 
     @Test
     void shouldThrowIfHandPointsAreInvalid(){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(caller, runner, 2));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(p1, p2, 2));
     }
 
     @Test
     void shouldThrowIfRequesterIsNull(){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(null, runner, 1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(null, p2, 1));
     }
 
     @Test
     void shouldThrowIfResponderIsNull(){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(caller, null, 1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.handle(p1, null, 1));
     }
 
     @Test
     void shouldHandWorthSixPointsWithBestPlayerHaving6Points(){
-        caller.incrementScoreBy(6);
-        TrucoResult result = sut.handle(caller, caller, 1);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p1.getTrucoResponse(anyInt())).thenReturn(1);
+        when(p1.getScore()).thenReturn(6);
+
+        when(p2.getTrucoResponse(anyInt())).thenReturn(1);
+        when(p2.getScore()).thenReturn(6);
+        TrucoResult result = sut.handle(p1, p2, 1);
         Assertions.assertEquals(new TrucoResult(6, null), result);
     }
 
     @Test
     void shouldLoseForCallingWith11Points(){
-        caller.incrementScoreBy(9);
-        caller.incrementScoreBy(1);
-        caller.incrementScoreBy(1);
-        TrucoResult result = sut.handle(caller, accepter, 1);
-        Assertions.assertEquals(new TrucoResult(12, accepter), result);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p1.getScore()).thenReturn(11);
+        TrucoResult result = sut.handle(p1, p2, 1);
+        Assertions.assertEquals(new TrucoResult(12, p2), result);
     }
 
     @Test
     void shouldReturnNoWinnerIfNoOneIsCalling(){
-        TrucoResult result = sut.handle(runner, runner, 3);
+        TrucoResult result = sut.handle(p1, p2, 3);
         Assertions.assertEquals(new TrucoResult(3, null), result);
     }
 
     @Test
     void shouldReturnNoWinnerAndMatchWorthSixPoints(){
-        TrucoResult result = sut.handle(caller, accepter, 3);
+        when(p1.requestTruco()).thenReturn(true);
+        TrucoResult result = sut.handle(p1, p2, 3);
         Assertions.assertEquals(new TrucoResult(6, null), result);
     }
 
     @Test
     void shouldReturnNoWinnerAndMatchWorth12Points(){
-        TrucoResult result = sut.handle(caller, caller, 3);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p1.getTrucoResponse(anyInt())).thenReturn(1);
+        when(p2.getTrucoResponse(anyInt())).thenReturn(1);
+        TrucoResult result = sut.handle(p1, p2, 3);
         Assertions.assertEquals(new TrucoResult(12, null), result);
     }
 
     @Test
     void shouldReturnWinnerAfterCallAndThenRun(){
-        TrucoResult result = sut.handle(callerRunner, caller, 3);
-        Assertions.assertEquals(new TrucoResult(6, caller), result);
+        when(p1.requestTruco()).thenReturn(true);
+        when(p1.getTrucoResponse(anyInt())).thenReturn(-1);
+        when(p2.getTrucoResponse(anyInt())).thenReturn(1);
+        TrucoResult result = sut.handle(p1, p2, 3);
+        Assertions.assertEquals(new TrucoResult(6, p2), result);
     }
 }
