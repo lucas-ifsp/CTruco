@@ -37,7 +37,7 @@ public class RequestTrucoUseCase {
 
             changeRoles();
         }
-        return new TrucoResult(handPoints);
+        return new TrucoResult(handPoints, null, currentRequester);
     }
 
     private int getNextValidIncrement(int currentValue){

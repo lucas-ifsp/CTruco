@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-//TODO ver possível bug em shouldHandWorthSixPointsWithBestPlayerHaving6Points
 @ExtendWith(MockitoExtension.class)
 class RequestTrucoUseCaseTest {
 
@@ -72,15 +71,16 @@ class RequestTrucoUseCaseTest {
     }
 
     @Test
-    void shouldHandWorthSixPointsWithBestPlayerHaving6Points(){
+    void shouldLimitHandPointsAccordingToLosingPlayer(){
         when(p1.requestTruco()).thenReturn(true);
         when(p1.getTrucoResponse(anyInt())).thenReturn(1);
-        when(p1.getScore()).thenReturn(6);
+        when(p1.getScore()).thenReturn(5);
 
         when(p2.getTrucoResponse(anyInt())).thenReturn(1);
-        when(p2.getScore()).thenReturn(6);
+        when(p2.getScore()).thenReturn(8);
+
         TrucoResult result = sut.handle(p1, p2, 1);
-        Assertions.assertEquals(new TrucoResult(6, null), result);
+        Assertions.assertEquals(new TrucoResult(9, null), result);
     }
 
     @Test

@@ -54,5 +54,4 @@ class DeckTest {
         Card card = trucoDeck.takeOne();
         Assertions.assertNotNull(card);
     }
-
 }
