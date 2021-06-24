@@ -40,8 +40,20 @@ class CardTest {
 
     @ParameterizedTest
     @CsvSource({"7,7 of Hearts", "1,A of Hearts", "11,Q of Hearts", "12,J of Hearts", "13,K of Hearts"})
-    void shouldCorrectlyToString(int rank, String toString){
+    void shouldCorrectlyToStringOpenCard(int rank, String toString){
         Assertions.assertEquals(toString, new Card(rank, Suit.HEARTS).toString());
+    }
+
+    @Test
+    void shouldCorrectlyToStringClosedCard() {
+        Assertions.assertEquals("Closed Card", Card.getClosedCard().toString());
+    }
+
+    @Test
+    void shouldClosedCardWorthLessThanWorstCard() {
+        Card worstCard = new Card(4, Suit.DIAMONDS);
+        Card vira = new Card(4, Suit.CLUBS);
+        Assertions.assertEquals(-1, Card.getClosedCard().compareValueTo(worstCard, vira));
     }
 
     @Test

@@ -1,79 +1,71 @@
 package com.bueno.truco.domain.usecases.hand;
 
-import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.Hand;
+import com.bueno.truco.domain.entities.game.HandResult;
 import com.bueno.truco.domain.entities.game.Round;
 import com.bueno.truco.domain.entities.player.Player;
 import com.bueno.truco.domain.usecases.truco.RequestTrucoUseCase;
 import com.bueno.truco.domain.usecases.truco.TrucoResult;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class PlayHandUseCase {
 
-    private final Player player1;
-    private final Player player2;
+    private Game game;
+    private Hand hand;
 
     private Player firstToPlay;
     private Player lastToPlay;
 
-    private final Card vira;
-    private final List<Player> winners = new ArrayList<>();
     private Player handPointsRequester;
-    private int handPoints = 1;
 
     private final RequestTrucoUseCase trucoUseCase = new RequestTrucoUseCase();
 
-
-    public PlayHandUseCase(Player player1, Player player2, Card vira) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.vira = vira;
+    public PlayHandUseCase(Game game) {
+        this.game = game;
     }
 
-    public HandResult play() {
-        Optional<HandResult> handResult;
+    public Hand play() {
+        hand = new Hand();
 
-        definePlayingOrder(1);
-        if(isFirstToPlayAbleToRequestPointsRise()) {
-            handResult = handleTruco();
-            if (handResult.isPresent())
-                return handResult.get();
-        }
-        playAndSetResult();
+        hand.playRound(playRound());
+        if (hand.hasWinner()) return hand;
 
-        definePlayingOrder(2);
-        if(isFirstToPlayAbleToRequestPointsRise()) {
-            handResult = handleTruco();
-            if (handResult.isPresent())
-                return handResult.get();
-        }
-        playAndSetResult();
+        hand.playRound(playRound());
+        if (hand.hasWinner()) return hand;
 
-        handResult = checkForWinnerAfterTwoRounds();
-        if (handResult.isPresent())
-            return handResult.get();
+        hand.checkForWinnerAfterTwoRounds();
+        if (hand.hasWinner()) return hand;
 
-        definePlayingOrder(3);
-        if(isFirstToPlayAbleToRequestPointsRise()) {
-            handResult = handleTruco();
-            if (handResult.isPresent())
-                return handResult.get();
-        }
-        playAndSetResult();
+        hand.playRound(playRound());
+        if (hand.hasWinner()) return hand;
 
-        return checkForWinnerAfterThirdRound();
+        hand.checkForWinnerAfterThirdRound();
+        return hand;
     }
 
-    private void definePlayingOrder(int roundNumber) {
-        final int lastWinnerIndex = roundNumber - 2;
-        if (lastWinnerIndex > 0 && player2.equals(winners.get(lastWinnerIndex))) {
-            firstToPlay = player2;
-            lastToPlay = player1;
+    private Round playRound() {
+        definePlayingOrder();
+        if(isFirstToPlayAbleToRequestPointsRise()) {
+            Optional<HandResult> handResult = handleTruco();
+            if (handResult.isPresent()){
+                hand.setResult(handResult.get());
+                return new Round(firstToPlay, lastToPlay, game.getCurrentVira());
+            }
+        }
+        Round round = new Round(firstToPlay, lastToPlay, game.getCurrentVira());
+        round.play();
+        return round;
+    }
+
+    private void definePlayingOrder() {
+        if (hand.getLastRoundWinner().isPresent() && game.getLastToPlay().equals(hand.getLastRoundWinner().get())) {
+            firstToPlay = game.getLastToPlay();
+            lastToPlay = game.getFirstToPlay();
         } else {
-            firstToPlay = player1;
-            lastToPlay = player2;
+            firstToPlay = game.getFirstToPlay();
+            lastToPlay = game.getLastToPlay();
         }
     }
 
@@ -82,42 +74,15 @@ public class PlayHandUseCase {
     }
 
     private Optional<HandResult> handleTruco() {
-        TrucoResult trucoResult = trucoUseCase.handle(firstToPlay, lastToPlay, handPoints);
+        final TrucoResult trucoResult = trucoUseCase.handle(firstToPlay, lastToPlay, hand.getHandPoints());
         HandResult handResult = null;
-        if (trucoResult.getWinner().isPresent())
+
+        if(trucoResult.hasWinner())
             handResult = new HandResult(trucoResult.getWinner().get(), trucoResult.getPoints());
 
-        handPoints = trucoResult.getPoints();
+        trucoResult.getLastRequester().ifPresent(requester -> handPointsRequester = requester);
+
+        hand.setHandPoints(trucoResult.getPoints());
         return Optional.ofNullable(handResult);
-    }
-
-    private void playAndSetResult() {
-        Card fistCard = firstToPlay.playCard();
-        Card lastCard = lastToPlay.playCard();
-        var round = new Round(fistCard, lastCard, vira);
-        round.getWinner().ifPresentOrElse(
-                card -> winners.add((card.equals(fistCard)) ? firstToPlay : lastToPlay),
-                () -> winners.add(null));
-    }
-
-    private Optional<HandResult> checkForWinnerAfterTwoRounds() {
-        HandResult result = null;
-
-        if (winners.get(0) == null && winners.get(1) != null)
-            result = new HandResult(winners.get(1), handPoints);
-        if (winners.get(0) != null && winners.get(1) == null)
-            result = new HandResult(winners.get(0), handPoints);
-        if (winners.get(1) != null && winners.get(1).equals(winners.get(0)))
-            result = new HandResult(winners.get(1), handPoints);
-
-        return Optional.ofNullable(result);
-    }
-
-    private HandResult checkForWinnerAfterThirdRound() {
-        if (winners.get(2) == null && winners.get(0) != null)
-            return (new HandResult(winners.get(0), handPoints));
-        if (winners.get(2) != null)
-            return (new HandResult(winners.get(2), handPoints));
-        return new HandResult(null, 0);
     }
 }

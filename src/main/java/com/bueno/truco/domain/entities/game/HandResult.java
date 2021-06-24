@@ -1,4 +1,4 @@
-package com.bueno.truco.domain.usecases.hand;
+package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.player.Player;
 

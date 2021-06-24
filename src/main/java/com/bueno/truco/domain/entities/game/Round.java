@@ -1,37 +1,54 @@
 package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.player.Player;
 
 import java.util.Optional;
 
 public class Round {
 
     private final Card vira;
-    private final Card card1;
-    private final Card card2;
-
-    public Round(Card card1, Card card2, Card vira) {
-        validateInput(card1, card2, vira);
-        this.card1 = card1;
-        this.card2 = card2;
+    private final Player firstToPlay;
+    private final Player lastToPlay;
+    private Player winner;
+    private Card firstCard;
+    private Card lastCard;
+    
+    public Round(Player firstToPlay, Player lastToPlay, Card vira) {
+        this.firstToPlay = firstToPlay;
+        this.lastToPlay = lastToPlay;
         this.vira = vira;
     }
 
-    private void validateInput(Card card1, Card card2, Card vira) {
-        if(card1 == null || card2 == null || vira == null)
+    public void play(){
+        firstCard = firstToPlay.playCard();
+        lastCard = lastToPlay.playCard();
+        validateCards();
+        Optional<Card> highestCard = getHighestCard();
+        if(highestCard.isPresent())
+            winner = (highestCard.get().equals(firstCard) ? firstToPlay : lastToPlay);
+        winner = null;
+
+    }
+
+    private void validateCards() {
+        if(firstCard == null || lastCard == null || vira == null)
             throw new IllegalArgumentException("Parameters can not be null!");
-        if(card1.equals(card2) || card1.equals(vira) || card2.equals(vira))
-            throw new SomeoneIsCheatingException("Cards in the deck must be unique!");
+        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(lastCard))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
+        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(vira))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
+        if(!lastCard.equals(Card.getClosedCard()) && lastCard.equals(vira))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
     }
 
-    public Optional<Card> getWinner() {
-        if (card1.compareValueTo(card2, vira) == 0)
+    public Optional<Card> getHighestCard() {
+        if (firstCard.compareValueTo(lastCard, vira) == 0)
             return Optional.empty();
-        return card1.compareValueTo(card2, vira) > 0 ? Optional.of(card1) : Optional.of(card2);
+        return firstCard.compareValueTo(lastCard, vira) > 0 ? Optional.of(firstCard) : Optional.of(lastCard);
     }
 
-    @Override
-    public String toString() {
-        return "vira = " + vira + ", card1=" + card1 + ", card2=" + card2 ;
+    public Optional<Player> getWinner() {
+        return Optional.ofNullable(winner);
     }
 }

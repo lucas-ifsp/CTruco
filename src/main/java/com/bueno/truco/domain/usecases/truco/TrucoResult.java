@@ -8,22 +8,38 @@ import java.util.Optional;
 public class TrucoResult {
     private final int points;
     private final Player winner;
+    private final Player lastRequester;
 
     public TrucoResult(int points) {
-        this(points, null);
+        this(points, null, null);
     }
 
+
     public TrucoResult(int points, Player winner) {
+        this(points, winner, null);
+    }
+
+    public TrucoResult(int points, Player winner, Player lastRequester) {
         this.points = points;
         this.winner = winner;
+        this.lastRequester = lastRequester;
     }
 
     public int getPoints() {
         return points;
     }
 
+
+    public boolean hasWinner() {
+        return winner != null;
+    }
+
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
+    }
+
+    public Optional<Player> getLastRequester() {
+        return Optional.ofNullable(lastRequester);
     }
 
     @Override

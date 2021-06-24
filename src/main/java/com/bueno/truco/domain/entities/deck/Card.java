@@ -6,7 +6,7 @@ public class Card {
 
     private int rank;
     private Suit suit;
-    private static final List<String> rankNames = List.of("Invalid", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K");
+    private static final List<String> rankNames = List.of("Hidden", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K");
 
     public Card(int rank, Suit suit) {
         setRank(rank);
@@ -17,8 +17,16 @@ public class Card {
         this(rankNames.indexOf(String.valueOf(rankName).toUpperCase()), suit);
     }
 
+    private Card(){
+
+    }
+
+    public static Card getClosedCard(){
+        return new Card();
+    }
+
     private void setRank(int rank) {
-        if(rank < 1 || rank > 13)
+        if(rank < 0 || rank > 13)
             throw new IllegalArgumentException("Invalid card rank!");
         if(rank == 8 || rank == 9 || rank == 10)
             throw new IllegalArgumentException("Invalid card rank for truco a game!");
@@ -36,7 +44,7 @@ public class Card {
     }
 
     private int getCardValue(Card card, Card vira) {
-        final List<Integer> values = List.of(4, 5, 6, 7, 11, 12, 13, 1, 2, 3);
+        final List<Integer> values = List.of(0, 4, 5, 6, 7, 11, 12, 13, 1, 2, 3);
         final int manilha;
 
         if (vira.getRank() == 3)
@@ -73,6 +81,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return rankNames.get(rank) + " of " + suit.getName();
+        return this.equals(getClosedCard())? "Closed Card" : rankNames.get(rank) + " of " + suit.getName();
     }
 }

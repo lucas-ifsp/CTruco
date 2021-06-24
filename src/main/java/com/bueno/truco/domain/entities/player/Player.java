@@ -1,6 +1,7 @@
 package com.bueno.truco.domain.entities.player;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,16 @@ public abstract class Player {
 
     public abstract Card playCard();
 
+    protected final Card discard(Card card){
+        if(card == null || !cards.contains(card))
+            throw new IllegalArgumentException("Card can not be null or out of player cards set!");
+        cards.remove(card);
+        return Card.getClosedCard();
+    }
+
     public void incrementScoreBy(int value){
         if(isValidScoreIncrement(value))
-            throw new InvalidTrucoScoreIncrementException("Invalid value increment for player score!");
+            throw new GameRuleViolationException("Invalid value increment for player score!");
         this.score = Math.min(MAX_SCORE, value + score);
     }
 
