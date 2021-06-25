@@ -9,7 +9,6 @@ import java.util.Optional;
 public class Hand {
 
     private final List<Round> roundsPlayed;
-    private final List<Player> winners = new ArrayList<>();
     private int handPoints;
 
     private HandResult result;
@@ -19,27 +18,32 @@ public class Hand {
         handPoints = 1;
     }
 
-    public void playRound(Round round){
+    public void addPlayedRound(Round round){
         if(roundsPlayed.size() == 3)
             throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
         roundsPlayed.add(round);
-        winners.add(round.getWinner().orElse(null)); // TODO remove Winner List
     }
 
     public void checkForWinnerAfterTwoRounds() {
-        if (winners.get(0) == null && winners.get(1) != null)
-            result = new HandResult(winners.get(1), handPoints);
-        else if (winners.get(0) != null && winners.get(1) == null)
-            result =  new HandResult(winners.get(0), handPoints);
-        else if (winners.get(1) != null && winners.get(1).equals(winners.get(0)))
-            result = new HandResult(winners.get(1), handPoints);
+        Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
+        Optional<Player> secondRoundWinner = roundsPlayed.get(1).getWinner();
+
+        if (firstRoundWinner.isEmpty() && secondRoundWinner.isPresent())
+            result = new HandResult(secondRoundWinner.get(), handPoints);
+        else if (firstRoundWinner.isPresent() && secondRoundWinner.isEmpty())
+            result =  new HandResult(firstRoundWinner.get(), handPoints);
+        else if (secondRoundWinner.isPresent() && secondRoundWinner.get().equals(firstRoundWinner.get()))
+            result = new HandResult(secondRoundWinner.get(), handPoints);
     }
 
     public void checkForWinnerAfterThirdRound() {
-        if (winners.get(2) == null && winners.get(0) != null)
-            result = new HandResult(winners.get(0), handPoints);
-        else if (winners.get(2) != null)
-            result = new HandResult(winners.get(2), handPoints);
+        Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
+        Optional<Player> lastRoundWinner = roundsPlayed.get(2).getWinner();
+
+        if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
+            result = new HandResult(firstRoundWinner.get(), handPoints);
+        else if (lastRoundWinner.isPresent())
+            result = new HandResult(lastRoundWinner.get(), handPoints);
         else result = new HandResult(null, 0);
     }
 
@@ -64,8 +68,7 @@ public class Hand {
     }
 
     public Optional<Player> getLastRoundWinner(){
-        if(winners.isEmpty()) return Optional.empty();
-        Player lastRoundWinner = winners.get(winners.size() - 1);
-        return Optional.ofNullable(lastRoundWinner);
+        if(roundsPlayed.isEmpty()) return Optional.empty();
+        return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
     }
 }
