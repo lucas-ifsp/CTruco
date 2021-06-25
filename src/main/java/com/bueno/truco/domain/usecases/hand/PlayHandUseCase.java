@@ -29,16 +29,16 @@ public class PlayHandUseCase {
     public Hand play() {
         hand = new Hand();
 
-        hand.playRound(playRound());
+        hand.addPlayedRound(playRound());
         if (hand.hasWinner()) return hand;
 
-        hand.playRound(playRound());
+        hand.addPlayedRound(playRound());
         if (hand.hasWinner()) return hand;
 
         hand.checkForWinnerAfterTwoRounds();
         if (hand.hasWinner()) return hand;
 
-        hand.playRound(playRound());
+        hand.addPlayedRound(playRound());
         if (hand.hasWinner()) return hand;
 
         hand.checkForWinnerAfterThirdRound();

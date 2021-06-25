@@ -15,20 +15,27 @@ public class Round {
     private Card lastCard;
     
     public Round(Player firstToPlay, Player lastToPlay, Card vira) {
+        validateConstructorInputs(firstToPlay, lastToPlay, vira);
         this.firstToPlay = firstToPlay;
         this.lastToPlay = lastToPlay;
         this.vira = vira;
     }
 
+    private void validateConstructorInputs(Player firstToPlay, Player lastToPlay, Card vira) {
+        if(firstToPlay == null || lastToPlay == null || vira == null)
+            throw new IllegalArgumentException("Parameters must not be null!");
+    }
+
     public void play(){
+        winner = null;
         firstCard = firstToPlay.playCard();
         lastCard = lastToPlay.playCard();
+
         validateCards();
         Optional<Card> highestCard = getHighestCard();
+
         if(highestCard.isPresent())
             winner = (highestCard.get().equals(firstCard) ? firstToPlay : lastToPlay);
-        winner = null;
-
     }
 
     private void validateCards() {

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;lkll
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -26,7 +26,10 @@ class RoundTest {
     void shouldReturnCorrectWinnerForSimpleCards(int card1, int card2, int vira, int winner) {
         when(p1.playCard()).thenReturn(new Card(card1, Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(card2, Suit.SPADES));
+
         var round = new Round(p1, p2, new Card(vira, Suit.SPADES));
+        round.play();
+
         Assertions.assertEquals(new Card(winner, Suit.SPADES), round.getHighestCard().orElse(null));
     }
 
@@ -38,6 +41,8 @@ class RoundTest {
         when(p2.playCard()).thenReturn(new Card(rank2, suit2));
 
         var round = new Round(p1, p2, new Card(vira, Suit.SPADES));
+        round.play();
+
         Assertions.assertEquals(new Card(winnerRank, winnerSuit), round.getHighestCard().orElse(null));
     }
 
@@ -47,6 +52,8 @@ class RoundTest {
         when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS));
 
         var round = new Round(p1, p2, new Card(6, Suit.SPADES));
+        round.play();
+
         Assertions.assertTrue(round.getHighestCard().isEmpty());
     }
 
@@ -56,21 +63,13 @@ class RoundTest {
         when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS));
 
         var round = new Round(p1, p2, new Card(3, Suit.SPADES));
+        round.play();
+
         Assertions.assertTrue(round.getHighestCard().isPresent());
     }
 
     @Test
-    void shouldThrowIfCreateRoundWithRepeatedCards() {
-        when(p1.playCard()).thenReturn(new Card(4, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.SPADES));
-        Assertions.assertThrows(GameRuleViolationException.class,
-                () -> new Round(p1, p2, new Card(3, Suit.SPADES)));
-    }
-
-    @Test
     void shouldThrowIfConstructorParameterIsNull() {
-        when(p1.playCard()).thenReturn(null);
-        when(p2.playCard()).thenReturn(null);
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Round(p1, p2, null));
     }
 }
