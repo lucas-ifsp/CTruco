@@ -41,6 +41,21 @@ class RequestTrucoUseCaseTest {
     }
 
     @Test
+    void shouldCorrectlyToStringTrucoResultHavingWinner(){
+        when(p1.requestTruco()).thenReturn(true);
+        when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
+        TrucoResult result = sut.handle(p1, p2, 1);
+        Assertions.assertEquals("Points=1, winner=p1",result.toString());
+    }
+
+    @Test
+    void shouldCorrectlyToStringTrucoResultHavingNoWinner(){
+        when(p1.requestTruco()).thenReturn(false);
+        TrucoResult result = sut.handle(p1, p1, 1);
+        Assertions.assertEquals("Points=1, winner=No winner",result.toString());
+    }
+
+    @Test
     void shouldCallerBeWinnerOfThreePoints(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(anyInt())).thenReturn(-1);

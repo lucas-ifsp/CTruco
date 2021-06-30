@@ -10,8 +10,14 @@ public class HandResult {
     private final int points;
 
     public HandResult(Player winner, int points) {
+        if(!isValidHandValue(points))
+            throw new GameRuleViolationException("Illegal hand value!");
         this.winner = winner;
         this.points = points;
+    }
+
+    private boolean isValidHandValue(int points) {
+        return points == 0 || points == 1 || points == 3 || points == 6 || points == 9 || points == 12;
     }
 
     public Optional<Player> getWinner() {
@@ -22,8 +28,4 @@ public class HandResult {
         return points;
     }
 
-    @Override
-    public String toString() {
-        return "winner=" + winner +  ", points=" + points;
-    }
 }

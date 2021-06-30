@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +26,7 @@ class PlayHandUseCaseTest {
     private Player p2;
 
     @Test
-    void shouldWinHandWinningFirstTwoRounds(){
+    void shouldHaveHandWinnerAfterTwoRounds(){
         when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
         configureGameMock(new Card(6, Suit.DIAMONDS));
@@ -36,40 +37,7 @@ class PlayHandUseCaseTest {
     }
 
     @Test
-    void shouldWinHandTyingFirstAndWinningSecond(){
-        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
-        configureGameMock(new Card(6, Suit.DIAMONDS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p2, result.getWinner().orElse(null));
-    }
-
-    @Test
-    void shouldWinHandWinningFirstAndTyingSecond(){
-        when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(6, Suit.CLUBS)).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.HEARTS));
-        configureGameMock(new Card(4, Suit.CLUBS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p1, result.getWinner().orElse(null));
-    }
-
-    @Test
-    void shouldDrawHandWithThreeTiedRounds(){
-        when(p1.playCard()).thenReturn(new Card(4, Suit.CLUBS)).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(6, Suit.CLUBS));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(6, Suit.HEARTS));
-        configureGameMock(new Card(7, Suit.DIAMONDS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertTrue(result.getWinner().isEmpty());
-    }
-
-    @Test
-    void shouldWinHandByBestOfThree(){
+    void shouldHaveHandWinnerAfterThreeRounds(){
         when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn( new Card('Q', Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
         configureGameMock(new Card(7, Suit.DIAMONDS));
@@ -80,21 +48,11 @@ class PlayHandUseCaseTest {
     }
 
     @Test
-    void shouldWinWinningFirstAndTyingThird(){
-        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn(new Card('Q', Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
-        configureGameMock(new Card('Q', Suit.DIAMONDS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p2, result.getWinner().orElse(null));
-    }
-
-    @Test
     void shouldWinGameIfOpponentRuns(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
-        configureGameMock(new Card('Q', Suit.DIAMONDS));
+        when(game.getFirstToPlay()).thenReturn(p1);
+        when(game.getLastToPlay()).thenReturn(p2);
 
         PlayHandUseCase hand = new PlayHandUseCase(game);
         HandResult result = hand.play().getResult().get();
