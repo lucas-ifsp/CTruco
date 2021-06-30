@@ -51,11 +51,6 @@ public class TrucoResult {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(points, winner);
-    }
-
-    @Override
     public String toString() {
         return "Points=" + points + ", winner=" + (winner != null? winner : "No winner");
     }

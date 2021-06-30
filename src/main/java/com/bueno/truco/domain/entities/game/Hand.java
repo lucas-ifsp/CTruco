@@ -24,7 +24,7 @@ public class Hand {
         roundsPlayed.add(round);
     }
 
-    public void checkForWinnerAfterTwoRounds() {
+    public void checkForWinnerAfterSecondRound() {
         Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
         Optional<Player> secondRoundWinner = roundsPlayed.get(1).getWinner();
 
@@ -42,9 +42,10 @@ public class Hand {
 
         if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
             result = new HandResult(firstRoundWinner.get(), handPoints);
-        else if (lastRoundWinner.isPresent())
-            result = new HandResult(lastRoundWinner.get(), handPoints);
-        else result = new HandResult(null, 0);
+        else
+            result = lastRoundWinner.
+                    map(player -> new HandResult(player, handPoints))
+                    .orElseGet(() -> new HandResult(null, 0));
     }
 
     public boolean hasWinner(){
@@ -70,5 +71,9 @@ public class Hand {
     public Optional<Player> getLastRoundWinner(){
         if(roundsPlayed.isEmpty()) return Optional.empty();
         return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+    }
+
+    public List<Round> getRoundsPlayed() {
+        return new ArrayList<>(roundsPlayed);
     }
 }

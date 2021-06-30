@@ -4,8 +4,6 @@ import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 import com.bueno.truco.domain.entities.player.Player;
 
-
-
 public class PlayGameUseCase {
 
     private Game game;
@@ -17,7 +15,7 @@ public class PlayGameUseCase {
     public Player play() {
         while (game.getWinner().isEmpty()){
             game.dealCards();
-            game.addHand(new PlayHandUseCase(game).play());
+            game.updateGameWithLastHand(new PlayHandUseCase(game).play());
         }
         return game.getWinner().get();
     }

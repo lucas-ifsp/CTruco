@@ -81,6 +81,18 @@ public class Card {
 
     @Override
     public String toString() {
-        return this.equals(getClosedCard())? "Closed Card" : rankNames.get(rank) + " of " + suit.getName();
+        return this.equals(getClosedCard())?
+                "[Xx]" :
+                "["+rankNames.get(rank) + toUnicodeSymbol(suit.getName())+"]";
+    }
+
+    private String toUnicodeSymbol(String suitName){
+        return switch (suitName){
+            case "Diamonds" -> "\u2666";
+            case "Hearts" -> "\u2665";
+            case "Clubs" -> "\u2663";
+            case "Spades" -> "\u2660";
+            default -> "";
+        };
     }
 }

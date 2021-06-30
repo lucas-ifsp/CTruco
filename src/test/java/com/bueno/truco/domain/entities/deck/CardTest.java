@@ -39,14 +39,14 @@ class CardTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"7,7 of Hearts", "1,A of Hearts", "11,Q of Hearts", "12,J of Hearts", "13,K of Hearts"})
+    @CsvSource({"7,[7\u2665]", "1,[A\u2665]", "11,[Q\u2665]", "12,[J\u2665]", "13,[K\u2665]"})
     void shouldCorrectlyToStringOpenCard(int rank, String toString){
         Assertions.assertEquals(toString, new Card(rank, Suit.HEARTS).toString());
     }
 
     @Test
     void shouldCorrectlyToStringClosedCard() {
-        Assertions.assertEquals("Closed Card", Card.getClosedCard().toString());
+        Assertions.assertEquals("[Xx]", Card.getClosedCard().toString());
     }
 
     @Test

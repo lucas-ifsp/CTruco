@@ -28,6 +28,7 @@ public class PlayHandUseCase {
 
     public Hand play() {
         hand = new Hand();
+        game.setCurrentHand(hand);
 
         hand.addPlayedRound(playRound());
         if (hand.hasWinner()) return hand;
@@ -35,7 +36,7 @@ public class PlayHandUseCase {
         hand.addPlayedRound(playRound());
         if (hand.hasWinner()) return hand;
 
-        hand.checkForWinnerAfterTwoRounds();
+        hand.checkForWinnerAfterSecondRound();
         if (hand.hasWinner()) return hand;
 
         hand.addPlayedRound(playRound());
@@ -51,10 +52,10 @@ public class PlayHandUseCase {
             Optional<HandResult> handResult = handleTruco();
             if (handResult.isPresent()){
                 hand.setResult(handResult.get());
-                return new Round(firstToPlay, lastToPlay, game.getCurrentVira());
+                return new Round(firstToPlay, lastToPlay, game);
             }
         }
-        Round round = new Round(firstToPlay, lastToPlay, game.getCurrentVira());
+        Round round = new Round(firstToPlay, lastToPlay, game);
         round.play();
         return round;
     }
