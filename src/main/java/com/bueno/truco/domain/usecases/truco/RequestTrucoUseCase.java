@@ -14,7 +14,6 @@ public class RequestTrucoUseCase {
         if(!requester.requestTruco()) {
             return new TrucoResult(handPoints);
         }
-
         if(requester.getScore() == 11) {
             return new TrucoResult(12, responder);
         }
@@ -35,6 +34,7 @@ public class RequestTrucoUseCase {
             if(requestAnswer == 0){
                 break;
             }
+
             changeRoles();
         }
         return new TrucoResult(handPoints, null, currentRequester);

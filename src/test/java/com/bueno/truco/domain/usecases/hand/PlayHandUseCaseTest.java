@@ -3,6 +3,7 @@ package com.bueno.truco.domain.usecases.hand;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
 import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.Hand;
 import com.bueno.truco.domain.entities.game.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.Assertions;
@@ -24,14 +25,22 @@ class PlayHandUseCaseTest {
     private Player p1;
     @Mock
     private Player p2;
+    @Mock
+    private Hand hand;
+    @Mock
+    private Card card;
 
     @Test
     void shouldHaveHandWinnerAfterTwoRounds(){
         when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
+        when(hand.getHandPoints()).thenReturn(1);
+        when(game.getCurrentHand()).thenReturn(hand);
+
         configureGameMock(new Card(6, Suit.DIAMONDS));
 
         PlayHandUseCase hand = new PlayHandUseCase(game);
+
         HandResult result = hand.play().getResult().get();
         Assertions.assertEquals(p1, result.getWinner().orElse(null));
     }
@@ -40,6 +49,9 @@ class PlayHandUseCaseTest {
     void shouldHaveHandWinnerAfterThreeRounds(){
         when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn( new Card('Q', Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
+        when(hand.getHandPoints()).thenReturn(1);
+        when(game.getCurrentHand()).thenReturn(hand);
+
         configureGameMock(new Card(7, Suit.DIAMONDS));
 
         PlayHandUseCase hand = new PlayHandUseCase(game);
@@ -51,6 +63,9 @@ class PlayHandUseCaseTest {
     void shouldWinGameIfOpponentRuns(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
+        when(hand.getHandPoints()).thenReturn(1);
+        when(game.getCurrentVira()).thenReturn(card);
+        when(game.getCurrentHand()).thenReturn(hand);
         when(game.getFirstToPlay()).thenReturn(p1);
         when(game.getLastToPlay()).thenReturn(p2);
 

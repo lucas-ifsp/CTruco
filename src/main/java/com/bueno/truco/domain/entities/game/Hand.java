@@ -9,6 +9,7 @@ import java.util.Optional;
 public class Hand {
 
     private final List<Round> roundsPlayed;
+    private Player pointsRequester;
     private int handPoints;
 
     private HandResult result;
@@ -66,6 +67,14 @@ public class Hand {
 
     public int getHandPoints() {
         return handPoints;
+    }
+
+    public Player getPointsRequester() {
+        return pointsRequester;
+    }
+
+    public void setPointsRequester(Player pointsRequester) {
+        this.pointsRequester = pointsRequester;
     }
 
     public Optional<Player> getLastRoundWinner(){

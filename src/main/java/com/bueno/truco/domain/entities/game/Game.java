@@ -19,6 +19,7 @@ public class Game implements Observable {
     private Set<Card> openCards;
     private List<Hand> hands;
     private Hand currentHand;
+    private int currentHandPoints;
 
     private final List<Observer> observers;
 
@@ -49,12 +50,18 @@ public class Game implements Observable {
         currentVira = null;
         cardToPlayAgainst = null;
         currentHand = null;
+        currentHandPoints = 1;
         openCards.clear();
     }
 
-  /*  public void updateGameWithCurrentHand(Hand hand) {
-        this.currentHand = hand;
-    }*/
+    public void updateCurrentHandPoints(){
+        currentHandPoints = currentHand.getHandPoints();
+        notifyObservers();
+    }
+
+    public int getCurrentHandPoints() {
+        return currentHandPoints;
+    }
 
     public void updateGameWithLastHand(Hand hand) {
         updateGameStatus(hand.getResult().get());

@@ -18,7 +18,6 @@ public class Card {
     }
 
     private Card(){
-
     }
 
     public static Card getClosedCard(){

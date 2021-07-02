@@ -28,6 +28,8 @@ class HandTest {
     private Game game;
     @Mock
     private Round round;
+    @Mock
+    private Card card;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +43,10 @@ class HandTest {
 
     @Test
     void shouldThrowIfExceedThreeRounds(){
+        when(game.getCurrentHand()).thenReturn(sut);
+        when(game.getCurrentVira()).thenReturn(card);
         playRounds(3);
+
         Assertions.assertThrows(GameRuleViolationException.class, () -> sut.addPlayedRound(new Round(p1, p2, game)));
     }
 
