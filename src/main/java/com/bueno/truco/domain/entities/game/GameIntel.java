@@ -19,6 +19,10 @@ public class GameIntel {
         return game.getCurrentVira();
     }
 
+    public int getCurrentHandPoints() {
+        return game.getCurrentHandPoints();
+    }
+
     public Optional<Card> getCardToPlayAgainst() {
         return game.getCardToPlayAgainst();
     }
