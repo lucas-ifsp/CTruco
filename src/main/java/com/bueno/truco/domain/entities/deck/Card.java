@@ -8,6 +8,9 @@ public class Card {
     private Suit suit;
     private static final List<String> rankNames = List.of("Hidden", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K");
 
+    private Card(){
+    }
+
     public Card(int rank, Suit suit) {
         setRank(rank);
         setSuit(suit);
@@ -15,13 +18,6 @@ public class Card {
 
     public Card(char rankName, Suit suit) {
         this(rankNames.indexOf(String.valueOf(rankName).toUpperCase()), suit);
-    }
-
-    private Card(){
-    }
-
-    public static Card getClosedCard(){
-        return new Card();
     }
 
     private void setRank(int rank) {
@@ -39,10 +35,10 @@ public class Card {
     }
 
     public int compareValueTo(Card card, Card vira){
-        return getCardValue(this, vira) - getCardValue(card, vira);
+        return computeCardValue(this, vira) - computeCardValue(card, vira);
     }
 
-    private int getCardValue(Card card, Card vira) {
+    private int computeCardValue(Card card, Card vira) {
         final List<Integer> values = List.of(0, 4, 5, 6, 7, 11, 12, 13, 1, 2, 3);
         final int manilha;
 
@@ -60,6 +56,10 @@ public class Card {
                 case HEARTS -> 13;
                 case CLUBS -> 14;
             };
+    }
+
+    public static Card getClosedCard(){
+        return new Card();
     }
 
     public int getRank() {
@@ -82,16 +82,15 @@ public class Card {
     public String toString() {
         return this.equals(getClosedCard())?
                 "[Xx]" :
-                "["+rankNames.get(rank) + toUnicodeSymbol(suit.getName())+"]";
+                "["+rankNames.get(rank) + toUnicodeSymbol(suit)+"]";
     }
 
-    private String toUnicodeSymbol(String suitName){
-        return switch (suitName){
-            case "Diamonds" -> "\u2666";
-            case "Hearts" -> "\u2665";
-            case "Clubs" -> "\u2663";
-            case "Spades" -> "\u2660";
-            default -> "";
+    private String toUnicodeSymbol(Suit suit){
+        return switch (suit){
+            case DIAMONDS-> "\u2666";
+            case HEARTS -> "\u2665";
+            case CLUBS -> "\u2663";
+            case SPADES -> "\u2660";
         };
     }
 }

@@ -24,23 +24,21 @@ public class Deck {
         return i == 8 || i == 9 || i == 10;
     }
 
-    public int size() {
-        return cards.size();
-    }
-
-    public Card takeOne() {
-        return take(1).get(0);
-    }
-
     public List<Card> take(int numberOfCards) {
         List<Card> cardsTaken = new ArrayList<>(cards.subList(0, numberOfCards));
         cards.removeAll(cardsTaken);
         return cardsTaken;
     }
 
+    public Card takeOne() {
+        return take(1).get(0);
+    }
+
     public void shuffle() {
         Collections.shuffle(cards);
     }
 
-
+    public int size() {
+        return cards.size();
+    }
 }

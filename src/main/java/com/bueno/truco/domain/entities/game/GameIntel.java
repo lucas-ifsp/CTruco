@@ -9,22 +9,30 @@ import java.util.Set;
 
 public class GameIntel {
 
-    private Game game;
+    private Hand currentHand;
 
-    public GameIntel(Game game) {
-        this.game = game;
+    public GameIntel(Hand hand) {
+        this.currentHand = hand;
     }
 
     public Card getCurrentVira() {
-        return game.getCurrentVira();
+        return currentHand.getVira();
     }
 
     public int getCurrentHandPoints() {
-        return game.getCurrentHandPoints();
+        return currentHand.getPoints();
     }
 
     public Optional<Card> getCardToPlayAgainst() {
-        return game.getCardToPlayAgainst();
+        return currentHand.getCardToPlayAgainst();
+    }
+
+    public Set<Card> getOpenCards() {
+        return currentHand.getOpenCards();
+    }
+
+    public List<Round> getRoundsPlayed() {
+        return currentHand.getRoundsPlayed();
     }
 
     public int getOpponentScore(Player requester) {
@@ -36,14 +44,10 @@ public class GameIntel {
     }
 
     private Player getOpponent(Player requester){
-        return requester.equals(game.getPlayer1()) ? game.getPlayer2() : game.getPlayer1();
+        return requester.equals(currentHand.getPlayer1()) ? currentHand.getPlayer2() : currentHand.getPlayer1();
     }
 
-    public Set<Card> getOpenCards() {
-        return game.getOpenCards();
-    }
-
-    public List<Round> getRoundsPlayed() {
-        return game.getCurrentHand().getRoundsPlayed();
+    public Optional<HandResult> getResult(){
+        return currentHand.getResult();
     }
 }

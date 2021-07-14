@@ -3,6 +3,7 @@ package com.bueno.truco.application.console;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.game.GameIntel;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.game.HandResult;
 import com.bueno.truco.domain.entities.game.Round;
 import com.bueno.truco.domain.entities.player.DummyPlayer;
 import com.bueno.truco.domain.entities.player.Player;
@@ -13,27 +14,36 @@ import java.util.*;
 public class PlayerCLI extends Player {
 
     public static void main(String[] args) {
-        cls();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("====== LET'S TRUCO ======");
 
         System.out.print("Nome do jogador 1 > ");
         String name1 = scanner.nextLine();
-        Player playerCLI1 = new PlayerCLI(name1);
+        PlayerCLI playerCLI = new PlayerCLI(name1);
 
-        System.out.print("Nome do jogador 2 > ");
-        String name2 = scanner.nextLine();
-        Player playerCLI2 = new PlayerCLI(name2);
+        playerCLI.startGame();
 
-
-        PlayGameUseCase gameUseCase = new PlayGameUseCase(playerCLI1, playerCLI2);
-        gameUseCase.play();
         scanner.close();
+
+
     }
 
     public PlayerCLI(String name) {
         super(name);
+    }
+
+    public void startGame() {
+        cls();
+        PlayGameUseCase gameUseCase = new PlayGameUseCase(this, new DummyPlayer());
+
+        while (true) {
+            final GameIntel intel = gameUseCase.playNewHand();
+            if (intel == null)
+                break;
+            printGameIntel(intel, 3000);
+
+        }
     }
 
     @Override
@@ -42,12 +52,12 @@ public class PlayerCLI extends Player {
 
         while (cardToPlay == null) {
             cls();
-            printGameIntel();
+            printGameIntel(getGameIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
 
             System.out.print("Carta a jogar [índice] > ");
             try {
-                final int cardIndex = Integer.valueOf(scanner.nextLine()) - 1;
+                final int cardIndex = Integer.parseInt(scanner.nextLine()) - 1;
 
                 if (cardIndex < 0 || cardIndex > cards.size() - 1) {
                     printErrorMessage("Valor inválido!");
@@ -56,7 +66,7 @@ public class PlayerCLI extends Player {
 
                 System.out.print("Descartar [s, n] > ");
                 final String choice = scanner.nextLine();
-                if (isValidChoice(choice, "s", "n")){
+                if (isValidChoice(choice, "s", "n")) {
                     printErrorMessage("Valor inválido!");
                     continue;
                 }
@@ -65,52 +75,54 @@ public class PlayerCLI extends Player {
                     cardToPlay = cards.remove(cardIndex);
                 else
                     cardToPlay = discard(cards.get(cardIndex));
-            }catch (Exception e){
-                printErrorMessage( "Valor inválido!");
-                continue;
+            } catch (Exception e) {
+                printErrorMessage("Valor inválido!");
             }
         }
         return cardToPlay;
     }
 
     private boolean isValidChoice(String choice, String... options) {
-        return Arrays.stream(options).noneMatch(option -> choice.equalsIgnoreCase(option));
+        return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
     }
 
     @Override
     public boolean requestTruco() {
+        if (getGameIntel().getCurrentHandPoints() == 12)
+            return false;
+
         cls();
 
-        while(true) {
-            printGameIntel();
+        while (true) {
+            printGameIntel(getGameIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
             System.out.print("Pedir " + getNextHandValueAsString() + " [s, n]: ");
-            final String choice = scanner.nextLine().toLowerCase();;
+            final String choice = scanner.nextLine().toLowerCase();
 
             if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            return choice.equalsIgnoreCase("s")? true: false;
+            return choice.equalsIgnoreCase("s");
         }
     }
 
     @Override
     public int getTrucoResponse(int newHandPoints) {
         cls();
-        while(true) {
+        while (true) {
             Scanner scanner = new Scanner(System.in);
             System.out.print(getGameIntel().getOpponentId(this) + " está pedindo "
                     + getNextHandValueAsString() + ". Escolha uma opção [(T)opa, (C)orre, (A)umenta]: ");
 
             final String choice = scanner.nextLine();
 
-            if (isValidChoice(choice, "t", "c", "a")){
+            if (isValidChoice(choice, "t", "c", "a")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
 
-            printGameIntel();
+            printGameIntel(getGameIntel(), 1000);
             return toIntChoice(choice);
         }
     }
@@ -133,8 +145,25 @@ public class PlayerCLI extends Player {
         };
     }
 
-    private void printGameIntel() {
-        final GameIntel intel = getGameIntel();
+    @Override
+    public boolean getMaoDeOnzeResponse() {
+        cls();
+
+        while (true) {
+            printGameIntel(getGameIntel(), 1000);
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("O jogo está em mão de onze. Você aceita [s, n]: ");
+            final String choice = scanner.nextLine().toLowerCase();
+
+            if (isValidChoice(choice, "s", "n")) {
+                printErrorMessage("Valor inválido!");
+                continue;
+            }
+            return choice.equalsIgnoreCase("s");
+        }
+    }
+
+    private void printGameIntel(GameIntel intel, int delayInMilliseconds) {
 
         System.out.println("+=======================================+");
         printGameMainInfo(intel);
@@ -143,7 +172,14 @@ public class PlayerCLI extends Player {
         printVira(intel.getCurrentVira());
         printOpponentCardIfAvailable(intel);
         printOwnedCards();
+        printResultIfAvailable();
         System.out.println("+=======================================+\n");
+
+        try {
+            Thread.sleep(delayInMilliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void printGameMainInfo(GameIntel intel) {
@@ -163,6 +199,7 @@ public class PlayerCLI extends Player {
         }
     }
 
+    //TODO remove code smell caused by Optional as a parameter
     private static void printRoundResult(Optional<Player> winner) {
         if (winner.isPresent())
             System.out.print(winner.get().getId() + " | ");
@@ -185,16 +222,25 @@ public class PlayerCLI extends Player {
 
     private void printOpponentCardIfAvailable(GameIntel intel) {
         final Optional<Card> cardToPlayAgainst = intel.getCardToPlayAgainst();
-        if (cardToPlayAgainst.isPresent())
-            System.out.println(" Carta do Oponente: " + cardToPlayAgainst.get());
+        cardToPlayAgainst.ifPresent(card -> System.out.println(" Carta do Oponente: " + card));
     }
 
     private void printOwnedCards() {
         System.out.print(" Cartas na mão: ");
         for (int i = 0; i < cards.size(); i++) {
-            System.out.print((i+1) + ") " + cards.get(i) + "\t");
+            System.out.print((i + 1) + ") " + cards.get(i) + "\t");
         }
         System.out.print("\n");
+    }
+
+    private void printResultIfAvailable() {
+        final Optional<HandResult> potentialResult = getGameIntel().getResult();
+        if (potentialResult.isPresent()) {
+            final String resultString = potentialResult.get().getWinner()
+                    .map(winner -> winner.getId().concat(" VENCEU!").toUpperCase())
+                    .orElse("EMPATE.");
+            System.out.println(" RESULTADO: " + resultString);
+        }
     }
 
     private void printErrorMessage(String message) {

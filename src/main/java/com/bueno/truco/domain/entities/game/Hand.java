@@ -1,27 +1,48 @@
 package com.bueno.truco.domain.entities.game;
 
+import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.utils.Observable;
+import com.bueno.truco.domain.entities.utils.Observer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class Hand {
+public class Hand implements Observable {
 
+    private final Game game;
+    private final Card vira;
+
+    private final Set<Card> openCards;
     private final List<Round> roundsPlayed;
+    private final List<Observer> observers;
+
+    private Card cardToPlayAgainst;
     private Player pointsRequester;
     private int handPoints;
-
     private HandResult result;
 
-    public Hand(){
+    public Hand(Game game, Card vira){
+        this.game = game;
+        this.vira = vira;
+        this.handPoints = 1;
+
         roundsPlayed = new ArrayList<>();
-        handPoints = 1;
+        openCards = new LinkedHashSet<>();
+        this.openCards.add(vira);
+
+        observers = new ArrayList<>();
+        registerObserver(getPlayer1());
+        registerObserver(getPlayer2());
+
+        notifyObservers();
     }
 
-    public void addPlayedRound(Round round){
+    public void playNewRound(Player firstToPlay, Player lastToPlay){
         if(roundsPlayed.size() == 3)
             throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
+
+        Round round = new Round(firstToPlay, lastToPlay, this);
+        round.play();
         roundsPlayed.add(round);
     }
 
@@ -49,8 +70,37 @@ public class Hand {
                     .orElseGet(() -> new HandResult(null, 0));
     }
 
-    public boolean hasWinner(){
-        return result != null;
+    @Override
+    public void notifyObservers() {
+        observers.forEach(observer -> observer.update(new GameIntel(this)));
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void setCardToPlayAgainst(Card cardToPlayAgainst) {
+        this.cardToPlayAgainst = cardToPlayAgainst;
+        notifyObservers();
+    }
+
+    public Optional<Card> getCardToPlayAgainst() {
+        return Optional.ofNullable(cardToPlayAgainst);
+    }
+
+    public void addOpenCard(Card card){
+        openCards.add(card);
+        notifyObservers();
+    }
+
+    public Optional<Player> getLastRoundWinner(){
+        if(roundsPlayed.isEmpty()) return Optional.empty();
+        return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+    }
+
+    public List<Round> getRoundsPlayed() {
+        return new ArrayList<>(roundsPlayed);
     }
 
     public Optional<HandResult> getResult() {
@@ -61,11 +111,16 @@ public class Hand {
         this.result = result;
     }
 
-    public void setHandPoints(int handPoints) {
-        this.handPoints = handPoints;
+    public boolean hasWinner(){
+        return result != null;
     }
 
-    public int getHandPoints() {
+    public void setHandPoints(int handPoints) {
+        this.handPoints = handPoints;
+        notifyObservers();
+    }
+
+    public int getPoints() {
         return handPoints;
     }
 
@@ -77,12 +132,23 @@ public class Hand {
         this.pointsRequester = pointsRequester;
     }
 
-    public Optional<Player> getLastRoundWinner(){
-        if(roundsPlayed.isEmpty()) return Optional.empty();
-        return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+    public Card getVira() {
+        return vira;
     }
 
-    public List<Round> getRoundsPlayed() {
-        return new ArrayList<>(roundsPlayed);
+    public Set<Card> getOpenCards() {
+        return openCards;
+    }
+
+    public Player getPlayer1(){
+        return game.getPlayer1();
+    }
+
+    public Player getPlayer2(){
+        return game.getPlayer2();
+    }
+
+    public GameIntel getGameIntel(){
+        return new GameIntel(this);
     }
 }

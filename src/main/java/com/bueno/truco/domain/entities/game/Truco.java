@@ -1,33 +1,33 @@
-package com.bueno.truco.domain.usecases.truco;
+package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.player.Player;
 
-public class RequestTrucoUseCase {
+public class Truco {
 
-    private Player currentRequester;
-    private Player currentResponder;
+    private Player requester;
+    private Player responder;
 
-    public TrucoResult handle(Player requester, Player responder, int handPoints) {
+    public Truco(Player requester, Player responder) {
+        this.requester = requester;
+        this.responder = responder;
+    }
+
+    public TrucoResult handle(int handPoints) {
         if(Player.isValidScoreIncrement(handPoints) || requester == null || responder == null) {
             throw new IllegalArgumentException("Players must no be null. Hand points must comply with truco rules.");
         }
-        if(!requester.requestTruco()) {
+
+        if(isForbidenToAskForTruco() || isNotAskingForTruco()) {
             return new TrucoResult(handPoints);
-        }
-        if(requester.getScore() == 11) {
-            return new TrucoResult(12, responder);
         }
 
         int pointsLimit = Player.MAX_SCORE - Math.min(requester.getScore(), responder.getScore());
 
-        currentRequester = requester;
-        currentResponder = responder;
-
         while(handPoints < pointsLimit){
-            int requestAnswer = currentResponder.getTrucoResponse(getNextValidIncrement(handPoints));
+            int requestAnswer = responder.getTrucoResponse(getNextValidIncrement(handPoints));
 
             if(requestAnswer < 0) {
-                return new TrucoResult(handPoints, currentRequester);
+                return new TrucoResult(handPoints, requester);
             }
 
             handPoints = getNextValidIncrement(handPoints);
@@ -37,7 +37,15 @@ public class RequestTrucoUseCase {
 
             changeRoles();
         }
-        return new TrucoResult(handPoints, null, currentRequester);
+        return new TrucoResult(handPoints, null, requester);
+    }
+
+    private boolean isForbidenToAskForTruco() {
+        return requester.getScore() == 11 || responder.getScore() == 11;
+    }
+
+    private boolean isNotAskingForTruco() {
+        return !requester.requestTruco();
     }
 
     private int getNextValidIncrement(int currentValue){
@@ -47,8 +55,8 @@ public class RequestTrucoUseCase {
     }
 
     private void changeRoles() {
-        Player swap = currentRequester;
-        currentRequester = currentResponder;
-        currentResponder = swap;
+        Player swap = requester;
+        requester = responder;
+        responder = swap;
     }
 }

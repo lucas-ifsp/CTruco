@@ -6,18 +6,22 @@ import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.Hand;
 import com.bueno.truco.domain.entities.game.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlayHandUseCaseTest {
+
+    private Hand hand;
+    private PlayHandUseCase sut;
 
     @Mock
     private Game game;
@@ -25,58 +29,74 @@ class PlayHandUseCaseTest {
     private Player p1;
     @Mock
     private Player p2;
-    @Mock
-    private Hand hand;
-    @Mock
-    private Card card;
 
-    @Test
-    void shouldHaveHandWinnerAfterTwoRounds(){
-        when(p1.playCard()).thenReturn(new Card(5, Suit.DIAMONDS)).thenReturn(new Card(5, Suit.SPADES)).thenReturn(new Card(5, Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(4, Suit.SPADES)).thenReturn(new Card(4, Suit.HEARTS));
-        when(hand.getHandPoints()).thenReturn(1);
-        when(game.getCurrentHand()).thenReturn(hand);
+    @BeforeEach
+    void setUp() {
+        when(game.getPlayer1()).thenReturn(p1);
+        when(game.getPlayer2()).thenReturn(p2);
 
-        configureGameMock(new Card(6, Suit.DIAMONDS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p1, result.getWinner().orElse(null));
+        hand = new Hand(game, new Card(7, Suit.CLUBS));
+        when(game.prepareNewHand()).thenReturn(hand);
+        sut  = new PlayHandUseCase(game);
     }
+
+    @AfterEach
+    void tearDown() {
+        sut = null;
+        hand = null;
+    }
+
+   @Test
+    void shouldHaveHandWinnerAfterTwoRounds(){
+       when(game.getFirstToPlay()).thenReturn(p1);
+       when(game.getLastToPlay()).thenReturn(p2);
+       when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
+       when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
+       sut.play();
+       assertEquals(p1, getWinner(hand));
+   }
 
     @Test
     void shouldHaveHandWinnerAfterThreeRounds(){
-        when(p1.playCard()).thenReturn(new Card(4, Suit.DIAMONDS)).thenReturn(new Card(7, Suit.SPADES)).thenReturn( new Card('Q', Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(5, Suit.CLUBS)).thenReturn(new Card(6, Suit.DIAMONDS)).thenReturn(new Card('Q', Suit.CLUBS));
-        when(hand.getHandPoints()).thenReturn(1);
-        when(game.getCurrentHand()).thenReturn(hand);
-
-        configureGameMock(new Card(7, Suit.DIAMONDS));
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p2, result.getWinner().orElse(null));
+        when(game.getFirstToPlay()).thenReturn(p1);
+        when(game.getLastToPlay()).thenReturn(p2);
+        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS)).thenReturn(new Card(3, Suit.DIAMONDS));
+        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS)).thenReturn(new Card(4, Suit.DIAMONDS));
+        sut.play();
+        assertEquals(p1, getWinner(hand));
     }
 
     @Test
-    void shouldWinGameIfOpponentRuns(){
-        when(p1.requestTruco()).thenReturn(true);
-        when(p2.getTrucoResponse(anyInt())).thenReturn(-1);
-        when(hand.getHandPoints()).thenReturn(1);
-        when(game.getCurrentVira()).thenReturn(card);
-        when(game.getCurrentHand()).thenReturn(hand);
-        when(game.getFirstToPlay()).thenReturn(p1);
-        when(game.getLastToPlay()).thenReturn(p2);
-
-        PlayHandUseCase hand = new PlayHandUseCase(game);
-        HandResult result = hand.play().getResult().get();
-        Assertions.assertEquals(p1, result.getWinner().orElse(null));
+    @DisplayName("ShouldWinnerReceiveOnePointInMaoDeOnzeRun")
+    void shouldWinnerReceiveOnePointInMaoDeOnzeRun() {
+        when(game.isMaoDeOnze()).thenReturn(true);
+        when(p1.getScore()).thenReturn(11);
+        when(p1.getMaoDeOnzeResponse()).thenReturn(false);
+        sut.play();
+        assertAll(
+                () -> assertEquals(p2, getWinner(hand)),
+                () -> assertEquals(1, hand.getPoints())
+        );
     }
 
-    private void configureGameMock(Card vira) {
+    @Test
+    @DisplayName("ShouldWinnerReceiveThreePointsForPlayedMaoDeOnze")
+    void shouldWinnerReceiveThreePointsForPlayedMaoDeOnze() {
         when(game.getFirstToPlay()).thenReturn(p1);
         when(game.getLastToPlay()).thenReturn(p2);
-        when(game.getCurrentVira()).thenReturn(vira);
+        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
+        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
+        when(game.isMaoDeOnze()).thenReturn(true);
+        when(p1.getScore()).thenReturn(11);
+        when(p1.getMaoDeOnzeResponse()).thenReturn(true);
+        sut.play();
+        assertEquals(3, hand.getPoints());
+    }
+
+
+    private Player getWinner(Hand hand) {
+        Optional<HandResult> handResult = hand.getResult();
+        return handResult.map(hr -> hr.getWinner().orElse(null))
+                .orElse(null);
     }
 }

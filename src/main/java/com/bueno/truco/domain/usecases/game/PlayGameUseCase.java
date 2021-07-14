@@ -1,8 +1,12 @@
 package com.bueno.truco.domain.usecases.game;
 
 import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.game.Hand;
 import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 import com.bueno.truco.domain.entities.player.Player;
+
+import java.util.Optional;
 
 public class PlayGameUseCase {
 
@@ -13,10 +17,21 @@ public class PlayGameUseCase {
     }
 
     public Player play() {
-        while (game.getWinner().isEmpty()){
-            game.dealCards();
-            game.updateGameWithLastHand(new PlayHandUseCase(game).play());
+        while (true){
+            if(playNewHand() == null)
+                return game.getWinner().get();
         }
-        return game.getWinner().get();
+    }
+
+    public GameIntel playNewHand(){
+        GameIntel gameIntel = null;
+
+        if(game.getWinner().isEmpty()) {
+            game.dealCards();
+            final Hand playedHand = new PlayHandUseCase(game).play();
+            gameIntel = playedHand.getGameIntel();
+            game.updateScores();
+        }
+        return gameIntel;
     }
 }
