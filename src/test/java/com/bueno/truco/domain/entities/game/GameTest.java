@@ -1,18 +1,14 @@
 package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.player.Player;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,10 +19,6 @@ class GameTest {
     private Player player1;
     @Mock
     private Player player2;
-    @Mock
-    private Hand hand;
-    @Mock
-    private HandResult handResult;
 
     @BeforeEach
     void setUp() {
@@ -39,41 +31,74 @@ class GameTest {
     }
 
     @Test
+    @DisplayName("Should correctly create game")
     void shouldCorrectlyCreateGame(){
-        Assertions.assertEquals(0, sut.getHands().size());
-        Assertions.assertEquals(player1, sut.getPlayer1());
-        Assertions.assertEquals(player2, sut.getPlayer2());
+        assertAll(
+                () -> assertEquals(0, sut.getHands().size()),
+                () -> assertEquals(player1, sut.getPlayer1()),
+                () -> assertEquals(player2, sut.getPlayer2())
+        );
     }
 
     @Test
+    @DisplayName("Should correctly deal cards")
     void shouldCorrectlyDealCards(){
         sut.dealCards();
-        Assertions.assertEquals(player1, sut.getFirstToPlay());
-        Assertions.assertEquals(player2, sut.getLastToPlay());
-        Assertions.assertFalse(sut.getFirstToPlay().equals(sut.getLastToPlay()));
-        Assertions.assertNotNull(sut.getCurrentVira());
+        sut.prepareNewHand();
+        verify(player1).setCards(anyList());
+        verify(player2).setCards(anyList());
     }
 
     @Test
-    void shouldCorrectlyAddHand(){
-        when(handResult.getPoints()).thenReturn(6);
-        when(handResult.getWinner()).thenReturn(Optional.of(player1)).thenReturn(Optional.of(player2));
-        when(hand.getResult()).thenReturn(Optional.of(handResult));
-        sut.updateGameWithLastHand(hand);
-        sut.updateGameWithLastHand(hand);
-        Assertions.assertEquals(2, sut.getHands().size());
+    @DisplayName("Should correctly prepare hand")
+    void shouldCorrectlyPrepareHand(){
+        final Hand hand = sut.prepareNewHand();
+        assertAll(
+                () -> assertEquals(player1, sut.getFirstToPlay()),
+                () -> assertEquals(player2, sut.getLastToPlay()),
+                () -> assertNotEquals(sut.getFirstToPlay(), sut.getLastToPlay()),
+                () -> assertEquals(hand, sut.getCurrentHand())
+        );
     }
 
     @Test
-    void shouldGetWinnerIfGameHasEnded(){
+    @DisplayName("Should have winner when game ends")
+    void shouldGetWinnerWhenGameEnds(){
         when(player1.getScore()).thenReturn(12);
-        Assertions.assertEquals(player1, sut.getWinner().get());
+        assertEquals(player1, sut.getWinner().orElse(null));
     }
 
     @Test
-    void shouldGetNoWinnerDuringGame(){
+    @DisplayName("Should have no winner before game ends")
+    void shouldGetNoWinnerBeforeGameEnds(){
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
-        Assertions.assertTrue(sut.getWinner().isEmpty());
+        assertTrue(sut.getWinner().isEmpty());
     }
+
+    @Test
+    @DisplayName("Should be mao de onze if only one player has 11 points")
+    void shouldBeMaoDeOnzeIfOnlyOnePlayerHas11Points() {
+        when(player1.getScore()).thenReturn(11);
+        when(player2.getScore()).thenReturn(3);
+        assertTrue(sut.isMaoDeOnze());
+    }
+
+    @Test
+    @DisplayName("Should not be mao de onze if both players have 11 points")
+    void shouldNotBeMaoDeOnzeIfBothPlayersHave11Points() {
+        when(player1.getScore()).thenReturn(11);
+        when(player2.getScore()).thenReturn(11);
+        assertFalse(sut.isMaoDeOnze());
+    }
+
+    @Test
+    @DisplayName("Should not be mao de onze if no player has 11 points")
+    void shouldNotBeMaoDeOnzeIfNoPlayerHas11Points() {
+        when(player1.getScore()).thenReturn(10);
+        when(player2.getScore()).thenReturn(8);
+        assertFalse(sut.isMaoDeOnze());
+    }
+
+
 }

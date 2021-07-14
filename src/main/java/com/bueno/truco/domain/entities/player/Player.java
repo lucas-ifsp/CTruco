@@ -26,15 +26,20 @@ public abstract class Player implements Observer<GameIntel> {
     public abstract int getTrucoResponse(int newHandPoints);
     public abstract Card playCard();
 
+    @Override
+    public final void update(GameIntel gameIntel){
+        this.gameIntel = gameIntel;
+    }
+
+    protected final GameIntel getGameIntel() {
+        return gameIntel;
+    }
+
     protected final Card discard(Card card){
         if(card == null || !cards.contains(card))
             throw new IllegalArgumentException("Card can not be null or out of player cards set!");
         cards.remove(card);
         return Card.getClosedCard();
-    }
-
-    public final void update(GameIntel gameIntel){
-        this.gameIntel = gameIntel;
     }
 
     public void incrementScoreBy(int value){
@@ -59,15 +64,10 @@ public abstract class Player implements Observer<GameIntel> {
         return score;
     }
 
-    protected GameIntel getGameIntel() {
-        return gameIntel;
-    }
-
     @Override
     public String toString() {
         return getId();
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -76,4 +76,6 @@ public abstract class Player implements Observer<GameIntel> {
         Player player = (Player) o;
         return id.equals(player.id);
     }
+
+    public abstract boolean getMaoDeOnzeResponse();
 }

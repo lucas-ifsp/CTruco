@@ -2,8 +2,6 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.player.Player;
-import com.bueno.truco.domain.usecases.truco.RequestTrucoUseCase;
-import com.bueno.truco.domain.usecases.truco.TrucoResult;
 
 import java.util.Optional;
 
@@ -14,29 +12,21 @@ public class Round {
     private Player winner;
     private Card firstCard;
     private Card lastCard;
-    private Game game;
     private Card vira;
     private Hand hand;
 
-    private final RequestTrucoUseCase trucoUseCase = new RequestTrucoUseCase();
-
-    public Round(Player firstToPlay, Player lastToPlay, Game game) {
-        validateConstructorInputs(firstToPlay, lastToPlay, game);
+    public Round(Player firstToPlay, Player lastToPlay, Hand hand) {
+        validateConstructorInputs(firstToPlay, lastToPlay, hand);
         this.firstToPlay = firstToPlay;
         this.lastToPlay = lastToPlay;
-        this.game = game;
-        this.vira = game.getCurrentVira();
-        this.hand = game.getCurrentHand();
-        this.game.setCardToPlayAgainst(null);
+        this.hand = hand;
+        this.vira = hand.getVira();
+        this.hand.setCardToPlayAgainst(null);
     }
 
-    private void validateConstructorInputs(Player firstToPlay, Player lastToPlay, Game game) {
-        if(firstToPlay == null || lastToPlay == null || game == null)
+    private void validateConstructorInputs(Player firstToPlay, Player lastToPlay, Hand hand) {
+        if(firstToPlay == null || lastToPlay == null || hand == null)
             throw new IllegalArgumentException("Parameters must not be null!");
-        if(game.getCurrentVira() == null)
-            throw new IllegalArgumentException("You must have a vira before creating a round!");
-        if(game.getCurrentHand() == null)
-            throw new IllegalArgumentException("You must have a hand in order to create a round!");
     }
 
     public void play(){
@@ -48,8 +38,8 @@ public class Round {
         }
 
         firstCard = firstToPlay.playCard();
-        game.setCardToPlayAgainst(firstCard);
-        game.addOpenCard(firstCard);
+        hand.setCardToPlayAgainst(firstCard);
+        hand.addOpenCard(firstCard);
 
         if(isPlayerAbleToRequestPointsRise(lastToPlay)) {
             final boolean hasWinnerByRun = handleTruco(lastToPlay, firstToPlay).isPresent();
@@ -57,19 +47,18 @@ public class Round {
         }
 
         lastCard = lastToPlay.playCard();
-        game.setCardToPlayAgainst(null);
-        game.addOpenCard(lastCard);
+        hand.setCardToPlayAgainst(null);
+        hand.addOpenCard(lastCard);
 
         validateCards();
         Optional<Card> highestCard = getHighestCard();
 
-        if(highestCard.isPresent())
-            winner = (highestCard.get().equals(firstCard) ? firstToPlay : lastToPlay);
+        highestCard.ifPresent(card -> winner = (card.equals(firstCard) ? firstToPlay : lastToPlay));
     }
 
     private void validateCards() {
         if(firstCard == null || lastCard == null || vira == null)
-            throw new IllegalArgumentException("Parameters can not be null!");
+            throw new GameRuleViolationException("Cards must not be null!");
         if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(lastCard))
             throw new GameRuleViolationException("Cards in the deck must be unique!");
         if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(vira))
@@ -83,17 +72,18 @@ public class Round {
     }
 
     private Optional<HandResult> handleTruco(Player requester, Player responder) {
-        final TrucoResult trucoResult = trucoUseCase.handle(requester, responder, hand.getHandPoints());
+        final Truco truco = new Truco(requester, responder);
+        final TrucoResult trucoResult = truco.handle(hand.getPoints());
         HandResult handResult = null;
 
         if(trucoResult.hasWinner()) {
-            handResult = new HandResult(trucoResult.getWinner().get(), trucoResult.getPoints());
+            winner = trucoResult.getWinner().get();
+            handResult = new HandResult(trucoResult);
             hand.setResult(handResult);
         }
 
         trucoResult.getLastRequester().ifPresent(lastRequester -> hand.setPointsRequester(lastRequester));
         hand.setHandPoints(trucoResult.getPoints());
-        game.updateCurrentHandPoints();
 
         return Optional.ofNullable(handResult);
     }

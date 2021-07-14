@@ -3,12 +3,7 @@ package com.bueno.truco.domain.usecases.hand;
 import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.Hand;
 import com.bueno.truco.domain.entities.game.HandResult;
-import com.bueno.truco.domain.entities.game.Round;
 import com.bueno.truco.domain.entities.player.Player;
-import com.bueno.truco.domain.usecases.truco.RequestTrucoUseCase;
-import com.bueno.truco.domain.usecases.truco.TrucoResult;
-
-import java.util.Optional;
 
 public class PlayHandUseCase {
 
@@ -23,30 +18,42 @@ public class PlayHandUseCase {
     }
 
     public Hand play() {
-        hand = new Hand();
-        game.setCurrentHand(hand);
+        hand = game.prepareNewHand();
 
-        hand.addPlayedRound(playRound());
+        if(game.isMaoDeOnze()){
+            handleMaoDeOnze();
+            if (hand.hasWinner()) return hand;
+        }
+
+        playRound();
         if (hand.hasWinner()) return hand;
 
-        hand.addPlayedRound(playRound());
+        playRound();
         if (hand.hasWinner()) return hand;
 
         hand.checkForWinnerAfterSecondRound();
         if (hand.hasWinner()) return hand;
 
-        hand.addPlayedRound(playRound());
+        playRound();
         if (hand.hasWinner()) return hand;
 
         hand.checkForWinnerAfterThirdRound();
         return hand;
     }
 
-    private Round playRound() {
+    private void handleMaoDeOnze() {
+        Player playerInMaoDeOnze = game.getPlayer1().getScore() == 11? game.getPlayer1() : game.getPlayer2();
+        Player otherPlayer = game.getPlayer1().getScore() == 11? game.getPlayer2() : game.getPlayer1();
+
+        if(playerInMaoDeOnze.getMaoDeOnzeResponse())
+            hand.setHandPoints(3);
+        else
+            hand.setResult(new HandResult(otherPlayer, 1));
+    }
+
+    private void playRound() {
         definePlayingOrder();
-        Round round = new Round(firstToPlay, lastToPlay, game);
-        round.play();
-        return round;
+        hand.playNewRound(firstToPlay, lastToPlay);
     }
 
     private void definePlayingOrder() {

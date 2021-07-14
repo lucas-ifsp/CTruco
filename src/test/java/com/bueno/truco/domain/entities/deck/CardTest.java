@@ -1,63 +1,84 @@
 package com.bueno.truco.domain.entities.deck;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class CardTest {
 
+    @Nested
+    @DisplayName("Should allow")
+    class ShouldAllow{
+        @Test
+        @DisplayName("Creating a card with valid rank and suit")
+        void creatingCardWithValidRankAndSuit(){
+            Card card = new Card(7, Suit.SPADES);
+            assertEquals(7, card.getRank());
+            assertEquals(Suit.SPADES, card.getSuit());
+        }
+
+        @ParameterizedTest(name = "[{index}]: {1} as rank name for {0}")
+        @DisplayName("creating cards from valid ranks names")
+        @CsvSource({"7,7", "A,1", "Q,11", "J,12", "K,13", "k,13"})
+        void creatingCardsFromValidRankNames(char rankName, int rankValue){
+            Card card = new Card(rankName, Suit.SPADES);
+            assertEquals(rankValue, card.getRank());
+        }
+    }
+
+    @Nested
+    @DisplayName("Should not allow")
+    class ShouldNotAllow{
+        @ParameterizedTest(name = "[{index}]: {0} as rank")
+        @DisplayName("creating cards with invalid ranks")
+        @ValueSource(ints = {-1, 8, 9, 10, 14})
+        void creatingCardsWithInvalidRank(int rank){
+            assertThrows(IllegalArgumentException.class, () -> new Card(rank, Suit.CLUBS));
+        }
+
+        @Test
+        @DisplayName("creating a card with null suit")
+        void creatingCardWithNullSuit(){
+            assertThrows(IllegalArgumentException.class, () -> new Card(7, null));
+        }
+
+        @Test
+        @DisplayName("creating a card from invalid rank name")
+        void creatingCardFromInvalidRankName(){
+            assertThrows(IllegalArgumentException.class, () -> new Card('P', Suit.CLUBS));
+        }
+    }
+
+    @ParameterizedTest(name = "[{index}]: rank {0} and suit {1} = {2}")
+    @DisplayName("Should correctly toString() open cards")
+    @CsvSource({"7,DIAMONDS,[7\u2666]", "1,HEARTS,[A\u2665]", "11,CLUBS,[Q\u2663]", "12,SPADES,[J\u2660]", "13,SPADES,[K\u2660]"})
+    void shouldCorrectlyToStringOpenCard(int rank, Suit suit, String toString){
+        assertEquals(toString, new Card(rank, suit).toString());
+    }
+
     @Test
-    void shouldCreateValidCard(){
-        Card card = new Card(7, Suit.SPADES);
-        Assertions.assertEquals(7, card.getRank());
-        Assertions.assertEquals(Suit.SPADES, card.getSuit());
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {-1, 8, 9, 10, 14})
-    void shouldNotCreateInvalidCard(int rank){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Card(rank, Suit.CLUBS));
-    }
-
-    @Test
-    void shouldNotAcceptNullSuit(){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Card(7, null));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"7,7", "A,1", "Q,11", "J,12", "K,13", "k,13"})
-    void shouldCreateCardFromValidRankName(char rankName, int rankValue){
-        Card card = new Card(rankName, Suit.SPADES);
-        Assertions.assertEquals(rankValue, card.getRank());
-    }
-
-    @Test
-    void shouldNotCreateCardFromInvalidRankName(){
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new Card('P', Suit.CLUBS));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"7,[7\u2665]", "1,[A\u2665]", "11,[Q\u2665]", "12,[J\u2665]", "13,[K\u2665]"})
-    void shouldCorrectlyToStringOpenCard(int rank, String toString){
-        Assertions.assertEquals(toString, new Card(rank, Suit.HEARTS).toString());
-    }
-
-    @Test
+    @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
-        Assertions.assertEquals("[Xx]", Card.getClosedCard().toString());
+        assertEquals("[Xx]", Card.getClosedCard().toString());
     }
 
     @Test
+    @DisplayName("Should a closed card worth less than worst possible card")
     void shouldClosedCardWorthLessThanWorstCard() {
         Card worstCard = new Card(4, Suit.DIAMONDS);
         Card vira = new Card(4, Suit.CLUBS);
-        Assertions.assertEquals(-1, Card.getClosedCard().compareValueTo(worstCard, vira));
+        assertEquals(-1, Card.getClosedCard().compareValueTo(worstCard, vira));
     }
 
     @Test
-    void shouldSameCardBeEquals(){
-        Assertions.assertEquals(new Card(1, Suit.DIAMONDS), new Card(1, Suit.DIAMONDS));
+    @DisplayName("Should same cards be equals")
+    void shouldSameCardsBeEquals(){
+        assertEquals(new Card(1, Suit.DIAMONDS), new Card(1, Suit.DIAMONDS));
     }
 }

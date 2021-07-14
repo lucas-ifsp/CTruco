@@ -1,7 +1,6 @@
 package com.bueno.truco.domain.entities.player;
 
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.GameIntel;
 
 public class DummyPlayer extends Player{
 
@@ -16,11 +15,16 @@ public class DummyPlayer extends Player{
 
     @Override
     public boolean requestTruco() {
-        return true;
+        return false;
     }
 
     @Override
     public int getTrucoResponse(int newHandPoints) {
         return 0;
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse() {
+        return false;
     }
 }

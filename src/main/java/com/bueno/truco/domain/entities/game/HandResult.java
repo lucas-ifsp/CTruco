@@ -16,6 +16,10 @@ public class HandResult {
         this.points = points;
     }
 
+    public HandResult(TrucoResult result){
+        this(result.getWinner().get(), result.getPoints());
+    }
+
     private boolean isValidHandValue(int points) {
         return points == 0 || points == 1 || points == 3 || points == 6 || points == 9 || points == 12;
     }
@@ -27,5 +31,4 @@ public class HandResult {
     public int getPoints() {
         return points;
     }
-
 }

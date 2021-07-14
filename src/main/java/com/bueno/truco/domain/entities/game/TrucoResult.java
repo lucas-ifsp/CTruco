@@ -1,4 +1,4 @@
-package com.bueno.truco.domain.usecases.truco;
+package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.player.Player;
 
@@ -13,7 +13,6 @@ public class TrucoResult {
     public TrucoResult(int points) {
         this(points, null, null);
     }
-
 
     public TrucoResult(int points, Player winner) {
         this(points, winner, null);
