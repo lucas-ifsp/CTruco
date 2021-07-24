@@ -40,6 +40,7 @@ public class Round {
         firstCard = firstToPlay.playCard();
         hand.setCardToPlayAgainst(firstCard);
         hand.addOpenCard(firstCard);
+        lastToPlay.handleOpponentPlay();
 
         if(isPlayerAbleToRequestPointsRise(lastToPlay)) {
             final boolean hasWinnerByRun = handleTruco(lastToPlay, firstToPlay).isPresent();
@@ -49,6 +50,7 @@ public class Round {
         lastCard = lastToPlay.playCard();
         hand.setCardToPlayAgainst(null);
         hand.addOpenCard(lastCard);
+        firstToPlay.handleOpponentPlay();
 
         validateCards();
         Optional<Card> highestCard = getHighestCard();

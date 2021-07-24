@@ -12,7 +12,7 @@ public class Hand implements Observable {
     private final Game game;
     private final Card vira;
 
-    private final Set<Card> openCards;
+    private final List<Card> openCards;
     private final List<Round> roundsPlayed;
     private final List<Observer> observers;
 
@@ -27,7 +27,7 @@ public class Hand implements Observable {
         this.handPoints = 1;
 
         roundsPlayed = new ArrayList<>();
-        openCards = new LinkedHashSet<>();
+        openCards = new ArrayList<>();
         this.openCards.add(vira);
 
         observers = new ArrayList<>();
@@ -43,6 +43,9 @@ public class Hand implements Observable {
 
         Round round = new Round(firstToPlay, lastToPlay, this);
         round.play();
+
+        firstToPlay.handleRoundConclusion();
+        lastToPlay.handleRoundConclusion();
         roundsPlayed.add(round);
     }
 
@@ -136,7 +139,7 @@ public class Hand implements Observable {
         return vira;
     }
 
-    public Set<Card> getOpenCards() {
+    public List<Card> getOpenCards() {
         return openCards;
     }
 

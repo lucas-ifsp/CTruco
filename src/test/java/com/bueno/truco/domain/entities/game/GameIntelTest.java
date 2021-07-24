@@ -58,7 +58,7 @@ class GameIntelTest {
     @Test
     @DisplayName("Should get the same open cards of the current hand")
     void shouldGetSameOpenCardsOfCurrentHand() {
-        final Set<Card> cards = Set.of(new Card(7, Suit.SPADES), new Card(7, Suit.CLUBS));
+        final List<Card> cards = List.of(new Card(7, Suit.SPADES), new Card(7, Suit.CLUBS));
         when(hand.getOpenCards()).thenReturn(cards);
         assertIterableEquals(cards, sut.getOpenCards());
     }

@@ -27,7 +27,7 @@ public class GameIntel {
         return currentHand.getCardToPlayAgainst();
     }
 
-    public Set<Card> getOpenCards() {
+    public List<Card> getOpenCards() {
         return currentHand.getOpenCards();
     }
 

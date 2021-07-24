@@ -208,7 +208,7 @@ public class PlayerCLI extends Player {
     }
 
     private void printCardsOpenInTable(GameIntel intel) {
-        final Set<Card> openCards = intel.getOpenCards();
+        final List<Card> openCards = intel.getOpenCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
             openCards.forEach(card -> System.out.print(card + " "));
