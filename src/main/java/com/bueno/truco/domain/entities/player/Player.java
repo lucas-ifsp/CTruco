@@ -22,9 +22,13 @@ public abstract class Player implements Observer<GameIntel> {
         this.id = id;
     }
 
+    public abstract Card playCard();
     public abstract boolean requestTruco();
     public abstract int getTrucoResponse(int newHandPoints);
-    public abstract Card playCard();
+    public abstract boolean getMaoDeOnzeResponse();
+    public void handleRoundConclusion(){}
+    public void handleOpponentPlay(){}
+
 
     @Override
     public final void update(GameIntel gameIntel){
@@ -76,6 +80,4 @@ public abstract class Player implements Observer<GameIntel> {
         Player player = (Player) o;
         return id.equals(player.id);
     }
-
-    public abstract boolean getMaoDeOnzeResponse();
 }
