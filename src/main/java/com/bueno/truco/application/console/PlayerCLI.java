@@ -183,9 +183,9 @@ public class PlayerCLI extends Player {
     }
 
     private void printGameMainInfo(GameIntel intel) {
-        System.out.println(" Vez do: " + getId());
+        System.out.println(" Vez do: " + getNickname());
         System.out.println(" Ponto da mão: " + intel.getCurrentHandPoints());
-        System.out.println(" Placar: " + getId() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
+        System.out.println(" Placar: " + getNickname() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
     }
 
     private void printRounds(GameIntel intel) {
@@ -202,7 +202,7 @@ public class PlayerCLI extends Player {
     //TODO remove code smell caused by Optional as a parameter
     private static void printRoundResult(Optional<Player> winner) {
         if (winner.isPresent())
-            System.out.print(winner.get().getId() + " | ");
+            System.out.print(winner.get().getNickname() + " | ");
         else
             System.out.print(" Empate  |");
     }
@@ -237,7 +237,7 @@ public class PlayerCLI extends Player {
         final Optional<HandResult> potentialResult = getGameIntel().getResult();
         if (potentialResult.isPresent()) {
             final String resultString = potentialResult.get().getWinner()
-                    .map(winner -> winner.getId().concat(" VENCEU!").toUpperCase())
+                    .map(winner -> winner.getNickname().concat(" VENCEU!").toUpperCase())
                     .orElse("EMPATE.");
             System.out.println(" RESULTADO: " + resultString);
         }

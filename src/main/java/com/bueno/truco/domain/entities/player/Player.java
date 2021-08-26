@@ -8,6 +8,7 @@ import com.bueno.truco.domain.entities.utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class Player implements Observer<GameIntel> {
 
@@ -17,6 +18,8 @@ public abstract class Player implements Observer<GameIntel> {
     protected String id;
     private int score;
     private GameIntel gameIntel;
+
+    private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
 
     public Player(String id) {
         this.id = id;
@@ -28,7 +31,6 @@ public abstract class Player implements Observer<GameIntel> {
     public abstract boolean getMaoDeOnzeResponse();
     public void handleRoundConclusion(){}
     public void handleOpponentPlay(){}
-
 
     @Override
     public final void update(GameIntel gameIntel){
@@ -57,10 +59,11 @@ public abstract class Player implements Observer<GameIntel> {
     }
 
     public void setCards(List<Card> cards){
+        LOGGER.info(id + " received: " + cards.get(0) + " | " + cards.get(1)  + " | " + cards.get(2));
         this.cards = new ArrayList<>(cards);
     }
 
-    public String getId() {
+    public String getNickname() {
         return id;
     }
 
@@ -70,7 +73,7 @@ public abstract class Player implements Observer<GameIntel> {
 
     @Override
     public String toString() {
-        return getId();
+        return getNickname();
     }
 
     @Override

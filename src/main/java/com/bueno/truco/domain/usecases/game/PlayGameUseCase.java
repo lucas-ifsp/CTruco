@@ -6,13 +6,15 @@ import com.bueno.truco.domain.entities.game.Hand;
 import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 import com.bueno.truco.domain.entities.player.Player;
 
-import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlayGameUseCase {
 
     private Game game;
 
     public PlayGameUseCase(Player player1, Player player2){
+        Logger.getGlobal().setLevel(Level.OFF);
         game = new Game(player1, player2);
     }
 

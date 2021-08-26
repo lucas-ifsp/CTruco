@@ -5,7 +5,6 @@ import com.bueno.truco.domain.entities.player.Player;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class GameIntel {
 
@@ -40,7 +39,7 @@ public class GameIntel {
     }
 
     public String getOpponentId(Player requester) {
-        return getOpponent(requester).getId();
+        return getOpponent(requester).getNickname();
     }
 
     private Player getOpponent(Player requester){

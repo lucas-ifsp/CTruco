@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -84,10 +83,10 @@ class GameIntelTest {
     @Test
     @DisplayName("Should get opponent id")
     void ShouldGetOpponentId() {
-        when(player2.getId()).thenReturn("Test");
+        when(player2.getNickname()).thenReturn("Test");
         when(hand.getPlayer1()).thenReturn(player1);
         when(hand.getPlayer2()).thenReturn(player2);
         final String opponentId = sut.getOpponentId(player1);
-        assertEquals(player2.getId(), opponentId);
+        assertEquals(player2.getNickname(), opponentId);
     }
 }

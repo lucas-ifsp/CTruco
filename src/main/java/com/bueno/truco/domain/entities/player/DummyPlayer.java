@@ -15,7 +15,7 @@ public class DummyPlayer extends Player{
 
     @Override
     public boolean requestTruco() {
-        return true;
+        return false;
     }
 
     @Override

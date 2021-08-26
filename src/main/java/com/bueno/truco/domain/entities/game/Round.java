@@ -4,6 +4,7 @@ import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.player.Player;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class Round {
 
@@ -14,6 +15,8 @@ public class Round {
     private Card lastCard;
     private Card vira;
     private Hand hand;
+
+    private final static Logger LOGGER = Logger.getLogger(Round.class.getName());
 
     public Round(Player firstToPlay, Player lastToPlay, Hand hand) {
         validateConstructorInputs(firstToPlay, lastToPlay, hand);
@@ -56,6 +59,9 @@ public class Round {
         Optional<Card> highestCard = getHighestCard();
 
         highestCard.ifPresent(card -> winner = (card.equals(firstCard) ? firstToPlay : lastToPlay));
+
+        LOGGER.info(firstToPlay.getNickname() + ": " + firstCard + " | " + lastToPlay.getNickname() + ": " + lastCard
+                + " | Result: " + (winner == null? "Draw" : winner.getNickname()));
     }
 
     private void validateCards() {
@@ -70,7 +76,13 @@ public class Round {
     }
 
     private boolean isPlayerAbleToRequestPointsRise(Player requester) {
-        return hand.getPointsRequester() == null || ! hand.getPointsRequester().equals(requester);
+        final Player previousRequester = hand.getPointsRequester();
+        final boolean isAbleToRequest = previousRequester == null || ! previousRequester.equals(requester);
+
+        LOGGER.info(requester.getNickname() + " is " + (isAbleToRequest? "able" : "not able")
+                + " to request to increase hand score. Previous requester: " + previousRequester);
+
+        return isAbleToRequest;
     }
 
     private Optional<HandResult> handleTruco(Player requester, Player responder) {
@@ -79,7 +91,7 @@ public class Round {
         HandResult handResult = null;
 
         if(trucoResult.hasWinner()) {
-            winner = trucoResult.getWinner().get();
+            winner = trucoResult.getWinner().orElseThrow();
             handResult = new HandResult(trucoResult);
             hand.setResult(handResult);
         }
