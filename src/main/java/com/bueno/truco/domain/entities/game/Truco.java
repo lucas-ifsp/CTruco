@@ -2,10 +2,14 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.player.Player;
 
+import java.util.logging.Logger;
+
 public class Truco {
 
     private Player requester;
     private Player responder;
+
+    private final static Logger LOGGER = Logger.getLogger(Truco.class.getName());
 
     public Truco(Player requester, Player responder) {
         this.requester = requester;
@@ -17,21 +21,26 @@ public class Truco {
             throw new IllegalArgumentException("Players must no be null. Hand points must comply with truco rules.");
         }
 
-        if(isForbidenToAskForTruco() || isNotAskingForTruco()) {
+        if(isMaoDeOnze() || isNotAskingForTruco()) {
             return new TrucoResult(handPoints);
         }
 
         int pointsLimit = Player.MAX_SCORE - Math.min(requester.getScore(), responder.getScore());
 
         while(handPoints < pointsLimit){
-            int requestAnswer = responder.getTrucoResponse(getNextValidIncrement(handPoints));
+            final int nextValidScore = getNextValidIncrement(handPoints);
+            LOGGER.info(requester.getNickname()  + " is asking to increase to " + nextValidScore + " points.");
+
+            int requestAnswer = responder.getTrucoResponse(nextValidScore);
 
             if(requestAnswer < 0) {
+                LOGGER.info(responder.getNickname()  + " run.");
                 return new TrucoResult(handPoints, requester);
             }
 
-            handPoints = getNextValidIncrement(handPoints);
+            handPoints = nextValidScore;
             if(requestAnswer == 0){
+                LOGGER.info(responder.getNickname()  + " accepted.");
                 break;
             }
 
@@ -40,12 +49,16 @@ public class Truco {
         return new TrucoResult(handPoints, null, requester);
     }
 
-    private boolean isForbidenToAskForTruco() {
-        return requester.getScore() == 11 || responder.getScore() == 11;
+    private boolean isMaoDeOnze() {
+        final boolean maoDeOnze = requester.getScore() == 11 ^ responder.getScore() == 11;
+        if(maoDeOnze) LOGGER.info("Asking for truco is not allowed due to mão de onze");
+        return maoDeOnze;
     }
 
     private boolean isNotAskingForTruco() {
-        return !requester.requestTruco();
+        final boolean isRequesting = requester.requestTruco();
+        if(!isRequesting) LOGGER.info(requester.getNickname() + " did not ask to increase hand score.");
+        return !isRequesting;
     }
 
     private int getNextValidIncrement(int currentValue){

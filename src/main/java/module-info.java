@@ -3,6 +3,7 @@ module desktop_app {
     requires javafx.fxml;
     requires spring.boot;
     requires spring.boot.autoconfigure;
+    requires java.logging;
 
     opens com.bueno.truco.application.desktop.controller to javafx.fxml;
 

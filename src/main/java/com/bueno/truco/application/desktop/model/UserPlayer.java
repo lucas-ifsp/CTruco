@@ -8,6 +8,7 @@ import javafx.concurrent.Task;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,123 +16,15 @@ public class UserPlayer extends Player {
 
     private final GameTableController controller;
     private Card cardToPlay;
-    private Optional<Boolean> hasTrucoRequestDecision = Optional.empty();
-    private Optional<Integer> hasTrucoResponseDecision = Optional.empty();
-
+    private Optional<Boolean> trucoRequestDecision = Optional.empty();
+    private Optional<Integer> trucoResponseDecision = Optional.empty();
+    private Optional<Boolean> maoDeOnzeResponseDecision = Optional.empty();
 
     private List<Card> receivedCards;
 
     public UserPlayer(GameTableController controller, String name) {
         super(name);
         this.controller = controller;
-    }
-
-    public void setTrucoRequestDecision(boolean isCalling){
-        hasTrucoRequestDecision = Optional.of(isCalling);
-    }
-
-    public void setTrucoResponseDecision(int response){
-        hasTrucoResponseDecision = Optional.of(response);
-    }
-
-
-    @Override
-    public boolean requestTruco() {
-        hasTrucoRequestDecision = Optional.empty();
-        controller.startPlayerTurn();
-
-        Task<Card> task  = new Task<>() {
-            @Override
-            protected Card call() throws Exception {
-                while (hasTrucoRequestDecision.isEmpty()){
-                    Thread.sleep(300);
-                }
-                return null;
-            }
-        };
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(task);
-
-        while (!task.isDone()){
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Boolean result = hasTrucoRequestDecision.get();
-
-        executor.shutdown();
-        return result;
-    }
-
-    @Override
-    public int getTrucoResponse(int newHandPoints) {
-        hasTrucoResponseDecision = Optional.empty();
-        controller.requestTrucoResponse();
-
-        Task<Card> task  = new Task<>() {
-            @Override
-            protected Card call() throws Exception {
-                while (hasTrucoResponseDecision.isEmpty()){
-                    Thread.sleep(300);
-                }
-                return null;
-            }
-
-        };
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(task);
-
-        while (!task.isDone()){
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Integer result = hasTrucoResponseDecision.get();
-
-        executor.shutdown();
-        return result;
-    }
-
-    public void setCardToPlay(Card cardToPlay) {
-        this.cardToPlay = cardToPlay;
-    }
-
-    @Override
-    public Card playCard(){
-        controller.startPlayerTurn();
-
-        Task<Card> task  = new Task<>() {
-            @Override
-            protected Card call() throws Exception {
-                while (cardToPlay == null){
-                    Thread.sleep(1000);
-                }
-                return null;
-            }
-
-        };
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(task);
-
-        while (!task.isDone()){
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Card result = cardToPlay;
-        cardToPlay = null;
-
-        executor.shutdown();
-        return result;
     }
 
     @Override
@@ -145,12 +38,98 @@ public class UserPlayer extends Player {
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse() {
-        return false;
+    public boolean requestTruco() {
+        controller.startPlayerTurn();
+        trucoRequestDecision = Optional.empty();
+
+        Task<Card> task  = createWaitingTask(this::getTrucoRequestDecision, 300);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(task);
+
+        waitUntilComplete(task, 100);
+        Boolean result = trucoRequestDecision.get();
+
+        trucoRequestDecision = Optional.empty();
+        executor.shutdown();
+
+        return result;
     }
 
-    public List<Card> getReceivedCards() {
-        return receivedCards;
+    private Task<Card> createWaitingTask(Callable<Optional> conclusionCheck, final int checkingPeriodInMillis) {
+        return new Task<>() {
+            @Override
+            protected Card call() {
+                try {
+                    while (conclusionCheck.call().isEmpty()){
+                        Thread.sleep(checkingPeriodInMillis);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+    }
+
+    private void waitUntilComplete(Task<Card> task, final int checkingPeriodInMillis) {
+        while (!task.isDone()) {
+            try {
+                Thread.sleep(checkingPeriodInMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public int getTrucoResponse(int newHandPoints) {
+        controller.requestTrucoResponse();
+
+        Task<Card> task  = createWaitingTask(this::getTrucoResponseDecision, 300);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(task);
+
+        waitUntilComplete(task, 100);
+        Integer result = trucoResponseDecision.get();
+
+        trucoResponseDecision = Optional.empty();
+        executor.shutdown();
+
+        return result;
+    }
+
+    @Override
+    public Card playCard(){
+        controller.startPlayerTurn();
+
+        Task<Card> task = createWaitingTask(this::getCardToPlay, 1000);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(task);
+
+        waitUntilComplete(task, 100);
+        Card result = cardToPlay;
+
+        cardToPlay = null;
+        executor.shutdown();
+
+        return result;
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse() {
+        controller.requestMaoDeOnzeResponse();
+
+        Task<Card> task  = createWaitingTask(this::getMaoDeOnzeResponseDecision, 300);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(task);
+
+        waitUntilComplete(task, 100);
+        Boolean result = maoDeOnzeResponseDecision.get();
+
+        maoDeOnzeResponseDecision = Optional.empty();
+        executor.shutdown();
+
+        return result;
     }
 
     @Override
@@ -159,7 +138,44 @@ public class UserPlayer extends Player {
         receivedCards = cards;
     }
 
+    public void setCardToPlay(Card cardToPlay) {
+        this.cardToPlay = cardToPlay;
+    }
+
+    public void setTrucoRequestDecision(boolean isCalling){
+        trucoRequestDecision = Optional.of(isCalling);
+    }
+
+    public void setTrucoResponseDecision(int response){
+        trucoResponseDecision = Optional.of(response);
+    }
+
+    public void setMaoDeOnzeResponseDecision(boolean response){
+        maoDeOnzeResponseDecision = Optional.of(response);
+    }
+
+
+    public List<Card> getReceivedCards() {
+        return receivedCards;
+    }
+
     public GameIntel getIntel(){
         return getGameIntel();
+    }
+
+    private Optional<Card> getCardToPlay() {
+        return Optional.ofNullable(cardToPlay);
+    }
+
+    private Optional<Boolean> getTrucoRequestDecision() {
+        return trucoRequestDecision;
+    }
+
+    private Optional<Integer> getTrucoResponseDecision() {
+        return trucoResponseDecision;
+    }
+
+    private Optional<Boolean> getMaoDeOnzeResponseDecision() {
+        return maoDeOnzeResponseDecision;
     }
 }

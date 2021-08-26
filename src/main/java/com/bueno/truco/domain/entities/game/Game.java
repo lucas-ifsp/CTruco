@@ -4,7 +4,9 @@ import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Deck;
 import com.bueno.truco.domain.entities.player.Player;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Game {
 
@@ -15,6 +17,8 @@ public class Game {
 
     private Player firstToPlay;
     private Card currentVira;
+
+    private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
 
     public Game(Player player1, Player player2) {
         this.player1 = player1;
@@ -29,6 +33,7 @@ public class Game {
         player1.setCards(deck.take(3));
         player2.setCards(deck.take(3));
         currentVira = deck.takeOne();
+        LOGGER.info("Vira: " + currentVira);
     }
 
     public Hand prepareNewHand(){
@@ -39,7 +44,7 @@ public class Game {
     }
 
     public void updateScores() {
-        final HandResult result = getCurrentHand().getResult().get();
+        final HandResult result = getCurrentHand().getResult().orElseThrow();
         Optional<Player> winner = result.getWinner();
 
         if (winner.isEmpty()) return;
