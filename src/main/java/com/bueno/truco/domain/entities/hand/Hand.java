@@ -1,6 +1,10 @@
-package com.bueno.truco.domain.entities.game;
+package com.bueno.truco.domain.entities.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.player.Player;
 import com.bueno.truco.domain.entities.utils.Observable;
 import com.bueno.truco.domain.entities.utils.Observer;
@@ -18,13 +22,13 @@ public class Hand implements Observable {
 
     private Card cardToPlayAgainst;
     private Player pointsRequester;
-    private int handPoints;
+    private HandScore score;
     private HandResult result;
 
     public Hand(Game game, Card vira){
         this.game = game;
         this.vira = vira;
-        this.handPoints = 1;
+        this.score = HandScore.of(1);
 
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
@@ -54,11 +58,11 @@ public class Hand implements Observable {
         Optional<Player> secondRoundWinner = roundsPlayed.get(1).getWinner();
 
         if (firstRoundWinner.isEmpty() && secondRoundWinner.isPresent())
-            result = new HandResult(secondRoundWinner.get(), handPoints);
+            result = new HandResult(secondRoundWinner.get(), score);
         else if (firstRoundWinner.isPresent() && secondRoundWinner.isEmpty())
-            result =  new HandResult(firstRoundWinner.get(), handPoints);
+            result =  new HandResult(firstRoundWinner.get(), score);
         else if (secondRoundWinner.isPresent() && secondRoundWinner.get().equals(firstRoundWinner.get()))
-            result = new HandResult(secondRoundWinner.get(), handPoints);
+            result = new HandResult(secondRoundWinner.get(), score);
     }
 
     public void checkForWinnerAfterThirdRound() {
@@ -66,11 +70,11 @@ public class Hand implements Observable {
         Optional<Player> lastRoundWinner = roundsPlayed.get(2).getWinner();
 
         if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
-            result = new HandResult(firstRoundWinner.get(), handPoints);
+            result = new HandResult(firstRoundWinner.get(), score);
         else
             result = lastRoundWinner.
-                    map(player -> new HandResult(player, handPoints))
-                    .orElseGet(() -> new HandResult(null, 0));
+                    map(player -> new HandResult(player, score))
+                    .orElseGet(() -> new HandResult());
     }
 
     @Override
@@ -118,13 +122,13 @@ public class Hand implements Observable {
         return result != null;
     }
 
-    public void setHandPoints(int handPoints) {
-        this.handPoints = handPoints;
+    public void setScore(HandScore score) {
+        this.score = HandScore.of(score);
         notifyObservers();
     }
 
-    public int getPoints() {
-        return handPoints;
+    public HandScore getScore() {
+        return score;
     }
 
     public Player getPointsRequester() {

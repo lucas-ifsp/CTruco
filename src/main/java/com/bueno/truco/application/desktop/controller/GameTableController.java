@@ -6,7 +6,8 @@ import com.bueno.truco.application.desktop.view.WindowMaoDeOnzeResponse;
 import com.bueno.truco.application.desktop.view.WindowTrucoResponse;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.game.GameIntel;
-import com.bueno.truco.domain.entities.game.Round;
+import com.bueno.truco.domain.entities.hand.HandScore;
+import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.player.Player;
 import com.bueno.truco.domain.usecases.game.PlayGameUseCase;
 import javafx.application.Platform;
@@ -192,7 +193,8 @@ public class GameTableController {
     }
 
     private void updateHandPointsInfo() {
-        Platform.runLater(() -> lbHandPointsValue.setText(String.valueOf(player.getIntel().getCurrentHandPoints())));
+        Platform.runLater(() -> lbHandPointsValue.setText(
+                String.valueOf(player.getIntel().getCurrentHandScore().get())));
     }
 
     private void updateActionButton() {
@@ -202,7 +204,7 @@ public class GameTableController {
                 btnAction.setText("Fechar");
             });
         } else {
-            final String newText = switch (player.getIntel().getCurrentHandPoints()) {
+            final String newText = switch (player.getIntel().getCurrentHandScore().get()) {
                 case 1 -> "Pedir Truco!";
                 case 3 -> "Pedir Seis!";
                 case 6 -> "Pedir Nove!";
@@ -294,8 +296,8 @@ public class GameTableController {
 
     public void requestTrucoResponse() {
         playerTurn = false;
-        final int handPoints = player.getIntel().getCurrentHandPoints();
-        final int pointsRequested = handPoints == 1 ? 3 : handPoints + 3;
+        final HandScore handPoints = player.getIntel().getCurrentHandScore();
+        final int pointsRequested = handPoints.increase().get();
 
         updateView();
         sleepFor(1000);

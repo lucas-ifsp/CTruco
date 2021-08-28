@@ -3,6 +3,7 @@ package com.bueno.truco.application.desktop.model;
 import com.bueno.truco.application.desktop.controller.GameTableController;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 import javafx.concurrent.Task;
 
@@ -82,7 +83,7 @@ public class UserPlayer extends Player {
     }
 
     @Override
-    public int getTrucoResponse(int newHandPoints) {
+    public int getTrucoResponse(HandScore newHandScore) {
         controller.requestTrucoResponse();
 
         Task<Card> task  = createWaitingTask(this::getTrucoResponseDecision, 300);

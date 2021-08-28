@@ -2,7 +2,7 @@ package com.bueno.truco.domain.usecases.game;
 
 import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.GameIntel;
-import com.bueno.truco.domain.entities.game.Hand;
+import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 import com.bueno.truco.domain.entities.player.Player;
 

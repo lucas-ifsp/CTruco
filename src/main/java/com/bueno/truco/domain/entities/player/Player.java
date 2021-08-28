@@ -4,6 +4,7 @@ import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.GameIntel;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.utils.Observer;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public abstract class Player implements Observer<GameIntel> {
 
     public abstract Card playCard();
     public abstract boolean requestTruco();
-    public abstract int getTrucoResponse(int newHandPoints);
+    public abstract int getTrucoResponse(HandScore newHandScore);
     public abstract boolean getMaoDeOnzeResponse();
     public void handleRoundConclusion(){}
     public void handleOpponentPlay(){}
@@ -48,14 +49,8 @@ public abstract class Player implements Observer<GameIntel> {
         return Card.getClosedCard();
     }
 
-    public void incrementScoreBy(int value){
-        if(isValidScoreIncrement(value))
-            throw new GameRuleViolationException("Invalid value increment for player score!");
-        this.score = Math.min(MAX_SCORE, value + score);
-    }
-
-    public static boolean isValidScoreIncrement(int value) {
-        return value != 1 && value != 3 && value != 6 && value != 9 && value != 12;
+    public void addScore(HandScore handScore){
+        this.score = Math.min(MAX_SCORE, this.score + handScore.get());
     }
 
     public void setCards(List<Card> cards){

@@ -1,6 +1,12 @@
-package com.bueno.truco.domain.entities.game;
+package com.bueno.truco.domain.entities.round;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.truco.Truco;
+import com.bueno.truco.domain.entities.truco.TrucoResult;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
 
 import java.util.Optional;
@@ -87,7 +93,7 @@ public class Round {
 
     private Optional<HandResult> handleTruco(Player requester, Player responder) {
         final Truco truco = new Truco(requester, responder);
-        final TrucoResult trucoResult = truco.handle(hand.getPoints());
+        final TrucoResult trucoResult = truco.handle(hand.getScore());
         HandResult handResult = null;
 
         if(trucoResult.hasWinner()) {
@@ -97,7 +103,7 @@ public class Round {
         }
 
         trucoResult.getLastRequester().ifPresent(lastRequester -> hand.setPointsRequester(lastRequester));
-        hand.setHandPoints(trucoResult.getPoints());
+        hand.setScore(trucoResult.getScore());
 
         return Optional.ofNullable(handResult);
     }

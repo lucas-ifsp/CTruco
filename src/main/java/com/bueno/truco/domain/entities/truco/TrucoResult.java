@@ -1,33 +1,33 @@
-package com.bueno.truco.domain.entities.game;
+package com.bueno.truco.domain.entities.truco;
 
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 
 import java.util.Objects;
 import java.util.Optional;
 
 public class TrucoResult {
-    private final int points;
+    private final HandScore score;
     private final Player winner;
     private final Player lastRequester;
 
-    public TrucoResult(int points) {
-        this(points, null, null);
+    public TrucoResult(HandScore score) {
+        this(score, null, null);
     }
 
-    public TrucoResult(int points, Player winner) {
-        this(points, winner, null);
+    public TrucoResult(HandScore score, Player winner) {
+        this(score, winner, null);
     }
 
-    public TrucoResult(int points, Player winner, Player lastRequester) {
-        this.points = points;
+    public TrucoResult(HandScore score, Player winner, Player lastRequester) {
+        this.score = score;
         this.winner = winner;
         this.lastRequester = lastRequester;
     }
 
-    public int getPoints() {
-        return points;
+    public HandScore getScore() {
+        return score;
     }
-
 
     public boolean hasWinner() {
         return winner != null;
@@ -46,11 +46,16 @@ public class TrucoResult {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TrucoResult that = (TrucoResult) o;
-        return points == that.points && Objects.equals(winner, that.winner);
+        return Objects.equals(score, that.score) && Objects.equals(winner, that.winner) && Objects.equals(lastRequester, that.lastRequester);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(score, winner, lastRequester);
     }
 
     @Override
     public String toString() {
-        return "Points=" + points + ", winner=" + (winner != null? winner : "No winner");
+        return "Points=" + score.get() + ", winner=" + (winner != null? winner : "No winner");
     }
 }

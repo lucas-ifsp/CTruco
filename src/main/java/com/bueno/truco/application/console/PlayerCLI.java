@@ -3,17 +3,21 @@ package com.bueno.truco.application.console;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.game.GameIntel;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
-import com.bueno.truco.domain.entities.game.HandResult;
-import com.bueno.truco.domain.entities.game.Round;
+import com.bueno.truco.domain.entities.hand.HandResult;
+import com.bueno.truco.domain.entities.hand.HandScore;
+import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.player.DummyPlayer;
 import com.bueno.truco.domain.entities.player.Player;
 import com.bueno.truco.domain.usecases.game.PlayGameUseCase;
 
 import java.util.*;
+import java.util.logging.LogManager;
 
 public class PlayerCLI extends Player {
 
     public static void main(String[] args) {
+        LogManager.getLogManager().reset();
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("====== LET'S TRUCO ======");
@@ -25,8 +29,6 @@ public class PlayerCLI extends Player {
         playerCLI.startGame();
 
         scanner.close();
-
-
     }
 
     public PlayerCLI(String name) {
@@ -88,11 +90,10 @@ public class PlayerCLI extends Player {
 
     @Override
     public boolean requestTruco() {
-        if (getGameIntel().getCurrentHandPoints() == 12)
+        if (getGameIntel().getCurrentHandScore().get() == 12)
             return false;
 
         cls();
-
         while (true) {
             printGameIntel(getGameIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
@@ -108,7 +109,7 @@ public class PlayerCLI extends Player {
     }
 
     @Override
-    public int getTrucoResponse(int newHandPoints) {
+    public int getTrucoResponse(HandScore newHandScore) {
         cls();
         while (true) {
             Scanner scanner = new Scanner(System.in);
@@ -136,7 +137,7 @@ public class PlayerCLI extends Player {
     }
 
     private String getNextHandValueAsString() {
-        return switch (getGameIntel().getCurrentHandPoints()) {
+        return switch (getGameIntel().getCurrentHandScore().get()) {
             case 1 -> "truco";
             case 3 -> "seis";
             case 6 -> "nove";
@@ -148,7 +149,6 @@ public class PlayerCLI extends Player {
     @Override
     public boolean getMaoDeOnzeResponse() {
         cls();
-
         while (true) {
             printGameIntel(getGameIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
@@ -164,7 +164,6 @@ public class PlayerCLI extends Player {
     }
 
     private void printGameIntel(GameIntel intel, int delayInMilliseconds) {
-
         System.out.println("+=======================================+");
         printGameMainInfo(intel);
         printRounds(intel);
@@ -184,7 +183,7 @@ public class PlayerCLI extends Player {
 
     private void printGameMainInfo(GameIntel intel) {
         System.out.println(" Vez do: " + getNickname());
-        System.out.println(" Ponto da mão: " + intel.getCurrentHandPoints());
+        System.out.println(" Ponto da mão: " + intel.getCurrentHandScore().get());
         System.out.println(" Placar: " + getNickname() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
     }
 

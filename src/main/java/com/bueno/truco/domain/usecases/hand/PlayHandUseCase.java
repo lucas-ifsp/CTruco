@@ -1,8 +1,9 @@
 package com.bueno.truco.domain.usecases.hand;
 
 import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.Hand;
-import com.bueno.truco.domain.entities.game.HandResult;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 
 public class PlayHandUseCase {
@@ -46,9 +47,9 @@ public class PlayHandUseCase {
         Player otherPlayer = game.getPlayer1().getScore() == 11? game.getPlayer2() : game.getPlayer1();
 
         if(playerInMaoDeOnze.getMaoDeOnzeResponse())
-            hand.setHandPoints(3);
+            hand.setScore(HandScore.of(3));
         else
-            hand.setResult(new HandResult(otherPlayer, 1));
+            hand.setResult(new HandResult(otherPlayer, HandScore.of(1)));
     }
 
     private void playRound() {

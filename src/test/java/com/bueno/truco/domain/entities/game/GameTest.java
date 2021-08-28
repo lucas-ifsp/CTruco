@@ -1,10 +1,15 @@
 package com.bueno.truco.domain.entities.game;
 
+import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -19,6 +24,11 @@ class GameTest {
     private Player player1;
     @Mock
     private Player player2;
+
+    @BeforeAll
+    static void init(){
+        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
+    }
 
     @BeforeEach
     void setUp() {
@@ -99,6 +109,4 @@ class GameTest {
         when(player2.getScore()).thenReturn(8);
         assertFalse(sut.isMaoDeOnze());
     }
-
-
 }

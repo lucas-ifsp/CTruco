@@ -1,7 +1,11 @@
 package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +22,8 @@ public class GameIntel {
         return currentHand.getVira();
     }
 
-    public int getCurrentHandPoints() {
-        return currentHand.getPoints();
+    public HandScore getCurrentHandScore() {
+        return currentHand.getScore();
     }
 
     public Optional<Card> getCardToPlayAgainst() {
