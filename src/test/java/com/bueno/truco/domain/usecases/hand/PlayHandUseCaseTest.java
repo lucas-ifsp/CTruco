@@ -3,8 +3,9 @@ package com.bueno.truco.domain.usecases.hand;
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
 import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.Hand;
-import com.bueno.truco.domain.entities.game.HandResult;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,7 +76,7 @@ class PlayHandUseCaseTest {
         sut.play();
         assertAll(
                 () -> assertEquals(p2, getWinner(hand)),
-                () -> assertEquals(1, hand.getPoints())
+                () -> assertEquals(HandScore.of(1), hand.getScore())
         );
     }
 
@@ -90,7 +91,7 @@ class PlayHandUseCaseTest {
         when(p1.getScore()).thenReturn(11);
         when(p1.getMaoDeOnzeResponse()).thenReturn(true);
         sut.play();
-        assertEquals(3, hand.getPoints());
+        assertEquals(HandScore.of(3), hand.getScore());
     }
 
 

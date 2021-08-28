@@ -2,9 +2,10 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Deck;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -48,8 +49,8 @@ public class Game {
         Optional<Player> winner = result.getWinner();
 
         if (winner.isEmpty()) return;
-        if (winner.get().equals(player1)) player1.incrementScoreBy(result.getPoints());
-        else player2.incrementScoreBy(result.getPoints());
+        if (winner.get().equals(player1)) player1.addScore(result.getScore());
+        else player2.addScore(result.getScore());
     }
 
     public Optional<Player> getWinner() {

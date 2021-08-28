@@ -2,7 +2,10 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,8 +45,8 @@ class GameIntelTest {
     @Test
     @DisplayName("Should get the same points of the current hand")
     void ShouldGetSamePointsOfCurrentHand() {
-        when(hand.getPoints()).thenReturn(3);
-        assertEquals(3, sut.getCurrentHandPoints());
+        when(hand.getScore()).thenReturn(HandScore.of(3));
+        assertEquals(HandScore.of(3), sut.getCurrentHandScore());
     }
 
     @Test

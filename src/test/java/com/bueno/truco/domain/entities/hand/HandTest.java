@@ -1,7 +1,11 @@
-package com.bueno.truco.domain.entities.game;
+package com.bueno.truco.domain.entities.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
+import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.hand.Hand;
+import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -161,7 +165,7 @@ class HandTest {
     @Test
     @DisplayName("Should have winner if hand result has winner")
     void shouldHaveWinnerIfHandResultHasWinner(){
-        sut.setResult(new HandResult(p1, 3));
+        sut.setResult(new HandResult(p1, HandScore.of(3)));
         Assertions.assertTrue(sut.hasWinner());
         assertEquals(p1, getWinner(sut));
     }

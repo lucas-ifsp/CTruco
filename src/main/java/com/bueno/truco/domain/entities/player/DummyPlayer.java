@@ -1,6 +1,7 @@
 package com.bueno.truco.domain.entities.player;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.hand.HandScore;
 
 public class DummyPlayer extends Player{
 
@@ -19,7 +20,7 @@ public class DummyPlayer extends Player{
     }
 
     @Override
-    public int getTrucoResponse(int newHandPoints) {
+    public int getTrucoResponse(HandScore newHandScore) {
         return 0;
     }
 
