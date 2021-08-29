@@ -1,9 +1,7 @@
-package com.bueno.truco.domain.entities.game;
+package com.bueno.truco.domain.entities.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
-import com.bueno.truco.domain.entities.hand.Hand;
-import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 import com.bueno.truco.domain.entities.round.Round;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +21,12 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class GameIntelTest {
+class IntelTest {
 
     @Mock
     private Hand hand;
     @InjectMocks
-    private GameIntel sut;
+    private Intel sut;
     @Mock
     Player player1;
     @Mock
@@ -39,14 +37,14 @@ class GameIntelTest {
     void ShouldGetSameViraOfCurrentHand() {
         Card card = new Card(7, Suit.CLUBS);
         when(hand.getVira()).thenReturn(card);
-        assertEquals(card, sut.getCurrentVira());
+        assertEquals(card, sut.getVira());
     }
 
     @Test
     @DisplayName("Should get the same points of the current hand")
     void ShouldGetSamePointsOfCurrentHand() {
         when(hand.getScore()).thenReturn(HandScore.of(3));
-        assertEquals(HandScore.of(3), sut.getCurrentHandScore());
+        assertEquals(HandScore.of(3), sut.getHandScore());
     }
 
     @Test
@@ -77,8 +75,8 @@ class GameIntelTest {
     @DisplayName("Should get opponent score")
     void ShouldGetOpponentScore() {
         when(player2.getScore()).thenReturn(6);
-        when(hand.getPlayer1()).thenReturn(player1);
-        when(hand.getPlayer2()).thenReturn(player2);
+        when(hand.getFirstToPlay()).thenReturn(player1);
+        when(hand.getLastToPlay()).thenReturn(player2);
         final int opponentScore = sut.getOpponentScore(player1);
         assertEquals(player2.getScore(), opponentScore);
     }
@@ -86,10 +84,10 @@ class GameIntelTest {
     @Test
     @DisplayName("Should get opponent id")
     void ShouldGetOpponentId() {
-        when(player2.getNickname()).thenReturn("Test");
-        when(hand.getPlayer1()).thenReturn(player1);
-        when(hand.getPlayer2()).thenReturn(player2);
+        when(player2.getUsername()).thenReturn("Test");
+        when(hand.getFirstToPlay()).thenReturn(player1);
+        when(hand.getLastToPlay()).thenReturn(player2);
         final String opponentId = sut.getOpponentId(player1);
-        assertEquals(player2.getNickname(), opponentId);
+        assertEquals(player2.getUsername(), opponentId);
     }
 }

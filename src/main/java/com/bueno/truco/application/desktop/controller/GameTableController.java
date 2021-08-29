@@ -5,7 +5,7 @@ import com.bueno.truco.application.desktop.model.UserPlayer;
 import com.bueno.truco.application.desktop.view.WindowMaoDeOnzeResponse;
 import com.bueno.truco.application.desktop.view.WindowTrucoResponse;
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.player.Player;
@@ -68,8 +68,8 @@ public class GameTableController {
         player = new UserPlayer(this, playerName);
         this.bot = bot;
         Platform.runLater(() -> {
-            lbPlayerNameValue.setText(player.getNickname());
-            lbOpponentNameValue.setText(bot.getNickname());
+            lbPlayerNameValue.setText(player.getUsername());
+            lbOpponentNameValue.setText(bot.getUsername());
         });
     }
 
@@ -78,9 +78,9 @@ public class GameTableController {
         gameOver = false;
         while (true) {
             prepareNewHand();
-            GameIntel gameIntel = gameUseCase.playNewHand();
+            Intel intel = gameUseCase.playNewHand();
             updatePlayerScores();
-            if (gameIntel == null)
+            if (intel == null)
                 break;
         }
         gameOver = true;
@@ -194,7 +194,7 @@ public class GameTableController {
 
     private void updateHandPointsInfo() {
         Platform.runLater(() -> lbHandPointsValue.setText(
-                String.valueOf(player.getIntel().getCurrentHandScore().get())));
+                String.valueOf(player.getIntel().getHandScore().get())));
     }
 
     private void updateActionButton() {
@@ -204,7 +204,7 @@ public class GameTableController {
                 btnAction.setText("Fechar");
             });
         } else {
-            final String newText = switch (player.getIntel().getCurrentHandScore().get()) {
+            final String newText = switch (player.getIntel().getHandScore().get()) {
                 case 1 -> "Pedir Truco!";
                 case 3 -> "Pedir Seis!";
                 case 6 -> "Pedir Nove!";
@@ -219,7 +219,9 @@ public class GameTableController {
     }
 
     private boolean canIncreaseScore() {
-        return playerTurn && !lastToIncreaseScore;
+        final Intel intel = player.getIntel();
+        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.getOpponentScore(player) == 11;
+        return playerTurn && !lastToIncreaseScore && !forbiddenToRequestIncrement;
     }
 
     private void updateRoundResults() {
@@ -231,7 +233,7 @@ public class GameTableController {
     }
 
     private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel) {
-        GameIntel intel = player.getIntel();
+        Intel intel = player.getIntel();
         final int roundsPlayed = intel.getRoundsPlayed().size();
         final int roundIndex = roundNumber - 1;
 
@@ -239,7 +241,7 @@ public class GameTableController {
             return;
 
         final Round round = intel.getRoundsPlayed().get(roundNumber - 1);
-        final String resultText = round.getWinner().map(Player::getNickname).orElse("Empate");
+        final String resultText = round.getWinner().map(Player::getUsername).orElse("Empate");
 
         Platform.runLater(() -> {
             roundResultLabel.setText(resultText);
@@ -249,7 +251,7 @@ public class GameTableController {
     }
 
     private void dealCards() {
-        final CardImage card = CardImage.of(player.getIntel().getCurrentVira());
+        final CardImage card = CardImage.of(player.getIntel().getVira());
         Platform.runLater(() -> {
             cardVira.setImage(card.getImage());
             cardOwnedLeft.setImage(CardImage.of(player.getReceivedCards().get(0)).getImage());
@@ -296,14 +298,14 @@ public class GameTableController {
 
     public void requestTrucoResponse() {
         playerTurn = false;
-        final HandScore handPoints = player.getIntel().getCurrentHandScore();
+        final HandScore handPoints = player.getIntel().getHandScore();
         final int pointsRequested = handPoints.increase().get();
 
         updateView();
         sleepFor(1000);
 
         final WindowTrucoResponse dialog = new WindowTrucoResponse();
-        final Integer decision = dialog.showAndWait(bot.getNickname(), pointsRequested);
+        final Integer decision = dialog.showAndWait(bot.getUsername(), pointsRequested);
 
         lastToIncreaseScore = decision == 1;
         player.setTrucoResponseDecision(decision);

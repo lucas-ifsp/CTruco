@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -26,14 +28,16 @@ class HandTest {
     private Player p1;
     @Mock
     private Player p2;
-    @Mock
-    private Game game;
+
+    @BeforeAll
+    static void init(){
+        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
+    }
 
     @BeforeEach
     void setUp() {
-        when(game.getPlayer1()).thenReturn(p1);
-        when(game.getPlayer2()).thenReturn(p2);
-        sut  = new Hand(game, new Card(7, Suit.CLUBS));
+        sut  = new Hand(p1,p2);//new Card(7, Suit.CLUBS)
+        //when(sut.getVira()).thenReturn(new Card(7, Suit.CLUBS));
     }
 
     @AfterEach
@@ -47,20 +51,20 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterSecondRound();
 
         assertEquals(p1, getWinner(sut));
     }
 
     @Test
-    @DisplayName("Shoudl get correct last round winner")
+    @DisplayName("Should get correct last round winner")
     void shouldGetCorrectLastRoundWinner(){
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
-        sut.playNewRound(p1, p2);
-        assertEquals(p1, sut.getLastRoundWinner().get());
+        sut.playNewRound();
+        assertEquals(p1, sut.getLastRoundWinner().orElse(null));
     }
 
     @Test
@@ -69,8 +73,8 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(4,Suit.SPADES));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterSecondRound();
 
         assertEquals(p1, getWinner(sut));
@@ -82,8 +86,8 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(3,Suit.CLUBS));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterSecondRound();
 
         assertEquals(p1, getWinner(sut));
@@ -95,9 +99,9 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(1, Suit.CLUBS));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterThirdRound();
 
         assertNull(getWinner(sut));
@@ -109,9 +113,9 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card('K', Suit.CLUBS));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p2, p1);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterThirdRound();
 
         assertEquals(p1, getWinner(sut));
@@ -123,9 +127,9 @@ class HandTest {
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(1, Suit.CLUBS));
 
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p2, p1);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
+        sut.playNewRound();
         sut.checkForWinnerAfterThirdRound();
 
         assertEquals(p1, getWinner(sut));
@@ -136,10 +140,10 @@ class HandTest {
     void shouldThrowPlayingAForthRound(){
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
-        Assertions.assertThrows(GameRuleViolationException.class, () -> sut.playNewRound(p1, p2));
+        sut.playNewRound();
+        sut.playNewRound();
+        sut.playNewRound();
+        Assertions.assertThrows(GameRuleViolationException.class, () -> sut.playNewRound());
     }
 
     @Test
@@ -147,8 +151,8 @@ class HandTest {
     void shouldStorePlayedHands(){
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
         assertEquals(2, sut.getRoundsPlayed().size());
     }
 
@@ -157,8 +161,8 @@ class HandTest {
     void shouldStoreOpenCards(){
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
-        sut.playNewRound(p1, p2);
-        sut.playNewRound(p1, p2);
+        sut.playNewRound();
+        sut.playNewRound();
         assertEquals(5, sut.getOpenCards().size());
     }
 
@@ -172,7 +176,6 @@ class HandTest {
 
     private Player getWinner(Hand hand) {
         Optional<HandResult> handResult = hand.getResult();
-        return handResult.map(hr -> hr.getWinner().orElse(null))
-                .orElse(null);
+        return handResult.flatMap(HandResult::getWinner).orElse(null);
     }
 }

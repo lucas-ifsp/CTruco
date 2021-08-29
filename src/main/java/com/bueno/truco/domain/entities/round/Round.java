@@ -1,7 +1,6 @@
 package com.bueno.truco.domain.entities.round;
 
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 import com.bueno.truco.domain.entities.truco.Truco;
 import com.bueno.truco.domain.entities.truco.TrucoResult;
@@ -41,7 +40,7 @@ public class Round {
     public void play(){
         winner = null;
 
-        if(isPlayerAbleToRequestPointsRise(firstToPlay)) {
+        if(isAbleToRequestScoreIncrement(firstToPlay)) {
             final boolean hasWinnerByRun = handleTruco(firstToPlay, lastToPlay).isPresent();
             if (hasWinnerByRun) return;
         }
@@ -51,7 +50,7 @@ public class Round {
         hand.addOpenCard(firstCard);
         lastToPlay.handleOpponentPlay();
 
-        if(isPlayerAbleToRequestPointsRise(lastToPlay)) {
+        if(isAbleToRequestScoreIncrement(lastToPlay)) {
             final boolean hasWinnerByRun = handleTruco(lastToPlay, firstToPlay).isPresent();
             if (hasWinnerByRun) return;
         }
@@ -66,26 +65,15 @@ public class Round {
 
         highestCard.ifPresent(card -> winner = (card.equals(firstCard) ? firstToPlay : lastToPlay));
 
-        LOGGER.info(firstToPlay.getNickname() + ": " + firstCard + " | " + lastToPlay.getNickname() + ": " + lastCard
-                + " | Result: " + (winner == null? "Draw" : winner.getNickname()));
+        LOGGER.info(firstToPlay.getUsername() + ": " + firstCard + " | " + lastToPlay.getUsername() +
+                ": " + lastCard + " | Result: " + (winner == null? "Draw" : winner.getUsername()));
     }
 
-    private void validateCards() {
-        if(firstCard == null || lastCard == null || vira == null)
-            throw new GameRuleViolationException("Cards must not be null!");
-        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(lastCard))
-            throw new GameRuleViolationException("Cards in the deck must be unique!");
-        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(vira))
-            throw new GameRuleViolationException("Cards in the deck must be unique!");
-        if(!lastCard.equals(Card.getClosedCard()) && lastCard.equals(vira))
-            throw new GameRuleViolationException("Cards in the deck must be unique!");
-    }
-
-    private boolean isPlayerAbleToRequestPointsRise(Player requester) {
-        final Player previousRequester = hand.getPointsRequester();
+    private boolean isAbleToRequestScoreIncrement(Player requester) {
+        final Player previousRequester = hand.getLastScoreIncrementRequester();
         final boolean isAbleToRequest = previousRequester == null || ! previousRequester.equals(requester);
 
-        LOGGER.info(requester.getNickname() + " is " + (isAbleToRequest? "able" : "not able")
+        LOGGER.info(requester.getUsername() + " is " + (isAbleToRequest? "able" : "not able")
                 + " to request to increase hand score. Previous requester: " + previousRequester);
 
         return isAbleToRequest;
@@ -102,10 +90,21 @@ public class Round {
             hand.setResult(handResult);
         }
 
-        trucoResult.getLastRequester().ifPresent(lastRequester -> hand.setPointsRequester(lastRequester));
+        trucoResult.getLastRequester().ifPresent(lastRequester -> hand.setLastScoreIncrementRequester(lastRequester));
         hand.setScore(trucoResult.getScore());
 
         return Optional.ofNullable(handResult);
+    }
+
+    private void validateCards() {
+        if(firstCard == null || lastCard == null || vira == null)
+            throw new GameRuleViolationException("Cards must not be null!");
+        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(lastCard))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
+        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(vira))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
+        if(!lastCard.equals(Card.getClosedCard()) && lastCard.equals(vira))
+            throw new GameRuleViolationException("Cards in the deck must be unique!");
     }
 
     public Optional<Card> getHighestCard() {

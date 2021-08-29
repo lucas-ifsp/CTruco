@@ -1,39 +1,27 @@
 package com.bueno.truco.domain.usecases.game;
 
 import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 import com.bueno.truco.domain.entities.player.Player;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PlayGameUseCase {
 
     private Game game;
 
     public PlayGameUseCase(Player player1, Player player2){
-        Logger.getGlobal().setLevel(Level.OFF);
         game = new Game(player1, player2);
     }
 
-    public Player play() {
-        while (true){
-            if(playNewHand() == null)
-                return game.getWinner().get();
-        }
-    }
-
-    public GameIntel playNewHand(){
-        GameIntel gameIntel = null;
+    public Intel playNewHand(){
+        Intel intel = null;
 
         if(game.getWinner().isEmpty()) {
-            game.dealCards();
             final Hand playedHand = new PlayHandUseCase(game).play();
-            gameIntel = playedHand.getGameIntel();
+            intel = playedHand.getIntel();
             game.updateScores();
         }
-        return gameIntel;
+        return intel;
     }
 }

@@ -3,16 +3,12 @@ package com.bueno.truco.domain.usecases.game;
 
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
-import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -42,21 +38,13 @@ class PlayGameUseCaseTest {
 
     @Test
     @DisplayName("Should have no winner after single simple hand")
-    @Disabled
     void shouldHaveNoWinnerAfterSingleSimpleHand(){
-        final GameIntel intel = sut.playNewHand();
+        when(p1.requestTruco()).thenReturn(false);
+        when(p2.requestTruco()).thenReturn(false);
+        final Intel intel = sut.playNewHand();
         Assertions.assertAll(
                 ()-> assertNotEquals(12, intel.getOpponentScore(p2)),
                 ()-> assertNotEquals(12, intel.getOpponentScore(p1))
         );
     }
-
-    @Test
-    @DisplayName("Should have winner when game ends")
-    @Disabled
-    void shouldHaveWinnerWhenGameEnds() {
-        final Player winner = sut.play();
-        assertEquals(p1, winner);
-    }
-
 }

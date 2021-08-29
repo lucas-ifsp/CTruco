@@ -1,29 +1,26 @@
 package com.bueno.truco.domain.entities.player;
 
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.GameIntel;
-import com.bueno.truco.domain.entities.game.GameRuleViolationException;
+import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.hand.HandScore;
-import com.bueno.truco.domain.entities.utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class Player implements Observer<GameIntel> {
+public abstract class Player {
 
     public static final int MAX_SCORE = 12;
 
     protected List<Card> cards;
-    protected String id;
+    protected String username;
     private int score;
-    private GameIntel gameIntel;
+    private Intel intel;
 
-    private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Player.class.getName());
 
-    public Player(String id) {
-        this.id = id;
+    public Player(String username) {
+        this.username = username;
     }
 
     public abstract Card playCard();
@@ -33,13 +30,12 @@ public abstract class Player implements Observer<GameIntel> {
     public void handleRoundConclusion(){}
     public void handleOpponentPlay(){}
 
-    @Override
-    public final void update(GameIntel gameIntel){
-        this.gameIntel = gameIntel;
+    public final void setIntel(Intel intel){
+        this.intel = intel;
     }
 
-    protected final GameIntel getGameIntel() {
-        return gameIntel;
+    public final Intel getIntel() {
+        return intel;
     }
 
     protected final Card discard(Card card){
@@ -54,12 +50,12 @@ public abstract class Player implements Observer<GameIntel> {
     }
 
     public void setCards(List<Card> cards){
-        LOGGER.info(id + " received: " + cards.get(0) + " | " + cards.get(1)  + " | " + cards.get(2));
+        LOGGER.info(username + " received: " + cards.get(0) + " | " + cards.get(1)  + " | " + cards.get(2));
         this.cards = new ArrayList<>(cards);
     }
 
-    public String getNickname() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     public int getScore() {
@@ -68,7 +64,7 @@ public abstract class Player implements Observer<GameIntel> {
 
     @Override
     public String toString() {
-        return getNickname();
+        return getUsername();
     }
 
     @Override
@@ -76,6 +72,6 @@ public abstract class Player implements Observer<GameIntel> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id.equals(player.id);
+        return username.equals(player.username);
     }
 }

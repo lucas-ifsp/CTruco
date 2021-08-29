@@ -11,9 +11,6 @@ public class PlayHandUseCase {
     private Game game;
     private Hand hand;
 
-    private Player firstToPlay;
-    private Player lastToPlay;
-
     public PlayHandUseCase(Game game) {
         this.game = game;
     }
@@ -53,17 +50,6 @@ public class PlayHandUseCase {
     }
 
     private void playRound() {
-        definePlayingOrder();
-        hand.playNewRound(firstToPlay, lastToPlay);
-    }
-
-    private void definePlayingOrder() {
-        if (hand.getLastRoundWinner().isPresent() && game.getLastToPlay().equals(hand.getLastRoundWinner().get())) {
-            firstToPlay = game.getLastToPlay();
-            lastToPlay = game.getFirstToPlay();
-        } else {
-            firstToPlay = game.getFirstToPlay();
-            lastToPlay = game.getLastToPlay();
-        }
+        hand.playNewRound();
     }
 }
