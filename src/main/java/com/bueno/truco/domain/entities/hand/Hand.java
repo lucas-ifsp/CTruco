@@ -1,56 +1,77 @@
 package com.bueno.truco.domain.entities.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.deck.Deck;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.player.Player;
-import com.bueno.truco.domain.entities.utils.Observable;
-import com.bueno.truco.domain.entities.utils.Observer;
 
 import java.util.*;
+import java.util.logging.Logger;
 
-public class Hand implements Observable {
+public class Hand {
 
-    private final Game game;
-    private final Card vira;
+    private Card vira;
 
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
-    private final List<Observer> observers;
+
+    private Player firstToPlay;
+    private Player lastToPlay;
+    private Player lastScoreIncrementRequester;
 
     private Card cardToPlayAgainst;
-    private Player pointsRequester;
     private HandScore score;
     private HandResult result;
 
-    public Hand(Game game, Card vira){
-        this.game = game;
-        this.vira = vira;
-        this.score = HandScore.of(1);
+    private final static Logger LOGGER = Logger.getLogger(Hand.class.getName());
 
+    public Hand(Player firstToPlay, Player lastToPlay){
+        this.firstToPlay = firstToPlay;
+        this.lastToPlay = lastToPlay;
+        dealCards();
+
+        score = HandScore.of(1);
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
-        this.openCards.add(vira);
-
-        observers = new ArrayList<>();
-        registerObserver(getPlayer1());
-        registerObserver(getPlayer2());
-
-        notifyObservers();
+        addOpenCard(vira);
     }
 
-    public void playNewRound(Player firstToPlay, Player lastToPlay){
+    public void dealCards() {
+        Deck deck = new Deck();
+        deck.shuffle();
+
+        firstToPlay.setCards(deck.take(3));
+        lastToPlay.setCards(deck.take(3));
+        vira = deck.takeOne();
+
+        LOGGER.info("Vira: " + vira);
+    }
+
+    public void playNewRound(){
         if(roundsPlayed.size() == 3)
             throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
 
+        defineRoundPlayingOrder();
         Round round = new Round(firstToPlay, lastToPlay, this);
         round.play();
 
         firstToPlay.handleRoundConclusion();
         lastToPlay.handleRoundConclusion();
         roundsPlayed.add(round);
+    }
+
+    private void defineRoundPlayingOrder() {
+        getLastRoundWinner().ifPresent(winner -> {
+            if(winner.equals(lastToPlay))
+                changePlayingOrder();
+        });
+    }
+
+    private void changePlayingOrder() {
+        Player referenceHolder = firstToPlay;
+        firstToPlay = lastToPlay;
+        lastToPlay = referenceHolder;
     }
 
     public void checkForWinnerAfterSecondRound() {
@@ -74,22 +95,17 @@ public class Hand implements Observable {
         else
             result = lastRoundWinner.
                     map(player -> new HandResult(player, score))
-                    .orElseGet(() -> new HandResult());
+                    .orElseGet(HandResult::new);
     }
 
-    @Override
-    public void notifyObservers() {
-        observers.forEach(observer -> observer.update(new GameIntel(this)));
-    }
-
-    @Override
-    public void registerObserver(Observer observer) {
-        observers.add(observer);
+    private void updatePlayersIntel() {
+        firstToPlay.setIntel(new Intel(this));
+        lastToPlay.setIntel(new Intel(this));
     }
 
     public void setCardToPlayAgainst(Card cardToPlayAgainst) {
         this.cardToPlayAgainst = cardToPlayAgainst;
-        notifyObservers();
+        updatePlayersIntel();
     }
 
     public Optional<Card> getCardToPlayAgainst() {
@@ -98,7 +114,7 @@ public class Hand implements Observable {
 
     public void addOpenCard(Card card){
         openCards.add(card);
-        notifyObservers();
+        updatePlayersIntel();
     }
 
     public Optional<Player> getLastRoundWinner(){
@@ -124,19 +140,27 @@ public class Hand implements Observable {
 
     public void setScore(HandScore score) {
         this.score = HandScore.of(score);
-        notifyObservers();
+        updatePlayersIntel();
+    }
+
+    public Player getFirstToPlay() {
+        return firstToPlay;
+    }
+
+    public Player getLastToPlay() {
+        return lastToPlay;
     }
 
     public HandScore getScore() {
         return score;
     }
 
-    public Player getPointsRequester() {
-        return pointsRequester;
+    public Player getLastScoreIncrementRequester() {
+        return lastScoreIncrementRequester;
     }
 
-    public void setPointsRequester(Player pointsRequester) {
-        this.pointsRequester = pointsRequester;
+    public void setLastScoreIncrementRequester(Player lastScoreIncrementRequester) {
+        this.lastScoreIncrementRequester = lastScoreIncrementRequester;
     }
 
     public Card getVira() {
@@ -147,15 +171,7 @@ public class Hand implements Observable {
         return openCards;
     }
 
-    public Player getPlayer1(){
-        return game.getPlayer1();
-    }
-
-    public Player getPlayer2(){
-        return game.getPlayer2();
-    }
-
-    public GameIntel getGameIntel(){
-        return new GameIntel(this);
+    public Intel getIntel(){
+        return new Intel(this);
     }
 }

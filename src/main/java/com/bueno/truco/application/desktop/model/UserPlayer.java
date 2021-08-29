@@ -2,7 +2,6 @@ package com.bueno.truco.application.desktop.model;
 
 import com.bueno.truco.application.desktop.controller.GameTableController;
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.GameIntel;
 import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
 import javafx.concurrent.Task;
@@ -17,6 +16,7 @@ public class UserPlayer extends Player {
 
     private final GameTableController controller;
     private Card cardToPlay;
+    //TODO remove code smell caused by Optional as field
     private Optional<Boolean> trucoRequestDecision = Optional.empty();
     private Optional<Integer> trucoResponseDecision = Optional.empty();
     private Optional<Boolean> maoDeOnzeResponseDecision = Optional.empty();
@@ -56,6 +56,7 @@ public class UserPlayer extends Player {
         return result;
     }
 
+    //TODO remove code smell caused by raw Optional
     private Task<Card> createWaitingTask(Callable<Optional> conclusionCheck, final int checkingPeriodInMillis) {
         return new Task<>() {
             @Override
@@ -91,7 +92,7 @@ public class UserPlayer extends Player {
         executor.submit(task);
 
         waitUntilComplete(task, 100);
-        Integer result = trucoResponseDecision.get();
+        Integer result = trucoResponseDecision.orElse(null);
 
         trucoResponseDecision = Optional.empty();
         executor.shutdown();
@@ -125,7 +126,7 @@ public class UserPlayer extends Player {
         executor.submit(task);
 
         waitUntilComplete(task, 100);
-        Boolean result = maoDeOnzeResponseDecision.get();
+        Boolean result = maoDeOnzeResponseDecision.orElse(null);
 
         maoDeOnzeResponseDecision = Optional.empty();
         executor.shutdown();
@@ -155,13 +156,8 @@ public class UserPlayer extends Player {
         maoDeOnzeResponseDecision = Optional.of(response);
     }
 
-
     public List<Card> getReceivedCards() {
         return receivedCards;
-    }
-
-    public GameIntel getIntel(){
-        return getGameIntel();
     }
 
     private Optional<Card> getCardToPlay() {

@@ -26,22 +26,22 @@ public class Truco {
             return new TrucoResult(handScore);
         }
 
-        int pointsLimit = Player.MAX_SCORE - Math.min(requester.getScore(), responder.getScore());
+        int maxScoreIncrement = Player.MAX_SCORE - Math.min(requester.getScore(), responder.getScore());
 
-        while(handScore.get() < pointsLimit){
+        while(handScore.get() < maxScoreIncrement){
             final HandScore nextValidScore = handScore.increase();
-            LOGGER.info(requester.getNickname()  + " is asking to increase to " + nextValidScore + " points.");
+            LOGGER.info(requester.getUsername()  + " is asking to increase to " + nextValidScore + " points.");
 
             int requestAnswer = responder.getTrucoResponse(nextValidScore);
 
             if(requestAnswer < 0) {
-                LOGGER.info(responder.getNickname()  + " run.");
+                LOGGER.info(responder.getUsername()  + " run.");
                 return new TrucoResult(handScore, requester);
             }
 
             handScore = nextValidScore;
             if(requestAnswer == 0){
-                LOGGER.info(responder.getNickname()  + " accepted.");
+                LOGGER.info(responder.getUsername()  + " accepted.");
                 break;
             }
 
@@ -58,7 +58,7 @@ public class Truco {
 
     private boolean isNotAskingForTruco() {
         final boolean isRequesting = requester.requestTruco();
-        if(!isRequesting) LOGGER.info(requester.getNickname() + " did not ask to increase hand score.");
+        if(!isRequesting) LOGGER.info(requester.getUsername() + " did not ask to increase hand score.");
         return !isRequesting;
     }
 

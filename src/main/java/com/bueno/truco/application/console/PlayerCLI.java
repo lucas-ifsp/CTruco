@@ -1,7 +1,7 @@
 package com.bueno.truco.application.console;
 
 import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.game.GameIntel;
+import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.hand.HandScore;
@@ -40,7 +40,7 @@ public class PlayerCLI extends Player {
         PlayGameUseCase gameUseCase = new PlayGameUseCase(this, new DummyPlayer());
 
         while (true) {
-            final GameIntel intel = gameUseCase.playNewHand();
+            final Intel intel = gameUseCase.playNewHand();
             if (intel == null)
                 break;
             printGameIntel(intel, 3000);
@@ -54,7 +54,7 @@ public class PlayerCLI extends Player {
 
         while (cardToPlay == null) {
             cls();
-            printGameIntel(getGameIntel(), 1000);
+            printGameIntel(getIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
 
             System.out.print("Carta a jogar [índice] > ");
@@ -90,12 +90,12 @@ public class PlayerCLI extends Player {
 
     @Override
     public boolean requestTruco() {
-        if (getGameIntel().getCurrentHandScore().get() == 12)
+        if (getIntel().getHandScore().get() == 12)
             return false;
 
         cls();
         while (true) {
-            printGameIntel(getGameIntel(), 1000);
+            printGameIntel(getIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
             System.out.print("Pedir " + getNextHandValueAsString() + " [s, n]: ");
             final String choice = scanner.nextLine().toLowerCase();
@@ -113,7 +113,7 @@ public class PlayerCLI extends Player {
         cls();
         while (true) {
             Scanner scanner = new Scanner(System.in);
-            System.out.print(getGameIntel().getOpponentId(this) + " está pedindo "
+            System.out.print(getIntel().getOpponentId(this) + " está pedindo "
                     + getNextHandValueAsString() + ". Escolha uma opção [(T)opa, (C)orre, (A)umenta]: ");
 
             final String choice = scanner.nextLine();
@@ -123,7 +123,7 @@ public class PlayerCLI extends Player {
                 continue;
             }
 
-            printGameIntel(getGameIntel(), 1000);
+            printGameIntel(getIntel(), 1000);
             return toIntChoice(choice);
         }
     }
@@ -137,7 +137,7 @@ public class PlayerCLI extends Player {
     }
 
     private String getNextHandValueAsString() {
-        return switch (getGameIntel().getCurrentHandScore().get()) {
+        return switch (getIntel().getHandScore().get()) {
             case 1 -> "truco";
             case 3 -> "seis";
             case 6 -> "nove";
@@ -150,7 +150,7 @@ public class PlayerCLI extends Player {
     public boolean getMaoDeOnzeResponse() {
         cls();
         while (true) {
-            printGameIntel(getGameIntel(), 1000);
+            printGameIntel(getIntel(), 1000);
             Scanner scanner = new Scanner(System.in);
             System.out.print("O jogo está em mão de onze. Você aceita [s, n]: ");
             final String choice = scanner.nextLine().toLowerCase();
@@ -163,12 +163,12 @@ public class PlayerCLI extends Player {
         }
     }
 
-    private void printGameIntel(GameIntel intel, int delayInMilliseconds) {
+    private void printGameIntel(Intel intel, int delayInMilliseconds) {
         System.out.println("+=======================================+");
         printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
-        printVira(intel.getCurrentVira());
+        printVira(intel.getVira());
         printOpponentCardIfAvailable(intel);
         printOwnedCards();
         printResultIfAvailable();
@@ -181,13 +181,13 @@ public class PlayerCLI extends Player {
         }
     }
 
-    private void printGameMainInfo(GameIntel intel) {
-        System.out.println(" Vez do: " + getNickname());
-        System.out.println(" Ponto da mão: " + intel.getCurrentHandScore().get());
-        System.out.println(" Placar: " + getNickname() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
+    private void printGameMainInfo(Intel intel) {
+        System.out.println(" Vez do: " + getUsername());
+        System.out.println(" Ponto da mão: " + intel.getHandScore().get());
+        System.out.println(" Placar: " + getUsername() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
     }
 
-    private void printRounds(GameIntel intel) {
+    private void printRounds(Intel intel) {
         final List<Round> roundsPlayed = intel.getRoundsPlayed();
         if (roundsPlayed.size() > 0) {
             System.out.print(" Ganhadores das Rodadas: | ");
@@ -201,12 +201,12 @@ public class PlayerCLI extends Player {
     //TODO remove code smell caused by Optional as a parameter
     private static void printRoundResult(Optional<Player> winner) {
         if (winner.isPresent())
-            System.out.print(winner.get().getNickname() + " | ");
+            System.out.print(winner.get().getUsername() + " | ");
         else
             System.out.print(" Empate  |");
     }
 
-    private void printCardsOpenInTable(GameIntel intel) {
+    private void printCardsOpenInTable(Intel intel) {
         final List<Card> openCards = intel.getOpenCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
@@ -219,7 +219,7 @@ public class PlayerCLI extends Player {
         System.out.println(" Vira: " + vira);
     }
 
-    private void printOpponentCardIfAvailable(GameIntel intel) {
+    private void printOpponentCardIfAvailable(Intel intel) {
         final Optional<Card> cardToPlayAgainst = intel.getCardToPlayAgainst();
         cardToPlayAgainst.ifPresent(card -> System.out.println(" Carta do Oponente: " + card));
     }
@@ -233,10 +233,10 @@ public class PlayerCLI extends Player {
     }
 
     private void printResultIfAvailable() {
-        final Optional<HandResult> potentialResult = getGameIntel().getResult();
+        final Optional<HandResult> potentialResult = getIntel().getResult();
         if (potentialResult.isPresent()) {
             final String resultString = potentialResult.get().getWinner()
-                    .map(winner -> winner.getNickname().concat(" VENCEU!").toUpperCase())
+                    .map(winner -> winner.getUsername().concat(" VENCEU!").toUpperCase())
                     .orElse("EMPATE.");
             System.out.println(" RESULTADO: " + resultString);
         }

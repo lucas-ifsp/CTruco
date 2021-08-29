@@ -15,8 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+//TODO solve flickering test failing because vira is random.
 
 @ExtendWith(MockitoExtension.class)
 class PlayHandUseCaseTest {
@@ -33,10 +34,7 @@ class PlayHandUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        when(game.getPlayer1()).thenReturn(p1);
-        when(game.getPlayer2()).thenReturn(p2);
-
-        hand = new Hand(game, new Card(7, Suit.CLUBS));
+        hand = new Hand(p1, p2);//new Card(7, Suit.CLUBS)
         when(game.prepareNewHand()).thenReturn(hand);
         sut  = new PlayHandUseCase(game);
     }
@@ -49,8 +47,6 @@ class PlayHandUseCaseTest {
 
    @Test
     void shouldHaveHandWinnerAfterTwoRounds(){
-       when(game.getFirstToPlay()).thenReturn(p1);
-       when(game.getLastToPlay()).thenReturn(p2);
        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
        sut.play();
@@ -59,8 +55,6 @@ class PlayHandUseCaseTest {
 
     @Test
     void shouldHaveHandWinnerAfterThreeRounds(){
-        when(game.getFirstToPlay()).thenReturn(p1);
-        when(game.getLastToPlay()).thenReturn(p2);
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS)).thenReturn(new Card(3, Suit.DIAMONDS));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS)).thenReturn(new Card(4, Suit.DIAMONDS));
         sut.play();
@@ -70,6 +64,8 @@ class PlayHandUseCaseTest {
     @Test
     @DisplayName("ShouldWinnerReceiveOnePointInMaoDeOnzeRun")
     void shouldWinnerReceiveOnePointInMaoDeOnzeRun() {
+        when(game.getPlayer1()).thenReturn(p1);
+        when(game.getPlayer2()).thenReturn(p2);
         when(game.isMaoDeOnze()).thenReturn(true);
         when(p1.getScore()).thenReturn(11);
         when(p1.getMaoDeOnzeResponse()).thenReturn(false);
@@ -83,8 +79,7 @@ class PlayHandUseCaseTest {
     @Test
     @DisplayName("ShouldWinnerReceiveThreePointsForPlayedMaoDeOnze")
     void shouldWinnerReceiveThreePointsForPlayedMaoDeOnze() {
-        when(game.getFirstToPlay()).thenReturn(p1);
-        when(game.getLastToPlay()).thenReturn(p2);
+        when(game.getPlayer1()).thenReturn(p1);
         when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
         when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
         when(game.isMaoDeOnze()).thenReturn(true);
@@ -97,7 +92,6 @@ class PlayHandUseCaseTest {
 
     private Player getWinner(Hand hand) {
         Optional<HandResult> handResult = hand.getResult();
-        return handResult.map(hr -> hr.getWinner().orElse(null))
-                .orElse(null);
+        return handResult.flatMap(HandResult::getWinner).orElse(null);
     }
 }

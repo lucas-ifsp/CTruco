@@ -51,15 +51,6 @@ class GameTest {
     }
 
     @Test
-    @DisplayName("Should correctly deal cards")
-    void shouldCorrectlyDealCards(){
-        sut.dealCards();
-        sut.prepareNewHand();
-        verify(player1).setCards(anyList());
-        verify(player2).setCards(anyList());
-    }
-
-    @Test
     @DisplayName("Should correctly prepare hand")
     void shouldCorrectlyPrepareHand(){
         final Hand hand = sut.prepareNewHand();

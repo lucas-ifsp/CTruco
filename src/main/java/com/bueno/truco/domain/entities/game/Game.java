@@ -1,7 +1,5 @@
 package com.bueno.truco.domain.entities.game;
 
-import com.bueno.truco.domain.entities.deck.Card;
-import com.bueno.truco.domain.entities.deck.Deck;
 import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
@@ -17,7 +15,7 @@ public class Game {
     private final List<Hand> hands;
 
     private Player firstToPlay;
-    private Card currentVira;
+    private Player lastToPlay;
 
     private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
 
@@ -27,21 +25,18 @@ public class Game {
         this.hands = new ArrayList<>();
     }
 
-    public void dealCards() {
-        Deck deck = new Deck();
-        deck.shuffle();
-
-        player1.setCards(deck.take(3));
-        player2.setCards(deck.take(3));
-        currentVira = deck.takeOne();
-        LOGGER.info("Vira: " + currentVira);
-    }
-
     public Hand prepareNewHand(){
-        Hand hand = new Hand(this, currentVira);
-        firstToPlay = player1.equals(firstToPlay) ? player2 : player1;
+        LOGGER.info("Preparing to play new hand...");
+        defineHandPlayingOrder();
+        Hand hand = new Hand(firstToPlay, lastToPlay);
         hands.add(hand);
         return hand;
+    }
+
+    private void defineHandPlayingOrder() {
+        firstToPlay = player1.equals(firstToPlay) ? player2 : player1;
+        lastToPlay = firstToPlay.equals(player1) ? player2 : player1;
+        LOGGER.info("First to play: " + firstToPlay + " | Last to play: " + lastToPlay );
     }
 
     public void updateScores() {
@@ -64,7 +59,7 @@ public class Game {
     }
 
     public Player getLastToPlay() {
-        return firstToPlay.equals(player1) ? player2 : player1;
+        return lastToPlay;
     }
 
     public Player getPlayer1() {
