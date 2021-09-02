@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.logging.LogManager;
 
 public class WindowGameTable extends Application {
 
@@ -19,6 +20,7 @@ public class WindowGameTable extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        LogManager.getLogManager().reset();
         FXMLLoader loader = new FXMLLoader();
         Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("game_table.fxml")).openStream());
         GameTableController controller = loader.getController();

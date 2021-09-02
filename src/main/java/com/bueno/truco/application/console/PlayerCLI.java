@@ -184,7 +184,8 @@ public class PlayerCLI extends Player {
     private void printGameMainInfo(Intel intel) {
         System.out.println(" Vez do: " + getUsername());
         System.out.println(" Ponto da mão: " + intel.getHandScore().get());
-        System.out.println(" Placar: " + getUsername() + " " + getScore() + " x " + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
+        System.out.println(" Placar: " + getUsername() + " " + getScore() + " x "
+                + intel.getOpponentScore(this) + " " + intel.getOpponentId(this));
     }
 
     private void printRounds(Intel intel) {
