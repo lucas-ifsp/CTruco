@@ -1,18 +1,23 @@
 package com.bueno.truco.domain.usecases.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.deck.Deck;
 import com.bueno.truco.domain.entities.deck.Suit;
 import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
+import com.bueno.truco.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -31,10 +36,20 @@ class PlayHandUseCaseTest {
     private Player p1;
     @Mock
     private Player p2;
+    @Mock
+    private Deck deck;
+
+    @BeforeAll
+    static void init(){
+        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+    }
 
     @BeforeEach
     void setUp() {
-        hand = new Hand(p1, p2);//new Card(7, Suit.CLUBS)
+        when(deck.takeOne()).thenReturn(new Card(7, Suit.CLUBS));
+        hand = new Hand(p1, p2, deck);
         when(game.prepareNewHand()).thenReturn(hand);
         sut  = new PlayHandUseCase(game);
     }

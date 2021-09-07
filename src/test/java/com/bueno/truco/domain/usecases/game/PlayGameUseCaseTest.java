@@ -1,19 +1,23 @@
 package com.bueno.truco.domain.usecases.game;
 
-
 import com.bueno.truco.domain.entities.deck.Card;
 import com.bueno.truco.domain.entities.deck.Suit;
+import com.bueno.truco.domain.entities.game.Game;
+import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.hand.Intel;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
+import com.bueno.truco.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-
-//TODO Solve flickering test due to rand vira card
 
 @ExtendWith(MockitoExtension.class)
 class PlayGameUseCaseTest {
@@ -23,6 +27,14 @@ class PlayGameUseCaseTest {
     @Mock
     private Player p2;
     private PlayGameUseCase sut;
+
+    @BeforeAll
+    static void init(){
+        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+    }
 
     @BeforeEach
     void setUp(){

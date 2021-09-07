@@ -1,12 +1,15 @@
 package com.bueno.truco.domain.entities.hand;
 
 import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.deck.Deck;
 import com.bueno.truco.domain.entities.deck.Suit;
 import com.bueno.truco.domain.entities.game.Game;
 import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.hand.HandResult;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
+import com.bueno.truco.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -28,16 +31,20 @@ class HandTest {
     private Player p1;
     @Mock
     private Player p2;
+    @Mock
+    private Deck deck;
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
     }
 
     @BeforeEach
     void setUp() {
-        sut  = new Hand(p1,p2);//new Card(7, Suit.CLUBS)
-        //when(sut.getVira()).thenReturn(new Card(7, Suit.CLUBS));
+        when(deck.takeOne()).thenReturn(new Card(7, Suit.CLUBS));
+        sut  = new Hand(p1,p2, deck);
     }
 
     @AfterEach
