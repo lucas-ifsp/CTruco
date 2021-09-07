@@ -1,6 +1,5 @@
 package com.bueno.truco.domain.entities.hand;
 
-import com.bueno.truco.domain.entities.game.GameRuleViolationException;
 import com.bueno.truco.domain.entities.player.Player;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

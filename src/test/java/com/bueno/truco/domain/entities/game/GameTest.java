@@ -2,6 +2,7 @@ package com.bueno.truco.domain.entities.game;
 
 import com.bueno.truco.domain.entities.hand.Hand;
 import com.bueno.truco.domain.entities.player.Player;
+import com.bueno.truco.domain.entities.round.Round;
 import com.bueno.truco.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,10 @@ class GameTest {
     @BeforeAll
     static void init(){
         Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
+        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+
     }
 
     @BeforeEach

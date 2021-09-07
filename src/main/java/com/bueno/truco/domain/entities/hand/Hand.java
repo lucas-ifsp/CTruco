@@ -26,10 +26,14 @@ public class Hand {
 
     private final static Logger LOGGER = Logger.getLogger(Hand.class.getName());
 
-    public Hand(Player firstToPlay, Player lastToPlay){
+    public Hand(Player firstToPlay, Player lastToPlay) {
+        this(firstToPlay, lastToPlay, new Deck());
+    }
+
+    public Hand(Player firstToPlay, Player lastToPlay, Deck deck){
         this.firstToPlay = firstToPlay;
         this.lastToPlay = lastToPlay;
-        dealCards();
+        dealCards(deck);
 
         score = HandScore.of(1);
         roundsPlayed = new ArrayList<>();
@@ -37,8 +41,7 @@ public class Hand {
         addOpenCard(vira);
     }
 
-    public void dealCards() {
-        Deck deck = new Deck();
+    private void dealCards(Deck deck) {
         deck.shuffle();
 
         firstToPlay.setCards(deck.take(3));
