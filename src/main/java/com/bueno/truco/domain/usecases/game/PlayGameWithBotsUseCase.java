@@ -20,27 +20,32 @@
 package com.bueno.truco.domain.usecases.game;
 
 import com.bueno.truco.domain.entities.game.Game;
-import com.bueno.truco.domain.entities.hand.Intel;
-import com.bueno.truco.domain.entities.hand.Hand;
-import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
+import com.bueno.truco.domain.entities.player.dummybot.DummyBot;
+import com.bueno.truco.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.truco.domain.entities.player.util.Player;
+import com.bueno.truco.domain.usecases.hand.PlayHandUseCase;
 
-public class PlayGameUseCase {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.logging.LogManager;
 
-    private Game game;
+//TODO Resolver problema de pegar a mesma referencia
+public class PlayGameWithBotsUseCase {
+    private final Player bot1;
+    private final Player bot2;
 
-    public PlayGameUseCase(Player player1, Player player2){
-        game = new Game(player1, player2);
+    public PlayGameWithBotsUseCase(Player bot1, Player bot2){
+        this.bot1 = bot1;
+        this.bot2 = bot2;
     }
 
-    public Intel playNewHand(){
-        Intel intel = null;
-
-        if(game.getWinner().isEmpty()) {
-            final Hand playedHand = new PlayHandUseCase(game).play();
-            intel = playedHand.getIntel();
+    public Player play(){
+        Game game = new Game(bot1, bot2);
+        while (game.getWinner().isEmpty()) {
+            new PlayHandUseCase(game).play();
             game.updateScores();
         }
-        return intel;
+        return game.getWinner().get();
     }
 }

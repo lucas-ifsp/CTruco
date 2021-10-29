@@ -8,100 +8,100 @@
 
 <AnchorPane fx:id="paneDesk" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bueno.truco.application.desktop.controller.GameTableController">
    <children>
-      <Label fx:id="lbPlayerName" layoutX="27.0" layoutY="680.0" text="Jogador: " textFill="WHITE">
+      <Label fx:id="lbPlayerName" layoutX="27.0" layoutY="676.0" text="Jogador: " textFill="WHITE" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbPlayerNameValue" layoutX="103.0" layoutY="680.0" text="--" textFill="WHITE">
+      <Label fx:id="lbPlayerNameValue" layoutX="106.0" layoutY="676.0" text="--" textFill="WHITE" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="106.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbPlayerScore" layoutX="27.0" layoutY="714.0" text="Tentos:" textFill="WHITE">
+      <Label fx:id="lbPlayerScore" layoutX="28.0" layoutY="714.0" text="Tentos:" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbPlayerScoreValue" layoutX="94.0" layoutY="714.0" text="--" textFill="WHITE">
+      <Label fx:id="lbPlayerScoreValue" layoutX="97.0" layoutY="714.0" text="--" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="97.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbOpponentName" layoutX="27.0" layoutY="30.0" text="Jogador: " textFill="WHITE">
+      <Label fx:id="lbOpponentName" layoutX="27.0" layoutY="30.0" text="Jogador: " textFill="WHITE" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbOpponentNameValue" layoutX="103.0" layoutY="30.0" text="--" textFill="WHITE">
+      <Label fx:id="lbOpponentNameValue" layoutX="108.0" layoutY="30.0" text="--" textFill="WHITE" AnchorPane.leftAnchor="108.0" AnchorPane.topAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbOpponentScore" layoutX="28.0" layoutY="64.0" text="Tentos:" textFill="WHITE">
+      <Label fx:id="lbOpponentScore" layoutX="28.0" layoutY="68.0" text="Tentos:" textFill="WHITE" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="70.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbOpponentScoreValue" layoutX="93.0" layoutY="64.0" text="--" textFill="WHITE">
+      <Label fx:id="lbOpponentScoreValue" layoutX="97.0" layoutY="70.0" text="--" textFill="WHITE" AnchorPane.leftAnchor="97.0" AnchorPane.topAnchor="70.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbHandPoints" layoutX="801.0" layoutY="33.0" text="Tentos da Mão:" textFill="WHITE">
+      <Label fx:id="lbHandPoints" layoutX="801.0" layoutY="33.0" text="Tentos da Mão:" textFill="WHITE" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnAction" layoutX="866.0" layoutY="674.0" mnemonicParsing="false" prefHeight="56.0" prefWidth="110.0" text="Pedir truco!" onAction="#callForPointsRise">
+      <Button fx:id="btnAction" layoutX="846.0" layoutY="674.0" mnemonicParsing="false" onAction="#callForPointsRise" prefHeight="56.0" prefWidth="130.0" text="Pedir truco!" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
          <font>
             <Font size="16.0" />
          </font>
       </Button>
-      <Label fx:id="lbHandPointsValue" layoutX="930.0" layoutY="34.0" text="--" textFill="WHITE">
+      <Label fx:id="lbHandPointsValue" layoutX="930.0" layoutY="30.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="30.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb1st" layoutX="801.0" layoutY="67.0" text="1ª Rodada:" textFill="WHITE">
+      <Label fx:id="lb1st" layoutX="801.0" layoutY="70.0" text="1ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="70.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb1stValue" layoutX="888.0" layoutY="68.0" text="--" textFill="WHITE">
+      <Label fx:id="lb1stValue" layoutX="897.0" layoutY="70.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="70.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb2nd" layoutX="801.0" layoutY="100.0" text="2ª Rodada:" textFill="WHITE">
+      <Label fx:id="lb2nd" layoutX="804.0" layoutY="110.0" text="2ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="137.5" AnchorPane.topAnchor="110.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb2ndValue" layoutX="888.0" layoutY="101.0" text="--" textFill="WHITE">
+      <Label fx:id="lb2ndValue" layoutX="897.0" layoutY="105.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="110.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb3rd" layoutX="801.0" layoutY="134.0" text="3ª Rodada:" textFill="WHITE">
+      <Label fx:id="lb3rd" layoutX="803.0" layoutY="150.0" text="3ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="150.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lb3rdValue" layoutX="888.0" layoutY="135.0" text="--" textFill="WHITE">
+      <Label fx:id="lb3rdValue" layoutX="897.0" layoutY="140.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="150.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <ImageView fx:id="cardVira" fitHeight="150.0" fitWidth="100.0" layoutX="437.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true" rotate="-20.2" />
       <ImageView fx:id="cardDeck" fitHeight="150.0" fitWidth="100.0" layoutX="468.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="cardOpponentCenter" fitHeight="150.0" fitWidth="100.0" layoutX="468.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="cardOpponentRight" fitHeight="150.0" layoutX="600.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true" rotate="167.35" />
-      <ImageView fx:id="cardOpponentLeft" fitHeight="150.0" layoutX="335.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true" rotate="-167.35" />
+      <ImageView fx:id="cardOpponentCenter" fitHeight="150.0" fitWidth="100.0" layoutX="468.0"  pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="60.0" />
+      <ImageView fx:id="cardOpponentRight" fitHeight="150.0" layoutX="600.0"  pickOnBounds="true" preserveRatio="true" rotate="167.35" AnchorPane.topAnchor="50.0" />
+      <ImageView fx:id="cardOpponentLeft" fitHeight="150.0" layoutX="335.0" pickOnBounds="true" preserveRatio="true" rotate="-167.35" AnchorPane.topAnchor="50.0" />
       <ImageView fx:id="cardPlayedLast" fitHeight="150.0" fitWidth="100.0" layoutX="735.0" layoutY="367.0" pickOnBounds="true" preserveRatio="true" rotate="-6.3" />
       <ImageView fx:id="cardPlayedFirst" fitHeight="150.0" fitWidth="100.0" layoutX="640.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true" rotate="20.6" />
-      <ImageView fx:id="cardOwnedCenter" fitHeight="150.0" fitWidth="100.0" layoutX="468.0" layoutY="538.0" onMouseClicked="#pickCenter" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="cardOwnedRight" fitHeight="150.0" fitWidth="100.0" layoutX="600.0" layoutY="555.0" onMouseClicked="#pickRight" pickOnBounds="true" preserveRatio="true" rotate="12.5" />
-      <ImageView fx:id="cardOwnedLeft" fitHeight="150.0" fitWidth="100.0" layoutX="335.0" layoutY="555.0" onMouseClicked="#pickLeft" pickOnBounds="true" preserveRatio="true" rotate="-12.5" />
+      <ImageView fx:id="cardOwnedCenter" fitHeight="150.0" fitWidth="100.0" layoutX="468.0"  onMouseClicked="#pickCenter" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="60.0" />
+      <ImageView fx:id="cardOwnedRight" fitHeight="150.0" fitWidth="100.0" layoutX="600.0"  onMouseClicked="#pickRight" pickOnBounds="true" preserveRatio="true" rotate="12.5" AnchorPane.bottomAnchor="50.0" />
+      <ImageView fx:id="cardOwnedLeft" fitHeight="150.0" fitWidth="100.0" layoutX="335.0" onMouseClicked="#pickLeft" pickOnBounds="true" preserveRatio="true" rotate="-12.5" AnchorPane.bottomAnchor="50.0" />
    </children>
 </AnchorPane>

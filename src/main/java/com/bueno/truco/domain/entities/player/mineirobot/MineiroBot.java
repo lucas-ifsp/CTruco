@@ -17,39 +17,36 @@
  *  along with Foobar.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.truco.domain.entities.hand;
+package com.bueno.truco.domain.entities.player.mineirobot;
 
-import com.bueno.truco.domain.entities.truco.TrucoResult;
+import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.hand.HandScore;
 import com.bueno.truco.domain.entities.player.util.Player;
+import com.bueno.truco.domain.entities.player.util.PlayingStrategy;
 
-import java.util.Optional;
+public class MineiroBot extends Player {
 
-public class HandResult {
-
-    private final Player winner;
-    private final HandScore score;
-
-    public HandResult() {
-        winner = null;
-        score = null;
+    public MineiroBot() {
+        super("MineiroBot");
     }
 
-    public HandResult(Player winner, HandScore handScore) {
-        if(winner == null || handScore == null)
-            throw new NullPointerException("Parameters must not be null!");
-        this.winner = winner;
-        this.score = HandScore.of(handScore);
+    @Override
+    public Card playCard() {
+        return PlayingStrategy.of(cards, this).playCard();
     }
 
-    public HandResult(TrucoResult result){
-        this(result.getWinner().get(), HandScore.of(result.getScore()));
+    @Override
+    public boolean requestTruco() {
+        return PlayingStrategy.of(cards, this).requestTruco();
     }
 
-    public Optional<Player> getWinner() {
-        return Optional.ofNullable(winner);
+    @Override
+    public int getTrucoResponse(HandScore newHandScore) {
+        return PlayingStrategy.of(cards, this).getTrucoResponse(newHandScore.get());
     }
 
-    public HandScore getScore() {
-        return score;
+    @Override
+    public boolean getMaoDeOnzeResponse() {
+        return PlayingStrategy.of(cards, this).getMaoDeOnzeResponse();
     }
 }
