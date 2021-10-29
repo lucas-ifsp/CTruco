@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2021 Lucas B. R. de Oliveira
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Foobar.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.bueno.truco.domain.entities.deck;
 
 import java.util.List;
@@ -7,6 +26,7 @@ public class Card {
     private int rank;
     private Suit suit;
     private static final List<String> rankNames = List.of("Hidden", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K");
+    private final List<Integer> ascendingCardRankValues = List.of(0, 4, 5, 6, 7, 11, 12, 13, 1, 2, 3);;
 
     private Card(){
     }
@@ -39,16 +59,8 @@ public class Card {
     }
 
     private int computeCardValue(Card card, Card vira) {
-        final List<Integer> values = List.of(0, 4, 5, 6, 7, 11, 12, 13, 1, 2, 3);
-        final int manilha;
-
-        if (vira.getRank() == 3)
-            manilha = 4;
-        else
-            manilha = values.get(values.indexOf(vira.getRank()) + 1);
-
-        if (card.getRank() != manilha)
-            return values.indexOf(card.getRank());
+        if (!card.isManilha(vira))
+            return ascendingCardRankValues.indexOf(card.getRank());
         else
             return switch (card.getSuit()) {
                 case DIAMONDS -> 11;
@@ -56,6 +68,34 @@ public class Card {
                 case HEARTS -> 13;
                 case CLUBS -> 14;
             };
+    }
+
+    public boolean isManilha(Card vira){
+        return getRank() == getManilhaRank(vira);
+    }
+
+    private int getManilhaRank(Card vira) {
+        if (vira.getRank() == 3) return 4;
+        return ascendingCardRankValues.get(ascendingCardRankValues.indexOf(vira.getRank()) + 1);
+    }
+
+    public boolean isZap(Card vira){
+        return isManilha(vira) && suit == Suit.CLUBS;
+    }
+
+
+    public boolean isCopas(Card vira){
+        return isManilha(vira) && suit == Suit.HEARTS;
+    }
+
+
+    public boolean isEspadilha(Card vira){
+        return isManilha(vira) && suit == Suit.SPADES;
+    }
+
+
+    public boolean isOuros(Card vira){
+        return isManilha(vira) && suit == Suit.DIAMONDS;
     }
 
     public static Card getClosedCard(){

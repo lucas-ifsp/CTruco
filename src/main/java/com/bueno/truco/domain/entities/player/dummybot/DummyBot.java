@@ -17,16 +17,37 @@
  *  along with Foobar.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.truco.domain.entities.deck;
+package com.bueno.truco.domain.entities.player.dummybot;
 
-public enum Suit {
-    DIAMONDS("Diamonds"),
-    SPADES("Spades"),
-    HEARTS("Hearts"),
-    CLUBS("Clubs");
+import com.bueno.truco.domain.entities.deck.Card;
+import com.bueno.truco.domain.entities.hand.HandScore;
+import com.bueno.truco.domain.entities.player.util.Player;
 
-    String name;
-    Suit(String name) {
-        this.name = name;
+public class DummyBot extends Player {
+
+    public DummyBot() {
+        super("DummyBot");
     }
+
+    @Override
+    public Card playCard() {
+        return cards.remove(0);
+    }
+
+    @Override
+    public boolean requestTruco() {
+        return false;
+    }
+
+    @Override
+    public int getTrucoResponse(HandScore newHandScore) {
+        return 0;
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse() {
+        return false;
+    }
+
+
 }
