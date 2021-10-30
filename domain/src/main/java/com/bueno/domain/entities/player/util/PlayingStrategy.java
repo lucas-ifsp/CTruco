@@ -73,16 +73,16 @@ public abstract class PlayingStrategy{
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
     }
 
-    protected final  boolean isPlayerFirstRoundWinner(Optional<Player> possibleWinner) {
-        return possibleWinner.isPresent() && possibleWinner.get().equals(player);
+    protected final  boolean isPlayerFirstRoundWinner(Player possibleWinner) {
+        return possibleWinner != null && possibleWinner.equals(player);
     }
 
-    protected final  boolean isPlayerFirstRoundLoser(Optional<Player> possibleWinner) {
-        return possibleWinner.isPresent() && !possibleWinner.get().equals(player);
+    protected final  boolean isPlayerFirstRoundLoser(Player possibleWinner) {
+        return possibleWinner != null && !possibleWinner.equals(player);
     }
 
-    protected final boolean isFirstRoundTied(Optional<Player> possibleWinner) {
-        return possibleWinner.isEmpty();
+    protected final boolean isFirstRoundTied(Player possibleWinner) {
+        return possibleWinner == null;
     }
 
     protected final int getCardValue(Card card, Card vira){

@@ -35,11 +35,11 @@ public class Round {
 
     private final Player firstToPlay;
     private final Player lastToPlay;
+    private final Card vira;
+    private final Hand hand;
     private Player winner;
     private Card firstCard;
     private Card lastCard;
-    private Card vira;
-    private Hand hand;
 
     private final static Logger LOGGER = Logger.getLogger(Round.class.getName());
 
@@ -110,7 +110,7 @@ public class Round {
             hand.setResult(handResult);
         }
 
-        trucoResult.getLastRequester().ifPresent(lastRequester -> hand.setLastScoreIncrementRequester(lastRequester));
+        trucoResult.getLastRequester().ifPresent(hand::setLastScoreIncrementRequester);
         hand.setScore(trucoResult.getScore());
 
         return Optional.ofNullable(handResult);

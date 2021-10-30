@@ -28,7 +28,7 @@ import com.bueno.domain.entities.player.util.Player;
 
 public class PlayHandUseCase {
 
-    private Game game;
+    private final Game game;
     private Hand hand;
 
     public PlayHandUseCase(Game game) {

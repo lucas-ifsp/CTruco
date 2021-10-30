@@ -35,7 +35,7 @@ public class CardImage {
     private Card card;
     private Image image;
 
-    private static HashMap<String, CardImage> cache = new HashMap<>();
+    private static final HashMap<String, CardImage> cache = new HashMap<>();
 
     private CardImage(){
     }
@@ -95,10 +95,6 @@ public class CardImage {
 
     public Image getImage() {
         return image;
-    }
-
-    public Optional<Card> getCard() {
-        return Optional.ofNullable(card);
     }
 
     public static boolean isCardClosed(Image image){

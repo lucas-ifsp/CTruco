@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.LogManager;
+import java.util.stream.Collectors;
 
 public class PlayerCLI extends Player {
 
@@ -213,20 +214,13 @@ public class PlayerCLI extends Player {
     private void printRounds(Intel intel) {
         final List<Round> roundsPlayed = intel.getRoundsPlayed();
         if (roundsPlayed.size() > 0) {
-            System.out.print(" Ganhadores das Rodadas: | ");
-            roundsPlayed.stream()
+            final String roundResults = roundsPlayed.stream()
                     .map(Round::getWinner)
-                    .forEach(PlayerCLI::printRoundResult);
-            System.out.print("\n");
+                    .map(possibleWinner -> possibleWinner.orElse(null))
+                    .map(winner -> winner != null ? winner.getUsername() : "Empate")
+                    .collect(Collectors.joining(" | ", "[ ", " ] "));
+            System.out.println("Ganhadores das Rodadas: " + roundResults);
         }
-    }
-
-    //TODO remove code smell caused by Optional as a parameter
-    private static void printRoundResult(Optional<Player> possibleWinner) {
-        if (possibleWinner.isPresent())
-            System.out.print(possibleWinner.get().getUsername() + " | ");
-        else
-            System.out.print(" Empate  |");
     }
 
     private void printCardsOpenInTable(Intel intel) {

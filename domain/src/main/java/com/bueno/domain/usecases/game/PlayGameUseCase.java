@@ -28,7 +28,7 @@ import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
 public class PlayGameUseCase {
 
-    private Game game;
+    private final Game game;
 
     public PlayGameUseCase(Player player1, Player player2){
         game = new Game(player1, player2);
