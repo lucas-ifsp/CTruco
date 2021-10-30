@@ -72,7 +72,6 @@ public class GameTableController {
 
     private UserPlayer player;
     private Player bot;
-    private PlayGameUseCase gameUseCase;
     private List<ImageView> opponentCardImages;
     private boolean playerTurn;
     private boolean lastToIncreaseScore;
@@ -94,7 +93,7 @@ public class GameTableController {
     }
 
     public void startGame() {
-        gameUseCase = new PlayGameUseCase(player, bot);
+        PlayGameUseCase gameUseCase = new PlayGameUseCase(player, bot);
         gameOver = false;
         while (true) {
             prepareNewHand();

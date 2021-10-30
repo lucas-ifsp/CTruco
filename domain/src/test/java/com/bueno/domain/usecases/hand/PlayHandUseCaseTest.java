@@ -43,8 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-//TODO solve flickering test failing because vira is random.
-
 @ExtendWith(MockitoExtension.class)
 class PlayHandUseCaseTest {
 

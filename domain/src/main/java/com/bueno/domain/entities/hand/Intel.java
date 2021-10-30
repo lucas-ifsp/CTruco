@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public class Intel {
 
-    private Hand hand;
+    private final Hand hand;
 
     public Intel(Hand hand) {
         this.hand = hand;

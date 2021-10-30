@@ -24,7 +24,6 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
-//TODO Resolver problema de pegar a mesma referencia
 public class PlayGameWithBotsUseCase {
     private final Player bot1;
     private final Player bot2;

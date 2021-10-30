@@ -43,12 +43,12 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
         final Optional<Player> possibleFirstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
 
-        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner)) {
+        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) {
             if (cards.stream().anyMatch(c -> getCardValue(c, vira) >= 8)) return discard(cards.get(1));
             return cards.remove(0);
         }
 
-        if (isFirstRoundTied(possibleFirstRoundWinner)) return cards.remove(0);
+        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) return cards.remove(0);
 
         Optional<Card> enoughCardToWin = getPossibleEnoughCardToWin(possibleOpponentCard.orElseThrow());
         if (enoughCardToWin.isPresent()) return cards.remove(cards.indexOf(enoughCardToWin.get()));
@@ -61,17 +61,17 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         final Optional<Player> possibleFirstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
         final int bestCardValue = getCardValue(cards.get(0), vira);
 
-        if (isFirstRoundTied(possibleFirstRoundWinner)) {
+        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) {
             if (bestCardValue < 10) return -1;
             if (bestCardValue > 11) return 1;
         }
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner) && hasAlreadyPlayedRound()) {
+        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner.orElse(null)) && hasAlreadyPlayedRound()) {
             if (bestCardValue < 10) return -1;
             if (bestCardValue > 11) return 1;
         }
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner) && !hasAlreadyPlayedRound()) {
+        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner.orElse(null)) && !hasAlreadyPlayedRound()) {
             final int remainingCardsValue = getCardValue(cards.get(0), vira) + getCardValue(cards.get(1), vira);
             if (remainingCardsValue < 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
             if (remainingCardsValue >= 23) return 1;
@@ -91,18 +91,20 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         final int handScoreValue = intel.getHandScore().get();
         final Card higherCard = cards.get(0);
 
-        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner)) return false;
+        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) return false;
 
-        if (isFirstRoundTied(possibleFirstRoundWinner)){
-            if(isCardValueBetween(higherCard,13,13) || isAbleToWinWith(higherCard, possibleOpponentCard)) return true;
+        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))){
+            if(isCardValueBetween(higherCard,13,13)
+                    || isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))) return true;
             if(handScoreValue == 1 && isCardValueBetween(higherCard, 10, 12)) return true;
             if(handScoreValue == 3 && isCardValueBetween(higherCard, 12, 12)) return true;
         }
 
         if(handScoreValue > 1) return false;
 
-        if (isAbleToWinWith(higherCard, possibleOpponentCard)
-                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard), 10, 13)) return true;
+        if (isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))
+                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)),
+                10, 13)) return true;
 
         return false;
     }
@@ -112,11 +114,11 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         return lowerValue <= value &&  value <= upperValue;
     }
 
-    private boolean isAbleToWinWith(Card playingCard, Optional<Card> possibleOpponentCard) {
-        return possibleOpponentCard.isPresent() && playingCard.compareValueTo(possibleOpponentCard.get(), vira) > 0;
+    private boolean isAbleToWinWith(Card playingCard, Card possibleOpponentCard) {
+        return possibleOpponentCard != null && playingCard.compareValueTo(possibleOpponentCard, vira) > 0;
     }
 
-    private Card getThirdRoundCard(Optional<Card> possibleOpponentCard){
+    private Card getThirdRoundCard(Card possibleOpponentCard){
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Card higherCard = cards.get(0);
         final Card worstCard = cards.get(1);

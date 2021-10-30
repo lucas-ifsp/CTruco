@@ -79,7 +79,8 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
 
         if(getCardValue(opponentCard, vira) < 5) return true;
         if(playingCard.compareValueTo(opponentCard, vira) > 0) return true;
-        if(isPlayerFirstRoundWinner(firstRoundWinner) && playingCard.compareValueTo(opponentCard, vira) == 0) return true;
+        if(isPlayerFirstRoundWinner(firstRoundWinner.orElse(null))
+                && playingCard.compareValueTo(opponentCard, vira) == 0) return true;
 
         return false;
     }
