@@ -195,7 +195,7 @@ class HandTest {
     @Test
     @DisplayName("Should have winner if hand result has winner")
     void shouldHaveWinnerIfHandResultHasWinner(){
-        sut.setResult(new HandResult(p1, HandScore.of(3)));
+        sut.setResult(new HandResult(p1, HandScore.THREE));
         Assertions.assertTrue(sut.hasWinner());
         assertEquals(p1, getWinner(sut));
     }

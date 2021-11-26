@@ -40,7 +40,7 @@ public class TrucoResult {
     }
 
     public TrucoResult(HandScore score, Player winner, Player lastRequester) {
-        this.score = score;
+        this.score = Objects.requireNonNull(score);
         this.winner = winner;
         this.lastRequester = lastRequester;
     }

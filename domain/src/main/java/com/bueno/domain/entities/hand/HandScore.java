@@ -20,38 +20,23 @@
 
 package com.bueno.domain.entities.hand;
 
+public enum HandScore {
+    ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
 
-import java.util.Objects;
-
-public class HandScore {
     private final int score;
 
-    private HandScore(int score) {
-        if (!isValid(score)) throw new HandScoreException("Invalid score value: " + score);
+    HandScore(int score) {
         this.score = score;
     }
 
-    public static HandScore of(int score) {
-        return new HandScore(score);
-    }
-
-    public static HandScore of(HandScore handScore) {
-        Objects.requireNonNull(handScore, "Source hand score must not be null.");
-        return new HandScore(handScore.get());
-    }
-
     public HandScore increase() {
-        if (score == 0) throw new HandScoreException("Can not increase score from 0 (zero).");
-        int nextScore = score == 1 ? 3 : score + 3;
-        return new HandScore(nextScore);
-    }
-
-    public boolean canIncrease() {
-        return score != 0 && score != 12;
-    }
-
-    private boolean isValid(int score) {
-        return score == 0 || score == 1 || (score % 3 == 0 && score >= 3 && score <= 12);
+        return switch (this){
+            case ONE -> THREE;
+            case THREE -> SIX;
+            case SIX -> NINE;
+            case NINE -> TWELVE;
+            case ZERO, TWELVE -> throw new HandScoreException("Can not increase score from 0 (zero).");
+        };
     }
 
     public int get() {
@@ -60,21 +45,6 @@ public class HandScore {
 
     @Override
     public String toString() {
-        return "HandScore{score=" + score + "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        HandScore handScore = (HandScore) o;
-
-        return score == handScore.score;
-    }
-
-    @Override
-    public int hashCode() {
-        return score;
+        return "HandScore{" + "score=" + score + '}';
     }
 }

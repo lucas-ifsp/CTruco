@@ -25,6 +25,7 @@ import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.round.Round;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Intel {
@@ -32,7 +33,7 @@ public class Intel {
     private final Hand hand;
 
     public Intel(Hand hand) {
-        this.hand = hand;
+        this.hand = Objects.requireNonNull(hand);
     }
 
     public Card getVira() {

@@ -4,7 +4,6 @@ module domain {
     exports com.bueno.domain.usecases.game to application.desktop, application.console;
     exports com.bueno.domain.usecases.hand to application.desktop, application.console;
 
-
     exports com.bueno.domain.entities.hand to application.desktop, application.console;
     exports com.bueno.domain.entities.deck to application.desktop, application.console;
     exports com.bueno.domain.entities.round to application.desktop, application.console;

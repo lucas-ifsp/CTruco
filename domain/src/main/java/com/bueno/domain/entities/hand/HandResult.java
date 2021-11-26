@@ -42,7 +42,7 @@ public class HandResult {
     }
 
     public HandResult(TrucoResult result){
-        this(result.getWinner().orElseThrow(), HandScore.of(result.getScore()));
+        this(result.getWinner().orElse(null), result.getScore());
     }
 
     public Optional<Player> getWinner() {

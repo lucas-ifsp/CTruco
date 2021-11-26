@@ -26,13 +26,15 @@ import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.player.util.Player;
 
+import java.util.Objects;
+
 public class PlayHandUseCase {
 
     private final Game game;
     private Hand hand;
 
     public PlayHandUseCase(Game game) {
-        this.game = game;
+        this.game = Objects.requireNonNull(game);
     }
 
     public Hand play() {
@@ -63,10 +65,8 @@ public class PlayHandUseCase {
         Player playerInMaoDeOnze = game.getPlayer1().getScore() == 11? game.getPlayer1() : game.getPlayer2();
         Player otherPlayer = game.getPlayer1().getScore() == 11? game.getPlayer2() : game.getPlayer1();
 
-        if(playerInMaoDeOnze.getMaoDeOnzeResponse())
-            hand.setScore(HandScore.of(3));
-        else
-            hand.setResult(new HandResult(otherPlayer, HandScore.of(1)));
+        if(playerInMaoDeOnze.getMaoDeOnzeResponse()) hand.setScore(HandScore.THREE);
+        else hand.setResult(new HandResult(otherPlayer, HandScore.ONE));
     }
 
     private void playRound() {

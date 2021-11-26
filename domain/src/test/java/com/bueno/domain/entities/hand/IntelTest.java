@@ -64,8 +64,8 @@ class IntelTest {
     @Test
     @DisplayName("Should get the same points of the current hand")
     void ShouldGetSamePointsOfCurrentHand() {
-        when(hand.getScore()).thenReturn(HandScore.of(3));
-        assertEquals(HandScore.of(3), sut.getHandScore());
+        when(hand.getScore()).thenReturn(HandScore.THREE);
+        assertEquals(HandScore.THREE, sut.getHandScore());
     }
 
     @Test

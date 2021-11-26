@@ -64,8 +64,8 @@ class TrucoTest {
     void shouldCallerBeWinnerOfOnePoint(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(any())).thenReturn(-1);
-        TrucoResult result = sut.handle(HandScore.of(1));
-        assertEquals(new TrucoResult(HandScore.of(1), p1), result);
+        TrucoResult result = sut.handle(HandScore.ONE);
+        assertEquals(new TrucoResult(HandScore.ONE, p1), result);
     }
 
     @Test
@@ -73,17 +73,17 @@ class TrucoTest {
     void shouldCallerBeWinnerOfThreePoints(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(any())).thenReturn(-1);
-        TrucoResult result = sut.handle(HandScore.of(3));
-        assertEquals(new TrucoResult(HandScore.of(3), p1), result);
+        TrucoResult result = sut.handle(HandScore.THREE);
+        assertEquals(new TrucoResult(HandScore.THREE, p1), result);
     }
 
     @Test
     @DisplayName("Should return not winner and match worth six points")
     void shouldReturnNoWinnerAndMatchWorthSixPoints(){
         when(p1.requestTruco()).thenReturn(true);
-        TrucoResult result = sut.handle(HandScore.of(3));
+        TrucoResult result = sut.handle(HandScore.THREE);
         assertAll(
-                () -> assertEquals(HandScore.of(6), result.getScore()),
+                () -> assertEquals(HandScore.SIX, result.getScore()),
                 () -> assertEquals(Optional.empty(), result.getWinner())
         );
     }
@@ -94,9 +94,9 @@ class TrucoTest {
         when(p1.requestTruco()).thenReturn(true);
         when(p1.getTrucoResponse(any())).thenReturn(1);
         when(p2.getTrucoResponse(any())).thenReturn(1);
-        TrucoResult result = sut.handle(HandScore.of(3));
+        TrucoResult result = sut.handle(HandScore.THREE);
         assertAll(
-                () -> assertEquals(HandScore.of(12), result.getScore()),
+                () -> assertEquals(HandScore.TWELVE, result.getScore()),
                 () -> assertEquals(Optional.empty(), result.getWinner())
         );
     }
@@ -107,8 +107,8 @@ class TrucoTest {
         when(p1.requestTruco()).thenReturn(true);
         when(p1.getTrucoResponse(any())).thenReturn(-1);
         when(p2.getTrucoResponse(any())).thenReturn(1);
-        TrucoResult result = sut.handle(HandScore.of(3));
-        assertEquals(new TrucoResult(HandScore.of(6), p2), result);
+        TrucoResult result = sut.handle(HandScore.THREE);
+        assertEquals(new TrucoResult(HandScore.SIX, p2), result);
     }
 
     @Test
@@ -116,7 +116,7 @@ class TrucoTest {
     void shouldCorrectlyToStringTrucoResultHavingWinner(){
         when(p1.requestTruco()).thenReturn(true);
         when(p2.getTrucoResponse(any())).thenReturn(-1);
-        TrucoResult result = sut.handle(HandScore.of(1));
+        TrucoResult result = sut.handle(HandScore.ONE);
         assertEquals("Points=1, winner=p1",result.toString());
     }
 
@@ -125,7 +125,7 @@ class TrucoTest {
     void shouldCorrectlyToStringTrucoResultHavingNoWinner(){
         when(p1.requestTruco()).thenReturn(false);
         sut = new Truco(p1, p1);
-        TrucoResult result = sut.handle(HandScore.of(1));
+        TrucoResult result = sut.handle(HandScore.ONE);
         assertEquals("Points=1, winner=No winner",result.toString());
     }
 
@@ -133,15 +133,13 @@ class TrucoTest {
     @Test
     @DisplayName("Should throw if requester is null")
     void shouldThrowIfRequesterIsNull(){
-        sut = new Truco(null, p2);
-        assertThrows(IllegalArgumentException.class, () -> sut.handle(HandScore.of(1)));
+        assertThrows(NullPointerException.class, () -> new Truco(null, p2));
     }
 
     @Test
     @DisplayName("Should throw if responder is null")
     void shouldThrowIfResponderIsNull(){
-        sut = new Truco(p1, null);
-        assertThrows(IllegalArgumentException.class, () -> sut.handle(HandScore.of(1)));
+        assertThrows(NullPointerException.class, () -> new Truco(p1, null));
     }
 
     @Test
@@ -154,9 +152,9 @@ class TrucoTest {
         when(p2.getTrucoResponse(any())).thenReturn(1);
         when(p2.getScore()).thenReturn(8);
 
-        TrucoResult result = sut.handle(HandScore.of(1));
+        TrucoResult result = sut.handle(HandScore.ONE);
         assertAll(
-                () -> assertEquals(HandScore.of(9), result.getScore()),
+                () -> assertEquals(HandScore.NINE, result.getScore()),
                 () -> assertEquals(Optional.empty(), result.getWinner())
         );
     }
@@ -165,17 +163,17 @@ class TrucoTest {
     @DisplayName("Should return no winner if any player has 11 points")
     void shouldReturnNoWinnerIfAnyPlayerHas11Points(){
         when(p1.getScore()).thenReturn(11);
-        TrucoResult result = sut.handle(HandScore.of(1));
-        assertEquals(new TrucoResult(HandScore.of(1), null), result);
+        TrucoResult result = sut.handle(HandScore.ONE);
+        assertEquals(new TrucoResult(HandScore.ONE, null), result);
     }
 
     @Test
     @DisplayName("Should return no winner of call starting on 12")
     void shouldReturnNoWinnerForCallStartingOn12(){
         when(p1.requestTruco()).thenReturn(true);
-        TrucoResult result = sut.handle(HandScore.of(12));
+        TrucoResult result = sut.handle(HandScore.TWELVE);
         assertAll(
-                () -> assertEquals(HandScore.of(12), result.getScore()),
+                () -> assertEquals(HandScore.TWELVE, result.getScore()),
                 () -> assertEquals(Optional.empty(), result.getWinner())
         );
     }
@@ -183,7 +181,7 @@ class TrucoTest {
     @Test
     @DisplayName("Should return no winner if no one is asking for truco")
     void shouldReturnNoWinnerIfNoOneIsAskingForTruco(){
-        TrucoResult result = sut.handle(HandScore.of(3));
-        assertEquals(new TrucoResult(HandScore.of(3), null), result);
+        TrucoResult result = sut.handle(HandScore.THREE);
+        assertEquals(new TrucoResult(HandScore.THREE, null), result);
     }
 }
