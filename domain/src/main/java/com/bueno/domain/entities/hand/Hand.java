@@ -58,7 +58,7 @@ public class Hand {
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
         dealCards(deck);
 
-        score = HandScore.of(1);
+        score = HandScore.ONE;
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
         addOpenCard(vira);
@@ -88,10 +88,7 @@ public class Hand {
     }
 
     private void defineRoundPlayingOrder() {
-        getLastRoundWinner().ifPresent(winner -> {
-            if(winner.equals(lastToPlay))
-                changePlayingOrder();
-        });
+        getLastRoundWinner().filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
     }
 
     private void changePlayingOrder() {
@@ -119,9 +116,7 @@ public class Hand {
         if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
             result = new HandResult(firstRoundWinner.get(), score);
         else
-            result = lastRoundWinner.
-                    map(player -> new HandResult(player, score))
-                    .orElseGet(HandResult::new);
+            result = lastRoundWinner.map(player -> new HandResult(player, score)).orElseGet(HandResult::new);
     }
 
     private void updatePlayersIntel() {
@@ -165,7 +160,7 @@ public class Hand {
     }
 
     public void setScore(HandScore score) {
-        this.score = HandScore.of(score);
+        this.score = score;
         updatePlayersIntel();
     }
 

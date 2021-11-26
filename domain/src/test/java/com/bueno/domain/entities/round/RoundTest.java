@@ -66,7 +66,7 @@ class RoundTest {
         when(p1.playCard()).thenReturn(Card.of(card1Rank, Suit.SPADES));
         when(p2.playCard()).thenReturn(Card.of(card2Rank, Suit.SPADES));
         when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
 
         var round = new Round(p1, p2, hand);
         round.play();
@@ -81,7 +81,7 @@ class RoundTest {
         when(p1.playCard()).thenReturn(Card.of(card1Rank, card1Suit));
         when(p2.playCard()).thenReturn(Card.of(card2Rank, card2Suit));
         when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
 
         var round = new Round(p1, p2, hand);
         round.play();
@@ -91,9 +91,10 @@ class RoundTest {
     @Test
     @DisplayName("Should have round winner card if opponent runs")
     void shouldHaveRoundWinnerIfOpponentRuns() {
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
+        when(hand.getVira()).thenReturn(Card.of(Rank.THREE, Suit.SPADES));
         when(p1.requestTruco()).thenReturn(true);
-        when(p2.getTrucoResponse(HandScore.of(3))).thenReturn(-1);
+        when(p2.getTrucoResponse(HandScore.THREE)).thenReturn(-1);
 
         var round = new Round(p1, p2, hand);
         round.play();
@@ -106,7 +107,7 @@ class RoundTest {
         when(p1.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.SPADES));
         when(p2.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.CLUBS));
         when(hand.getVira()).thenReturn(Card.of(Rank.SIX, Suit.SPADES));
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
 
         var round = new Round(p1, p2, hand);
         round.play();
@@ -119,7 +120,7 @@ class RoundTest {
         when(p1.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.SPADES));
         when(p2.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.CLUBS));
         when(hand.getVira()).thenReturn(Card.of(Rank.THREE, Suit.SPADES));
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
 
         var round = new Round(p1, p2, hand);
         round.play();
@@ -127,17 +128,18 @@ class RoundTest {
     }
 
     @Test
-    @DisplayName("Should throw if constructor parameter  is null")
+    @DisplayName("Should throw if constructor parameter is null")
     void shouldThrowIfConstructorParameterIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new Round(p1, p2, null));
+        assertThrows(NullPointerException.class, () -> new Round(p1, p2, null));
     }
 
     @Test
     @DisplayName("Should throw if round card is null")
     void shouldThrowIfRoundCardIsNull() {
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
+        when(hand.getVira()).thenReturn(Card.of(Rank.THREE, Suit.SPADES));
         var round = new Round(p1, p2, hand);
-        assertThrows(GameRuleViolationException.class, round::play);
+        assertThrows(NullPointerException.class, round::play);
     }
 
     @ParameterizedTest
@@ -147,7 +149,7 @@ class RoundTest {
         when(p1.playCard()).thenReturn(Card.of(card1Rank, Suit.SPADES));
         when(p2.playCard()).thenReturn(Card.of(card2Rank, Suit.SPADES));
         when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
-        when(hand.getScore()).thenReturn(HandScore.of(1));
+        when(hand.getScore()).thenReturn(HandScore.ONE);
 
         var round = new Round(p1, p2, hand);
         assertThrows(GameRuleViolationException.class, round::play);

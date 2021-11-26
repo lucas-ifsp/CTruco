@@ -28,6 +28,7 @@ import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.truco.Truco;
 import com.bueno.domain.entities.truco.TrucoResult;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -44,17 +45,11 @@ public class Round {
     private final static Logger LOGGER = Logger.getLogger(Round.class.getName());
 
     public Round(Player firstToPlay, Player lastToPlay, Hand hand) {
-        validateConstructorInputs(firstToPlay, lastToPlay, hand);
-        this.firstToPlay = firstToPlay;
-        this.lastToPlay = lastToPlay;
-        this.hand = hand;
-        this.vira = hand.getVira();
+        this.firstToPlay = Objects.requireNonNull(firstToPlay, "First to play must not be null!");
+        this.lastToPlay = Objects.requireNonNull(lastToPlay, "Second to play must not be null!");
+        this.hand = Objects.requireNonNull(hand, "Hand must not be null!");
+        this.vira = Objects.requireNonNull(hand.getVira(), "Vira must not be null!");
         this.hand.setCardToPlayAgainst(null);
-    }
-
-    private void validateConstructorInputs(Player firstToPlay, Player lastToPlay, Hand hand) {
-        if(firstToPlay == null || lastToPlay == null || hand == null)
-            throw new IllegalArgumentException("Parameters must not be null!");
     }
 
     public void play(){
@@ -65,7 +60,7 @@ public class Round {
             if (hasWinnerByRun) return;
         }
 
-        firstCard = firstToPlay.playCard();
+        firstCard = Objects.requireNonNull(firstToPlay.playCard(), "First card played must not be null!");
         hand.setCardToPlayAgainst(firstCard);
         hand.addOpenCard(firstCard);
         lastToPlay.handleOpponentPlay();
@@ -75,7 +70,7 @@ public class Round {
             if (hasWinnerByRun) return;
         }
 
-        lastCard = lastToPlay.playCard();
+        lastCard = Objects.requireNonNull(lastToPlay.playCard(), "Last card played must not be null!");
         hand.setCardToPlayAgainst(null);
         hand.addOpenCard(lastCard);
         firstToPlay.handleOpponentPlay();
@@ -117,8 +112,6 @@ public class Round {
     }
 
     private void validateCards() {
-        if(firstCard == null || lastCard == null || vira == null)
-            throw new GameRuleViolationException("Cards must not be null!");
         if(!firstCard.equals(Card.closed()) && firstCard.equals(lastCard))
             throw new GameRuleViolationException("Cards in the deck must be unique!");
         if(!firstCard.equals(Card.closed()) && firstCard.equals(vira))

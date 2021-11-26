@@ -37,20 +37,21 @@ class HandResultTest {
     @Mock
     private Player player;
 
-    @ParameterizedTest(name = "[{index}]: with valid hand value = {0}")
-    @DisplayName("Should allow creating hand result with all arguments")
-    @ValueSource(ints = {0, 1, 3, 6, 9, 12})
-    void shouldAllowCreatingHandResultWithValidArguments(int value){
-        HandResult handResult = new HandResult(player, HandScore.of(value));
-        assertEquals(player, handResult.getWinner().orElseThrow());
-        assertEquals(HandScore.of(value), handResult.getScore());
+    @Test
+    void shouldAllowCreatingHandResultWithValidArguments(){
+        HandResult handResult = new HandResult(player, HandScore.THREE);
+        assertAll(
+                () -> assertEquals(player, handResult.getWinner().orElseThrow()),
+                () -> assertEquals(HandScore.THREE, handResult.getScore())
+        );
     }
 
     @Test
     @DisplayName("Should not allow creating hand result with partial parameters")
     void shouldNotAllowCreatingHandResultWithPartialParameters() {
         assertAll(
-                () -> assertThrows(NullPointerException.class, () -> new HandResult(null, HandScore.of(1))),
-                () -> assertThrows(NullPointerException.class, () -> new HandResult(player, null)));
+                () -> assertThrows(NullPointerException.class, () -> new HandResult(null, HandScore.ONE)),
+                () -> assertThrows(NullPointerException.class, () -> new HandResult(player, null))
+        );
     }
 }

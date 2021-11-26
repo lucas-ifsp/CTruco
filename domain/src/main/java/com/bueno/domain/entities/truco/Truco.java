@@ -23,6 +23,7 @@ package com.bueno.domain.entities.truco;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.player.util.Player;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Truco {
@@ -33,18 +34,12 @@ public class Truco {
     private final static Logger LOGGER = Logger.getLogger(Truco.class.getName());
 
     public Truco(Player requester, Player responder) {
-        this.requester = requester;
-        this.responder = responder;
+        this.requester = Objects.requireNonNull(requester);
+        this.responder = Objects.requireNonNull(responder);
     }
 
     public TrucoResult handle(HandScore handScore) {
-        if(requester == null || responder == null) {
-            throw new IllegalArgumentException("Players must no be null!");
-        }
-
-        if(isMaoDeOnze() || isNotAskingForTruco()) {
-            return new TrucoResult(handScore);
-        }
+        if(isMaoDeOnze() || isNotAskingForTruco())  return new TrucoResult(handScore);
 
         int maxScoreIncrement = Player.MAX_SCORE - Math.min(requester.getScore(), responder.getScore());
 

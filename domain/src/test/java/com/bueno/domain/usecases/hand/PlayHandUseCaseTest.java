@@ -107,7 +107,7 @@ class PlayHandUseCaseTest {
         sut.play();
         assertAll(
                 () -> assertEquals(p2, getWinner(hand)),
-                () -> assertEquals(HandScore.of(1), hand.getScore())
+                () -> assertEquals(HandScore.ONE, hand.getScore())
         );
     }
 
@@ -121,7 +121,7 @@ class PlayHandUseCaseTest {
         when(p1.getScore()).thenReturn(11);
         when(p1.getMaoDeOnzeResponse()).thenReturn(true);
         sut.play();
-        assertEquals(HandScore.of(3), hand.getScore());
+        assertEquals(HandScore.THREE, hand.getScore());
     }
 
 
