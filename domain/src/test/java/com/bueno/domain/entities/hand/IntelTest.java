@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.round.Round;
@@ -55,7 +56,7 @@ class IntelTest {
     @Test
     @DisplayName("Should get the same vira of the current hand")
     void ShouldGetSameViraOfCurrentHand() {
-        Card card = new Card(7, Suit.CLUBS);
+        Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
         when(hand.getVira()).thenReturn(card);
         assertEquals(card, sut.getVira());
     }
@@ -70,7 +71,7 @@ class IntelTest {
     @Test
     @DisplayName("Should get the same card to play against of the current hand")
     void shouldGetSameCardToPlayAgainstOfCurrentHand() {
-        Card card = new Card(7, Suit.CLUBS);
+        Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
         when(hand.getCardToPlayAgainst()).thenReturn(Optional.of(card));
         assertEquals(card, sut.getCardToPlayAgainst().orElse(null));
     }
@@ -78,7 +79,7 @@ class IntelTest {
     @Test
     @DisplayName("Should get the same open cards of the current hand")
     void shouldGetSameOpenCardsOfCurrentHand() {
-        final List<Card> cards = List.of(new Card(7, Suit.SPADES), new Card(7, Suit.CLUBS));
+        final List<Card> cards = List.of(Card.of(Rank.SEVEN, Suit.SPADES), Card.of(Rank.SEVEN, Suit.CLUBS));
         when(hand.getOpenCards()).thenReturn(cards);
         assertIterableEquals(cards, sut.getOpenCards());
     }

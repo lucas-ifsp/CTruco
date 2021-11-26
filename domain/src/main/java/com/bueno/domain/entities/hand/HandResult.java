@@ -23,6 +23,7 @@ package com.bueno.domain.entities.hand;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.truco.TrucoResult;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class HandResult {
@@ -36,10 +37,8 @@ public class HandResult {
     }
 
     public HandResult(Player winner, HandScore handScore) {
-        if(winner == null || handScore == null)
-            throw new NullPointerException("Parameters must not be null!");
-        this.winner = winner;
-        this.score = HandScore.of(handScore);
+        this.winner = Objects.requireNonNull(winner, "Player must not be null!");
+        this.score = Objects.requireNonNull(handScore, "Hand score must not be null!");
     }
 
     public HandResult(TrucoResult result){

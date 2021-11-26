@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
@@ -58,8 +59,8 @@ class PlayGameUseCaseTest {
 
     @BeforeEach
     void setUp(){
-        when(p1.playCard()).thenReturn(new Card(3, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(2, Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.TWO, Suit.SPADES));
         sut = new PlayGameUseCase(p1, p2);
     }
 

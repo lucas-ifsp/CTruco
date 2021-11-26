@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.round;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.hand.Hand;
@@ -59,32 +60,32 @@ class RoundTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"4,5,6,5", "5,4,6,5", "7,1,5,1", "1,3,5,3"})
+    @CsvSource({"FOUR,FIVE,SIX,FIVE", "FIVE,FOUR,SIX,FIVE", "SEVEN,ACE,FIVE,ACE", "ACE,THREE,FIVE,THREE"})
     @DisplayName("Should return correct winner for non manilhas")
-    void shouldReturnCorrectWinnerCardForNonManilhas(int card1, int card2, int vira, int winner) {
-        when(p1.playCard()).thenReturn(new Card(card1, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(card2, Suit.SPADES));
-        when(hand.getVira()).thenReturn(new Card(vira, Suit.SPADES));
+    void shouldReturnCorrectWinnerCardForNonManilhas(Rank card1Rank, Rank card2Rank, Rank viraRank, Rank winnerRank) {
+        when(p1.playCard()).thenReturn(Card.of(card1Rank, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(card2Rank, Suit.SPADES));
+        when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
         when(hand.getScore()).thenReturn(HandScore.of(1));
 
         var round = new Round(p1, p2, hand);
         round.play();
-        assertEquals(new Card(winner, Suit.SPADES), round.getHighestCard().orElse(null));
+        assertEquals(Card.of(winnerRank, Suit.SPADES), round.getHighestCard().orElse(null));
     }
 
     @ParameterizedTest
-    @CsvSource({"4,DIAMONDS,4,HEARTS,3,4,HEARTS", "5,CLUBS,5,HEARTS,4,5,CLUBS",
-            "13,SPADES,13,HEARTS,12,13,HEARTS", "13,SPADES,12,HEARTS,12,13,SPADES"})
+    @CsvSource({"FOUR,DIAMONDS,FOUR,HEARTS,THREE,FOUR,HEARTS", "FIVE,CLUBS,FIVE,HEARTS,FOUR,FIVE,CLUBS",
+            "KING,SPADES,KING,HEARTS,JACK,KING,HEARTS", "KING,SPADES,JACK,HEARTS,JACK,KING,SPADES"})
     @DisplayName("Should return correct winner card for manilhas")
-    void shouldReturnCorrectWinnerCardForManilhas(int rank1, Suit suit1, int rank2, Suit suit2, int vira, int winnerRank, Suit winnerSuit) {
-        when(p1.playCard()).thenReturn(new Card(rank1, suit1));
-        when(p2.playCard()).thenReturn(new Card(rank2, suit2));
-        when(hand.getVira()).thenReturn(new Card(vira, Suit.SPADES));
+    void shouldReturnCorrectWinnerCardForManilhas(Rank card1Rank, Suit card1Suit, Rank card2Rank, Suit card2Suit, Rank viraRank, Rank winnerRank, Suit winnerSuit) {
+        when(p1.playCard()).thenReturn(Card.of(card1Rank, card1Suit));
+        when(p2.playCard()).thenReturn(Card.of(card2Rank, card2Suit));
+        when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
         when(hand.getScore()).thenReturn(HandScore.of(1));
 
         var round = new Round(p1, p2, hand);
         round.play();
-        assertEquals(new Card(winnerRank, winnerSuit), round.getHighestCard().orElse(null));
+        assertEquals(Card.of(winnerRank, winnerSuit), round.getHighestCard().orElse(null));
     }
 
     @Test
@@ -102,9 +103,9 @@ class RoundTest {
     @Test
     @DisplayName("Should draw when comparing equal non manilha ranks")
     void shouldDrawWhenComparingEqualNonManilhaRanks() {
-        when(p1.playCard()).thenReturn(new Card(4, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS));
-        when(hand.getVira()).thenReturn(new Card(6, Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.CLUBS));
+        when(hand.getVira()).thenReturn(Card.of(Rank.SIX, Suit.SPADES));
         when(hand.getScore()).thenReturn(HandScore.of(1));
 
         var round = new Round(p1, p2, hand);
@@ -115,9 +116,9 @@ class RoundTest {
     @Test
     @DisplayName("Should not draw when comparing equal manilha ranks")
     void shouldNotDrawWhenComparingEqualManilhaRanks() {
-        when(p1.playCard()).thenReturn(new Card(4, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4, Suit.CLUBS));
-        when(hand.getVira()).thenReturn(new Card(3, Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR, Suit.CLUBS));
+        when(hand.getVira()).thenReturn(Card.of(Rank.THREE, Suit.SPADES));
         when(hand.getScore()).thenReturn(HandScore.of(1));
 
         var round = new Round(p1, p2, hand);
@@ -140,12 +141,12 @@ class RoundTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"4,4,5", "4,5,4", "5,4,4"})
+    @CsvSource({"FOUR,FOUR,FIVE", "FOUR,FIVE,FOUR", "FIVE,FOUR,FOUR"})
     @DisplayName("Should throw if round hs duplicated cards")
-    void shouldThrowIfRoundHasDuplicatedCard(int rank1, int rank2, int rankVira) {
-        when(p1.playCard()).thenReturn(new Card(rank1, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(rank2, Suit.SPADES));
-        when(hand.getVira()).thenReturn(new Card(rankVira, Suit.SPADES));
+    void shouldThrowIfRoundHasDuplicatedCard(Rank card1Rank, Rank card2Rank, Rank viraRank) {
+        when(p1.playCard()).thenReturn(Card.of(card1Rank, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(card2Rank, Suit.SPADES));
+        when(hand.getVira()).thenReturn(Card.of(viraRank, Suit.SPADES));
         when(hand.getScore()).thenReturn(HandScore.of(1));
 
         var round = new Round(p1, p2, hand);

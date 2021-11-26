@@ -86,8 +86,7 @@ public abstract class PlayingStrategy{
     }
 
     protected final int getCardValue(Card card, Card vira){
-        char rank = String.valueOf(card.getRank()).toUpperCase().toCharArray()[0];
-        final List<Character> rankValues = new ArrayList<>(Arrays.asList('4', '5', '6', '7', 'Q', 'J', 'K', '1', '2', '3'));
+
         final List<Card> openCards = intel.getOpenCards();
 
         int higherManilhasAlreadyPlayed = (int) openCards.stream()
@@ -107,7 +106,8 @@ public abstract class PlayingStrategy{
         if(card.isCopas(vira)) return 12 + offset;
         if(card.isZap(vira)) return 13;
 
-        return rankValues.indexOf(rank) + offset;
+        final int actualValue = card.getRank().value() - 1;
+        return actualValue + offset;
     }
 
     protected final Card discard(Card card){

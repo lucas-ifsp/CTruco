@@ -22,6 +22,7 @@ package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
@@ -67,7 +68,7 @@ class PlayHandUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        when(deck.takeOne()).thenReturn(new Card(7, Suit.CLUBS));
+        when(deck.takeOne()).thenReturn(Card.of(Rank.SEVEN, Suit.CLUBS));
         hand = new Hand(p1, p2, deck);
         when(game.prepareNewHand()).thenReturn(hand);
         sut  = new PlayHandUseCase(game);
@@ -81,16 +82,16 @@ class PlayHandUseCaseTest {
 
    @Test
     void shouldHaveHandWinnerAfterTwoRounds(){
-       when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
-       when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
+       when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
+       when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.FOUR,Suit.HEARTS));
        sut.play();
        assertEquals(p1, getWinner(hand));
    }
 
     @Test
     void shouldHaveHandWinnerAfterThreeRounds(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS)).thenReturn(new Card(3, Suit.DIAMONDS));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS)).thenReturn(new Card(4, Suit.DIAMONDS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.FOUR,Suit.HEARTS)).thenReturn(Card.of(Rank.THREE, Suit.DIAMONDS));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS)).thenReturn(Card.of(Rank.FOUR, Suit.DIAMONDS));
         sut.play();
         assertEquals(p1, getWinner(hand));
     }
@@ -114,8 +115,8 @@ class PlayHandUseCaseTest {
     @DisplayName("ShouldWinnerReceiveThreePointsForPlayedMaoDeOnze")
     void shouldWinnerReceiveThreePointsForPlayedMaoDeOnze() {
         when(game.getPlayer1()).thenReturn(p1);
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES));
         when(game.isMaoDeOnze()).thenReturn(true);
         when(p1.getScore()).thenReturn(11);
         when(p1.getMaoDeOnzeResponse()).thenReturn(true);

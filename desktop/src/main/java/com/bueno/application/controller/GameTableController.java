@@ -188,7 +188,7 @@ public class GameTableController {
     }
 
     private void playCard(Card card, ImageView imageView) {
-        Card cardToPlay = CardImage.isCardClosed(imageView.getImage()) ? Card.getClosedCard() : card;
+        Card cardToPlay = CardImage.isCardClosed(imageView.getImage()) ? Card.closed() : card;
         showUserTurn(imageView);
         player.setCardToPlayDecision(cardToPlay);
         player.setTrucoRequestDecision(false);

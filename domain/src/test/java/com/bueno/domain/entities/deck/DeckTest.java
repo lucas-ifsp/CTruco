@@ -53,8 +53,8 @@ class DeckTest {
     @DisplayName("Should create sorted deck")
     void shouldCreateSortedDeck() {
         List<Card> firstEight = List.of(
-                new Card(1, Suit.DIAMONDS), new Card(1, Suit.SPADES), new Card(1, Suit.HEARTS), new Card(1, Suit.CLUBS),
-                new Card(2, Suit.DIAMONDS), new Card(2, Suit.SPADES), new Card(2, Suit.HEARTS), new Card(2, Suit.CLUBS));
+                Card.of(Rank.FOUR, Suit.DIAMONDS), Card.of(Rank.FOUR, Suit.SPADES), Card.of(Rank.FOUR, Suit.HEARTS), Card.of(Rank.FOUR, Suit.CLUBS),
+                Card.of(Rank.FIVE, Suit.DIAMONDS), Card.of(Rank.FIVE, Suit.SPADES), Card.of(Rank.FIVE, Suit.HEARTS), Card.of(Rank.FIVE, Suit.CLUBS));
         assertEquals(firstEight, trucoDeck.take(8));
     }
 
@@ -63,8 +63,8 @@ class DeckTest {
     void shouldGetShuffledCardsAfterShuffling() {
         trucoDeck.shuffle();
         List<Card> firstEight = List.of(
-                new Card(1, Suit.DIAMONDS), new Card(1, Suit.SPADES), new Card(1, Suit.HEARTS), new Card(1, Suit.CLUBS),
-                new Card(2, Suit.DIAMONDS), new Card(2, Suit.SPADES), new Card(2, Suit.HEARTS), new Card(2, Suit.CLUBS));
+                Card.of(Rank.ACE, Suit.DIAMONDS), Card.of(Rank.ACE, Suit.SPADES), Card.of(Rank.ACE, Suit.HEARTS), Card.of(Rank.ACE, Suit.CLUBS),
+                Card.of(Rank.TWO, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.SPADES), Card.of(Rank.TWO, Suit.HEARTS), Card.of(Rank.TWO, Suit.CLUBS));
         assertNotEquals(firstEight, trucoDeck.take(8));
     }
 
