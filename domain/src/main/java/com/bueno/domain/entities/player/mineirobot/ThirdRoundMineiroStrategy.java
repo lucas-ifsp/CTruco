@@ -48,7 +48,7 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
 
         if(remainingCard.compareValueTo(opponentCard, vira) > 0) return cards.remove(0);
 
-        return Card.getClosedCard();
+        return Card.closed();
     }
 
     @Override

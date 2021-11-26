@@ -119,11 +119,11 @@ public class Round {
     private void validateCards() {
         if(firstCard == null || lastCard == null || vira == null)
             throw new GameRuleViolationException("Cards must not be null!");
-        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(lastCard))
+        if(!firstCard.equals(Card.closed()) && firstCard.equals(lastCard))
             throw new GameRuleViolationException("Cards in the deck must be unique!");
-        if(!firstCard.equals(Card.getClosedCard()) && firstCard.equals(vira))
+        if(!firstCard.equals(Card.closed()) && firstCard.equals(vira))
             throw new GameRuleViolationException("Cards in the deck must be unique!");
-        if(!lastCard.equals(Card.getClosedCard()) && lastCard.equals(vira))
+        if(!lastCard.equals(Card.closed()) && lastCard.equals(vira))
             throw new GameRuleViolationException("Cards in the deck must be unique!");
     }
 

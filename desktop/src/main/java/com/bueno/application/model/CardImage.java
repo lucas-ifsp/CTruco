@@ -21,12 +21,12 @@
 package com.bueno.application.model;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Optional;
 
 public class CardImage {
 
@@ -41,7 +41,7 @@ public class CardImage {
     }
 
     public static CardImage ofClosedCard(){
-        return of(Card.getClosedCard());
+        return of(Card.closed());
     }
 
     public static CardImage ofNoCard(){
@@ -67,26 +67,19 @@ public class CardImage {
 
     private static String getCardFileName(Card card) {
         if(card == null) return "table";
-        if(card.equals(Card.getClosedCard())) return "red_back";
+        if(card.equals(Card.closed())) return "red_back";
 
-        final int rank = card.getRank();
+        final Rank rank = card.getRank();
         final Suit suit = card.getSuit();
-
-        String rankName = switch (rank) {
-            case 1 -> "A";
-            case 11 -> "Q";
-            case 12 -> "J";
-            case 13 -> "K";
-            default -> String.valueOf(rank);
-        };
 
         String suitName = switch (suit) {
             case HEARTS -> "H";
             case CLUBS -> "C";
             case SPADES -> "S";
             case DIAMONDS -> "D";
+            case HIDDEN -> "";
         };
-        return rankName + suitName;
+        return rank + suitName;
     }
 
     private void loadImage(String imagePath) {

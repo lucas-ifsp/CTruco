@@ -26,6 +26,7 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -42,8 +43,8 @@ public class Game {
     private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
 
     public Game(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+        this.player1 = Objects.requireNonNull(player1);
+        this.player2 = Objects.requireNonNull(player2);
         this.hands = new ArrayList<>();
     }
 

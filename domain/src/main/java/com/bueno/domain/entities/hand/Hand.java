@@ -28,6 +28,7 @@ import com.bueno.domain.entities.round.Round;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -53,8 +54,8 @@ public class Hand {
     }
 
     public Hand(Player firstToPlay, Player lastToPlay, Deck deck){
-        this.firstToPlay = firstToPlay;
-        this.lastToPlay = lastToPlay;
+        this.firstToPlay = Objects.requireNonNull(firstToPlay);
+        this.lastToPlay = Objects.requireNonNull(lastToPlay);
         dealCards(deck);
 
         score = HandScore.of(1);

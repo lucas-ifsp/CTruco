@@ -22,6 +22,7 @@ package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
+import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
@@ -61,7 +62,7 @@ class HandTest {
 
     @BeforeEach
     void setUp() {
-        when(deck.takeOne()).thenReturn(new Card(7, Suit.CLUBS));
+        when(deck.takeOne()).thenReturn(Card.of(Rank.SEVEN, Suit.CLUBS));
         sut  = new Hand(p1,p2, deck);
     }
 
@@ -73,8 +74,8 @@ class HandTest {
     @Test
     @DisplayName("Should win hand winning first two rounds")
     void shouldWinHandWinningFirstTwoRounds(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.FOUR,Suit.HEARTS));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -86,8 +87,8 @@ class HandTest {
     @Test
     @DisplayName("Should get correct last round winner")
     void shouldGetCorrectLastRoundWinner(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES));
         sut.playNewRound();
         assertEquals(p1, sut.getLastRoundWinner().orElse(null));
     }
@@ -95,8 +96,8 @@ class HandTest {
     @Test
     @DisplayName("Should win hand tying first and winning second")
     void shouldWinHandTyingFirstAndWinningSecond(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(4,Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
+        when(p2.playCard()).thenReturn(Card.of(Rank.THREE,Suit.CLUBS)).thenReturn(Card.of(Rank.FOUR,Suit.SPADES));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -108,8 +109,8 @@ class HandTest {
     @Test
     @DisplayName("Should win hand winning first and tying second")
     void shouldWinHandWinningFirstAndTyingSecond(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(3,Suit.CLUBS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.CLUBS));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -121,8 +122,8 @@ class HandTest {
     @Test
     @DisplayName("Should draw hand with three tied rounds")
     void shouldDrawHandWithThreeTiedRounds(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(1, Suit.CLUBS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.TWO,Suit.SPADES)).thenReturn(Card.of(Rank.ACE, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.THREE,Suit.CLUBS)).thenReturn(Card.of(Rank.TWO,Suit.CLUBS)).thenReturn(Card.of(Rank.ACE, Suit.CLUBS));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -135,8 +136,8 @@ class HandTest {
     @Test
     @DisplayName("Should win hand by best of three")
     void shouldWinHandByBestOfThree(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card('K', Suit.CLUBS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.TWO,Suit.SPADES)).thenReturn(Card.of(Rank.ACE, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.TWO,Suit.CLUBS)).thenReturn(Card.of(Rank.THREE,Suit.CLUBS)).thenReturn(Card.of(Rank.KING, Suit.CLUBS));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -149,8 +150,8 @@ class HandTest {
     @Test
     @DisplayName("Should win hand winning first and tying third")
     void shouldWinHandWinningFirstAndTyingThird(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(2,Suit.SPADES)).thenReturn(new Card(1, Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(2,Suit.CLUBS)).thenReturn(new Card(3,Suit.CLUBS)).thenReturn(new Card(1, Suit.CLUBS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.TWO,Suit.SPADES)).thenReturn(Card.of(Rank.ACE, Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.TWO,Suit.CLUBS)).thenReturn(Card.of(Rank.THREE,Suit.CLUBS)).thenReturn(Card.of(Rank.ACE, Suit.CLUBS));
 
         sut.playNewRound();
         sut.playNewRound();
@@ -163,8 +164,8 @@ class HandTest {
     @Test
     @DisplayName("Should throw playing a forth round")
     void shouldThrowPlayingAForthRound(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES));
         sut.playNewRound();
         sut.playNewRound();
         sut.playNewRound();
@@ -174,8 +175,8 @@ class HandTest {
     @Test
     @DisplayName("Should store played hands")
     void shouldStorePlayedHands(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES));
         sut.playNewRound();
         sut.playNewRound();
         assertEquals(2, sut.getRoundsPlayed().size());
@@ -184,8 +185,8 @@ class HandTest {
     @Test
     @DisplayName("Should store open cards")
     void shouldStoreOpenCards(){
-        when(p1.playCard()).thenReturn(new Card(3,Suit.SPADES)).thenReturn(new Card(3,Suit.HEARTS));
-        when(p2.playCard()).thenReturn(new Card(4,Suit.SPADES)).thenReturn(new Card(4,Suit.HEARTS));
+        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
+        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.FOUR,Suit.HEARTS));
         sut.playNewRound();
         sut.playNewRound();
         assertEquals(5, sut.getOpenCards().size());

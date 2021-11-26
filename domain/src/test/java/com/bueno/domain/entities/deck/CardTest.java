@@ -25,10 +25,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CardTest {
 
@@ -38,67 +36,95 @@ class CardTest {
         @Test
         @DisplayName("Creating a card with valid rank and suit")
         void creatingCardWithValidRankAndSuit(){
-            Card card = new Card(7, Suit.SPADES);
-            assertEquals(7, card.getRank());
-            assertEquals(Suit.SPADES, card.getSuit());
+            Card card = Card.of(Rank.SEVEN, Suit.SPADES);
+            assertAll(
+                    () -> assertEquals(Rank.SEVEN, card.getRank()),
+                    () -> assertEquals(Suit.SPADES, card.getSuit())
+            );
         }
 
-        @ParameterizedTest(name = "[{index}]: {1} as rank name for {0}")
-        @DisplayName("creating cards from valid ranks names")
-        @CsvSource({"7,7", "A,1", "Q,11", "J,12", "K,13", "k,13"})
-        void creatingCardsFromValidRankNames(char rankName, int rankValue){
-            Card card = new Card(rankName, Suit.SPADES);
-            assertEquals(rankValue, card.getRank());
+        @Test
+        @DisplayName("creating closed card")
+        void creatingClosedCard(){
+            Card card = Card.closed();
+            assertAll(
+                    () -> assertEquals(Rank.HIDDEN, card.getRank()),
+                    () -> assertEquals(Suit.HIDDEN, card.getSuit())
+            );
+        }
+
+        @Test
+        @DisplayName("creating closed card")
+        void creatingClosedCardWithHiddenRankAndSuit(){
+            Card card = Card.of(Rank.HIDDEN, Suit.HIDDEN);
+            assertAll(
+                    () -> assertEquals(Rank.HIDDEN, card.getRank()),
+                    () -> assertEquals(Suit.HIDDEN, card.getSuit())
+            );
+        }
+
+        @Test
+        @DisplayName("create get same reference for same values")
+        void createGetSameReferenceForSameValues() {
+            Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
+            Card closedCard = Card.closed();
+
+            assertAll(
+                    () -> assertEquals(Card.of(Rank.SEVEN, Suit.CLUBS), card),
+                    () -> assertEquals(Card.closed(), closedCard)
+            );
         }
     }
 
     @Nested
     @DisplayName("Should not allow")
     class ShouldNotAllow{
-        @ParameterizedTest(name = "[{index}]: {0} as rank")
-        @DisplayName("creating cards with invalid ranks")
-        @ValueSource(ints = {-1, 8, 9, 10, 14})
-        void creatingCardsWithInvalidRank(int rank){
-            assertThrows(IllegalArgumentException.class, () -> new Card(rank, Suit.CLUBS));
+        @Test
+        @DisplayName("creating a card with null rank")
+        void creatingCardWithNullRank(){
+            assertThrows(NullPointerException.class, () -> Card.of(null, Suit.CLUBS));
         }
 
         @Test
         @DisplayName("creating a card with null suit")
         void creatingCardWithNullSuit(){
-            assertThrows(IllegalArgumentException.class, () -> new Card(7, null));
+            assertThrows(NullPointerException.class, () -> Card.of(Rank.ACE, null));
         }
 
         @Test
-        @DisplayName("creating a card from invalid rank name")
-        void creatingCardFromInvalidRankName(){
-            assertThrows(IllegalArgumentException.class, () -> new Card('P', Suit.CLUBS));
+        @DisplayName("creating card with only rank or suit hidden")
+        void creatingCardWithOnlyRankOrSuitHidden() {
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class, () -> Card.of(Rank.HIDDEN, Suit.CLUBS)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> Card.of(Rank.SEVEN, Suit.HIDDEN))
+            );
         }
     }
 
     @ParameterizedTest(name = "[{index}]: rank {0} and suit {1} = {2}")
     @DisplayName("Should correctly toString() open cards")
-    @CsvSource({"7,DIAMONDS,[7\u2666]", "1,HEARTS,[A\u2665]", "11,CLUBS,[Q\u2663]", "12,SPADES,[J\u2660]", "13,SPADES,[K\u2660]"})
-    void shouldCorrectlyToStringOpenCard(int rank, Suit suit, String toString){
-        assertEquals(toString, new Card(rank, suit).toString());
+    @CsvSource({"SEVEN,DIAMONDS,[7\u2666]", "ACE,HEARTS,[A\u2665]", "QUEEN,CLUBS,[Q\u2663]", "JACK,SPADES,[J\u2660]", "KING,SPADES,[K\u2660]"})
+    void shouldCorrectlyToStringOpenCard(Rank rank, Suit suit, String output){
+        assertEquals(output, Card.of(rank, suit).toString());
     }
 
     @Test
     @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
-        assertEquals("[Xx]", Card.getClosedCard().toString());
+        assertEquals("[Xx]", Card.closed().toString());
     }
 
     @Test
     @DisplayName("Should a closed card worth less than worst possible card")
     void shouldClosedCardWorthLessThanWorstCard() {
-        Card worstCard = new Card(4, Suit.DIAMONDS);
-        Card vira = new Card(4, Suit.CLUBS);
-        assertEquals(-1, Card.getClosedCard().compareValueTo(worstCard, vira));
+        Card worstCard = Card.of(Rank.FOUR, Suit.DIAMONDS);
+        Card vira = Card.of(Rank.FOUR, Suit.CLUBS);
+        assertEquals(-1, Card.closed().compareValueTo(worstCard, vira));
     }
 
     @Test
     @DisplayName("Should same cards be equals")
     void shouldSameCardsBeEquals(){
-        assertEquals(new Card(1, Suit.DIAMONDS), new Card(1, Suit.DIAMONDS));
+        assertEquals(Card.of(Rank.TWO, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.DIAMONDS));
     }
 }

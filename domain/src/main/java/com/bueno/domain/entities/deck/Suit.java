@@ -21,13 +21,26 @@
 package com.bueno.domain.entities.deck;
 
 public enum Suit {
-    DIAMONDS("Diamonds"),
-    SPADES("Spades"),
-    HEARTS("Hearts"),
-    CLUBS("Clubs");
+    HIDDEN("x", 0),
+    DIAMONDS("\u2666", 1),
+    SPADES("\u2660", 2),
+    HEARTS("\u2665", 3),
+    CLUBS("\u2663", 4);
 
-    String name;
-    Suit(String name) {
-        this.name = name;
+    private String symbol;
+    private int ordinalValue;
+
+    Suit(String symbol, int ordinalValue) {
+        this.symbol = symbol;
+        this.ordinalValue = ordinalValue;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
+
+    int value() {
+        return ordinalValue;
     }
 }

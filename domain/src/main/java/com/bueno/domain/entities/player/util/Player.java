@@ -62,7 +62,7 @@ public abstract class Player {
         if(card == null || !cards.contains(card))
             throw new IllegalArgumentException("Card can not be null or out of player cards set!");
         cards.remove(card);
-        return Card.getClosedCard();
+        return Card.closed();
     }
 
     public void addScore(HandScore handScore){

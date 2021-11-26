@@ -20,39 +20,41 @@
 
 package com.bueno.domain.entities.deck;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public enum Rank {
+    HIDDEN(0, 'X'),
+    FOUR(1, '4'),
+    FIVE(2, '5'),
+    SIX(3, '6'),
+    SEVEN(4, '7'),
+    QUEEN(5, 'Q'),
+    JACK(6, 'J'),
+    KING(7, 'K'),
+    ACE(8, 'A'),
+    TWO(9, '2'),
+    THREE(10, '3');
 
-public class Deck {
-    private final List<Card> cards = new ArrayList<>();
+    private int value;
+    private char symbol;
 
-    public Deck() {
-        generateSortedDeck();
+    Rank(int value, char symbol) {
+        this.value = value;
+        this.symbol = symbol;
     }
 
-    private void generateSortedDeck() {
-        for(Rank rank : Rank.values())
-            for(Suit suit : Suit.values())
-                if(rank != Rank.HIDDEN && suit != Suit.HIDDEN)
-                    cards.add(Card.of(rank, suit));
+    public int value() {
+        return value;
     }
 
-    public List<Card> take(int numberOfCards) {
-        List<Card> cardsTaken = new ArrayList<>(cards.subList(0, numberOfCards));
-        cards.removeAll(cardsTaken);
-        return cardsTaken;
+    public Rank next() {
+        return switch (ordinal()){
+            case 0 -> HIDDEN;
+            case 10 -> FOUR;
+            default -> values()[ordinal() + 1];
+        };
     }
 
-    public Card takeOne() {
-        return cards.remove(0);
-    }
-
-    public void shuffle() {
-        Collections.shuffle(cards);
-    }
-
-    public int size() {
-        return cards.size();
+    @Override
+    public String toString() {
+        return String.valueOf(symbol);
     }
 }

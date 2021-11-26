@@ -20,39 +20,40 @@
 
 package com.bueno.domain.entities.deck;
 
-import java.util.List;
+import java.util.Objects;
 
-public class Card {
+public final class Card {
 
-    private int rank;
-    private Suit suit;
-    private static final List<String> rankNames = List.of("Hidden", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K");
-    private final List<Integer> ascendingCardRankValues = List.of(0, 4, 5, 6, 7, 11, 12, 13, 1, 2, 3);
+    private static final Card[] cache = new Card[41];
 
-    private Card(){
-    }
+    private final Suit suit;
+    private final Rank rank;
 
-    public Card(int rank, Suit suit) {
-        setRank(rank);
-        setSuit(suit);
-    }
-
-    public Card(char rankName, Suit suit) {
-        this(rankNames.indexOf(String.valueOf(rankName).toUpperCase()), suit);
-    }
-
-    private void setRank(int rank) {
-        if(rank < 0 || rank > 13)
-            throw new IllegalArgumentException("Invalid card rank!");
-        if(rank == 8 || rank == 9 || rank == 10)
-            throw new IllegalArgumentException("Invalid card rank for truco a game!");
+    private Card(Rank rank, Suit suit) {
         this.rank = rank;
+        this.suit  = suit;
     }
 
-    private void setSuit(Suit suit) {
-        if(suit == null)
-            throw new IllegalArgumentException("Card suit must not be null!");
-        this.suit = suit;
+    public static Card of(Rank rank, Suit suit){
+        Objects.requireNonNull(rank);
+        Objects.requireNonNull(suit);
+        if(rank == Rank.HIDDEN ^ suit == Suit.HIDDEN)
+            throw new IllegalArgumentException("Both rank and suit must be HIDDEN or none: " + rank + suit);
+
+        return fromCache(rank, suit);
+    }
+
+    public static Card closed(){
+        return fromCache(Rank.HIDDEN, Suit.HIDDEN);
+    }
+
+    private static Card fromCache(Rank rank, Suit suit){
+        int rankValue = rank.value();
+        int suitValue = suit.value();
+        int cachePosition = rankValue == 0 || suitValue == 0 ? 0 : (rankValue - 1) * 4 + suitValue;
+
+        if(cache[cachePosition] == null) cache[cachePosition] = new Card(rank, suit);
+        return cache[cachePosition];
     }
 
     public int compareValueTo(Card card, Card vira){
@@ -61,23 +62,19 @@ public class Card {
 
     private int computeCardValue(Card card, Card vira) {
         if (!card.isManilha(vira))
-            return ascendingCardRankValues.indexOf(card.getRank());
+            return card.getRank().value();
         else
             return switch (card.getSuit()) {
                 case DIAMONDS -> 11;
                 case SPADES -> 12;
                 case HEARTS -> 13;
                 case CLUBS -> 14;
+                case HIDDEN -> throw new IllegalStateException("Hidden card can not be manilha!");
             };
     }
 
     public boolean isManilha(Card vira){
-        return getRank() == getManilhaRank(vira);
-    }
-
-    private int getManilhaRank(Card vira) {
-        if (vira.getRank() == 3) return 4;
-        return ascendingCardRankValues.get(ascendingCardRankValues.indexOf(vira.getRank()) + 1);
+        return getRank() == vira.getRank().next();
     }
 
     public boolean isZap(Card vira){
@@ -96,11 +93,7 @@ public class Card {
         return isManilha(vira) && suit == Suit.DIAMONDS;
     }
 
-    public static Card getClosedCard(){
-        return new Card();
-    }
-
-    public int getRank() {
+    public Rank getRank() {
         return rank;
     }
 
@@ -118,17 +111,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return this.equals(getClosedCard())?
-                "[Xx]" :
-                "["+rankNames.get(rank) + toUnicodeSymbol(suit)+"]";
-    }
-
-    private String toUnicodeSymbol(Suit suit){
-        return switch (suit){
-            case DIAMONDS-> "\u2666";
-            case HEARTS -> "\u2665";
-            case CLUBS -> "\u2663";
-            case SPADES -> "\u2660";
-        };
+        return "["+ rank + suit +"]";
     }
 }

@@ -21,11 +21,13 @@
 package com.bueno.domain.entities.hand;
 
 
+import java.util.Objects;
+
 public class HandScore {
     private final int score;
 
-    private HandScore(int score){
-        if(!isValid(score)) throw new HandScoreException("Invalid score value: " + score);
+    private HandScore(int score) {
+        if (!isValid(score)) throw new HandScoreException("Invalid score value: " + score);
         this.score = score;
     }
 
@@ -34,12 +36,12 @@ public class HandScore {
     }
 
     public static HandScore of(HandScore handScore) {
-        if(handScore == null) throw new NullPointerException("Source hand score must not be null.");
+        Objects.requireNonNull(handScore, "Source hand score must not be null.");
         return new HandScore(handScore.get());
     }
 
     public HandScore increase() {
-        if(score == 0) throw new HandScoreException("Can not increase score from 0 (zero).");
+        if (score == 0) throw new HandScoreException("Can not increase score from 0 (zero).");
         int nextScore = score == 1 ? 3 : score + 3;
         return new HandScore(nextScore);
     }
