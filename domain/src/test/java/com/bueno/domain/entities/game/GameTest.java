@@ -22,7 +22,7 @@ package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

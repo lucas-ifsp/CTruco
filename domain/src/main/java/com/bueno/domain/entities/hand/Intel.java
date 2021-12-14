@@ -22,7 +22,6 @@ package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class Intel {
     }
 
     public Optional<Card> getCardToPlayAgainst() {
-        return hand.getCardToPlayAgainst();
+        return Optional.ofNullable(hand.getCardToPlayAgainst().orElse(null));
     }
 
     public List<Card> getOpenCards() {
@@ -70,5 +69,14 @@ public class Intel {
 
     public Optional<HandResult> getResult(){
         return hand.getResult();
+    }
+
+    @Override
+    public String toString() {
+        return "getVira = " + getVira() +
+                " | cardToPlayAgainst = " + getCardToPlayAgainst() +
+                " | getRoundsPlayed = " + getRoundsPlayed() +
+                " | getOpenCards = " + getOpenCards() +
+                " | getResult = " + getResult();
     }
 }

@@ -52,4 +52,12 @@ public class HandResult {
     public HandScore getScore() {
         return score;
     }
+
+    @Override
+    public String toString() {
+        return "HandResult{" +
+                "winner=" + winner +
+                ", score=" + score +
+                '}';
+    }
 }

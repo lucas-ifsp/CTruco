@@ -18,10 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.usecases.game;
 
-public class HandScoreException extends RuntimeException {
-    public HandScoreException(String message) {
-        super(message);
+import com.bueno.domain.entities.game.Game;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+public class LoadGameUseCase {
+
+    private GameRepository repo;
+
+    public LoadGameUseCase(GameRepository repo) {
+        this.repo = repo;
+    }
+
+    public Optional<Game> load(UUID uuid) {
+        return repo.findByUuid(Objects.requireNonNull(uuid));
     }
 }

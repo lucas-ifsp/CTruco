@@ -20,18 +20,18 @@
 
 package com.bueno.domain.entities.game;
 
+import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.player.util.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Game {
 
+    private final UUID uuid;
     private final Player player1;
     private final Player player2;
 
@@ -43,15 +43,28 @@ public class Game {
     private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
 
     public Game(Player player1, Player player2) {
+        this(player1, player2, UUID.randomUUID());
+    }
+
+    public Game(Player player1, Player player2, UUID uuid) {
         this.player1 = Objects.requireNonNull(player1);
         this.player2 = Objects.requireNonNull(player2);
+        this.uuid = uuid;
         this.hands = new ArrayList<>();
     }
 
     public Hand prepareNewHand(){
         LOGGER.info("Preparing to play new hand...");
         defineHandPlayingOrder();
-        Hand hand = new Hand(firstToPlay, lastToPlay);
+
+        final Deck deck = new Deck();
+        deck.shuffle();
+
+        final Card vira = deck.takeOne();
+        firstToPlay.setCards(deck.take(3));
+        lastToPlay.setCards(deck.take(3));
+
+        Hand hand = new Hand(firstToPlay, lastToPlay, vira);
         hands.add(hand);
         return hand;
     }
@@ -67,7 +80,8 @@ public class Game {
         Optional<Player> winner = result.getWinner();
 
         if (winner.isEmpty()) return;
-        if (winner.get().equals(player1)) player1.addScore(result.getScore());
+        if (winner.get().equals(player1))
+            player1.addScore(result.getScore());
         else player2.addScore(result.getScore());
     }
 
@@ -75,6 +89,10 @@ public class Game {
         if (player1.getScore() == Player.MAX_SCORE) return Optional.of(player1);
         if (player2.getScore() == Player.MAX_SCORE) return Optional.of(player2);
         return Optional.empty();
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Player getFirstToPlay() {
@@ -98,11 +116,29 @@ public class Game {
     }
 
     public Hand getCurrentHand(){
+        if(hands.isEmpty()) return null;
         int lastHandIndex = hands.size() - 1;
         return hands.get(lastHandIndex);
     }
 
     public boolean isMaoDeOnze() {
         return player1.getScore() == 11 ^ player2.getScore() == 11;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return uuid.equals(game.uuid) && player1.equals(game.player1) && player2.equals(game.player2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, player1, player2);
+    }
+
+    public boolean isDone() {
+        return getWinner().isPresent();
     }
 }

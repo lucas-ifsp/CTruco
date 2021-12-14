@@ -26,6 +26,8 @@ import com.bueno.domain.entities.hand.Intel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public abstract class Player {
@@ -34,13 +36,20 @@ public abstract class Player {
 
     protected List<Card> cards;
     protected String username;
+    private UUID uuid;
+
     private int score;
     private Intel intel;
 
     private final static Logger LOGGER = Logger.getLogger(Player.class.getName());
 
     public Player(String username) {
+        this(username, UUID.randomUUID());
+    }
+
+    public Player(String username, UUID uuid) {
         this.username = username;
+        this.uuid = uuid;
     }
 
     public abstract Card playCard();
@@ -58,6 +67,13 @@ public abstract class Player {
         return intel;
     }
 
+    public final Card play(Card card){
+        Card cardToPlay = Objects.requireNonNull(card);
+        if(!cards.contains(cardToPlay)) new IllegalArgumentException("User don't own card " + cardToPlay + ".");
+        cards.remove(cardToPlay);
+        return cardToPlay;
+    }
+
     protected final Card discard(Card card){
         if(card == null || !cards.contains(card))
             throw new IllegalArgumentException("Card can not be null or out of player cards set!");
@@ -66,7 +82,8 @@ public abstract class Player {
     }
 
     public void addScore(HandScore handScore){
-        this.score = Math.min(MAX_SCORE, this.score + handScore.get());
+        final int newScore = Math.min(MAX_SCORE, this.score + handScore.get());
+        this.score = newScore;
     }
 
     public void setCards(List<Card> cards){
@@ -86,6 +103,10 @@ public abstract class Player {
     @Override
     public String toString() {
         return getUsername();
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     @Override

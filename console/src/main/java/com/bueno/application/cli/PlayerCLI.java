@@ -27,7 +27,7 @@ import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.hand.Intel;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.usecases.game.PlayGameUseCase;
 
 import java.util.Arrays;

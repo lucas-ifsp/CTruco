@@ -21,16 +21,10 @@
 package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.logging.Logger;
+import java.util.*;
 
 public class Hand {
 
@@ -38,63 +32,137 @@ public class Hand {
 
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
+    private EnumSet<PossibleActions> possibleActions;
 
     private Player firstToPlay;
     private Player lastToPlay;
-    private Player lastScoreIncrementRequester;
+    private Player currentPlayer;
+    private Player lastBetRaiser;
 
     private Card cardToPlayAgainst;
     private HandScore score;
+    private HandScore scoreProposal;
+
     private HandResult result;
 
-    private final static Logger LOGGER = Logger.getLogger(Hand.class.getName());
+    private HandState state;
 
-    public Hand(Player firstToPlay, Player lastToPlay) {
-        this(firstToPlay, lastToPlay, new Deck());
-    }
+    //private final static Logger LOGGER = Logger.getLogger(Hand.class.getName());
 
-    public Hand(Player firstToPlay, Player lastToPlay, Deck deck){
+    public Hand(Player firstToPlay, Player lastToPlay, Card vira){
         this.firstToPlay = Objects.requireNonNull(firstToPlay);
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
-        dealCards(deck);
+        this.vira = Objects.requireNonNull(vira);
 
+        currentPlayer = firstToPlay;
         score = HandScore.ONE;
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
         addOpenCard(vira);
+        state = new NoCardState(this);
     }
 
-    private void dealCards(Deck deck) {
-        deck.shuffle();
+    public void playFirstCard(Player player, Card card){
+        final Player requester = Objects.requireNonNull(player, "Player must not be null!");
+        final Card requesterCard = Objects.requireNonNull(card, "Card must not be null!");
+        if(!requester.equals(currentPlayer))
+            throw new IllegalArgumentException("First to play must be " + currentPlayer + ", not " + requester + ".");
+        state.playFirstCard(requester, requesterCard);
 
-        firstToPlay.setCards(deck.take(3));
-        lastToPlay.setCards(deck.take(3));
-        vira = deck.takeOne();
-
-        LOGGER.info("Vira: " + vira);
     }
 
-    public void playNewRound(){
-        if(roundsPlayed.size() == 3)
-            throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
+    public void playSecondCard(Player player, Card cards){
+        final Player requester = Objects.requireNonNull(player, "Player must not be null!");
+        final Card requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
+        if(!requester.equals(currentPlayer))
+            throw new IllegalArgumentException("Second to play must be " + currentPlayer + ", not " + requester + ".");
+        state.playSecondCard(requester,requesterCard);
+    }
 
-        defineRoundPlayingOrder();
-        Round round = new Round(firstToPlay, lastToPlay, this);
-        round.play();
+    public void accept(Player responder){
+        final Player player = Objects.requireNonNull(responder, "Player must not be null!");
+        if(!player.equals(currentPlayer))
+            throw new IllegalArgumentException(player + " can not accept a bet requested to " + currentPlayer + ".");
+        state.accept(player);
+    }
 
-        firstToPlay.handleRoundConclusion();
-        lastToPlay.handleRoundConclusion();
+    public void quit(Player responder){
+        final Player player = Objects.requireNonNull(responder, "Player must not be null!");
+        if(!player.equals(currentPlayer))
+            throw new IllegalArgumentException(player + " can not quit a bet requested to " + currentPlayer + ".");
+        state.quit(player);
+    }
+
+    public void raiseBet(Player requester){
+        final Player player = Objects.requireNonNull(requester, "Player must not be null!");
+        if(!player.equals(currentPlayer))
+            throw new IllegalArgumentException(player + " can not raise the bet in " + currentPlayer + " turn.");
+        if(player.equals(lastBetRaiser))
+            throw new IllegalStateException(player + " can not raise the bet consecutively.");
+        state.raiseBet(player);
+    }
+
+    void playRound(Card lastCard){
+        final Round round = new Round(firstToPlay, cardToPlayAgainst, lastToPlay, lastCard, vira);
+        round.play2();
         roundsPlayed.add(round);
     }
 
-    private void defineRoundPlayingOrder() {
+    boolean isMaoDeOnze() {
+        return firstToPlay.getScore() == 11 || lastToPlay.getScore() == 11;
+    }
+
+    void addScoreProposal() {
+        final int maxHandScore = getMaxHandScore();
+        final HandScore requestingScore = score.increase();
+
+        if(requestingScore.get() > maxHandScore) {
+            final String message = String.format("Can not raise bet to %d. Maximum valid score is %d",
+                    requestingScore.get(), score.get());
+            throw new GameRuleViolationException(message);
+        }
+        scoreProposal = requestingScore;
+    }
+
+    void removeScoreProposal(){
+        scoreProposal = null;
+    }
+
+    public HandScore getScoreProposal() {
+        return scoreProposal;
+    }
+
+    int getMaxHandScore(){
+        final int firstToPlayScore = firstToPlay.getScore();
+        final int lastToPlayScore = lastToPlay.getScore();
+
+        final int scoreToLosingPlayerWin = Player.MAX_SCORE - Math.min(firstToPlayScore, lastToPlayScore);
+
+        return scoreToLosingPlayerWin % 3 == 0 ? scoreToLosingPlayerWin
+                : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
+    }
+
+
+
+
+
+
+
+
+
+    void defineRoundPlayingOrder() {
         getLastRoundWinner().filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
+        currentPlayer = firstToPlay;
     }
 
     private void changePlayingOrder() {
         Player referenceHolder = firstToPlay;
         firstToPlay = lastToPlay;
         lastToPlay = referenceHolder;
+    }
+
+    Player getOpponentOf(Player player){
+        return player.equals(firstToPlay)? lastToPlay : firstToPlay;
     }
 
     public void checkForWinnerAfterSecondRound() {
@@ -147,6 +215,14 @@ public class Hand {
         return new ArrayList<>(roundsPlayed);
     }
 
+    public boolean isDone(){
+        return state instanceof DoneState;
+    }
+
+    public int numberOfRoundsPlayed(){
+        return roundsPlayed.size();
+    }
+
     public Optional<HandResult> getResult() {
         return Optional.ofNullable(result);
     }
@@ -176,16 +252,8 @@ public class Hand {
         return score;
     }
 
-    public Player getLastScoreIncrementRequester() {
-        return lastScoreIncrementRequester;
-    }
-
-    public void setLastScoreIncrementRequester(Player lastScoreIncrementRequester) {
-        this.lastScoreIncrementRequester = lastScoreIncrementRequester;
-    }
-
-    public Card getVira() {
-        return vira;
+    public void setLastBetRaiser(Player lastBetRaiser) {
+        this.lastBetRaiser = lastBetRaiser;
     }
 
     public List<Card> getOpenCards() {
@@ -195,4 +263,46 @@ public class Hand {
     public Intel getIntel(){
         return new Intel(this);
     }
+
+    public void setState(HandState state) {
+        this.state = state;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Card getVira() {
+        return vira;
+    }
+
+    public Player getLastBetRaiser() {
+        return lastBetRaiser;
+    }
+
+    public void playNewRound(){
+        if(roundsPlayed.size() == 3)
+            throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
+
+        defineRoundPlayingOrder();
+        Round round = new Round(firstToPlay, lastToPlay, this);
+        round.play();
+
+        firstToPlay.handleRoundConclusion();
+        lastToPlay.handleRoundConclusion();
+        roundsPlayed.add(round);
+    }
+
+    public EnumSet<PossibleActions> getPossibleActions() {
+        return possibleActions;
+    }
+
+    public void setPossibleActions(EnumSet<PossibleActions> actions){
+        this.possibleActions = EnumSet.copyOf(actions);
+    }
+
 }

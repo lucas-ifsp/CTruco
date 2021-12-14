@@ -26,7 +26,7 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.hand.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
+import com.bueno.domain.entities.hand.Round;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

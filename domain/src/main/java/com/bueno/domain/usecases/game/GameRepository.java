@@ -18,35 +18,16 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.game.Game;
 
-public enum HandScore {
-    ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
+import java.util.Optional;
+import java.util.UUID;
 
-    private final int score;
-
-    HandScore(int score) {
-        this.score = score;
-    }
-
-    public HandScore increase() {
-        return switch (this){
-            case ONE -> THREE;
-            case THREE -> SIX;
-            case SIX -> NINE;
-            case NINE -> TWELVE;
-            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase score from " + this);
-        };
-    }
-
-    public int get() {
-        return score;
-    }
-
-    @Override
-    public String toString() {
-        return "HandScore{" + "score=" + score + '}';
-    }
+public interface GameRepository {
+    void save(Game game);
+    Optional<Game> findByUuid(UUID uuid);
+    Optional<Game> findByUserUuid(UUID uuid);
+    Optional<Game> findByPlayerUsername(String userName);
 }

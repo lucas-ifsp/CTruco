@@ -21,27 +21,27 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandResult;
-import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
-import com.bueno.domain.entities.truco.Truco;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.InMemoryGameRepository;
+import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.UUID;
+import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,29 +49,36 @@ class PlayHandUseCaseTest {
 
     private Hand hand;
     private PlayHandUseCase sut;
-
-    @Mock
+    private CreateGameUseCase createGameUseCase;
     private Game game;
-    @Mock
-    private Player p1;
-    @Mock
-    private Player p2;
-    @Mock
-    private Deck deck;
+
+    @Mock private Player p1;
+    @Mock private Player p2;
+
+    private UUID p1Uuid;
+    private UUID p2Uuid;
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
     }
 
     @BeforeEach
     void setUp() {
-        when(deck.takeOne()).thenReturn(Card.of(Rank.SEVEN, Suit.CLUBS));
-        hand = new Hand(p1, p2, deck);
-        when(game.prepareNewHand()).thenReturn(hand);
-        sut  = new PlayHandUseCase(game);
+        p1Uuid = UUID.randomUUID();
+        p2Uuid = UUID.randomUUID();
+
+        lenient().when(p1.getUuid()).thenReturn(p1Uuid);
+        lenient().when(p1.getUsername()).thenReturn(p1Uuid.toString());
+
+        lenient().when(p2.getUuid()).thenReturn(p2Uuid);
+        lenient().when(p2.getUsername()).thenReturn(p2Uuid.toString());
+
+        final InMemoryGameRepository repo = new InMemoryGameRepository();
+        createGameUseCase = new CreateGameUseCase(repo);
+        game = createGameUseCase.create(p1, p2);
+
+        sut  = new PlayHandUseCase(repo);
     }
 
     @AfterEach
@@ -80,7 +87,76 @@ class PlayHandUseCaseTest {
         hand = null;
     }
 
-   @Test
+    @Test
+    @DisplayName("Should throw if playCard method parameters are null")
+    void shouldThrowIfPlayCardMethodParametersAreNull() {
+        assertAll(
+                () -> assertThrows(NullPointerException.class, () -> sut.playCard(null, Card.closed())),
+                () -> assertThrows(NullPointerException.class, () -> sut.playCard(p1.getUuid(), null))
+        );
+    }
+
+    @Test
+    @DisplayName("Should throw if accept method parameter is null")
+    void shouldThrowIfAcceptMethodParameterIsNull() {
+        assertThrows(NullPointerException.class, () -> sut.accept(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if quit method parameter is null")
+    void shouldThrowIfQuitMethodParameterIsNull() {
+        assertThrows(NullPointerException.class, () -> sut.quit(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if raiseBet method parameter is null")
+    void shouldThrowIfRaiseBetMethodParameterIsNull() {
+        assertThrows(NullPointerException.class, () -> sut.raiseBet(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if there is no active game for player UUID")
+    void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(UUID.randomUUID(), Card.closed()));
+    }
+
+    @Test
+    @DisplayName("Should throw if opponent is playing in player turn")
+    void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(p2Uuid, Card.closed()));
+    }
+
+    @Test
+    @DisplayName("Should throw if requests actions not allowed in hand state")
+    void shouldThrowIfRequestsActionsNotAllowedInHandState() {
+        assertAll(
+                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.accept(p1Uuid)),
+                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.quit(p1Uuid)),
+                () -> {
+                    sut.raiseBet(p1Uuid);
+                    assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(p2Uuid, Card.closed()));
+                }
+        );
+    }
+
+    @Test
+    @DisplayName("Should throw if requests action and the game is done")
+    void shouldThrowIfRequestsActionAndTheGameIsDone() {
+        when(p1.getScore()).thenReturn(12);
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(p1Uuid, Card.closed()));
+    }
+
+
+/*
+    @Test
+    @DisplayName("Should throw if game is done")
+    void shouldThrowIfGameIsDone() {
+
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(p1.getUuid(), Card.closed()));
+    }*/
+
+
+   /* @Test
     void shouldHaveHandWinnerAfterTwoRounds(){
        when(p1.playCard()).thenReturn(Card.of(Rank.THREE,Suit.SPADES)).thenReturn(Card.of(Rank.THREE,Suit.HEARTS));
        when(p2.playCard()).thenReturn(Card.of(Rank.FOUR,Suit.SPADES)).thenReturn(Card.of(Rank.FOUR,Suit.HEARTS));
@@ -124,9 +200,10 @@ class PlayHandUseCaseTest {
         assertEquals(HandScore.THREE, hand.getScore());
     }
 
-
+*/
     private Player getWinner(Hand hand) {
         Optional<HandResult> handResult = hand.getResult();
         return handResult.flatMap(HandResult::getWinner).orElse(null);
     }
+
 }
