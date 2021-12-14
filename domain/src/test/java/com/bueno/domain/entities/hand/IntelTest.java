@@ -24,7 +24,6 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 

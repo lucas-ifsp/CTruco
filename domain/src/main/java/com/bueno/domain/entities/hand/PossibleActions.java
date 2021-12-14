@@ -20,33 +20,9 @@
 
 package com.bueno.domain.entities.hand;
 
-import com.bueno.domain.entities.game.GameRuleViolationException;
-
-public enum HandScore {
-    ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
-
-    private final int score;
-
-    HandScore(int score) {
-        this.score = score;
-    }
-
-    public HandScore increase() {
-        return switch (this){
-            case ONE -> THREE;
-            case THREE -> SIX;
-            case SIX -> NINE;
-            case NINE -> TWELVE;
-            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase score from " + this);
-        };
-    }
-
-    public int get() {
-        return score;
-    }
-
-    @Override
-    public String toString() {
-        return "HandScore{" + "score=" + score + '}';
-    }
+public enum PossibleActions {
+    PLAY,
+    RAISE,
+    ACCEPT,
+    QUIT
 }

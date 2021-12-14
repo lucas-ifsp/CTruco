@@ -28,7 +28,7 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.hand.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.round.Round;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.usecases.game.PlayGameUseCase;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

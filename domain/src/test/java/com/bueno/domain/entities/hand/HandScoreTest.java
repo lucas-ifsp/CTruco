@@ -20,6 +20,7 @@
 
 package com.bueno.domain.entities.hand;
 
+import com.bueno.domain.entities.game.GameRuleViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,20 +35,32 @@ class HandScoreTest {
     }
 
     @Test
+    @DisplayName("Should increase from 3 to 6")
+    void shouldIncreaseFrom3To6() {
+        assertEquals(HandScore.SIX, HandScore.THREE.increase());
+    }
+
+    @Test
     @DisplayName("Should increase from 6 to 9")
     void shouldIncreaseFrom6To9() {
         assertEquals(HandScore.NINE, HandScore.SIX.increase());
     }
 
     @Test
+    @DisplayName("Should increase from 9 to 12")
+    void shouldIncreaseFrom9To12() {
+        assertEquals(HandScore.TWELVE, HandScore.NINE.increase());
+    }
+
+    @Test
     @DisplayName("Should throw if increases from 12")
     void shouldThrowIfIncreasesFrom12() {
-        assertThrows(HandScoreException.class, HandScore.TWELVE::increase);
+        assertThrows(GameRuleViolationException.class, HandScore.TWELVE::increase);
     }
 
     @Test
     @DisplayName("Should throw if increase from 0")
     void shouldThrowIfIncreasesFrom0() {
-        assertThrows(HandScoreException.class, HandScore.ZERO::increase);
+        assertThrows(GameRuleViolationException.class, HandScore.ZERO::increase);
     }
 }

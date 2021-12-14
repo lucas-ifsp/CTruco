@@ -18,12 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.round;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.GameRuleViolationException;
-import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.truco.Truco;
 import com.bueno.domain.entities.truco.TrucoResult;
@@ -34,10 +32,10 @@ import java.util.logging.Logger;
 
 public class Round {
 
-    private final Player firstToPlay;
-    private final Player lastToPlay;
+    private Player firstToPlay;
+    private Player lastToPlay;
     private final Card vira;
-    private final Hand hand;
+    private Hand hand;
     private Player winner;
     private Card firstCard;
     private Card lastCard;
@@ -50,6 +48,29 @@ public class Round {
         this.hand = Objects.requireNonNull(hand, "Hand must not be null!");
         this.vira = Objects.requireNonNull(hand.getVira(), "Vira must not be null!");
         this.hand.setCardToPlayAgainst(null);
+    }
+
+    public Round(Player firstToPlay, Card firstCard, Player lastToPlay, Card lastCard, Card vira) {
+        this.firstToPlay = Objects.requireNonNull(firstToPlay, "First to play must not be null!");
+        this.lastToPlay = Objects.requireNonNull(lastToPlay, "Second to play must not be null!");
+        this.firstCard = Objects.requireNonNull(firstCard, "First card played must not be null!");
+        this.lastCard = Objects.requireNonNull(lastCard, "Last card played must not be null!");
+        this.vira = Objects.requireNonNull(vira, "Vira must not be null!");
+        validateCards();
+    }
+
+    public void play2() {
+        final Optional<Card> possibleWinnerCard = winnerCard();
+        final Player winner = possibleWinnerCard
+                .map(card -> card.equals(firstCard)? firstToPlay : lastToPlay)
+                .orElse(null);
+        this.winner = winner;
+    }
+
+
+    public Optional<Card> winnerCard(){
+        if (firstCard.compareValueTo(lastCard, vira) == 0) return Optional.empty();
+        return firstCard.compareValueTo(lastCard, vira) > 0 ? Optional.of(firstCard) : Optional.of(lastCard);
     }
 
     public void play(){
@@ -84,8 +105,9 @@ public class Round {
                 ": " + lastCard + " | Result: " + (winner == null? "Draw" : winner.getUsername()));
     }
 
+
     private boolean isAbleToRequestScoreIncrement(Player requester) {
-        final Player previousRequester = hand.getLastScoreIncrementRequester();
+        final Player previousRequester = hand.getLastBetRaiser();
         final boolean isAbleToRequest = previousRequester == null || ! previousRequester.equals(requester);
 
         LOGGER.info(requester.getUsername() + " is " + (isAbleToRequest? "able" : "not able")
@@ -105,7 +127,7 @@ public class Round {
             hand.setResult(handResult);
         }
 
-        trucoResult.getLastRequester().ifPresent(hand::setLastScoreIncrementRequester);
+        trucoResult.getLastRequester().ifPresent(hand::setLastBetRaiser);
         hand.setScore(trucoResult.getScore());
 
         return Optional.ofNullable(handResult);
@@ -121,13 +143,22 @@ public class Round {
     }
 
     public Optional<Card> getHighestCard() {
-        if (firstCard.compareValueTo(lastCard, vira) == 0)
-            return Optional.empty();
-        return firstCard.compareValueTo(lastCard, vira) > 0 ?
-                Optional.of(firstCard) : Optional.of(lastCard);
+        if (firstCard.compareValueTo(lastCard, vira) == 0) return Optional.empty();
+        return firstCard.compareValueTo(lastCard, vira) > 0 ? Optional.of(firstCard) : Optional.of(lastCard);
     }
 
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    @Override
+    public String toString() {
+        return "Round{" +
+                "winner=" + winner +
+                '}';
     }
 }
