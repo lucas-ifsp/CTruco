@@ -21,10 +21,7 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Rank;
-import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.player.util.Player;
@@ -47,10 +44,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PlayHandUseCaseTest {
 
-    private Hand hand;
     private PlayHandUseCase sut;
     private CreateGameUseCase createGameUseCase;
-    private Game game;
 
     @Mock private Player p1;
     @Mock private Player p2;
@@ -75,16 +70,18 @@ class PlayHandUseCaseTest {
         lenient().when(p2.getUsername()).thenReturn(p2Uuid.toString());
 
         final InMemoryGameRepository repo = new InMemoryGameRepository();
-        createGameUseCase = new CreateGameUseCase(repo);
-        game = createGameUseCase.create(p1, p2);
 
-        sut  = new PlayHandUseCase(repo);
+        createGameUseCase = new CreateGameUseCase(repo);
+        createGameUseCase.create(p1, p2);
+        sut = new PlayHandUseCase(repo);
     }
 
     @AfterEach
     void tearDown() {
         sut = null;
-        hand = null;
+        createGameUseCase = null;
+        p1Uuid = null;
+        p2Uuid = null;
     }
 
     @Test

@@ -25,16 +25,13 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.logging.LogManager;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -44,22 +41,17 @@ import static org.mockito.Mockito.when;
 class HandTest {
 
     private Hand sut;
-    @Mock
-    private Player p1;
-    @Mock
-    private Player p2;
+    @Mock private Player p1;
+    @Mock private Player p2;
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Player.class.getName()).setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
     }
 
     @BeforeEach
     void setUp() {
-        sut  = new Hand(p1,p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut  = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
     }
 
     @AfterEach
@@ -101,6 +93,12 @@ class HandTest {
     }
 
     @Test
+    @DisplayName("Should not accept last to play playing first card")
+    void shouldNotAcceptLastToPlayPlayingFirstCard() {
+        assertThrows(IllegalArgumentException.class, () -> sut.playFirstCard(p2, Card.closed()));
+    }
+
+    @Test
     @DisplayName("Should not accept first card if has one")
     void shouldNotAcceptFirstCardIfHasOne() {
         sut.playFirstCard(p1, Card.of(Rank.KING, Suit.SPADES));
@@ -108,15 +106,15 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should not accept first card after the rounds")
-    void shouldNotAcceptFirstCardAfterTheRounds() {
+    @DisplayName("Should not accept first card after three rounds")
+    void shouldNotAcceptFirstCardAfterThreeRounds() {
         sut.playFirstCard(p1, Card.of(Rank.KING, Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.KING, Suit.DIAMONDS));
         sut.playFirstCard(p1, Card.of(Rank.FOUR, Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.FOUR, Suit.DIAMONDS));
         sut.playFirstCard(p1, Card.of(Rank.FIVE, Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.FIVE, Suit.DIAMONDS));
-        assertThrows(Exception.class, () -> sut.playFirstCard(p1, Card.closed()));
+        assertThrows(IllegalArgumentException.class, () -> sut.playFirstCard(p1, Card.closed()));
     }
 
     @Test
@@ -126,9 +124,7 @@ class HandTest {
         assertAll(
                 () ->  assertThrows(IllegalArgumentException.class, () -> sut.playFirstCard(p1, Card.closed())),
                 () ->  assertThrows(IllegalStateException.class, () -> sut.playFirstCard(p2, Card.closed()))
-
         );
-        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(p2, Card.closed()));
     }
 
     @Test
@@ -156,6 +152,14 @@ class HandTest {
     }
 
     @Test
+    @DisplayName("Should get correct last round winner")
+    void shouldGetCorrectLastRoundWinner(){
+        sut.playFirstCard(p1, Card.of(Rank.THREE,Suit.SPADES));
+        sut.playSecondCard(p2, Card.of(Rank.FOUR,Suit.SPADES));
+        assertEquals(p1, sut.getLastRoundWinner().orElse(null));
+    }
+
+    @Test
     @DisplayName("Should win hand winning first two rounds")
     void shouldWinHandWinningFirstTwoRounds(){
         sut.playFirstCard(p1, Card.of(Rank.THREE,Suit.SPADES));
@@ -163,14 +167,6 @@ class HandTest {
         sut.playFirstCard(p1, Card.of(Rank.THREE,Suit.HEARTS));
         sut.playSecondCard(p2, Card.of(Rank.FOUR,Suit.HEARTS));
         assertEquals(p1, getPossibleWinner());
-    }
-
-    @Test
-    @DisplayName("Should get correct last round winner")
-    void shouldGetCorrectLastRoundWinner(){
-        sut.playFirstCard(p1, Card.of(Rank.THREE,Suit.SPADES));
-        sut.playSecondCard(p2, Card.of(Rank.FOUR,Suit.SPADES));
-        assertEquals(p1, sut.getLastRoundWinner().orElse(null));
     }
 
     @Test
@@ -230,17 +226,11 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should not accept last player playing first card")
-    void shouldNotAcceptLastPlayerPlayingFirstCard() {
-        assertThrows(IllegalArgumentException.class, () -> sut.playFirstCard(p2, Card.closed()));
-    }
-
-    @Test
     @DisplayName("Should first round winner be the second round first to play")
     void shouldFirstRoundWinnerBeTheSecondRoundFirstToPlay() {
         sut.playFirstCard(p1, Card.of(Rank.TWO,Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.THREE,Suit.CLUBS));
-        assertEquals(p2, sut.getFirstToPlay());
+        assertEquals(p2, sut.getCurrentPlayer());
     }
 
     @Test
@@ -248,7 +238,7 @@ class HandTest {
     void shouldFirstToPlayInSecondRoundTheSameOneIfFirstRoundIsTied() {
         sut.playFirstCard(p1, Card.of(Rank.THREE,Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.THREE,Suit.CLUBS));
-        assertEquals(p1, sut.getFirstToPlay());
+        assertEquals(p1, sut.getCurrentPlayer());
     }
 
     @Test
@@ -258,7 +248,7 @@ class HandTest {
         sut.playSecondCard(p2, Card.of(Rank.TWO,Suit.CLUBS));
         sut.playFirstCard(p1, Card.of(Rank.KING,Suit.SPADES));
         sut.playSecondCard(p2, Card.of(Rank.ACE,Suit.CLUBS));
-        assertEquals(p2, sut.getFirstToPlay());
+        assertEquals(p2, sut.getCurrentPlayer());
     }
 
     @Test
@@ -363,17 +353,6 @@ class HandTest {
         assertThrows(IllegalArgumentException.class, () -> sut.quit(p1));
     }
 
-
-    @Test
-    @DisplayName("Should allow to raise the bet just enough to enable both players to win")
-    void shouldAllowToRaiseTheBetJustEnoughToEnableBothPlayersToWin() {
-        sut.raiseBet(p1);
-        sut.raiseBet(p2);
-        sut.raiseBet(p1);
-        sut.accept(p2);
-        assertEquals(HandScore.NINE, sut.getScore());
-    }
-
     @Test
     @DisplayName("Should return not winner and match worth 12 points")
     void shouldReturnNoWinnerAndMatchWorth12Points(){
@@ -400,7 +379,6 @@ class HandTest {
         );
     }
 
-
     @Test
     @DisplayName("Should not allow to raise bet above twelve points")
     void shouldNotAllowToRaiseBetAboveTwelvePoints() {
@@ -412,6 +390,16 @@ class HandTest {
                 () -> assertThrows(GameRuleViolationException.class, () -> sut.raiseBet(p1)),
                 () -> assertEquals(p1, sut.getCurrentPlayer())
         );
+    }
+
+    @Test
+    @DisplayName("Should allow to raise the bet just enough to enable both players to win")
+    void shouldAllowToRaiseTheBetJustEnoughToEnableBothPlayersToWin() {
+        sut.raiseBet(p1);
+        sut.raiseBet(p2);
+        sut.raiseBet(p1);
+        sut.accept(p2);
+        assertEquals(HandScore.NINE, sut.getScore());
     }
 
     @Test
@@ -437,7 +425,7 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points after a round card whas played")
+    @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points after a round card was played")
     void shouldLoseTheHandIfRequestToRaiseTheBetWhenAnyUserHas11PointsAfterARoundCardWasPlayed() {
         when(p1.getScore()).thenReturn(11);
         sut.playFirstCard(p1, Card.closed());
@@ -531,7 +519,7 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should throw if any action is requested when the hand is done ")
+    @DisplayName("Should throw if any action is requested when the hand is done")
     void shouldThrowIfAnyActionIsRequestedWhenTheHandIsDone() {
         sut.raiseBet(p1);
         sut.quit(p2);
@@ -552,7 +540,6 @@ class HandTest {
         sut.quit(p2);
         assertNull(sut.getCurrentPlayer());
     }
-
 
     private Player getPossibleWinner() {
         return sut.getResult().flatMap(HandResult::getWinner).orElse(null);

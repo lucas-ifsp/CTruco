@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,18 +40,12 @@ import static org.mockito.Mockito.when;
 class GameTest {
 
     private Game sut;
-    @Mock
-    private Player player1;
-    @Mock
-    private Player player2;
+    @Mock private Player player1;
+    @Mock private Player player2;
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Player.class.getName()).setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
     }
 
     @BeforeEach
