@@ -23,6 +23,7 @@ package com.bueno.domain.usecases.hand;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.*;
+import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
@@ -37,13 +38,107 @@ public class PlayHandUseCase {
     private Hand hand;
     private GameRepository repo;
 
-    public PlayHandUseCase(Game game) {
-        this.game = Objects.requireNonNull(game);
-        hand = this.game.prepareNewHand();
-    }
-
     public PlayHandUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
+    }
+
+    public Intel playCard(UUID usedID, Card card){
+        Objects.requireNonNull(card);
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
+        final Player player = hand.getCurrentPlayer();
+
+        hand.getCardToPlayAgainst().ifPresentOrElse(unused ->
+                hand.playSecondCard(player, card), () -> hand.playFirstCard(player, card));
+
+        hand.getResult().ifPresent(unused -> updateGameStatus(game));
+
+        final Intel intel = new Intel(game.getCurrentHand());
+
+        if(game.isDone()) return intel;
+        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
+
+        return new Intel(game.getCurrentHand());
+    }
+
+    private Game loadGameIfRequestIsValid(UUID usedID) {
+        final Game game = repo.findByUserUuid(usedID).orElseThrow(
+                () -> new UnsupportedGameRequestException("User with UUID " + usedID + " is not in an active game."));
+
+        if(game.isDone()) throw new UnsupportedGameRequestException("Game is over. Start a new game.");
+        return game;
+    }
+
+    private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
+        final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
+        final Hand hand = game.getCurrentHand();
+        //final Hand effectiveCurrentHand = needsNewHand(hand) ? game.prepareNewHand() : hand;
+
+        if(!hand.getCurrentPlayer().equals(requester))
+            throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
+
+        final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
+        if(!possibleActions.contains(action))
+            throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
+
+        return hand;
+    }
+
+    private void updateGameStatus(Game game) {
+        game.updateScores();
+        if(!game.isDone()) game.prepareNewHand();
+    }
+
+    public Intel raiseBet(UUID usedID){
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
+        final Player player = hand.getCurrentPlayer();
+        hand.raiseBet(player);
+
+        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
+        return new Intel(game.getCurrentHand());
+    }
+
+    public Intel accept(UUID usedID){
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
+        final Player player = hand.getCurrentPlayer();
+        hand.accept(player);
+
+        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
+        return new Intel(game.getCurrentHand());
+    }
+
+    public Intel quit(UUID usedID){
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
+        final Player player = hand.getCurrentPlayer();
+        hand.quit(player);
+
+        hand.getResult().ifPresent(unused -> updateGameStatus(game));
+
+        final Intel intel = new Intel(game.getCurrentHand());
+
+        if(game.isDone()) return intel;
+        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
+
+        return new Intel(game.getCurrentHand());
+    }
+
+
+
+
+
+
+
+
+
+    public PlayHandUseCase(Game game) {
+        this.game = Objects.requireNonNull(game);
     }
 
     public Hand play() {
@@ -82,75 +177,4 @@ public class PlayHandUseCase {
         hand.playNewRound();
     }
 
-    public Intel playCard(UUID usedID, Card card){
-        Objects.requireNonNull(card);
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
-        final Player player = hand.getCurrentPlayer();
-
-        hand.getCardToPlayAgainst().ifPresentOrElse(unused ->
-                hand.playSecondCard(player, card), () -> hand.playFirstCard(player, card));
-
-        hand.getResult().ifPresent(unused -> updateGameStatus(game));
-        return new Intel(game.getCurrentHand());
-    }
-
-    private void updateGameStatus(Game game) {
-        game.updateScores();
-        if(game.isDone()) return;
-        game.prepareNewHand();
-    }
-
-    private Game loadGameIfRequestIsValid(UUID usedID) {
-        final Game game = repo.findByUserUuid(usedID).orElseThrow(
-                () -> new UnsupportedGameRequestException("User with UUID " + usedID + " is not in an active game."));
-
-        if(game.isDone()) throw new UnsupportedGameRequestException("Game is over. Start a new game.");
-        return game;
-    }
-
-    private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
-        final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
-        final Hand hand = game.getCurrentHand();
-        //final Hand effectiveCurrentHand = needsNewHand(hand) ? game.prepareNewHand() : hand;
-
-        if(!hand.getCurrentPlayer().equals(requester))
-            throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
-
-        final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
-        if(!possibleActions.contains(action))
-            throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
-
-        return hand;
-    }
-
-    public Intel raiseBet(UUID usedID){
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
-        final Player player = hand.getCurrentPlayer();
-        hand.raiseBet(player);
-        return new Intel(hand);
-    }
-
-    public Intel accept(UUID usedID){
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
-        final Player player = hand.getCurrentPlayer();
-        hand.accept(player);
-        return new Intel(hand);
-    }
-
-    public Intel quit(UUID usedID){
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
-        final Player player = hand.getCurrentPlayer();
-        hand.quit(player);
-
-        hand.getResult().ifPresent(unused -> updateGameStatus(game));
-        return new Intel(game.getCurrentHand());
-    }
 }
