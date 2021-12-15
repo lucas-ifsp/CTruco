@@ -82,8 +82,7 @@ public abstract class Player {
     }
 
     public void addScore(HandScore handScore){
-        final int newScore = Math.min(MAX_SCORE, this.score + handScore.get());
-        this.score = newScore;
+        this.score = Math.min(MAX_SCORE, this.score + handScore.get());
     }
 
     public void setCards(List<Card> cards){

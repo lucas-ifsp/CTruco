@@ -23,10 +23,7 @@ package com.bueno.domain.entities.hand;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Intel {
 
@@ -42,6 +39,10 @@ public class Intel {
 
     public HandScore getHandScore() {
         return hand.getScore();
+    }
+
+    public HandScore getScoreProposal(){
+        return hand.getScoreProposal();
     }
 
     public Optional<Card> getCardToPlayAgainst() {
@@ -76,12 +77,12 @@ public class Intel {
         return hand.getFirstToPlay().getScore() == 12 || hand.getLastToPlay().getScore() == 12;
     }
 
-    public boolean isHandDone(){
-        return hand.isDone();
-    }
-
     public UUID currentPlayer(){
         return hand.getCurrentPlayer().getUuid();
+    }
+
+    public EnumSet<PossibleActions> possibleActions(){
+        return hand.getPossibleActions();
     }
 
     @Override
