@@ -26,6 +26,7 @@ import com.bueno.domain.entities.player.util.Player;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Intel {
 
@@ -44,7 +45,7 @@ public class Intel {
     }
 
     public Optional<Card> getCardToPlayAgainst() {
-        return Optional.ofNullable(hand.getCardToPlayAgainst().orElse(null));
+        return hand.getCardToPlayAgainst();
     }
 
     public List<Card> getOpenCards() {
@@ -69,6 +70,18 @@ public class Intel {
 
     public Optional<HandResult> getResult(){
         return hand.getResult();
+    }
+
+    public boolean isGameDone(){
+        return hand.getFirstToPlay().getScore() == 12 || hand.getLastToPlay().getScore() == 12;
+    }
+
+    public boolean isHandDone(){
+        return hand.isDone();
+    }
+
+    public UUID currentPlayer(){
+        return hand.getCurrentPlayer().getUuid();
     }
 
     @Override
