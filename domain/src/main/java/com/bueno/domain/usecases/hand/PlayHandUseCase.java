@@ -86,14 +86,20 @@ public class PlayHandUseCase {
         Objects.requireNonNull(card);
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = createHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
         final Player player = hand.getCurrentPlayer();
 
         hand.getCardToPlayAgainst().ifPresentOrElse(unused ->
                 hand.playSecondCard(player, card), () -> hand.playFirstCard(player, card));
 
-        hand.getResult().ifPresent(unused -> game.updateScores());
-        return new Intel(hand);
+        hand.getResult().ifPresent(unused -> updateGameStatus(game));
+        return new Intel(game.getCurrentHand());
+    }
+
+    private void updateGameStatus(Game game) {
+        game.updateScores();
+        if(game.isDone()) return;
+        game.prepareNewHand();
     }
 
     private Game loadGameIfRequestIsValid(UUID usedID) {
@@ -104,29 +110,25 @@ public class PlayHandUseCase {
         return game;
     }
 
-    private Hand createHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
+    private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
         final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
         final Hand hand = game.getCurrentHand();
-        final Hand effectiveCurrentHand = needsNewHand(hand) ? game.prepareNewHand() : hand;
+        //final Hand effectiveCurrentHand = needsNewHand(hand) ? game.prepareNewHand() : hand;
 
-        if(!effectiveCurrentHand.getCurrentPlayer().equals(requester))
+        if(!hand.getCurrentPlayer().equals(requester))
             throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
 
-        final EnumSet<PossibleActions> possibleActions = effectiveCurrentHand.getPossibleActions();
+        final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
         if(!possibleActions.contains(action))
             throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
 
-        return effectiveCurrentHand;
-    }
-
-    private boolean needsNewHand(Hand possibleCurrentHand) {
-        return possibleCurrentHand == null || possibleCurrentHand.isDone();
+        return hand;
     }
 
     public Intel raiseBet(UUID usedID){
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = createHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
         final Player player = hand.getCurrentPlayer();
         hand.raiseBet(player);
         return new Intel(hand);
@@ -135,7 +137,7 @@ public class PlayHandUseCase {
     public Intel accept(UUID usedID){
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = createHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
         final Player player = hand.getCurrentPlayer();
         hand.accept(player);
         return new Intel(hand);
@@ -144,9 +146,11 @@ public class PlayHandUseCase {
     public Intel quit(UUID usedID){
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = createHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
+        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
         final Player player = hand.getCurrentPlayer();
         hand.quit(player);
-        return new Intel(hand);
+
+        hand.getResult().ifPresent(unused -> updateGameStatus(game));
+        return new Intel(game.getCurrentHand());
     }
 }

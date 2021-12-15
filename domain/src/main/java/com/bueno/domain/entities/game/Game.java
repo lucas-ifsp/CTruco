@@ -51,6 +51,7 @@ public class Game {
         this.player2 = Objects.requireNonNull(player2);
         this.uuid = uuid;
         this.hands = new ArrayList<>();
+        prepareNewHand();
     }
 
     public Hand prepareNewHand(){

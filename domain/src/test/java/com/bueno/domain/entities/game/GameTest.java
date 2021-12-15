@@ -62,7 +62,7 @@ class GameTest {
     @DisplayName("Should correctly create game")
     void shouldCorrectlyCreateGame(){
         assertAll(
-                () -> assertEquals(0, sut.getHands().size()),
+                () -> assertEquals(1, sut.getHands().size()),
                 () -> assertEquals(player1, sut.getPlayer1()),
                 () -> assertEquals(player2, sut.getPlayer2())
         );
@@ -71,12 +71,11 @@ class GameTest {
     @Test
     @DisplayName("Should correctly prepare hand")
     void shouldCorrectlyPrepareHand(){
-        final Hand hand = sut.prepareNewHand();
         assertAll(
                 () -> assertEquals(player1, sut.getFirstToPlay()),
                 () -> assertEquals(player2, sut.getLastToPlay()),
                 () -> assertNotEquals(sut.getFirstToPlay(), sut.getLastToPlay()),
-                () -> assertEquals(hand, sut.getCurrentHand())
+                () -> assertEquals(1, sut.getHands().size())
         );
     }
 
