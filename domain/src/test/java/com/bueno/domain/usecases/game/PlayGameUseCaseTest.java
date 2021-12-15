@@ -23,19 +23,14 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.hand.Round;
-import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
@@ -51,10 +46,7 @@ class PlayGameUseCaseTest {
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
     }
 
     @BeforeEach

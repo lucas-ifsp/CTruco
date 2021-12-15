@@ -21,10 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -50,10 +46,7 @@ class LoadGameUseCaseTest {
 
     @BeforeAll
     static void init(){
-        Logger.getLogger(Game.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Hand.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
+        LogManager.getLogManager().reset();
     }
 
     @BeforeEach
