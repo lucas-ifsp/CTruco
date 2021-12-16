@@ -449,9 +449,79 @@ class HandTest {
     }
 
     @Test
+    @DisplayName("Should not allow to play first card before deciding if plays mao de onze")
+    void shouldNotAllowToPlayCardFirstBeforeDecidingIfPlaysMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(p1, Card.closed()));
+    }
+
+    @Test
+    @DisplayName("Should not allow to play second card before deciding if plays mao de onze")
+    void shouldNotAllowToPlaySecondCardBeforeDecidingIfPlaysMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        assertThrows(IllegalStateException.class, () -> sut.playSecondCard(p1, Card.closed()));
+    }
+
+    @Test
+    @DisplayName("Should not allow to raise bet while deciding if plays mao de onze")
+    void shouldNotAllowToRaiseBetWhileDecidingIfPlaysMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        assertThrows(IllegalStateException.class, () -> sut.raiseBet(p1));
+    }
+
+
+    @Test
+    @DisplayName("Should be able to play card after deciding if plays mao de onze")
+    void shouldBeAbleToPlayCardAfterDecidingIfPlaysMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.accept(p1);
+        assertDoesNotThrow(() -> sut.playFirstCard(p1, Card.closed()));
+    }
+
+    @Test
+    @DisplayName("Should hand worth 3 points if player accepts mao de onze")
+    void shouldHandWorth3PointsIfPlayerAcceptsMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.accept(p1);
+        assertEquals(HandScore.THREE, sut.getScore());
+    }
+
+    @Test
+    @DisplayName("Should opponent win 1 point if player quits mao de onze")
+    void shouldOpponentWin1PointIfPlayerQuitsMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.quit(p1);
+        assertEquals(new HandResult(p2, HandScore.ONE), sut.getResult().orElse(null));
+    }
+
+    @Test
+    @DisplayName("Should hand be done after player quits mao de onze")
+    void shouldHandBeDoneAfterPlayerQuitsMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.quit(p1);
+        assertTrue(sut.isDone());
+    }
+
+    @Test
     @DisplayName("Should current player be able to play card or raise bet when the hand begins")
     void shouldCurrentPlayerBeAbleToPlayCardOrRaiseBetWhenTheHandBegins() {
         EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY, PossibleActions.RAISE);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+    @Test
+    @DisplayName("Should current player be able only to accept or quit when hand begins in mao de onze")
+    void shouldCurrentPlayerBeAbleOnlyToAcceptOrQuitWhenHandBeginsInMaoDeOnze() {
+        when(p1.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.ACCEPT_HAND, PossibleActions.QUIT_HAND);
         assertEquals(possibleActions, sut.getPossibleActions());
     }
 

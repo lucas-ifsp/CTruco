@@ -74,7 +74,7 @@ public abstract class Player {
         return cardToPlay;
     }
 
-    protected final Card discard(Card card){
+    public final Card discard(Card card){
         if(card == null || !cards.contains(card))
             throw new IllegalArgumentException("Card can not be null or out of player cards set!");
         cards.remove(card);
@@ -101,7 +101,7 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return getUsername();
+        return getUsername() + " (" + getUuid() + ")";
     }
 
     public UUID getUuid() {
@@ -113,6 +113,11 @@ public abstract class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return username.equals(player.username);
+        return uuid.equals(player.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 }

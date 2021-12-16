@@ -33,6 +33,10 @@ public class Intel {
         this.hand = Objects.requireNonNull(hand);
     }
 
+    public int maximumHandScore(){
+       return hand.getMaxHandScore();
+    }
+
     public Card getVira() {
         return hand.getVira();
     }
@@ -76,6 +80,13 @@ public class Intel {
     public boolean isGameDone(){
         return hand.getFirstToPlay().getScore() == 12 || hand.getLastToPlay().getScore() == 12;
     }
+
+    public Optional<Player> gameWinner(){
+        if(hand.getFirstToPlay().getScore() == 12) return Optional.of(hand.getFirstToPlay());
+        if(hand.getLastToPlay().getScore() == 12) return Optional.of(hand.getLastToPlay());
+        return Optional.empty();
+    }
+
 
     public UUID currentPlayer(){
         return hand.getCurrentPlayer().getUuid();

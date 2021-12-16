@@ -21,24 +21,26 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.hand.Intel;
+import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
 public class PlayGameWithBotsUseCase {
-    private final Player bot1;
-    private final Player bot2;
 
-    public PlayGameWithBotsUseCase(Player bot1, Player bot2){
-        this.bot1 = bot1;
-        this.bot2 = bot2;
+    private final GameRepository repo;
+
+    public PlayGameWithBotsUseCase(GameRepository repo) {
+        this.repo = repo;
     }
 
-    public Player play(){
-        Game game = new Game(bot1, bot2);
-        while (game.getWinner().isEmpty()) {
-            new PlayHandUseCase(game).play();
-            game.updateScores();
-        }
-        return game.getWinner().get();
+    public Player playWithBots(Bot bot1, Bot bot2){
+        CreateGameUseCase gameUseCase = new CreateGameUseCase(repo);
+        gameUseCase.create((Player) bot1, (Player) bot2);
+        PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
+        final Intel intel = playHandUseCase.playCard(((Player) bot1).getUuid(), bot1.playCard());
+        return intel.gameWinner().orElseThrow();
     }
+
+
 }
