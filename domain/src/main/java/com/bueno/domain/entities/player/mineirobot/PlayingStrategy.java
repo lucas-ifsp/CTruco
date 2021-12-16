@@ -18,14 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.util;
+package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.hand.Intel;
-import com.bueno.domain.entities.player.mineirobot.FirstRoundMineiroStrategy;
-import com.bueno.domain.entities.player.mineirobot.SecondRoundMineiroStrategy;
-import com.bueno.domain.entities.player.mineirobot.ThirdRoundMineiroStrategy;
+import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
 
