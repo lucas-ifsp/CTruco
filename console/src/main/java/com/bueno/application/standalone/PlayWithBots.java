@@ -41,21 +41,24 @@ public class PlayWithBots {
         LogManager.getLogManager().reset();
 
         PlayWithBots main = new PlayWithBots();
-        final List<Player> results = main.play(1000);
+        final List<Player> results = main.play(100000);
 
         System.out.print("MineiroBot1: " + results.stream().filter(player -> player.getUuid().equals(uuid1)).count() + " | ");
         System.out.print("MineiroBot2: " + results.stream().filter(player -> player.getUuid().equals(uuid2)).count());
     }
 
-    /*public static void main(String[] args) {
-        final InMemoryGameRepository repo = new InMemoryGameRepository();
-        PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
-        final Player player = uc.playWithBots(new MineiroBot(repo), new MineiroBot(repo));
-        System.out.println("Winner: " + player);
-    }
-*/
+   /* public static void main(String[] args) throws InterruptedException {
+        for (int i = 0; i < 100; i++) {
+            final InMemoryGameRepository repo = new InMemoryGameRepository();
+            PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
+            final Player player = uc.playWithBots(new MineiroBot(repo), new MineiroBot(repo));
+            System.out.println("Winner: " + player);
+            TimeUnit.SECONDS.sleep(1);
+        }
+    }*/
+
     public List<Player> play(int times) throws InterruptedException, ExecutionException {
-        final int numberOfThreads = Math.max(1, times / 10);
+        final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         final List<Callable<Player>> games = new ArrayList<>();
 

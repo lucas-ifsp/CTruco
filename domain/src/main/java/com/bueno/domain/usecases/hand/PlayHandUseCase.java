@@ -90,7 +90,7 @@ public class PlayHandUseCase {
 
         final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
         if(!possibleActions.contains(action))
-            throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
+            throw new UnsupportedGameRequestException(hand.isDone() + " Invalid action for hand state. Valid actions: " + possibleActions);
 
         return hand;
     }
@@ -102,10 +102,10 @@ public class PlayHandUseCase {
 
     public Intel raiseBet(UUID usedID){
         Objects.requireNonNull(usedID);
+        LOGGER.info("Player: " + usedID + " is asking to raise bet.");
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
         final Player player = hand.getCurrentPlayer();
-        LOGGER.info("Player: " + player.getUuid() + " is asking to raise bet.");
         hand.raiseBet(player);
 
         if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
@@ -114,10 +114,10 @@ public class PlayHandUseCase {
 
     public Intel accept(UUID usedID){
         Objects.requireNonNull(usedID);
+        LOGGER.info("Player " + usedID + " accepts.");
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
         final Player player = hand.getCurrentPlayer();
-        LOGGER.info("Player: " + player.getUuid() + " is asking accepting bet.");
         hand.accept(player);
 
         if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
@@ -126,10 +126,10 @@ public class PlayHandUseCase {
 
     public Intel quit(UUID usedID){
         Objects.requireNonNull(usedID);
+        LOGGER.info("Player " + usedID + " quits.");
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
         final Player player = hand.getCurrentPlayer();
-        LOGGER.info("Player: " + player.getUuid() + " is quiting.");
         hand.quit(player);
 
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
