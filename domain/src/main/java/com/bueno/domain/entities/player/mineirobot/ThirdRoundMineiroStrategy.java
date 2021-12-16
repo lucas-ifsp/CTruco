@@ -22,7 +22,6 @@ package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.player.util.PlayingStrategy;
 
 import java.util.List;
 import java.util.Optional;

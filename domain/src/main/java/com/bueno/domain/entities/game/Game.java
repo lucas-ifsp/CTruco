@@ -62,6 +62,7 @@ public class Game {
         deck.shuffle();
 
         final Card vira = deck.takeOne();
+        LOGGER.info("Vira: " + vira);
         firstToPlay.setCards(deck.take(3));
         lastToPlay.setCards(deck.take(3));
 
@@ -84,6 +85,8 @@ public class Game {
         if (winner.get().equals(player1))
             player1.addScore(result.getScore());
         else player2.addScore(result.getScore());
+        LOGGER.info(player1.getUuid() + " score = " + player1.getScore() + " | " + player2.getUuid() + " score : " + player2.getScore() );
+
     }
 
     public Optional<Player> getWinner() {

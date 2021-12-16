@@ -59,7 +59,9 @@ public class Hand {
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
         addOpenCard(vira);
-        state = new NoCardState(this);
+
+        if(isMaoDeOnze()) state = new WaitingMaoDeOnzeState(this);
+        else state = new NoCardState(this);
     }
 
     public void playFirstCard(Player player, Card card){

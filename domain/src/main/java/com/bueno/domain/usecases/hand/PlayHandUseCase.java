@@ -25,18 +25,23 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.*;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+//TODO Test use case with bots
+//TODO Split this class with different use cases (PlayCardUseCase, AcceptBetUseCase...)
 public class PlayHandUseCase {
 
     private Game game;
     private Hand hand;
     private GameRepository repo;
+    private final static Logger LOGGER = Logger.getLogger(PlayHandUseCase.class.getName());
 
     public PlayHandUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
@@ -49,15 +54,21 @@ public class PlayHandUseCase {
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
         final Player player = hand.getCurrentPlayer();
 
-        hand.getCardToPlayAgainst().ifPresentOrElse(unused ->
-                hand.playSecondCard(player, card), () -> hand.playFirstCard(player, card));
+        if(hand.getCardToPlayAgainst().isEmpty()){
+            LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to open round.");
+            hand.playFirstCard(player, card);
+        }else{
+            LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to end round.");
+            hand.playSecondCard(player, card);
+        }
 
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
         final Intel intel = new Intel(game.getCurrentHand());
 
         if(game.isDone()) return intel;
-        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
+        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot)
+            bot.playTurn(intel);
 
         return new Intel(game.getCurrentHand());
     }
@@ -73,7 +84,6 @@ public class PlayHandUseCase {
     private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
         final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
         final Hand hand = game.getCurrentHand();
-        //final Hand effectiveCurrentHand = needsNewHand(hand) ? game.prepareNewHand() : hand;
 
         if(!hand.getCurrentPlayer().equals(requester))
             throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
@@ -95,6 +105,7 @@ public class PlayHandUseCase {
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
         final Player player = hand.getCurrentPlayer();
+        LOGGER.info("Player: " + player.getUuid() + " is asking to raise bet.");
         hand.raiseBet(player);
 
         if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
@@ -106,6 +117,7 @@ public class PlayHandUseCase {
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
         final Player player = hand.getCurrentPlayer();
+        LOGGER.info("Player: " + player.getUuid() + " is asking accepting bet.");
         hand.accept(player);
 
         if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
@@ -117,6 +129,7 @@ public class PlayHandUseCase {
         final Game game = loadGameIfRequestIsValid(usedID);
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
         final Player player = hand.getCurrentPlayer();
+        LOGGER.info("Player: " + player.getUuid() + " is quiting.");
         hand.quit(player);
 
         hand.getResult().ifPresent(unused -> updateGameStatus(game));

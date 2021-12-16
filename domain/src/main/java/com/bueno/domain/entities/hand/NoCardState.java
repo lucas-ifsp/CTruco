@@ -74,7 +74,6 @@ public class NoCardState implements HandState {
             context.setResult(new HandResult(opponent, HandScore.ONE));
             context.setState(new DoneState(context));
         }
-
         context.addScoreProposal();
         context.setCurrentPlayer(context.getLastToPlay());
         context.setState(new WaitingResponseState(context));

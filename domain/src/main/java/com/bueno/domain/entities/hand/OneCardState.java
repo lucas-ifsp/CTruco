@@ -57,7 +57,6 @@ public class OneCardState implements HandState {
         switch (context.numberOfRoundsPlayed()) {
             case 1 -> {
                 context.defineRoundPlayingOrder();
-                context.setCardToPlayAgainst(null);
                 context.setState(new NoCardState(context));
             }
             case 2 -> {
@@ -74,6 +73,7 @@ public class OneCardState implements HandState {
                 context.setState(new DoneState(context));
             }
         }
+        context.setCardToPlayAgainst(null);
     }
 
     @Override

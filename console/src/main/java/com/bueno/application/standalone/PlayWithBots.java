@@ -27,28 +27,42 @@ import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.logging.LogManager;
 
+//TODO Colocar Logs estratégicos para companhar o novo andamento do processo.
 public class PlayWithBots {
+
+    private static final UUID uuid1 = UUID.randomUUID();
+    private static final UUID uuid2 = UUID.randomUUID();
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
         PlayWithBots main = new PlayWithBots();
         final List<Player> results = main.play(1000);
 
-        System.out.print("MineiroBot: " + results.stream().filter(player -> player.equals(new MineiroBot())).count() + " | ");
-        System.out.print("DummyBot: " + results.stream().filter(player -> player.equals(new DummyBot())).count());
+        System.out.print("MineiroBot1: " + results.stream().filter(player -> player.getUuid().equals(uuid1)).count() + " | ");
+        System.out.print("MineiroBot2: " + results.stream().filter(player -> player.getUuid().equals(uuid2)).count());
     }
 
+    /*public static void main(String[] args) {
+        final InMemoryGameRepository repo = new InMemoryGameRepository();
+        PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
+        final Player player = uc.playWithBots(new MineiroBot(repo), new MineiroBot(repo));
+        System.out.println("Winner: " + player);
+    }
+*/
     public List<Player> play(int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         final List<Callable<Player>> games = new ArrayList<>();
 
         Callable<Player> game = () -> {
-            PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(new MineiroBot(), new DummyBot());
-            return uc.play();
+            final InMemoryGameRepository repo = new InMemoryGameRepository();
+            PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
+            return uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
         };
 
         for (int i = 0; i < times; i++) {

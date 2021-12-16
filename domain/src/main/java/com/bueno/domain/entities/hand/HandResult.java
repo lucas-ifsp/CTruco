@@ -60,4 +60,17 @@ public class HandResult {
                 ", score=" + score +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HandResult that = (HandResult) o;
+        return Objects.equals(winner, that.winner) && score == that.score;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(winner, score);
+    }
 }

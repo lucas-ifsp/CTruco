@@ -21,18 +21,16 @@
 package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.hand.Intel;
 import com.bueno.domain.entities.hand.PossibleActions;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.player.util.PlayingStrategy;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 public class MineiroBot extends Player implements Bot {
 
@@ -40,6 +38,11 @@ public class MineiroBot extends Player implements Bot {
 
     public MineiroBot(GameRepository repo) {
         super("MineiroBot");
+        this.repo = repo;
+    }
+
+    public MineiroBot(GameRepository repo, UUID uuid) {
+        super("MineiroBot", uuid);
         this.repo = repo;
     }
 
@@ -72,7 +75,7 @@ public class MineiroBot extends Player implements Bot {
         if(shouldPlay(intel)){
             final EnumSet<PossibleActions> possibleActions = intel.possibleActions();
             final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
-            if(possibleActions.contains(PossibleActions.RAISE) && requestTruco()){
+            if(canStartRaiseRequest(intel, possibleActions)){
                 playHandUseCase.raiseBet(getUuid());
                 return;
             }
@@ -87,6 +90,14 @@ public class MineiroBot extends Player implements Bot {
                 case 1 -> {if(possibleActions.contains(PossibleActions.RAISE)) playHandUseCase.raiseBet(getUuid());}
             }
         }
+    }
+
+    private boolean canStartRaiseRequest(Intel intel, EnumSet<PossibleActions> possibleActions) {
+        return possibleActions.contains(PossibleActions.RAISE)
+                && !possibleActions.contains(PossibleActions.QUIT)
+                && !(intel.getScoreProposal() == HandScore.TWELVE)
+                && intel.getHandScore().increase().get() <= intel.maximumHandScore()
+                && requestTruco();
     }
 
     private boolean shouldPlay(Intel intel) {
