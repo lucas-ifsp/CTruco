@@ -42,5 +42,4 @@ public class PlayGameWithBotsUseCase {
         return intel.gameWinner().orElseThrow();
     }
 
-
 }

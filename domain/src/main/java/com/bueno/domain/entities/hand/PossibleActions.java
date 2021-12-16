@@ -24,7 +24,5 @@ public enum PossibleActions {
     PLAY,
     RAISE,
     ACCEPT,
-    QUIT,
-    ACCEPT_HAND,
-    QUIT_HAND
+    QUIT
 }

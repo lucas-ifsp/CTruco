@@ -420,6 +420,7 @@ class HandTest {
     @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points")
     void shouldLoseTheHandIfRequestToRaiseTheBetWhenAnyUserHas11Points() {
         when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
         sut.raiseBet(p1);
         assertEquals(p2, getPossibleWinner());
     }
@@ -428,6 +429,7 @@ class HandTest {
     @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points after a round card was played")
     void shouldLoseTheHandIfRequestToRaiseTheBetWhenAnyUserHas11PointsAfterARoundCardWasPlayed() {
         when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
         sut.playFirstCard(p1, Card.closed());
         sut.raiseBet(p2);
         assertEquals(p1, getPossibleWinner());
@@ -446,6 +448,23 @@ class HandTest {
     void shouldBeMaoDeOnzeIfAtLeastOnePlayerHas11ScorePoints() {
         when(p2.getScore()).thenReturn(11);
         assertTrue(sut.isMaoDeOnze());
+    }
+
+    @Test
+    @DisplayName("Should be the player with 11 points who decides if plays hand in mao de onze")
+    void shouldBeThePlayerWith11PointsWhoDecidesIfPlaysHandInMaoDeOnze() {
+        when(p2.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        assertThrows(IllegalArgumentException.class, () -> sut.accept(p1));
+    }
+
+    @Test
+    @DisplayName("Should mao de onze responder not interfere in playing order ")
+    void shouldMaoDeOnzeResponderNotInterfereInPlayingOrder() {
+        when(p2.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.accept(p2);
+        assertDoesNotThrow(() -> sut.playFirstCard(p1, Card.closed()));
     }
 
     @Test
@@ -471,7 +490,6 @@ class HandTest {
         sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
         assertThrows(IllegalStateException.class, () -> sut.raiseBet(p1));
     }
-
 
     @Test
     @DisplayName("Should be able to play card after deciding if plays mao de onze")
@@ -521,7 +539,17 @@ class HandTest {
     void shouldCurrentPlayerBeAbleOnlyToAcceptOrQuitWhenHandBeginsInMaoDeOnze() {
         when(p1.getScore()).thenReturn(11);
         sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
-        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.ACCEPT_HAND, PossibleActions.QUIT_HAND);
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.ACCEPT, PossibleActions.QUIT);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+    @Test
+    @DisplayName("Should current player only be able to play after responder accepts mao de onze")
+    void shouldCurrentPlayerOnlyBeAbleToPlayAfterResponderAcceptsMaoDeOnze() {
+        when(p2.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        sut.accept(p2);
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
         assertEquals(possibleActions, sut.getPossibleActions());
     }
 
@@ -563,7 +591,7 @@ class HandTest {
     @Test
     @DisplayName("Should current player only be able to play if any user has 11 points")
     void shouldCurrentPlayerOnlyBeAbleToPlayIfAnyUserHas11Points() {
-        when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
         sut.playFirstCard(p1, Card.closed());
         sut.playSecondCard(p2, Card.closed());
         EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
@@ -573,7 +601,7 @@ class HandTest {
     @Test
     @DisplayName("Should current player only be able to play if any user has 11 points and a round card was already player")
     void shouldCurrentPlayerOnlyBeAbleToPlayIfAnyUserHas11PointsAndARoundCardWasAlreadyPlayed() {
-        when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
         sut.playFirstCard(p1, Card.closed());
         EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
         assertEquals(possibleActions, sut.getPossibleActions());

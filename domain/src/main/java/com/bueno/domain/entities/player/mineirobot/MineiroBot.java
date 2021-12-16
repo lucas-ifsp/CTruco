@@ -75,6 +75,12 @@ public class MineiroBot extends Player implements Bot {
         if(shouldPlay(intel)){
             final EnumSet<PossibleActions> possibleActions = intel.possibleActions();
             final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
+
+            if(intel.isMaoDeOnze() && intel.getHandScore() == HandScore.ONE){
+                if(getMaoDeOnzeResponse()) playHandUseCase.accept(getUuid());
+                else playHandUseCase.quit(getUuid());
+                return;
+            }
             if(canStartRaiseRequest(intel, possibleActions)){
                 playHandUseCase.raiseBet(getUuid());
                 return;

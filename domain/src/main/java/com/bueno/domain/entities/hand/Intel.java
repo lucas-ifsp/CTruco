@@ -37,6 +37,10 @@ public class Intel {
        return hand.getMaxHandScore();
     }
 
+    public boolean isMaoDeOnze() {
+        return  hand.isMaoDeOnze();
+    }
+
     public Card getVira() {
         return hand.getVira();
     }

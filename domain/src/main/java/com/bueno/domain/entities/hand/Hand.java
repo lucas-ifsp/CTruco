@@ -25,6 +25,7 @@ import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Hand {
 
@@ -44,24 +45,25 @@ public class Hand {
     private HandScore scoreProposal;
 
     private HandResult result;
-
     private HandState state;
-
-    //private final static Logger LOGGER = Logger.getLogger(Hand.class.getName());
 
     public Hand(Player firstToPlay, Player lastToPlay, Card vira){
         this.firstToPlay = Objects.requireNonNull(firstToPlay);
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
         this.vira = Objects.requireNonNull(vira);
 
-        currentPlayer = firstToPlay;
         score = HandScore.ONE;
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
         addOpenCard(vira);
 
-        if(isMaoDeOnze()) state = new WaitingMaoDeOnzeState(this);
-        else state = new NoCardState(this);
+        if(isMaoDeOnze()){
+            currentPlayer = firstToPlay.getScore() == 11 ? firstToPlay : lastToPlay;
+            state = new WaitingMaoDeOnzeState(this);
+        } else{
+            currentPlayer = firstToPlay;
+            state = new NoCardState(this);
+        }
     }
 
     public void playFirstCard(Player player, Card card){
@@ -111,7 +113,7 @@ public class Hand {
     }
 
     boolean isMaoDeOnze() {
-        return firstToPlay.getScore() == 11 || lastToPlay.getScore() == 11;
+        return firstToPlay.getScore() == 11 ^ lastToPlay.getScore() == 11;
     }
 
     void addScoreProposal() {
@@ -307,4 +309,7 @@ public class Hand {
         this.possibleActions = EnumSet.copyOf(actions);
     }
 
+    public boolean isForbidenToRaiseBet() {
+        return firstToPlay.getScore() == 11 || lastToPlay.getScore() == 11;
+    }
 }
