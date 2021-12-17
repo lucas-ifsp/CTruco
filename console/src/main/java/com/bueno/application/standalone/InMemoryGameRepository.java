@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 public class InMemoryGameRepository implements GameRepository {
 
-    private Map<UUID, Game> games = new HashMap();
+    private final Map<UUID, Game> games = new HashMap<>();
 
     @Override
     public void save(Game game) {

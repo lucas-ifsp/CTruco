@@ -25,7 +25,6 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.*;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 
@@ -47,7 +46,15 @@ public class PlayHandUseCase {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public Intel playCard(UUID usedID, Card card){
+    public Intel playCard(UUID playerUUID, Card card) {
+        return playCard(playerUUID, card, false);
+    }
+
+    public Intel discard(UUID playerUUID, Card card) {
+        return playCard(playerUUID, card, true);
+    }
+
+    private Intel playCard(UUID usedID, Card card, boolean discard){
         Objects.requireNonNull(card);
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
@@ -189,5 +196,6 @@ public class PlayHandUseCase {
     private void playRound() {
         hand.playNewRound();
     }
+
 
 }

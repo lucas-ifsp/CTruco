@@ -25,7 +25,6 @@ import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 public class Hand {
 
@@ -165,7 +164,7 @@ public class Hand {
         lastToPlay = referenceHolder;
     }
 
-    Player getOpponentOf(Player player){
+    public Player getOpponentOf(Player player){
         return player.equals(firstToPlay)? lastToPlay : firstToPlay;
     }
 
@@ -196,7 +195,7 @@ public class Hand {
         lastToPlay.setIntel(new Intel(this));
     }
 
-    public void setCardToPlayAgainst(Card cardToPlayAgainst) {
+    void setCardToPlayAgainst(Card cardToPlayAgainst) {
         this.cardToPlayAgainst = cardToPlayAgainst;
         updatePlayersIntel();
     }
@@ -205,7 +204,7 @@ public class Hand {
         return Optional.ofNullable(cardToPlayAgainst);
     }
 
-    public void addOpenCard(Card card){
+    void addOpenCard(Card card){
         openCards.add(card);
         updatePlayersIntel();
     }
@@ -256,7 +255,7 @@ public class Hand {
         return score;
     }
 
-    public void setLastBetRaiser(Player lastBetRaiser) {
+    void setLastBetRaiser(Player lastBetRaiser) {
         this.lastBetRaiser = lastBetRaiser;
     }
 
@@ -268,11 +267,11 @@ public class Hand {
         return new Intel(this);
     }
 
-    public void setState(HandState state) {
+    void setState(HandState state) {
         this.state = state;
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
+    void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
@@ -305,7 +304,7 @@ public class Hand {
         return possibleActions;
     }
 
-    public void setPossibleActions(EnumSet<PossibleActions> actions){
+    void setPossibleActions(EnumSet<PossibleActions> actions){
         this.possibleActions = EnumSet.copyOf(actions);
     }
 

@@ -95,6 +95,6 @@ public class OneCardState implements HandState {
         }
         context.addScoreProposal();
         context.setCurrentPlayer(context.getFirstToPlay());
-        context.setState(new WaitingResponseState(context));
+        context.setState(new WaitingRaiseResponseState(context));
     }
 }
