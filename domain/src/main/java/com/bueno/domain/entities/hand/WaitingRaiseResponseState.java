@@ -25,11 +25,11 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class WaitingResponseState implements HandState {
+public class WaitingRaiseResponseState implements HandState {
 
     private Hand context;
 
-    public WaitingResponseState(Hand context) {
+    public WaitingRaiseResponseState(Hand context) {
         this.context = context;
         this.context.setPossibleActions(EnumSet.of(PossibleActions.QUIT, PossibleActions.ACCEPT, PossibleActions.RAISE));
     }
@@ -77,6 +77,6 @@ public class WaitingResponseState implements HandState {
         final Player opponent = context.getOpponentOf(requester);
         context.setCurrentPlayer(opponent);
 
-        context.setState(new WaitingResponseState(context));
+        context.setState(new WaitingRaiseResponseState(context));
     }
 }

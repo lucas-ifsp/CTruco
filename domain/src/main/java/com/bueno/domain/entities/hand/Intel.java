@@ -41,6 +41,10 @@ public class Intel {
         return  hand.isMaoDeOnze();
     }
 
+    public boolean isForbidenToRaiseBet() {
+        return hand.isForbidenToRaiseBet();
+    }
+
     public Card getVira() {
         return hand.getVira();
     }

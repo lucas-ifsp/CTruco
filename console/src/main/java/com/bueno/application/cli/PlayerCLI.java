@@ -107,10 +107,6 @@ public class PlayerCLI extends Player {
         return cardToPlay;
     }
 
-    private boolean isValidChoice(String choice, String... options) {
-        return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
-    }
-
     @Override
     public boolean requestTruco() {
         if (getIntel().getHandScore().get() == 12)
@@ -184,6 +180,10 @@ public class PlayerCLI extends Player {
             }
             return choice.equalsIgnoreCase("s");
         }
+    }
+
+    boolean isValidChoice(String choice, String... options) {
+        return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
     }
 
     private void printGameIntel(Intel intel, int delayInMilliseconds) {

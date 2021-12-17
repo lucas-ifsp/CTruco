@@ -24,10 +24,7 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.hand.HandScore;
 import com.bueno.domain.entities.hand.Intel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 public abstract class Player {
@@ -89,6 +86,10 @@ public abstract class Player {
         if(cards.size() == 3) // to enable receiving less cards during tests
             LOGGER.info(username + " received: " + cards.get(0) + " | " + cards.get(1)  + " | " + cards.get(2));
         this.cards = new ArrayList<>(cards);
+    }
+
+    public List<Card> getCards() {
+        return new ArrayList<>(cards);
     }
 
     public String getUsername() {
