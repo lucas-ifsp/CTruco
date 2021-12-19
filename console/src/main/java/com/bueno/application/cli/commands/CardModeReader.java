@@ -20,25 +20,22 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.application.cli.PlayCLI2;
+import com.bueno.application.cli.GameCLI;
 import java.util.Scanner;
 
 public class CardModeReader implements Command<CardModeReader.CardMode> {
 
-    private final PlayCLI2 mainCli;
+    private final GameCLI mainCli;
     public enum CardMode{OPEN, DISCARDED}
 
-    public CardModeReader(PlayCLI2 mainCli) {
+    public CardModeReader(GameCLI mainCli) {
         this.mainCli = mainCli;
     }
 
     @Override
     public CardMode execute() {
+        Scanner scanner = new Scanner(System.in);
         while (true){
-            cls();
-            mainCli.printGameIntel();
-
-            Scanner scanner = new Scanner(System.in);
             System.out.print("Descartar [s, n] > ");
 
             final String choice = scanner.nextLine();

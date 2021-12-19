@@ -20,9 +20,7 @@
 
 package com.bueno.application.standalone;
 
-import com.bueno.domain.entities.player.dummybot.DummyBot;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
-import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
 
 import java.util.ArrayList;
@@ -41,28 +39,28 @@ public class PlayWithBots {
         LogManager.getLogManager().reset();
 
         PlayWithBots main = new PlayWithBots();
-        final List<Player> results = main.play(100000);
+        final List<UUID> results = main.play(100000);
 
-        System.out.print("MineiroBot1: " + results.stream().filter(player -> player.getUuid().equals(uuid1)).count() + " | ");
-        System.out.print("MineiroBot2: " + results.stream().filter(player -> player.getUuid().equals(uuid2)).count());
+        System.out.print("MineiroBot1: " + results.stream().filter(uuid -> uuid.equals(uuid1)).count() + " | ");
+        System.out.print("MineiroBot2: " + results.stream().filter(uuid -> uuid.equals(uuid2)).count());
     }
-
-   /* public static void main(String[] args) throws InterruptedException {
+/*
+    public static void main(String[] args) throws InterruptedException {
         for (int i = 0; i < 100; i++) {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
-            final Player player = uc.playWithBots(new MineiroBot(repo), new MineiroBot(repo));
-            System.out.println("Winner: " + player);
-            TimeUnit.SECONDS.sleep(1);
+            final UUID uuid = uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
+            System.out.println("Winner: " + (uuid.equals(uuid1) ? "MineiroBot1" : "MineiroBot2"));
+            //TimeUnit.SECONDS.sleep(1);
         }
     }*/
 
-    public List<Player> play(int times) throws InterruptedException, ExecutionException {
+    public List<UUID> play(int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        final List<Callable<Player>> games = new ArrayList<>();
+        final List<Callable<UUID>> games = new ArrayList<>();
 
-        Callable<Player> game = () -> {
+        Callable<UUID> game = () -> {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
             return uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
@@ -72,8 +70,8 @@ public class PlayWithBots {
             games.add(game);
         }
 
-        final List<Player> result = new ArrayList<>();
-        for (Future<Player> future : executor.invokeAll(games)) {
+        final List<UUID> result = new ArrayList<>();
+        for (Future<UUID> future : executor.invokeAll(games)) {
             result.add(future.get());
         }
 

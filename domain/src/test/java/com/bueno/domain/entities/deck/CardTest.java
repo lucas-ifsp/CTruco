@@ -109,6 +109,24 @@ class CardTest {
     }
 
     @Test
+    @DisplayName("Should next rank of hidden be hidden")
+    void shouldNextRankOfHiddenBeHidden() {
+        assertEquals(Rank.HIDDEN, Rank.HIDDEN.next());
+    }
+
+    @Test
+    @DisplayName("Should next rank of 3 be 4")
+    void shouldNextRankOf3Be4() {
+        assertEquals(Rank.FOUR, Rank.THREE.next());
+    }
+
+    @Test
+    @DisplayName("Should next rank of King be Ace")
+    void shouldNextRankOfKingBeAce() {
+        assertEquals(Rank.ACE, Rank.KING.next());
+    }
+
+    @Test
     @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
         assertEquals("[Xx]", Card.closed().toString());

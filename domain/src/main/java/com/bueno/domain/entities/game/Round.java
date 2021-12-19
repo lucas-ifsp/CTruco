@@ -18,10 +18,9 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.entities.truco.Truco;
 import com.bueno.domain.entities.truco.TrucoResult;
@@ -81,7 +80,7 @@ public class Round {
             if (hasWinnerByRun) return;
         }
 
-        firstCard = Objects.requireNonNull(firstToPlay.playCard(), "First card played must not be null!");
+        firstCard = Objects.requireNonNull(firstToPlay.chooseCardToPlay().content(), "First card played must not be null!");
         hand.setCardToPlayAgainst(firstCard);
         hand.addOpenCard(firstCard);
         lastToPlay.handleOpponentPlay();
@@ -91,7 +90,7 @@ public class Round {
             if (hasWinnerByRun) return;
         }
 
-        lastCard = Objects.requireNonNull(lastToPlay.playCard(), "Last card played must not be null!");
+        lastCard = Objects.requireNonNull(lastToPlay.chooseCardToPlay().content(), "Last card played must not be null!");
         hand.setCardToPlayAgainst(null);
         hand.addOpenCard(lastCard);
         firstToPlay.handleOpponentPlay();

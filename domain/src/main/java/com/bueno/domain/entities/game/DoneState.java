@@ -18,49 +18,45 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class WaitingMaoDeOnzeState implements HandState{
+public class DoneState implements HandState {
 
-    private final Hand context;
+    private Hand context;
 
-    public WaitingMaoDeOnzeState(Hand context) {
+    public DoneState(Hand context){
         this.context = context;
-        this.context.setPossibleActions(EnumSet.of(PossibleActions.ACCEPT, PossibleActions.QUIT));
+        this.context.setCurrentPlayer(null);
+        this.context.setPossibleActions(EnumSet.noneOf(PossibleActions.class));
     }
 
     @Override
     public void playFirstCard(Player player, Card card) {
-        throw new IllegalStateException("Can not play first card before deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not play card because hand is done.");
     }
 
     @Override
     public void playSecondCard(Player player, Card card) {
-        throw new IllegalStateException("Can not play second card before deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not play card because hand is done.");
     }
 
     @Override
     public void accept(Player responder) {
-        context.setScore(HandScore.THREE);
-        context.setCurrentPlayer(context.getFirstToPlay());
-        context.setPossibleActions(EnumSet.of(PossibleActions.PLAY));
-        context.setState(new NoCardState(context));
+        throw new IllegalStateException("Can not accept bet because hand is done.");
     }
 
     @Override
     public void quit(Player responder) {
-        Player opponent = context.getOpponentOf(responder);
-        context.setResult(new HandResult(opponent, HandScore.ONE));
-        context.setState(new DoneState(context));
+        throw new IllegalStateException("Can not quit hand because hand is done.");
     }
 
     @Override
     public void raiseBet(Player requester) {
-        throw new IllegalStateException("Can not raise while deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not bet because hand is done.");
     }
 }

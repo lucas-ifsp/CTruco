@@ -20,10 +20,14 @@
 
 package com.bueno.application.cli.commands;
 
+import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.game.HandScore;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
 public interface Command <T>{
+
     T execute();
 
     default void printErrorMessage(String message) {
@@ -32,7 +36,6 @@ public interface Command <T>{
         System.out.println(message);
         scanner.nextLine();
         cls();
-        scanner.close();
     }
 
     default void cls() {
@@ -41,5 +44,15 @@ public interface Command <T>{
 
     default boolean isValidChoice(String choice, String... options) {
         return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
+    }
+
+    default String toRequestString(HandScore nextScore) {
+        return switch (nextScore) {
+            case THREE -> "truco";
+            case SIX -> "seis";
+            case NINE -> "nove";
+            case TWELVE -> "doze";
+            default -> throw new GameRuleViolationException("Invalid hand value!");
+        };
     }
 }

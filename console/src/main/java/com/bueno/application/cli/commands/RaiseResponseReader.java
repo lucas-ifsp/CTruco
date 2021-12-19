@@ -21,40 +21,40 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.entities.deck.Card;
-import com.google.common.primitives.Ints;
+import com.bueno.domain.entities.game.HandScore;
 
-import java.util.List;
 import java.util.Scanner;
 
-public class CardReader implements Command<Card> {
-
+public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseResponseChoice> {
     private final GameCLI mainCli;
-    private final List<Card> userCards;
+    private final HandScore nextScore;
+    public enum RaiseResponseChoice {QUIT, ACCEPT, RAISE}
 
-    public CardReader(GameCLI mainCli, List<Card> userCards) {
+    public RaiseResponseReader(GameCLI mainCli, HandScore nextScore) {
         this.mainCli = mainCli;
-        this.userCards = userCards;
+        this.nextScore = nextScore;
     }
 
     @Override
-    public Card execute() {
+    public RaiseResponseChoice execute() {
         Scanner scanner = new Scanner(System.in);
-        while (true){
-            mainCli.printGameIntel(0);
+        while (true) {
+            System.out.print(mainCli.getOpponentUsername() + " está pedindo " + toRequestString(nextScore)
+                    + ". Escolha uma opção [(T)opa, (C)orre, (A)umenta]: ");
 
-            System.out.print("Carta a jogar [índice] > ");
-
-            final Integer choice = Ints.tryParse(scanner.nextLine());
-            if (choice == null || cardIndexOf(choice) < 0 || cardIndexOf(choice) > userCards.size() - 1) {
+            final String choice = scanner.nextLine();
+            if (isValidChoice(choice, "t", "c", "a")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            return userCards.get(cardIndexOf(choice));
-        }
-    }
 
-    private int cardIndexOf(Integer choice) {
-        return choice - 1;
+            RaiseResponseChoice result = switch (choice){
+                case "c" -> RaiseResponseChoice.QUIT;
+                case "t" -> RaiseResponseChoice.ACCEPT;
+                case "a" -> RaiseResponseChoice.RAISE;
+                default -> throw new IllegalStateException("Unexpected value: " + choice);
+            };
+            return result;
+        }
     }
 }

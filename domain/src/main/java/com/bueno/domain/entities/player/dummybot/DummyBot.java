@@ -21,8 +21,8 @@
 package com.bueno.domain.entities.player.dummybot;
 
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 public class DummyBot extends Player {
@@ -32,8 +32,8 @@ public class DummyBot extends Player {
     }
 
     @Override
-    public Card playCard() {
-        return cards.remove(0);
+    public CardToPlay chooseCardToPlay() {
+        return CardToPlay.of(cards.get(0));
     }
 
     @Override

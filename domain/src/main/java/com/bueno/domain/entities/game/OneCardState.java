@@ -18,18 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class NoCardState implements HandState {
+public class OneCardState implements HandState {
 
     private Hand context;
 
-    public NoCardState(Hand context) {
+    public OneCardState(Hand context) {
         this.context = context;
         setPossibleHandActions();
     }
@@ -47,17 +47,36 @@ public class NoCardState implements HandState {
 
     @Override
     public void playFirstCard(Player player, Card card) {
-        context.addOpenCard(card);
-        context.setCardToPlayAgainst(card);
-        context.setCurrentPlayer(context.getLastToPlay());
-        context.setState(new OneCardState(context));
+        throw new IllegalStateException("First card has already been played: " + context.getCardToPlayAgainst());
     }
 
     @Override
     public void playSecondCard(Player player, Card card) {
-        throw new IllegalStateException("Can not play a second card before playing a first one.");
+        context.addOpenCard(card);
+        context.playRound(card);
+        switch (context.numberOfRoundsPlayed()) {
+            case 1 -> {
+                context.defineRoundPlayingOrder();
+                context.setState(new NoCardState(context));
+            }
+            case 2 -> {
+                context.checkForWinnerAfterSecondRound();
+                if (context.hasWinner()) context.setState(new DoneState(context));
+                else {
+                    context.defineRoundPlayingOrder();
+                    context.setCurrentPlayer(context.getFirstToPlay());
+                    context.setState(new NoCardState(context));
+                }
+            }
+            case 3 -> {
+                context.checkForWinnerAfterThirdRound();
+                context.setState(new DoneState(context));
+            }
+        }
+        context.setCardToPlayAgainst(null);
     }
 
+    @Override
     public void accept(Player responder) {
         throw new IllegalStateException("No raising bet request to be accepted.");
     }
@@ -75,7 +94,8 @@ public class NoCardState implements HandState {
             context.setState(new DoneState(context));
         }
         context.addScoreProposal();
-        context.setCurrentPlayer(context.getLastToPlay());
+        context.setLastBetRaiser(requester);
+        context.setCurrentPlayer(context.getFirstToPlay());
         context.setState(new WaitingRaiseResponseState(context));
     }
 }

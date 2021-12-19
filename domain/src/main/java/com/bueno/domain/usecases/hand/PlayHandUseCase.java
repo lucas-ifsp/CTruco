@@ -21,8 +21,7 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.*;
+import com.bueno.domain.entities.game.*;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
@@ -33,7 +32,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-//TODO Test use case with bots
 //TODO Split this class with different use cases (PlayCardUseCase, AcceptBetUseCase...)
 public class PlayHandUseCase {
 
@@ -61,23 +59,24 @@ public class PlayHandUseCase {
         final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
         final Player player = hand.getCurrentPlayer();
 
+        Card playingCard = discard ? player.discard(card) : player.play(card);
         if(hand.getCardToPlayAgainst().isEmpty()){
             LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to open round.");
-            hand.playFirstCard(player, card);
+            hand.playFirstCard(player, playingCard);
         }else{
             LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to end round.");
-            hand.playSecondCard(player, card);
+            hand.playSecondCard(player, playingCard);
         }
 
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        final Intel intel = new Intel(game.getCurrentHand());
+        final Intel intel = game.getIntel();
 
         if(game.isDone()) return intel;
-        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot)
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot)
             bot.playTurn(intel);
 
-        return new Intel(game.getCurrentHand());
+        return game.getIntel();
     }
 
     private Game loadGameIfRequestIsValid(UUID usedID) {
@@ -90,7 +89,7 @@ public class PlayHandUseCase {
 
     private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
         final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
-        final Hand hand = game.getCurrentHand();
+        final Hand hand = game.currentHand();
 
         if(!hand.getCurrentPlayer().equals(requester))
             throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
@@ -115,8 +114,8 @@ public class PlayHandUseCase {
         final Player player = hand.getCurrentPlayer();
         hand.raiseBet(player);
 
-        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
-        return new Intel(game.getCurrentHand());
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
+        return game.getIntel();
     }
 
     public Intel accept(UUID usedID){
@@ -127,8 +126,8 @@ public class PlayHandUseCase {
         final Player player = hand.getCurrentPlayer();
         hand.accept(player);
 
-        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(new Intel(game.getCurrentHand()));
-        return new Intel(game.getCurrentHand());
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
+        return game.getIntel();
     }
 
     public Intel quit(UUID usedID){
@@ -141,12 +140,12 @@ public class PlayHandUseCase {
 
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        final Intel intel = new Intel(game.getCurrentHand());
+        final Intel intel = game.getIntel();
 
         if(game.isDone()) return intel;
-        if(game.getCurrentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
 
-        return new Intel(game.getCurrentHand());
+        return game.getIntel();
     }
 
 

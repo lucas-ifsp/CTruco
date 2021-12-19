@@ -21,9 +21,8 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.hand.HandResult;
+import com.bueno.domain.entities.game.Hand;
+import com.bueno.domain.entities.game.HandResult;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.InMemoryGameRepository;

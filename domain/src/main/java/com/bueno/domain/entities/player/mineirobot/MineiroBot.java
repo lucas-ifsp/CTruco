@@ -20,11 +20,11 @@
 
 package com.bueno.domain.entities.player.mineirobot;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
-import com.bueno.domain.entities.hand.Intel;
-import com.bueno.domain.entities.hand.PossibleActions;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.game.PossibleActions;
 import com.bueno.domain.entities.player.util.Bot;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
@@ -51,7 +51,7 @@ public class MineiroBot extends Player implements Bot {
     }
 
     @Override
-    public Card playCard() {
+    public CardToPlay chooseCardToPlay() {
         return PlayingStrategy.of(cards, this).playCard();
     }
 
@@ -73,7 +73,7 @@ public class MineiroBot extends Player implements Bot {
     @Override
     public void playTurn(Intel intel) {
         if(shouldPlay(intel)){
-            final EnumSet<PossibleActions> possibleActions = intel.possibleActions();
+            final EnumSet<PossibleActions> possibleActions = intel.possibleActions(getUuid());
             final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
 
             if(intel.isMaoDeOnze() && intel.getHandScore() == HandScore.ONE){
@@ -81,12 +81,14 @@ public class MineiroBot extends Player implements Bot {
                 else playHandUseCase.quit(getUuid());
                 return;
             }
-            if(canStartRaiseRequest(intel, possibleActions)){
+            if(canStartRaiseRequest(intel, possibleActions) && requestTruco()){
                 playHandUseCase.raiseBet(getUuid());
                 return;
             }
             if(possibleActions.contains(PossibleActions.PLAY)){
-                playHandUseCase.playCard(getUuid(), playCard());
+                final CardToPlay chosenCard = chooseCardToPlay();
+                if(chosenCard.isDiscard()) playHandUseCase.discard(getUuid(), chosenCard.content());
+                else playHandUseCase.playCard(getUuid(), chosenCard.content());
                 return;
             }
             final int response = getTrucoResponse(intel.getScoreProposal());
@@ -102,8 +104,7 @@ public class MineiroBot extends Player implements Bot {
         return possibleActions.contains(PossibleActions.RAISE)
                 && !possibleActions.contains(PossibleActions.QUIT)
                 && !(intel.getScoreProposal() == HandScore.TWELVE)
-                && intel.getHandScore().increase().get() <= intel.maximumHandScore()
-                && requestTruco();
+                && intel.getHandScore().increase().get() <= intel.maximumHandScore();
     }
 
     private boolean shouldPlay(Intel intel) {

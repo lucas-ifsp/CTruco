@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
@@ -49,9 +49,6 @@ public class WaitingRaiseResponseState implements HandState {
         context.setScore(context.getScoreProposal());
         context.removeScoreProposal();
 
-        final Player requester = context.getOpponentOf(responder);
-        context.setLastBetRaiser(requester);
-
         final Player currentPlayer = context.getCardToPlayAgainst().isEmpty() ? context.getFirstToPlay() : context.getLastToPlay();
         context.setCurrentPlayer(currentPlayer);
 
@@ -62,6 +59,7 @@ public class WaitingRaiseResponseState implements HandState {
     @Override
     public void quit(Player responder) {
         Player opponent = context.getOpponentOf(responder);
+        context.setLastBetRaiser(null);
         context.setResult(new HandResult(opponent, context.getScore()));
         context.setState(new DoneState(context));
     }
@@ -73,6 +71,7 @@ public class WaitingRaiseResponseState implements HandState {
 
         context.setScore(currentScore);
         context.addScoreProposal();
+        context.setLastBetRaiser(requester);
 
         final Player opponent = context.getOpponentOf(requester);
         context.setCurrentPlayer(opponent);

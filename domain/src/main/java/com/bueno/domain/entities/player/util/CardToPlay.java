@@ -18,35 +18,36 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.player.util;
 
-import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.deck.Card;
 
-public enum HandScore {
-    ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
+public final class CardToPlay {
+    private final Card content;
+    private final boolean discard;
 
-    private final int score;
-
-    HandScore(int score) {
-        this.score = score;
+    private CardToPlay(Card card, boolean discard) {
+        this.content = card;
+        this.discard = discard;
     }
 
-    public HandScore increase() {
-        return switch (this){
-            case ONE -> THREE;
-            case THREE -> SIX;
-            case SIX -> NINE;
-            case NINE -> TWELVE;
-            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase score from " + this);
-        };
+    public static CardToPlay of(Card card){
+        return new CardToPlay(card, false);
     }
 
-    public int get() {
-        return score;
+    public static CardToPlay ofDiscard(Card card){
+        return new CardToPlay(card, true);
     }
 
-    @Override
-    public String toString() {
-        return "HandScore{" + "score=" + score + '}';
+    public Card value() {
+        return discard ? Card.closed() : content;
+    }
+
+    public Card content() {
+        return content;
+    }
+
+    public boolean isDiscard() {
+        return discard;
     }
 }

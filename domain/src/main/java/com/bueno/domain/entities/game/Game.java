@@ -22,8 +22,6 @@ package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
-import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
@@ -78,21 +76,23 @@ public class Game {
     }
 
     public void updateScores() {
-        final HandResult result = getCurrentHand().getResult().orElseThrow();
+        final HandResult result = currentHand().getResult().orElseThrow();
         Optional<Player> winner = result.getWinner();
 
         if (winner.isEmpty()) return;
-        if (winner.get().equals(player1))
-            player1.addScore(result.getScore());
+        if (winner.get().equals(player1)) player1.addScore(result.getScore());
         else player2.addScore(result.getScore());
         LOGGER.info(player1.getUuid() + " score = " + player1.getScore() + " | " + player2.getUuid() + " score : " + player2.getScore() );
-
     }
 
     public Optional<Player> getWinner() {
         if (player1.getScore() == Player.MAX_SCORE) return Optional.of(player1);
         if (player2.getScore() == Player.MAX_SCORE) return Optional.of(player2);
         return Optional.empty();
+    }
+
+    public Intel getIntel(){
+        return new Intel(this);
     }
 
     public UUID getUuid() {
@@ -115,11 +115,13 @@ public class Game {
         return player2;
     }
 
-    public List<Hand> getHands() {
-        return new ArrayList<>(hands);
+    public List<Hand> getHands() {return new ArrayList<>(hands);}
+
+    public int handsPlayed(){
+        return hands.size();
     }
 
-    public Hand getCurrentHand(){
+    public Hand currentHand(){
         if(hands.isEmpty()) return null;
         int lastHandIndex = hands.size() - 1;
         return hands.get(lastHandIndex);
@@ -127,6 +129,10 @@ public class Game {
 
     public boolean isMaoDeOnze() {
         return player1.getScore() == 11 ^ player2.getScore() == 11;
+    }
+
+    public boolean isDone() {
+        return getWinner().isPresent();
     }
 
     @Override
@@ -140,9 +146,5 @@ public class Game {
     @Override
     public int hashCode() {
         return Objects.hash(uuid, player1, player2);
-    }
-
-    public boolean isDone() {
-        return getWinner().isPresent();
     }
 }

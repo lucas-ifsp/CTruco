@@ -25,10 +25,9 @@ import com.bueno.application.model.UserPlayer;
 import com.bueno.application.view.WindowMaoDeOnzeResponse;
 import com.bueno.application.view.WindowTrucoResponse;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
-import com.bueno.domain.entities.hand.Intel;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.usecases.game.PlayGameUseCase;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -239,12 +238,12 @@ public class GameTableController {
 
     private boolean canIncreaseScore() {
         final Intel intel = player.getIntel();
-        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.getOpponentScore(player) == 11;
+        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.getOpponentScore(player.getUuid()) == 11;
         return playerTurn && !lastToIncreaseScore && !forbiddenToRequestIncrement;
     }
 
     private void updateRoundResults() {
-        final int roundsPlayed = player.getIntel().getRoundsPlayed().size();
+        final int roundsPlayed = player.getIntel().roundsPlayed();
         if (roundsPlayed == 0) setRoundLabelsInvisible();
         if (roundsPlayed >= 1) showRoundResult(1, lb1st, lb1stValue);
         if (roundsPlayed >= 2) showRoundResult(2, lb2nd, lb2ndValue);
@@ -253,14 +252,13 @@ public class GameTableController {
 
     private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel) {
         Intel intel = player.getIntel();
-        final int roundsPlayed = intel.getRoundsPlayed().size();
+        final int roundsPlayed = intel.roundsPlayed();
         final int roundIndex = roundNumber - 1;
 
         if (roundIndex >= roundsPlayed)
             return;
 
-        final Round round = intel.getRoundsPlayed().get(roundNumber - 1);
-        final String resultText = round.getWinner().map(Player::getUsername).orElse("Empate");
+        final String resultText = intel.roundWinners().get(roundNumber - 1).orElse("Empate");
 
         Platform.runLater(() -> {
             roundResultLabel.setText(resultText);
@@ -270,7 +268,7 @@ public class GameTableController {
     }
 
     private void dealCards() {
-        final CardImage card = CardImage.of(player.getIntel().getVira());
+        final CardImage card = CardImage.of(player.getIntel().vira());
         Platform.runLater(() -> {
             cardVira.setImage(card.getImage());
             cardOwnedLeft.setImage(CardImage.of(player.getReceivedCards().get(0)).getImage());
@@ -282,7 +280,7 @@ public class GameTableController {
 
     private void updatePlayerScores() {
         Platform.runLater(() -> {
-            lbOpponentScoreValue.setText(String.valueOf(player.getIntel().getOpponentScore(player)));
+            lbOpponentScoreValue.setText(String.valueOf(player.getIntel().getOpponentScore(player.getUuid())));
             lbPlayerScoreValue.setText(String.valueOf(player.getScore()));
         });
     }
@@ -294,7 +292,7 @@ public class GameTableController {
 
     public void showOpponentTurn() {
         playerTurn = false;
-        final List<Card> openCards = player.getIntel().getOpenCards();
+        final List<Card> openCards = player.getIntel().openCards();
         final int lastCardPlayedIndex = openCards.size() - 1;
         final Card lastCardPlayed = openCards.get(lastCardPlayedIndex);
         final ImageView randomCardImage = opponentCardImages.remove(0);

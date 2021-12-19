@@ -22,7 +22,8 @@ package com.bueno.application.model;
 
 import com.bueno.application.controller.GameTableController;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import javafx.concurrent.Task;
 
@@ -69,11 +70,12 @@ public class UserPlayer extends Player {
     }
 
     @Override
-    public Card playCard(){
+    public CardToPlay chooseCardToPlay(){
         controller.startPlayerTurn();
         final Card card = getUserResponseAsync(this::getCardToPlayDecision);
+        final CardToPlay cardToPlay = card.equals(Card.closed()) ? CardToPlay.ofDiscard(card) : CardToPlay.of(card);
         cardToPlayDecision = null;
-        return card;
+        return cardToPlay;
     }
 
     @Override
