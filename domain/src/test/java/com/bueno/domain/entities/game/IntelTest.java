@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
@@ -31,11 +31,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.when;
 
 
@@ -56,7 +57,7 @@ class IntelTest {
     void ShouldGetSameViraOfCurrentHand() {
         Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
         when(hand.getVira()).thenReturn(card);
-        assertEquals(card, sut.getVira());
+        assertEquals(card, sut.vira());
     }
 
     @Test
@@ -79,34 +80,33 @@ class IntelTest {
     void shouldGetSameOpenCardsOfCurrentHand() {
         final List<Card> cards = List.of(Card.of(Rank.SEVEN, Suit.SPADES), Card.of(Rank.SEVEN, Suit.CLUBS));
         when(hand.getOpenCards()).thenReturn(cards);
-        assertIterableEquals(cards, sut.getOpenCards());
-    }
-
-    @Test
-    @DisplayName("Should get the same played rounds of the current hand")
-    void shouldGetSamePlayedRoundsOfCurrentHand() {
-        final List<Round> roundsPlayed = new ArrayList<>();
-        when(hand.getRoundsPlayed()).thenReturn(roundsPlayed);
-        assertIterableEquals(roundsPlayed, sut.getRoundsPlayed());
+        assertIterableEquals(cards, sut.openCards());
     }
 
     @Test
     @DisplayName("Should get opponent score")
     void ShouldGetOpponentScore() {
+        final UUID p1UUID = UUID.randomUUID();
+        when(player1.getUuid()).thenReturn(p1UUID);
         when(player2.getScore()).thenReturn(6);
         when(hand.getFirstToPlay()).thenReturn(player1);
         when(hand.getLastToPlay()).thenReturn(player2);
-        final int opponentScore = sut.getOpponentScore(player1);
+
+        final int opponentScore = sut.getOpponentScore(player1.getUuid());
         assertEquals(player2.getScore(), opponentScore);
     }
 
     @Test
-    @DisplayName("Should get opponent id")
-    void ShouldGetOpponentId() {
+    @DisplayName("Should get opponent username")
+    void ShouldGetOpponentUsername() {
+        final UUID p1UUID = UUID.randomUUID();
+
+        when(player1.getUuid()).thenReturn(p1UUID);
         when(player2.getUsername()).thenReturn("Test");
         when(hand.getFirstToPlay()).thenReturn(player1);
         when(hand.getLastToPlay()).thenReturn(player2);
-        final String opponentId = sut.getOpponentId(player1);
+
+        final String opponentId = sut.getOpponentUsername(player1.getUuid());
         assertEquals(player2.getUsername(), opponentId);
     }
 }

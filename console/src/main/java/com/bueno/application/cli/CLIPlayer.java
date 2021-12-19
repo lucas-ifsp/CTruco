@@ -20,8 +20,8 @@
 
 package com.bueno.application.cli;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.UUID;
@@ -33,7 +33,7 @@ public class CLIPlayer extends Player {
     }
 
     @Override
-    public Card playCard() {
+    public CardToPlay chooseCardToPlay() {
         return null;
     }
 

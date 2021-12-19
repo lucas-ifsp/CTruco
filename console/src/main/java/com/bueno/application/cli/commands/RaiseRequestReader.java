@@ -20,50 +20,36 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.application.cli.PlayCLI2;
-import com.bueno.domain.entities.game.GameRuleViolationException;
-import com.bueno.domain.entities.hand.HandScore;
+import com.bueno.application.cli.GameCLI;
+import com.bueno.domain.entities.game.HandScore;
 
 import java.util.Scanner;
 
 public class RaiseRequestReader implements Command<RaiseRequestReader.RaiseChoice> {
 
-    private final PlayCLI2 mainCli;
+    private final GameCLI mainCli;
     private final HandScore nextScore;
-    public enum RaiseChoice {REQUEST, NOT_REQUEST};
+    public enum RaiseChoice {REQUEST, NOT_REQUEST}
 
-
-    public RaiseRequestReader(PlayCLI2 mainCli, HandScore nextScore) {
+    public RaiseRequestReader(GameCLI mainCli, HandScore nextScore) {
         this.mainCli = mainCli;
         this.nextScore = nextScore;
     }
 
     @Override
     public RaiseChoice execute() {
-        cls();
+        Scanner scanner = new Scanner(System.in);
         while (true) {
-            mainCli.printGameIntel();
+            mainCli.printGameIntel(0);
 
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Pedir " + toRequestString() + " [s, n]: ");
-            final String choice = scanner.nextLine().toLowerCase();
+            System.out.print("Pedir " + toRequestString(nextScore) + " [s, n]: ");
 
+            String choice = scanner.nextLine().toLowerCase();
             if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-
             return choice.equalsIgnoreCase("s") ? RaiseChoice.REQUEST : RaiseChoice.NOT_REQUEST;
         }
-    }
-
-    private String toRequestString() {
-        return switch (nextScore) {
-            case THREE -> "truco";
-            case SIX -> "seis";
-            case NINE -> "nove";
-            case TWELVE -> "doze";
-            default -> throw new GameRuleViolationException("Invalid hand value!");
-        };
     }
 }

@@ -21,14 +21,9 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.player.util.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class CreateGameUseCase {

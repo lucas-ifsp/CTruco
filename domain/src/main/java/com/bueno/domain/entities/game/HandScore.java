@@ -18,30 +18,33 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.Hand;
-import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.hand.PlayHandUseCase;
+public enum HandScore {
+    ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
 
-public class PlayGameUseCase {
+    private final int score;
 
-    private final Game game;
-
-    public PlayGameUseCase(Player player1, Player player2){
-        game = new Game(player1, player2);
+    HandScore(int score) {
+        this.score = score;
     }
 
-    public Intel playNewHand(){
-        Intel intel = null;
+    public HandScore increase() {
+        return switch (this){
+            case ONE -> THREE;
+            case THREE -> SIX;
+            case SIX -> NINE;
+            case NINE -> TWELVE;
+            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase score from " + this);
+        };
+    }
 
-        if(game.getWinner().isEmpty()) {
-            final Hand playedHand = new PlayHandUseCase(game).play();
-            intel = playedHand.getIntel();
-            game.updateScores();
-        }
-        return intel;
+    public int get() {
+        return score;
+    }
+
+    @Override
+    public String toString() {
+        return "HandScore{" + "score=" + score + '}';
     }
 }

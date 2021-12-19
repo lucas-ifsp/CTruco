@@ -21,9 +21,8 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandResult;
-import com.bueno.domain.entities.hand.Intel;
-import com.bueno.domain.entities.hand.Round;
+import com.bueno.domain.entities.game.HandResult;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
@@ -45,18 +44,24 @@ public class IntelPrinter implements Command<Void>{
 
     @Override
     public Void execute() {
+        cls();
         System.out.println("+=======================================+");
         printGameMainInfo();
         printRounds(intel);
         printCardsOpenInTable(intel);
-        printVira(intel.getVira());
+        printVira(intel.vira());
         printOpponentCardIfAvailable(intel);
         printOwnedCards();
         printResultIfAvailable();
         System.out.println("+=======================================+\n");
 
-        try {TimeUnit.MILLISECONDS.sleep(delayInMilliseconds);}
-        catch (InterruptedException e) {e.printStackTrace();}
+        if(delayInMilliseconds > 0) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(delayInMilliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 
@@ -64,23 +69,21 @@ public class IntelPrinter implements Command<Void>{
         System.out.println(" Vez do: " + player.getUsername());
         System.out.println(" Ponto da mão: " + intel.getHandScore().get());
         System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
-                + " x " + intel.getOpponentId(player) + " " + intel.getOpponentScore(player));
+                + " x " + intel.getOpponentUsername(player.getUuid()) + " " + intel.getOpponentScore(player.getUuid()));
     }
 
     private void printRounds(Intel intel) {
-        final List<Round> roundsPlayed = intel.getRoundsPlayed();
-        if (roundsPlayed.size() > 0) {
-            final String roundResults = roundsPlayed.stream()
-                    .map(Round::getWinner)
-                    .map(possibleWinner -> possibleWinner.orElse(null))
-                    .map(winner -> winner != null ? winner.getUsername() : "Empate")
+        final List<Optional<String>> roundWinners = intel.roundWinners();
+        if (roundWinners.size() > 0) {
+            final String roundResults = roundWinners.stream()
+                    .map(possibleWinner -> possibleWinner.orElse("Empate"))
                     .collect(Collectors.joining(" | ", "[ ", " ] "));
-            System.out.println("Ganhadores das Rodadas: " + roundResults);
+            System.out.println(" Ganhadores das Rodadas: " + roundResults);
         }
     }
 
     private void printCardsOpenInTable(Intel intel) {
-        final List<Card> openCards = intel.getOpenCards();
+        final List<Card> openCards = intel.openCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
             openCards.forEach(card -> System.out.print(card + " "));
@@ -99,8 +102,9 @@ public class IntelPrinter implements Command<Void>{
 
     private void printOwnedCards() {
         System.out.print(" Cartas na mão: ");
-        for (int i = 0; i < player.getCards().size(); i++) {
-            System.out.print((i + 1) + ") " + player.getCards().get(i) + "\t");
+        final List<Card> playerCards = intel.ownedCards(player.getUuid());
+        for (int i = 0; i < playerCards.size(); i++) {
+            System.out.print((i + 1) + ") " + playerCards.get(i) + "\t");
         }
         System.out.print("\n");
     }

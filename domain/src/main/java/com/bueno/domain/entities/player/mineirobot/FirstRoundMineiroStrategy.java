@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
@@ -32,31 +33,29 @@ public class FirstRoundMineiroStrategy extends PlayingStrategy {
         this.cards = cards;
         this.player = player;
         this.intel = player.getIntel();
-        this.vira = intel.getVira();
+        this.vira = intel.vira();
         this.cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
     }
 
     @Override
-    public Card playCard() {
+    public CardToPlay playCard() {
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
         final int numberOfTopThreeCards = countCardsBetween(11, 13);
         final int numberOfMediumCards = countCardsBetween(8,9);
 
-        if(numberOfTopThreeCards == 2) return discard(cards.get(2));
+        if(numberOfTopThreeCards == 2) return CardToPlay.ofDiscard(cards.get(2));
 
         if(possibleOpponentCard.isPresent()) {
             Card opponentCard = possibleOpponentCard.get();
 
             Optional<Card> possibleEnoughCardToWin = getPossibleEnoughCardToWin(opponentCard);
-            if (possibleEnoughCardToWin.isPresent()) return cards.remove(cards.indexOf(possibleEnoughCardToWin.get()));
+            if (possibleEnoughCardToWin.isPresent()) return CardToPlay.of(possibleEnoughCardToWin.get());
 
             Optional<Card> possibleCardToDraw = getPossibleCardToDraw(opponentCard);
-            if (possibleCardToDraw.isPresent()) return cards.remove(cards.indexOf(possibleCardToDraw.get()));
-
-            return discard(cards.get(2));
+            return possibleCardToDraw.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard((cards.get(2))));
         }
-        if(numberOfTopThreeCards == 1 && numberOfMediumCards > 0) return cards.remove(1);
-        return cards.remove(0);
+        if(numberOfTopThreeCards == 1 && numberOfMediumCards > 0) return CardToPlay.of(cards.get(1));
+        return CardToPlay.of(cards.get(0));
     }
 
     private int countCardsBetween(int lowerValue, int upperValue){
@@ -73,7 +72,7 @@ public class FirstRoundMineiroStrategy extends PlayingStrategy {
             if (!cards.get(0).isManilha(vira) || cards.get(0).isOuros(vira) || getCardValue(cards.get(1), vira) < 9) return -1;
             return 0;
         }
-        final List<Card> openCards = intel.getOpenCards();
+        final List<Card> openCards = intel.openCards();
         final Card cardPlayed = openCards.get(openCards.size()-1);
         if(getCardValue(cardPlayed, vira) < 9 && remainingCardsValue < 17) return -1;
         return 0;

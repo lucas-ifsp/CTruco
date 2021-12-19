@@ -18,11 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.application.cli.commands;
 
-public enum PossibleActions {
-    PLAY,
-    RAISE,
-    ACCEPT,
-    QUIT
+import java.util.Scanner;
+
+public class UsernameReader implements Command<String>{
+
+    @Override
+    public String execute() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("====== CLEAN TRUCO - Let's Play! ======");
+        System.out.print("Nome do jogador > ");
+        String username = scanner.nextLine();
+        return username;
+    }
 }

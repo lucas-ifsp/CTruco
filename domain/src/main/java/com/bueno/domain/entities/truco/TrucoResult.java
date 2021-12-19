@@ -20,7 +20,7 @@
 
 package com.bueno.domain.entities.truco;
 
-import com.bueno.domain.entities.hand.HandScore;
+import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.Objects;

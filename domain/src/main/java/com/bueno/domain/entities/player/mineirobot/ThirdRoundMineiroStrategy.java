@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
@@ -32,27 +33,26 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
         this.cards = cards;
         this.player = player;
         this.intel = player.getIntel();
-        this.vira = intel.getVira();
+        this.vira = intel.vira();
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
     }
 
     @Override
-    public Card playCard() {
+    public CardToPlay playCard() {
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
-
-        if(possibleOpponentCard.isEmpty()) return cards.remove(0);
-
         final Card remainingCard = cards.get(0);
+
+        if(possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
+
         final Card opponentCard = possibleOpponentCard.get();
+        if(remainingCard.compareValueTo(opponentCard, vira) > 0) return CardToPlay.of(remainingCard);
 
-        if(remainingCard.compareValueTo(opponentCard, vira) > 0) return cards.remove(0);
-
-        return Card.closed();
+        return CardToPlay.ofDiscard(remainingCard);
     }
 
     @Override
     public int getTrucoResponse(int newScoreValue) {
-        final Card lastOpenedCard = intel.getOpenCards().get(intel.getOpenCards().size() - 1);
+        final Card lastOpenedCard = intel.openCards().get(intel.openCards().size() - 1);
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(lastOpenedCard, vira) : getCardValue(cards.get(0), vira);
 
@@ -64,7 +64,7 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
     @Override
     public boolean requestTruco() {
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
-        final Optional<Player> firstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
+        final Optional<String> firstRoundWinner = intel.roundWinners().get(0);
         final int handScoreValue = intel.getHandScore().get();
         final Card playingCard = cards.get(0);
 

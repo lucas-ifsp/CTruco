@@ -21,40 +21,31 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.entities.deck.Card;
-import com.google.common.primitives.Ints;
 
-import java.util.List;
 import java.util.Scanner;
 
-public class CardReader implements Command<Card> {
+public class MaoDeOnzeResponseReader implements Command<MaoDeOnzeResponseReader.MaoDeOnzeChoice> {
 
     private final GameCLI mainCli;
-    private final List<Card> userCards;
+    public enum MaoDeOnzeChoice {QUIT, ACCEPT}
 
-    public CardReader(GameCLI mainCli, List<Card> userCards) {
+    public MaoDeOnzeResponseReader(GameCLI mainCli) {
         this.mainCli = mainCli;
-        this.userCards = userCards;
     }
 
     @Override
-    public Card execute() {
+    public MaoDeOnzeChoice execute() {
         Scanner scanner = new Scanner(System.in);
-        while (true){
+        while (true) {
             mainCli.printGameIntel(0);
+            System.out.print("O jogo está em mão de onze. Você aceita [s, n]: ");
+            final String choice = scanner.nextLine().toLowerCase();
 
-            System.out.print("Carta a jogar [índice] > ");
-
-            final Integer choice = Ints.tryParse(scanner.nextLine());
-            if (choice == null || cardIndexOf(choice) < 0 || cardIndexOf(choice) > userCards.size() - 1) {
+            if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            return userCards.get(cardIndexOf(choice));
+            return choice.equalsIgnoreCase("s") ? MaoDeOnzeChoice.ACCEPT : MaoDeOnzeChoice.QUIT;
         }
-    }
-
-    private int cardIndexOf(Integer choice) {
-        return choice - 1;
     }
 }

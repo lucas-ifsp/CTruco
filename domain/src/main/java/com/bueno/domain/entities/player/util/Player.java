@@ -21,8 +21,8 @@
 package com.bueno.domain.entities.player.util;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
-import com.bueno.domain.entities.hand.Intel;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -49,7 +49,7 @@ public abstract class Player {
         this.uuid = uuid;
     }
 
-    public abstract Card playCard();
+    public abstract CardToPlay chooseCardToPlay();
     public abstract boolean requestTruco();
     public abstract int getTrucoResponse(HandScore newHandScore);
     public abstract boolean getMaoDeOnzeResponse();
@@ -66,16 +66,22 @@ public abstract class Player {
 
     public final Card play(Card card){
         Card cardToPlay = Objects.requireNonNull(card);
-        if(!cards.contains(cardToPlay)) new IllegalArgumentException("User don't own card " + cardToPlay + ".");
+        if(doesNotOwn(cardToPlay))
+            throw new IllegalArgumentException("User doesn't own card " + cardToPlay + " to play it.");
         cards.remove(cardToPlay);
         return cardToPlay;
     }
 
     public final Card discard(Card card){
-        if(card == null || !cards.contains(card))
-            throw new IllegalArgumentException("Card can not be null or out of player cards set!");
-        cards.remove(card);
+        Card discard = Objects.requireNonNull(card);
+        if(doesNotOwn(discard))
+            throw new IllegalArgumentException("User doesn't own card " + card + " to discard it.");
+        cards.remove(discard);
         return Card.closed();
+    }
+
+    private boolean doesNotOwn(Card discard) {
+        return !cards.contains(discard);
     }
 
     public void addScore(HandScore handScore){

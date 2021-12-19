@@ -22,7 +22,8 @@ package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.GameRuleViolationException;
-import com.bueno.domain.entities.hand.Intel;
+import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public abstract class PlayingStrategy{
     protected Card vira;
 
     public static PlayingStrategy of(List<Card> hand, Player player){
-        final int roundsPlayed = player.getIntel().getRoundsPlayed().size();
+        final int roundsPlayed = player.getIntel().roundsPlayed();
         return switch (roundsPlayed){
             case 0 -> new FirstRoundMineiroStrategy(hand, player);
             case 1 -> new SecondRoundMineiroStrategy(hand, player);
@@ -44,7 +45,7 @@ public abstract class PlayingStrategy{
         };
     }
 
-    public abstract Card playCard();
+    public abstract CardToPlay playCard();
     public abstract int getTrucoResponse(int newScoreValue);
     public abstract boolean requestTruco();
 
@@ -53,7 +54,7 @@ public abstract class PlayingStrategy{
         final int bestCard = getCardValue(cards.get(0), vira);
         final int mediumCard = getCardValue(cards.get(1), vira);
         final int worstCard = getCardValue(cards.get(2), vira);
-        final int opponentScore = intel.getOpponentScore(player);
+        final int opponentScore = intel.getOpponentScore(player.getUuid());
 
         if(opponentScore < 8 && (bestCard + mediumCard + worstCard) > 28 ) return true;
         if(opponentScore >= 8 && bestCard > 10 && mediumCard + worstCard >= 15) return true;
@@ -71,21 +72,21 @@ public abstract class PlayingStrategy{
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
     }
 
-    protected final  boolean isPlayerFirstRoundWinner(Player possibleWinner) {
-        return possibleWinner != null && possibleWinner.equals(player);
+    protected final boolean isPlayerFirstRoundWinner(String possibleWinner) {
+        return possibleWinner != null && possibleWinner.equals(player.getUsername());
     }
 
-    protected final  boolean isPlayerFirstRoundLoser(Player possibleWinner) {
-        return possibleWinner != null && !possibleWinner.equals(player);
+    protected final boolean isPlayerFirstRoundLoser(String possibleWinner) {
+        return possibleWinner != null && !possibleWinner.equals(player.getUsername());
     }
 
-    protected final boolean isFirstRoundTied(Player possibleWinner) {
+    protected final boolean isFirstRoundTied(String possibleWinner) {
         return possibleWinner == null;
     }
 
     protected final int getCardValue(Card card, Card vira){
 
-        final List<Card> openCards = intel.getOpenCards();
+        final List<Card> openCards = intel.openCards();
 
         int higherManilhasAlreadyPlayed = (int) openCards.stream()
                 .filter(c -> c.compareValueTo(card, vira) > 1)

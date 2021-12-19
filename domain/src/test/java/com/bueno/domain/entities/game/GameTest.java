@@ -20,18 +20,13 @@
 
 package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.hand.Round;
-import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;

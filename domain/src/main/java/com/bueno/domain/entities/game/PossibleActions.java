@@ -18,30 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.Hand;
-import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.hand.PlayHandUseCase;
-
-public class PlayGameUseCase {
-
-    private final Game game;
-
-    public PlayGameUseCase(Player player1, Player player2){
-        game = new Game(player1, player2);
-    }
-
-    public Intel playNewHand(){
-        Intel intel = null;
-
-        if(game.getWinner().isEmpty()) {
-            final Hand playedHand = new PlayHandUseCase(game).play();
-            intel = playedHand.getIntel();
-            game.updateScores();
-        }
-        return intel;
-    }
+public enum PossibleActions {
+    PLAY,
+    RAISE,
+    ACCEPT,
+    QUIT
 }

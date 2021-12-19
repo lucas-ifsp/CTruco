@@ -20,12 +20,11 @@
 
 package com.bueno.domain.entities.player.util;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.HandScore;
-import com.bueno.domain.entities.hand.Intel;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
 
 public interface Bot {
-    Card playCard();
+    CardToPlay chooseCardToPlay();
     boolean requestTruco();
     int getTrucoResponse(HandScore newHandScore);
     boolean getMaoDeOnzeResponse();

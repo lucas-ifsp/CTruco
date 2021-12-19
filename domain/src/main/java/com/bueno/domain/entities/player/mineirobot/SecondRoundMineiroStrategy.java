@@ -22,6 +22,7 @@ package com.bueno.domain.entities.player.mineirobot;
 
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
@@ -33,31 +34,30 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         this.cards = cards;
         this.player = player;
         this.intel = player.getIntel();
-        this.vira = intel.getVira();
+        this.vira = intel.vira();
     }
 
     @Override
-    public Card playCard() {
+    public CardToPlay playCard() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
-        final Optional<Player> possibleFirstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
+        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
 
         if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) {
-            if (cards.stream().anyMatch(c -> getCardValue(c, vira) >= 8)) return discard(cards.get(1));
-            return cards.remove(0);
+            if (cards.stream().anyMatch(c -> getCardValue(c, vira) >= 8)) return CardToPlay.ofDiscard(cards.get(1));
+            return CardToPlay.of(cards.get(0));
         }
 
-        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) return cards.remove(0);
+        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) return CardToPlay.of(cards.get(0));
 
         Optional<Card> enoughCardToWin = getPossibleEnoughCardToWin(possibleOpponentCard.orElseThrow());
-        if (enoughCardToWin.isPresent()) return cards.remove(cards.indexOf(enoughCardToWin.get()));
-        return discard(cards.get(1));
+        return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard(cards.get(1)));
     }
 
     @Override
     public int getTrucoResponse(int newScoreValue) {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<Player> possibleFirstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
+        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
         final int bestCardValue = getCardValue(cards.get(0), vira);
 
         if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) {
@@ -85,7 +85,7 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
     @Override
     public boolean requestTruco() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<Player> possibleFirstRoundWinner = intel.getRoundsPlayed().get(0).getWinner();
+        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
         final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
         final int handScoreValue = intel.getHandScore().get();
         final Card higherCard = cards.get(0);

@@ -18,12 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.hand;
+package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
-import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.util.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.EnumSet;
 import java.util.logging.LogManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -400,6 +400,17 @@ class HandTest {
         sut.raiseBet(p1);
         sut.accept(p2);
         assertEquals(HandScore.NINE, sut.getScore());
+    }
+
+    @Test
+    @DisplayName("Should allow to re-raise bet after accepting previous bet")
+    void shouldAllowToReRaiseBetAfterAcceptingPreviousBet() {
+        sut.raiseBet(p1);
+        sut.raiseBet(p2);
+        sut.accept(p1);
+        sut.raiseBet(p1);
+        sut.raiseBet(p2);
+        assertDoesNotThrow(() -> sut.accept(p1));
     }
 
     @Test
