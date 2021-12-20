@@ -72,16 +72,17 @@ public class MineiroBot extends Player implements Bot {
 
     @Override
     public void playTurn(Intel intel) {
-        if(shouldPlay(intel)){
-            final EnumSet<PossibleActions> possibleActions = intel.possibleActions();
+        setIntel(intel);
+        if(shouldPlay(getIntel())){
+            final EnumSet<PossibleActions> possibleActions = getIntel().possibleActions();
             final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
 
-            if(intel.isMaoDeOnze() && intel.handScore() == HandScore.ONE){
+            if(getIntel().isMaoDeOnze() && getIntel().handScore() == HandScore.ONE){
                 if(getMaoDeOnzeResponse()) playHandUseCase.accept(getUuid());
                 else playHandUseCase.quit(getUuid());
                 return;
             }
-            if(canStartRaiseRequest(intel, possibleActions) && requestTruco()){
+            if(canStartRaiseRequest(getIntel(), possibleActions) && requestTruco()){
                 playHandUseCase.raiseBet(getUuid());
                 return;
             }
@@ -91,7 +92,7 @@ public class MineiroBot extends Player implements Bot {
                 else playHandUseCase.playCard(getUuid(), chosenCard.content());
                 return;
             }
-            final int response = getTrucoResponse(intel.scoreProposal());
+            final int response = getTrucoResponse(getIntel().scoreProposal());
             switch (response){
                 case -1 -> {if(possibleActions.contains(PossibleActions.QUIT)) playHandUseCase.quit(getUuid());}
                 case 0 -> {if(possibleActions.contains(PossibleActions.ACCEPT)) playHandUseCase.accept(getUuid());}
