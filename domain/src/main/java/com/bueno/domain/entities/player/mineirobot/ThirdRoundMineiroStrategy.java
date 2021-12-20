@@ -39,7 +39,7 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
 
     @Override
     public CardToPlay playCard() {
-        final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Card remainingCard = cards.get(0);
 
         if(possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
@@ -63,9 +63,9 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
 
     @Override
     public boolean requestTruco() {
-        final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Optional<String> firstRoundWinner = intel.roundWinners().get(0);
-        final int handScoreValue = intel.getHandScore().get();
+        final int handScoreValue = intel.handScore().get();
         final Card playingCard = cards.get(0);
 
         if(possibleOpponentCard.isEmpty()) {

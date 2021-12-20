@@ -41,7 +41,7 @@ public class CardReader implements Command<Card> {
     public Card execute() {
         Scanner scanner = new Scanner(System.in);
         while (true){
-            mainCli.printGameIntel(0);
+            mainCli.printGameIntel(3000);
 
             System.out.print("Carta a jogar [índice] > ");
 

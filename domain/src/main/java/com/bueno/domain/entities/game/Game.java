@@ -25,7 +25,9 @@ import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Game {
 
@@ -92,7 +94,24 @@ public class Game {
     }
 
     public Intel getIntel(){
-        return new Intel(this);
+        return currentHand().getIntel();
+    }
+
+    public List<Intel> getIntelSince(Intel lastIntel){
+        final List<Intel> handHistory = currentHand().getHistory();
+        final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
+        final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;
+        final List<Intel> currentHandResult = handHistory.stream().filter(isAfter).collect(Collectors.toList());
+
+        if(currentHandResult.size() < handHistory.size())
+            return currentHandResult;
+
+        final Hand previousHand = hands.get(hands.size() - 2);
+        final List<Intel> lastHandResult = previousHand.getHistory().stream().filter(isAfter).collect(Collectors.toList());
+        final List<Intel> result = new ArrayList<>();
+        result.addAll(lastHandResult);
+        result.addAll(currentHandResult);
+        return  result;
     }
 
     public UUID getUuid() {

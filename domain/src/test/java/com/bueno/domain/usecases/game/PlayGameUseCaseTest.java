@@ -34,7 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,9 +72,6 @@ class PlayGameUseCaseTest {
         when(p2.getUuid()).thenReturn(p2UUID);
 
         final Intel intel = sut.playNewHand();
-        Assertions.assertAll(
-                ()-> assertNotEquals(12, intel.getOpponentScore(p2.getUuid())),
-                ()-> assertNotEquals(12, intel.getOpponentScore(p1.getUuid()))
-        );
+        assertFalse(intel.isGameDone());
     }
 }

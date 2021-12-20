@@ -32,27 +32,27 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.LogManager;
 
 import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
 import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
-
-//TODO Solve problem of not showing intermediate intel while bot is playing
 public class GameCLI {
 
     private final InMemoryGameRepository repo;
     private final CreateGameUseCase gameUseCase;
     private final PlayHandUseCase playHandUseCase;
-    private Intel intel;
+    private Intel lastIntel;
     private Player player;
     private Game game;
     private final UUID botUUID;
     private final UUID playerUUID;
 
     public static void main(String[] args) {
-        //LogManager.getLogManager().reset();
+        LogManager.getLogManager().reset();
         final GameCLI cli = new GameCLI();
         cli.createGame();
         cli.play();
@@ -67,7 +67,7 @@ public class GameCLI {
     }
 
     private void play(){
-        while (!intel.isGameDone()){
+        while (!lastIntel.isGameDone()){
             int handsPlayed = game.handsPlayed();
             handleMaoDeOnzeResponse();
             if(isCurrentHandDone(handsPlayed)) continue;
@@ -88,36 +88,36 @@ public class GameCLI {
         final String username = usernameReader.execute();
         player = new CLIPlayer(username, playerUUID);
         game = gameUseCase.create(player, new MineiroBot(repo, botUUID));
-        intel = game.getIntel();
+        lastIntel = game.getIntel();
     }
 
     private void handleCardPlaying(){
         final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.PLAY);
         if(canNotPerform(actions)) return;
 
-        final CardReader cardReader = new CardReader(this, intel.ownedCards(playerUUID));
-        final CardModeReader cardModeReader = new CardModeReader(this);
+        final CardReader cardReader = new CardReader(this, lastIntel.currentPlayerCards());
+        final CardModeReader cardModeReader = new CardModeReader();
         final Card card = cardReader.execute();
         final CardModeReader.CardMode mode = cardModeReader.execute();
 
-        if(mode == OPEN) intel = playHandUseCase.playCard(playerUUID, card);
-        else intel = playHandUseCase.discard(playerUUID, card);
+        if(mode == OPEN) playHandUseCase.playCard(playerUUID, card);
+        else playHandUseCase.discard(playerUUID, card);
     }
 
     private void handleRaiseRequest(){
         final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.RAISE);
         if(canNotPerform(actions)) return;
 
-        RaiseRequestReader requestReader = new RaiseRequestReader(this, intel.getHandScore().increase());
-        if(requestReader.execute() == REQUEST) intel = playHandUseCase.raiseBet(playerUUID);
+        RaiseRequestReader requestReader = new RaiseRequestReader(this, lastIntel.handScore().increase());
+        if(requestReader.execute() == REQUEST) playHandUseCase.raiseBet(playerUUID);
     }
 
     private void handleRaiseResponse(){
         final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.RAISE, PossibleActions.ACCEPT, PossibleActions.QUIT);
         if(canNotPerform(actions)) return;
 
-        RaiseResponseReader responseReader = new RaiseResponseReader(this, intel.getHandScore().increase());
-        intel = switch (responseReader.execute()){
+        RaiseResponseReader responseReader = new RaiseResponseReader(this, lastIntel.handScore().increase());
+        switch (responseReader.execute()){
             case QUIT -> playHandUseCase.quit(playerUUID);
             case ACCEPT -> playHandUseCase.accept(playerUUID);
             case RAISE -> playHandUseCase.raiseBet(playerUUID);
@@ -125,7 +125,7 @@ public class GameCLI {
     }
 
     private void handleMaoDeOnzeResponse(){
-        if(!intel.isMaoDeOnze()) return;
+        if(!lastIntel.isMaoDeOnze()) return;
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
         if(responseReader.execute() == ACCEPT) {playHandUseCase.accept(playerUUID);}
@@ -133,15 +133,23 @@ public class GameCLI {
     }
 
     private boolean canNotPerform(EnumSet<PossibleActions> actions) {
-        return !intel.possibleActions(playerUUID).containsAll(actions);
+        return !lastIntel.currentPlayerUuid().equals(playerUUID) || !lastIntel.possibleActions().containsAll(actions);
     }
 
     public void printGameIntel(int delayInMilliseconds){
-        IntelPrinter intelPrinter  = new IntelPrinter(player, intel, delayInMilliseconds);
+        final List<Intel> missingIntel = playHandUseCase.findIntelSince(playerUUID, lastIntel);
+        if(missingIntel.isEmpty()) {
+            missingIntel.add(lastIntel);
+            delayInMilliseconds = 0;
+        }
+
+        IntelPrinter intelPrinter  = new IntelPrinter(player, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
+
+        lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
     public String getOpponentUsername(){
-        return intel.getOpponentUsername(playerUUID);
+        return lastIntel.currentOpponentUsername();
     }
 }

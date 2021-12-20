@@ -73,10 +73,10 @@ public class MineiroBot extends Player implements Bot {
     @Override
     public void playTurn(Intel intel) {
         if(shouldPlay(intel)){
-            final EnumSet<PossibleActions> possibleActions = intel.possibleActions(getUuid());
+            final EnumSet<PossibleActions> possibleActions = intel.possibleActions();
             final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
 
-            if(intel.isMaoDeOnze() && intel.getHandScore() == HandScore.ONE){
+            if(intel.isMaoDeOnze() && intel.handScore() == HandScore.ONE){
                 if(getMaoDeOnzeResponse()) playHandUseCase.accept(getUuid());
                 else playHandUseCase.quit(getUuid());
                 return;
@@ -91,7 +91,7 @@ public class MineiroBot extends Player implements Bot {
                 else playHandUseCase.playCard(getUuid(), chosenCard.content());
                 return;
             }
-            final int response = getTrucoResponse(intel.getScoreProposal());
+            final int response = getTrucoResponse(intel.scoreProposal());
             switch (response){
                 case -1 -> {if(possibleActions.contains(PossibleActions.QUIT)) playHandUseCase.quit(getUuid());}
                 case 0 -> {if(possibleActions.contains(PossibleActions.ACCEPT)) playHandUseCase.accept(getUuid());}
@@ -103,11 +103,11 @@ public class MineiroBot extends Player implements Bot {
     private boolean canStartRaiseRequest(Intel intel, EnumSet<PossibleActions> possibleActions) {
         return possibleActions.contains(PossibleActions.RAISE)
                 && !possibleActions.contains(PossibleActions.QUIT)
-                && !(intel.getScoreProposal() == HandScore.TWELVE)
-                && intel.getHandScore().increase().get() <= intel.maximumHandScore();
+                && !(intel.scoreProposal() == HandScore.TWELVE)
+                && intel.handScore().increase().get() <= intel.maximumHandScore();
     }
 
     private boolean shouldPlay(Intel intel) {
-        return !intel.isGameDone() && intel.currentPlayer().equals(getUuid());
+        return !intel.isGameDone() && intel.currentPlayerUuid().equals(getUuid());
     }
 }

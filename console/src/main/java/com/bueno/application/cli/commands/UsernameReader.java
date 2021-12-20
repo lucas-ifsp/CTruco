@@ -28,7 +28,7 @@ public class UsernameReader implements Command<String>{
     public String execute() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("====== CLEAN TRUCO - Let's Play! ======");
-        System.out.print("Nome do jogador > ");
+        System.out.print("Nome do(a) jogador(a) > ");
         String username = scanner.nextLine();
         return username;
     }

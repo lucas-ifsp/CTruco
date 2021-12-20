@@ -39,7 +39,7 @@ public class FirstRoundMineiroStrategy extends PlayingStrategy {
 
     @Override
     public CardToPlay playCard() {
-        final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final int numberOfTopThreeCards = countCardsBetween(11, 13);
         final int numberOfMediumCards = countCardsBetween(8,9);
 
