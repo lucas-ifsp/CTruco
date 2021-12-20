@@ -40,7 +40,7 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
     @Override
     public CardToPlay playCard() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
 
         if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) {
@@ -86,8 +86,8 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
     public boolean requestTruco() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
-        final Optional<Card> possibleOpponentCard = intel.getCardToPlayAgainst();
-        final int handScoreValue = intel.getHandScore().get();
+        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
+        final int handScoreValue = intel.handScore().get();
         final Card higherCard = cards.get(0);
 
         if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) return false;

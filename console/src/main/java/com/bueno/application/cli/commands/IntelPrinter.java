@@ -32,27 +32,32 @@ import java.util.stream.Collectors;
 
 public class IntelPrinter implements Command<Void>{
 
-    private final Intel intel;
+    private final List<Intel> history;
     private final int delayInMilliseconds;
     private final Player player;
 
-    public IntelPrinter(Player player, Intel intel, int delayInMilliseconds) {
+    public IntelPrinter(Player player, List<Intel> history, int delayInMilliseconds) {
         this.player = player;
-        this.intel = intel;
+        this.history = history;
         this.delayInMilliseconds = delayInMilliseconds;
     }
 
     @Override
     public Void execute() {
+        history.forEach(intel -> print(intel));
+        return null;
+    }
+
+    private void print(Intel intel) {
         cls();
         System.out.println("+=======================================+");
-        printGameMainInfo();
+        printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
         printVira(intel.vira());
         printOpponentCardIfAvailable(intel);
-        printOwnedCards();
-        printResultIfAvailable();
+        printOwnedCards(intel);
+        printResultIfAvailable(intel);
         System.out.println("+=======================================+\n");
 
         if(delayInMilliseconds > 0) {
@@ -62,14 +67,13 @@ public class IntelPrinter implements Command<Void>{
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
-    public void printGameMainInfo() {
+    public void printGameMainInfo(Intel intel) {
         System.out.println(" Vez do: " + player.getUsername());
-        System.out.println(" Ponto da mão: " + intel.getHandScore().get());
+        System.out.println(" Ponto da mão: " + intel.handScore().get());
         System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
-                + " x " + intel.getOpponentUsername(player.getUuid()) + " " + intel.getOpponentScore(player.getUuid()));
+                + " x " + intel.currentOpponentUsername() + " " + intel.currentOpponentScore());
     }
 
     private void printRounds(Intel intel) {
@@ -96,21 +100,21 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printOpponentCardIfAvailable(Intel intel) {
-        final Optional<Card> cardToPlayAgainst = intel.getCardToPlayAgainst();
+        final Optional<Card> cardToPlayAgainst = intel.cardToPlayAgainst();
         cardToPlayAgainst.ifPresent(card -> System.out.println(" Carta do Oponente: " + card));
     }
 
-    private void printOwnedCards() {
+    private void printOwnedCards(Intel intel) {
         System.out.print(" Cartas na mão: ");
-        final List<Card> playerCards = intel.ownedCards(player.getUuid());
+        final List<Card> playerCards = intel.currentPlayerCards();
         for (int i = 0; i < playerCards.size(); i++) {
             System.out.print((i + 1) + ") " + playerCards.get(i) + "\t");
         }
         System.out.print("\n");
     }
 
-    private void printResultIfAvailable() {
-        final Optional<HandResult> potentialResult = intel.getResult();
+    private void printResultIfAvailable(Intel intel) {
+        final Optional<HandResult> potentialResult = intel.handResult();
         if (potentialResult.isPresent()) {
             final String resultString = potentialResult.get().getWinner()
                     .map(winner -> winner.getUsername().concat(" VENCEU!").toUpperCase())

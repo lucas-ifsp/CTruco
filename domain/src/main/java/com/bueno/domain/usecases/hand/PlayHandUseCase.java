@@ -28,6 +28,7 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -60,6 +61,7 @@ public class PlayHandUseCase {
         final Player player = hand.getCurrentPlayer();
 
         Card playingCard = discard ? player.discard(card) : player.play(card);
+
         if(hand.getCardToPlayAgainst().isEmpty()){
             LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to open round.");
             hand.playFirstCard(player, playingCard);
@@ -146,6 +148,12 @@ public class PlayHandUseCase {
         if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
 
         return game.getIntel();
+    }
+
+    public List<Intel> findIntelSince(UUID usedID, Intel lastIntel){
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        return game.getIntelSince(lastIntel);
     }
 
 

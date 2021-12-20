@@ -40,7 +40,7 @@ public class RaiseRequestReader implements Command<RaiseRequestReader.RaiseChoic
     public RaiseChoice execute() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            mainCli.printGameIntel(0);
+            mainCli.printGameIntel(3000);
 
             System.out.print("Pedir " + toRequestString(nextScore) + " [s, n]: ");
 

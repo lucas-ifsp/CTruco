@@ -212,7 +212,7 @@ public class GameTableController {
 
     private void updateHandPointsInfo() {
         Platform.runLater(() -> lbHandPointsValue.setText(
-                String.valueOf(player.getIntel().getHandScore().get())));
+                String.valueOf(player.getIntel().handScore().get())));
     }
 
     private void updateActionButton() {
@@ -222,7 +222,7 @@ public class GameTableController {
                 btnAction.setText("Fechar");
             });
         } else {
-            final String newText = switch (player.getIntel().getHandScore().get()) {
+            final String newText = switch (player.getIntel().handScore().get()) {
                 case 1 -> "Pedir Truco!";
                 case 3 -> "Pedir Seis!";
                 case 6 -> "Pedir Nove!";
@@ -238,7 +238,7 @@ public class GameTableController {
 
     private boolean canIncreaseScore() {
         final Intel intel = player.getIntel();
-        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.getOpponentScore(player.getUuid()) == 11;
+        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.currentOpponentScore() == 11;
         return playerTurn && !lastToIncreaseScore && !forbiddenToRequestIncrement;
     }
 
@@ -280,7 +280,7 @@ public class GameTableController {
 
     private void updatePlayerScores() {
         Platform.runLater(() -> {
-            lbOpponentScoreValue.setText(String.valueOf(player.getIntel().getOpponentScore(player.getUuid())));
+            lbOpponentScoreValue.setText(String.valueOf(player.getIntel().currentOpponentScore()));
             lbPlayerScoreValue.setText(String.valueOf(player.getScore()));
         });
     }
@@ -315,7 +315,7 @@ public class GameTableController {
 
     public void requestTrucoResponse() {
         playerTurn = false;
-        final HandScore handPoints = player.getIntel().getHandScore();
+        final HandScore handPoints = player.getIntel().handScore();
         final int pointsRequested = handPoints.increase().get();
 
         updateView();

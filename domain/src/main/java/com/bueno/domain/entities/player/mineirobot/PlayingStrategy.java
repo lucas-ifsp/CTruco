@@ -54,7 +54,7 @@ public abstract class PlayingStrategy{
         final int bestCard = getCardValue(cards.get(0), vira);
         final int mediumCard = getCardValue(cards.get(1), vira);
         final int worstCard = getCardValue(cards.get(2), vira);
-        final int opponentScore = intel.getOpponentScore(player.getUuid());
+        final int opponentScore = intel.currentOpponentScore();
 
         if(opponentScore < 8 && (bestCard + mediumCard + worstCard) > 28 ) return true;
         if(opponentScore >= 8 && bestCard > 10 && mediumCard + worstCard >= 15) return true;

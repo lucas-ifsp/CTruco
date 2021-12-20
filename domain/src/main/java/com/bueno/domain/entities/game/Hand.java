@@ -31,6 +31,7 @@ public class Hand {
 
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
+    private final List<Intel> history;
     private EnumSet<PossibleActions> possibleActions;
 
     private Player firstToPlay;
@@ -53,6 +54,8 @@ public class Hand {
         score = HandScore.ONE;
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
+        history = new ArrayList<>();
+
         addOpenCard(vira);
 
         if(isMaoDeOnze()){
@@ -62,6 +65,7 @@ public class Hand {
             currentPlayer = firstToPlay;
             state = new NoCardState(this);
         }
+        updateHistory();
     }
 
     public void playFirstCard(Player player, Card card){
@@ -70,7 +74,7 @@ public class Hand {
         if(!requester.equals(currentPlayer))
             throw new IllegalArgumentException("First to play must be " + currentPlayer + ", not " + requester + ".");
         state.playFirstCard(requester, requesterCard);
-
+        updateHistory();
     }
 
     public void playSecondCard(Player player, Card cards){
@@ -79,6 +83,7 @@ public class Hand {
         if(!requester.equals(currentPlayer))
             throw new IllegalArgumentException("Second to play must be " + currentPlayer + ", not " + requester + ".");
         state.playSecondCard(requester,requesterCard);
+        updateHistory();
     }
 
     public void accept(Player responder){
@@ -86,6 +91,7 @@ public class Hand {
         if(!player.equals(currentPlayer))
             throw new IllegalArgumentException(player + " can not accept a bet requested to " + currentPlayer + ".");
         state.accept(player);
+        updateHistory();
     }
 
     public void quit(Player responder){
@@ -93,6 +99,7 @@ public class Hand {
         if(!player.equals(currentPlayer))
             throw new IllegalArgumentException(player + " can not quit a bet requested to " + currentPlayer + ".");
         state.quit(player);
+        updateHistory();
     }
 
     public void raiseBet(Player requester){
@@ -102,6 +109,7 @@ public class Hand {
         if(player.equals(lastBetRaiser))
             throw new IllegalStateException(player + " can not raise the bet consecutively.");
         state.raiseBet(player);
+        updateHistory();
     }
 
     void playRound(Card lastCard){
@@ -144,7 +152,19 @@ public class Hand {
                 : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
     }
 
+    private void updateHistory() {
+        final Intel intel = new Intel(this);
+        history.add(intel);
+        System.out.println(intel);
+    }
 
+    Intel getIntel(){
+        return history.get(history.size() - 1);
+    }
+
+    List<Intel> getHistory(){
+        return List.copyOf(history);
+    }
 
 
 
@@ -262,7 +282,7 @@ public class Hand {
         return openCards;
     }
 
-    public Intel getIntel(){
+    public Intel getIntelOLD(){
         return new Intel(this);
     }
 

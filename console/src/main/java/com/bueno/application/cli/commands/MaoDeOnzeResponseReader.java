@@ -37,7 +37,7 @@ public class MaoDeOnzeResponseReader implements Command<MaoDeOnzeResponseReader.
     public MaoDeOnzeChoice execute() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            mainCli.printGameIntel(0);
+            mainCli.printGameIntel(3000);
             System.out.print("O jogo está em mão de onze. Você aceita [s, n]: ");
             final String choice = scanner.nextLine().toLowerCase();
 

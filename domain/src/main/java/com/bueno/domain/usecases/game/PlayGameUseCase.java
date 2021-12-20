@@ -39,7 +39,7 @@ public class PlayGameUseCase {
 
         if(game.getWinner().isEmpty()) {
             final Hand playedHand = new PlayHandUseCase(game).play();
-            intel = playedHand.getIntel();
+            intel = playedHand.getIntelOLD();
             game.updateScores();
         }
         return intel;

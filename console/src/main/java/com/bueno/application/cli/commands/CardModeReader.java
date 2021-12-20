@@ -20,16 +20,13 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.application.cli.GameCLI;
 import java.util.Scanner;
 
 public class CardModeReader implements Command<CardModeReader.CardMode> {
 
-    private final GameCLI mainCli;
     public enum CardMode{OPEN, DISCARDED}
 
-    public CardModeReader(GameCLI mainCli) {
-        this.mainCli = mainCli;
+    public CardModeReader() {
     }
 
     @Override

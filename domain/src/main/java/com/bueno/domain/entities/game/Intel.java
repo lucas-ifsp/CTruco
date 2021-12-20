@@ -23,57 +23,76 @@ package com.bueno.domain.entities.game;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.player.util.Player;
 
+import java.time.Instant;
 import java.util.*;
 
-public class Intel {
+public class Intel{
 
-    private Game game;
-    private final Hand hand;
+    private final Instant timestamp;
+
+    private final boolean gameIsDone;
+    private final UUID gameWinner;
+    private final boolean maoDeOnze;
+
+    private final HandScore handScore;
+    private final HandScore handScoreProposal;
+    private final int maximumHandScore;
+    private final List<Optional<String>> roundWinners;
+    private final int roundsPlayed;
+
+    private final Player currentPlayer;
+    private final int currentPlayerScore;
+    private final String currentPlayerUsername;
+    private final int currentOpponentScore;
+    private final String currentOpponentUsername;
+    private final Card vira;
+    private final Card cardToPlayAgaist;
+    private final List<Card> openCards;
+    private final List<Card> currentPlayerCards;
+    private final EnumSet<PossibleActions> possibleActions;
+    private final HandResult handResult;
+
 
     Intel(Hand hand) {
-        this.hand = Objects.requireNonNull(hand);
+        Objects.requireNonNull(hand);
+
+        timestamp = Instant.now();
+
+        gameIsDone = getGameResult(hand);
+        gameWinner = getGameWinner(hand);
+        maoDeOnze = hand.isMaoDeOnze();
+
+        handScore = hand.getScore();
+        handScoreProposal = hand.getScoreProposal();
+        maximumHandScore = hand.getMaxHandScore();
+        roundWinners = getRoundWinners(hand);
+        roundsPlayed = roundWinners.size();
+        vira = hand.getVira();
+        handResult = hand.getResult().orElse(null);
+        openCards = List.copyOf(hand.getOpenCards());
+        cardToPlayAgaist = hand.getCardToPlayAgainst().orElse(null);
+        possibleActions = EnumSet.copyOf(hand.getPossibleActions());
+
+
+        currentPlayer = hand.getCurrentPlayer();
+        currentPlayerCards = List.copyOf(currentPlayer.getCards());
+        currentPlayerScore = currentPlayer.getScore();
+        currentPlayerUsername = currentPlayer.getUsername();
+        currentOpponentScore = hand.getOpponentOf(currentPlayer).getScore();
+        currentOpponentUsername = hand.getOpponentOf(currentPlayer).getUsername();
     }
 
-    Intel(Game game) {
-        this.game = Objects.requireNonNull(game);
-        this.hand = game.currentHand();
-    }
-
-    public boolean isMaoDeOnze() {
-        return game.isMaoDeOnze();
-    }
-
-    public boolean isForbidenToRaiseBet() {
-        return hand.isForbidenToRaiseBet();
-    }
-
-    public int maximumHandScore() {
-        return hand.getMaxHandScore();
-    }
-
-    public boolean isGameDone() {
+    private boolean getGameResult(Hand hand) {
         return hand.getFirstToPlay().getScore() == 12 || hand.getLastToPlay().getScore() == 12;
     }
 
-    public Optional<UUID> gameWinner() {
-        if (hand.getFirstToPlay().getScore() == 12) return Optional.of(hand.getFirstToPlay().getUuid());
-        if (hand.getLastToPlay().getScore() == 12) return Optional.of(hand.getLastToPlay().getUuid());
-        return Optional.empty();
+    private UUID getGameWinner(Hand hand) {
+        if (hand.getFirstToPlay().getScore() == 12) return hand.getFirstToPlay().getUuid();
+        if (hand.getLastToPlay().getScore() == 12) return hand.getLastToPlay().getUuid();
+        return null;
     }
 
-    public Card vira() {
-        return hand.getVira();
-    }
-
-    public List<Card> ownedCards(UUID requesterUUID){
-        return new ArrayList<>(getPlayer(requesterUUID).getCards());
-    }
-
-    public List<Card> openCards() {
-        return hand.getOpenCards();
-    }
-
-    public List<Optional<String>> roundWinners() {
+    private List<Optional<String>> getRoundWinners(Hand hand) {
         return hand.getRoundsPlayed().stream()
                 .map(Round::getWinner)
                 .map(maybeWinner -> maybeWinner.orElse(null))
@@ -82,57 +101,106 @@ public class Intel {
                 .toList();
     }
 
+    public Instant timestamp() {
+        return timestamp;
+    }
+
+    public boolean isGameDone() {
+        return gameIsDone;
+    }
+
+    public Optional<UUID> gameWinner() {
+        return Optional.ofNullable(gameWinner);
+    }
+
+    public boolean isMaoDeOnze() {
+        return maoDeOnze;
+    }
+
+    public HandScore handScore() {
+        return handScore;
+    }
+
+    public HandScore scoreProposal() {
+        return handScoreProposal;
+    }
+
+    public int maximumHandScore() {
+        return maximumHandScore;
+    }
+
+    public List<Optional<String>> roundWinners() {
+        return roundWinners;
+    }
+
     public int roundsPlayed() {
-        return hand.getRoundsPlayed().size();
+        return roundsPlayed;
     }
 
-    public Optional<Card> getCardToPlayAgainst() {
-        return hand.getCardToPlayAgainst();
+    public Card vira() {
+        return vira;
     }
 
-    public EnumSet<PossibleActions> possibleActions(UUID requesterUUID) {
-        if(requesterUUID.equals(currentPlayer())) return hand.getPossibleActions();
-        return EnumSet.noneOf(PossibleActions.class);
+    public Optional<HandResult> handResult() {
+        return Optional.ofNullable(handResult);
     }
 
-    public UUID currentPlayer() {
-        return hand.getCurrentPlayer().getUuid();
+    public List<Card> openCards() {
+        return openCards;
     }
 
-    public HandScore getHandScore() {
-        return hand.getScore();
+    public Optional<Card> cardToPlayAgainst() {
+        return Optional.ofNullable(cardToPlayAgaist);
     }
 
-    public HandScore getScoreProposal() {
-        return hand.getScoreProposal();
+    public EnumSet<PossibleActions> possibleActions() {
+        return possibleActions;
     }
 
-    public Optional<HandResult> getResult() {
-        return hand.getResult();
+    public UUID currentPlayerUuid() {
+        return currentPlayer.getUuid();
     }
 
-    public int getOpponentScore(UUID requesterUUID) {
-        return getOpponent(requesterUUID).getScore();
+    public List<Card> currentPlayerCards(){return new ArrayList<>(currentPlayerCards);}
+
+    public int currentPlayerScore() {
+        return currentPlayerScore;
     }
 
-    public String getOpponentUsername(UUID requesterUUID) {
-        return getOpponent(requesterUUID).getUsername();
+    public String currentPlayerUsername() {
+        return currentPlayerUsername;
     }
 
-    private Player getOpponent(UUID requesterUUID) {
-        return requesterUUID.equals(hand.getFirstToPlay().getUuid()) ? hand.getLastToPlay() : hand.getFirstToPlay();
+    public int currentOpponentScore() {
+        return currentOpponentScore;
     }
 
-    private Player getPlayer(UUID requesterUUID) {
-        return requesterUUID.equals(hand.getFirstToPlay().getUuid()) ? hand.getFirstToPlay() : hand.getLastToPlay();
+    public String currentOpponentUsername() {
+        return currentOpponentUsername;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Intel intel = (Intel) o;
+        return timestamp.equals(intel.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp);
     }
 
     @Override
     public String toString() {
-        return "Vira = " + vira() +
-                " | Card to play against = " + getCardToPlayAgainst() +
-                " | Rounds = " + roundWinners() +
-                " | Open cards = " + openCards() +
-                " | Result = " + getResult();
+        return "[" + timestamp +
+                " ] Current player = " + currentPlayerUsername +
+                " ] Vira = " + vira +
+                " | Card to play against = " + cardToPlayAgaist +
+                " | Open cards = " + openCards +
+                " | Possible actions = " + openCards +
+                " | Rounds = " + roundWinners +
+                " | Result = " + handResult;
     }
 }

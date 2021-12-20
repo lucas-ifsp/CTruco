@@ -64,7 +64,7 @@ class IntelTest {
     @DisplayName("Should get the same points of the current hand")
     void ShouldGetSamePointsOfCurrentHand() {
         when(hand.getScore()).thenReturn(HandScore.THREE);
-        assertEquals(HandScore.THREE, sut.getHandScore());
+        assertEquals(HandScore.THREE, sut.handScore());
     }
 
     @Test
@@ -72,7 +72,7 @@ class IntelTest {
     void shouldGetSameCardToPlayAgainstOfCurrentHand() {
         Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
         when(hand.getCardToPlayAgainst()).thenReturn(Optional.of(card));
-        assertEquals(card, sut.getCardToPlayAgainst().orElse(null));
+        assertEquals(card, sut.cardToPlayAgainst().orElse(null));
     }
 
     @Test
@@ -92,7 +92,7 @@ class IntelTest {
         when(hand.getFirstToPlay()).thenReturn(player1);
         when(hand.getLastToPlay()).thenReturn(player2);
 
-        final int opponentScore = sut.getOpponentScore(player1.getUuid());
+        final int opponentScore = sut.currentOpponentScore();
         assertEquals(player2.getScore(), opponentScore);
     }
 
@@ -106,7 +106,7 @@ class IntelTest {
         when(hand.getFirstToPlay()).thenReturn(player1);
         when(hand.getLastToPlay()).thenReturn(player2);
 
-        final String opponentId = sut.getOpponentUsername(player1.getUuid());
+        final String opponentId = sut.currentOpponentUsername();
         assertEquals(player2.getUsername(), opponentId);
     }
 }
