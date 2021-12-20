@@ -94,7 +94,7 @@ public class Game {
     }
 
     public Intel getIntel(){
-        return currentHand().getIntel();
+        return isDone() ? Intel.ofConcluded(this) : currentHand().getIntel();
     }
 
     public List<Intel> getIntelSince(Intel lastIntel){

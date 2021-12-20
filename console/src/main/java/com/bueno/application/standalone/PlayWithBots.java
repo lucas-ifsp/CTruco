@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.logging.LogManager;
 
-//TODO Colocar Logs estratégicos para companhar o novo andamento do processo.
 public class PlayWithBots {
 
     private static final UUID uuid1 = UUID.randomUUID();
@@ -44,8 +43,8 @@ public class PlayWithBots {
         System.out.print("MineiroBot1: " + results.stream().filter(uuid -> uuid.equals(uuid1)).count() + " | ");
         System.out.print("MineiroBot2: " + results.stream().filter(uuid -> uuid.equals(uuid2)).count());
     }
-/*
-    public static void main(String[] args) throws InterruptedException {
+
+ /*   public static void main(String[] args) throws InterruptedException {
         for (int i = 0; i < 100; i++) {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
