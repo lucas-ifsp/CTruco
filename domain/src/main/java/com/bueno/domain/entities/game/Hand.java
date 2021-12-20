@@ -153,7 +153,7 @@ public class Hand {
     }
 
     private void updateHistory() {
-        history.add(new Intel(this));
+        history.add(Intel.of(this));
     }
 
     Intel getIntel(){
@@ -275,7 +275,7 @@ public class Hand {
     }
 
     public Intel getIntelOLD(){
-        return new Intel(this);
+        return Intel.of(this);
     }
 
     void setState(HandState state) {

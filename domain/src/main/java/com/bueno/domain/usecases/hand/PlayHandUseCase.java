@@ -74,7 +74,8 @@ public class PlayHandUseCase {
 
         final Intel intel = game.getIntel();
 
-        if(game.isDone()) return intel;
+        if(game.isDone())
+            return intel;
         if(game.currentHand().getCurrentPlayer() instanceof Bot bot)
             bot.playTurn(intel);
 
