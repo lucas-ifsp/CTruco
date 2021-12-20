@@ -153,9 +153,7 @@ public class Hand {
     }
 
     private void updateHistory() {
-        final Intel intel = new Intel(this);
-        history.add(intel);
-        System.out.println(intel);
+        history.add(new Intel(this));
     }
 
     Intel getIntel(){
@@ -165,12 +163,6 @@ public class Hand {
     List<Intel> getHistory(){
         return List.copyOf(history);
     }
-
-
-
-
-
-
 
     void defineRoundPlayingOrder() {
         getLastRoundWinner().filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
@@ -210,8 +202,8 @@ public class Hand {
     }
 
     private void updatePlayersIntel() {
-        firstToPlay.setIntel(new Intel(this));
-        lastToPlay.setIntel(new Intel(this));
+        //firstToPlay.setIntel(new Intel(this));
+        //lastToPlay.setIntel(new Intel(this));
     }
 
     void setCardToPlayAgainst(Card cardToPlayAgainst) {
@@ -327,7 +319,7 @@ public class Hand {
         this.possibleActions = EnumSet.copyOf(actions);
     }
 
-    public boolean isForbidenToRaiseBet() {
+    public boolean isForbiddenToRaiseBet() {
         return firstToPlay.getScore() == 11 || lastToPlay.getScore() == 11;
     }
 }

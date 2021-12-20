@@ -46,7 +46,7 @@ public class Intel{
     private final int currentOpponentScore;
     private final String currentOpponentUsername;
     private final Card vira;
-    private final Card cardToPlayAgaist;
+    private final Card cardToPlayAgainst;
     private final List<Card> openCards;
     private final List<Card> currentPlayerCards;
     private final EnumSet<PossibleActions> possibleActions;
@@ -70,16 +70,14 @@ public class Intel{
         vira = hand.getVira();
         handResult = hand.getResult().orElse(null);
         openCards = List.copyOf(hand.getOpenCards());
-        cardToPlayAgaist = hand.getCardToPlayAgainst().orElse(null);
+        cardToPlayAgainst = hand.getCardToPlayAgainst().orElse(null);
         possibleActions = EnumSet.copyOf(hand.getPossibleActions());
-
-
         currentPlayer = hand.getCurrentPlayer();
-        currentPlayerCards = List.copyOf(currentPlayer.getCards());
-        currentPlayerScore = currentPlayer.getScore();
-        currentPlayerUsername = currentPlayer.getUsername();
-        currentOpponentScore = hand.getOpponentOf(currentPlayer).getScore();
-        currentOpponentUsername = hand.getOpponentOf(currentPlayer).getUsername();
+        currentPlayerCards = currentPlayer != null ? List.copyOf(currentPlayer.getCards()) : null;
+        currentPlayerScore = currentPlayer != null ?  currentPlayer.getScore() : null;
+        currentPlayerUsername = currentPlayer != null ?  currentPlayer.getUsername() : null;
+        currentOpponentScore = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getScore() : null;
+        currentOpponentUsername = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getUsername() : null;
     }
 
     private boolean getGameResult(Hand hand) {
@@ -150,7 +148,7 @@ public class Intel{
     }
 
     public Optional<Card> cardToPlayAgainst() {
-        return Optional.ofNullable(cardToPlayAgaist);
+        return Optional.ofNullable(cardToPlayAgainst);
     }
 
     public EnumSet<PossibleActions> possibleActions() {
@@ -196,10 +194,10 @@ public class Intel{
     public String toString() {
         return "[" + timestamp +
                 " ] Current player = " + currentPlayerUsername +
-                " ] Vira = " + vira +
-                " | Card to play against = " + cardToPlayAgaist +
+                " | Vira = " + vira +
+                " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +
-                " | Possible actions = " + openCards +
+                " | Possible actions = " + possibleActions +
                 " | Rounds = " + roundWinners +
                 " | Result = " + handResult;
     }

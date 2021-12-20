@@ -142,10 +142,8 @@ public class GameCLI {
             missingIntel.add(lastIntel);
             delayInMilliseconds = 0;
         }
-
         IntelPrinter intelPrinter  = new IntelPrinter(player, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
-
         lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
