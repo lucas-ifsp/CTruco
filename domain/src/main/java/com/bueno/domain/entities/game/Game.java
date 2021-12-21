@@ -111,7 +111,7 @@ public class Game {
         final List<Intel> result = new ArrayList<>();
         result.addAll(lastHandResult);
         result.addAll(currentHandResult);
-        return  result;
+        return result;
     }
 
     public UUID getUuid() {

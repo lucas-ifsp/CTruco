@@ -173,8 +173,8 @@ public class Intel{
         return possibleActions;
     }
 
-    public UUID currentPlayerUuid() {
-        return currentPlayer.getUuid();
+    public Optional<UUID> currentPlayerUuid() {
+        return currentPlayer != null ? Optional.of(currentPlayer.getUuid()) : Optional.empty();
     }
 
     public List<Card> currentPlayerCards(){return new ArrayList<>(currentPlayerCards);}

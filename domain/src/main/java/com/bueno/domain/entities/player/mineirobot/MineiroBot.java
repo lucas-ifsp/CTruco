@@ -30,6 +30,7 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.UUID;
 
 public class MineiroBot extends Player implements Bot {
@@ -109,6 +110,8 @@ public class MineiroBot extends Player implements Bot {
     }
 
     private boolean shouldPlay(Intel intel) {
-        return !intel.isGameDone() && intel.currentPlayerUuid().equals(getUuid());
+        final Optional<UUID> possibleUuid = intel.currentPlayerUuid();
+        if(possibleUuid.isEmpty()) return false;
+        return !intel.isGameDone() && possibleUuid.get().equals(getUuid());
     }
 }

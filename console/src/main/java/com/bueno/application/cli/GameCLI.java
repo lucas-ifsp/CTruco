@@ -31,9 +31,7 @@ import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.PlayHandUseCase;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.LogManager;
 
 import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
@@ -41,12 +39,12 @@ import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOn
 import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
 //TODO REMOVE CARDS FROM INFO REQUEST.
-//TODO SOLVE BUG IN INTEL HAPPENING IN THIRD ROUND
 public class GameCLI {
 
     private final InMemoryGameRepository repo;
     private final CreateGameUseCase gameUseCase;
     private final PlayHandUseCase playHandUseCase;
+    private final List<Intel> missingIntel;
     private Intel lastIntel;
     private Player player;
     private Game game;
@@ -66,6 +64,7 @@ public class GameCLI {
         playHandUseCase = new PlayHandUseCase(repo);
         botUUID = UUID.randomUUID();
         playerUUID = UUID.randomUUID();
+        missingIntel = new ArrayList<>();
     }
 
     private void play(){
@@ -91,11 +90,15 @@ public class GameCLI {
         player = new CLIPlayer(username, playerUUID);
         game = gameUseCase.create(player, new MineiroBot(repo, botUUID));
         lastIntel = game.getIntel();
+        missingIntel.add(lastIntel);
     }
 
     private void handleCardPlaying(){
-        final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.PLAY);
-        if(canNotPerform(actions)) return;
+        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.PLAY);
+        final EnumSet<PossibleActions> notAllowedActions = EnumSet.noneOf(PossibleActions.class);
+
+        updateIntel();
+        if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         final CardReader cardReader = new CardReader(this, lastIntel.currentPlayerCards());
         final CardModeReader cardModeReader = new CardModeReader();
@@ -106,17 +109,39 @@ public class GameCLI {
         else playHandUseCase.discard(playerUUID, card);
     }
 
+    private void updateIntel() {
+        List<Intel> newIntel = playHandUseCase.findIntelSince(playerUUID, lastIntel);
+        missingIntel.addAll(newIntel);
+        if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
+        else lastIntel = missingIntel.get(missingIntel.size() - 1);
+    }
+
+    private boolean canNotPerform(EnumSet<PossibleActions> allowedActions, EnumSet<PossibleActions> notAllowedActions) {
+        final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
+        if(possibleUuid.isEmpty()) return true;
+        final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
+        final boolean isPerformingAllowedAction = lastIntel.possibleActions().containsAll(allowedActions);
+        final boolean isNotPerformingAnyNotAllowed = Collections.disjoint(lastIntel.possibleActions(), notAllowedActions);
+        return !isCurrentPlayer || !isPerformingAllowedAction || !isNotPerformingAnyNotAllowed;
+    }
+
     private void handleRaiseRequest(){
-        final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.RAISE);
-        if(canNotPerform(actions)) return;
+        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.RAISE);
+        final EnumSet<PossibleActions> notAllowedActions = EnumSet.of(PossibleActions.QUIT);
+
+        updateIntel();
+        if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseRequestReader requestReader = new RaiseRequestReader(this, lastIntel.handScore().increase());
         if(requestReader.execute() == REQUEST) playHandUseCase.raiseBet(playerUUID);
     }
 
     private void handleRaiseResponse(){
-        final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.RAISE, PossibleActions.ACCEPT, PossibleActions.QUIT);
-        if(canNotPerform(actions)) return;
+        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.RAISE, PossibleActions.ACCEPT, PossibleActions.QUIT);
+        final EnumSet<PossibleActions> notAllowedActions = EnumSet.noneOf(PossibleActions.class);
+
+        updateIntel();
+        if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseResponseReader responseReader = new RaiseResponseReader(this, lastIntel.handScore().increase());
         switch (responseReader.execute()){
@@ -127,6 +152,7 @@ public class GameCLI {
     }
 
     private void handleMaoDeOnzeResponse(){
+        updateIntel();
         if(!lastIntel.isMaoDeOnze()) return;
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
@@ -134,19 +160,10 @@ public class GameCLI {
         playHandUseCase.quit(playerUUID);
     }
 
-    private boolean canNotPerform(EnumSet<PossibleActions> actions) {
-        return !lastIntel.currentPlayerUuid().equals(playerUUID) || !lastIntel.possibleActions().containsAll(actions);
-    }
-
     public void printGameIntel(int delayInMilliseconds){
-        final List<Intel> missingIntel = playHandUseCase.findIntelSince(playerUUID, lastIntel);
-        if(missingIntel.isEmpty()) {
-            missingIntel.add(lastIntel);
-            delayInMilliseconds = 0;
-        }
+        if(missingIntel.size() == 1) delayInMilliseconds = 0;
         IntelPrinter intelPrinter  = new IntelPrinter(player, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
-        lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
     public String getOpponentUsername(){

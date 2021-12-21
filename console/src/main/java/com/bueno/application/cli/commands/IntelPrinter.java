@@ -44,24 +44,32 @@ public class IntelPrinter implements Command<Void>{
 
     @Override
     public Void execute() {
-        history.forEach(intel -> print(intel));
+        while (!history.isEmpty()){
+            final Intel intel = history.remove(0);
+            print(intel);
+        }
         return null;
     }
 
     private void print(Intel intel) {
+        waitFor(delayInMilliseconds);
         cls();
-        System.out.println("+=======================================+");
+        System.out.println("+====================================================+");
         printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
         printVira(intel.vira());
-        if(intel.currentPlayerUuid().equals(player.getUuid())) {
+
+        intel.currentPlayerUuid().filter(uuid -> uuid.equals(player.getUuid())).ifPresent(unused -> {
             printOpponentCardIfAvailable(intel);
             printOwnedCards(intel);
-        }
-        printResultIfAvailable(intel);
-        System.out.println("+=======================================+\n");
+        });
 
+        printResultIfAvailable(intel);
+        System.out.println("+====================================================+\n");
+    }
+
+    private void waitFor(int delayInMilliseconds) {
         if(delayInMilliseconds > 0) {
             try {
                 TimeUnit.MILLISECONDS.sleep(delayInMilliseconds);
@@ -72,15 +80,15 @@ public class IntelPrinter implements Command<Void>{
     }
 
     public void printGameMainInfo(Intel intel) {
-        final String botUserName = intel.currentPlayerUsername() != player.getUsername() ?
-                intel.currentPlayerUsername() : intel.currentOpponentUsername();
-        final int botScore = intel.currentPlayerScore() != player.getScore() ?
-                intel.currentPlayerScore() : intel.currentOpponentScore();
-
-        System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
-                + " x " + botUserName + " " + botScore);
-
-        System.out.println(" Vez do: " + intel.currentPlayerUsername());
+        if(intel.currentPlayerUuid().isPresent()) {
+            final String botUserName = intel.currentPlayerUsername() != player.getUsername() ?
+                    intel.currentPlayerUsername() : intel.currentOpponentUsername();
+            final int botScore = intel.currentPlayerScore() != player.getScore() ?
+                    intel.currentPlayerScore() : intel.currentOpponentScore();
+            System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
+                    + " x " + botScore + " " + botUserName);
+            System.out.println(" Vez do: " + intel.currentPlayerUsername());
+        }
         System.out.println(" Ponto da mão: " + intel.handScore().get());
     }
 
