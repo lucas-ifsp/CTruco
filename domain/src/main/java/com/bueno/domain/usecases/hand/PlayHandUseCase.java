@@ -99,7 +99,7 @@ public class PlayHandUseCase {
 
         final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
         if(!possibleActions.contains(action))
-            throw new UnsupportedGameRequestException(hand.isDone() + " Invalid action for hand state. Valid actions: " + possibleActions);
+            throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
 
         return hand;
     }

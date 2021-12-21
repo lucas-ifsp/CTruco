@@ -55,8 +55,10 @@ public class IntelPrinter implements Command<Void>{
         printRounds(intel);
         printCardsOpenInTable(intel);
         printVira(intel.vira());
-        printOpponentCardIfAvailable(intel);
-        printOwnedCards(intel);
+        if(intel.currentPlayerUuid().equals(player.getUuid())) {
+            printOpponentCardIfAvailable(intel);
+            printOwnedCards(intel);
+        }
         printResultIfAvailable(intel);
         System.out.println("+=======================================+\n");
 
@@ -70,10 +72,16 @@ public class IntelPrinter implements Command<Void>{
     }
 
     public void printGameMainInfo(Intel intel) {
-        System.out.println(" Vez do: " + player.getUsername());
-        System.out.println(" Ponto da mão: " + intel.handScore().get());
+        final String botUserName = intel.currentPlayerUsername() != player.getUsername() ?
+                intel.currentPlayerUsername() : intel.currentOpponentUsername();
+        final int botScore = intel.currentPlayerScore() != player.getScore() ?
+                intel.currentPlayerScore() : intel.currentOpponentScore();
+
         System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
-                + " x " + intel.currentOpponentUsername() + " " + intel.currentOpponentScore());
+                + " x " + botUserName + " " + botScore);
+
+        System.out.println(" Vez do: " + intel.currentPlayerUsername());
+        System.out.println(" Ponto da mão: " + intel.handScore().get());
     }
 
     private void printRounds(Intel intel) {
