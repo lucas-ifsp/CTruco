@@ -40,6 +40,8 @@ import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
 import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
+//TODO REMOVE CARDS FROM INFO REQUEST.
+//TODO SOLVE BUG IN INTEL HAPPENING IN THIRD ROUND
 public class GameCLI {
 
     private final InMemoryGameRepository repo;
