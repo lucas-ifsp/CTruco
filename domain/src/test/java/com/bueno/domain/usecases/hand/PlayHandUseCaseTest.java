@@ -87,27 +87,28 @@ class PlayHandUseCaseTest {
     @DisplayName("Should throw if playCard method parameters are null")
     void shouldThrowIfPlayCardMethodParametersAreNull() {
         assertAll(
-                () -> assertThrows(NullPointerException.class, () -> sut.playCard(null, Card.closed())),
-                () -> assertThrows(NullPointerException.class, () -> sut.playCard(p1.getUuid(), null))
+                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(null, Card.closed())),
+                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(p1.getUuid(), null))
         );
     }
 
     @Test
     @DisplayName("Should throw if accept method parameter is null")
     void shouldThrowIfAcceptMethodParameterIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.accept(null));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.accept(null));
     }
 
     @Test
     @DisplayName("Should throw if quit method parameter is null")
     void shouldThrowIfQuitMethodParameterIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.quit(null));
+        assertThrows(UnsupportedGameRequestException.class,
+                () -> sut.quit(null));
     }
 
     @Test
     @DisplayName("Should throw if raiseBet method parameter is null")
     void shouldThrowIfRaiseBetMethodParameterIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.raiseBet(null));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(null));
     }
 
     @Test
