@@ -26,15 +26,13 @@ import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.Notification;
+import com.bueno.domain.usecases.utils.Validator;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-//TODO REMOVE CARDS FROM INFO REQUEST.
-//TODO Refactor to use Validator and reduce duplicated code
 //TODO Split this class with different use cases (PlayCardUseCase, AcceptBetUseCase...)
 //TODO Write test cases for uncovered code (use cases and entities)
 public class PlayHandUseCase {
@@ -42,69 +40,38 @@ public class PlayHandUseCase {
     private Game game;
     private Hand hand;
     private GameRepository repo;
-    private final static Logger LOGGER = Logger.getLogger(PlayHandUseCase.class.getName());
 
     public PlayHandUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public Intel playCard(UUID playerUUID, Card card) {
-        return playCard(playerUUID, card, false);
+    public Intel playCard(UUID usedUuid, Card card) {
+        return playCard(usedUuid, card, false);
     }
 
-    public Intel discard(UUID playerUUID, Card card) {
-        return playCard(playerUUID, card, true);
+    public Intel discard(UUID usedUuid, Card card) {
+        return playCard(usedUuid, card, true);
     }
 
-    private Intel playCard(UUID usedID, Card card, boolean discard){
-        Objects.requireNonNull(card);
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.PLAY);
+    private Intel playCard(UUID usedUuid, Card card, boolean discard){
+        final Validator<UUID> validator = new ActionRequestValidator(repo, PossibleActions.PLAY);
+        final Notification notification = validator.validate(usedUuid);
+
+        if(card == null) notification.addError("Card is null");
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
+        final Card playingCard = discard ? player.discard(card) : player.play(card);
 
-        Card playingCard = discard ? player.discard(card) : player.play(card);
-
-        if(hand.getCardToPlayAgainst().isEmpty()){
-            LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to open round.");
-            hand.playFirstCard(player, playingCard);
-        }else{
-            LOGGER.info("Player: " + player.getUuid() + " is throwing a " + card + " to end round.");
-            hand.playSecondCard(player, playingCard);
-        }
-
+        if(hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playingCard);
+        else hand.playSecondCard(player, playingCard);
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        final Intel intel = game.getIntel();
-
-        if(game.isDone())
-            return intel;
-        if(game.currentHand().getCurrentPlayer() instanceof Bot bot)
-            bot.playTurn(intel);
-
+        if(game.isDone()) return game.getIntel();
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
         return game.getIntel();
-    }
-
-    private Game loadGameIfRequestIsValid(UUID usedID) {
-        final Game game = repo.findByUserUuid(usedID).orElseThrow(
-                () -> new UnsupportedGameRequestException("User with UUID " + usedID + " is not in an active game."));
-
-        if(game.isDone()) throw new UnsupportedGameRequestException("Game is over. Start a new game.");
-        return game;
-    }
-
-    private Hand loadHandIfRequestIsValid(UUID usedID, Game game, PossibleActions action){
-        final Player requester = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
-        final Hand hand = game.currentHand();
-
-        if(!hand.getCurrentPlayer().equals(requester))
-            throw new UnsupportedGameRequestException("User with UUID " + usedID + " is not in not the current player.");
-
-        final EnumSet<PossibleActions> possibleActions = hand.getPossibleActions();
-        if(!possibleActions.contains(action))
-            throw new UnsupportedGameRequestException("Invalid action for hand state. Valid actions: " + possibleActions);
-
-        return hand;
     }
 
     private void updateGameStatus(Game game) {
@@ -112,58 +79,71 @@ public class PlayHandUseCase {
         if(!game.isDone()) game.prepareNewHand();
     }
 
-    public Intel raiseBet(UUID usedID){
-        Objects.requireNonNull(usedID);
-        LOGGER.info("Player: " + usedID + " is asking to raise bet.");
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.RAISE);
+    public Intel raiseBet(UUID usedUuid){
+        final Validator<UUID> validator = new ActionRequestValidator(repo, PossibleActions.RAISE);
+        final Notification notification = validator.validate(usedUuid);
+
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
+
         hand.raiseBet(player);
 
         if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
         return game.getIntel();
     }
 
-    public Intel accept(UUID usedID){
-        Objects.requireNonNull(usedID);
-        LOGGER.info("Player " + usedID + " accepts.");
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.ACCEPT);
+    public Intel accept(UUID usedUuid){
+        final Validator<UUID> validator = new ActionRequestValidator(repo, PossibleActions.ACCEPT);
+        final Notification notification = validator.validate(usedUuid);
+
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
+
         hand.accept(player);
 
         if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
         return game.getIntel();
     }
 
-    public Intel quit(UUID usedID){
-        Objects.requireNonNull(usedID);
-        LOGGER.info("Player " + usedID + " quits.");
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Hand hand = loadHandIfRequestIsValid(usedID, game, PossibleActions.QUIT);
-        final Player player = hand.getCurrentPlayer();
-        hand.quit(player);
+    public Intel quit(UUID usedUuid){
+        final Validator<UUID> validator = new ActionRequestValidator(repo, PossibleActions.QUIT);
+        final Notification notification = validator.validate(usedUuid);
 
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
+        final Player player = hand.getCurrentPlayer();
+
+        hand.quit(player);
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        final Intel intel = game.getIntel();
-
-        if(game.isDone()) return intel;
-        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(intel);
+        if(game.isDone()) return game.getIntel();
+        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
 
         return game.getIntel();
     }
 
-    public List<Intel> findIntelSince(UUID usedID, Intel lastIntel){
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
+    public List<Intel> findIntelSince(UUID usedUuid, Intel lastIntel){
+        final Validator<UUID> validator = new QueryRequestValidator(repo);
+        final Notification notification = validator.validate(usedUuid);
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
         return game.getIntelSince(lastIntel);
     }
 
-    public List<Card> getOwnedCards(UUID usedID){
-        Objects.requireNonNull(usedID);
-        final Game game = loadGameIfRequestIsValid(usedID);
-        final Player player = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
+    public List<Card> getOwnedCards(UUID usedUuid){
+        final Validator<UUID> validator = new QueryRequestValidator(repo);
+        final Notification notification = validator.validate(usedUuid);
+        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Player player = game.getPlayer1().getUuid().equals(usedUuid) ? game.getPlayer1() : game.getPlayer2();
         return List.copyOf(player.getCards());
     }
 
