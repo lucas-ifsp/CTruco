@@ -45,41 +45,39 @@ public class IntelPrinter implements Command<Void>{
     @Override
     public Void execute() {
         while (!history.isEmpty()){
-            final Intel intel = history.remove(0);
-            print(intel);
+            print(history.remove(0));
         }
         return null;
     }
 
     private void print(Intel intel) {
-        waitFor(delayInMilliseconds);
-        cls();
-        System.out.println("+====================================================+");
+        clearAfter(delayInMilliseconds);
+        printDelimiter(false);
         printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
         printVira(intel.vira());
-
-        intel.currentPlayerUuid().filter(uuid -> uuid.equals(player.getUuid())).ifPresent(unused -> {
-            printOpponentCardIfAvailable(intel);
-            printOwnedCards(intel);
-        });
-
-        printResultIfAvailable(intel);
-        System.out.println("+====================================================+\n");
-    }
-
-    private void waitFor(int delayInMilliseconds) {
-        if(delayInMilliseconds > 0) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(delayInMilliseconds);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if(isPlayerTurn(intel)) {
+            printCardToPlayAgainst(intel);
+            printOwnedCards();
         }
+        printResultIfAvailable(intel);
+        printDelimiter(true);
     }
 
-    public void printGameMainInfo(Intel intel) {
+    private void clearAfter(int delayInMilliseconds) {
+        if(delayInMilliseconds > 0) {
+            try {TimeUnit.MILLISECONDS.sleep(delayInMilliseconds);}
+            catch (InterruptedException e) {e.printStackTrace();}
+        }
+        cls();
+    }
+
+    private void printDelimiter(boolean blankLine) {
+        System.out.println("+==========================================================+" + (blankLine ? "\n" : ""));
+    }
+
+    private void printGameMainInfo(Intel intel) {
         if(intel.currentPlayerUuid().isPresent()) {
             final String botUserName = intel.currentPlayerUsername() != player.getUsername() ?
                     intel.currentPlayerUsername() : intel.currentOpponentUsername();
@@ -87,7 +85,7 @@ public class IntelPrinter implements Command<Void>{
                     intel.currentPlayerScore() : intel.currentOpponentScore();
             System.out.println(" Placar: " + player.getUsername() + " " + player.getScore()
                     + " x " + botScore + " " + botUserName);
-            System.out.println(" Vez do: " + intel.currentPlayerUsername());
+            System.out.println(" Vez do (a): " + intel.currentPlayerUsername());
         }
         System.out.println(" Ponto da mão: " + intel.handScore().get());
     }
@@ -115,14 +113,18 @@ public class IntelPrinter implements Command<Void>{
         System.out.println(" Vira: " + vira);
     }
 
-    private void printOpponentCardIfAvailable(Intel intel) {
+    private boolean isPlayerTurn(Intel intel) {
+        return intel.currentPlayerUuid().filter(uuid -> uuid.equals(player.getUuid())).isPresent();
+    }
+
+    private void printCardToPlayAgainst(Intel intel) {
         final Optional<Card> cardToPlayAgainst = intel.cardToPlayAgainst();
         cardToPlayAgainst.ifPresent(card -> System.out.println(" Carta do Oponente: " + card));
     }
 
-    private void printOwnedCards(Intel intel) {
+    private void printOwnedCards() {
         System.out.print(" Cartas na mão: ");
-        final List<Card> playerCards = intel.currentPlayerCards();
+        final List<Card> playerCards = player.getCards();
         for (int i = 0; i < playerCards.size(); i++) {
             System.out.print((i + 1) + ") " + playerCards.get(i) + "\t");
         }
@@ -133,8 +135,7 @@ public class IntelPrinter implements Command<Void>{
         final Optional<HandResult> potentialResult = intel.handResult();
         if (potentialResult.isPresent()) {
             final String resultString = potentialResult.get().getWinner()
-                    .map(winner -> winner.getUsername().concat(" VENCEU!").toUpperCase())
-                    .orElse("EMPATE.");
+                    .map(winner -> winner.getUsername().concat(" VENCEU!").toUpperCase()).orElse("EMPATE.");
             System.out.println(" RESULTADO: " + resultString);
         }
     }

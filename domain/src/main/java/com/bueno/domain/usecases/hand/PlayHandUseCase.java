@@ -33,7 +33,10 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+//TODO REMOVE CARDS FROM INFO REQUEST.
+//TODO Refactor to use Validator and reduce duplicated code
 //TODO Split this class with different use cases (PlayCardUseCase, AcceptBetUseCase...)
+//TODO Write test cases for uncovered code (use cases and entities)
 public class PlayHandUseCase {
 
     private Game game;
@@ -155,6 +158,13 @@ public class PlayHandUseCase {
         Objects.requireNonNull(usedID);
         final Game game = loadGameIfRequestIsValid(usedID);
         return game.getIntelSince(lastIntel);
+    }
+
+    public List<Card> getOwnedCards(UUID usedID){
+        Objects.requireNonNull(usedID);
+        final Game game = loadGameIfRequestIsValid(usedID);
+        final Player player = game.getPlayer1().getUuid().equals(usedID) ? game.getPlayer1() : game.getPlayer2();
+        return List.copyOf(player.getCards());
     }
 
 
