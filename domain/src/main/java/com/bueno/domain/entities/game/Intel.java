@@ -48,7 +48,6 @@ public class Intel{
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
-    private List<Card> currentPlayerCards;
     private EnumSet<PossibleActions> possibleActions;
     private HandResult handResult;
 
@@ -68,7 +67,7 @@ public class Intel{
     }
 
     private void setGameIntel(Game game){
-        gameIsDone = getGameResult(game);
+        gameIsDone = isGameDone(game);
         gameWinner = getGameWinner(game);
     }
     private void setHandIntel(Hand hand){
@@ -87,7 +86,6 @@ public class Intel{
 
     private void setPlayersIntel(Hand hand){
         currentPlayer = hand.getCurrentPlayer();
-        currentPlayerCards = currentPlayer != null ? List.copyOf(currentPlayer.getCards()) : null;
         currentPlayerScore = currentPlayer != null ?  currentPlayer.getScore() : 0;
         currentPlayerUsername = currentPlayer != null ?  currentPlayer.getUsername() : null;
         currentOpponentScore = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getScore() : 0;
@@ -98,8 +96,8 @@ public class Intel{
         timestamp = Instant.now();
     }
 
-    private boolean getGameResult(Game game) {
-        return game.getPlayer1().getScore() == Player.MAX_SCORE || game.getPlayer1().getScore() == Player.MAX_SCORE;
+    private boolean isGameDone(Game game) {
+        return game.getPlayer1().getScore() == Player.MAX_SCORE || game.getPlayer2().getScore() == Player.MAX_SCORE;
     }
 
     private UUID getGameWinner(Game game) {
@@ -176,9 +174,7 @@ public class Intel{
     public Optional<UUID> currentPlayerUuid() {
         return currentPlayer != null ? Optional.of(currentPlayer.getUuid()) : Optional.empty();
     }
-
-    public List<Card> currentPlayerCards(){return new ArrayList<>(currentPlayerCards);}
-
+    
     public int currentPlayerScore() {
         return currentPlayerScore;
     }

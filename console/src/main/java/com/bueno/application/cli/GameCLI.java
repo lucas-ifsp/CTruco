@@ -38,7 +38,6 @@ import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
 import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
-//TODO REMOVE CARDS FROM INFO REQUEST.
 public class GameCLI {
 
     private final InMemoryGameRepository repo;
@@ -100,7 +99,8 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        final CardReader cardReader = new CardReader(this, lastIntel.currentPlayerCards());
+        player.setCards(playHandUseCase.getOwnedCards(playerUUID));
+        final CardReader cardReader = new CardReader(this, player.getCards());
         final CardModeReader cardModeReader = new CardModeReader();
         final Card card = cardReader.execute();
         final CardModeReader.CardMode mode = cardModeReader.execute();
