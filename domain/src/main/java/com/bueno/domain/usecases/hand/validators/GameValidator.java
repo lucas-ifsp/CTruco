@@ -18,31 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.hand.validators;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
+import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.utils.Notification;
+import com.bueno.domain.usecases.utils.Validator;
 
 import java.util.UUID;
 
-public class PlayGameWithBotsUseCase {
+public class GameValidator extends Validator<UUID> {
 
     private final GameRepository repo;
 
-    public PlayGameWithBotsUseCase(GameRepository repo) {
+    public GameValidator(GameRepository repo) {
         this.repo = repo;
     }
 
-    public UUID playWithBots(Bot bot1, Bot bot2){
-        CreateGameUseCase gameUseCase = new CreateGameUseCase(repo);
-        final Game game = gameUseCase.create((Player) bot1, (Player) bot2);
-        ((Player) bot1).setIntel(game.getIntel());
-        PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-        final Intel intel = playCardUseCase.playCard(new RequestModel(((Player) bot1).getUuid(), bot1.chooseCardToPlay().content()));
-        return intel.gameWinner().orElseThrow();
+    @Override
+    public Notification validate(UUID uuid) {
+        if(uuid == null) return new Notification("UUID is null.");
+        final Game game = repo.findByUserUuid(uuid).orElse(null);
+        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
+        if(game.isDone()) return new Notification("Game is over. Start a new game.");
+        return new Notification();
     }
 }

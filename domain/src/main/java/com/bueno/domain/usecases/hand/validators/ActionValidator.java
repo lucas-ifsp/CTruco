@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.validators;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
@@ -29,29 +29,31 @@ import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.UUID;
 
-public class ActionRequestValidator extends Validator<UUID> {
+public class ActionValidator extends Validator<UUID> {
 
     private final GameRepository repo;
+    private final GameValidator gameValidator;
     private final PossibleActions action;
 
-    public ActionRequestValidator(GameRepository repo, PossibleActions action) {
+    public ActionValidator(GameRepository repo, PossibleActions action) {
         this.repo = repo;
+        this.gameValidator = new GameValidator(repo);
         this.action = action;
     }
 
     @Override
     public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
+        final Notification gameNotification = gameValidator.validate(uuid);
+        if(gameNotification.hasErrors()) return gameNotification;
 
         final Game game = repo.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        if(game.isDone()) return new Notification("Game is over. Start a new game.");
-
-        final Player requester = getRequester(uuid, game);
+        final Player requester = getRequester(uuid, Objects.requireNonNull(game));
         final Hand currentHand = game.currentHand();
         final EnumSet<PossibleActions> possibleActions = currentHand.getPossibleActions();
+
         Notification notification = new Notification();
 
         if(!currentHand.getCurrentPlayer().equals(requester))

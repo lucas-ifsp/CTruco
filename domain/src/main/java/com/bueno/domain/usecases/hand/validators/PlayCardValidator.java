@@ -18,31 +18,25 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.validators;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.PossibleActions;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
-import java.util.UUID;
+public class PlayCardValidator extends Validator<PlayCardUseCase.RequestModel> {
 
-public class QueryRequestValidator extends Validator<UUID> {
+    private final ActionValidator actionValidator;
 
-    private final GameRepository repo;
-
-    public QueryRequestValidator(GameRepository repo) {
-        this.repo = repo;
+    public PlayCardValidator(GameRepository repo, PossibleActions action) {
+        this.actionValidator = new ActionValidator(repo, action);
     }
 
     @Override
-    public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
-
-        final Game game = repo.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        if(game.isDone()) return new Notification("Game is over. Start a new game.");
-
-        return new Notification();
+    public Notification validate(PlayCardUseCase.RequestModel input) {
+        if(input.card() == null) return new Notification("Card is null");
+        return actionValidator.validate(input.requester());
     }
 }

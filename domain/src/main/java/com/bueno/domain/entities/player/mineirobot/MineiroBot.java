@@ -27,7 +27,9 @@ import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.PlayHandUseCase;
+import com.bueno.domain.usecases.hand.BetUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -76,28 +78,29 @@ public class MineiroBot extends Player implements Bot {
         setIntel(intel);
         if(shouldPlay(getIntel())){
             final EnumSet<PossibleActions> possibleActions = getIntel().possibleActions();
-            final PlayHandUseCase playHandUseCase = new PlayHandUseCase(repo);
+            final PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
+            final BetUseCase betUseCase = new BetUseCase(repo);
 
             if(getIntel().isMaoDeOnze() && getIntel().handScore() == HandScore.ONE){
-                if(getMaoDeOnzeResponse()) playHandUseCase.accept(getUuid());
-                else playHandUseCase.quit(getUuid());
+                if(getMaoDeOnzeResponse()) betUseCase.accept(getUuid());
+                else betUseCase.quit(getUuid());
                 return;
             }
             if(canStartRaiseRequest(getIntel(), possibleActions) && requestTruco()){
-                playHandUseCase.raiseBet(getUuid());
+                betUseCase.raiseBet(getUuid());
                 return;
             }
             if(possibleActions.contains(PossibleActions.PLAY)){
                 final CardToPlay chosenCard = chooseCardToPlay();
-                if(chosenCard.isDiscard()) playHandUseCase.discard(getUuid(), chosenCard.content());
-                else playHandUseCase.playCard(getUuid(), chosenCard.content());
+                if(chosenCard.isDiscard()) playCardUseCase.discard(new RequestModel(getUuid(), chosenCard.content()));
+                else playCardUseCase.playCard(new RequestModel(getUuid(), chosenCard.content()));
                 return;
             }
             final int response = getTrucoResponse(getIntel().scoreProposal());
             switch (response){
-                case -1 -> {if(possibleActions.contains(PossibleActions.QUIT)) playHandUseCase.quit(getUuid());}
-                case 0 -> {if(possibleActions.contains(PossibleActions.ACCEPT)) playHandUseCase.accept(getUuid());}
-                case 1 -> {if(possibleActions.contains(PossibleActions.RAISE)) playHandUseCase.raiseBet(getUuid());}
+                case -1 -> {if(possibleActions.contains(PossibleActions.QUIT)) betUseCase.quit(getUuid());}
+                case 0 -> {if(possibleActions.contains(PossibleActions.ACCEPT)) betUseCase.accept(getUuid());}
+                case 1 -> {if(possibleActions.contains(PossibleActions.RAISE)) betUseCase.raiseBet(getUuid());}
             }
         }
     }

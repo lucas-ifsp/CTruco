@@ -29,7 +29,10 @@ import com.bueno.domain.entities.game.PossibleActions;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.hand.PlayHandUseCase;
+import com.bueno.domain.usecases.hand.BetUseCase;
+import com.bueno.domain.usecases.hand.HandleIntelUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -40,9 +43,12 @@ import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.
 
 public class GameCLI {
 
-    private final InMemoryGameRepository repo;
     private final CreateGameUseCase gameUseCase;
-    private final PlayHandUseCase playHandUseCase;
+    private final PlayCardUseCase playCardUseCase;
+    private final BetUseCase betUseCase;
+    private final HandleIntelUseCase handleIntelUseCase;
+
+    private final InMemoryGameRepository repo;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
     private Player player;
@@ -59,8 +65,12 @@ public class GameCLI {
 
     public GameCLI() {
         repo = new InMemoryGameRepository();
+
         gameUseCase = new CreateGameUseCase(repo);
-        playHandUseCase = new PlayHandUseCase(repo);
+        playCardUseCase = new PlayCardUseCase(repo);
+        betUseCase = new BetUseCase(repo);
+        handleIntelUseCase = new HandleIntelUseCase(repo);
+
         botUUID = UUID.randomUUID();
         playerUUID = UUID.randomUUID();
         missingIntel = new ArrayList<>();
@@ -99,18 +109,18 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        player.setCards(playHandUseCase.getOwnedCards(playerUUID));
+        player.setCards(handleIntelUseCase.getOwnedCards(playerUUID));
         final CardReader cardReader = new CardReader(this, player.getCards());
         final CardModeReader cardModeReader = new CardModeReader();
         final Card card = cardReader.execute();
         final CardModeReader.CardMode mode = cardModeReader.execute();
 
-        if(mode == OPEN) playHandUseCase.playCard(playerUUID, card);
-        else playHandUseCase.discard(playerUUID, card);
+        if(mode == OPEN) playCardUseCase.playCard(new RequestModel(playerUUID, card));
+        else playCardUseCase.discard(new RequestModel(playerUUID, card));
     }
 
     private void updateIntel() {
-        List<Intel> newIntel = playHandUseCase.findIntelSince(playerUUID, lastIntel);
+        List<Intel> newIntel = handleIntelUseCase.findIntelSince(playerUUID, lastIntel);
         missingIntel.addAll(newIntel);
         if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
@@ -133,7 +143,7 @@ public class GameCLI {
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseRequestReader requestReader = new RaiseRequestReader(this, lastIntel.handScore().increase());
-        if(requestReader.execute() == REQUEST) playHandUseCase.raiseBet(playerUUID);
+        if(requestReader.execute() == REQUEST) betUseCase.raiseBet(playerUUID);
     }
 
     private void handleRaiseResponse(){
@@ -145,9 +155,9 @@ public class GameCLI {
 
         RaiseResponseReader responseReader = new RaiseResponseReader(this, lastIntel.handScore().increase());
         switch (responseReader.execute()){
-            case QUIT -> playHandUseCase.quit(playerUUID);
-            case ACCEPT -> playHandUseCase.accept(playerUUID);
-            case RAISE -> playHandUseCase.raiseBet(playerUUID);
+            case QUIT -> betUseCase.quit(playerUUID);
+            case ACCEPT -> betUseCase.accept(playerUUID);
+            case RAISE -> betUseCase.raiseBet(playerUUID);
         };
     }
 
@@ -156,8 +166,9 @@ public class GameCLI {
         if(!lastIntel.isMaoDeOnze()) return;
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
-        if(responseReader.execute() == ACCEPT) {playHandUseCase.accept(playerUUID);}
-        playHandUseCase.quit(playerUUID);
+        if(responseReader.execute() == ACCEPT) {
+            betUseCase.accept(playerUUID);}
+        betUseCase.quit(playerUUID);
     }
 
     public void printGameIntel(int delayInMilliseconds){
