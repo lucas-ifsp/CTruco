@@ -24,7 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.hand.PlayHandUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
 
 public class PlayGameUseCase {
 
@@ -38,7 +38,7 @@ public class PlayGameUseCase {
         Intel intel = null;
 
         if(game.getWinner().isEmpty()) {
-            final Hand playedHand = new PlayHandUseCase(game).play();
+            final Hand playedHand = new PlayCardUseCase(game).play();
             intel = playedHand.getIntelOLD();
             game.updateScores();
         }
