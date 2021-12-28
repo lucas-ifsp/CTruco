@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.standalone;
+package com.bueno.application.repository;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.util.Player;

@@ -20,93 +20,118 @@
 
 package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Rank;
-import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.player.util.Player;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 class IntelTest {
 
-    @Mock
-    private Hand hand;
-    @InjectMocks
-    private Intel sut;
-    @Mock
-    Player player1;
-    @Mock
-    Player player2;
+    @Mock private Game game;
+    @Mock private Hand hand;
+    @Mock private Round round;
+    @Mock Player p1;
+    @Mock Player p2;
+
+    @BeforeAll
+    static void init(){
+        LogManager.getLogManager().reset();
+    }
+
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleActions.ACCEPT));
+    }
+
 
     @Test
-    @DisplayName("Should get the same vira of the current hand")
-    void ShouldGetSameViraOfCurrentHand() {
-        Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
-        when(hand.getVira()).thenReturn(card);
-        assertEquals(card, sut.vira());
+    @DisplayName("Should not allow null game in static constructor")
+    void shouldNotAllowNullGameInStaticConstructor() {
+        assertThrows(NullPointerException.class, () -> Intel.ofGame(null));
     }
 
     @Test
-    @DisplayName("Should get the same points of the current hand")
-    void ShouldGetSamePointsOfCurrentHand() {
-        when(hand.getScore()).thenReturn(HandScore.THREE);
-        assertEquals(HandScore.THREE, sut.handScore());
+    @DisplayName("Should not allow null hand in static constructor")
+    void shouldNotAllowNullHandInStaticConstructor() {
+        assertThrows(NullPointerException.class, () -> Intel.ofHand(null));
     }
 
     @Test
-    @DisplayName("Should get the same card to play against of the current hand")
-    void shouldGetSameCardToPlayAgainstOfCurrentHand() {
-        Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
-        when(hand.getCardToPlayAgainst()).thenReturn(Optional.of(card));
-        assertEquals(card, sut.cardToPlayAgainst().orElse(null));
+    @DisplayName("Should return that game is done if game is done")
+    void shouldReturnThatGameIsDoneIfGameIsDone() {
+        when(game.isDone()).thenReturn(true);
+        when(game.currentHand()).thenReturn(hand);
+        final Intel intel = Intel.ofGame(game);
+        assertTrue(intel.isGameDone());
     }
 
     @Test
-    @DisplayName("Should get the same open cards of the current hand")
-    void shouldGetSameOpenCardsOfCurrentHand() {
-        final List<Card> cards = List.of(Card.of(Rank.SEVEN, Suit.SPADES), Card.of(Rank.SEVEN, Suit.CLUBS));
-        when(hand.getOpenCards()).thenReturn(cards);
-        assertIterableEquals(cards, sut.openCards());
+    @DisplayName("Should have no game winner from hand static constructor")
+    void shouldHaveNoGameWinnerFromHandStaticConstructor() {
+        final Intel intel = Intel.ofHand(hand);
+        assertTrue(intel.gameWinner().isEmpty());
     }
 
     @Test
-    @DisplayName("Should get opponent score")
-    void ShouldGetOpponentScore() {
-        final UUID p1UUID = UUID.randomUUID();
-        when(player1.getUuid()).thenReturn(p1UUID);
-        when(player2.getScore()).thenReturn(6);
-        when(hand.getFirstToPlay()).thenReturn(player1);
-        when(hand.getLastToPlay()).thenReturn(player2);
-
-        final int opponentScore = sut.currentOpponentScore();
-        assertEquals(player2.getScore(), opponentScore);
+    @DisplayName("Should game not be done from hand static constructor")
+    void shouldGameNotBeDoneFromHandStaticConstructor() {
+        final Intel intel = Intel.ofHand(hand);
+        assertFalse(intel.isGameDone());
     }
 
     @Test
-    @DisplayName("Should get opponent username")
-    void ShouldGetOpponentUsername() {
-        final UUID p1UUID = UUID.randomUUID();
+    @DisplayName("Should intel have non null timestamp")
+    void shouldIntelHaveNonNullTimestamp() {
+        final Intel intel = Intel.ofHand(hand);
+        assertNotNull(intel.timestamp());
+    }
 
-        when(player1.getUuid()).thenReturn(p1UUID);
-        when(player2.getUsername()).thenReturn("Test");
-        when(hand.getFirstToPlay()).thenReturn(player1);
-        when(hand.getLastToPlay()).thenReturn(player2);
+    @Test
+    @DisplayName("Should two intel objects be different if created in different moments")
+    void shouldTwoIntelObjectsBeDifferentIfCreatedInDifferentMoments() {
+        assertNotEquals(Intel.ofHand(hand), Intel.ofHand(hand));
+    }
 
-        final String opponentId = sut.currentOpponentUsername();
-        assertEquals(player2.getUsername(), opponentId);
+    @Test
+    @DisplayName("Should get default values of player and opponent if current player is null")
+    void shouldGetDefaultValuesOfPlayerAndOpponentIfCurrentPlayerIsNull() {
+        final Intel intel = Intel.ofHand(hand);
+        assertAll(
+                () -> assertEquals(Optional.empty(), intel.currentPlayerUuid()),
+                () -> assertNull(intel.currentPlayerUsername()),
+                () -> assertNull(intel.currentOpponentUsername()),
+                () -> assertEquals(0, intel.currentPlayerScore()),
+                () -> assertEquals(0, intel.currentOpponentScore())
+        );
+    }
+
+    @Test
+    @DisplayName("Should correctly obtain the name of the round winners")
+    void shouldCorrectlyObtainTheNameOfTheRoundWinners() {
+        when(p1.getUsername()).thenReturn("name1");
+        when(p2.getUsername()).thenReturn("name2");
+        when(round.getWinner()).thenReturn(Optional.of(p1)).thenReturn(Optional.empty()).thenReturn(Optional.of(p2));
+        when(hand.getRoundsPlayed()).thenReturn(List.of(round, round, round));
+
+        final List<Optional<String>> expected = List.of(Optional.of("name1"), Optional.empty(), Optional.of("name2"));
+        final Intel intel = Intel.ofHand(hand);
+
+        assertEquals(expected, intel.roundWinners());
     }
 }

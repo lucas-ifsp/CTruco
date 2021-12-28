@@ -26,6 +26,7 @@ import com.bueno.domain.entities.player.util.Player;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+//TODO Write test cases for uncovered code (MineiroBot, this class...)
 public class CreateGameUseCase {
 
     private GameRepository dao;

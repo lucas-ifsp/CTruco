@@ -33,7 +33,6 @@ import com.bueno.domain.usecases.utils.Validator;
 import java.util.Objects;
 import java.util.UUID;
 
-//TODO Write test cases for uncovered code (use cases and entities)
 public class PlayCardUseCase {
 
     private Game game;

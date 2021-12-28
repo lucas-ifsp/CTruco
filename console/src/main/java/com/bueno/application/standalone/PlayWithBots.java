@@ -20,6 +20,7 @@
 
 package com.bueno.application.standalone;
 
+import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
 
@@ -27,13 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
-import java.util.logging.LogManager;
 
 public class PlayWithBots {
 
     private static final UUID uuid1 = UUID.randomUUID();
     private static final UUID uuid2 = UUID.randomUUID();
-
+/*
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
@@ -42,17 +42,17 @@ public class PlayWithBots {
 
         System.out.print("MineiroBot1: " + results.stream().filter(uuid -> uuid.equals(uuid1)).count() + " | ");
         System.out.print("MineiroBot2: " + results.stream().filter(uuid -> uuid.equals(uuid2)).count());
-    }
+    }*/
 
- /*   public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         for (int i = 0; i < 100; i++) {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
             final UUID uuid = uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
-            System.out.println("Winner: " + (uuid.equals(uuid1) ? "MineiroBot1" : "MineiroBot2"));
+            System.err.println("Winner: " + (uuid.equals(uuid1) ? "MineiroBot1" : "MineiroBot2"));
             //TimeUnit.SECONDS.sleep(1);
         }
-    }*/
+    }
 
     public List<UUID> play(int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);

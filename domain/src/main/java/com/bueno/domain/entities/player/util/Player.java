@@ -33,7 +33,7 @@ public abstract class Player {
 
     protected List<Card> cards;
     protected String username;
-    private UUID uuid;
+    private final UUID uuid;
 
     private int score;
     private Intel intel;
@@ -68,7 +68,7 @@ public abstract class Player {
         Card cardToPlay = Objects.requireNonNull(card);
         if(doesNotOwn(cardToPlay))
             throw new IllegalArgumentException("User doesn't own card " + cardToPlay + " to play it.");
-        cards.remove(cardToPlay);
+        getCards().remove(cardToPlay);
         return cardToPlay;
     }
 
@@ -76,12 +76,12 @@ public abstract class Player {
         Card discard = Objects.requireNonNull(card);
         if(doesNotOwn(discard))
             throw new IllegalArgumentException("User doesn't own card " + card + " to discard it.");
-        cards.remove(discard);
+        getCards().remove(discard);
         return Card.closed();
     }
 
     private boolean doesNotOwn(Card discard) {
-        return !cards.contains(discard);
+        return !getCards().contains(discard);
     }
 
     public void addScore(HandScore handScore){

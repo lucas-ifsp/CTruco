@@ -34,10 +34,6 @@ public class Notification {
         addError(message);
     }
 
-    public Notification(String message, Exception e){
-        addError(message, e);
-    }
-
     public void addError(String message){
         addError(message, null);
     }
@@ -59,5 +55,4 @@ public class Notification {
     public String errorMessage(){
         return errors.stream().map(e -> e.message).collect(Collectors.joining(" ,"));
     }
-
 }
