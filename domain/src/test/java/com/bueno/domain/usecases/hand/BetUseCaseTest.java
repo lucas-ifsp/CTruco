@@ -20,6 +20,10 @@
 
 package com.bueno.domain.usecases.hand;
 
+import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.HandResult;
+import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.InMemoryGameRepository;
@@ -29,11 +33,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +52,7 @@ class BetUseCaseTest {
 
     private UUID p1Uuid;
     private UUID p2Uuid;
+    private Game game;
 
     @BeforeAll
     static void init() {
@@ -68,7 +73,7 @@ class BetUseCaseTest {
         final InMemoryGameRepository repo = new InMemoryGameRepository();
 
         createGameUseCase = new CreateGameUseCase(repo);
-        createGameUseCase.create(p1, p2);
+        game = createGameUseCase.create(p1, p2);
         sut = new BetUseCase(repo);
     }
 
@@ -125,4 +130,36 @@ class BetUseCaseTest {
         when(p1.getScore()).thenReturn(12);
         assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(p1Uuid));
     }
+
+    @Test
+    @DisplayName("Should be able to raise bet if invariants are met")
+    void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
+        final Intel intel = sut.raiseBet(p1Uuid);
+        assertEquals(HandScore.THREE, intel.scoreProposal());
+    }
+
+    @Test
+    @DisplayName("Should be able to accept bet if invariants are met")
+    void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
+        sut.raiseBet(p1Uuid);
+        final Intel intel = sut.accept(p2Uuid);
+        assertEquals(HandScore.THREE, intel.handScore());
+    }
+
+    @Test
+    @DisplayName("Should be able to quit bet if invariants are met")
+    void shouldBeAbleToQuitBetIfInvariantsAreMet() {
+        final Intel firstIntel = sut.raiseBet(p1Uuid);
+        final Intel lastIntel = sut.quit(p2Uuid); //last intel is already pointing to a new hand.
+        final List<Intel> intelSince = game.getIntelSince(firstIntel);
+        intelSince.remove(lastIntel);
+        final Intel quitIntel = intelSince.get(intelSince.size() - 1);
+
+        assertAll(
+                () -> assertEquals(HandScore.ONE, quitIntel.handScore()),
+                () -> assertEquals(p1Uuid, quitIntel.handResult().flatMap(HandResult::getWinner)
+                        .map(Player::getUuid).orElse(null))
+        );
+    }
+
 }

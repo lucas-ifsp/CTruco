@@ -150,10 +150,6 @@ public class Round {
         return Optional.ofNullable(winner);
     }
 
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
-
     @Override
     public String toString() {
         return "Round{" +

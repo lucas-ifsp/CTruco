@@ -51,17 +51,17 @@ public class Intel{
     private EnumSet<PossibleActions> possibleActions;
     private HandResult handResult;
 
-    public static Intel of(Hand currentHand){
-        Hand hand = Objects.requireNonNull(currentHand);
-        Intel result = new Intel();
+    static Intel ofHand(Hand currentHand){
+        final Hand hand = Objects.requireNonNull(currentHand);
+        final Intel result = new Intel();
         result.setHandIntel(hand);
         result.setPlayersIntel(hand);
         return result;
     }
 
-    public static Intel ofConcluded(Game concludedGame){
-        Game game = Objects.requireNonNull(concludedGame);
-        Intel result = of(game.currentHand());
+    static Intel ofGame(Game currentGame){
+        final Game game = Objects.requireNonNull(currentGame);
+        final Intel result = ofHand(game.currentHand());
         result.setGameIntel(game);
         return result;
     }
@@ -70,6 +70,19 @@ public class Intel{
         gameIsDone = isGameDone(game);
         gameWinner = getGameWinner(game);
     }
+
+    private boolean isGameDone(Game game) {
+        return game.isDone();
+        //return game.getPlayer1().getScore() == Player.MAX_SCORE || game.getPlayer2().getScore() == Player.MAX_SCORE;
+    }
+
+    private UUID getGameWinner(Game game) {
+        return game.getWinner().map(winner -> winner.getUuid()).orElse(null);
+        //if (game.getPlayer1().getScore() == Player.MAX_SCORE) return game.getPlayer1().getUuid();
+        //if (game.getPlayer2().getScore() == Player.MAX_SCORE) return game.getPlayer2().getUuid();
+        //return null;
+    }
+
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
         handScore = hand.getScore();
@@ -94,16 +107,6 @@ public class Intel{
 
     private Intel() {
         timestamp = Instant.now();
-    }
-
-    private boolean isGameDone(Game game) {
-        return game.getPlayer1().getScore() == Player.MAX_SCORE || game.getPlayer2().getScore() == Player.MAX_SCORE;
-    }
-
-    private UUID getGameWinner(Game game) {
-        if (game.getPlayer1().getScore() == Player.MAX_SCORE) return game.getPlayer1().getUuid();
-        if (game.getPlayer2().getScore() == Player.MAX_SCORE) return game.getPlayer2().getUuid();
-        return null;
     }
 
     private List<Optional<String>> getRoundWinners(Hand hand) {

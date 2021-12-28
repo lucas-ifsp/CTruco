@@ -21,7 +21,7 @@
 package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
-import com.bueno.application.standalone.InMemoryGameRepository;
+import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;

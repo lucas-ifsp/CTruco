@@ -21,6 +21,9 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
+import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.InMemoryGameRepository;
@@ -31,11 +34,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -52,7 +56,7 @@ class PlayCardUseCaseTest {
     private UUID p2Uuid;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         LogManager.getLogManager().reset();
     }
 
@@ -108,10 +112,57 @@ class PlayCardUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should throw if requests action and the game is done")
-    void shouldThrowIfRequestsActionAndTheGameIsDone() {
+    @DisplayName("Should throw if requests action when game is done")
+    void shouldThrowIfRequestsActionWhenGameIsDone() {
         when(p1.getScore()).thenReturn(12);
         assertThrows(UnsupportedGameRequestException.class,
                 () -> sut.playCard(new RequestModel(p1Uuid, Card.closed())));
+    }
+
+    @Test
+    @DisplayName("Should correctly play first card if invariants are met")
+    void shouldCorrectlyPlayFirstCardIfInvariantsAreMet() {
+        final Card card = Card.of(Rank.THREE, Suit.CLUBS);
+        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
+        final Intel intel = sut.playCard(new RequestModel(p1Uuid, card));
+        assertEquals(card, intel.cardToPlayAgainst().orElse(null));
+    }
+
+    @Test
+    @DisplayName("Should correctly play second card if invariants are met")
+    void shouldCorrectlyPlaySecondCardIfInvariantsAreMet() {
+        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
+        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+
+        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
+        when(p2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+
+        sut.discard(new RequestModel(p1Uuid, card1));
+        final Intel intel = sut.playCard(new RequestModel(p2Uuid, card2));
+        assertAll(
+                () -> assertNull(intel.cardToPlayAgainst().orElse(null)),
+                () -> assertEquals(1, intel.roundsPlayed())
+        );
+    }
+
+    @Test
+    @DisplayName("Should correctly play hand if invariants are met")
+    void shouldCorrectlyPlayHandIfInvariantsAreMet() {
+        final Card card1P1 = Card.of(Rank.THREE, Suit.CLUBS);
+        final Card card2P1 = Card.of(Rank.TWO, Suit.CLUBS);
+        final Card card1P2 = Card.of(Rank.ACE, Suit.CLUBS);
+        final Card card2P2 = Card.of(Rank.KING, Suit.CLUBS);
+
+        when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
+
+        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card1P1, card2P1)));
+        when(p2.getCards()).thenReturn(new ArrayList<>(List.of(card1P2, card2P2)));
+
+        sut.discard(new RequestModel(p1Uuid, card1P1));
+        sut.playCard(new RequestModel(p2Uuid, card1P2));
+        sut.playCard(new RequestModel(p2Uuid, card2P2));
+
+        assertDoesNotThrow(() -> sut.discard(new RequestModel(p1Uuid, card2P1)));
     }
 }

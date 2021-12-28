@@ -66,7 +66,7 @@ public class Game {
         firstToPlay.setCards(deck.take(3));
         lastToPlay.setCards(deck.take(3));
 
-        Hand hand = new Hand(firstToPlay, lastToPlay, vira);
+        final Hand hand = new Hand(firstToPlay, lastToPlay, vira);
         hands.add(hand);
         return hand;
     }
@@ -94,11 +94,15 @@ public class Game {
     }
 
     public Intel getIntel(){
-        return isDone() ? Intel.ofConcluded(this) : currentHand().getIntel();
+        return isDone() ? Intel.ofGame(this) : currentHand().getIntel();
     }
 
     public List<Intel> getIntelSince(Intel lastIntel){
         final List<Intel> handHistory = currentHand().getHistory();
+
+        if(lastIntel == null)
+            return getWholeHistory();
+
         final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
         final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;
         final List<Intel> currentHandResult = handHistory.stream().filter(isAfter).collect(Collectors.toList());
@@ -112,6 +116,10 @@ public class Game {
         result.addAll(lastHandResult);
         result.addAll(currentHandResult);
         return result;
+    }
+
+    private List<Intel> getWholeHistory() {
+        return hands.stream().flatMap(hand -> hand.getHistory().stream()).collect(Collectors.toList());
     }
 
     public UUID getUuid() {
