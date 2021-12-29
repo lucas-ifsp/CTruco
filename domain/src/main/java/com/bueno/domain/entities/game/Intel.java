@@ -36,7 +36,6 @@ public class Intel{
 
     private HandScore handScore;
     private HandScore handScoreProposal;
-    private int maximumHandScore;
     private List<Optional<String>> roundWinners;
     private int roundsPlayed;
 
@@ -73,21 +72,16 @@ public class Intel{
 
     private boolean isGameDone(Game game) {
         return game.isDone();
-        //return game.getPlayer1().getScore() == Player.MAX_SCORE || game.getPlayer2().getScore() == Player.MAX_SCORE;
     }
 
     private UUID getGameWinner(Game game) {
-        return game.getWinner().map(winner -> winner.getUuid()).orElse(null);
-        //if (game.getPlayer1().getScore() == Player.MAX_SCORE) return game.getPlayer1().getUuid();
-        //if (game.getPlayer2().getScore() == Player.MAX_SCORE) return game.getPlayer2().getUuid();
-        //return null;
+        return game.getWinner().map(Player::getUuid).orElse(null);
     }
 
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
         handScore = hand.getScore();
         handScoreProposal = hand.getScoreProposal();
-        maximumHandScore = hand.getMaxHandScore();
         roundWinners = getRoundWinners(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();
@@ -140,10 +134,6 @@ public class Intel{
 
     public HandScore scoreProposal() {
         return handScoreProposal;
-    }
-
-    public int maximumHandScore() {
-        return maximumHandScore;
     }
 
     public List<Optional<String>> roundWinners() {

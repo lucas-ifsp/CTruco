@@ -25,11 +25,11 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class WaitingRaiseResponseState implements HandState {
+class WaitingRaiseResponseState implements HandState {
 
     private final Hand context;
 
-    public WaitingRaiseResponseState(Hand context) {
+    WaitingRaiseResponseState(Hand context) {
         this.context = context;
         final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.QUIT, PossibleActions.ACCEPT);
         if(context.canRaiseBet()) actions.add(PossibleActions.RAISE);
@@ -50,33 +50,32 @@ public class WaitingRaiseResponseState implements HandState {
     public void accept(Player responder) {
         context.setScore(context.getScoreProposal());
         context.removeScoreProposal();
+        context.setCurrentPlayer(defineCurrentPlayer());
+        context.setState(defineNextState());
+    }
 
-        final Player currentPlayer = context.getCardToPlayAgainst().isEmpty() ? context.getFirstToPlay() : context.getLastToPlay();
-        context.setCurrentPlayer(currentPlayer);
+    private Player defineCurrentPlayer() {
+        return context.getCardToPlayAgainst().isEmpty() ? context.getFirstToPlay() : context.getLastToPlay();
+    }
 
-        final HandState nextState = context.getCardToPlayAgainst().isPresent() ? new OneCardState(context) : new NoCardState(context);
-        context.setState(nextState);
+    private HandState defineNextState() {
+        return context.getCardToPlayAgainst().isPresent() ? new OneCardState(context) : new NoCardState(context);
     }
 
     @Override
     public void quit(Player responder) {
-        Player opponent = context.getOpponentOf(responder);
         context.setLastBetRaiser(null);
-        context.setResult(new HandResult(opponent, context.getScore()));
+        context.setResult(new HandResult(context.getOpponentOf(responder), context.getScore()));
         context.setState(new DoneState(context));
     }
 
     @Override
     public void raiseBet(Player requester) {
         final HandScore score = context.getScoreProposal() != null ? context.getScoreProposal() : context.getScore();
-
         context.setScore(score);
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
-
-        final Player opponent = context.getOpponentOf(requester);
-        context.setCurrentPlayer(opponent);
-
+        context.setCurrentPlayer(context.getOpponentOf(requester));
         context.setState(new WaitingRaiseResponseState(context));
     }
 }

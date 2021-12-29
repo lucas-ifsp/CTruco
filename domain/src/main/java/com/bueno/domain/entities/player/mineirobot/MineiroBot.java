@@ -86,7 +86,7 @@ public class MineiroBot extends Player implements Bot {
                 else betUseCase.quit(getUuid());
                 return;
             }
-            if(canStartRaiseRequest(getIntel(), possibleActions) && requestTruco()){
+            if(canStartRaiseRequest(possibleActions) && requestTruco()){
                 betUseCase.raiseBet(getUuid());
                 return;
             }
@@ -105,11 +105,9 @@ public class MineiroBot extends Player implements Bot {
         }
     }
 
-    private boolean canStartRaiseRequest(Intel intel, EnumSet<PossibleActions> possibleActions) {
-        return possibleActions.contains(PossibleActions.RAISE)
-                && !possibleActions.contains(PossibleActions.QUIT)
-                && !(intel.scoreProposal() == HandScore.TWELVE)
-                && intel.handScore().increase().get() <= intel.maximumHandScore();
+    private boolean canStartRaiseRequest(EnumSet<PossibleActions> possibleActions) {
+        return possibleActions.contains(PossibleActions.RAISE) && !possibleActions.contains(PossibleActions.QUIT);
+
     }
 
     private boolean shouldPlay(Intel intel) {
