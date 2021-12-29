@@ -25,11 +25,11 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class NoCardState implements HandState {
+class NoCardState implements HandState {
 
     private final Hand context;
 
-    public NoCardState(Hand context) {
+    NoCardState(Hand context) {
         this.context = context;
         setPossibleHandActions();
     }

@@ -27,8 +27,7 @@ import java.util.*;
 
 public class Hand {
 
-    private Card vira;
-
+    private final Card vira;
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
     private final List<Intel> history;
@@ -46,7 +45,7 @@ public class Hand {
     private HandResult result;
     private HandState state;
 
-    public Hand(Player firstToPlay, Player lastToPlay, Card vira){
+    Hand(Player firstToPlay, Player lastToPlay, Card vira){
         this.firstToPlay = Objects.requireNonNull(firstToPlay);
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
         this.vira = Objects.requireNonNull(vira);
@@ -153,11 +152,11 @@ public class Hand {
         scoreProposal = null;
     }
 
-    public HandScore getScoreProposal() {
+    HandScore getScoreProposal() {
         return scoreProposal;
     }
 
-    int getMaxHandScore(){
+    private int getMaxHandScore(){
         final int firstToPlayScore = firstToPlay.getScore();
         final int lastToPlayScore = lastToPlay.getScore();
 
@@ -190,11 +189,11 @@ public class Hand {
         lastToPlay = referenceHolder;
     }
 
-    public Player getOpponentOf(Player player){
+    Player getOpponentOf(Player player){
         return player.equals(firstToPlay)? lastToPlay : firstToPlay;
     }
 
-    public void checkForWinnerAfterSecondRound() {
+    void checkForWinnerAfterSecondRound() {
         Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
         Optional<Player> secondRoundWinner = roundsPlayed.get(1).getWinner();
 
@@ -206,7 +205,7 @@ public class Hand {
             result = new HandResult(secondRoundWinner.get(), score);
     }
 
-    public void checkForWinnerAfterThirdRound() {
+    void checkForWinnerAfterThirdRound() {
         Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
         Optional<Player> lastRoundWinner = roundsPlayed.get(2).getWinner();
 
@@ -235,20 +234,20 @@ public class Hand {
         updatePlayersIntel();
     }
 
-    public Optional<Player> getLastRoundWinner(){
+    Optional<Player> getLastRoundWinner(){
         if(roundsPlayed.isEmpty()) return Optional.empty();
         return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
     }
 
-    public List<Round> getRoundsPlayed() {
+    List<Round> getRoundsPlayed() {
         return new ArrayList<>(roundsPlayed);
     }
 
-    public boolean isDone(){
+    boolean isDone(){
         return state instanceof DoneState;
     }
 
-    public int numberOfRoundsPlayed(){
+    int numberOfRoundsPlayed(){
         return roundsPlayed.size();
     }
 
@@ -256,7 +255,7 @@ public class Hand {
         return Optional.ofNullable(result);
     }
 
-    public void setResult(HandResult result) {
+    void setResult(HandResult result) {
         this.result = result;
     }
 
@@ -264,20 +263,20 @@ public class Hand {
         return result != null;
     }
 
-    public void setScore(HandScore score) {
+    void setScore(HandScore score) {
         this.score = score;
         updatePlayersIntel();
     }
 
-    public Player getFirstToPlay() {
+    Player getFirstToPlay() {
         return firstToPlay;
     }
 
-    public Player getLastToPlay() {
+    Player getLastToPlay() {
         return lastToPlay;
     }
 
-    public HandScore getScore() {
+    HandScore getScore() {
         return score;
     }
 
@@ -285,7 +284,7 @@ public class Hand {
         this.lastBetRaiser = lastBetRaiser;
     }
 
-    public List<Card> getOpenCards() {
+    List<Card> getOpenCards() {
         return openCards;
     }
 
@@ -305,25 +304,12 @@ public class Hand {
         return currentPlayer;
     }
 
-    public Card getVira() {
+    Card getVira() {
         return vira;
     }
 
-    public Player getLastBetRaiser() {
+    Player getLastBetRaiser() {
         return lastBetRaiser;
-    }
-
-    public void playNewRound(){
-        if(roundsPlayed.size() == 3)
-            throw new GameRuleViolationException("The number of rounds exceeded the maximum of three.");
-
-        defineRoundPlayingOrder();
-        Round round = new Round(firstToPlay, lastToPlay, this);
-        round.play();
-
-        firstToPlay.handleRoundConclusion();
-        lastToPlay.handleRoundConclusion();
-        roundsPlayed.add(round);
     }
 
     public EnumSet<PossibleActions> getPossibleActions() {

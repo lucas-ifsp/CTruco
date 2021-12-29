@@ -25,11 +25,11 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class WaitingMaoDeOnzeState implements HandState {
+class WaitingMaoDeOnzeState implements HandState {
 
     private final Hand context;
 
-    public WaitingMaoDeOnzeState(Hand context) {
+    WaitingMaoDeOnzeState(Hand context) {
         this.context = context;
         this.context.setPossibleActions(EnumSet.of(PossibleActions.ACCEPT, PossibleActions.QUIT));
     }
