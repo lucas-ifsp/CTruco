@@ -36,7 +36,7 @@ public class OneCardState implements HandState {
 
     private void setPossibleHandActions() {
         final EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
-        if(!context.isForbiddenToRaiseBet() && !isCurrentPlayerTheLastToRaiseTheBet())
+        if(context.canRaiseBet() && !isCurrentPlayerTheLastToRaiseTheBet() )
             possibleActions.add(PossibleActions.RAISE);
         context.setPossibleActions(possibleActions);
     }
@@ -88,11 +88,6 @@ public class OneCardState implements HandState {
 
     @Override
     public void raiseBet(Player requester) {
-        if(context.isForbiddenToRaiseBet()){
-            Player opponent = context.getOpponentOf(requester);
-            context.setResult(new HandResult(opponent, HandScore.ONE));
-            context.setState(new DoneState(context));
-        }
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getFirstToPlay());
