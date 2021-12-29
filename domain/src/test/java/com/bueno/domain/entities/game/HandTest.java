@@ -414,39 +414,6 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should not allow to raise more than enough to both players win")
-    void shouldNotAllowToRaiseMoreThanEnoughToBothPlayersWin() {
-        when(p1.getScore()).thenReturn(5);
-        when(p2.getScore()).thenReturn(8);
-        sut.raiseBet(p1);
-        sut.raiseBet(p2);
-        sut.raiseBet(p1);
-        assertAll(
-                () -> assertThrows(GameRuleViolationException.class, () -> sut.raiseBet(p2)),
-                () -> assertEquals(p2, sut.getCurrentPlayer())
-        );
-    }
-
-    @Test
-    @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points")
-    void shouldLoseTheHandIfRequestToRaiseTheBetWhenAnyUserHas11Points() {
-        when(p1.getScore()).thenReturn(11);
-        when(p2.getScore()).thenReturn(11);
-        sut.raiseBet(p1);
-        assertEquals(p2, getPossibleWinner());
-    }
-
-    @Test
-    @DisplayName("Should lose the hand if request to raise the bet when any user has 11 points after a round card was played")
-    void shouldLoseTheHandIfRequestToRaiseTheBetWhenAnyUserHas11PointsAfterARoundCardWasPlayed() {
-        when(p1.getScore()).thenReturn(11);
-        when(p2.getScore()).thenReturn(11);
-        sut.playFirstCard(p1, Card.closed());
-        sut.raiseBet(p2);
-        assertEquals(p1, getPossibleWinner());
-    }
-
-    @Test
     @DisplayName("Should lose the hand if quits a bet")
     void shouldLoseTheHandIfQuitsABet() {
         sut.raiseBet(p1);
@@ -610,7 +577,52 @@ class HandTest {
     }
 
     @Test
-    @DisplayName("Should current player only be able to play if any user has 11 points and a round card was already player")
+    @DisplayName("Should not be able to raise when hand reaches max score")
+    void shouldNotBeAbleToRaiseWhenHandReachesMaxScore() {
+        when(p1.getScore()).thenReturn(10);
+        when(p2.getScore()).thenReturn(10);
+        sut.raiseBet(p1);
+        sut.accept(p2);
+        sut.playFirstCard(p1, Card.closed());
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+    @Test
+    @DisplayName("Should not be able to raise the bet when any user has 11 points")
+    void shouldNotBeAbleToRaiseBetWhenAnyUserHas11Points() {
+        when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
+        sut = new Hand(p1, p2, Card.of(Rank.SEVEN, Suit.CLUBS));
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+    @Test
+    @DisplayName("Should not be able to raise the bet when any user has 11 points after a round card was played")
+    void shouldNotBeAbleToRaiseBetWhenAnyUserHas11PointsAfterARoundCardWasPlayed() {
+        when(p1.getScore()).thenReturn(11);
+        when(p2.getScore()).thenReturn(11);
+        sut.playFirstCard(p1, Card.closed());
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+    @Test
+    @DisplayName("Should not be able to re-raise the bet when already reached the max hand score")
+    void shouldNotBeAbleToReRaiseTheBetWhenAlreadyReachedTheMaxHandScore() {
+        when(p1.getScore()).thenReturn(5);
+        when(p2.getScore()).thenReturn(8);
+        sut.raiseBet(p1);
+        sut.raiseBet(p2);
+        sut.raiseBet(p1);
+        EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.ACCEPT, PossibleActions.QUIT);
+        assertEquals(possibleActions, sut.getPossibleActions());
+    }
+
+
+    @Test
+    @DisplayName("Should current player only be able to play if any user has 11 points and a round card was already played")
     void shouldCurrentPlayerOnlyBeAbleToPlayIfAnyUserHas11PointsAndARoundCardWasAlreadyPlayed() {
         when(p2.getScore()).thenReturn(11);
         sut.playFirstCard(p1, Card.closed());

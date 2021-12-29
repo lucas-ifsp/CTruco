@@ -123,15 +123,26 @@ public class Hand {
     }
 
     void addScoreProposal() {
-        final int maxHandScore = getMaxHandScore();
-        final HandScore requestingScore = score.increase();
-
-        if(requestingScore.get() > maxHandScore) {
-            final String message = String.format("Can not raise bet to %d. Maximum valid score is %d",
-                    requestingScore.get(), score.get());
+        if(!canRaiseBet()) {
+            final String message = String.format("Can not raise bet to %d. Maximum valid score is %d", score.increase().get(), score.get());
             throw new GameRuleViolationException(message);
         }
-        scoreProposal = requestingScore;
+        scoreProposal = score.increase();
+    }
+
+    boolean canRaiseBet(){
+        return isAllowedToRaise() && isAllowedToReRaise();
+    }
+
+    private boolean isAllowedToRaise() {
+        return score.get() < 12
+                && score.increase().get() <= getMaxHandScore()
+                && firstToPlay.getScore() < 11
+                && lastToPlay.getScore() < 11;
+    }
+
+    private boolean isAllowedToReRaise() {
+        return scoreProposal == null || scoreProposal.get() < 12 && scoreProposal.increase().get() <= getMaxHandScore();
     }
 
     void removeScoreProposal(){
@@ -317,9 +328,5 @@ public class Hand {
 
     void setPossibleActions(EnumSet<PossibleActions> actions){
         this.possibleActions = EnumSet.copyOf(actions);
-    }
-
-    public boolean isForbiddenToRaiseBet() {
-        return firstToPlay.getScore() == 11 || lastToPlay.getScore() == 11;
     }
 }
