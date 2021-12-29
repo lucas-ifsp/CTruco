@@ -71,8 +71,7 @@ public class Hand {
     public void playFirstCard(Player player, Card card){
         final Player requester = Objects.requireNonNull(player, "Player must not be null!");
         final Card requesterCard = Objects.requireNonNull(card, "Card must not be null!");
-        if(!requester.equals(currentPlayer))
-            throw new IllegalArgumentException("First to play must be " + currentPlayer + ", not " + requester + ".");
+        validateRequest(requester, PossibleActions.PLAY);
         state.playFirstCard(requester, requesterCard);
         updateHistory();
     }
@@ -80,36 +79,37 @@ public class Hand {
     public void playSecondCard(Player player, Card cards){
         final Player requester = Objects.requireNonNull(player, "Player must not be null!");
         final Card requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
-        if(!requester.equals(currentPlayer))
-            throw new IllegalArgumentException("Second to play must be " + currentPlayer + ", not " + requester + ".");
+        validateRequest(requester, PossibleActions.PLAY);
         state.playSecondCard(requester,requesterCard);
         updateHistory();
     }
 
     public void accept(Player responder){
         final Player player = Objects.requireNonNull(responder, "Player must not be null!");
-        if(!player.equals(currentPlayer))
-            throw new IllegalArgumentException(player + " can not accept a bet requested to " + currentPlayer + ".");
+        validateRequest(player, PossibleActions.ACCEPT);
         state.accept(player);
         updateHistory();
     }
 
     public void quit(Player responder){
         final Player player = Objects.requireNonNull(responder, "Player must not be null!");
-        if(!player.equals(currentPlayer))
-            throw new IllegalArgumentException(player + " can not quit a bet requested to " + currentPlayer + ".");
+        validateRequest(player, PossibleActions.QUIT);
         state.quit(player);
         updateHistory();
     }
 
     public void raiseBet(Player requester){
         final Player player = Objects.requireNonNull(requester, "Player must not be null!");
-        if(!player.equals(currentPlayer))
-            throw new IllegalArgumentException(player + " can not raise the bet in " + currentPlayer + " turn.");
-        if(player.equals(lastBetRaiser))
-            throw new IllegalStateException(player + " can not raise the bet consecutively.");
+        validateRequest(requester, PossibleActions.RAISE);
         state.raiseBet(player);
         updateHistory();
+    }
+
+    private void validateRequest(Player requester, PossibleActions action){
+        if(!requester.equals(currentPlayer))
+            throw new IllegalArgumentException(requester + " can not " + action + " in " + currentPlayer + " turn.");
+        if(!possibleActions.contains(action))
+            throw new IllegalStateException("Can not " + action + ", but " + possibleActions + ".");
     }
 
     void playRound(Card lastCard){
@@ -131,7 +131,11 @@ public class Hand {
     }
 
     boolean canRaiseBet(){
-        return isAllowedToRaise() && isAllowedToReRaise();
+        return isPlayerAllowedToRaise() && isAllowedToRaise() && isAllowedToReRaise();
+    }
+
+    private boolean isPlayerAllowedToRaise() {
+        return currentPlayer != lastBetRaiser;
     }
 
     private boolean isAllowedToRaise() {

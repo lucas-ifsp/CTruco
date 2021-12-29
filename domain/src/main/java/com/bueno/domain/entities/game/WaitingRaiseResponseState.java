@@ -27,7 +27,7 @@ import java.util.EnumSet;
 
 public class WaitingRaiseResponseState implements HandState {
 
-    private Hand context;
+    private final Hand context;
 
     public WaitingRaiseResponseState(Hand context) {
         this.context = context;
@@ -68,10 +68,9 @@ public class WaitingRaiseResponseState implements HandState {
 
     @Override
     public void raiseBet(Player requester) {
-        final HandScore currentScore = context.getScoreProposal() != null ?
-                context.getScoreProposal() : context.getScore();
+        final HandScore score = context.getScoreProposal() != null ? context.getScoreProposal() : context.getScore();
 
-        context.setScore(currentScore);
+        context.setScore(score);
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
 
