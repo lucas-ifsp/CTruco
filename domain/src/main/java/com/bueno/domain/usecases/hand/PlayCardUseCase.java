@@ -52,7 +52,7 @@ public class PlayCardUseCase {
     }
 
     private Intel playCard(RequestModel request, boolean discard){
-        final Validator<RequestModel> validator = new PlayCardValidator(repo, PossibleActions.PLAY);
+        final Validator<RequestModel> validator = new PlayCardValidator(repo, PossibleAction.PLAY);
         final Notification notification = validator.validate(request);
 
         if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());

@@ -25,7 +25,7 @@ import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.game.PossibleActions;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
@@ -103,8 +103,8 @@ public class GameCLI {
     }
 
     private void handleCardPlaying(){
-        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.PLAY);
-        final EnumSet<PossibleActions> notAllowedActions = EnumSet.noneOf(PossibleActions.class);
+        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.PLAY);
+        final EnumSet<PossibleAction> notAllowedActions = EnumSet.noneOf(PossibleAction.class);
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
@@ -126,7 +126,7 @@ public class GameCLI {
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
-    private boolean canNotPerform(EnumSet<PossibleActions> allowedActions, EnumSet<PossibleActions> notAllowedActions) {
+    private boolean canNotPerform(EnumSet<PossibleAction> allowedActions, EnumSet<PossibleAction> notAllowedActions) {
         final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
         if(possibleUuid.isEmpty()) return true;
         final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
@@ -136,8 +136,8 @@ public class GameCLI {
     }
 
     private void handleRaiseRequest(){
-        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.RAISE);
-        final EnumSet<PossibleActions> notAllowedActions = EnumSet.of(PossibleActions.QUIT);
+        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.RAISE);
+        final EnumSet<PossibleAction> notAllowedActions = EnumSet.of(PossibleAction.QUIT);
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
@@ -147,8 +147,8 @@ public class GameCLI {
     }
 
     private void handleRaiseResponse(){
-        final EnumSet<PossibleActions> allowedActions = EnumSet.of(PossibleActions.RAISE, PossibleActions.ACCEPT, PossibleActions.QUIT);
-        final EnumSet<PossibleActions> notAllowedActions = EnumSet.noneOf(PossibleActions.class);
+        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.RAISE, PossibleAction.ACCEPT, PossibleAction.QUIT);
+        final EnumSet<PossibleAction> notAllowedActions = EnumSet.noneOf(PossibleAction.class);
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;

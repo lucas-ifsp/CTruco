@@ -31,7 +31,7 @@ public class Hand {
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
     private final List<Intel> history;
-    private EnumSet<PossibleActions> possibleActions;
+    private EnumSet<PossibleAction> possibleActions;
 
     private Player firstToPlay;
     private Player lastToPlay;
@@ -64,47 +64,47 @@ public class Hand {
             currentPlayer = firstToPlay;
             state = new NoCardState(this);
         }
-        updateHistory();
+        updateHistory(PossibleAction.PLAY);
     }
 
     public void playFirstCard(Player player, Card card){
         final Player requester = Objects.requireNonNull(player, "Player must not be null!");
         final Card requesterCard = Objects.requireNonNull(card, "Card must not be null!");
-        validateRequest(requester, PossibleActions.PLAY);
+        validateRequest(requester, PossibleAction.PLAY);
         state.playFirstCard(requester, requesterCard);
-        updateHistory();
+        updateHistory(PossibleAction.PLAY);
     }
 
     public void playSecondCard(Player player, Card cards){
         final Player requester = Objects.requireNonNull(player, "Player must not be null!");
         final Card requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
-        validateRequest(requester, PossibleActions.PLAY);
+        validateRequest(requester, PossibleAction.PLAY);
         state.playSecondCard(requester,requesterCard);
-        updateHistory();
+        updateHistory(PossibleAction.PLAY);
+    }
+
+    public void raise(Player requester){
+        final Player player = Objects.requireNonNull(requester, "Player must not be null!");
+        validateRequest(requester, PossibleAction.RAISE);
+        state.raiseBet(player);
+        updateHistory(PossibleAction.RAISE);
     }
 
     public void accept(Player responder){
         final Player player = Objects.requireNonNull(responder, "Player must not be null!");
-        validateRequest(player, PossibleActions.ACCEPT);
+        validateRequest(player, PossibleAction.ACCEPT);
         state.accept(player);
-        updateHistory();
+        updateHistory(PossibleAction.ACCEPT);
     }
 
     public void quit(Player responder){
         final Player player = Objects.requireNonNull(responder, "Player must not be null!");
-        validateRequest(player, PossibleActions.QUIT);
+        validateRequest(player, PossibleAction.QUIT);
         state.quit(player);
-        updateHistory();
+        updateHistory(PossibleAction.QUIT);
     }
 
-    public void raiseBet(Player requester){
-        final Player player = Objects.requireNonNull(requester, "Player must not be null!");
-        validateRequest(requester, PossibleActions.RAISE);
-        state.raiseBet(player);
-        updateHistory();
-    }
-
-    private void validateRequest(Player requester, PossibleActions action){
+    private void validateRequest(Player requester, PossibleAction action){
         if(!requester.equals(currentPlayer))
             throw new IllegalArgumentException(requester + " can not " + action + " in " + currentPlayer + " turn.");
         if(!possibleActions.contains(action))
@@ -122,10 +122,6 @@ public class Hand {
     }
 
     void addScoreProposal() {
-        if(!canRaiseBet()) {
-            final String message = String.format("Can not raise bet to %d. Maximum valid score is %d", score.increase().get(), score.get());
-            throw new GameRuleViolationException(message);
-        }
         scoreProposal = score.increase();
     }
 
@@ -166,8 +162,8 @@ public class Hand {
                 : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
     }
 
-    private void updateHistory() {
-        history.add(Intel.ofHand(this));
+    private void updateHistory(PossibleAction action) {
+        history.add(Intel.ofHand(this, action));
     }
 
     Intel getIntel(){
@@ -289,7 +285,7 @@ public class Hand {
     }
 
     public Intel getIntelOLD(){
-        return Intel.ofHand(this);
+        return Intel.ofHand(this, null);
     }
 
     void setState(HandState state) {
@@ -312,11 +308,11 @@ public class Hand {
         return lastBetRaiser;
     }
 
-    public EnumSet<PossibleActions> getPossibleActions() {
+    public EnumSet<PossibleAction> getPossibleActions() {
         return possibleActions;
     }
 
-    void setPossibleActions(EnumSet<PossibleActions> actions){
+    void setPossibleActions(EnumSet<PossibleAction> actions){
         this.possibleActions = EnumSet.copyOf(actions);
     }
 }

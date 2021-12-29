@@ -31,8 +31,8 @@ class WaitingRaiseResponseState implements HandState {
 
     WaitingRaiseResponseState(Hand context) {
         this.context = context;
-        final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.QUIT, PossibleActions.ACCEPT);
-        if(context.canRaiseBet()) actions.add(PossibleActions.RAISE);
+        final EnumSet<PossibleAction> actions = EnumSet.of(PossibleAction.QUIT, PossibleAction.ACCEPT);
+        if(context.canRaiseBet()) actions.add(PossibleAction.RAISE);
         this.context.setPossibleActions(actions);
     }
 

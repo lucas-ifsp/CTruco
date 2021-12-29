@@ -47,12 +47,14 @@ public class Intel{
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
-    private EnumSet<PossibleActions> possibleActions;
+    private PossibleAction intelSource;
+    private EnumSet<PossibleAction> possibleActions;
     private HandResult handResult;
 
-    static Intel ofHand(Hand currentHand){
+    static Intel ofHand(Hand currentHand, PossibleAction action){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();
+        result.intelSource = action;
         result.setHandIntel(hand);
         result.setPlayersIntel(hand);
         return result;
@@ -60,7 +62,7 @@ public class Intel{
 
     static Intel ofGame(Game currentGame){
         final Game game = Objects.requireNonNull(currentGame);
-        final Intel result = ofHand(game.currentHand());
+        final Intel result = ofHand(game.currentHand(), null);
         result.setGameIntel(game);
         return result;
     }
@@ -160,7 +162,7 @@ public class Intel{
         return Optional.ofNullable(cardToPlayAgainst);
     }
 
-    public EnumSet<PossibleActions> possibleActions() {
+    public EnumSet<PossibleAction> possibleActions() {
         return possibleActions;
     }
 
@@ -182,6 +184,10 @@ public class Intel{
 
     public String currentOpponentUsername() {
         return currentOpponentUsername;
+    }
+
+    public Optional<PossibleAction> getIntelSource() {
+        return Optional.ofNullable(intelSource);
     }
 
     @Override

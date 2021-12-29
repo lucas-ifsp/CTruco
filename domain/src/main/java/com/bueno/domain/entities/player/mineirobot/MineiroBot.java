@@ -22,7 +22,7 @@ package com.bueno.domain.entities.player.mineirobot;
 
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.game.PossibleActions;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
@@ -77,7 +77,7 @@ public class MineiroBot extends Player implements Bot {
     public void playTurn(Intel intel) {
         setIntel(intel);
         if(shouldPlay(getIntel())){
-            final EnumSet<PossibleActions> possibleActions = getIntel().possibleActions();
+            final EnumSet<PossibleAction> possibleActions = getIntel().possibleActions();
             final PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
             final BetUseCase betUseCase = new BetUseCase(repo);
 
@@ -90,7 +90,7 @@ public class MineiroBot extends Player implements Bot {
                 betUseCase.raiseBet(getUuid());
                 return;
             }
-            if(possibleActions.contains(PossibleActions.PLAY)){
+            if(possibleActions.contains(PossibleAction.PLAY)){
                 final CardToPlay chosenCard = chooseCardToPlay();
                 if(chosenCard.isDiscard()) playCardUseCase.discard(new RequestModel(getUuid(), chosenCard.content()));
                 else playCardUseCase.playCard(new RequestModel(getUuid(), chosenCard.content()));
@@ -98,15 +98,15 @@ public class MineiroBot extends Player implements Bot {
             }
             final int response = getTrucoResponse(getIntel().scoreProposal());
             switch (response){
-                case -1 -> {if(possibleActions.contains(PossibleActions.QUIT)) betUseCase.quit(getUuid());}
-                case 0 -> {if(possibleActions.contains(PossibleActions.ACCEPT)) betUseCase.accept(getUuid());}
-                case 1 -> {if(possibleActions.contains(PossibleActions.RAISE)) betUseCase.raiseBet(getUuid());}
+                case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) betUseCase.quit(getUuid());}
+                case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) betUseCase.accept(getUuid());}
+                case 1 -> {if(possibleActions.contains(PossibleAction.RAISE)) betUseCase.raiseBet(getUuid());}
             }
         }
     }
 
-    private boolean canStartRaiseRequest(EnumSet<PossibleActions> possibleActions) {
-        return possibleActions.contains(PossibleActions.RAISE) && !possibleActions.contains(PossibleActions.QUIT);
+    private boolean canStartRaiseRequest(EnumSet<PossibleAction> possibleActions) {
+        return possibleActions.contains(PossibleAction.RAISE) && !possibleActions.contains(PossibleAction.QUIT);
 
     }
 
