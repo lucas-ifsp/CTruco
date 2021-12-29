@@ -23,18 +23,17 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
 import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,17 +60,5 @@ class PlayGameUseCaseTest {
         sut = null;
     }
 
-    @Test
-    @DisplayName("Should have no winner after single simple hand")
-    void shouldHaveNoWinnerAfterSingleSimpleHand(){
-        when(p1.requestTruco()).thenReturn(false);
-        when(p2.requestTruco()).thenReturn(false);
-        final UUID p1UUID = UUID.randomUUID();
-        final UUID p2UUID = UUID.randomUUID();
-        when(p1.getUuid()).thenReturn(p1UUID);
-        when(p2.getUuid()).thenReturn(p2UUID);
 
-        final Intel intel = sut.playNewHand();
-        assertFalse(intel.isGameDone());
-    }
 }
