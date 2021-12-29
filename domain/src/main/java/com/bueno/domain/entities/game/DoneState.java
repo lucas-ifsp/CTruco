@@ -25,9 +25,9 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class DoneState implements HandState {
+class DoneState implements HandState {
 
-    public DoneState(Hand context){
+    DoneState(Hand context){
         context.setCurrentPlayer(null);
         context.setPossibleActions(EnumSet.noneOf(PossibleActions.class));
     }

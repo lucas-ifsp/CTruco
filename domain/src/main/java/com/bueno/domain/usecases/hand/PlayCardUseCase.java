@@ -96,13 +96,13 @@ public class PlayCardUseCase {
         playRound();
         if (hand.hasWinner()) return hand;
 
-        hand.checkForWinnerAfterSecondRound();
+        //hand.checkForWinnerAfterSecondRound();
         if (hand.hasWinner()) return hand;
 
         playRound();
         if (hand.hasWinner()) return hand;
 
-        hand.checkForWinnerAfterThirdRound();
+        //hand.checkForWinnerAfterThirdRound();
         return hand;
     }
 
@@ -110,12 +110,12 @@ public class PlayCardUseCase {
         Player playerInMaoDeOnze = game.getPlayer1().getScore() == 11? game.getPlayer1() : game.getPlayer2();
         Player otherPlayer = game.getPlayer1().getScore() == 11? game.getPlayer2() : game.getPlayer1();
 
-        if(playerInMaoDeOnze.getMaoDeOnzeResponse()) hand.setScore(HandScore.THREE);
-        else hand.setResult(new HandResult(otherPlayer, HandScore.ONE));
+        if(playerInMaoDeOnze.getMaoDeOnzeResponse());// hand.setScore(HandScore.THREE);
+        else ;//hand.setResult(new HandResult(otherPlayer, HandScore.ONE));
     }
 
     private void playRound() {
-        hand.playNewRound();
+        //hand.playNewRound();
     }
 
 

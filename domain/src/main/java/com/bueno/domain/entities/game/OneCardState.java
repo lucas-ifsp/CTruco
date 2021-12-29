@@ -25,11 +25,11 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.EnumSet;
 
-public class OneCardState implements HandState {
+class OneCardState implements HandState {
 
     private final Hand context;
 
-    public OneCardState(Hand context) {
+    OneCardState(Hand context) {
         this.context = context;
         setPossibleHandActions();
     }
@@ -50,25 +50,31 @@ public class OneCardState implements HandState {
         context.addOpenCard(card);
         context.playRound(card);
         switch (context.numberOfRoundsPlayed()) {
-            case 1 -> {
-                context.defineRoundPlayingOrder();
-                context.setState(new NoCardState(context));
-            }
-            case 2 -> {
-                context.checkForWinnerAfterSecondRound();
-                if (context.hasWinner()) context.setState(new DoneState(context));
-                else {
-                    context.defineRoundPlayingOrder();
-                    context.setCurrentPlayer(context.getFirstToPlay());
-                    context.setState(new NoCardState(context));
-                }
-            }
-            case 3 -> {
-                context.checkForWinnerAfterThirdRound();
-                context.setState(new DoneState(context));
-            }
+            case 1 -> handleFirstRoundPostConditions();
+            case 2 -> handleSecondRoundPostConditions();
+            case 3 -> handleThirdRoundPostConditions();
         }
         context.setCardToPlayAgainst(null);
+    }
+
+    private void handleFirstRoundPostConditions() {
+        context.defineRoundPlayingOrder();
+        context.setState(new NoCardState(context));
+    }
+
+    private void handleSecondRoundPostConditions() {
+        context.checkForWinnerAfterSecondRound();
+        if (context.hasWinner()) context.setState(new DoneState(context));
+        else {
+            context.defineRoundPlayingOrder();
+            context.setCurrentPlayer(context.getFirstToPlay());
+            context.setState(new NoCardState(context));
+        }
+    }
+
+    private void handleThirdRoundPostConditions() {
+        context.checkForWinnerAfterThirdRound();
+        context.setState(new DoneState(context));
     }
 
     @Override
