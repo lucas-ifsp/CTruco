@@ -386,8 +386,10 @@ class HandTest {
         sut.raiseBet(p2);
         sut.raiseBet(p1);
         sut.raiseBet(p2);
+        final EnumSet<PossibleActions> actions = EnumSet.of(PossibleActions.QUIT, PossibleActions.ACCEPT);
         assertAll(
-                () -> assertThrows(GameRuleViolationException.class, () -> sut.raiseBet(p1)),
+                () -> assertEquals(actions, sut.getPossibleActions()),
+                () -> assertThrows(IllegalStateException.class, () -> sut.raiseBet(p1)),
                 () -> assertEquals(p1, sut.getCurrentPlayer())
         );
     }

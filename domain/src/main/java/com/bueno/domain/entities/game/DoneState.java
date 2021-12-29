@@ -27,12 +27,9 @@ import java.util.EnumSet;
 
 public class DoneState implements HandState {
 
-    private Hand context;
-
     public DoneState(Hand context){
-        this.context = context;
-        this.context.setCurrentPlayer(null);
-        this.context.setPossibleActions(EnumSet.noneOf(PossibleActions.class));
+        context.setCurrentPlayer(null);
+        context.setPossibleActions(EnumSet.noneOf(PossibleActions.class));
     }
 
     @Override

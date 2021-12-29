@@ -27,7 +27,7 @@ import java.util.EnumSet;
 
 public class OneCardState implements HandState {
 
-    private Hand context;
+    private final Hand context;
 
     public OneCardState(Hand context) {
         this.context = context;
@@ -36,13 +36,8 @@ public class OneCardState implements HandState {
 
     private void setPossibleHandActions() {
         final EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
-        if(context.canRaiseBet() && !isCurrentPlayerTheLastToRaiseTheBet() )
-            possibleActions.add(PossibleActions.RAISE);
+        if(context.canRaiseBet()) possibleActions.add(PossibleActions.RAISE);
         context.setPossibleActions(possibleActions);
-    }
-
-    private boolean isCurrentPlayerTheLastToRaiseTheBet() {
-        return context.getCurrentPlayer().equals(context.getLastBetRaiser());
     }
 
     @Override
