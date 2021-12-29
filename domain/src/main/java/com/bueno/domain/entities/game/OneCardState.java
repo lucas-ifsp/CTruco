@@ -35,8 +35,8 @@ class OneCardState implements HandState {
     }
 
     private void setPossibleHandActions() {
-        final EnumSet<PossibleActions> possibleActions = EnumSet.of(PossibleActions.PLAY);
-        if(context.canRaiseBet()) possibleActions.add(PossibleActions.RAISE);
+        final EnumSet<PossibleAction> possibleActions = EnumSet.of(PossibleAction.PLAY);
+        if(context.canRaiseBet()) possibleActions.add(PossibleAction.RAISE);
         context.setPossibleActions(possibleActions);
     }
 

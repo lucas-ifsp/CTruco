@@ -20,7 +20,7 @@
 
 package com.bueno.domain.entities.game;
 
-public enum PossibleActions {
+public enum PossibleAction {
     PLAY,
     RAISE,
     ACCEPT,

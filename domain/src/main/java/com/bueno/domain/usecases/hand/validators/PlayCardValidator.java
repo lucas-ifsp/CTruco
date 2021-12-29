@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.hand.validators;
 
-import com.bueno.domain.entities.game.PossibleActions;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.utils.Notification;
@@ -30,7 +30,7 @@ public class PlayCardValidator extends Validator<PlayCardUseCase.RequestModel> {
 
     private final ActionValidator actionValidator;
 
-    public PlayCardValidator(GameRepository repo, PossibleActions action) {
+    public PlayCardValidator(GameRepository repo, PossibleAction action) {
         this.actionValidator = new ActionValidator(repo, action);
     }
 

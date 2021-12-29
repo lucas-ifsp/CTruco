@@ -29,7 +29,7 @@ class DoneState implements HandState {
 
     DoneState(Hand context){
         context.setCurrentPlayer(null);
-        context.setPossibleActions(EnumSet.noneOf(PossibleActions.class));
+        context.setPossibleActions(EnumSet.noneOf(PossibleAction.class));
     }
 
     @Override

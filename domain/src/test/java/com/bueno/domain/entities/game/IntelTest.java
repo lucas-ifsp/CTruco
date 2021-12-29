@@ -56,7 +56,7 @@ class IntelTest {
 
     @BeforeEach
     void setUp() {
-        lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleActions.ACCEPT));
+        lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleAction.ACCEPT));
     }
 
 
@@ -69,7 +69,7 @@ class IntelTest {
     @Test
     @DisplayName("Should not allow null hand in static constructor")
     void shouldNotAllowNullHandInStaticConstructor() {
-        assertThrows(NullPointerException.class, () -> Intel.ofHand(null));
+        assertThrows(NullPointerException.class, () -> Intel.ofHand(null, null));
     }
 
     @Test
@@ -84,34 +84,34 @@ class IntelTest {
     @Test
     @DisplayName("Should have no game winner from hand static constructor")
     void shouldHaveNoGameWinnerFromHandStaticConstructor() {
-        final Intel intel = Intel.ofHand(hand);
+        final Intel intel = Intel.ofHand(hand, null);
         assertTrue(intel.gameWinner().isEmpty());
     }
 
     @Test
     @DisplayName("Should game not be done from hand static constructor")
     void shouldGameNotBeDoneFromHandStaticConstructor() {
-        final Intel intel = Intel.ofHand(hand);
+        final Intel intel = Intel.ofHand(hand, null);
         assertFalse(intel.isGameDone());
     }
 
     @Test
     @DisplayName("Should intel have non null timestamp")
     void shouldIntelHaveNonNullTimestamp() {
-        final Intel intel = Intel.ofHand(hand);
+        final Intel intel = Intel.ofHand(hand, null);
         assertNotNull(intel.timestamp());
     }
 
     @Test
     @DisplayName("Should two intel objects be different if created in different moments")
     void shouldTwoIntelObjectsBeDifferentIfCreatedInDifferentMoments() {
-        assertNotEquals(Intel.ofHand(hand), Intel.ofHand(hand));
+        assertNotEquals(Intel.ofHand(hand, null), Intel.ofHand(hand, null));
     }
 
     @Test
     @DisplayName("Should get default values of player and opponent if current player is null")
     void shouldGetDefaultValuesOfPlayerAndOpponentIfCurrentPlayerIsNull() {
-        final Intel intel = Intel.ofHand(hand);
+        final Intel intel = Intel.ofHand(hand, null);
         assertAll(
                 () -> assertEquals(Optional.empty(), intel.currentPlayerUuid()),
                 () -> assertNull(intel.currentPlayerUsername()),
@@ -130,7 +130,7 @@ class IntelTest {
         when(hand.getRoundsPlayed()).thenReturn(List.of(round, round, round));
 
         final List<Optional<String>> expected = List.of(Optional.of("name1"), Optional.empty(), Optional.of("name2"));
-        final Intel intel = Intel.ofHand(hand);
+        final Intel intel = Intel.ofHand(hand, null);
 
         assertEquals(expected, intel.roundWinners());
     }

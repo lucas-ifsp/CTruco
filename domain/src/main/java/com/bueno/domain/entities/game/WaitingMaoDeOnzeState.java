@@ -31,7 +31,7 @@ class WaitingMaoDeOnzeState implements HandState {
 
     WaitingMaoDeOnzeState(Hand context) {
         this.context = context;
-        this.context.setPossibleActions(EnumSet.of(PossibleActions.ACCEPT, PossibleActions.QUIT));
+        this.context.setPossibleActions(EnumSet.of(PossibleAction.ACCEPT, PossibleAction.QUIT));
     }
 
     @Override
@@ -48,7 +48,7 @@ class WaitingMaoDeOnzeState implements HandState {
     public void accept(Player responder) {
         context.setScore(HandScore.THREE);
         context.setCurrentPlayer(context.getFirstToPlay());
-        context.setPossibleActions(EnumSet.of(PossibleActions.PLAY));
+        context.setPossibleActions(EnumSet.of(PossibleAction.PLAY));
         context.setState(new NoCardState(context));
     }
 

@@ -41,20 +41,20 @@ public class BetUseCase {
     }
 
     public Intel raiseBet(UUID usedUuid){
-        validateInput(usedUuid, PossibleActions.RAISE);
+        validateInput(usedUuid, PossibleAction.RAISE);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
-        hand.raiseBet(player);
+        hand.raise(player);
 
         if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
         return game.getIntel();
     }
 
     public Intel accept(UUID usedUuid){
-        validateInput(usedUuid, PossibleActions.ACCEPT);
+        validateInput(usedUuid, PossibleAction.ACCEPT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
@@ -67,7 +67,7 @@ public class BetUseCase {
     }
 
     public Intel quit(UUID usedUuid){
-        validateInput(usedUuid, PossibleActions.QUIT);
+        validateInput(usedUuid, PossibleAction.QUIT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
@@ -82,7 +82,7 @@ public class BetUseCase {
         return game.getIntel();
     }
 
-    private void validateInput(UUID usedUuid, PossibleActions raise) {
+    private void validateInput(UUID usedUuid, PossibleAction raise) {
         final Validator<UUID> validator = new ActionValidator(repo, raise);
         final Notification notification = validator.validate(usedUuid);
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());

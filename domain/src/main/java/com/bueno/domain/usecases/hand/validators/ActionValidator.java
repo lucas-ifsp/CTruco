@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.hand.validators;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
-import com.bueno.domain.entities.game.PossibleActions;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.Notification;
@@ -36,9 +36,9 @@ public class ActionValidator extends Validator<UUID> {
 
     private final GameRepository repo;
     private final GameValidator gameValidator;
-    private final PossibleActions action;
+    private final PossibleAction action;
 
-    public ActionValidator(GameRepository repo, PossibleActions action) {
+    public ActionValidator(GameRepository repo, PossibleAction action) {
         this.repo = repo;
         this.gameValidator = new GameValidator(repo);
         this.action = action;
@@ -52,7 +52,7 @@ public class ActionValidator extends Validator<UUID> {
         final Game game = repo.findByUserUuid(uuid).orElse(null);
         final Player requester = getRequester(uuid, Objects.requireNonNull(game));
         final Hand currentHand = game.currentHand();
-        final EnumSet<PossibleActions> possibleActions = currentHand.getPossibleActions();
+        final EnumSet<PossibleAction> possibleActions = currentHand.getPossibleActions();
 
         Notification notification = new Notification();
 
