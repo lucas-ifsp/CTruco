@@ -23,6 +23,7 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.model.UIPlayer;
 import com.bueno.application.repository.InMemoryGameRepository;
+import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.application.view.WindowMaoDeOnzeResponse;
 import com.bueno.application.view.WindowTrucoResponse;
 import com.bueno.domain.entities.deck.Card;
@@ -36,8 +37,6 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.BetUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,7 +47,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.*;
 
@@ -96,7 +94,7 @@ public class GameTableController {
     private List<Card> opponentCards;
     private List<Card> openCards;
 
-    //TODO Resolver bug do bot estar jogando carta repetida
+    //TODO Resolver bug do bot estar jogando carta repetida (Quando empata ele joga a mesma carta mais alta) Arrumar o mineirobot e também um usecase para pegar carta repetida
     //TODO Resolver o bug de não mostrar última carta jogada
     public GameTableController() {
         repo = new InMemoryGameRepository();
@@ -108,6 +106,7 @@ public class GameTableController {
         playerUUID = UUID.randomUUID();
         missingIntel = new ArrayList<>();
         openCards = new ArrayList<>();
+        opponentCards = new ArrayList<>();
     }
 
     @FXML
@@ -174,8 +173,6 @@ public class GameTableController {
     private void dealCards() {
         final CardImage card = CardImage.of(lastIntel.vira());
         player.setCards(handleIntelUseCase.getOwnedCards(playerUUID));
-        opponentCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
-        System.out.println(opponentCards);
 
         cardVira.setImage(card.getImage());
         cardOwnedLeft.setImage(CardImage.of(player.getCards().get(0)).getImage());
@@ -185,11 +182,12 @@ public class GameTableController {
     }
 
     private void updateView() {
-        final Timeline timeline = new Timeline();
-        double timePosition = 0;
+        final TimelineBuilder timelineBuilder = new TimelineBuilder();
 
         while (!missingIntel.isEmpty()) {
             final Intel intel = missingIntel.remove(0);
+            opponentCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
+            System.out.println(opponentCards);
 
             if (intel.scoreProposal().isPresent()) {
                 System.out.println("Score proposal " + intel);
@@ -198,44 +196,36 @@ public class GameTableController {
             }
 
             if(hasHandScoreChange(intel)){
-                final KeyFrame handScoreInfo = new KeyFrame(Duration.seconds(timePosition), e -> updateHandPointsInfo(intel));
-                timeline.getKeyFrames().add(handScoreInfo);
+                timelineBuilder.append(() -> updateHandPointsInfo(intel));
             }
 
             if (isPlayingEvent(intel)) {
                 System.out.println("Playing event " + intel);
 
-                if (hasNewCardToShow(intel) && isOpponentCard(intel)) {
+                if (hasNewCardToShow(intel) && isOpponentCard(intel)) { // TODO está imprimindo carta do usuário se essa for fechada
                     System.out.println("Opponent Card: " + intel.openCards().get(intel.openCards().size() - 1));
                     openCards = new ArrayList<>(intel.openCards());
-                    timePosition += 0.5;
-                    final KeyFrame cardFrame = new KeyFrame(Duration.seconds(timePosition), e -> showOpponentPlay(intel));
-                    timeline.getKeyFrames().add(cardFrame);
+                    timelineBuilder.append(0.5, () -> showOpponentPlay(intel));
                 }
 
-                timePosition += 0.5;
-                final KeyFrame roundFrame = new KeyFrame(Duration.seconds(timePosition), e -> updateRoundResults(intel));
-                timeline.getKeyFrames().add(roundFrame);
+                timelineBuilder.append(0.5, () -> updateRoundResults(intel));
 
                 if (hasCardsToClean(intel)) {
                     System.out.println("Need to clean");
-                    timePosition += 2.5;
-                    final KeyFrame cleaningFrame = new KeyFrame(Duration.seconds(timePosition), e -> clearPlayedCards());
-                    timeline.getKeyFrames().add(cleaningFrame);
+                    timelineBuilder.append(2.5, this::clearPlayedCards);
                 }
             }
 
             if (intel.handResult().isPresent()) {
                 System.out.println("Hand conclusion ");
                 openCards.clear();
-                timePosition += 1;
-                final KeyFrame roundFrame = new KeyFrame(Duration.seconds(timePosition), e -> updateRoundResults(intel));
-                final KeyFrame newHandFrame = new KeyFrame(Duration.seconds(timePosition), e -> organizeNewHand());
-                final KeyFrame playerScoreFrame = new KeyFrame(Duration.seconds(timePosition), e -> updatePlayerScores());
-                timeline.getKeyFrames().addAll(roundFrame, newHandFrame, playerScoreFrame);
+
+                timelineBuilder.append(1.0, () -> updateRoundResults(intel));
+                timelineBuilder.append(this::organizeNewHand);
+                timelineBuilder.append(this::updatePlayerScores);
             }
         }
-        Platform.runLater(timeline::play);
+        Platform.runLater(timelineBuilder.build()::play);
     }
 
     private boolean hasHandScoreChange(Intel intel) {
@@ -262,7 +252,6 @@ public class GameTableController {
         firstCard.setImage(CardImage.ofNoCard().getImage());
     }
 
-    //TEM BUG AQUI, ESTÁ IMPRIMINDO CARTA DE OUTRO JOGADOR SE ELA FOR FECHADA
     private void showOpponentPlay(Intel intel) {
         final List<Card> openCards = intel.openCards();
         final Card card = openCards.get(openCards.size() - 1);
