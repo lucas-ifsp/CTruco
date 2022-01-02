@@ -47,14 +47,14 @@ public class Intel{
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
-    private PossibleAction intelSource;
+    private PossibleAction event;
     private EnumSet<PossibleAction> possibleActions;
     private HandResult handResult;
 
     static Intel ofHand(Hand currentHand, PossibleAction action){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();
-        result.intelSource = action;
+        result.event = action;
         result.setHandIntel(hand);
         result.setPlayersIntel(hand);
         return result;
@@ -134,8 +134,8 @@ public class Intel{
         return handScore;
     }
 
-    public HandScore scoreProposal() {
-        return handScoreProposal;
+    public Optional<HandScore> scoreProposal() {
+        return Optional.ofNullable(handScoreProposal);
     }
 
     public List<Optional<String>> roundWinners() {
@@ -186,8 +186,8 @@ public class Intel{
         return currentOpponentUsername;
     }
 
-    public Optional<PossibleAction> getIntelSource() {
-        return Optional.ofNullable(intelSource);
+    public Optional<PossibleAction> event() {
+        return Optional.ofNullable(event);
     }
 
     @Override
@@ -206,7 +206,8 @@ public class Intel{
     @Override
     public String toString() {
         return "[" + timestamp +
-                " ] Current player = " + currentPlayerUsername +
+                "] Event = " + (event == null ? "--" : event) +
+                " | Current player = " + currentPlayerUsername +
                 " | Vira = " + vira +
                 " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +

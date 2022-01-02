@@ -28,19 +28,20 @@ import javafx.stage.Stage;
 
 public class TrucoResponseController {
 
-    @FXML public Button btnRise;
+    @FXML public Button btnRaise;
     @FXML public Label txtQuestion;
 
     private int result;
 
-    public void configureViewInfo(String requesterName, int numberOfPoints) {
+    public void configureViewInfo(String requesterName, int numberOfPoints, boolean canRaise) {
+        btnRaise.setDisable(!canRaise);
         txtQuestion.setText(requesterName + " está pedindo " + toPointsString(numberOfPoints) + ". Você deseja:");
         if(numberOfPoints == 12) {
-            btnRise.setText("--");
-            btnRise.setDisable(true);
+            btnRaise.setText("--");
+            btnRaise.setDisable(true);
             return;
         }
-        btnRise.setText(toPointsString(numberOfPoints + 3) + "!!!");
+        btnRaise.setText(toPointsString(numberOfPoints + 3) + "!!!");
     }
 
     private String toPointsString(int points) {
@@ -69,7 +70,7 @@ public class TrucoResponseController {
     }
 
     private void close(){
-        Stage stage = (Stage) btnRise.getScene().getWindow();
+        Stage stage = (Stage) btnRaise.getScene().getWindow();
         stage.close();
     }
 

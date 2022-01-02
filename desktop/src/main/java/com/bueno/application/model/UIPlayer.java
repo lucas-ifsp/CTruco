@@ -18,8 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.dummybot;
-
+package com.bueno.application.model;
 
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.player.util.CardToPlay;
@@ -27,15 +26,15 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.UUID;
 
-public class DummyBot extends Player {
+public class UIPlayer extends Player {
 
-    public DummyBot() {
-        super("DummyBot", UUID.randomUUID());
+    public UIPlayer(String username, UUID uuid) {
+        super(username, uuid);
     }
 
     @Override
     public CardToPlay chooseCardToPlay() {
-        return CardToPlay.of(cards.get(0));
+        return null;
     }
 
     @Override
@@ -52,6 +51,4 @@ public class DummyBot extends Player {
     public boolean getMaoDeOnzeResponse() {
         return false;
     }
-
-
 }
