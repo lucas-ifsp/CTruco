@@ -21,27 +21,36 @@
 package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
-import com.bueno.application.model.UserPlayer;
+import com.bueno.application.model.UIPlayer;
+import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.application.view.WindowMaoDeOnzeResponse;
 import com.bueno.application.view.WindowTrucoResponse;
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.game.PossibleAction;
+import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.game.PlayGameUseCase;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.hand.BetUseCase;
+import com.bueno.domain.usecases.hand.HandleIntelUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GameTableController {
 
@@ -65,87 +74,304 @@ public class GameTableController {
     @FXML private ImageView cardOwnedCenter;
     @FXML private ImageView cardOwnedRight;
     @FXML private ImageView cardOwnedLeft;
-    @FXML private ImageView cardPlayedFirst;
-    @FXML private ImageView cardPlayedLast;
+    @FXML private ImageView lastCard;
+    @FXML private ImageView firstCard;
     @FXML private Button btnAction;
 
-    private UserPlayer player;
+    private Player player;
     private Player bot;
+    private Game game;
     private List<ImageView> opponentCardImages;
-    private boolean playerTurn;
-    private boolean lastToIncreaseScore;
-    private boolean handIsBeginning;
-    private boolean gameOver;
+
+    private final InMemoryGameRepository repo;
+    private final CreateGameUseCase gameUseCase;
+    private final PlayCardUseCase playCardUseCase;
+    private final BetUseCase betUseCase;
+    private final HandleIntelUseCase handleIntelUseCase;
+
+    private final UUID botUUID;
+    private final UUID playerUUID;
+    private final List<Intel> missingIntel;
+    private Intel lastIntel;
+    private List<Card> opponentCards;
+    private List<Card> openCards;
+
+    //TODO Resolver bug do bot estar jogando carta repetida
+    //TODO Resolver o bug de não mostrar última carta jogada
+    public GameTableController() {
+        repo = new InMemoryGameRepository();
+        gameUseCase = new CreateGameUseCase(repo);
+        playCardUseCase = new PlayCardUseCase(repo);
+        betUseCase = new BetUseCase(repo);
+        handleIntelUseCase = new HandleIntelUseCase(repo);
+        botUUID = UUID.randomUUID();
+        playerUUID = UUID.randomUUID();
+        missingIntel = new ArrayList<>();
+        openCards = new ArrayList<>();
+    }
 
     @FXML
     private void initialize() {
-        prepareNewHand();
+        organizeNewHand();
     }
 
-    public void setPlayers(String playerName, Player bot) {
-        player = new UserPlayer(this, playerName);
-        this.bot = bot;
-        Platform.runLater(() -> {
-            lbPlayerNameValue.setText(player.getUsername());
-            lbOpponentNameValue.setText(bot.getUsername());
-        });
-    }
-
-    public void startGame() {
-        PlayGameUseCase gameUseCase = new PlayGameUseCase(player, bot);
-        gameOver = false;
-        while (true) {
-            prepareNewHand();
-            Intel intel = gameUseCase.playNewHand();
-            updatePlayerScores();
-            if (intel == null)
-                break;
-        }
-        gameOver = true;
-        updateActionButton();
-    }
-
-    public void prepareNewHand() {
+    public void organizeNewHand() {
         opponentCardImages = new ArrayList<>(List.of(cardOpponentLeft, cardOpponentCenter, cardOpponentRight));
         Collections.shuffle(opponentCardImages);
         resetCardImages();
         setRoundLabelsInvisible();
-        handIsBeginning = true;
-        lastToIncreaseScore = false;
+        updateHandPointsInfo(null);
+
+        if (lastIntel != null) dealCards();
     }
 
     private void resetCardImages() {
-        Platform.runLater(() -> {
-            cardOwnedLeft.setImage(CardImage.ofClosedCard().getImage());
-            cardOwnedCenter.setImage(CardImage.ofClosedCard().getImage());
-            cardOwnedRight.setImage(CardImage.ofClosedCard().getImage());
-            cardOpponentLeft.setImage(CardImage.ofClosedCard().getImage());
-            cardOpponentCenter.setImage(CardImage.ofClosedCard().getImage());
-            cardOpponentRight.setImage(CardImage.ofClosedCard().getImage());
-            cardVira.setImage(CardImage.ofNoCard().getImage());
-            cardDeck.setImage(CardImage.ofClosedCard().getImage());
-            cardPlayedLast.setImage(CardImage.ofNoCard().getImage());
-            cardPlayedFirst.setImage(CardImage.ofNoCard().getImage());
-        });
+        cardOwnedLeft.setImage(CardImage.ofClosedCard().getImage());
+        cardOwnedCenter.setImage(CardImage.ofClosedCard().getImage());
+        cardOwnedRight.setImage(CardImage.ofClosedCard().getImage());
+        cardOpponentLeft.setImage(CardImage.ofClosedCard().getImage());
+        cardOpponentCenter.setImage(CardImage.ofClosedCard().getImage());
+        cardOpponentRight.setImage(CardImage.ofClosedCard().getImage());
+        cardVira.setImage(CardImage.ofNoCard().getImage());
+        cardDeck.setImage(CardImage.ofClosedCard().getImage());
+        firstCard.setImage(CardImage.ofNoCard().getImage());
+        lastCard.setImage(CardImage.ofNoCard().getImage());
     }
 
     private void setRoundLabelsInvisible() {
-        Platform.runLater(() -> {
-            lb1st.setVisible(false);
-            lb1stValue.setVisible(false);
-            lb2nd.setVisible(false);
-            lb2ndValue.setVisible(false);
-            lb3rd.setVisible(false);
-            lb3rdValue.setVisible(false);
-        });
+        lb1st.setVisible(false);
+        lb1stValue.setVisible(false);
+        lb2nd.setVisible(false);
+        lb2ndValue.setVisible(false);
+        lb3rd.setVisible(false);
+        lb3rdValue.setVisible(false);
+    }
+
+    public void createGame(String username) {
+        player = new UIPlayer(username, playerUUID);
+        bot = new MineiroBot(repo, botUUID);
+        game = gameUseCase.create(player, bot);
+        lastIntel = game.getIntel();
+        missingIntel.add(lastIntel);
+
+        showPlayerNames();
+        updateIntel();
+        dealCards();
+    }
+
+    private void showPlayerNames() {
+        lbPlayerNameValue.setText(player.getUsername());
+        lbOpponentNameValue.setText(bot.getUsername());
+    }
+
+    private void updateIntel() {
+        List<Intel> newIntel = handleIntelUseCase.findIntelSince(playerUUID, lastIntel);
+        missingIntel.addAll(newIntel);
+        if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
+        else lastIntel = missingIntel.get(missingIntel.size() - 1);
+    }
+
+    private void dealCards() {
+        final CardImage card = CardImage.of(lastIntel.vira());
+        player.setCards(handleIntelUseCase.getOwnedCards(playerUUID));
+        opponentCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
+        System.out.println(opponentCards);
+
+        cardVira.setImage(card.getImage());
+        cardOwnedLeft.setImage(CardImage.of(player.getCards().get(0)).getImage());
+        cardOwnedCenter.setImage(CardImage.of(player.getCards().get(1)).getImage());
+        cardOwnedRight.setImage(CardImage.of(player.getCards().get(2)).getImage());
+
+    }
+
+    private void updateView() {
+        final Timeline timeline = new Timeline();
+        double timePosition = 0;
+
+        while (!missingIntel.isEmpty()) {
+            final Intel intel = missingIntel.remove(0);
+
+            if (intel.scoreProposal().isPresent()) {
+                System.out.println("Score proposal " + intel);
+                requestTrucoResponse(intel);
+                continue;
+            }
+
+            if(hasHandScoreChange(intel)){
+                final KeyFrame handScoreInfo = new KeyFrame(Duration.seconds(timePosition), e -> updateHandPointsInfo(intel));
+                timeline.getKeyFrames().add(handScoreInfo);
+            }
+
+            if (isPlayingEvent(intel)) {
+                System.out.println("Playing event " + intel);
+
+                if (hasNewCardToShow(intel) && isOpponentCard(intel)) {
+                    System.out.println("Opponent Card: " + intel.openCards().get(intel.openCards().size() - 1));
+                    openCards = new ArrayList<>(intel.openCards());
+                    timePosition += 0.5;
+                    final KeyFrame cardFrame = new KeyFrame(Duration.seconds(timePosition), e -> showOpponentPlay(intel));
+                    timeline.getKeyFrames().add(cardFrame);
+                }
+
+                timePosition += 0.5;
+                final KeyFrame roundFrame = new KeyFrame(Duration.seconds(timePosition), e -> updateRoundResults(intel));
+                timeline.getKeyFrames().add(roundFrame);
+
+                if (hasCardsToClean(intel)) {
+                    System.out.println("Need to clean");
+                    timePosition += 2.5;
+                    final KeyFrame cleaningFrame = new KeyFrame(Duration.seconds(timePosition), e -> clearPlayedCards());
+                    timeline.getKeyFrames().add(cleaningFrame);
+                }
+            }
+
+            if (intel.handResult().isPresent()) {
+                System.out.println("Hand conclusion ");
+                openCards.clear();
+                timePosition += 1;
+                final KeyFrame roundFrame = new KeyFrame(Duration.seconds(timePosition), e -> updateRoundResults(intel));
+                final KeyFrame newHandFrame = new KeyFrame(Duration.seconds(timePosition), e -> organizeNewHand());
+                final KeyFrame playerScoreFrame = new KeyFrame(Duration.seconds(timePosition), e -> updatePlayerScores());
+                timeline.getKeyFrames().addAll(roundFrame, newHandFrame, playerScoreFrame);
+            }
+        }
+        Platform.runLater(timeline::play);
+    }
+
+    private boolean hasHandScoreChange(Intel intel) {
+        final PossibleAction event = intel.event().orElse(null);
+        return event == PossibleAction.RAISE || PossibleAction.ACCEPT == event;
+    }
+
+    private boolean hasNewCardToShow(Intel intel) {
+        if (intel.openCards().size() == 1) return false;
+        return openCards.size() < intel.openCards().size();
+    }
+
+    private boolean isPlayingEvent(Intel intel) {
+        return intel.event().orElse(null) == PossibleAction.PLAY;
+    }
+
+    private boolean hasCardsToClean(Intel intel) {
+        final int cardsPlayed = intel.openCards().size();
+        return cardsPlayed > 1 && cardsPlayed % 2 == 1;
+    }
+
+    private void clearPlayedCards() {
+        lastCard.setImage(CardImage.ofNoCard().getImage());
+        firstCard.setImage(CardImage.ofNoCard().getImage());
+    }
+
+    //TEM BUG AQUI, ESTÁ IMPRIMINDO CARTA DE OUTRO JOGADOR SE ELA FOR FECHADA
+    private void showOpponentPlay(Intel intel) {
+        final List<Card> openCards = intel.openCards();
+        final Card card = openCards.get(openCards.size() - 1);
+        final Image cardImage = CardImage.of(card).getImage();
+        final ImageView randomCardImage = removeRandomOpponentCard();
+        randomCardImage.setImage(CardImage.ofNoCard().getImage());
+        lastCard.setImage(cardImage);
+        opponentCards.remove(card);
+    }
+
+    private synchronized ImageView removeRandomOpponentCard() {
+        return opponentCardImages.remove(0);
+    }
+
+    private boolean isOpponentCard(Intel intel) {
+        final List<Card> cards = intel.openCards();
+        final Card card = cards.get(cards.size() - 1);
+        return card.equals(Card.closed()) || opponentCards.contains(card);
+    }
+
+    private void updateHandPointsInfo(Intel intel) {
+        final String value = intel != null ? String.valueOf(intel.handScore().get()) : "1";
+        lbHandPointsValue.setText(value);
+    }
+
+    private void updateActionButton(Intel intel) {
+        if (intel.isGameDone()) {
+            btnAction.setDisable(false);
+            btnAction.setText("Fechar");
+            return;
+        }
+        if (intel.possibleActions().contains(PossibleAction.RAISE)) {
+            btnAction.setDisable(false);
+            btnAction.setText("Pedir truco");
+            return;
+        }
+        btnAction.setDisable(true);
+    }
+
+    private void updateRoundResults(Intel intel) {
+        final int roundsPlayed = intel.roundsPlayed();
+        if (roundsPlayed == 0) setRoundLabelsInvisible();
+        if (roundsPlayed >= 1) showRoundResult(1, lb1st, lb1stValue, intel);
+        if (roundsPlayed >= 2) showRoundResult(2, lb2nd, lb2ndValue, intel);
+        if (roundsPlayed >= 3) showRoundResult(3, lb3rd, lb3rdValue, intel);
+    }
+
+    private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel, Intel intel) {
+        final int roundsPlayed = intel.roundsPlayed();
+        final int roundIndex = roundNumber - 1;
+
+        if (roundIndex >= roundsPlayed) return;
+
+        final String resultText = intel.roundWinners().get(roundNumber - 1).orElse("Empate");
+
+        roundResultLabel.setText(resultText);
+        roundLabel.setVisible(true);
+        roundResultLabel.setVisible(true);
+    }
+
+    public void pickLeft(MouseEvent mouseEvent) {
+        if (canPerform(PossibleAction.PLAY) && !CardImage.isMissing(cardOwnedLeft.getImage())) {
+            final Card card = player.getCards().get(0);
+            handleCardMouseEvents(mouseEvent, card, cardOwnedLeft);
+        }
+    }
+
+    public void pickCenter(MouseEvent mouseEvent) {
+        if (canPerform(PossibleAction.PLAY) && !CardImage.isMissing(cardOwnedCenter.getImage())) {
+            final Card card = player.getCards().get(1);
+            handleCardMouseEvents(mouseEvent, card, cardOwnedCenter);
+        }
+    }
+
+    public void pickRight(MouseEvent mouseEvent) {
+        if (canPerform(PossibleAction.PLAY) && !CardImage.isMissing(cardOwnedRight.getImage())) {
+            final Card card = player.getCards().get(2);
+            handleCardMouseEvents(mouseEvent, card, cardOwnedRight);
+        }
+    }
+
+    private void handleCardMouseEvents(MouseEvent e, Card card, ImageView cardImageView) {
+        if (e.getButton() == MouseButton.PRIMARY) playCard(card, cardImageView);
+        else flipCardImage(card, cardImageView);
+    }
+
+    private void playCard(Card card, ImageView imageView) {
+        if (isClosed(imageView)) playCardUseCase.discard(new PlayCardUseCase.RequestModel(playerUUID, card));
+        else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(playerUUID, card));
+
+        firstCard.setImage(imageView.getImage());
+        imageView.setImage(CardImage.ofNoCard().getImage());
+
+        updateIntel();
+        updateView();
+    }
+
+    private void flipCardImage(Card card, ImageView currentCard) {
+        if (!isClosed(currentCard)) currentCard.setImage(CardImage.ofClosedCard().getImage());
+        else currentCard.setImage(CardImage.of(card).getImage());
+    }
+
+    private boolean isClosed(ImageView imageView) {
+        return CardImage.isCardClosed(imageView.getImage());
     }
 
     public void callForPointsRise(ActionEvent actionEvent) {
-        if (gameOver)
-            closeWindow();
-        lastToIncreaseScore = true;
-        updateActionButton();
-        player.setTrucoRequestDecision(true);
+        if (lastIntel.isGameDone()) closeWindow();
+        if (canPerform(PossibleAction.RAISE)) betUseCase.raiseBet(playerUUID);
     }
 
     private void closeWindow() {
@@ -153,191 +379,41 @@ public class GameTableController {
         window.close();
     }
 
-    public void pickLeft(MouseEvent mouseEvent) {
-        final Card card = player.getReceivedCards().get(0);
-        handleCardMouseEvents(mouseEvent, card, cardOwnedLeft);
-    }
-
-    public void pickCenter(MouseEvent mouseEvent) {
-        final Card card = player.getReceivedCards().get(1);
-        handleCardMouseEvents(mouseEvent, card, cardOwnedCenter);
-    }
-
-    public void pickRight(MouseEvent mouseEvent) {
-        final Card card = player.getReceivedCards().get(2);
-        handleCardMouseEvents(mouseEvent, card, cardOwnedRight);
-    }
-
-    private void handleCardMouseEvents(MouseEvent e, Card card, ImageView cardImageView) {
-        if (!canPlay(cardImageView)) return;
-        if (e.getButton() == MouseButton.SECONDARY) flipCardImage(card, cardImageView);
-        if (e.getButton() == MouseButton.PRIMARY) playCard(card, cardImageView);
-    }
-
-    private boolean canPlay(ImageView imageView) {
-        return playerTurn && !CardImage.isCardMissing(imageView.getImage());
-    }
-
-    private void flipCardImage(Card card, ImageView currentCard) {
-        if (!CardImage.isCardClosed(currentCard.getImage())) {
-            Platform.runLater(() -> currentCard.setImage(CardImage.ofClosedCard().getImage()));
-            return;
-        }
-        Platform.runLater(() -> currentCard.setImage(CardImage.of(card).getImage()));
-    }
-
-    private void playCard(Card card, ImageView imageView) {
-        Card cardToPlay = CardImage.isCardClosed(imageView.getImage()) ? Card.closed() : card;
-        showUserTurn(imageView);
-        player.setCardToPlayDecision(cardToPlay);
-        player.setTrucoRequestDecision(false);
-        updateView();
-        playerTurn = false;
-    }
-
-    private void showUserTurn(ImageView cardImage) {
-        Platform.runLater(() -> {
-            cardPlayedLast.setImage(cardImage.getImage());
-            cardImage.setImage(CardImage.ofNoCard().getImage());
-        });
-    }
-
-    private void updateView() {
-        updateHandPointsInfo();
-        updateActionButton();
-        updateRoundResults();
-        if (handIsBeginning)
-            dealCards();
-    }
-
-    private void updateHandPointsInfo() {
-        Platform.runLater(() -> lbHandPointsValue.setText(
-                String.valueOf(player.getIntel().handScore().get())));
-    }
-
-    private void updateActionButton() {
-        if (gameOver) {
-            Platform.runLater(() -> {
-                btnAction.setDisable(false);
-                btnAction.setText("Fechar");
-            });
-        } else {
-            final String newText = switch (player.getIntel().handScore().get()) {
-                case 1 -> "Pedir Truco!";
-                case 3 -> "Pedir Seis!";
-                case 6 -> "Pedir Nove!";
-                case 9 -> "Pedir Doze!";
-                default -> "";
-            };
-            Platform.runLater(() -> {
-                btnAction.setDisable(!canIncreaseScore());
-                btnAction.setText(newText);
-            });
-        }
-    }
-
-    private boolean canIncreaseScore() {
-        final Intel intel = player.getIntel();
-        final boolean forbiddenToRequestIncrement = player.getScore() == 11 || intel.currentOpponentScore() == 11;
-        return playerTurn && !lastToIncreaseScore && !forbiddenToRequestIncrement;
-    }
-
-    private void updateRoundResults() {
-        final int roundsPlayed = player.getIntel().roundsPlayed();
-        if (roundsPlayed == 0) setRoundLabelsInvisible();
-        if (roundsPlayed >= 1) showRoundResult(1, lb1st, lb1stValue);
-        if (roundsPlayed >= 2) showRoundResult(2, lb2nd, lb2ndValue);
-        if (roundsPlayed >= 3) showRoundResult(3, lb3rd, lb3rdValue);
-    }
-
-    private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel) {
-        Intel intel = player.getIntel();
-        final int roundsPlayed = intel.roundsPlayed();
-        final int roundIndex = roundNumber - 1;
-
-        if (roundIndex >= roundsPlayed)
-            return;
-
-        final String resultText = intel.roundWinners().get(roundNumber - 1).orElse("Empate");
-
-        Platform.runLater(() -> {
-            roundResultLabel.setText(resultText);
-            roundLabel.setVisible(true);
-            roundResultLabel.setVisible(true);
-        });
-    }
-
-    private void dealCards() {
-        final CardImage card = CardImage.of(player.getIntel().vira());
-        Platform.runLater(() -> {
-            cardVira.setImage(card.getImage());
-            cardOwnedLeft.setImage(CardImage.of(player.getReceivedCards().get(0)).getImage());
-            cardOwnedCenter.setImage(CardImage.of(player.getReceivedCards().get(1)).getImage());
-            cardOwnedRight.setImage(CardImage.of(player.getReceivedCards().get(2)).getImage());
-        });
-        handIsBeginning = false;
+    private boolean canPerform(PossibleAction action) {
+        final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
+        if (possibleUuid.isEmpty()) return false;
+        final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
+        final boolean isPerformingAllowedAction = lastIntel.possibleActions().contains(action);
+        return isCurrentPlayer && isPerformingAllowedAction;
     }
 
     private void updatePlayerScores() {
-        Platform.runLater(() -> {
-            lbOpponentScoreValue.setText(String.valueOf(player.getIntel().currentOpponentScore()));
-            lbPlayerScoreValue.setText(String.valueOf(player.getScore()));
-        });
+        lbOpponentScoreValue.setText(String.valueOf(lastIntel.currentOpponentScore()));
+        lbPlayerScoreValue.setText(String.valueOf(lastIntel.currentPlayerScore()));
     }
 
-    public void startPlayerTurn() {
-        playerTurn = true;
-        updateView();
-    }
-
-    public void showOpponentTurn() {
-        playerTurn = false;
-        final List<Card> openCards = player.getIntel().openCards();
-        final int lastCardPlayedIndex = openCards.size() - 1;
-        final Card lastCardPlayed = openCards.get(lastCardPlayedIndex);
-        final ImageView randomCardImage = opponentCardImages.remove(0);
-
-        sleepFor(1500);
-        Platform.runLater(() -> {
-            randomCardImage.setImage(CardImage.ofNoCard().getImage());
-            cardPlayedFirst.setImage(CardImage.of(lastCardPlayed).getImage());
-        });
-        updateView();
-    }
-
-    public void clearPlayedCards() {
-        sleepFor(2500);
-        Platform.runLater(() -> {
-            cardPlayedFirst.setImage(CardImage.ofNoCard().getImage());
-            cardPlayedLast.setImage(CardImage.ofNoCard().getImage());
-        });
-    }
-
-    public void requestTrucoResponse() {
-        playerTurn = false;
-        final HandScore handPoints = player.getIntel().handScore();
-        final int pointsRequested = handPoints.increase().get();
-
-        updateView();
-        sleepFor(1000);
+    public void requestTrucoResponse(Intel intel) {
+        final HandScore scoreProposal = intel.scoreProposal().orElseThrow();
+        final boolean canRaise = intel.possibleActions().contains(PossibleAction.RAISE);
 
         final WindowTrucoResponse dialog = new WindowTrucoResponse();
-        final Integer decision = dialog.showAndWait(bot.getUsername(), pointsRequested);
+        final Integer decision = dialog.showAndWait(bot.getUsername(), scoreProposal.get(), canRaise);
 
-        lastToIncreaseScore = decision == 1;
-        player.setTrucoResponseDecision(decision);
+        switch (decision) {
+            case -1 -> betUseCase.quit(playerUUID);
+            case 0 -> betUseCase.accept(playerUUID);
+            case 1 -> betUseCase.raiseBet(playerUUID);
+        }
+        updateIntel();
     }
 
     public void requestMaoDeOnzeResponse() {
-        playerTurn = true;
-
         updateView();
-        sleepFor(1000);
 
         final WindowMaoDeOnzeResponse dialog = new WindowMaoDeOnzeResponse();
         final boolean decision = dialog.showAndWait();
 
-        player.setMaoDeOnzeResponseDecision(decision);
+        //player.setMaoDeOnzeResponseDecision(decision);
     }
 
     private void sleepFor(int millis) {
@@ -347,4 +423,5 @@ public class GameTableController {
             e.printStackTrace();
         }
     }
+
 }

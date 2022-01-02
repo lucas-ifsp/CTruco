@@ -121,9 +121,9 @@
                rotate="167.35" AnchorPane.topAnchor="50.0"/>
     <ImageView fx:id="cardOpponentLeft" fitHeight="150.0" layoutX="335.0" pickOnBounds="true" preserveRatio="true"
                rotate="-167.35" AnchorPane.topAnchor="50.0"/>
-    <ImageView fx:id="cardPlayedLast" fitHeight="150.0" fitWidth="100.0" layoutX="735.0" layoutY="367.0"
+    <ImageView fx:id="firstCard" fitHeight="150.0" fitWidth="100.0" layoutX="735.0" layoutY="367.0"
                pickOnBounds="true" preserveRatio="true" rotate="-6.3"/>
-    <ImageView fx:id="cardPlayedFirst" fitHeight="150.0" fitWidth="100.0" layoutX="640.0" layoutY="226.0"
+    <ImageView fx:id="lastCard" fitHeight="150.0" fitWidth="100.0" layoutX="640.0" layoutY="226.0"
                pickOnBounds="true" preserveRatio="true" rotate="20.6"/>
     <ImageView fx:id="cardOwnedCenter" fitHeight="150.0" fitWidth="100.0" layoutX="468.0" onMouseClicked="#pickCenter"
                pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="60.0"/>

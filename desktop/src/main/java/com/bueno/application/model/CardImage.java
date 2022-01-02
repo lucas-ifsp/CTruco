@@ -94,7 +94,7 @@ public class CardImage {
         return image.equals(ofClosedCard().getImage());
     }
 
-    public static boolean isCardMissing(Image image){
+    public static boolean isMissing(Image image){
         return image.equals(ofNoCard().getImage());
     }
 }

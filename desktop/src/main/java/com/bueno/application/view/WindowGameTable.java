@@ -21,9 +21,7 @@
 package com.bueno.application.view;
 
 import com.bueno.application.controller.GameTableController;
-import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import javafx.application.Application;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -44,23 +42,25 @@ public class WindowGameTable extends Application {
         FXMLLoader loader = new FXMLLoader();
         Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("game_table.fxml")).openStream());
         GameTableController controller = loader.getController();
+        controller.createGame("Lucas");
 
         Scene scene = new Scene(graph, 1024, 740);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
 
-        controller.setPlayers("Lucas", new MineiroBot());
+        //controller.createGame("Lucas");
 
-        Task<Void> task = new Task<>() {
+
+        /*Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                controller.startGame();
+                controller.createGame("Lucas");
                 return null;
             }
         };
         Thread thread = new Thread(task);
         thread.setDaemon(true);
-        thread.start();
+        thread.start();*/
     }
 }

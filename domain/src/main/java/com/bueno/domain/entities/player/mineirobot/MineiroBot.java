@@ -32,6 +32,7 @@ import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -96,7 +97,7 @@ public class MineiroBot extends Player implements Bot {
                 else playCardUseCase.playCard(new RequestModel(getUuid(), chosenCard.content()));
                 return;
             }
-            final int response = getTrucoResponse(getIntel().scoreProposal());
+            final int response = getTrucoResponse(Objects.requireNonNull(getIntel().scoreProposal().orElse(null)));
             switch (response){
                 case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) betUseCase.quit(getUuid());}
                 case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) betUseCase.accept(getUuid());}
