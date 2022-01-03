@@ -135,7 +135,7 @@ class BetUseCaseTest {
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
         final Intel intel = sut.raiseBet(p1Uuid);
-        assertEquals(HandScore.THREE, intel.scoreProposal());
+        assertEquals(HandScore.THREE, intel.scoreProposal().orElse(null));
     }
 
     @Test

@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Intel;
@@ -49,8 +50,8 @@ class PlayCardUseCaseTest {
     private PlayCardUseCase sut;
     private CreateGameUseCase createGameUseCase;
 
-    @Mock private Player p1;
-    @Mock private Player p2;
+    @Mock private Player player1;
+    @Mock private Player player2;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
@@ -62,19 +63,22 @@ class PlayCardUseCaseTest {
 
     @BeforeEach
     void setUp() {
+        Deck deck = new Deck();
+        when(player1.getCards()).thenReturn(deck.take(40));
+
         p1Uuid = UUID.randomUUID();
         p2Uuid = UUID.randomUUID();
 
-        lenient().when(p1.getUuid()).thenReturn(p1Uuid);
-        lenient().when(p1.getUsername()).thenReturn(p1Uuid.toString());
+        lenient().when(player1.getUuid()).thenReturn(p1Uuid);
+        lenient().when(player1.getUsername()).thenReturn(p1Uuid.toString());
 
-        lenient().when(p2.getUuid()).thenReturn(p2Uuid);
-        lenient().when(p2.getUsername()).thenReturn(p2Uuid.toString());
+        lenient().when(player2.getUuid()).thenReturn(p2Uuid);
+        lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
         final InMemoryGameRepository repo = new InMemoryGameRepository();
 
         createGameUseCase = new CreateGameUseCase(repo);
-        createGameUseCase.create(p1, p2);
+        createGameUseCase.create(player1, player2);
         sut = new PlayCardUseCase(repo);
     }
 
@@ -93,7 +97,7 @@ class PlayCardUseCaseTest {
                 () -> assertThrows(UnsupportedGameRequestException.class,
                         () -> sut.playCard(new RequestModel(null, Card.closed()))),
                 () -> assertThrows(UnsupportedGameRequestException.class,
-                        () -> sut.playCard(new RequestModel(p1.getUuid(), null)))
+                        () -> sut.playCard(new RequestModel(player1.getUuid(), null)))
         );
     }
 
@@ -114,7 +118,7 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should throw if requests action when game is done")
     void shouldThrowIfRequestsActionWhenGameIsDone() {
-        when(p1.getScore()).thenReturn(12);
+        when(player1.getScore()).thenReturn(12);
         assertThrows(UnsupportedGameRequestException.class,
                 () -> sut.playCard(new RequestModel(p1Uuid, Card.closed())));
     }
@@ -123,26 +127,9 @@ class PlayCardUseCaseTest {
     @DisplayName("Should correctly play first card if invariants are met")
     void shouldCorrectlyPlayFirstCardIfInvariantsAreMet() {
         final Card card = Card.of(Rank.THREE, Suit.CLUBS);
-        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
         final Intel intel = sut.playCard(new RequestModel(p1Uuid, card));
         assertEquals(card, intel.cardToPlayAgainst().orElse(null));
-    }
-
-    @Test
-    @DisplayName("Should correctly play second card if invariants are met")
-    void shouldCorrectlyPlaySecondCardIfInvariantsAreMet() {
-        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
-        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
-
-        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
-        when(p2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
-
-        sut.discard(new RequestModel(p1Uuid, card1));
-        final Intel intel = sut.playCard(new RequestModel(p2Uuid, card2));
-        assertAll(
-                () -> assertNull(intel.cardToPlayAgainst().orElse(null)),
-                () -> assertEquals(1, intel.roundsPlayed())
-        );
     }
 
     @Test
@@ -153,11 +140,11 @@ class PlayCardUseCaseTest {
         final Card card1P2 = Card.of(Rank.ACE, Suit.CLUBS);
         final Card card2P2 = Card.of(Rank.KING, Suit.CLUBS);
 
-        when(p1.getScore()).thenReturn(11);
-        when(p2.getScore()).thenReturn(11);
+        when(player1.getScore()).thenReturn(11);
+        when(player2.getScore()).thenReturn(11);
 
-        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(card1P1, card2P1)));
-        when(p2.getCards()).thenReturn(new ArrayList<>(List.of(card1P2, card2P2)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1P1, card2P1)));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card1P2, card2P2)));
 
         sut.discard(new RequestModel(p1Uuid, card1P1));
         sut.playCard(new RequestModel(p2Uuid, card1P2));
@@ -165,4 +152,50 @@ class PlayCardUseCaseTest {
 
         assertDoesNotThrow(() -> sut.discard(new RequestModel(p1Uuid, card2P1)));
     }
+
+    @Test
+    @DisplayName("Should correctly play second card if invariants are met")
+    void shouldCorrectlyPlaySecondCardIfInvariantsAreMet() {
+        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
+        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+
+        sut.discard(new RequestModel(p1Uuid, card1));
+        final Intel intel = sut.playCard(new RequestModel(p2Uuid, card2));
+        assertAll(
+                () -> assertNull(intel.cardToPlayAgainst().orElse(null)),
+                () -> assertEquals(1, intel.roundsPlayed())
+        );
+    }
+
+    @Test
+    @DisplayName("Should not allow playing the same card twice in the same hand")
+    void shouldNotAllowPlayingTheSameCardTwiceInTheSameHand() {
+        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
+        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+
+        sut.playCard(new RequestModel(p1Uuid, card1));
+        sut.discard(new RequestModel(p2Uuid, card2));
+        assertThrows(IllegalArgumentException.class, () -> sut.playCard(new RequestModel(p1Uuid, card1)));
+    }
+
+    @Test
+    @DisplayName("Should not allow discard a card already played in the same hand")
+    void shouldNotAllowDiscardingACardAlreadyPlayedInTheSameHand() {
+        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
+        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+
+        sut.playCard(new RequestModel(p1Uuid, card1));
+        sut.discard(new RequestModel(p2Uuid, card2));
+        assertThrows(IllegalArgumentException.class, () -> sut.discard(new RequestModel(p1Uuid, card1)));
+    }
+
 }

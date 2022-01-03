@@ -187,8 +187,8 @@ class MineiroBotTest {
             }
 
             @Test
-            @DisplayName("Should use best card to open round after tying first")
-            void shouldUseBestCardToOpenRoundAfterTyingFirst() {
+            @DisplayName("Should not be able to play the same card twice in the same hand")
+            void shouldNotBeAbleToPlayTheSameCardTwiceInTheSameHand() {
                 sut.setCards(List.of(Card.of(Rank.QUEEN, Suit.SPADES), Card.of(Rank.TWO, Suit.HEARTS)));
 
                 when(intel.roundsPlayed()).thenReturn(1);

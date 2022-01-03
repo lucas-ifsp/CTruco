@@ -89,8 +89,6 @@ public abstract class Player {
     }
 
     public void setCards(List<Card> cards){
-        if(cards.size() == 3) // to enable receiving less cards during tests
-            LOGGER.info(username + " received: " + cards.get(0) + " | " + cards.get(1)  + " | " + cards.get(2));
         this.cards = new ArrayList<>(cards);
     }
 
