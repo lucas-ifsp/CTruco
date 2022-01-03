@@ -28,6 +28,7 @@ import java.util.*;
 public class Hand {
 
     private final Card vira;
+    private final List<Card> dealtCards;
     private final List<Card> openCards;
     private final List<Round> roundsPlayed;
     private final List<Intel> history;
@@ -49,6 +50,11 @@ public class Hand {
         this.firstToPlay = Objects.requireNonNull(firstToPlay);
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
         this.vira = Objects.requireNonNull(vira);
+
+        dealtCards = new ArrayList<>();
+        dealtCards.add(vira);
+        dealtCards.addAll(firstToPlay.getCards());
+        dealtCards.addAll(lastToPlay.getCards());
 
         score = HandScore.ONE;
         roundsPlayed = new ArrayList<>();
@@ -211,14 +217,8 @@ public class Hand {
             result = lastRoundWinner.map(player -> new HandResult(player, score)).orElseGet(HandResult::new);
     }
 
-    private void updatePlayersIntel() {
-        //firstToPlay.setIntel(new Intel(this));
-        //lastToPlay.setIntel(new Intel(this));
-    }
-
     void setCardToPlayAgainst(Card cardToPlayAgainst) {
         this.cardToPlayAgainst = cardToPlayAgainst;
-        updatePlayersIntel();
     }
 
     public Optional<Card> getCardToPlayAgainst() {
@@ -226,8 +226,13 @@ public class Hand {
     }
 
     void addOpenCard(Card card){
+        if(!dealtCards.contains(card) && !card.equals(Card.closed()))
+            throw new GameRuleViolationException("Card has not been dealt in this hand.");
+
+        if(openCards.contains(card) && !card.equals(Card.closed()) )
+            throw new GameRuleViolationException("Card " + card + " has already been played during hand.");
+
         openCards.add(card);
-        updatePlayersIntel();
     }
 
     Optional<Player> getLastRoundWinner(){
@@ -261,7 +266,6 @@ public class Hand {
 
     void setScore(HandScore score) {
         this.score = score;
-        updatePlayersIntel();
     }
 
     Player getFirstToPlay() {
