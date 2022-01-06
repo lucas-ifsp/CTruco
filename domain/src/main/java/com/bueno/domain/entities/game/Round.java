@@ -83,7 +83,6 @@ public class Round {
         firstCard = Objects.requireNonNull(firstToPlay.chooseCardToPlay().content(), "First card played must not be null!");
         hand.setCardToPlayAgainst(firstCard);
         hand.addOpenCard(firstCard);
-        lastToPlay.handleOpponentPlay();
 
         if(isAbleToRequestScoreIncrement(lastToPlay)) {
             final boolean hasWinnerByRun = handleTruco(lastToPlay, firstToPlay).isPresent();
@@ -93,7 +92,6 @@ public class Round {
         lastCard = Objects.requireNonNull(lastToPlay.chooseCardToPlay().content(), "Last card played must not be null!");
         hand.setCardToPlayAgainst(null);
         hand.addOpenCard(lastCard);
-        firstToPlay.handleOpponentPlay();
 
         validateCards();
         Optional<Card> highestCard = getHighestCard();

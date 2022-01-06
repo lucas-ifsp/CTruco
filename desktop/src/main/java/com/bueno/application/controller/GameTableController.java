@@ -78,7 +78,7 @@ public class GameTableController {
     @FXML private ImageView firstCard;
     @FXML private Button btnAction;
 
-    private Player player;
+    private Player user;
     private Player bot;
     private Game game;
     private List<ImageView> opponentCardImages;
@@ -89,15 +89,16 @@ public class GameTableController {
     private final BetUseCase betUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
+    private final UUID userUUID;
     private final UUID botUUID;
-    private final UUID playerUUID;
+    private List<Card> userCards;
+    private List<Card> botCards;
+    private int lastUserPlayedCardPosition;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
-    private List<Card> opponentCards;
-    private int lastUserPlayedCardIndex;
 
+    //TODO Resolver bug de estar perdendo cartas da lista da GUI enquanto joga
     //TODO Resolver bug do bot estar jogando carta repetida (Quando empata ele joga a mesma carta mais alta) Arrumar o mineirobot e também um usecase para pegar carta repetida
-    //TODO Resolver o bug de não mostrar última carta jogada
     public GameTableController() {
         repo = new InMemoryGameRepository();
         gameUseCase = new CreateGameUseCase(repo);
@@ -105,9 +106,9 @@ public class GameTableController {
         betUseCase = new BetUseCase(repo);
         handleIntelUseCase = new HandleIntelUseCase(repo);
         botUUID = UUID.randomUUID();
-        playerUUID = UUID.randomUUID();
+        userUUID = UUID.randomUUID();
         missingIntel = new ArrayList<>();
-        opponentCards = new ArrayList<>();
+        botCards = new ArrayList<>();
     }
 
     @FXML
@@ -148,9 +149,9 @@ public class GameTableController {
     }
 
     public void createGame(String username) {
-        player = new UIPlayer(username, playerUUID);
+        user = new UIPlayer(username, userUUID);
         bot = new MineiroBot(repo, botUUID);
-        game = gameUseCase.create(player, bot);
+        game = gameUseCase.create(user, bot);
         lastIntel = game.getIntel();
         missingIntel.add(lastIntel);
 
@@ -160,12 +161,12 @@ public class GameTableController {
     }
 
     private void showPlayerNames() {
-        lbPlayerNameValue.setText(player.getUsername());
+        lbPlayerNameValue.setText(user.getUsername());
         lbOpponentNameValue.setText(bot.getUsername());
     }
 
     private void updateIntel() {
-        List<Intel> newIntel = handleIntelUseCase.findIntelSince(playerUUID, lastIntel);
+        List<Intel> newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel);
         missingIntel.addAll(newIntel);
         if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
@@ -173,13 +174,14 @@ public class GameTableController {
 
     private void dealCards() {
         final CardImage card = CardImage.of(lastIntel.vira());
-        player.setCards(handleIntelUseCase.getOwnedCards(playerUUID));
+        final List<Card> ownedCards = handleIntelUseCase.getOwnedCards(userUUID);
+        user.setCards(ownedCards);
+        userCards = ownedCards;
 
         cardVira.setImage(card.getImage());
-        cardOwnedLeft.setImage(CardImage.of(player.getCards().get(0)).getImage());
-        cardOwnedCenter.setImage(CardImage.of(player.getCards().get(1)).getImage());
-        cardOwnedRight.setImage(CardImage.of(player.getCards().get(2)).getImage());
-
+        cardOwnedLeft.setImage(CardImage.of(userCards.get(0)).getImage());
+        cardOwnedCenter.setImage(CardImage.of(userCards.get(1)).getImage());
+        cardOwnedRight.setImage(CardImage.of(userCards.get(2)).getImage());
     }
 
     private void updateView() {
@@ -187,8 +189,8 @@ public class GameTableController {
 
         while (!missingIntel.isEmpty()) {
             final Intel intel = missingIntel.remove(0);
-            opponentCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
-            System.out.println(opponentCards);
+            botCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
+            System.out.println(botCards);
 
             if (intel.scoreProposal().isPresent()) {
                 System.out.println("Score proposal " + intel);
@@ -204,7 +206,6 @@ public class GameTableController {
 
                 if (hasOpponentCardToShow(intel)) {
                     System.out.println("Opponent Card: " + intel.openCards().get(intel.openCards().size() - 1));
-                    //openCards = new ArrayList<>(intel.openCards());
                     timelineBuilder.append(0.5, () -> showOpponentCard(intel));
                 }
 
@@ -218,8 +219,7 @@ public class GameTableController {
 
             if (intel.handResult().isPresent()) {
                 System.out.println("Hand conclusion ");
-                lastUserPlayedCardIndex = 1;
-                //openCards.clear();
+                lastUserPlayedCardPosition = 1;
 
                 timelineBuilder.append(1.0, () -> updateRoundResults(intel));
                 timelineBuilder.append(this::organizeNewHand);
@@ -235,9 +235,7 @@ public class GameTableController {
     }
 
     private boolean hasOpponentCardToShow(Intel intel) {
-        //if (intel.openCards().size() == 1) return false;
-        //return openCards.size() < intel.openCards().size();
-        return lastUserPlayedCardIndex < intel.openCards().size();
+        return lastUserPlayedCardPosition < intel.openCards().size();
     }
 
     private boolean isPlayingEvent(Intel intel) {
@@ -246,7 +244,8 @@ public class GameTableController {
 
     private boolean hasCardsToClean(Intel intel) {
         final int cardsPlayed = intel.openCards().size();
-        return cardsPlayed > 1 && cardsPlayed % 2 == 1;
+        final boolean isSecondCardOfRound = cardsPlayed % 2 == 1;
+        return cardsPlayed > 1 && isSecondCardOfRound;
     }
 
     private void clearPlayedCards() {
@@ -261,17 +260,11 @@ public class GameTableController {
         final ImageView randomCardImage = removeRandomOpponentCard();
         randomCardImage.setImage(CardImage.ofNoCard().getImage());
         lastCard.setImage(cardImage);
-        opponentCards.remove(card);
+        botCards.remove(card);
     }
 
     private synchronized ImageView removeRandomOpponentCard() {
         return opponentCardImages.remove(0);
-    }
-
-    private boolean isOpponentCard(Intel intel) {
-        final List<Card> cards = intel.openCards();
-        final Card card = cards.get(cards.size() - 1);
-        return card.equals(Card.closed()) || opponentCards.contains(card);
     }
 
     private void updateHandPointsInfo(Intel intel) {
@@ -315,21 +308,21 @@ public class GameTableController {
 
     public void pickLeft(MouseEvent mouseEvent) {
         if (canPerform(PLAY) && !CardImage.isMissing(cardOwnedLeft.getImage())) {
-            final Card card = player.getCards().get(0);
+            final Card card = userCards.get(0);
             handleCardMouseEvents(mouseEvent, card, cardOwnedLeft);
         }
     }
 
     public void pickCenter(MouseEvent mouseEvent) {
         if (canPerform(PLAY) && !CardImage.isMissing(cardOwnedCenter.getImage())) {
-            final Card card = player.getCards().get(1);
+            final Card card = userCards.get(1);
             handleCardMouseEvents(mouseEvent, card, cardOwnedCenter);
         }
     }
 
     public void pickRight(MouseEvent mouseEvent) {
         if (canPerform(PLAY) && !CardImage.isMissing(cardOwnedRight.getImage())) {
-            final Card card = player.getCards().get(2);
+            final Card card = userCards.get(2);
             handleCardMouseEvents(mouseEvent, card, cardOwnedRight);
         }
     }
@@ -340,13 +333,13 @@ public class GameTableController {
     }
 
     private void playCard(Card card, ImageView imageView) {
-        if (isClosed(imageView)) playCardUseCase.discard(new PlayCardUseCase.RequestModel(playerUUID, card));
-        else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(playerUUID, card));
+        if (isClosed(imageView)) playCardUseCase.discard(new PlayCardUseCase.RequestModel(userUUID, card));
+        else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(userUUID, card));
 
         firstCard.setImage(imageView.getImage());
         imageView.setImage(CardImage.ofNoCard().getImage());
 
-        lastUserPlayedCardIndex = lastIntel.openCards().size() + 1;
+        lastUserPlayedCardPosition = lastIntel.openCards().size() + 1;
 
         updateIntel();
         updateView();
@@ -363,7 +356,7 @@ public class GameTableController {
 
     public void callForPointsRise(ActionEvent actionEvent) {
         if (lastIntel.isGameDone()) closeWindow();
-        if (canPerform(RAISE)) betUseCase.raiseBet(playerUUID);
+        if (canPerform(RAISE)) betUseCase.raiseBet(userUUID);
     }
 
     private void closeWindow() {
@@ -374,7 +367,7 @@ public class GameTableController {
     private boolean canPerform(PossibleAction action) {
         final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
         if (possibleUuid.isEmpty()) return false;
-        final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
+        final boolean isCurrentPlayer = possibleUuid.get().equals(userUUID);
         final boolean isPerformingAllowedAction = lastIntel.possibleActions().contains(action);
         return isCurrentPlayer && isPerformingAllowedAction;
     }
@@ -392,9 +385,9 @@ public class GameTableController {
         final Integer decision = dialog.showAndWait(bot.getUsername(), scoreProposal.get(), canRaise);
 
         switch (decision) {
-            case -1 -> betUseCase.quit(playerUUID);
-            case 0 -> betUseCase.accept(playerUUID);
-            case 1 -> betUseCase.raiseBet(playerUUID);
+            case -1 -> betUseCase.quit(userUUID);
+            case 0 -> betUseCase.accept(userUUID);
+            case 1 -> betUseCase.raiseBet(userUUID);
         }
         updateIntel();
     }

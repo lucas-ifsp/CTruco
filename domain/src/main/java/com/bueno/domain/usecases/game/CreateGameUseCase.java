@@ -27,8 +27,6 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 //TODO Write test cases for uncovered code (MineiroBot, this class...)
-//TODO Refactor game usecases to use Validator/Notification pattern
-
 public class CreateGameUseCase {
 
     private GameRepository dao;
