@@ -134,7 +134,7 @@ class GameTest {
     @Test
     @DisplayName("Should correctly get intel in the same hand")
     void shouldCorrectlyGetIntelInTheSameHand() {
-        when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.QUEEN, Suit.CLUBS)));
+        when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.KING, Suit.SPADES)));
 
         sut = new Game(player1, player2);
         final Intel firstHandIntel = sut.getIntel();
@@ -142,7 +142,7 @@ class GameTest {
 
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.CLUBS));
         hand.playSecondCard(player2, Card.closed());
-        hand.playFirstCard(player1, Card.of(Rank.QUEEN, Suit.CLUBS));
+        hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
         assertEquals(3, sut.getIntelSince(firstHandIntel).size());
     }
 
