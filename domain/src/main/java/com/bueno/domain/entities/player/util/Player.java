@@ -53,8 +53,6 @@ public abstract class Player {
     public abstract boolean requestTruco();
     public abstract int getTrucoResponse(HandScore newHandScore);
     public abstract boolean getMaoDeOnzeResponse();
-    public void handleRoundConclusion(){}
-    public void handleOpponentPlay(){}
 
     public final void setIntel(Intel intel){
         this.intel = intel;
@@ -93,7 +91,7 @@ public abstract class Player {
     }
 
     public List<Card> getCards() {
-        return new ArrayList<>(cards);
+        return cards;
     }
 
     public String getUsername() {
