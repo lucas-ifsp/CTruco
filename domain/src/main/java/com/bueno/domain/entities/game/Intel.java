@@ -205,14 +205,20 @@ public class Intel{
 
     @Override
     public String toString() {
+        final String userInMaoDeOnze = currentPlayerScore < currentOpponentScore ?
+                currentOpponentUsername : currentPlayerUsername;
+
         return "[" + timestamp +
                 "] Event = " + (event == null ? "--" : event) +
+                " | Possible actions = " + possibleActions +
                 " | Current player = " + currentPlayerUsername +
                 " | Vira = " + vira +
                 " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +
-                " | Possible actions = " + possibleActions +
                 " | Rounds = " + roundWinners +
+                " | Hand Score = " + handScore +
+                (scoreProposal().isPresent() ? " | Score Proposal = " + scoreProposal().get() : "") +
+                (isMaoDeOnze() ? " | Mão de Onze = " + userInMaoDeOnze  :  "") +
                 " | Result = " + handResult;
     }
 }
