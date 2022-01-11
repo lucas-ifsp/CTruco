@@ -100,15 +100,13 @@ public class Game {
     public List<Intel> getIntelSince(Intel lastIntel){
         final List<Intel> handHistory = currentHand().getHistory();
 
-        if(lastIntel == null)
-            return getWholeHistory();
+        if(lastIntel == null) return getWholeHistory();
 
         final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
         final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;
         final List<Intel> currentHandResult = handHistory.stream().filter(isAfter).collect(Collectors.toList());
 
-        if(currentHandResult.size() < handHistory.size())
-            return currentHandResult;
+        if(currentHandResult.size() < handHistory.size()) return currentHandResult;
 
         final Hand previousHand = hands.get(hands.size() - 2);
         final List<Intel> lastHandResult = previousHand.getHistory().stream().filter(isAfter).collect(Collectors.toList());

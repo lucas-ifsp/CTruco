@@ -648,9 +648,9 @@ class MineiroBotTest {
     class MaoDeOnzeTest {
 
         @Test
-        @DisplayName("Should accept mao de onze if has more than 28 in card value and opponent has less than 8 points")
-        void shouldAcceptMaoDeOnzeIfHasMoreThan28InCardValueAndOpponentHasLessThan8Points() {
-            sut.setCards(List.of(Card.of(Rank.THREE, Suit.HEARTS), Card.of(Rank.THREE, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.SPADES)));
+        @DisplayName("Should accept mao de onze if the sum of the two higher cards values is 20 or more")
+        void shouldAcceptMaoDeOnzeIfTheSumOfTheTwoHigherCardsValuesIs20OrMore() {
+            sut.setCards(List.of(Card.of(Rank.THREE, Suit.HEARTS), Card.of(Rank.TWO, Suit.SPADES), Card.of(Rank.FOUR, Suit.SPADES)));
             when(intel.vira()).thenReturn(Card.of(Rank.ACE, Suit.CLUBS));
             when(intel.currentOpponentScore()).thenReturn(4);
             assertTrue(sut.getMaoDeOnzeResponse());

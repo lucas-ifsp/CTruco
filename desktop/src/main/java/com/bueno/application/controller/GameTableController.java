@@ -97,8 +97,6 @@ public class GameTableController {
     private final List<Intel> missingIntel;
     private Intel lastIntel;
 
-    //TODO Resolver bug de estar perdendo cartas da lista da GUI enquanto joga
-    //TODO Resolver bug do bot estar jogando carta repetida (Quando empata ele joga a mesma carta mais alta) Arrumar o mineirobot e também um usecase para pegar carta repetida
     public GameTableController() {
         repo = new InMemoryGameRepository();
         gameUseCase = new CreateGameUseCase(repo);
@@ -189,36 +187,25 @@ public class GameTableController {
 
         while (!missingIntel.isEmpty()) {
             final Intel intel = missingIntel.remove(0);
+            System.out.println(intel);
+
             botCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
-            System.out.println(botCards);
 
-            if (intel.scoreProposal().isPresent()) {
-                System.out.println("Score proposal " + intel);
-                requestTrucoResponse(intel);
-            }
+            if (intel.scoreProposal().isPresent()) break;
 
-            if(hasHandScoreChange(intel)){
-                timelineBuilder.append(() -> updateHandPointsInfo(intel));
-            }
+            if(hasHandScoreChange(intel)){timelineBuilder.append(() -> updateHandPointsInfo(intel));}
 
             if (isPlayingEvent(intel)) {
-                System.out.println("Playing event " + intel);
-
-                if (hasOpponentCardToShow(intel)) {
-                    System.out.println("Opponent Card: " + intel.openCards().get(intel.openCards().size() - 1));
+                if (hasOpponentCardToShow(intel))
                     timelineBuilder.append(0.5, () -> showOpponentCard(intel));
-                }
 
                 timelineBuilder.append(0.5, () -> updateRoundResults(intel));
 
-                if (hasCardsToClean(intel)) {
-                    System.out.println("Need to clean");
+                if (hasCardsToClean(intel))
                     timelineBuilder.append(2.5, this::clearPlayedCards);
-                }
             }
 
             if (intel.handResult().isPresent()) {
-                System.out.println("Hand conclusion ");
                 lastUserPlayedCardPosition = 1;
 
                 timelineBuilder.append(1.0, () -> updateRoundResults(intel));
@@ -227,6 +214,7 @@ public class GameTableController {
             }
         }
         Platform.runLater(timelineBuilder.build()::play);
+        if (lastIntel.scoreProposal().isPresent()) requestTrucoResponse(lastIntel);
     }
 
     private boolean hasHandScoreChange(Intel intel) {
@@ -340,7 +328,6 @@ public class GameTableController {
         imageView.setImage(CardImage.ofNoCard().getImage());
 
         lastUserPlayedCardPosition = lastIntel.openCards().size() + 1;
-
         updateIntel();
         updateView();
     }
@@ -390,6 +377,7 @@ public class GameTableController {
             case 1 -> betUseCase.raiseBet(userUUID);
         }
         updateIntel();
+        updateView();
     }
 
     public void requestMaoDeOnzeResponse() {
