@@ -183,7 +183,7 @@ public class GameTableController {
     }
 
     private void updateView() {
-        final TimelineBuilder timelineBuilder = new TimelineBuilder();
+        final TimelineBuilder timeline = new TimelineBuilder();
 
         while (!missingIntel.isEmpty()) {
             final Intel intel = missingIntel.remove(0);
@@ -191,30 +191,28 @@ public class GameTableController {
 
             botCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
 
-            if (intel.scoreProposal().isPresent()) break;
-
-            if(hasHandScoreChange(intel)){timelineBuilder.append(() -> updateHandPointsInfo(intel));}
+            if (hasRaiseProposalFromBot(intel)) break;
+            if (hasHandScoreChange(intel)) timeline.append(0.5, () -> updateHandPointsInfo(intel));
 
             if (isPlayingEvent(intel)) {
-                if (hasOpponentCardToShow(intel))
-                    timelineBuilder.append(0.5, () -> showOpponentCard(intel));
-
-                timelineBuilder.append(0.5, () -> updateRoundResults(intel));
-
-                if (hasCardsToClean(intel))
-                    timelineBuilder.append(2.5, this::clearPlayedCards);
+                if (hasOpponentCardToShow(intel)) timeline.append(0.5, () -> showOpponentCard(intel));
+                timeline.append(0.5, () -> updateRoundResults(intel));
+                if (hasCardsToClean(intel)) timeline.append(2.5, this::clearPlayedCards);
             }
 
             if (intel.handResult().isPresent()) {
                 lastUserPlayedCardPosition = 1;
-
-                timelineBuilder.append(1.0, () -> updateRoundResults(intel));
-                timelineBuilder.append(this::organizeNewHand);
-                timelineBuilder.append(this::updatePlayerScores);
+                timeline.append(1.0, () -> updateRoundResults(intel));
+                timeline.append(0.5, this::organizeNewHand);
+                timeline.append(this::updatePlayerScores);
             }
         }
-        Platform.runLater(timelineBuilder.build()::play);
+        Platform.runLater(timeline.build()::play);
         if (lastIntel.scoreProposal().isPresent()) requestTrucoResponse(lastIntel);
+    }
+
+    private boolean hasRaiseProposalFromBot(Intel intel) {
+        return intel.scoreProposal().isPresent() && userUUID.equals(intel.currentPlayerUuid().orElse(null));
     }
 
     private boolean hasHandScoreChange(Intel intel) {
@@ -343,7 +341,11 @@ public class GameTableController {
 
     public void callForPointsRise(ActionEvent actionEvent) {
         if (lastIntel.isGameDone()) closeWindow();
-        if (canPerform(RAISE)) betUseCase.raiseBet(userUUID);
+        if (canPerform(RAISE)) {
+            betUseCase.raiseBet(userUUID);
+            updateIntel();
+            updateView();
+        }
     }
 
     private void closeWindow() {
@@ -381,11 +383,8 @@ public class GameTableController {
     }
 
     public void requestMaoDeOnzeResponse() {
-        updateView();
-
         final WindowMaoDeOnzeResponse dialog = new WindowMaoDeOnzeResponse();
         final boolean decision = dialog.showAndWait();
-
         //player.setMaoDeOnzeResponseDecision(decision);
     }
 }
