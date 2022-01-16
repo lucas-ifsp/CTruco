@@ -32,15 +32,15 @@ import com.bueno.domain.usecases.utils.Validator;
 import java.util.Objects;
 import java.util.UUID;
 
-public class BetUseCase {
+public class ScoreProposalUseCase {
 
     private final GameRepository repo;
 
-    public BetUseCase(GameRepository repo) {
+    public ScoreProposalUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public Intel raiseBet(UUID usedUuid){
+    public Intel raise(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.RAISE);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();

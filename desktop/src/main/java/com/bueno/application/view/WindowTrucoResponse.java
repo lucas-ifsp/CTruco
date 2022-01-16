@@ -34,14 +34,13 @@ public class WindowTrucoResponse {
 
     private TrucoResponseController controller;
 
-    public Integer showAndWait(String requesterName, int numberOfPoints, boolean canRaise) {
-        FXMLLoader loader = new FXMLLoader();
-        final Pane graph;
+    public Integer showAndWait(String requester, int numberOfPoints, boolean canRaise) {
         try {
-            graph = loader.load(Objects.requireNonNull(getClass().getResource("truco_response.fxml")).openStream());
+            FXMLLoader loader = new FXMLLoader();
+            final Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("truco_response.fxml")).openStream());
             Scene scene = new Scene(graph, 480, 165);
             controller = loader.getController();
-            controller.configureViewInfo(requesterName, numberOfPoints, canRaise);
+            controller.configureViewInfo(requester, numberOfPoints, canRaise);
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
