@@ -42,9 +42,9 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BetUseCaseTest {
+class ScoreProposalUseCaseTest {
 
-    private BetUseCase sut;
+    private ScoreProposalUseCase sut;
     private CreateGameUseCase createGameUseCase;
 
     @Mock private Player p1;
@@ -74,7 +74,7 @@ class BetUseCaseTest {
 
         createGameUseCase = new CreateGameUseCase(repo);
         game = createGameUseCase.create(p1, p2);
-        sut = new BetUseCase(repo);
+        sut = new ScoreProposalUseCase(repo);
     }
 
     @AfterEach
@@ -100,19 +100,19 @@ class BetUseCaseTest {
     @Test
     @DisplayName("Should throw if raiseBet method parameter is null")
     void shouldThrowIfRaiseBetMethodParameterIsNull() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(null));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(null));
     }
 
     @Test
     @DisplayName("Should throw if there is no active game for player UUID")
     void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(UUID.randomUUID()));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(p2Uuid));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(p2Uuid));
     }
 
     @Test
@@ -128,20 +128,20 @@ class BetUseCaseTest {
     @DisplayName("Should throw if requests action and the game is done")
     void shouldThrowIfRequestsActionAndTheGameIsDone() {
         when(p1.getScore()).thenReturn(12);
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raiseBet(p1Uuid));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(p1Uuid));
     }
 
     @Test
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
-        final Intel intel = sut.raiseBet(p1Uuid);
+        final Intel intel = sut.raise(p1Uuid);
         assertEquals(HandScore.THREE, intel.scoreProposal().orElse(null));
     }
 
     @Test
     @DisplayName("Should be able to accept bet if invariants are met")
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
-        sut.raiseBet(p1Uuid);
+        sut.raise(p1Uuid);
         final Intel intel = sut.accept(p2Uuid);
         assertEquals(HandScore.THREE, intel.handScore());
     }
@@ -149,7 +149,7 @@ class BetUseCaseTest {
     @Test
     @DisplayName("Should be able to quit bet if invariants are met")
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
-        final Intel firstIntel = sut.raiseBet(p1Uuid);
+        final Intel firstIntel = sut.raise(p1Uuid);
         final Intel lastIntel = sut.quit(p2Uuid); //last intel is already pointing to a new hand.
         final List<Intel> intelSince = game.getIntelSince(firstIntel);
         intelSince.remove(lastIntel);

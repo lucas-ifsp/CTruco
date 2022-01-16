@@ -27,7 +27,7 @@ import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.BetUseCase;
+import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
@@ -80,15 +80,15 @@ public class MineiroBot extends Player implements Bot {
         if(shouldPlay(getIntel())){
             final EnumSet<PossibleAction> possibleActions = getIntel().possibleActions();
             final PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-            final BetUseCase betUseCase = new BetUseCase(repo);
+            final ScoreProposalUseCase proposalUseCase = new ScoreProposalUseCase(repo);
 
             if(getIntel().isMaoDeOnze() && getIntel().handScore() == HandScore.ONE){
-                if(getMaoDeOnzeResponse()) betUseCase.accept(getUuid());
-                else betUseCase.quit(getUuid());
+                if(getMaoDeOnzeResponse()) proposalUseCase.accept(getUuid());
+                else proposalUseCase.quit(getUuid());
                 return;
             }
             if(canStartRaiseRequest(possibleActions) && requestTruco()){
-                betUseCase.raiseBet(getUuid());
+                proposalUseCase.raise(getUuid());
                 return;
             }
             if(possibleActions.contains(PossibleAction.PLAY)){
@@ -99,9 +99,9 @@ public class MineiroBot extends Player implements Bot {
             }
             final int response = getTrucoResponse(Objects.requireNonNull(getIntel().scoreProposal().orElse(null)));
             switch (response){
-                case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) betUseCase.quit(getUuid());}
-                case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) betUseCase.accept(getUuid());}
-                case 1 -> {if(possibleActions.contains(PossibleAction.RAISE)) betUseCase.raiseBet(getUuid());}
+                case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) proposalUseCase.quit(getUuid());}
+                case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) proposalUseCase.accept(getUuid());}
+                case 1 -> {if(possibleActions.contains(PossibleAction.RAISE)) proposalUseCase.raise(getUuid());}
             }
         }
     }

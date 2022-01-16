@@ -29,7 +29,7 @@ import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.hand.BetUseCase;
+import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
@@ -45,7 +45,7 @@ public class GameCLI {
 
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
-    private final BetUseCase betUseCase;
+    private final ScoreProposalUseCase scoreProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
     private final InMemoryGameRepository repo;
@@ -68,7 +68,7 @@ public class GameCLI {
 
         gameUseCase = new CreateGameUseCase(repo);
         playCardUseCase = new PlayCardUseCase(repo);
-        betUseCase = new BetUseCase(repo);
+        scoreProposalUseCase = new ScoreProposalUseCase(repo);
         handleIntelUseCase = new HandleIntelUseCase(repo);
 
         botUUID = UUID.randomUUID();
@@ -143,7 +143,7 @@ public class GameCLI {
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseRequestReader requestReader = new RaiseRequestReader(this, lastIntel.handScore().increase());
-        if(requestReader.execute() == REQUEST) betUseCase.raiseBet(playerUUID);
+        if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(playerUUID);
     }
 
     private void handleRaiseResponse(){
@@ -155,9 +155,9 @@ public class GameCLI {
 
         RaiseResponseReader responseReader = new RaiseResponseReader(this, lastIntel.handScore().increase());
         switch (responseReader.execute()){
-            case QUIT -> betUseCase.quit(playerUUID);
-            case ACCEPT -> betUseCase.accept(playerUUID);
-            case RAISE -> betUseCase.raiseBet(playerUUID);
+            case QUIT -> scoreProposalUseCase.quit(playerUUID);
+            case ACCEPT -> scoreProposalUseCase.accept(playerUUID);
+            case RAISE -> scoreProposalUseCase.raise(playerUUID);
         };
     }
 
@@ -167,8 +167,8 @@ public class GameCLI {
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
         if(responseReader.execute() == ACCEPT) {
-            betUseCase.accept(playerUUID);}
-        betUseCase.quit(playerUUID);
+            scoreProposalUseCase.accept(playerUUID);}
+        scoreProposalUseCase.quit(playerUUID);
     }
 
     public void printGameIntel(int delayInMilliseconds){

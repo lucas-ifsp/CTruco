@@ -36,11 +36,6 @@ public class TrucoResponseController {
     public void configureViewInfo(String requesterName, int numberOfPoints, boolean canRaise) {
         btnRaise.setDisable(!canRaise);
         txtQuestion.setText(requesterName + " está pedindo " + toPointsString(numberOfPoints) + ". Você deseja:");
-        if(numberOfPoints == 12) {
-            btnRaise.setText("--");
-            btnRaise.setDisable(true);
-            return;
-        }
         btnRaise.setText(toPointsString(numberOfPoints + 3) + "!!!");
     }
 

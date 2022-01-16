@@ -39,6 +39,10 @@ public enum HandScore {
         };
     }
 
+    public boolean canIncrease(){
+        return !equals(ZERO) && !equals(TWELVE);
+    }
+
     public int get() {
         return score;
     }
