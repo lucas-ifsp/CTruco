@@ -53,12 +53,11 @@ class IntelTest {
         LogManager.getLogManager().reset();
     }
 
-
     @BeforeEach
     void setUp() {
         lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleAction.ACCEPT));
+        lenient().when(hand.getScore()).thenReturn(HandScore.ONE);
     }
-
 
     @Test
     @DisplayName("Should not allow null game in static constructor")

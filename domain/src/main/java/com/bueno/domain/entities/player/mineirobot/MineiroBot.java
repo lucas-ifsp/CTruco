@@ -27,14 +27,15 @@ import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
+import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MineiroBot extends Player implements Bot {
 
@@ -78,11 +79,14 @@ public class MineiroBot extends Player implements Bot {
     public void playTurn(Intel intel) {
         setIntel(intel);
         if(shouldPlay(getIntel())){
-            final EnumSet<PossibleAction> possibleActions = getIntel().possibleActions();
             final PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
             final ScoreProposalUseCase proposalUseCase = new ScoreProposalUseCase(repo);
 
-            if(getIntel().isMaoDeOnze() && getIntel().handScore() == HandScore.ONE){
+            final EnumSet<PossibleAction> possibleActions = getIntel().possibleActions().stream()
+                    .map(PossibleAction::valueOf)
+                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
+
+            if(getIntel().isMaoDeOnze() && HandScore.fromIntValue(getIntel().handScore()).orElse(null) == HandScore.ONE){
                 if(getMaoDeOnzeResponse()) proposalUseCase.accept(getUuid());
                 else proposalUseCase.quit(getUuid());
                 return;
@@ -97,7 +101,8 @@ public class MineiroBot extends Player implements Bot {
                 else playCardUseCase.playCard(new RequestModel(getUuid(), chosenCard.content()));
                 return;
             }
-            final int response = getTrucoResponse(Objects.requireNonNull(getIntel().scoreProposal().orElse(null)));
+            final Optional<HandScore> scoreProposal = getIntel().scoreProposal().flatMap(HandScore::fromIntValue);
+            final int response = getTrucoResponse(Objects.requireNonNull(scoreProposal.orElse(null)));
             switch (response){
                 case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) proposalUseCase.quit(getUuid());}
                 case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) proposalUseCase.accept(getUuid());}

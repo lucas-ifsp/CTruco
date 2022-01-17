@@ -87,7 +87,7 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
-        final int handScoreValue = intel.handScore().get();
+        final int handScoreValue = intel.handScore();
         final Card higherCard = cards.get(0);
 
         if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) return false;
@@ -101,11 +101,8 @@ public class SecondRoundMineiroStrategy extends PlayingStrategy {
 
         if(handScoreValue > 1) return false;
 
-        if (isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))
-                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)),
-                10, 13)) return true;
-
-        return false;
+        return isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))
+                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)), 10, 13);
     }
 
     private boolean isCardValueBetween(Card card, int lowerValue, int upperValue){

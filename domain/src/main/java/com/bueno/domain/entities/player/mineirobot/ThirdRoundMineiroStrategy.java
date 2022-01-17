@@ -65,22 +65,19 @@ public class ThirdRoundMineiroStrategy extends PlayingStrategy {
     public boolean requestTruco() {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Optional<String> firstRoundWinner = intel.roundWinners().get(0);
-        final int handScoreValue = intel.handScore().get();
+        final int handScoreValue = intel.handScore();
         final Card playingCard = cards.get(0);
 
         if(possibleOpponentCard.isEmpty()) {
             if (handScoreValue > 1 && getCardValue(playingCard, vira) >= 12) return true;
-            if (getCardValue(playingCard, vira) >= 10) return true;
-            return false;
+            return getCardValue(playingCard, vira) >= 10;
         }
 
         final Card opponentCard = possibleOpponentCard.get();
 
         if(getCardValue(opponentCard, vira) < 5) return true;
         if(playingCard.compareValueTo(opponentCard, vira) > 0) return true;
-        if(isPlayerFirstRoundWinner(firstRoundWinner.orElse(null))
-                && playingCard.compareValueTo(opponentCard, vira) == 0) return true;
-
-        return false;
+        return isPlayerFirstRoundWinner(firstRoundWinner.orElse(null))
+                && playingCard.compareValueTo(opponentCard, vira) == 0;
     }
 }

@@ -21,12 +21,12 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.HandResult;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,7 @@ public class IntelPrinter implements Command<Void>{
 
     private void printGameMainInfo(Intel intel) {
         if(intel.currentPlayerUuid().isPresent()) {
-            final String botUserName = intel.currentPlayerUsername() != player.getUsername() ?
+            final String botUserName = !intel.currentPlayerUsername().equals(player.getUsername()) ?
                     intel.currentPlayerUsername() : intel.currentOpponentUsername();
             final int botScore = intel.currentPlayerScore() != player.getScore() ?
                     intel.currentPlayerScore() : intel.currentOpponentScore();
@@ -87,7 +87,7 @@ public class IntelPrinter implements Command<Void>{
                     + " x " + botScore + " " + botUserName);
             System.out.println(" Vez do (a): " + intel.currentPlayerUsername());
         }
-        System.out.println(" Ponto da mão: " + intel.handScore().get());
+        System.out.println(" Ponto da mão: " + intel.handScore());
     }
 
     private void printRounds(Intel intel) {
@@ -132,10 +132,13 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printResultIfAvailable(Intel intel) {
-        final Optional<HandResult> potentialResult = intel.handResult();
-        if (potentialResult.isPresent()) {
-            final String resultString = potentialResult.get().getWinner()
-                    .map(winner -> winner.getUsername().concat(" VENCEU!").toUpperCase()).orElse("EMPATE.");
+        final var possibleWinner = intel.handWinner();
+        if (possibleWinner.isPresent()) {
+            final String resultString = possibleWinner
+                    .map(UUID::toString)
+                    .map(String::toUpperCase)
+                    .map(name -> name.concat(" VENCEU!"))
+                    .orElse("EMPATE.");
             System.out.println(" RESULTADO: " + resultString);
         }
     }

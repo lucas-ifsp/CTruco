@@ -25,6 +25,7 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Intel{
 
@@ -34,8 +35,8 @@ public class Intel{
     private UUID gameWinner;
     private boolean maoDeOnze;
 
-    private HandScore handScore;
-    private HandScore handScoreProposal;
+    private Integer handScore;
+    private Integer handScoreProposal;
     private List<Optional<String>> roundWinners;
     private int roundsPlayed;
 
@@ -47,14 +48,14 @@ public class Intel{
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
-    private PossibleAction event;
-    private EnumSet<PossibleAction> possibleActions;
-    private HandResult handResult;
+    private String event;
+    private Set<String> possibleActions;
+    private UUID handWinner;
 
     static Intel ofHand(Hand currentHand, PossibleAction action){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();
-        result.event = action;
+        if(action != null) result.event = action.toString();
         result.setHandIntel(hand);
         result.setPlayersIntel(hand);
         return result;
@@ -82,15 +83,15 @@ public class Intel{
 
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
-        handScore = hand.getScore();
-        handScoreProposal = hand.getScoreProposal();
+        handScore = hand.getScore().get();
+        if(hand.getScoreProposal() != null) handScoreProposal = hand.getScoreProposal().get();
         roundWinners = getRoundWinners(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();
-        handResult = hand.getResult().orElse(null);
+        handWinner = hand.getResult().flatMap(HandResult::getWinner).map(Player::getUuid).orElse(null);
         openCards = List.copyOf(hand.getOpenCards());
         cardToPlayAgainst = hand.getCardToPlayAgainst().orElse(null);
-        possibleActions = EnumSet.copyOf(hand.getPossibleActions());
+        possibleActions = hand.getPossibleActions().stream().map(Objects::toString).collect(Collectors.toSet());
     }
 
     private void setPlayersIntel(Hand hand){
@@ -130,11 +131,11 @@ public class Intel{
         return maoDeOnze;
     }
 
-    public HandScore handScore() {
+    public Integer handScore() {
         return handScore;
     }
 
-    public Optional<HandScore> scoreProposal() {
+    public Optional<Integer> scoreProposal() {
         return Optional.ofNullable(handScoreProposal);
     }
 
@@ -150,8 +151,8 @@ public class Intel{
         return vira;
     }
 
-    public Optional<HandResult> handResult() {
-        return Optional.ofNullable(handResult);
+    public Optional<UUID> handWinner() {
+        return Optional.ofNullable(handWinner);
     }
 
     public List<Card> openCards() {
@@ -162,7 +163,7 @@ public class Intel{
         return Optional.ofNullable(cardToPlayAgainst);
     }
 
-    public EnumSet<PossibleAction> possibleActions() {
+    public Set<String> possibleActions() {
         return possibleActions;
     }
 
@@ -186,7 +187,7 @@ public class Intel{
         return currentOpponentUsername;
     }
 
-    public Optional<PossibleAction> event() {
+    public Optional<String> event() {
         return Optional.ofNullable(event);
     }
 
@@ -219,6 +220,6 @@ public class Intel{
                 " | Hand Score = " + handScore +
                 (scoreProposal().isPresent() ? " | Score Proposal = " + scoreProposal().get() : "") +
                 (isMaoDeOnze() ? " | Mão de Onze = " + userInMaoDeOnze  :  "") +
-                " | Result = " + handResult;
+                " | Winner = " + handWinner;
     }
 }
