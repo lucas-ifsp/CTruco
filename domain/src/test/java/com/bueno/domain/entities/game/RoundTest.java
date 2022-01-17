@@ -61,8 +61,8 @@ class RoundTest {
         final Card card2 = Card.of(card2Rank, Suit.SPADES);
         final Card vira = Card.of(viraRank, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
-        round.play2();
-        assertEquals(Card.of(winnerRank, Suit.SPADES), round.getHighestCard().orElse(null));
+        round.play();
+        assertEquals(Card.of(winnerRank, Suit.SPADES), round.getWinnerCard().orElse(null));
     }
 
     @ParameterizedTest
@@ -74,8 +74,8 @@ class RoundTest {
         final Card card2 = Card.of(card2Rank, card2Suit);
         final Card vira = Card.of(viraRank, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
-        round.play2();
-        assertEquals(Card.of(winnerRank, winnerSuit), round.getHighestCard().orElse(null));
+        round.play();
+        assertEquals(Card.of(winnerRank, winnerSuit), round.getWinnerCard().orElse(null));
     }
 
     @Test
@@ -85,7 +85,7 @@ class RoundTest {
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.SIX, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
-        round.play2();
+        round.play();
         assertTrue(round.getWinner().isEmpty());
     }
 
@@ -96,7 +96,7 @@ class RoundTest {
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
-        round.play2();
+        round.play();
         assertEquals(p2, round.getWinner().orElseThrow());
     }
 

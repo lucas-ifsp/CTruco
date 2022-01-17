@@ -26,7 +26,7 @@ import com.bueno.domain.entities.truco.TrucoResult;
 import java.util.Objects;
 import java.util.Optional;
 
-public class HandResult {
+class HandResult {
 
     private final Player winner;
     private final HandScore score;
