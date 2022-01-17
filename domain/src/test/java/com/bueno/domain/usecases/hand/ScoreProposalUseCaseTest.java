@@ -155,7 +155,7 @@ class ScoreProposalUseCaseTest {
 
         assertAll(
                 () -> assertEquals(1, quitIntel.handScore()),
-                () -> assertEquals(p1Uuid, quitIntel.handWinner().orElse(null))
+                () -> assertEquals(p1.getUsername(), quitIntel.handWinner().orElse(null))
         );
     }
 

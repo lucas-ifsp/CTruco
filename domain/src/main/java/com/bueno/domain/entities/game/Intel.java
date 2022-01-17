@@ -50,7 +50,7 @@ public class Intel{
     private List<Card> openCards;
     private String event;
     private Set<String> possibleActions;
-    private UUID handWinner;
+    private String handWinner;
 
     static Intel ofHand(Hand currentHand, PossibleAction action){
         final Hand hand = Objects.requireNonNull(currentHand);
@@ -88,7 +88,7 @@ public class Intel{
         roundWinners = getRoundWinners(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();
-        handWinner = hand.getResult().flatMap(HandResult::getWinner).map(Player::getUuid).orElse(null);
+        handWinner = hand.getResult().flatMap(HandResult::getWinner).map(Player::getUsername).orElse(null);
         openCards = List.copyOf(hand.getOpenCards());
         cardToPlayAgainst = hand.getCardToPlayAgainst().orElse(null);
         possibleActions = hand.getPossibleActions().stream().map(Objects::toString).collect(Collectors.toSet());
@@ -151,7 +151,7 @@ public class Intel{
         return vira;
     }
 
-    public Optional<UUID> handWinner() {
+    public Optional<String> handWinner() {
         return Optional.ofNullable(handWinner);
     }
 
