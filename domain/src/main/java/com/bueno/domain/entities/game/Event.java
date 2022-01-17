@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -20,13 +20,13 @@
 
 package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.Player;
-
-public interface HandState {
-    void playFirstCard(Player player, Card card);
-    void playSecondCard(Player player, Card card);
-    void accept(Player responder);
-    void quit(Player responder);
-    void raise(Player requester);
+public enum Event {
+    HAND_START,
+    PLAY,
+    RAISE,
+    ACCEPT,
+    QUIT,
+    ACCEPT_HAND,
+    QUIT_HAND,
+    GAME_OVER
 }

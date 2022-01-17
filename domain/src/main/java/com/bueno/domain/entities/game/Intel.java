@@ -43,6 +43,7 @@ public class Intel{
     private Player currentPlayer;
     private int currentPlayerScore;
     private String currentPlayerUsername;
+    private String eventPlayerUsername;
     private int currentOpponentScore;
     private String currentOpponentUsername;
     private Card vira;
@@ -52,10 +53,10 @@ public class Intel{
     private Set<String> possibleActions;
     private String handWinner;
 
-    static Intel ofHand(Hand currentHand, PossibleAction action){
+    static Intel ofHand(Hand currentHand, Event event){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();
-        if(action != null) result.event = action.toString();
+        result.event = event.toString();
         result.setHandIntel(hand);
         result.setPlayersIntel(hand);
         return result;
@@ -63,7 +64,7 @@ public class Intel{
 
     static Intel ofGame(Game currentGame){
         final Game game = Objects.requireNonNull(currentGame);
-        final Intel result = ofHand(game.currentHand(), null);
+        final Intel result = ofHand(game.currentHand(), Event.GAME_OVER);
         result.setGameIntel(game);
         return result;
     }
@@ -95,6 +96,7 @@ public class Intel{
     }
 
     private void setPlayersIntel(Hand hand){
+        eventPlayerUsername = hand.getEventPlayer() != null ? hand.getEventPlayer().getUsername() : null;
         currentPlayer = hand.getCurrentPlayer();
         currentPlayerScore = currentPlayer != null ?  currentPlayer.getScore() : 0;
         currentPlayerUsername = currentPlayer != null ?  currentPlayer.getUsername() : null;
@@ -191,6 +193,10 @@ public class Intel{
         return Optional.ofNullable(event);
     }
 
+    public Optional<String> getEventPlayerUsername() {
+        return Optional.ofNullable(eventPlayerUsername);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -211,8 +217,9 @@ public class Intel{
 
         return "[" + timestamp +
                 "] Event = " + (event == null ? "--" : event) +
+                " | Event player = " + eventPlayerUsername +
+                " | Next player = " + currentPlayerUsername +
                 " | Possible actions = " + possibleActions +
-                " | Current player = " + currentPlayerUsername +
                 " | Vira = " + vira +
                 " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +

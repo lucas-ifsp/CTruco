@@ -50,6 +50,7 @@ class WaitingMaoDeOnzeState implements HandState {
         context.setCurrentPlayer(context.getFirstToPlay());
         context.setPossibleActions(EnumSet.of(PossibleAction.PLAY));
         context.setState(new NoCardState(context));
+        context.updateHistory(Event.ACCEPT_HAND);
     }
 
     @Override
@@ -57,10 +58,11 @@ class WaitingMaoDeOnzeState implements HandState {
         Player opponent = context.getOpponentOf(responder);
         context.setResult(new HandResult(opponent, HandScore.ONE));
         context.setState(new DoneState(context));
+        context.updateHistory(Event.QUIT_HAND);
     }
 
     @Override
-    public void raiseBet(Player requester) {
+    public void raise(Player requester) {
         throw new IllegalStateException("Can not raise while deciding if plays mão de onze.");
     }
 }

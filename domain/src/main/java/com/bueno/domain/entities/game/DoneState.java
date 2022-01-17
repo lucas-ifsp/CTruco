@@ -53,7 +53,7 @@ class DoneState implements HandState {
     }
 
     @Override
-    public void raiseBet(Player requester) {
+    public void raise(Player requester) {
         throw new IllegalStateException("Can not bet because hand is done.");
     }
 }
