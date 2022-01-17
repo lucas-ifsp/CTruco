@@ -21,8 +21,6 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.HandResult;
-import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
@@ -135,7 +133,7 @@ class ScoreProposalUseCaseTest {
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
         final Intel intel = sut.raise(p1Uuid);
-        assertEquals(HandScore.THREE, intel.scoreProposal().orElse(null));
+        assertEquals(3, intel.scoreProposal().orElse(null));
     }
 
     @Test
@@ -143,7 +141,7 @@ class ScoreProposalUseCaseTest {
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
         sut.raise(p1Uuid);
         final Intel intel = sut.accept(p2Uuid);
-        assertEquals(HandScore.THREE, intel.handScore());
+        assertEquals(3, intel.handScore());
     }
 
     @Test
@@ -156,9 +154,8 @@ class ScoreProposalUseCaseTest {
         final Intel quitIntel = intelSince.get(intelSince.size() - 1);
 
         assertAll(
-                () -> assertEquals(HandScore.ONE, quitIntel.handScore()),
-                () -> assertEquals(p1Uuid, quitIntel.handResult().flatMap(HandResult::getWinner)
-                        .map(Player::getUuid).orElse(null))
+                () -> assertEquals(1, quitIntel.handScore()),
+                () -> assertEquals(p1Uuid, quitIntel.handWinner().orElse(null))
         );
     }
 

@@ -25,7 +25,6 @@ import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
@@ -103,8 +102,8 @@ public class GameCLI {
     }
 
     private void handleCardPlaying(){
-        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.PLAY);
-        final EnumSet<PossibleAction> notAllowedActions = EnumSet.noneOf(PossibleAction.class);
+        final Set<String> allowedActions = Set.of("PLAY");
+        final Set<String> notAllowedActions = Set.of();
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
@@ -126,7 +125,7 @@ public class GameCLI {
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
-    private boolean canNotPerform(EnumSet<PossibleAction> allowedActions, EnumSet<PossibleAction> notAllowedActions) {
+    private boolean canNotPerform(Set<String> allowedActions, Set<String> notAllowedActions) {
         final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
         if(possibleUuid.isEmpty()) return true;
         final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
@@ -136,29 +135,33 @@ public class GameCLI {
     }
 
     private void handleRaiseRequest(){
-        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.RAISE);
-        final EnumSet<PossibleAction> notAllowedActions = EnumSet.of(PossibleAction.QUIT);
+        final Set<String> allowedActions = Set.of("RAISE");
+        final Set<String> notAllowedActions = Set.of("QUIT");
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        RaiseRequestReader requestReader = new RaiseRequestReader(this, lastIntel.handScore().increase());
+        RaiseRequestReader requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handScore()));
         if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(playerUUID);
     }
 
+    private int nextScore(int score){
+        return score == 1 ? 3 : score + 3;
+    }
+
     private void handleRaiseResponse(){
-        final EnumSet<PossibleAction> allowedActions = EnumSet.of(PossibleAction.RAISE, PossibleAction.ACCEPT, PossibleAction.QUIT);
-        final EnumSet<PossibleAction> notAllowedActions = EnumSet.noneOf(PossibleAction.class);
+        final Set<String> allowedActions = Set.of("RAISE", "ACCEPT", "QUIT");
+        final Set<String> notAllowedActions = Set.of();
 
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        RaiseResponseReader responseReader = new RaiseResponseReader(this, lastIntel.handScore().increase());
+        RaiseResponseReader responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handScore()));
         switch (responseReader.execute()){
             case QUIT -> scoreProposalUseCase.quit(playerUUID);
             case ACCEPT -> scoreProposalUseCase.accept(playerUUID);
             case RAISE -> scoreProposalUseCase.raise(playerUUID);
-        };
+        }
     }
 
     private void handleMaoDeOnzeResponse(){

@@ -20,6 +20,9 @@
 
 package com.bueno.domain.entities.game;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum HandScore {
     ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
 
@@ -39,12 +42,12 @@ public enum HandScore {
         };
     }
 
-    public boolean canIncrease(){
-        return !equals(ZERO) && !equals(TWELVE);
-    }
-
     public int get() {
         return score;
+    }
+
+    public static Optional<HandScore> fromIntValue(Integer score){
+        return Arrays.stream(values()).filter(value -> value.score == score).findFirst();
     }
 
     @Override

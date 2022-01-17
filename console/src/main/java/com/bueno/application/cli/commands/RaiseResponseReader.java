@@ -21,16 +21,15 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.entities.game.HandScore;
 
 import java.util.Scanner;
 
 public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseResponseChoice> {
     private final GameCLI mainCli;
-    private final HandScore nextScore;
+    private final int nextScore;
     public enum RaiseResponseChoice {QUIT, ACCEPT, RAISE}
 
-    public RaiseResponseReader(GameCLI mainCli, HandScore nextScore) {
+    public RaiseResponseReader(GameCLI mainCli, int nextScore) {
         this.mainCli = mainCli;
         this.nextScore = nextScore;
     }
@@ -48,13 +47,12 @@ public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseRes
                 continue;
             }
 
-            RaiseResponseChoice result = switch (choice){
+            return switch (choice){
                 case "c" -> RaiseResponseChoice.QUIT;
                 case "t" -> RaiseResponseChoice.ACCEPT;
                 case "a" -> RaiseResponseChoice.RAISE;
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             };
-            return result;
         }
     }
 }

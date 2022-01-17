@@ -21,7 +21,6 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.entities.game.GameRuleViolationException;
-import com.bueno.domain.entities.game.HandScore;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -46,12 +45,12 @@ public interface Command <T>{
         return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
     }
 
-    default String toRequestString(HandScore nextScore) {
+    default String toRequestString(int nextScore) {
         return switch (nextScore) {
-            case THREE -> "truco";
-            case SIX -> "seis";
-            case NINE -> "nove";
-            case TWELVE -> "doze";
+            case 3 -> "truco";
+            case 6 -> "seis";
+            case 9 -> "nove";
+            case 12 -> "doze";
             default -> throw new GameRuleViolationException("Invalid hand value!");
         };
     }

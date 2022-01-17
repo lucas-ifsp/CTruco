@@ -28,10 +28,10 @@ import java.util.Scanner;
 public class RaiseRequestReader implements Command<RaiseRequestReader.RaiseChoice> {
 
     private final GameCLI mainCli;
-    private final HandScore nextScore;
+    private final int nextScore;
     public enum RaiseChoice {REQUEST, NOT_REQUEST}
 
-    public RaiseRequestReader(GameCLI mainCli, HandScore nextScore) {
+    public RaiseRequestReader(GameCLI mainCli, int nextScore) {
         this.mainCli = mainCli;
         this.nextScore = nextScore;
     }
