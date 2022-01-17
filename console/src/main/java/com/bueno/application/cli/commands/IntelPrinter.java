@@ -26,7 +26,6 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -135,7 +134,6 @@ public class IntelPrinter implements Command<Void>{
         final var possibleWinner = intel.handWinner();
         if (possibleWinner.isPresent()) {
             final String resultString = possibleWinner
-                    .map(UUID::toString)
                     .map(String::toUpperCase)
                     .map(name -> name.concat(" VENCEU!"))
                     .orElse("EMPATE.");
