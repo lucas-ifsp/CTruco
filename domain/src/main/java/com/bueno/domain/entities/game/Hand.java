@@ -119,7 +119,7 @@ public class Hand {
 
     void playRound(Card lastCard){
         final Round round = new Round(firstToPlay, cardToPlayAgainst, lastToPlay, lastCard, vira);
-        round.play2();
+        round.play();
         roundsPlayed.add(round);
     }
 
