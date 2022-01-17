@@ -74,37 +74,37 @@ public class Hand {
     }
 
     public void playFirstCard(Player player, Card card){
-        final Player requester = Objects.requireNonNull(player, "Player must not be null!");
-        final Card requesterCard = Objects.requireNonNull(card, "Card must not be null!");
+        final var requester = Objects.requireNonNull(player, "Player must not be null!");
+        final var requesterCard = Objects.requireNonNull(card, "Card must not be null!");
         validateRequest(requester, PossibleAction.PLAY);
         state.playFirstCard(requester, requesterCard);
         updateHistory(PossibleAction.PLAY);
     }
 
     public void playSecondCard(Player player, Card cards){
-        final Player requester = Objects.requireNonNull(player, "Player must not be null!");
-        final Card requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
+        final var requester = Objects.requireNonNull(player, "Player must not be null!");
+        final var requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
         validateRequest(requester, PossibleAction.PLAY);
         state.playSecondCard(requester,requesterCard);
         updateHistory(PossibleAction.PLAY);
     }
 
     public void raise(Player requester){
-        final Player player = Objects.requireNonNull(requester, "Player must not be null!");
+        final var player = Objects.requireNonNull(requester, "Player must not be null!");
         validateRequest(requester, PossibleAction.RAISE);
         state.raiseBet(player);
         updateHistory(PossibleAction.RAISE);
     }
 
     public void accept(Player responder){
-        final Player player = Objects.requireNonNull(responder, "Player must not be null!");
+        final var player = Objects.requireNonNull(responder, "Player must not be null!");
         validateRequest(player, PossibleAction.ACCEPT);
         state.accept(player);
         updateHistory(PossibleAction.ACCEPT);
     }
 
     public void quit(Player responder){
-        final Player player = Objects.requireNonNull(responder, "Player must not be null!");
+        final var player = Objects.requireNonNull(responder, "Player must not be null!");
         validateRequest(player, PossibleAction.QUIT);
         state.quit(player);
         updateHistory(PossibleAction.QUIT);
@@ -117,87 +117,41 @@ public class Hand {
             throw new IllegalStateException("Can not " + action + ", but " + possibleActions + ".");
     }
 
-    void playRound(Card lastCard){
-        final Round round = new Round(firstToPlay, cardToPlayAgainst, lastToPlay, lastCard, vira);
-        round.play();
-        roundsPlayed.add(round);
-    }
-
-    boolean isMaoDeOnze() {
-        return firstToPlay.getScore() == 11 ^ lastToPlay.getScore() == 11;
-    }
-
-    void addScoreProposal() {
-        scoreProposal = score.increase();
-    }
-
-    boolean canRaiseBet(){
-        return isPlayerAllowedToRaise() && isAllowedToRaise() && isAllowedToReRaise();
-    }
-
-    private boolean isPlayerAllowedToRaise() {
-        return currentPlayer != lastBetRaiser;
-    }
-
-    private boolean isAllowedToRaise() {
-        return score.get() < 12
-                && score.increase().get() <= getMaxHandScore()
-                && firstToPlay.getScore() < 11
-                && lastToPlay.getScore() < 11;
-    }
-
-    private boolean isAllowedToReRaise() {
-        return scoreProposal == null || scoreProposal.get() < 12 && scoreProposal.increase().get() <= getMaxHandScore();
-    }
-
-    void removeScoreProposal(){
-        scoreProposal = null;
-    }
-
-    HandScore getScoreProposal() {
-        return scoreProposal;
-    }
-
-    private int getMaxHandScore(){
-        final int firstToPlayScore = firstToPlay.getScore();
-        final int lastToPlayScore = lastToPlay.getScore();
-
-        final int scoreToLosingPlayerWin = Player.MAX_SCORE - Math.min(firstToPlayScore, lastToPlayScore);
-
-        return scoreToLosingPlayerWin % 3 == 0 ? scoreToLosingPlayerWin
-                : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
-    }
-
     private void updateHistory(PossibleAction action) {
         history.add(Intel.ofHand(this, action));
     }
 
-    Intel getIntel(){
-        return history.get(history.size() - 1);
-    }
-
-    List<Intel> getHistory(){
-        return List.copyOf(history);
+    void playRound(Card lastCard){
+        final var round = new Round(firstToPlay, cardToPlayAgainst, lastToPlay, lastCard, vira);
+        round.play();
+        roundsPlayed.add(round);
     }
 
     void defineRoundPlayingOrder() {
-        getLastRoundWinner().filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
+        final var lastRoundWinner = roundsPlayed.isEmpty() ?
+                Optional.empty() : roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+
+        lastRoundWinner.filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
         currentPlayer = firstToPlay;
     }
 
     private void changePlayingOrder() {
-        Player referenceHolder = firstToPlay;
+        var referenceHolder = firstToPlay;
         firstToPlay = lastToPlay;
         lastToPlay = referenceHolder;
     }
 
-    Player getOpponentOf(Player player){
-        return player.equals(firstToPlay)? lastToPlay : firstToPlay;
+    void addOpenCard(Card card){
+        if(!dealtCards.contains(card) && !card.equals(Card.closed()))
+            throw new GameRuleViolationException("Card has not been dealt in this hand.");
+        if(openCards.contains(card) && !card.equals(Card.closed()) )
+            throw new GameRuleViolationException("Card " + card + " has already been played during hand.");
+        openCards.add(card);
     }
 
     void checkForWinnerAfterSecondRound() {
-        Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
-        Optional<Player> secondRoundWinner = roundsPlayed.get(1).getWinner();
+        var firstRoundWinner = roundsPlayed.get(0).getWinner();
+        var secondRoundWinner = roundsPlayed.get(1).getWinner();
 
         if (firstRoundWinner.isEmpty() && secondRoundWinner.isPresent())
             result = new HandResult(secondRoundWinner.get(), score);
@@ -208,8 +162,8 @@ public class Hand {
     }
 
     void checkForWinnerAfterThirdRound() {
-        Optional<Player> firstRoundWinner = roundsPlayed.get(0).getWinner();
-        Optional<Player> lastRoundWinner = roundsPlayed.get(2).getWinner();
+        var firstRoundWinner = roundsPlayed.get(0).getWinner();
+        var lastRoundWinner = roundsPlayed.get(2).getWinner();
 
         if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
             result = new HandResult(firstRoundWinner.get(), score);
@@ -217,51 +171,64 @@ public class Hand {
             result = lastRoundWinner.map(player -> new HandResult(player, score)).orElseGet(HandResult::new);
     }
 
-    void setCardToPlayAgainst(Card cardToPlayAgainst) {
-        this.cardToPlayAgainst = cardToPlayAgainst;
-    }
-
     public Optional<Card> getCardToPlayAgainst() {
         return Optional.ofNullable(cardToPlayAgainst);
     }
 
-    void addOpenCard(Card card){
-        if(!dealtCards.contains(card) && !card.equals(Card.closed()))
-            throw new GameRuleViolationException("Card has not been dealt in this hand.");
-
-        if(openCards.contains(card) && !card.equals(Card.closed()) )
-            throw new GameRuleViolationException("Card " + card + " has already been played during hand.");
-
-        openCards.add(card);
+    void setCardToPlayAgainst(Card cardToPlayAgainst) {
+        this.cardToPlayAgainst = cardToPlayAgainst;
     }
 
-    Optional<Player> getLastRoundWinner(){
-        if(roundsPlayed.isEmpty()) return Optional.empty();
-        return roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
-    List<Round> getRoundsPlayed() {
-        return new ArrayList<>(roundsPlayed);
+    void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
-    boolean isDone(){
-        return state instanceof DoneState;
-    }
-
-    int numberOfRoundsPlayed(){
-        return roundsPlayed.size();
+    public boolean hasWinner(){
+        return result != null;
     }
 
     public Optional<HandResult> getResult() {
         return Optional.ofNullable(result);
     }
 
-    void setResult(HandResult result) {
-        this.result = result;
+    public EnumSet<PossibleAction> getPossibleActions() {
+        return possibleActions;
     }
 
-    public boolean hasWinner(){
-        return result != null;
+    void setPossibleActions(EnumSet<PossibleAction> actions){
+        this.possibleActions = EnumSet.copyOf(actions);
+    }
+
+    Intel getLastIntel(){
+        return history.get(history.size() - 1);
+    }
+
+    List<Intel> getIntelHistory(){
+        return List.copyOf(history);
+    }
+
+    Player getOpponentOf(Player player){
+        return player.equals(firstToPlay)? lastToPlay : firstToPlay;
+    }
+
+    List<Round> getRoundsPlayed() {
+        return new ArrayList<>(roundsPlayed);
+    }
+
+    int numberOfRoundsPlayed(){
+        return roundsPlayed.size();
+    }
+
+    boolean isDone(){
+        return state instanceof DoneState;
+    }
+
+    void setResult(HandResult result) {
+        this.result = result;
     }
 
     void setScore(HandScore score) {
@@ -288,35 +255,52 @@ public class Hand {
         return openCards;
     }
 
-    public Intel getIntelOLD(){
-        return Intel.ofHand(this, null);
-    }
-
     void setState(HandState state) {
         this.state = state;
-    }
-
-    void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
     }
 
     Card getVira() {
         return vira;
     }
 
-    Player getLastBetRaiser() {
-        return lastBetRaiser;
+    boolean isMaoDeOnze() {
+        return firstToPlay.getScore() == 11 ^ lastToPlay.getScore() == 11;
     }
 
-    public EnumSet<PossibleAction> getPossibleActions() {
-        return possibleActions;
+    void addScoreProposal() {
+        scoreProposal = score.increase();
     }
 
-    void setPossibleActions(EnumSet<PossibleAction> actions){
-        this.possibleActions = EnumSet.copyOf(actions);
+    void removeScoreProposal(){
+        scoreProposal = null;
+    }
+
+    HandScore getScoreProposal() {
+        return scoreProposal;
+    }
+
+    boolean canRaiseBet(){
+        return isPlayerAllowedToRaise() && isAllowedToRaise() && isAllowedToReRaise();
+    }
+
+    private boolean isPlayerAllowedToRaise() {
+        return currentPlayer != lastBetRaiser;
+    }
+
+    private boolean isAllowedToRaise() {
+        return score.get() < 12 && score.increase().get() <= getMaxHandScore()
+                && firstToPlay.getScore() < 11 && lastToPlay.getScore() < 11;
+    }
+
+    private boolean isAllowedToReRaise() {
+        return scoreProposal == null || scoreProposal.get() < 12 && scoreProposal.increase().get() <= getMaxHandScore();
+    }
+
+    private int getMaxHandScore(){
+        final int firstToPlayScore = firstToPlay.getScore();
+        final int lastToPlayScore = lastToPlay.getScore();
+        final int scoreToLosingPlayerWin = Player.MAX_SCORE - Math.min(firstToPlayScore, lastToPlayScore);
+        return scoreToLosingPlayerWin % 3 == 0 ? scoreToLosingPlayerWin
+                : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
     }
 }

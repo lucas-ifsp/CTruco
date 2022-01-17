@@ -21,12 +21,11 @@
 package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.truco.TrucoResult;
 
 import java.util.Objects;
 import java.util.Optional;
 
-class HandResult {
+public class HandResult {
 
     private final Player winner;
     private final HandScore score;
@@ -41,10 +40,6 @@ class HandResult {
         this.score = Objects.requireNonNull(handScore, "Hand score must not be null!");
     }
 
-    public HandResult(TrucoResult result){
-        this(result.getWinner().orElse(null), result.getScore());
-    }
-
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
     }
@@ -55,10 +50,7 @@ class HandResult {
 
     @Override
     public String toString() {
-        return "HandResult{" +
-                "winner=" + winner +
-                ", score=" + score +
-                '}';
+        return "HandResult{winner=" + winner + ", score=" + score + '}';
     }
 
     @Override

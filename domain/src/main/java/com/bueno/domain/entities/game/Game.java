@@ -94,11 +94,11 @@ public class Game {
     }
 
     public Intel getIntel(){
-        return isDone() ? Intel.ofGame(this) : currentHand().getIntel();
+        return isDone() ? Intel.ofGame(this) : currentHand().getLastIntel();
     }
 
     public List<Intel> getIntelSince(Intel lastIntel){
-        final List<Intel> handHistory = currentHand().getHistory();
+        final List<Intel> handHistory = currentHand().getIntelHistory();
 
         if(lastIntel == null) return getWholeHistory();
 
@@ -109,7 +109,7 @@ public class Game {
         if(currentHandResult.size() < handHistory.size()) return currentHandResult;
 
         final Hand previousHand = hands.get(hands.size() - 2);
-        final List<Intel> lastHandResult = previousHand.getHistory().stream().filter(isAfter).collect(Collectors.toList());
+        final List<Intel> lastHandResult = previousHand.getIntelHistory().stream().filter(isAfter).collect(Collectors.toList());
         final List<Intel> result = new ArrayList<>();
         result.addAll(lastHandResult);
         result.addAll(currentHandResult);
@@ -117,7 +117,7 @@ public class Game {
     }
 
     private List<Intel> getWholeHistory() {
-        return hands.stream().flatMap(hand -> hand.getHistory().stream()).collect(Collectors.toList());
+        return hands.stream().flatMap(hand -> hand.getIntelHistory().stream()).collect(Collectors.toList());
     }
 
     public UUID getUuid() {

@@ -157,13 +157,13 @@ class HandTest {
             assertThrows(GameRuleViolationException.class, () -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.HEARTS)));
         }
 
-        @Test
+        /*@Test
         @DisplayName("Should get correct last round winner")
         void shouldGetCorrectLastRoundWinner() {
             sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.SPADES));
             sut.playSecondCard(player2, Card.of(Rank.FOUR, Suit.SPADES));
             assertEquals(player1, sut.getLastRoundWinner().orElse(null));
-        }
+        }*/
 
         @Test
         @DisplayName("Should win hand winning first two rounds")
