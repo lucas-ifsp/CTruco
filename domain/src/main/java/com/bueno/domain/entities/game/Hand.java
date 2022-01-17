@@ -38,6 +38,7 @@ public class Hand {
     private Player lastToPlay;
     private Player currentPlayer;
     private Player lastBetRaiser;
+    private Player eventPlayer;
 
     private Card cardToPlayAgainst;
     private HandScore score;
@@ -70,44 +71,44 @@ public class Hand {
             currentPlayer = firstToPlay;
             state = new NoCardState(this);
         }
-        updateHistory(PossibleAction.PLAY);
+        updateHistory(Event.HAND_START);
     }
 
     public void playFirstCard(Player player, Card card){
         final var requester = Objects.requireNonNull(player, "Player must not be null!");
         final var requesterCard = Objects.requireNonNull(card, "Card must not be null!");
         validateRequest(requester, PossibleAction.PLAY);
+        eventPlayer = currentPlayer;
         state.playFirstCard(requester, requesterCard);
-        updateHistory(PossibleAction.PLAY);
     }
 
     public void playSecondCard(Player player, Card cards){
         final var requester = Objects.requireNonNull(player, "Player must not be null!");
         final var requesterCard = Objects.requireNonNull(cards, "Card must not be null!");
         validateRequest(requester, PossibleAction.PLAY);
+        eventPlayer = currentPlayer;
         state.playSecondCard(requester,requesterCard);
-        updateHistory(PossibleAction.PLAY);
     }
 
     public void raise(Player requester){
         final var player = Objects.requireNonNull(requester, "Player must not be null!");
         validateRequest(requester, PossibleAction.RAISE);
-        state.raiseBet(player);
-        updateHistory(PossibleAction.RAISE);
+        eventPlayer = currentPlayer;
+        state.raise(player);
     }
 
     public void accept(Player responder){
         final var player = Objects.requireNonNull(responder, "Player must not be null!");
         validateRequest(player, PossibleAction.ACCEPT);
+        eventPlayer = currentPlayer;
         state.accept(player);
-        updateHistory(PossibleAction.ACCEPT);
     }
 
     public void quit(Player responder){
         final var player = Objects.requireNonNull(responder, "Player must not be null!");
         validateRequest(player, PossibleAction.QUIT);
+        eventPlayer = currentPlayer;
         state.quit(player);
-        updateHistory(PossibleAction.QUIT);
     }
 
     private void validateRequest(Player requester, PossibleAction action){
@@ -117,8 +118,8 @@ public class Hand {
             throw new IllegalStateException("Can not " + action + ", but " + possibleActions + ".");
     }
 
-    private void updateHistory(PossibleAction action) {
-        history.add(Intel.ofHand(this, action));
+    void updateHistory(Event event) {
+        history.add(Intel.ofHand(this, event));
     }
 
     void playRound(Card lastCard){
@@ -181,6 +182,14 @@ public class Hand {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public Player getEventPlayer() {
+        return eventPlayer;
+    }
+
+    void setEventPlayer(Player eventPlayer) {
+        this.eventPlayer = eventPlayer;
     }
 
     void setCurrentPlayer(Player currentPlayer) {

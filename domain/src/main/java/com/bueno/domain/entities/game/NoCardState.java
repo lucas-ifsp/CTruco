@@ -46,6 +46,7 @@ class NoCardState implements HandState {
         context.setCardToPlayAgainst(card);
         context.setCurrentPlayer(context.getLastToPlay());
         context.setState(new OneCardState(context));
+        context.updateHistory(Event.PLAY);
     }
 
     @Override
@@ -63,10 +64,11 @@ class NoCardState implements HandState {
     }
 
     @Override
-    public void raiseBet(Player requester) {
+    public void raise(Player requester) {
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getLastToPlay());
         context.setState(new WaitingRaiseResponseState(context));
+        context.updateHistory(Event.RAISE);
     }
 }

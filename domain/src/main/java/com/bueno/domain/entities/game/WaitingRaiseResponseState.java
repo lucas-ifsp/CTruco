@@ -52,6 +52,7 @@ class WaitingRaiseResponseState implements HandState {
         context.removeScoreProposal();
         context.setCurrentPlayer(defineCurrentPlayer());
         context.setState(defineNextState());
+        context.updateHistory(Event.ACCEPT);
     }
 
     private Player defineCurrentPlayer() {
@@ -68,15 +69,17 @@ class WaitingRaiseResponseState implements HandState {
         context.removeScoreProposal();
         context.setResult(new HandResult(context.getOpponentOf(responder), context.getScore()));
         context.setState(new DoneState(context));
+        context.updateHistory(Event.QUIT);
     }
 
     @Override
-    public void raiseBet(Player requester) {
+    public void raise(Player requester) {
         final HandScore score = context.getScoreProposal() != null ? context.getScoreProposal() : context.getScore();
         context.setScore(score);
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getOpponentOf(requester));
         context.setState(new WaitingRaiseResponseState(context));
+        context.updateHistory(Event.RAISE);
     }
 }

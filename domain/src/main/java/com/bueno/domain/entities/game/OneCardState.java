@@ -55,6 +55,7 @@ class OneCardState implements HandState {
             case 3 -> handleThirdRoundPostConditions();
         }
         context.setCardToPlayAgainst(null);
+        context.updateHistory(Event.PLAY);
     }
 
     private void handleFirstRoundPostConditions() {
@@ -88,10 +89,11 @@ class OneCardState implements HandState {
     }
 
     @Override
-    public void raiseBet(Player requester) {
+    public void raise(Player requester) {
         context.addScoreProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getFirstToPlay());
         context.setState(new WaitingRaiseResponseState(context));
+        context.updateHistory(Event.RAISE);
     }
 }
