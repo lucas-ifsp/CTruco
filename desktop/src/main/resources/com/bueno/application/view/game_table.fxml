@@ -8,17 +8,17 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="927.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bueno.application.controller.GameTableController">
-    <Label layoutX="27.0" layoutY="676.0" text="Jogador: " textFill="WHITE" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="30.0">
+    <Label layoutX="30.0" layoutY="674.0" text="Jogador: " textFill="WHITE" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="30.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lbPlayerNameValue" layoutX="93.0" layoutY="669.0" text="--" textFill="WHITE" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="93.0">
+    <Label fx:id="lbPlayerNameValue" layoutX="93.0" layoutY="674.0" text="--" textFill="WHITE" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="93.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label layoutX="28.0" layoutY="714.0" text="Tentos:" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
+    <Label layoutX="30.0" layoutY="709.0" text="Tentos:" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
         <font>
             <Font size="14.0" />
         </font>
@@ -38,12 +38,12 @@
             <Font size="14.0" />
         </font>
     </Label>
-    <Label layoutX="28.0" layoutY="68.0" text="Tentos:" textFill="WHITE" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="70.0">
+    <Label layoutX="30.0" layoutY="65.0" text="Tentos:" textFill="WHITE" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="65.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lbOpponentScoreValue" layoutX="86.0" layoutY="70.0" text="--" textFill="WHITE" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="70.0">
+    <Label fx:id="lbOpponentScoreValue" layoutX="86.0" layoutY="65.0" text="--" textFill="WHITE" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="65.0">
         <font>
             <Font size="14.0" />
         </font>
@@ -63,32 +63,32 @@
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb1st" layoutX="801.0" layoutY="70.0" text="1ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="70.0">
+    <Label fx:id="lb1st" layoutX="724.5" layoutY="65.0" text="1ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="65.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb1stValue" layoutX="797.0" layoutY="68.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="68.0">
+    <Label fx:id="lb1stValue" layoutX="797.0" layoutY="63.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="63.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb2nd" layoutX="804.0" layoutY="110.0" text="2ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="137.5" AnchorPane.topAnchor="110.0">
+    <Label fx:id="lb2nd" layoutX="723.0" layoutY="100.0" text="2ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="98.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb2ndValue" layoutX="797.0" layoutY="108.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="108.0">
+    <Label fx:id="lb2ndValue" layoutX="797.0" layoutY="98.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="96.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb3rd" layoutX="803.0" layoutY="150.0" text="3ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="150.0">
+    <Label fx:id="lb3rd" layoutX="724.5" layoutY="133.0" text="3ª Rodada:" textFill="WHITE" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="131.0">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lb3rdValue" layoutX="797.0" layoutY="148.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="148.0">
+    <Label fx:id="lb3rdValue" layoutX="797.0" layoutY="131.0" prefHeight="23.0" prefWidth="100.0" text="--" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="129.0">
         <font>
             <Font size="14.0" />
         </font>
@@ -116,7 +116,7 @@
          <ColorAdjust />
       </effect>
    </Button>
-   <Label fx:id="lbMessage" layoutX="430.0" layoutY="704.0" text="Message here" textFill="#f0d122" visible="false" AnchorPane.bottomAnchor="30.0">
+   <Label fx:id="lbMessage" layoutX="430.0" layoutY="704.0" text="Message here" textAlignment="CENTER" textFill="#f0d122" visible="false" AnchorPane.bottomAnchor="30.0">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
