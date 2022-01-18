@@ -95,9 +95,7 @@ public class GameTableController {
     private final List<Intel> missingIntel;
     private Intel lastIntel;
 
-    //TODO INCLUDE EVENT RESPONSIBLE
     //TODO REFACTOR CREATE GAME TO RETURN INTEL, NOT GAME
-    //TODO TEST USER MAO DE ONZE
     //TODO SOLVE GAME OVER BUG
     //TODO TEST OVERALL GAME PLAYING
     public GameTableController() {
@@ -194,36 +192,58 @@ public class GameTableController {
 
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
-            System.out.println(intel);
+            final var event = intel.event().orElse("");
 
             botCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
-
-            if (shouldDecideMaoDeOnze(intel))
-                builder.append(0.5, () -> showMessage("Sua mão de onze"));
-
-            if (hasRaiseProposalFromBot(intel)) {
-                final var value = scoreToString(intel.scoreProposal().orElseThrow());
-                builder.append(0.5, () -> showMessage(bot.getUsername() + " pediu " + value + " !"));
-            }
+            System.out.println(intel);
 
             if (hasHandScoreChange(intel))
                 builder.append(0.5, () -> updateHandScore(intel));
 
-            if (isPlayingEvent(intel)) {
-                if (hasOpponentCardToShow(intel)) builder.append(0.5, () -> showOpponentCard(intel));
-                builder.append(0.5, () -> updateRoundResults(intel));
-                if (hasCardsToClean(intel)) builder.append(2.5, this::clearPlayedCards);
-            }
+            if (isBotEvent(intel))
+                addBotAnimation(builder, intel, event);
 
-            if (intel.handWinner().isPresent()) {
-                lastUserPlayedCardPosition = 1;
-                builder.append(1.0, () -> updateRoundResults(intel));
-                builder.append(1.5, this::organizeNewHand);
-                builder.append(this::updatePlayerScores);
-            }
-            builder.append(() -> configureButtons(intel));
+            addSupportingAnimation(builder, intel);
+
+            if (isUserNextPlayer(intel))
+                addNotificationToUser(builder, intel);
         }
         Platform.runLater(builder.build()::play);
+    }
+
+    private void addBotAnimation(TimelineBuilder builder, Intel intel, String event) {
+        switch (event) {
+            case "PLAY" -> {
+                if (hasOpponentCardToShow(intel)) builder.append(0.5, () -> showOpponentCard(intel));
+                builder.append(0.5, () -> updateRoundResults(intel));
+            }
+            case "QUIT" -> {
+                builder.append(0.5, () -> showMessage(bot.getUsername() + " correu!"));
+                builder.append(1.5, this::hideMessage);
+            }
+            case "QUIT_HAND" -> {
+                builder.append(0.5, () -> showMessage(bot.getUsername() + " não aceitou a mão!"));
+                builder.append(1.5, this::hideMessage);
+            }
+            case "ACCEPT" -> {
+                builder.append(0.5, () -> showMessage(bot.getUsername() + " aceitou!"));
+                builder.append(1.5, this::hideMessage);
+            }
+        }
+    }
+
+    private void addSupportingAnimation(TimelineBuilder builder, Intel intel) {
+        if (hasCardsToClean(intel)) {
+            builder.append(0.5, () -> updateRoundResults(intel));
+            builder.append(2.5, this::clearPlayedCards);
+        }
+        if (intel.handWinner().isPresent()) {
+            lastUserPlayedCardPosition = 1;
+            builder.append(1.0, () -> updateRoundResults(intel));
+            builder.append(1.5, this::organizeNewHand);
+            builder.append(() -> updatePlayerScores(intel));
+        }
+        builder.append(() -> configureButtons(intel));
     }
 
     private String scoreToString(int points) {
@@ -235,9 +255,15 @@ public class GameTableController {
             default -> "--";
         };
     }
-    private void showMessage(String message) {
-        lbMessage.setVisible(true);
-        lbMessage.setText(message);
+
+    private void addNotificationToUser(TimelineBuilder builder, Intel intel) {
+        if (shouldDecideMaoDeOnze(intel)) {
+            builder.append(0.5, () -> showMessage("Sua mão de onze"));
+        }
+        if (hasRaiseProposalFromBot(intel)) {
+            final var value = scoreToString(intel.scoreProposal().orElseThrow());
+            builder.append(0.5, () -> showMessage(bot.getUsername() + " pediu " + value + " !"));
+        }
     }
 
     private void hideMessage() {
@@ -245,9 +271,13 @@ public class GameTableController {
         lbMessage.setText("");
     }
 
+    private void showMessage(String message) {
+        lbMessage.setVisible(true);
+        lbMessage.setText(message);
+    }
+
     private void configureButtons(Intel intel){
-        Predicate<String> shouldDisable = a ->
-                 !intel.possibleActions().contains(a) || !userUUID.equals(intel.currentPlayerUuid().orElse(null));
+        Predicate<String> shouldDisable = a -> !intel.possibleActions().contains(a) || !isUserNextPlayer(intel);
 
         btnAccept.setDisable(shouldDisable.test("ACCEPT"));
         btnQuit.setDisable(shouldDisable.test("QUIT"));
@@ -258,32 +288,36 @@ public class GameTableController {
             btnRaise.setText("Pedir " + scoreToString(baseScore == 1? 3 : baseScore + 3) + "!");
     }
 
+    private boolean isUserNextPlayer(Intel intel) {
+        return userUUID.equals(intel.currentPlayerUuid().orElse(null));
+    }
+
     private boolean shouldDecideMaoDeOnze(Intel intel) {
-        return intel.isMaoDeOnze() && intel.handScore() == 1
-                && userUUID.equals(intel.currentPlayerUuid().orElse(null));
+        return intel.isMaoDeOnze() && intel.handScore() == 1;
     }
 
     private boolean hasRaiseProposalFromBot(Intel intel) {
-        return intel.scoreProposal().isPresent() && userUUID.equals(intel.currentPlayerUuid().orElse(null));
+        return intel.scoreProposal().isPresent();
     }
 
     private boolean hasHandScoreChange(Intel intel) {
         final var event = intel.event().orElse("");
-        return event.equals("RAISE") || event.equals("ACCEPT");
+        return event.equals("RAISE") || event.equals("ACCEPT") || event.equals("ACCEPT_HAND");
     }
 
     private boolean hasOpponentCardToShow(Intel intel) {
         return lastUserPlayedCardPosition < intel.openCards().size();
     }
 
-    private boolean isPlayingEvent(Intel intel) {
-        return intel.event().orElse("").equals("PLAY") && !intel.possibleActions().contains("QUIT");
+    private boolean isBotEvent(Intel intel) {
+        return botUUID.equals(intel.getEventPlayerUUID().orElse(null));
     }
 
     private boolean hasCardsToClean(Intel intel) {
         final var cardsPlayed = intel.openCards().size();
         final var isSecondCardOfRound = cardsPlayed % 2 == 1;
-        return cardsPlayed > 1 && isSecondCardOfRound;
+        final var event = intel.event().orElse("");
+        return event.equals("PLAY") && cardsPlayed > 1 && isSecondCardOfRound;
     }
 
     private void clearPlayedCards() {
@@ -330,7 +364,7 @@ public class GameTableController {
         roundResultLabel.setVisible(true);
     }
 
-    private void updatePlayerScores() {
+    private void updatePlayerScores(Intel intel) {
         lbOpponentScoreValue.setText(String.valueOf(lastIntel.currentOpponentScore()));
         lbPlayerScoreValue.setText(String.valueOf(lastIntel.currentPlayerScore()));
     }
@@ -348,9 +382,11 @@ public class GameTableController {
     }
 
     private void handleScoreChange(String action, Runnable request){
-        if(canPerform(action)) request.run();
-        updateIntel();
-        updateView();
+        if(canPerform(action)) {
+            request.run();
+            updateIntel();
+            updateView();
+        }
     }
 
     private boolean canPerform(String action) {

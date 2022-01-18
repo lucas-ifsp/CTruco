@@ -43,9 +43,13 @@ public class Intel{
     private Player currentPlayer;
     private int currentPlayerScore;
     private String currentPlayerUsername;
+
     private String eventPlayerUsername;
+    private UUID eventPlayerUUID;
+
     private int currentOpponentScore;
     private String currentOpponentUsername;
+
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
@@ -96,10 +100,14 @@ public class Intel{
     }
 
     private void setPlayersIntel(Hand hand){
-        eventPlayerUsername = hand.getEventPlayer() != null ? hand.getEventPlayer().getUsername() : null;
+        final Player eventPlayer = hand.getEventPlayer();
+        eventPlayerUsername = eventPlayer != null ? eventPlayer.getUsername() : null;
+        eventPlayerUUID = eventPlayer != null ? eventPlayer.getUuid() : null;
+
         currentPlayer = hand.getCurrentPlayer();
         currentPlayerScore = currentPlayer != null ?  currentPlayer.getScore() : 0;
         currentPlayerUsername = currentPlayer != null ?  currentPlayer.getUsername() : null;
+
         currentOpponentScore = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getScore() : 0;
         currentOpponentUsername = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getUsername() : null;
     }
@@ -193,8 +201,8 @@ public class Intel{
         return Optional.ofNullable(event);
     }
 
-    public Optional<String> getEventPlayerUsername() {
-        return Optional.ofNullable(eventPlayerUsername);
+    public Optional<UUID> getEventPlayerUUID() {
+        return Optional.ofNullable(eventPlayerUUID);
     }
 
     @Override

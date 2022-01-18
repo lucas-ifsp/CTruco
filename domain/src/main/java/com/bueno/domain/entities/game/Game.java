@@ -26,7 +26,6 @@ import com.bueno.domain.entities.player.util.Player;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -40,8 +39,6 @@ public class Game {
     private Player firstToPlay;
     private Player lastToPlay;
 
-    private final static Logger LOGGER = Logger.getLogger(Game.class.getName());
-
     public Game(Player player1, Player player2) {
         this(player1, player2, UUID.randomUUID());
     }
@@ -54,15 +51,13 @@ public class Game {
         prepareNewHand();
     }
 
-    public Hand prepareNewHand(){
-        LOGGER.info("Preparing to play new hand...");
+    public Hand prepareNewHand() {
         defineHandPlayingOrder();
 
         final Deck deck = new Deck();
         deck.shuffle();
 
         final Card vira = deck.takeOne();
-        LOGGER.info("Vira: " + vira);
         firstToPlay.setCards(deck.take(3));
         lastToPlay.setCards(deck.take(3));
 
@@ -74,7 +69,6 @@ public class Game {
     private void defineHandPlayingOrder() {
         firstToPlay = player1.equals(firstToPlay) ? player2 : player1;
         lastToPlay = firstToPlay.equals(player1) ? player2 : player1;
-        LOGGER.info("First to play: " + firstToPlay + " | Last to play: " + lastToPlay );
     }
 
     public void updateScores() {
@@ -84,7 +78,6 @@ public class Game {
         if (winner.isEmpty()) return;
         if (winner.get().equals(player1)) player1.addScore(result.getScore());
         else player2.addScore(result.getScore());
-        LOGGER.info(player1.getUuid() + " score = " + player1.getScore() + " | " + player2.getUuid() + " score : " + player2.getScore() );
     }
 
     public Optional<Player> getWinner() {
@@ -93,31 +86,16 @@ public class Game {
         return Optional.empty();
     }
 
-    public Intel getIntel(){
+    public Intel getIntel() {
         return isDone() ? Intel.ofGame(this) : currentHand().getLastIntel();
     }
 
-    public List<Intel> getIntelSince(Intel lastIntel){
-        final List<Intel> handHistory = currentHand().getIntelHistory();
-
-        if(lastIntel == null) return getWholeHistory();
-
+    public List<Intel> getIntelSince(Intel lastIntel) {
+        final List<Intel> wholeHistory = hands.stream().flatMap(hand -> hand.getIntelHistory().stream()).collect(Collectors.toList());
+        if (lastIntel == null) return wholeHistory;
         final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
         final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;
-        final List<Intel> currentHandResult = handHistory.stream().filter(isAfter).collect(Collectors.toList());
-
-        if(currentHandResult.size() < handHistory.size()) return currentHandResult;
-
-        final Hand previousHand = hands.get(hands.size() - 2);
-        final List<Intel> lastHandResult = previousHand.getIntelHistory().stream().filter(isAfter).collect(Collectors.toList());
-        final List<Intel> result = new ArrayList<>();
-        result.addAll(lastHandResult);
-        result.addAll(currentHandResult);
-        return result;
-    }
-
-    private List<Intel> getWholeHistory() {
-        return hands.stream().flatMap(hand -> hand.getIntelHistory().stream()).collect(Collectors.toList());
+        return wholeHistory.stream().filter(isAfter).collect(Collectors.toList());
     }
 
     public UUID getUuid() {
@@ -140,14 +118,16 @@ public class Game {
         return player2;
     }
 
-    public List<Hand> getHands() {return new ArrayList<>(hands);}
+    public List<Hand> getHands() {
+        return new ArrayList<>(hands);
+    }
 
-    public int handsPlayed(){
+    public int handsPlayed() {
         return hands.size();
     }
 
-    public Hand currentHand(){
-        if(hands.isEmpty()) return null;
+    public Hand currentHand() {
+        if (hands.isEmpty()) return null;
         int lastHandIndex = hands.size() - 1;
         return hands.get(lastHandIndex);
     }

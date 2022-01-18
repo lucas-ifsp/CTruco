@@ -48,19 +48,5 @@ public class WindowGameTable extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
-
-        //controller.createGame("Lucas");
-
-
-        /*Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                controller.createGame("Lucas");
-                return null;
-            }
-        };
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();*/
     }
 }
