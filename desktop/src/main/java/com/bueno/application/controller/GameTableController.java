@@ -95,8 +95,8 @@ public class GameTableController {
     private final List<Intel> missingIntel;
     private Intel lastIntel;
 
+    //TODO SOLVE PROBLEM WHILE BOT REJECTS MÃO DE ONZE
     //TODO REFACTOR CREATE GAME TO RETURN INTEL, NOT GAME
-    //TODO SOLVE GAME OVER BUG
     //TODO TEST OVERALL GAME PLAYING
     public GameTableController() {
         repo = new InMemoryGameRepository();
@@ -179,6 +179,8 @@ public class GameTableController {
         final var ownedCards = handleIntelUseCase.getOwnedCards(userUUID);
         user.setCards(ownedCards);
         userCards = ownedCards;
+
+        if(userCards.isEmpty()) return;
 
         cardVira.setImage(card.getImage());
         cardOwnedLeft.setImage(CardImage.of(userCards.get(0)).getImage());
