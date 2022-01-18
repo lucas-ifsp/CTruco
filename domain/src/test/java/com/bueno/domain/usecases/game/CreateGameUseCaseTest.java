@@ -20,9 +20,12 @@
 
 package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -55,11 +58,13 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should create game with valid parameters")
     void shouldCreateGameWithValidParameters() {
-        Game game = sut.create(p1, p2);
+        when(p1.getUsername()).thenReturn("p1");
+        when(p2.getUsername()).thenReturn("p2");
+        Intel intel = sut.create(p1, p2);
         assertAll(
-                () -> assertEquals(p1, game.getPlayer1()),
-                () -> assertEquals(p2, game.getPlayer2()),
-                () -> assertNotNull(game.getUuid())
+                () -> assertEquals(p1.getUsername(), intel.currentPlayerUsername()),
+                () -> assertEquals(p2.getUsername(), intel.currentOpponentUsername()),
+                () -> assertNotNull(intel.timestamp())
         );
     }
 
@@ -88,8 +93,8 @@ class CreateGameUseCaseTest {
         when(p2.getUsername()).thenReturn("p2");
         when(p3.getUsername()).thenReturn("p3");
         when(p4.getUsername()).thenReturn("p4");
-        Game game1 = sut.create(p1, p2);
-        Game game2 = sut.create(p3, p4);
-        assertNotEquals(game1, game2);
+        Intel intel1 = sut.create(p1, p2);
+        Intel intel2 = sut.create(p3, p4);
+        assertNotEquals(intel1, intel2);
     }
 }

@@ -20,7 +20,6 @@
 
 package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
@@ -39,10 +38,10 @@ public class PlayGameWithBotsUseCase {
 
     public UUID playWithBots(Bot bot1, Bot bot2){
         CreateGameUseCase gameUseCase = new CreateGameUseCase(repo);
-        final Game game = gameUseCase.create((Player) bot1, (Player) bot2);
-        ((Player) bot1).setIntel(game.getIntel());
+        Intel intel = gameUseCase.create((Player) bot1, (Player) bot2);
+        ((Player) bot1).setIntel(intel);
         PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-        final Intel intel = playCardUseCase.playCard(new RequestModel(((Player) bot1).getUuid(), bot1.chooseCardToPlay().content()));
+        intel = playCardUseCase.playCard(new RequestModel(((Player) bot1).getUuid(), bot1.chooseCardToPlay().content()));
         return intel.gameWinner().orElseThrow();
     }
 }

@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +31,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
 import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,12 +60,15 @@ class LoadGameUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should load game by UUID")
+    @DisplayName("Should load game by user UUID")
     void shouldLoadGameByUuid() {
+        final UUID userUUID = UUID.randomUUID();
         when(p1.getUsername()).thenReturn("p1");
+        when(p1.getUuid()).thenReturn(userUUID);
         when(p2.getUsername()).thenReturn("p2");
-        final Game game = createGameUseCase.create(p1, p2);
-        assertEquals(game, sut.load(game.getUuid()).orElse(null));
+
+        final Intel intel = createGameUseCase.create(p1, p2);
+        assertEquals(intel, sut.loadUserGame(userUUID).map(Game::getIntel).orElse(null));
     }
 
     @Test
