@@ -91,7 +91,6 @@ public class GameTableController {
     private final UUID userUUID;
     private final UUID botUUID;
     private List<Card> userCards;
-    private List<Card> botCards;
     private int lastUserPlayedCardPosition;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
@@ -108,7 +107,6 @@ public class GameTableController {
         botUUID = UUID.randomUUID();
         userUUID = UUID.randomUUID();
         missingIntel = new ArrayList<>();
-        botCards = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
     }
 
@@ -198,7 +196,6 @@ public class GameTableController {
             final var intel = missingIntel.remove(0);
             final var event = intel.event().orElse("");
 
-            botCards = new ArrayList<>(handleIntelUseCase.getOwnedCards(botUUID));
             System.out.println(intel);
 
             if (hasHandScoreChange(intel))
@@ -338,7 +335,6 @@ public class GameTableController {
         final var randomCardImage = removeRandomOpponentCard();
         randomCardImage.setImage(CardImage.ofNoCard().getImage());
         lastCard.setImage(cardImage);
-        botCards.remove(card);
     }
 
     private synchronized ImageView removeRandomOpponentCard() {
