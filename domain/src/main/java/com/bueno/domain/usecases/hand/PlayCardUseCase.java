@@ -35,8 +35,6 @@ import java.util.UUID;
 
 public class PlayCardUseCase {
 
-    private Game game;
-    private Hand hand;
     private GameRepository repo;
 
     public PlayCardUseCase(GameRepository repo) {
@@ -77,46 +75,4 @@ public class PlayCardUseCase {
     }
 
     public record RequestModel(UUID requester, Card card){}
-
-    public PlayCardUseCase(Game game) {
-        this.game = Objects.requireNonNull(game);
-    }
-
-    public Hand play() {
-        hand = game.prepareNewHand();
-
-        if(game.isMaoDeOnze()){
-            handleMaoDeOnze();
-            if (hand.hasWinner()) return hand;
-        }
-
-        playRound();
-        if (hand.hasWinner()) return hand;
-
-        playRound();
-        if (hand.hasWinner()) return hand;
-
-        //hand.checkForWinnerAfterSecondRound();
-        if (hand.hasWinner()) return hand;
-
-        playRound();
-        if (hand.hasWinner()) return hand;
-
-        //hand.checkForWinnerAfterThirdRound();
-        return hand;
-    }
-
-    private void handleMaoDeOnze() {
-        Player playerInMaoDeOnze = game.getPlayer1().getScore() == 11? game.getPlayer1() : game.getPlayer2();
-        Player otherPlayer = game.getPlayer1().getScore() == 11? game.getPlayer2() : game.getPlayer1();
-
-        if(playerInMaoDeOnze.getMaoDeOnzeResponse());// hand.setScore(HandScore.THREE);
-        else ;//hand.setResult(new HandResult(otherPlayer, HandScore.ONE));
-    }
-
-    private void playRound() {
-        //hand.playNewRound();
-    }
-
-
 }

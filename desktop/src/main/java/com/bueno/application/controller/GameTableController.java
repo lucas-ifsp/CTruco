@@ -241,7 +241,7 @@ public class GameTableController {
             lastUserPlayedCardPosition = 1;
             builder.append(1.0, () -> updateRoundResults(intel));
             builder.append(1.5, this::organizeNewHand);
-            builder.append(() -> updatePlayerScores(intel));
+            builder.append(this::updatePlayerScores);
         }
         builder.append(() -> configureButtons(intel));
     }
@@ -364,7 +364,7 @@ public class GameTableController {
         roundResultLabel.setVisible(true);
     }
 
-    private void updatePlayerScores(Intel intel) {
+    private void updatePlayerScores() {
         lbOpponentScoreValue.setText(String.valueOf(lastIntel.currentOpponentScore()));
         lbPlayerScoreValue.setText(String.valueOf(lastIntel.currentPlayerScore()));
     }
