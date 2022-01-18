@@ -21,12 +21,12 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 
 import java.util.Objects;
 import java.util.logging.Logger;
 
-//TODO Write test cases for uncovered code (MineiroBot, this class...)
 public class CreateGameUseCase {
 
     private GameRepository dao;
@@ -36,7 +36,7 @@ public class CreateGameUseCase {
         this.dao = dao;
     }
 
-    public Game create(Player p1, Player p2) {
+    public Intel create(Player p1, Player p2) {
         Objects.requireNonNull(p1);
         Objects.requireNonNull(p2);
 
@@ -51,6 +51,6 @@ public class CreateGameUseCase {
 
         LOGGER.info("Game has been created with UUID: " + game.getUuid());
 
-        return game;
+        return game.getIntel();
     }
 }

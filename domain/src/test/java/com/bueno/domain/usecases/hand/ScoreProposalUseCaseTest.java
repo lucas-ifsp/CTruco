@@ -25,6 +25,7 @@ import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.InMemoryGameRepository;
+import com.bueno.domain.usecases.game.LoadGameUseCase;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +51,8 @@ class ScoreProposalUseCaseTest {
 
     private UUID p1Uuid;
     private UUID p2Uuid;
-    private Game game;
+    private InMemoryGameRepository repo;
+
 
     @BeforeAll
     static void init() {
@@ -68,10 +70,10 @@ class ScoreProposalUseCaseTest {
         lenient().when(p2.getUuid()).thenReturn(p2Uuid);
         lenient().when(p2.getUsername()).thenReturn(p2Uuid.toString());
 
-        final InMemoryGameRepository repo = new InMemoryGameRepository();
+        repo = new InMemoryGameRepository();
 
         createGameUseCase = new CreateGameUseCase(repo);
-        game = createGameUseCase.create(p1, p2);
+        createGameUseCase.create(p1, p2);
         sut = new ScoreProposalUseCase(repo);
     }
 
@@ -149,6 +151,9 @@ class ScoreProposalUseCaseTest {
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
         final Intel firstIntel = sut.raise(p1Uuid);
         final Intel lastIntel = sut.quit(p2Uuid); //last intel is already pointing to a new hand.
+        final LoadGameUseCase loadGameUseCase = new LoadGameUseCase(repo);
+        final Game game = loadGameUseCase.loadUserGame(p1Uuid).orElseThrow();
+
         final List<Intel> intelSince = game.getIntelSince(firstIntel);
         intelSince.remove(lastIntel);
         final Intel quitIntel = intelSince.get(intelSince.size() - 1);

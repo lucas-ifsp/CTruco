@@ -37,4 +37,8 @@ public class LoadGameUseCase {
     public Optional<Game> load(UUID uuid) {
         return repo.findByUuid(Objects.requireNonNull(uuid));
     }
+
+    public Optional<Game> loadUserGame(UUID userUUID) {
+        return repo.findByUserUuid(Objects.requireNonNull(userUUID));
+    }
 }

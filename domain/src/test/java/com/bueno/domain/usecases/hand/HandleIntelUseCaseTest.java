@@ -29,6 +29,7 @@ import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.InMemoryGameRepository;
+import com.bueno.domain.usecases.game.LoadGameUseCase;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ class HandleIntelUseCaseTest {
 
     private UUID p1Uuid;
     private UUID p2Uuid;
-    private Game game;
+    private InMemoryGameRepository repo;
 
     @BeforeAll
     static void init() {
@@ -75,10 +76,10 @@ class HandleIntelUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
-        final InMemoryGameRepository repo = new InMemoryGameRepository();
+        repo = new InMemoryGameRepository();
 
         createGameUseCase = new CreateGameUseCase(repo);
-        game = createGameUseCase.create(player1, player2);
+        createGameUseCase.create(player1, player2);
         sut = new HandleIntelUseCase(repo);
     }
 
@@ -124,6 +125,9 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should correctly get intel history if invariants are met")
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
+        LoadGameUseCase loadGameUseCase = new LoadGameUseCase(repo);
+        Game game = loadGameUseCase.loadUserGame(p1Uuid).orElseThrow();
+
         final Hand hand = game.currentHand();
         final Intel initialIntel = game.getIntel();
         hand.playFirstCard(player1, Card.closed());

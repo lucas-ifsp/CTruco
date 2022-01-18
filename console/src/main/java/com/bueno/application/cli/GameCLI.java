@@ -23,15 +23,14 @@ package com.bueno.application.cli;
 import com.bueno.application.cli.commands.*;
 import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
+import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -51,7 +50,6 @@ public class GameCLI {
     private final List<Intel> missingIntel;
     private Intel lastIntel;
     private Player player;
-    private Game game;
     private final UUID botUUID;
     private final UUID playerUUID;
 
@@ -77,27 +75,25 @@ public class GameCLI {
 
     private void play(){
         while (!lastIntel.isGameDone()){
-            int handsPlayed = game.handsPlayed();
             handleMaoDeOnzeResponse();
-            if(isCurrentHandDone(handsPlayed)) continue;
+            if(isCurrentHandDone(lastIntel)) continue;
             handleRaiseRequest();
-            if(isCurrentHandDone(handsPlayed)) continue;
+            if(isCurrentHandDone(lastIntel)) continue;
             handleCardPlaying();
-            if(isCurrentHandDone(handsPlayed)) continue;
+            if(isCurrentHandDone(lastIntel)) continue;
             handleRaiseResponse();
         }
     }
 
-    private boolean isCurrentHandDone(int handsPlayed) {
-        return game.handsPlayed() > handsPlayed;
+    private boolean isCurrentHandDone(Intel intel) {
+        return intel.event().orElse("").equals("NEW_HAND");
     }
 
     private void createGame(){
         final UsernameReader usernameReader = new UsernameReader();
         final String username = usernameReader.execute();
         player = new CLIPlayer(username, playerUUID);
-        game = gameUseCase.create(player, new MineiroBot(repo, botUUID));
-        lastIntel = game.getIntel();
+        lastIntel = gameUseCase.create(player, new MineiroBot(repo, botUUID));
         missingIntel.add(lastIntel);
     }
 

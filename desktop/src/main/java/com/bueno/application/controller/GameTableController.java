@@ -25,7 +25,6 @@ import com.bueno.application.model.UIPlayer;
 import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.entities.player.util.Player;
@@ -33,6 +32,7 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class GameTableController {
@@ -94,9 +95,9 @@ public class GameTableController {
     private int lastUserPlayedCardPosition;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
+    private AtomicBoolean isAnimating;
 
     //TODO SOLVE PROBLEM WHILE BOT REJECTS MÃO DE ONZE
-    //TODO REFACTOR CREATE GAME TO RETURN INTEL, NOT GAME
     //TODO TEST OVERALL GAME PLAYING
     public GameTableController() {
         repo = new InMemoryGameRepository();
@@ -108,6 +109,7 @@ public class GameTableController {
         userUUID = UUID.randomUUID();
         missingIntel = new ArrayList<>();
         botCards = new ArrayList<>();
+        isAnimating = new AtomicBoolean(false);
     }
 
     @FXML
@@ -153,8 +155,7 @@ public class GameTableController {
     public void createGame(String username) {
         user = new UIPlayer(username, userUUID);
         bot = new MineiroBot(repo, botUUID);
-        Game game = gameUseCase.create(user, bot);
-        lastIntel = game.getIntel();
+        lastIntel = gameUseCase.create(user, bot);
         missingIntel.add(lastIntel);
 
         showPlayerNames();
@@ -192,6 +193,7 @@ public class GameTableController {
         final var builder = new TimelineBuilder();
         hideMessage();
 
+        isAnimating = new AtomicBoolean(true);
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
             final var event = intel.event().orElse("");
@@ -210,7 +212,9 @@ public class GameTableController {
             if (isUserNextPlayer(intel))
                 addNotificationToUser(builder, intel);
         }
-        Platform.runLater(builder.build()::play);
+        final Timeline timeline = builder.build();
+        timeline.setOnFinished(e -> isAnimating = new AtomicBoolean(false));
+        Platform.runLater(timeline::play);
     }
 
     private void addBotAnimation(TimelineBuilder builder, Intel intel, String event) {
@@ -396,7 +400,7 @@ public class GameTableController {
         if (possibleUuid.isEmpty()) return false;
         final var isCurrentPlayer = possibleUuid.get().equals(userUUID);
         final var isPerformingAllowedAction = lastIntel.possibleActions().contains(action);
-        return isCurrentPlayer && isPerformingAllowedAction;
+        return !isAnimating.get() && isCurrentPlayer && isPerformingAllowedAction;
     }
 
     public void pickLeft(MouseEvent mouseEvent) {
