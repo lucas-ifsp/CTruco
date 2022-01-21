@@ -24,7 +24,6 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.truco.Truco;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,6 @@ class RoundTest {
     @BeforeEach
      void setUp(){
         Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-        Logger.getLogger(Truco.class.getName()).setLevel(Level.OFF);
     }
 
     @ParameterizedTest

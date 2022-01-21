@@ -50,6 +50,8 @@ public class Intel{
     private int currentOpponentScore;
     private String currentOpponentUsername;
 
+    private List<PlayerIntel> players;
+
     private Card vira;
     private Card cardToPlayAgainst;
     private List<Card> openCards;
@@ -73,19 +75,6 @@ public class Intel{
         return result;
     }
 
-    private void setGameIntel(Game game){
-        gameIsDone = isGameDone(game);
-        gameWinner = getGameWinner(game);
-    }
-
-    private boolean isGameDone(Game game) {
-        return game.isDone();
-    }
-
-    private UUID getGameWinner(Game game) {
-        return game.getWinner().map(Player::getUuid).orElse(null);
-    }
-
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
         handScore = hand.getScore().get();
@@ -100,6 +89,8 @@ public class Intel{
     }
 
     private void setPlayersIntel(Hand hand){
+        players = List.of(new PlayerIntel(hand.getFirstToPlay()), new PlayerIntel(hand.getLastToPlay()));
+
         final Player eventPlayer = hand.getEventPlayer();
         eventPlayerUsername = eventPlayer != null ? eventPlayer.getUsername() : null;
         eventPlayerUUID = eventPlayer != null ? eventPlayer.getUuid() : null;
@@ -112,8 +103,37 @@ public class Intel{
         currentOpponentUsername = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getUsername() : null;
     }
 
+    private void setGameIntel(Game game){
+        gameIsDone = game.isDone();
+        gameWinner = game.getWinner().map(Player::getUuid).orElse(null);
+    }
+
     private Intel() {
         timestamp = Instant.now();
+    }
+
+    public class PlayerIntel{
+        private final UUID uuid;
+        private final String username;
+        private final int score;
+
+        public PlayerIntel(Player player) {
+            this.uuid = player.getUuid();
+            this.username = player.getUsername();
+            this.score = player.getScore();
+        }
+
+        public UUID getUuid() {
+            return uuid;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public int getScore() {
+            return score;
+        }
     }
 
     private List<Optional<String>> getRoundWinners(Hand hand) {
@@ -177,6 +197,10 @@ public class Intel{
         return possibleActions;
     }
 
+    public List<PlayerIntel> players(){
+        return players;
+    }
+
     public Optional<UUID> currentPlayerUuid() {
         return currentPlayer != null ? Optional.of(currentPlayer.getUuid()) : Optional.empty();
     }
@@ -201,7 +225,7 @@ public class Intel{
         return Optional.ofNullable(event);
     }
 
-    public Optional<UUID> getEventPlayerUUID() {
+    public Optional<UUID> eventPlayer() {
         return Optional.ofNullable(eventPlayerUUID);
     }
 
