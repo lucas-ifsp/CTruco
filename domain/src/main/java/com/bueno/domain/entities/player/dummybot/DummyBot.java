@@ -22,15 +22,15 @@ package com.bueno.domain.entities.player.dummybot;
 
 
 import com.bueno.domain.entities.game.HandScore;
+import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
-import java.util.UUID;
-
-public class DummyBot extends Player {
+public class DummyBot extends Player implements Bot {
 
     public DummyBot() {
-        super("DummyBot", UUID.randomUUID());
+        super("DummyBot");
     }
 
     @Override
@@ -53,5 +53,8 @@ public class DummyBot extends Player {
         return false;
     }
 
+    @Override
+    public void playTurn(Intel intel) {
 
+    }
 }
