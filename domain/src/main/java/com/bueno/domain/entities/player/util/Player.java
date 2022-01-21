@@ -49,11 +49,6 @@ public abstract class Player {
         this.uuid = uuid;
     }
 
-    public abstract CardToPlay chooseCardToPlay();
-    public abstract boolean requestTruco();
-    public abstract int getTrucoResponse(HandScore newHandScore);
-    public abstract boolean getMaoDeOnzeResponse();
-
     public final void setIntel(Intel intel){
         this.intel = intel;
     }
