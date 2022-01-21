@@ -78,9 +78,7 @@ public class GameTableController {
     @FXML private Button btnQuit;
     @FXML private Button btnRaise;
 
-    private Player user;
     private String username;
-    private Player bot;
     private String botName;
     private List<ImageView> opponentCardImages;
 
@@ -156,8 +154,8 @@ public class GameTableController {
         this.username = username;
         this.botName = "MineiroBot";
 
-        user = new UIPlayer(username, userUUID);
-        bot = new MineiroBot(repo, botUUID);
+        Player user = new UIPlayer(username, userUUID);
+        Player bot = new MineiroBot(repo, botUUID);
 
         lastIntel = gameUseCase.create(user, bot);
         missingIntel.add(lastIntel);
@@ -219,15 +217,15 @@ public class GameTableController {
                 builder.append(0.5, () -> updateRoundResults(intel));
             }
             case "QUIT" -> {
-                builder.append(0.5, () -> showMessage(bot.getUsername() + " correu!"));
+                builder.append(0.5, () -> showMessage(botName + " correu!"));
                 builder.append(1.5, this::hideMessage);
             }
             case "QUIT_HAND" -> {
-                builder.append(0.5, () -> showMessage(bot.getUsername() + " não aceitou a mão!"));
+                builder.append(0.5, () -> showMessage(botName + " não aceitou a mão!"));
                 builder.append(1.5, this::hideMessage);
             }
             case "ACCEPT" -> {
-                builder.append(0.5, () -> showMessage(bot.getUsername() + " aceitou!"));
+                builder.append(0.5, () -> showMessage(botName + " aceitou!"));
                 builder.append(1.5, this::hideMessage);
             }
         }
@@ -263,7 +261,7 @@ public class GameTableController {
         }
         if (hasRaiseProposal(intel)) {
             final var value = scoreToString(intel.scoreProposal().orElseThrow());
-            builder.append(0.5, () -> showMessage(bot.getUsername() + " pediu " + value + " !"));
+            builder.append(0.5, () -> showMessage(botName + " pediu " + value + " !"));
         }
     }
 
