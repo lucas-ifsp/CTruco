@@ -32,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,8 +56,16 @@ class IntelTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(p1.getUuid()).thenReturn(UUID.randomUUID());
+        lenient().when(p2.getUuid()).thenReturn(UUID.randomUUID());
+        lenient().when(p1.getUsername()).thenReturn("name1");
+        lenient().when(p2.getUsername()).thenReturn("name2");
+        lenient().when(p1.getScore()).thenReturn(0);
+        lenient().when(p2.getScore()).thenReturn(0);
         lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleAction.ACCEPT));
         lenient().when(hand.getScore()).thenReturn(HandScore.ONE);
+        lenient().when(hand.getFirstToPlay()).thenReturn(p1);
+        lenient().when(hand.getLastToPlay()).thenReturn(p2);
     }
 
     @Test
@@ -123,8 +132,6 @@ class IntelTest {
     @Test
     @DisplayName("Should correctly obtain the name of the round winners")
     void shouldCorrectlyObtainTheNameOfTheRoundWinners() {
-        when(p1.getUsername()).thenReturn("name1");
-        when(p2.getUsername()).thenReturn("name2");
         when(round.getWinner()).thenReturn(Optional.of(p1)).thenReturn(Optional.empty()).thenReturn(Optional.of(p2));
         when(hand.getRoundsPlayed()).thenReturn(List.of(round, round, round));
 
