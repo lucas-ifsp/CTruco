@@ -23,7 +23,7 @@
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lbPlayerScoreValue" layoutX="85.0" layoutY="709.0" text="--" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="85.0">
+    <Label fx:id="lbPlayerScoreValue" layoutX="85.0" layoutY="709.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="85.0">
         <font>
             <Font size="14.0" />
         </font>
@@ -43,7 +43,7 @@
             <Font size="14.0" />
         </font>
     </Label>
-    <Label fx:id="lbOpponentScoreValue" layoutX="86.0" layoutY="65.0" text="--" textFill="WHITE" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="65.0">
+    <Label fx:id="lbOpponentScoreValue" layoutX="86.0" layoutY="65.0" text="0" textFill="WHITE" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="65.0">
         <font>
             <Font size="14.0" />
         </font>

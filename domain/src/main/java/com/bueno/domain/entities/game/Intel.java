@@ -112,15 +112,17 @@ public class Intel{
         timestamp = Instant.now();
     }
 
-    public class PlayerIntel{
+    public static class PlayerIntel{
         private final UUID uuid;
         private final String username;
         private final int score;
+        private final List<Card> cards;
 
         public PlayerIntel(Player player) {
             this.uuid = player.getUuid();
             this.username = player.getUsername();
             this.score = player.getScore();
+            this.cards = List.copyOf(player.getCards());
         }
 
         public UUID getUuid() {
@@ -133,6 +135,10 @@ public class Intel{
 
         public int getScore() {
             return score;
+        }
+
+        public List<Card> getCards() {
+            return cards;
         }
     }
 
