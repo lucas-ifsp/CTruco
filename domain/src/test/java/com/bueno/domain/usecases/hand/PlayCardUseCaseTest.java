@@ -24,10 +24,10 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.InMemoryGameRepository;
+import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 import org.junit.jupiter.api.*;
@@ -37,10 +37,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -48,13 +50,14 @@ import static org.mockito.Mockito.when;
 class PlayCardUseCaseTest {
 
     private PlayCardUseCase sut;
-    private CreateGameUseCase createGameUseCase;
 
     @Mock private Player player1;
     @Mock private Player player2;
+    @Mock private GameRepository repo;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
+    private Game game;
 
     @BeforeAll
     static void init() {
@@ -75,17 +78,15 @@ class PlayCardUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
-        final InMemoryGameRepository repo = new InMemoryGameRepository();
+        game = new Game(player1, player2);
+        lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
 
-        createGameUseCase = new CreateGameUseCase(repo);
-        createGameUseCase.create(player1, player2);
         sut = new PlayCardUseCase(repo);
     }
 
     @AfterEach
     void tearDown() {
         sut = null;
-        createGameUseCase = null;
         p1Uuid = null;
         p2Uuid = null;
     }
@@ -111,8 +112,7 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
-        assertThrows(UnsupportedGameRequestException.class,
-                () -> sut.playCard(new RequestModel(p2Uuid, Card.closed())));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(new RequestModel(p2Uuid, Card.closed())));
     }
 
     @Test

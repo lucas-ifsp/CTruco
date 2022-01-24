@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.repository;
+package com.bueno.persistence.inmemory;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.util.Player;
@@ -40,15 +40,14 @@ public class InMemoryGameRepository implements GameRepository {
     }
 
     @Override
-    public Optional findByUuid(UUID key) {
+    public Optional<Game> findByUuid(UUID key) {
         return Optional.ofNullable(games.get(key));
     }
 
     @Override
     public Optional<Game> findByUserUuid(UUID uuid) {
-        Predicate<Game> hasPlayerWithUuid = game ->
-                hasUuid(game.getPlayer1(), uuid) || hasUuid(game.getPlayer2(), uuid);
-        return games.values().stream().filter(hasPlayerWithUuid).findAny();
+        Predicate<Game> hasPlayer = game -> hasUuid(game.getPlayer1(), uuid) || hasUuid(game.getPlayer2(), uuid);
+        return games.values().stream().filter(hasPlayer).findAny();
     }
 
     private static boolean hasUuid(Player player, UUID uuid) {
@@ -58,9 +57,9 @@ public class InMemoryGameRepository implements GameRepository {
 
     @Override
     public Optional<Game> findByPlayerUsername(String username) {
-        Predicate<Game> hasPlayerWithUsername = game ->
-                hasUsername(game.getPlayer1(), username) || hasUsername(game.getPlayer2(), username);
-        return games.values().stream().filter(hasPlayerWithUsername).findAny();
+        Predicate<Game> hasPlayer =
+                game -> hasUsername(game.getPlayer1(), username) || hasUsername(game.getPlayer2(), username);
+        return games.values().stream().filter(hasPlayer).findAny();
     }
 
     private static boolean hasUsername(Player player, String username) {

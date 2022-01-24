@@ -20,9 +20,9 @@
 
 package com.bueno.application.standalone;
 
-import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
+import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.ArrayList;
 import java.util.List;
