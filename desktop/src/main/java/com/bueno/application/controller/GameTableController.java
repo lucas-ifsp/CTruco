@@ -22,7 +22,6 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.model.UIPlayer;
-import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
@@ -32,6 +31,7 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -96,7 +96,16 @@ public class GameTableController {
     private Intel lastIntel;
     private AtomicBoolean isAnimating;
 
-    //TODO TEST OVERALL GAME PLAYING
+
+    //TODO Remover player do application
+    //TODO Acertar todos os export de módulo ao mínimo
+    //TODO Arrumar toda a persistência inMemory
+    //TODO BOT Jogar somente aberto na mão de onze
+    //TODO BOT Mostrar carta em caso de empate na última rodada
+    //TODO BOT Ver truco na terceira rodada
+    //TODO BOT Aceitar qualquer valor se já ganhou o jogo
+    //TODO Testar o jogo em modo console
+    //TODO Organizar esta classe
     public GameTableController() {
         repo = new InMemoryGameRepository();
         gameUseCase = new CreateGameUseCase(repo);

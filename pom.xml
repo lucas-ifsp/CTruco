@@ -10,6 +10,7 @@
         <module>domain</module>
         <module>console</module>
         <module>desktop</module>
+        <module>persistence</module>
     </modules>
 
     <parent>

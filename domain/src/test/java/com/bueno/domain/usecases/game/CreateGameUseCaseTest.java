@@ -20,7 +20,9 @@
 
 package com.bueno.domain.usecases.game;
 
+import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.player.dummybot.DummyBot;
 import com.bueno.domain.entities.player.util.Player;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +32,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +46,7 @@ class CreateGameUseCaseTest {
     @Mock private Player p2;
     @Mock private Player p3;
     @Mock private Player p4;
+    @Mock private GameRepository repo;
 
     private CreateGameUseCase sut;
 
@@ -52,7 +57,7 @@ class CreateGameUseCaseTest {
 
     @BeforeEach
     void setUp(){
-        sut = new CreateGameUseCase(new InMemoryGameRepository());
+        sut = new CreateGameUseCase(repo);
     }
 
     @Test
@@ -80,21 +85,7 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should not create new game if one of the players is enrolled in another game")
     void shouldNotCreateNewGameIfOneOfThePlayersEnrolledInAnotherGame() {
-        when(p1.getUsername()).thenReturn("p1");
-        when(p2.getUsername()).thenReturn("p2");
-        sut.create(p1, p2);
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.create(p1, p3));
-    }
-
-    @Test
-    @DisplayName("Should be able to add multiple games")
-    void shouldBeAbleToAddMultipleGames() {
-        when(p1.getUsername()).thenReturn("p1");
-        when(p2.getUsername()).thenReturn("p2");
-        when(p3.getUsername()).thenReturn("p3");
-        when(p4.getUsername()).thenReturn("p4");
-        Intel intel1 = sut.create(p1, p2);
-        Intel intel2 = sut.create(p3, p4);
-        assertNotEquals(intel1, intel2);
+        when(repo.findByPlayerUsername(any())).thenReturn(Optional.of(new Game(new DummyBot(), new DummyBot())));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.create(p1, p2));
     }
 }

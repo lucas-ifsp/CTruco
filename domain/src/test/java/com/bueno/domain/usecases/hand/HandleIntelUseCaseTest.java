@@ -27,9 +27,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.InMemoryGameRepository;
-import com.bueno.domain.usecases.game.LoadGameUseCase;
+import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
@@ -51,14 +50,14 @@ import static org.mockito.Mockito.when;
 class HandleIntelUseCaseTest {
 
     private HandleIntelUseCase sut;
-    private CreateGameUseCase createGameUseCase;
 
     @Mock private Player player1;
     @Mock private Player player2;
+    @Mock private GameRepository repo;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
-    private InMemoryGameRepository repo;
+    private Game game;
 
     @BeforeAll
     static void init() {
@@ -76,10 +75,8 @@ class HandleIntelUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
-        repo = new InMemoryGameRepository();
-
-        createGameUseCase = new CreateGameUseCase(repo);
-        createGameUseCase.create(player1, player2);
+        game = new Game(player1, player2);
+        lenient().when(repo.findByUserUuid(p1Uuid)).thenReturn(Optional.of(game));
         sut = new HandleIntelUseCase(repo);
     }
 
@@ -125,9 +122,6 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should correctly get intel history if invariants are met")
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
-        LoadGameUseCase loadGameUseCase = new LoadGameUseCase(repo);
-        Game game = loadGameUseCase.loadUserGame(p1Uuid).orElseThrow();
-
         final Hand hand = game.currentHand();
         final Intel initialIntel = game.getIntel();
         hand.playFirstCard(player1, Card.closed());

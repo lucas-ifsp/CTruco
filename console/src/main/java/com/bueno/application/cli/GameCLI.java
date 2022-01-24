@@ -21,7 +21,6 @@
 package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
-import com.bueno.application.repository.InMemoryGameRepository;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
@@ -31,6 +30,7 @@ import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.*;
 import java.util.logging.LogManager;

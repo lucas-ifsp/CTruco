@@ -29,25 +29,25 @@ import java.util.logging.Logger;
 
 public class CreateGameUseCase {
 
-    private GameRepository dao;
+    private GameRepository repository;
     private final static Logger LOGGER = Logger.getLogger(CreateGameUseCase.class.getName());
 
-    public CreateGameUseCase(GameRepository dao) {
-        this.dao = dao;
+    public CreateGameUseCase(GameRepository repository) {
+        this.repository = repository;
     }
 
     public Intel create(Player p1, Player p2) {
         Objects.requireNonNull(p1);
         Objects.requireNonNull(p2);
 
-        dao.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
+        repository.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p1.getUsername() + " is already playing a game.");});
 
-        dao.findByPlayerUsername(p2.getUsername()).ifPresent(unused -> {
+        repository.findByPlayerUsername(p2.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p2.getUsername() + " is already playing a game.");});
 
         Game game = new Game(p1, p2);
-        dao.save(game);
+        repository.save(game);
 
         LOGGER.info("Game has been created with UUID: " + game.getUuid());
 
