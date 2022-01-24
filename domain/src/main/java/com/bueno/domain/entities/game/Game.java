@@ -92,6 +92,7 @@ public class Game {
 
     public List<Intel> getIntelSince(Intel lastIntel) {
         final List<Intel> wholeHistory = hands.stream().flatMap(hand -> hand.getIntelHistory().stream()).collect(Collectors.toList());
+        if (isDone()) wholeHistory.add(Intel.ofGame(this));
         if (lastIntel == null) return wholeHistory;
         final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
         final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;

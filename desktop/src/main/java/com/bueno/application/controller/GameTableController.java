@@ -247,6 +247,13 @@ public class GameTableController {
             lastUserPlayedCardPosition = 1;
             builder.append(1.5, () -> organizeNewHand(intel));
         }
+        if (intel.isGameDone()){
+            final String message = "Game Over - Você " + (getPlayerScore(intel, userUUID) == 12? "Venceu!" : "Perdeu.");
+            builder.append(0.5, this::resetCardImages);
+            builder.append(0.25, () -> showMessage(message));
+            builder.append(this::setRoundLabelsInvisible);
+            builder.append(() -> updateHandScore(null));
+        }
         builder.append(() -> updatePlayerScores(intel));
         builder.append(() -> configureButtons(intel));
     }
