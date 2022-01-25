@@ -27,12 +27,12 @@ import com.bueno.domain.entities.game.Intel;
 import java.util.*;
 import java.util.logging.Logger;
 
-public abstract class Player {
+public class Player {
 
     public static final int MAX_SCORE = 12;
 
     protected List<Card> cards;
-    protected String username;
+    protected final String username;
     private final UUID uuid;
 
     private int score;
