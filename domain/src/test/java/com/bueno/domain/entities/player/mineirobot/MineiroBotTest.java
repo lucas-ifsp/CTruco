@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,7 +59,7 @@ class MineiroBotTest {
     void setUp() {
         opponentUsername = "Opponent";
         lenient().when(opponent.getUsername()).thenReturn(opponentUsername);
-        sut = new MineiroBot();
+        sut = new MineiroBot( UUID.randomUUID());
         sut.setIntel(intel);
     }
 

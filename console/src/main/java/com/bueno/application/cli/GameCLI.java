@@ -23,14 +23,14 @@ package com.bueno.application.cli;
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.mineirobot.MineiroBot;
-import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.domain.usecases.player.CreateUserUseCase;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.bueno.persistence.inmemory.InMemoryUserRepository;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -41,35 +41,35 @@ import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.
 
 public class GameCLI {
 
+    private final CreateUserUseCase createUserUseCase;
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final ScoreProposalUseCase scoreProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
-    private final InMemoryGameRepository repo;
+    private final InMemoryGameRepository gameRepo;
+    private final InMemoryUserRepository userRepo;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
-    private Player player;
-    private final UUID botUUID;
-    private final UUID playerUUID;
+    private UUID userUUID;
 
     public static void main(String[] args) {
         LogManager.getLogManager().reset();
         final GameCLI cli = new GameCLI();
+        cli.createAccount();
         cli.createGame();
         cli.play();
     }
 
     public GameCLI() {
-        repo = new InMemoryGameRepository();
+        gameRepo = new InMemoryGameRepository();
+        userRepo = new InMemoryUserRepository();
 
-        gameUseCase = new CreateGameUseCase(repo);
-        playCardUseCase = new PlayCardUseCase(repo);
-        scoreProposalUseCase = new ScoreProposalUseCase(repo);
-        handleIntelUseCase = new HandleIntelUseCase(repo);
-
-        botUUID = UUID.randomUUID();
-        playerUUID = UUID.randomUUID();
+        createUserUseCase = new CreateUserUseCase(userRepo);
+        gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
+        playCardUseCase = new PlayCardUseCase(gameRepo);
+        scoreProposalUseCase = new ScoreProposalUseCase(gameRepo);
+        handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }
 
@@ -89,11 +89,14 @@ public class GameCLI {
         return intel.event().orElse("").equals("NEW_HAND");
     }
 
-    private void createGame(){
+    private void createAccount(){
         final UsernameReader usernameReader = new UsernameReader();
         final String username = usernameReader.execute();
-        player = new CLIPlayer(username, playerUUID);
-        lastIntel = gameUseCase.create(player, new MineiroBot(repo, botUUID));
+        userUUID = createUserUseCase.create(new CreateUserUseCase.RequestModel(username, "unused@email.com"));
+    }
+
+    private void createGame(){
+        lastIntel = gameUseCase.create(userUUID, "MineiroBot");
         missingIntel.add(lastIntel);
     }
 
@@ -104,18 +107,18 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        player.setCards(handleIntelUseCase.getOwnedCards(playerUUID));
-        final CardReader cardReader = new CardReader(this, player.getCards());
+        final List<Card> ownedCards = handleIntelUseCase.getOwnedCards(userUUID);
+        final CardReader cardReader = new CardReader(this, ownedCards);
         final CardModeReader cardModeReader = new CardModeReader();
         final Card card = cardReader.execute();
         final CardModeReader.CardMode mode = cardModeReader.execute();
 
-        if(mode == OPEN) playCardUseCase.playCard(new RequestModel(playerUUID, card));
-        else playCardUseCase.discard(new RequestModel(playerUUID, card));
+        if(mode == OPEN) playCardUseCase.playCard(new RequestModel(userUUID, card));
+        else playCardUseCase.discard(new RequestModel(userUUID, card));
     }
 
     private void updateIntel() {
-        List<Intel> newIntel = handleIntelUseCase.findIntelSince(playerUUID, lastIntel);
+        List<Intel> newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel);
         missingIntel.addAll(newIntel);
         if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
@@ -124,7 +127,7 @@ public class GameCLI {
     private boolean canNotPerform(Set<String> allowedActions, Set<String> notAllowedActions) {
         final Optional<UUID> possibleUuid = lastIntel.currentPlayerUuid();
         if(possibleUuid.isEmpty()) return true;
-        final boolean isCurrentPlayer = possibleUuid.get().equals(playerUUID);
+        final boolean isCurrentPlayer = possibleUuid.get().equals(userUUID);
         final boolean isPerformingAllowedAction = lastIntel.possibleActions().containsAll(allowedActions);
         final boolean isNotPerformingAnyNotAllowed = Collections.disjoint(lastIntel.possibleActions(), notAllowedActions);
         return !isCurrentPlayer || !isPerformingAllowedAction || !isNotPerformingAnyNotAllowed;
@@ -138,7 +141,7 @@ public class GameCLI {
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseRequestReader requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handScore()));
-        if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(playerUUID);
+        if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(userUUID);
     }
 
     private int nextScore(int score){
@@ -154,9 +157,9 @@ public class GameCLI {
 
         RaiseResponseReader responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handScore()));
         switch (responseReader.execute()){
-            case QUIT -> scoreProposalUseCase.quit(playerUUID);
-            case ACCEPT -> scoreProposalUseCase.accept(playerUUID);
-            case RAISE -> scoreProposalUseCase.raise(playerUUID);
+            case QUIT -> scoreProposalUseCase.quit(userUUID);
+            case ACCEPT -> scoreProposalUseCase.accept(userUUID);
+            case RAISE -> scoreProposalUseCase.raise(userUUID);
         }
     }
 
@@ -166,13 +169,14 @@ public class GameCLI {
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
         if(responseReader.execute() == ACCEPT) {
-            scoreProposalUseCase.accept(playerUUID);}
-        scoreProposalUseCase.quit(playerUUID);
+            scoreProposalUseCase.accept(userUUID);}
+        scoreProposalUseCase.quit(userUUID);
     }
 
     public void printGameIntel(int delayInMilliseconds){
         if(missingIntel.size() == 1) delayInMilliseconds = 0;
-        IntelPrinter intelPrinter  = new IntelPrinter(player, missingIntel, delayInMilliseconds);
+        final List<Card> ownedCards = handleIntelUseCase.getOwnedCards(userUUID);
+        IntelPrinter intelPrinter  = new IntelPrinter(userUUID, ownedCards, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
     }
 

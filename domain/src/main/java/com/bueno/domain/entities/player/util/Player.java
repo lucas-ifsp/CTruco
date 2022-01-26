@@ -24,36 +24,36 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
-public class Player {
+public abstract class Player {
 
     public static final int MAX_SCORE = 12;
 
-    protected List<Card> cards;
-    protected final String username;
+    private List<Card> cards;
+    private final String username;
     private final UUID uuid;
 
     private int score;
     private Intel intel;
 
-    private final static Logger LOGGER = Logger.getLogger(Player.class.getName());
-
     public Player(String username) {
-        this(username, UUID.randomUUID());
+        this(UUID.randomUUID(), username);
     }
 
-    public Player(String username, UUID uuid) {
+    public Player(UUID uuid, String username) {
         this.username = username;
         this.uuid = uuid;
     }
 
-    public final void setIntel(Intel intel){
+    public void setIntel(Intel intel){
         this.intel = intel;
     }
 
-    public final Intel getIntel() {
+    public Intel getIntel() {
         return intel;
     }
 
@@ -77,11 +77,11 @@ public class Player {
         return !getCards().contains(discard);
     }
 
-    public void addScore(HandScore handScore){
+    public final void addScore(HandScore handScore){
         this.score = Math.min(MAX_SCORE, this.score + handScore.get());
     }
 
-    public void setCards(List<Card> cards){
+    public final void setCards(List<Card> cards){
         this.cards = new ArrayList<>(cards);
     }
 
@@ -97,13 +97,13 @@ public class Player {
         return score;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
     @Override
     public String toString() {
         return getUsername() + " (" + getUuid() + ")";
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     @Override

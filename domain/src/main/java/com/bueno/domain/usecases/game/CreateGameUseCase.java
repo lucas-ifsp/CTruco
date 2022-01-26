@@ -22,32 +22,59 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.player.util.BotFactory;
 import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.player.EntityNotFoundException;
+import com.bueno.domain.usecases.player.UserRepository;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class CreateGameUseCase {
 
-    private GameRepository repository;
+    private GameRepository gameRepo;
+    private UserRepository userRepo;
     private final static Logger LOGGER = Logger.getLogger(CreateGameUseCase.class.getName());
 
-    public CreateGameUseCase(GameRepository repository) {
-        this.repository = repository;
+    public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo) {
+        this.gameRepo = Objects.requireNonNull(gameRepo);
+        this.userRepo = userRepo;
     }
 
-    public Intel create(Player p1, Player p2) {
-        Objects.requireNonNull(p1);
-        Objects.requireNonNull(p2);
+    public Intel create(UUID user1UUID, UUID user2UUID){
+        Objects.requireNonNull(user1UUID);
+        Objects.requireNonNull(user2UUID);
 
-        repository.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
+        final Player user1 = userRepo.findByUUID(user1UUID)
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + user1UUID));
+        final Player user2 = userRepo.findByUUID(user2UUID)
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + user2UUID));
+
+        return create(user1, user2);
+    }
+
+    public Intel create(UUID userUUID, String botName){
+        Objects.requireNonNull(userUUID);
+        Objects.requireNonNull(botName);
+
+        final Player user = userRepo.findByUUID(userUUID)
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + userUUID));
+
+        final Player bot = BotFactory.create(botName, gameRepo);
+
+        return create(user, bot);
+    }
+
+    Intel create(Player p1, Player p2) {
+        gameRepo.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p1.getUsername() + " is already playing a game.");});
 
-        repository.findByPlayerUsername(p2.getUsername()).ifPresent(unused -> {
+        gameRepo.findByPlayerUsername(p2.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p2.getUsername() + " is already playing a game.");});
 
         Game game = new Game(p1, p2);
-        repository.save(game);
+        gameRepo.save(game);
 
         LOGGER.info("Game has been created with UUID: " + game.getUuid());
 

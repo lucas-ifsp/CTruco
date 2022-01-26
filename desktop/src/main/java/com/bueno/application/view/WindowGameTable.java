@@ -42,7 +42,7 @@ public class WindowGameTable extends Application {
         FXMLLoader loader = new FXMLLoader();
         Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("game_table.fxml")).openStream());
         GameTableController controller = loader.getController();
-        controller.createGame("Lucas");
+        controller.createGame("Lucas", "MineiroBot");
 
         Scene scene = new Scene(graph, 1024, 740);
         stage.setScene(scene);

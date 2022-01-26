@@ -20,29 +20,24 @@
 
 package com.bueno.domain.usecases.player;
 
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.utils.Notification;
+import com.bueno.domain.usecases.utils.Validator;
 
 import java.util.Objects;
-import java.util.UUID;
 
-public class CreatePlayerUseCase {
-    private final PlayerRepository repository;
+public class CreateUserValidator extends Validator<CreateUserUseCase.RequestModel> {
 
-    public CreatePlayerUseCase(PlayerRepository repository) {
-        this.repository = repository;
-    }
+    @Override
+    public Notification validate(CreateUserUseCase.RequestModel model) {
+        if(model == null) return new Notification("Request model is null");
 
-    public UUID create(String username){
-        Objects.requireNonNull(username);
+        final Notification notification = new Notification();
+        if(model.username() == null) notification.addError("Username is null.");
+        if(model.email() == null) notification.addError("E-mail is null.");
+        if(notification.hasErrors()) return notification;
 
-        if(username.isEmpty()) throw new IllegalArgumentException("Username must no be null");
-
-        repository.findByUsername(username).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use.");});
-
-        Player player = new Player(username);
-
-        repository.save(player);
-        return player.getUuid();
+        if(Objects.requireNonNull(model.username()).isEmpty()) notification.addError("Username is empty");
+        if(Objects.requireNonNull(model.email()).isEmpty()) notification.addError("E-mail is empty");
+        return notification;
     }
 }

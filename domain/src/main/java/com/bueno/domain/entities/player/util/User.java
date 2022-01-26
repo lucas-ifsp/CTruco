@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,39 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.dummybot;
-
-import com.bueno.domain.entities.game.HandScore;
-import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.game.GameRepository;
+package com.bueno.domain.entities.player.util;
 
 import java.util.UUID;
 
-public class DummyBot extends Bot {
+public class User extends Player{
+    private final String email;
 
-    public DummyBot(GameRepository repo, UUID uuid) {
-        super(repo, "DummyBot");
+    public User(String username, String email) {
+        super(username);
+        this.email = email;
+    }
+
+    public User(UUID uuid, String username, String email) {
+        super(uuid, username);
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
-    public CardToPlay chooseCardToPlay() {
-        return CardToPlay.of(getCards().get(0));
+    public String toString() {
+        return getUsername() + " (" + getUuid() + ")";
     }
-
-    @Override
-    public boolean requestTruco() {
-        return false;
-    }
-
-    @Override
-    public int getTrucoResponse(HandScore newHandScore) {
-        return 0;
-    }
-
-    @Override
-    public boolean getMaoDeOnzeResponse() {
-        return false;
-    }
-
 }

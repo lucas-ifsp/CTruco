@@ -20,24 +20,30 @@
 
 package com.bueno.persistence.inmemory;
 
-import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.player.PlayerRepository;
+import com.bueno.domain.entities.player.util.User;
+import com.bueno.domain.usecases.player.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
-public class InMemoryPlayerRepository implements PlayerRepository {
+public class InMemoryUserRepository implements UserRepository {
 
-    private final Map<String, Player> db = new HashMap<>();
+    private final Map<String, User> db = new HashMap<>();
 
     @Override
-    public void save(Player player) {
-        db.put(player.getUsername(), player);
+    public void save(User user) {
+        db.put(user.getUsername(), user);
     }
 
     @Override
-    public Optional<Player> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return Optional.ofNullable(db.get(username));
+    }
+
+    @Override
+    public Optional<User> findByUUID(UUID uuid) {
+        return db.values().stream().filter(user -> user.getUuid().equals(uuid)).findAny();
     }
 }

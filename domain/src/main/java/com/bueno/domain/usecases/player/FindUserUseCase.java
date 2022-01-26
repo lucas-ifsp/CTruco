@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,39 +18,26 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.dummybot;
+package com.bueno.domain.usecases.player;
 
-import com.bueno.domain.entities.game.HandScore;
-import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.entities.player.util.User;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public class DummyBot extends Bot {
+public class FindUserUseCase {
 
-    public DummyBot(GameRepository repo, UUID uuid) {
-        super(repo, "DummyBot");
+    private final UserRepository repo;
+
+    public FindUserUseCase(UserRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public CardToPlay chooseCardToPlay() {
-        return CardToPlay.of(getCards().get(0));
+    public ResponseModel findByUUID(UUID uuid){
+        final User user = repo.findByUUID(Objects.requireNonNull(uuid))
+                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
 
-    @Override
-    public boolean requestTruco() {
-        return false;
-    }
-
-    @Override
-    public int getTrucoResponse(HandScore newHandScore) {
-        return 0;
-    }
-
-    @Override
-    public boolean getMaoDeOnzeResponse() {
-        return false;
-    }
-
+    public record ResponseModel(UUID uuid, String username, String email){}
 }
