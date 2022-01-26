@@ -97,10 +97,7 @@ public class GameTableController {
     private Intel lastIntel;
     private AtomicBoolean isAnimating;
 
-
-    //TODO Remover player do application
-    //TODO Acertar todos os export de módulo ao mínimo
-    //TODO Arrumar toda a persistência inMemory
+    //TODO Arrumar o play with bots que não está pegando o UUID
     //TODO BOT Jogar somente aberto na mão de onze
     //TODO BOT Mostrar carta em caso de empate na última rodada
     //TODO BOT Ver truco na terceira rodada
