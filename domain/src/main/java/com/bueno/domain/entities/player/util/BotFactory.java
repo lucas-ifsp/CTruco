@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,16 +18,20 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.model;
+package com.bueno.domain.entities.player.util;
 
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.dummybot.DummyBot;
+import com.bueno.domain.entities.player.mineirobot.MineiroBot;
+import com.bueno.domain.usecases.game.GameRepository;
 
 import java.util.UUID;
 
-public class UIPlayer extends Player {
-
-    public UIPlayer(String username, UUID uuid) {
-        super(username, uuid);
+public class BotFactory {
+    public static Bot create(String botName, GameRepository repo){
+        return switch (botName){
+            case "MineiroBot" -> new MineiroBot(repo, UUID.randomUUID());
+            case "DummyBot" -> new DummyBot(repo, UUID.randomUUID());
+            default -> throw new IllegalArgumentException("Bot not found!");
+        };
     }
-
 }

@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.util.BotFactory;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
@@ -36,12 +36,17 @@ public class PlayGameWithBotsUseCase {
         this.repo = repo;
     }
 
-    public UUID playWithBots(Bot bot1, Bot bot2){
-        CreateGameUseCase gameUseCase = new CreateGameUseCase(repo);
-        Intel intel = gameUseCase.create((Player) bot1, (Player) bot2);
-        ((Player) bot1).setIntel(intel);
+    public UUID playWithBots(String bot1Name, String bot2Name){
+        final Bot bot1 = BotFactory.create(bot1Name, repo);
+        final Bot bot2 = BotFactory.create(bot2Name, repo);
+
+        CreateGameUseCase gameUseCase = new CreateGameUseCase(repo, null);
+        Intel intel = gameUseCase.create(bot1, bot2);
+        bot1.setIntel(intel);
+
         PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-        intel = playCardUseCase.playCard(new RequestModel(((Player) bot1).getUuid(), bot1.chooseCardToPlay().content()));
+        intel = playCardUseCase.playCard(new RequestModel(bot1.getUuid(), bot1.chooseCardToPlay().content()));
+
         return intel.gameWinner().orElseThrow();
     }
 }

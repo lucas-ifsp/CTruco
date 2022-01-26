@@ -20,14 +20,8 @@
 
 package com.bueno.domain.usecases.player;
 
-import com.bueno.domain.entities.player.util.Player;
-
-import java.util.Optional;
-
-public interface PlayerRepository {
-
-    void save(Player player) ;
-
-    Optional<Player> findByUsername(String username);
-
+public class EntityNotFoundException extends RuntimeException {
+    public EntityNotFoundException(String message) {
+        super(message);
+    }
 }

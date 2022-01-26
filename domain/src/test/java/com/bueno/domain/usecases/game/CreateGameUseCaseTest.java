@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,8 +45,7 @@ class CreateGameUseCaseTest {
 
     @Mock private Player p1;
     @Mock private Player p2;
-    @Mock private Player p3;
-    @Mock private Player p4;
+
     @Mock private GameRepository repo;
 
     private CreateGameUseCase sut;
@@ -57,7 +57,7 @@ class CreateGameUseCaseTest {
 
     @BeforeEach
     void setUp(){
-        sut = new CreateGameUseCase(repo);
+        sut = new CreateGameUseCase(repo, null);
     }
 
     @Test
@@ -75,6 +75,7 @@ class CreateGameUseCaseTest {
 
     @Test
     @DisplayName("Should throw if any player parameter is null")
+    @SuppressWarnings("ConstantConditions")
     void shouldThrowIfAnyPlayerParameterIsNull() {
         assertAll(
                 () -> assertThrows(NullPointerException.class, () -> sut.create(null, p2)),
@@ -85,7 +86,9 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should not create new game if one of the players is enrolled in another game")
     void shouldNotCreateNewGameIfOneOfThePlayersEnrolledInAnotherGame() {
-        when(repo.findByPlayerUsername(any())).thenReturn(Optional.of(new Game(new DummyBot(), new DummyBot())));
+        final DummyBot bot1 = new DummyBot(repo, UUID.randomUUID());
+        final DummyBot bot2 = new DummyBot(repo, UUID.randomUUID());
+        when(repo.findByPlayerUsername(any())).thenReturn(Optional.of(new Game(bot1, bot2)));
         assertThrows(UnsupportedGameRequestException.class, () -> sut.create(p1, p2));
     }
 }

@@ -21,17 +21,16 @@
 package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
-import com.bueno.application.model.UIPlayer;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.mineirobot.MineiroBot;
-import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.domain.usecases.player.CreateUserUseCase;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -82,14 +81,16 @@ public class GameTableController {
     private String botName;
     private List<ImageView> opponentCardImages;
 
-    private final InMemoryGameRepository repo;
+    private final InMemoryGameRepository gameRepo;
+    private final InMemoryUserRepository userRepo;
+    private final CreateUserUseCase createUserUseCase;
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final ScoreProposalUseCase scoreProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
-    private final UUID userUUID;
-    private final UUID botUUID;
+    private UUID userUUID;
+    private UUID botUUID;
     private List<Card> userCards;
     private int lastUserPlayedCardPosition;
     private final List<Intel> missingIntel;
@@ -107,13 +108,13 @@ public class GameTableController {
     //TODO Testar o jogo em modo console
     //TODO Organizar esta classe
     public GameTableController() {
-        repo = new InMemoryGameRepository();
-        gameUseCase = new CreateGameUseCase(repo);
-        playCardUseCase = new PlayCardUseCase(repo);
-        scoreProposalUseCase = new ScoreProposalUseCase(repo);
-        handleIntelUseCase = new HandleIntelUseCase(repo);
-        botUUID = UUID.randomUUID();
-        userUUID = UUID.randomUUID();
+        gameRepo = new InMemoryGameRepository();
+        userRepo = new InMemoryUserRepository();
+        createUserUseCase = new CreateUserUseCase(userRepo);
+        gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
+        playCardUseCase = new PlayCardUseCase(gameRepo);
+        scoreProposalUseCase = new ScoreProposalUseCase(gameRepo);
+        handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
     }
@@ -158,15 +159,18 @@ public class GameTableController {
         lb3rdValue.setVisible(false);
     }
 
-    public void createGame(String username) {
+    public void createGame(String username, String botName) {
         this.username = username;
-        this.botName = "MineiroBot";
+        this.botName = botName;
+        userUUID = createUserUseCase.create(new CreateUserUseCase.RequestModel(username, "user@email.com"));
 
-        Player user = new UIPlayer(username, userUUID);
-        Player bot = new MineiroBot(repo, botUUID);
-
-        lastIntel = gameUseCase.create(user, bot);
+        lastIntel = gameUseCase.create(userUUID, this.botName);
         missingIntel.add(lastIntel);
+
+        this.botUUID = lastIntel.players().stream()
+                .map(Intel.PlayerIntel::getUuid)
+                .filter(uuid -> !uuid.equals(userUUID))
+                .findAny().orElseThrow();
 
         showPlayerNames();
         updateIntel();

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,16 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli;
+package com.bueno.domain.usecases.player;
 
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.util.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
-public class CLIPlayer extends Player {
+public interface UserRepository {
 
-    public CLIPlayer(String username, UUID uuid) {
-        super(username, uuid);
-    }
+    void save(User user) ;
 
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByUUID(UUID uuid);
 }

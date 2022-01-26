@@ -20,7 +20,6 @@
 
 package com.bueno.application.standalone;
 
-import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
@@ -65,7 +64,7 @@ public class PlayWithBots {
         Callable<UUID> game = () -> {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
-            return uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
+            return uc.playWithBots("MineiroBot", "MineiroBot");
         };
 
         for (int i = 0; i < times; i++) {
