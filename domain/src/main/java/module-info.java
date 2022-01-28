@@ -7,6 +7,6 @@ module domain {
     exports com.bueno.domain.usecases.hand to application.desktop, application.console;
 
     exports com.bueno.domain.entities.deck;
-    exports com.bueno.domain.entities.player.util to application.persistence;
+    exports com.bueno.domain.entities.player.util to application.persistence, application.console;
     exports com.bueno.domain.entities.game to application.console, application.desktop, application.persistence;
 }

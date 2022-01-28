@@ -31,14 +31,16 @@ import java.util.UUID;
 public class PlayGameWithBotsUseCase {
 
     private final GameRepository repo;
+    private final static UUID uuid1 = UUID.randomUUID();
+    private final static UUID uuid2 = UUID.randomUUID();
 
     public PlayGameWithBotsUseCase(GameRepository repo) {
         this.repo = repo;
     }
 
     public UUID playWithBots(String bot1Name, String bot2Name){
-        final Bot bot1 = BotFactory.create(bot1Name, repo);
-        final Bot bot2 = BotFactory.create(bot2Name, repo);
+        final Bot bot1 = BotFactory.create(uuid1, bot1Name, repo);
+        final Bot bot2 = BotFactory.create(uuid2, bot2Name, repo);
 
         CreateGameUseCase gameUseCase = new CreateGameUseCase(repo, null);
         Intel intel = gameUseCase.create(bot1, bot2);
