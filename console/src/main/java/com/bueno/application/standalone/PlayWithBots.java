@@ -25,23 +25,34 @@ import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.logging.LogManager;
+import java.util.stream.Collectors;
+
+import static com.bueno.domain.entities.player.util.BotFactory.getBot;
 
 public class PlayWithBots {
-
-    private static final UUID uuid1 = UUID.randomUUID();
-    private static final UUID uuid2 = UUID.randomUUID();
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
-        PlayWithBots main = new PlayWithBots();
-        final List<UUID> results = main.play(100000);
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Bot1: ");
+        final String bot1Name = scanner.nextLine();
+        System.out.print("Bot2: ");
+        final String bot2Name = scanner.nextLine();
+        System.out.print("Number of simulations: ");
+        final int times = scanner.nextInt();
+        System.out.println("Starting simulation... it may take a while: ");
 
-        System.out.print("MineiroBot1: " + results.stream().filter(uuid -> uuid.equals(uuid1)).count() + " | ");
-        System.out.print("MineiroBot2: " + results.stream().filter(uuid -> uuid.equals(uuid2)).count());
+        final PlayWithBots main = new PlayWithBots();
+        final List<UUID> results = main.play(bot1Name, bot2Name, times);
+
+        results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .forEach((uuid, wins) -> System.out.println(getBot(uuid).getUsername() + ": " + wins));
     }
 
 /*
@@ -56,15 +67,15 @@ public class PlayWithBots {
     }
 */
 
-    public List<UUID> play(int times) throws InterruptedException, ExecutionException {
+    public List<UUID> play(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         final List<Callable<UUID>> games = new ArrayList<>();
 
-        Callable<UUID> game = () -> {
+        final Callable<UUID> game = () -> {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
             PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
-            return uc.playWithBots("MineiroBot", "MineiroBot");
+            return uc.playWithBots(bot1Name, bot2Name);
         };
 
         for (int i = 0; i < times; i++) {

@@ -30,7 +30,7 @@ import java.util.UUID;
 public class DummyBot extends Bot {
 
     public DummyBot(GameRepository repo, UUID uuid) {
-        super(repo, "DummyBot");
+        super(repo, uuid, "DummyBot");
     }
 
     @Override

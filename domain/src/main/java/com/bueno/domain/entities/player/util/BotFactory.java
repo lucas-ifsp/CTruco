@@ -24,14 +24,34 @@ import com.bueno.domain.entities.player.dummybot.DummyBot;
 import com.bueno.domain.entities.player.mineirobot.MineiroBot;
 import com.bueno.domain.usecases.game.GameRepository;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class BotFactory {
-    public static Bot create(String botName, GameRepository repo){
-        return switch (botName){
-            case "MineiroBot" -> new MineiroBot(repo, UUID.randomUUID());
-            case "DummyBot" -> new DummyBot(repo, UUID.randomUUID());
+
+    private static final Map<UUID, Bot> bots = new HashMap<>();
+
+    public static Bot create(UUID uuid, String botName, GameRepository repo){
+        final Bot bot = switch (botName) {
+            case "MineiroBot" -> new MineiroBot(repo, uuid);
+            case "DummyBot" -> new DummyBot(repo, uuid);
             default -> throw new IllegalArgumentException("Bot not found!");
         };
+        return register(bot);
+    }
+
+    public static Bot create(String botName, GameRepository repo){
+        return create(UUID.randomUUID(), botName, repo);
+    }
+
+    private static Bot register(Bot bot) {
+        if(!bots.containsKey(bot.getUuid()))
+            bots.put(bot.getUuid(), bot);
+        return bot;
+    }
+
+    public static Bot getBot(UUID uuid){
+        return bots.get(uuid);
     }
 }
