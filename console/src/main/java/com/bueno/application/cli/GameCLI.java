@@ -24,11 +24,13 @@ import com.bueno.application.cli.commands.*;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
 import com.bueno.domain.usecases.player.CreateUserUseCase;
+import com.bueno.domain.usecases.player.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 
@@ -47,8 +49,6 @@ public class GameCLI {
     private final ScoreProposalUseCase scoreProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
-    private final InMemoryGameRepository gameRepo;
-    private final InMemoryUserRepository userRepo;
     private final List<Intel> missingIntel;
     private Intel lastIntel;
     private UUID userUUID;
@@ -62,8 +62,8 @@ public class GameCLI {
     }
 
     public GameCLI() {
-        gameRepo = new InMemoryGameRepository();
-        userRepo = new InMemoryUserRepository();
+        final GameRepository gameRepo = new InMemoryGameRepository();
+        final UserRepository userRepo = new InMemoryUserRepository();
 
         createUserUseCase = new CreateUserUseCase(userRepo);
         gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
