@@ -38,17 +38,17 @@ public class MineiroBot extends Bot {
     }
 
     @Override
-    public CardToPlay chooseCardToPlay() {
+    public CardToPlay decideCardToPlay() {
         return PlayingStrategy.of(getCards(), this).playCard();
     }
 
     @Override
-    public boolean requestTruco() {
+    public boolean wantsToRaise() {
         return PlayingStrategy.of(getCards(), this).requestTruco();
     }
 
     @Override
-    public int getTrucoResponse(HandScore newHandScore) {
+    public int getRaiseResponse(HandScore newHandScore) {
         return PlayingStrategy.of(getCards(), this).getTrucoResponse(newHandScore.get());
     }
 

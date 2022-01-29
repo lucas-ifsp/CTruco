@@ -27,9 +27,9 @@ import com.bueno.domain.entities.player.util.Player;
 import java.util.List;
 import java.util.Optional;
 
-public class FirstRoundMineiroStrategy extends PlayingStrategy {
+public class FirstRoundStrategy extends PlayingStrategy {
 
-    public FirstRoundMineiroStrategy(List<Card> cards, Player player) {
+    public FirstRoundStrategy(List<Card> cards, Player player) {
         this.cards = cards;
         this.player = player;
         this.intel = player.getIntel();

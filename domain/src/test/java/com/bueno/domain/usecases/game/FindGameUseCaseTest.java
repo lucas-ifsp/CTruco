@@ -40,9 +40,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LoadGameUseCaseTest {
+class FindGameUseCaseTest {
 
-    private LoadGameUseCase sut;
+    private FindGameUseCase sut;
     private Game game;
 
     @Mock private Player player1;
@@ -57,7 +57,7 @@ class LoadGameUseCaseTest {
     @BeforeEach
     void setUp(){
         game = new Game(player1, player2);
-        sut = new LoadGameUseCase(repo);
+        sut = new FindGameUseCase(repo);
     }
 
     @Test

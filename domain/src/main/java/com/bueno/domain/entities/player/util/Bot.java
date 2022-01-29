@@ -35,67 +35,79 @@ import java.util.stream.Collectors;
 
 public abstract class Bot extends Player{
 
-    public final GameRepository repo;
-
-    protected Bot(GameRepository repo, String username) {
-        super(username);
-        this.repo = repo;
-    }
+    private final GameRepository repo;
 
     protected Bot(GameRepository repo, UUID uuid, String username) {
         super(uuid, username);
         this.repo = repo;
     }
 
-    public abstract CardToPlay chooseCardToPlay();
-    public abstract boolean requestTruco();
-    public abstract int getTrucoResponse(HandScore newHandScore);
+    public abstract CardToPlay decideCardToPlay();
+    public abstract boolean wantsToRaise();
+    public abstract int getRaiseResponse(HandScore newHandScore);
     public abstract boolean getMaoDeOnzeResponse();
 
     public final void playTurn(Intel intel) {
         setIntel(intel);
-        if(shouldPlay(getIntel())){
-            final PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-            final ScoreProposalUseCase proposalUseCase = new ScoreProposalUseCase(repo);
-
-            final EnumSet<PossibleAction> possibleActions = getIntel().possibleActions().stream()
+        if(isCurrentPlayer(getIntel())){
+            final var playCardUseCase = new PlayCardUseCase(repo);
+            final var proposalUseCase = new ScoreProposalUseCase(repo);
+            final var possibleActions = getIntel().possibleActions().stream()
                     .map(PossibleAction::valueOf)
                     .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-            if(getIntel().isMaoDeOnze() && HandScore.fromIntValue(getIntel().handScore()).orElse(null) == HandScore.ONE){
-                if(getMaoDeOnzeResponse()) proposalUseCase.accept(getUuid());
-                else proposalUseCase.quit(getUuid());
+            if(shouldDecideMaoDeOnze()){
+                decideMaoDeOnze(proposalUseCase);
                 return;
             }
-            if(canStartRaiseRequest(possibleActions) && requestTruco()){
+            if(canStartRaiseRequest(possibleActions) && wantsToRaise()){
                 proposalUseCase.raise(getUuid());
                 return;
             }
-            if(possibleActions.contains(PossibleAction.PLAY)){
-                final CardToPlay chosenCard = chooseCardToPlay();
-                if(chosenCard.isDiscard()) playCardUseCase.discard(new PlayCardUseCase.RequestModel(getUuid(), chosenCard.content()));
-                else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(getUuid(), chosenCard.content()));
+            if(canPlayCard(possibleActions)){
+                playCard(playCardUseCase);
                 return;
             }
-            final Optional<HandScore> scoreProposal = getIntel().scoreProposal().flatMap(HandScore::fromIntValue);
-            final int response = getTrucoResponse(Objects.requireNonNull(scoreProposal.orElse(null)));
-            switch (response){
-                case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) proposalUseCase.quit(getUuid());}
-                case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) proposalUseCase.accept(getUuid());}
-                case 1 -> {if(possibleActions.contains(PossibleAction.RAISE)) proposalUseCase.raise(getUuid());}
-            }
+            answerRaiseRequest(proposalUseCase, possibleActions);
         }
     }
 
-    private boolean canStartRaiseRequest(EnumSet<PossibleAction> possibleActions) {
-        return possibleActions.contains(PossibleAction.RAISE) && !possibleActions.contains(PossibleAction.QUIT);
-
-    }
-
-    private boolean shouldPlay(Intel intel) {
+    private boolean isCurrentPlayer(Intel intel) {
         final Optional<UUID> possibleUuid = intel.currentPlayerUuid();
         if(possibleUuid.isEmpty()) return false;
         return !intel.isGameDone() && possibleUuid.get().equals(getUuid());
     }
 
+    private boolean shouldDecideMaoDeOnze() {
+        return getIntel().isMaoDeOnze() && HandScore.fromIntValue(getIntel().handScore()).orElse(null) == HandScore.ONE;
+    }
+
+    private void decideMaoDeOnze(ScoreProposalUseCase proposalUseCase) {
+        if(getMaoDeOnzeResponse()) proposalUseCase.accept(getUuid());
+        else proposalUseCase.quit(getUuid());
+    }
+
+    private boolean canStartRaiseRequest(EnumSet<PossibleAction> possibleActions) {
+        return possibleActions.contains(PossibleAction.RAISE) && !possibleActions.contains(PossibleAction.QUIT);
+    }
+
+    private boolean canPlayCard(EnumSet<PossibleAction> possibleActions) {
+        return possibleActions.contains(PossibleAction.PLAY);
+    }
+
+    private void playCard(PlayCardUseCase playCardUseCase) {
+        final CardToPlay chosenCard = decideCardToPlay();
+        if(chosenCard.isDiscard()) playCardUseCase.discard(new PlayCardUseCase.RequestModel(getUuid(), chosenCard.content()));
+        else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(getUuid(), chosenCard.content()));
+    }
+
+    private void answerRaiseRequest(ScoreProposalUseCase proposalUseCase, EnumSet<PossibleAction> possibleActions) {
+        final Optional<HandScore> scoreProposal = getIntel().scoreProposal().flatMap(HandScore::fromIntValue);
+        final int response = getRaiseResponse(Objects.requireNonNull(scoreProposal.orElse(null)));
+        switch (response){
+            case -1 -> {if(possibleActions.contains(PossibleAction.QUIT)) proposalUseCase.quit(getUuid());}
+            case 0 -> {if(possibleActions.contains(PossibleAction.ACCEPT)) proposalUseCase.accept(getUuid());}
+            case 1 -> {if(possibleActions.contains(PossibleAction.RAISE)) proposalUseCase.raise(getUuid());}
+        }
+    }
 }

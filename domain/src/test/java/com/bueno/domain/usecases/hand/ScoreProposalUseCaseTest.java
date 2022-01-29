@@ -24,8 +24,8 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.game.LoadGameUseCase;
-import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -149,8 +149,8 @@ class ScoreProposalUseCaseTest {
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
         final Intel firstIntel = sut.raise(p1Uuid);
         final Intel lastIntel = sut.quit(p2Uuid); //last intel is already pointing to a new hand.
-        final LoadGameUseCase loadGameUseCase = new LoadGameUseCase(repo);
-        final Game game = loadGameUseCase.loadUserGame(p1Uuid).orElseThrow();
+        final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
+        final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
 
         final List<Intel> intelSince = game.getIntelSince(firstIntel);
         intelSince.remove(lastIntel);

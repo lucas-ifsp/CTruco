@@ -34,17 +34,17 @@ public class DummyBot extends Bot {
     }
 
     @Override
-    public CardToPlay chooseCardToPlay() {
+    public CardToPlay decideCardToPlay() {
         return CardToPlay.of(getCards().get(0));
     }
 
     @Override
-    public boolean requestTruco() {
+    public boolean wantsToRaise() {
         return false;
     }
 
     @Override
-    public int getTrucoResponse(HandScore newHandScore) {
+    public int getRaiseResponse(HandScore newHandScore) {
         return 0;
     }
 
