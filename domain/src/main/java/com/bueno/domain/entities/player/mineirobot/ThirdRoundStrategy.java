@@ -42,16 +42,18 @@ public class ThirdRoundStrategy extends PlayingStrategy {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Card remainingCard = cards.get(0);
 
-        if(possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
+        if (possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
 
         final Card opponentCard = possibleOpponentCard.get();
-        if(remainingCard.compareValueTo(opponentCard, vira) > 0) return CardToPlay.of(remainingCard);
+        if (remainingCard.compareValueTo(opponentCard, vira) >= 0) return CardToPlay.of(remainingCard);
 
         return CardToPlay.ofDiscard(remainingCard);
     }
 
     @Override
     public int getRaiseResponse(int newScoreValue) {
+        if(knowsTheOdds() && canWin(cards.get(0), intel.cardToPlayAgainst().orElseThrow())) return 1;
+
         final Card lastOpenedCard = intel.openCards().get(intel.openCards().size() - 1);
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(lastOpenedCard, vira) : getCardValue(cards.get(0), vira);
@@ -61,23 +63,31 @@ public class ThirdRoundStrategy extends PlayingStrategy {
         return 0;
     }
 
+    private boolean knowsTheOdds() {
+        return cards.size() == 1 && intel.cardToPlayAgainst().isPresent();
+    }
+
+
     @Override
     public boolean decideIfRaises() {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
-        final Optional<String> firstRoundWinner = intel.roundWinners().get(0);
         final int handScoreValue = intel.handScore();
         final Card playingCard = cards.get(0);
 
-        if(possibleOpponentCard.isEmpty()) {
+        if (possibleOpponentCard.isEmpty()) {
             if (handScoreValue > 1 && getCardValue(playingCard, vira) >= 12) return true;
             return getCardValue(playingCard, vira) >= 10;
         }
 
         final Card opponentCard = possibleOpponentCard.get();
 
-        if(getCardValue(opponentCard, vira) < 5) return true;
-        if(playingCard.compareValueTo(opponentCard, vira) > 0) return true;
-        return isPlayerFirstRoundWinner(firstRoundWinner.orElse(null))
-                && playingCard.compareValueTo(opponentCard, vira) == 0;
+        if (getCardValue(opponentCard, vira) < 5) return true;
+        return canWin(playingCard, opponentCard);
+    }
+
+    private boolean canWin(Card remainingCard, Card opponentCard) {
+        final String firstRoundWinner = intel.roundWinners().get(0).orElse(null);
+        return (!isPlayerFirstRoundLoser(firstRoundWinner) && remainingCard.compareValueTo(opponentCard, vira) > 0)
+                || (isPlayerFirstRoundWinner(firstRoundWinner) && remainingCard.compareValueTo(opponentCard, vira) == 0);
     }
 }

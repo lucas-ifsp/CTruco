@@ -44,7 +44,8 @@ public class SecondRoundStrategy extends PlayingStrategy {
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
 
         if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null))) {
-            if (cards.stream().anyMatch(c -> getCardValue(c, vira) >= 8)) return CardToPlay.ofDiscard(cards.get(1));
+            if (!isMaoDeFerro() && cards.stream().anyMatch(c -> getCardValue(c, vira) >= 8) )
+                return CardToPlay.ofDiscard(cards.get(1));
             return CardToPlay.of(cards.get(0));
         }
 
@@ -54,28 +55,42 @@ public class SecondRoundStrategy extends PlayingStrategy {
         return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard(cards.get(1)));
     }
 
+    private boolean isMaoDeFerro() {
+        return intel.currentPlayerScore() == 11 && intel.currentOpponentScore() == 11;
+    }
+
     @Override
     public int getRaiseResponse(int newScoreValue) {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
+        final String possibleFirstRoundWinner = intel.roundWinners().get(0).orElse(null);
         final int bestCardValue = getCardValue(cards.get(0), vira);
 
-        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) {
+        if(canWin(cards.get(0), possibleFirstRoundWinner)) return 1;
+
+        if (isFirstRoundTied(possibleFirstRoundWinner)) {
             if (bestCardValue < 10) return -1;
             if (bestCardValue > 11) return 1;
         }
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner.orElse(null)) && hasAlreadyPlayedRound()) {
-            if (bestCardValue < 10) return -1;
-            if (bestCardValue > 11) return 1;
+        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner)
+                && hasAlreadyPlayedRound() && bestCardValue < 10) {
+            return -1;
         }
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner.orElse(null)) && !hasAlreadyPlayedRound()) {
+        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner) && !hasAlreadyPlayedRound()) {
             final int remainingCardsValue = getCardValue(cards.get(0), vira) + getCardValue(cards.get(1), vira);
             if (remainingCardsValue < 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
             if (remainingCardsValue >= 23) return 1;
         }
         return 0;
+    }
+
+    private boolean canWin(Card bestCard, String possibleFirstRoundWinner) {
+        if(cards.size() < 2) return false;
+        if(intel.cardToPlayAgainst().isEmpty()) return false;
+        final Card opponentCard = intel.cardToPlayAgainst().get();
+        return !isPlayerFirstRoundLoser(possibleFirstRoundWinner)
+                && bestCard.compareValueTo(opponentCard, intel.vira()) > 0;
     }
 
     private boolean hasAlreadyPlayedRound() {
