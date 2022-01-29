@@ -38,7 +38,7 @@ public class FirstRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public CardToPlay playCard() {
+    public CardToPlay decideCardToPlay() {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final int numberOfTopThreeCards = countCardsBetween(11, 13);
         final int numberOfMediumCards = countCardsBetween(8,9);
@@ -65,7 +65,7 @@ public class FirstRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public int getTrucoResponse(int newScoreValue) {
+    public int getRaiseResponse(int newScoreValue) {
         final int remainingCardsValue = getCardValue(cards.get(0), vira) + getCardValue(cards.get(1), vira);
         if(cards.size() == 3) {
             if (remainingCardsValue >= 23) return 1;
@@ -79,7 +79,7 @@ public class FirstRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public boolean requestTruco() {
+    public boolean decideIfRaises() {
         return false;
     }
 }

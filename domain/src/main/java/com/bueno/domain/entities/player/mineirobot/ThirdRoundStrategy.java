@@ -38,7 +38,7 @@ public class ThirdRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public CardToPlay playCard() {
+    public CardToPlay decideCardToPlay() {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Card remainingCard = cards.get(0);
 
@@ -51,7 +51,7 @@ public class ThirdRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public int getTrucoResponse(int newScoreValue) {
+    public int getRaiseResponse(int newScoreValue) {
         final Card lastOpenedCard = intel.openCards().get(intel.openCards().size() - 1);
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(lastOpenedCard, vira) : getCardValue(cards.get(0), vira);
@@ -62,7 +62,7 @@ public class ThirdRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public boolean requestTruco() {
+    public boolean decideIfRaises() {
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Optional<String> firstRoundWinner = intel.roundWinners().get(0);
         final int handScoreValue = intel.handScore();
