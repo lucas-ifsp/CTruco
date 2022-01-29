@@ -28,7 +28,7 @@ import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.game.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

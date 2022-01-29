@@ -28,13 +28,13 @@ import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
 
 import java.util.UUID;
 
-public class PlayGameWithBotsUseCase {
+public class PlayWithBotsUseCase {
 
     private final GameRepository repo;
     private final static UUID uuid1 = UUID.randomUUID();
     private final static UUID uuid2 = UUID.randomUUID();
 
-    public PlayGameWithBotsUseCase(GameRepository repo) {
+    public PlayWithBotsUseCase(GameRepository repo) {
         this.repo = repo;
     }
 
@@ -47,7 +47,7 @@ public class PlayGameWithBotsUseCase {
         bot1.setIntel(intel);
 
         PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-        intel = playCardUseCase.playCard(new RequestModel(bot1.getUuid(), bot1.chooseCardToPlay().content()));
+        intel = playCardUseCase.playCard(new RequestModel(bot1.getUuid(), bot1.decideCardToPlay().content()));
 
         return intel.gameWinner().orElseThrow();
     }

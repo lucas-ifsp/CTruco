@@ -82,7 +82,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.FOUR, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SIX, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.TWO, Suit.CLUBS));
-                assertEquals(Card.of(Rank.SEVEN, Suit.CLUBS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.SEVEN, Suit.CLUBS), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -91,7 +91,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.FOUR, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.ACE, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.TWO, Suit.CLUBS));
-                assertEquals(Card.of(Rank.ACE, Suit.CLUBS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.ACE, Suit.CLUBS), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -100,7 +100,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.FOUR, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.TWO, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.TWO, Suit.CLUBS));
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -109,7 +109,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.SEVEN, Suit.SPADES)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.KING, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.SIX, Suit.CLUBS));
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -118,7 +118,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.THREE, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
-                assertEquals(Card.of(Rank.THREE, Suit.CLUBS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.THREE, Suit.CLUBS), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -127,7 +127,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.DIAMONDS), Card.of(Rank.THREE, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.KING, Suit.CLUBS));
-                assertEquals(Card.of(Rank.ACE, Suit.DIAMONDS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.ACE, Suit.DIAMONDS), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -136,7 +136,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.CLUBS), Card.of(Rank.ACE, Suit.SPADES), Card.of(Rank.KING, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.KING, Suit.CLUBS));
-                assertEquals(Card.of(Rank.ACE, Suit.SPADES), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.ACE, Suit.SPADES), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -145,7 +145,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.HEARTS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.SEVEN, Suit.SPADES)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.KING, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.SIX, Suit.CLUBS));
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -154,7 +154,7 @@ class MineiroBotTest {
                 sut.setCards(List.of(Card.of(Rank.SEVEN, Suit.SPADES), Card.of(Rank.SIX, Suit.HEARTS), Card.of(Rank.THREE, Suit.CLUBS)));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.SIX, Suit.CLUBS));
-                assertEquals(Card.of(Rank.THREE, Suit.CLUBS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.THREE, Suit.CLUBS), sut.decideCardToPlay().value());
             }
         }
 
@@ -171,7 +171,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SEVEN, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -184,7 +184,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.THREE, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -197,7 +197,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.THREE, Suit.SPADES)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.of(Rank.TWO, Suit.HEARTS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.TWO, Suit.HEARTS), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -210,7 +210,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -223,7 +223,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.of(Rank.ACE, Suit.HEARTS), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.ACE, Suit.HEARTS), sut.decideCardToPlay().value());
             }
         }
 
@@ -237,7 +237,7 @@ class MineiroBotTest {
                 when(intel.roundsPlayed()).thenReturn(2);
                 when(intel.vira()).thenReturn(Card.of(Rank.FOUR, Suit.CLUBS));
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
-                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -249,7 +249,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SEVEN, Suit.CLUBS)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.chooseCardToPlay().value());
+                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.decideCardToPlay().value());
             }
 
             @Test
@@ -261,7 +261,7 @@ class MineiroBotTest {
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SIX, Suit.CLUBS)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-                assertEquals(Card.closed(), sut.chooseCardToPlay().value());
+                assertEquals(Card.closed(), sut.decideCardToPlay().value());
             }
         }
     }
@@ -275,7 +275,7 @@ class MineiroBotTest {
         void shouldRequestRaiseIfIsSureAboutWinningInFirstRound() {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.CLUBS), Card.of(Rank.SIX, Suit.HEARTS), Card.of(Rank.THREE, Suit.CLUBS)));
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
-            assertEquals(1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -283,7 +283,7 @@ class MineiroBotTest {
         void shouldRunIfHasLessThanOneCardOfValue9AndEspadilhaAmongThreeCards() {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.CLUBS), Card.of(Rank.FIVE, Suit.HEARTS), Card.of(Rank.TWO, Suit.CLUBS)));
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -291,7 +291,7 @@ class MineiroBotTest {
         void shouldAcceptIfHasAtLeastOneCardOfValue9AndEspadilhaAmongThreeCards() {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.SPADES), Card.of(Rank.FIVE, Suit.HEARTS), Card.of(Rank.THREE, Suit.CLUBS)));
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
-            assertEquals(0, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(0, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -300,7 +300,7 @@ class MineiroBotTest {
             sut.setCards(List.of(Card.of(Rank.THREE, Suit.SPADES), Card.of(Rank.ACE, Suit.CLUBS)));
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.FIVE, Suit.CLUBS), Card.of(Rank.TWO, Suit.CLUBS)));
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -313,7 +313,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -326,7 +326,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -339,7 +339,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(0, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(0, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -352,7 +352,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -365,7 +365,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.SIX));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.SIX));
         }
 
         @Test
@@ -378,7 +378,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
 
-            assertEquals(1, sut.getTrucoResponse(HandScore.SIX));
+            assertEquals(1, sut.getRaiseResponse(HandScore.SIX));
         }
 
         @Test
@@ -391,7 +391,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.empty()));
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -404,7 +404,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.empty()));
 
-            assertEquals(1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -417,7 +417,7 @@ class MineiroBotTest {
             when(intel.roundsPlayed()).thenReturn(1);
             when(intel.roundWinners()).thenReturn(List.of(Optional.empty()));
 
-            assertEquals(0, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(0, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -429,7 +429,7 @@ class MineiroBotTest {
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.TWO, Suit.CLUBS)));
             when(intel.roundsPlayed()).thenReturn(2);
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -441,7 +441,7 @@ class MineiroBotTest {
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.SIX, Suit.SPADES)));
             when(intel.roundsPlayed()).thenReturn(2);
 
-            assertEquals(-1, sut.getTrucoResponse(HandScore.SIX));
+            assertEquals(-1, sut.getRaiseResponse(HandScore.SIX));
         }
 
 
@@ -454,7 +454,7 @@ class MineiroBotTest {
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.THREE, Suit.CLUBS)));
             when(intel.roundsPlayed()).thenReturn(2);
 
-            assertEquals(0, sut.getTrucoResponse(HandScore.THREE));
+            assertEquals(0, sut.getRaiseResponse(HandScore.THREE));
         }
 
         @Test
@@ -466,7 +466,7 @@ class MineiroBotTest {
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.SIX, Suit.CLUBS)));
             when(intel.roundsPlayed()).thenReturn(2);
 
-            assertEquals(1, sut.getTrucoResponse(HandScore.NINE));
+            assertEquals(1, sut.getRaiseResponse(HandScore.NINE));
         }
     }
 
@@ -478,7 +478,7 @@ class MineiroBotTest {
         void shouldNotRequestScoreRaiseInFirstRound() {
             sut.setCards(List.of());
             when(intel.roundsPlayed()).thenReturn(0);
-            assertFalse(sut.requestTruco());
+            assertFalse(sut.wantsToRaise());
         }
 
         @Test
@@ -491,7 +491,7 @@ class MineiroBotTest {
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-            assertFalse(sut.requestTruco());
+            assertFalse(sut.wantsToRaise());
         }
 
         @Test
@@ -504,7 +504,7 @@ class MineiroBotTest {
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -517,7 +517,7 @@ class MineiroBotTest {
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-            assertFalse(sut.requestTruco());
+            assertFalse(sut.wantsToRaise());
         }
 
         @Test
@@ -531,7 +531,7 @@ class MineiroBotTest {
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -544,7 +544,7 @@ class MineiroBotTest {
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -556,7 +556,7 @@ class MineiroBotTest {
             when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
             when(intel.handScore()).thenReturn(3);
 
-            assertFalse(sut.requestTruco());
+            assertFalse(sut.wantsToRaise());
         }
 
         @Test
@@ -570,7 +570,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SIX, Suit.HEARTS)));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -584,7 +584,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -598,7 +598,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -612,7 +612,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.JACK, Suit.CLUBS)));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -626,7 +626,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FIVE, Suit.CLUBS)));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
 
         @Test
@@ -640,7 +640,7 @@ class MineiroBotTest {
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FIVE, Suit.CLUBS)));
 
-            assertTrue(sut.requestTruco());
+            assertTrue(sut.wantsToRaise());
         }
     }
 

@@ -26,11 +26,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class LoadGameUseCase {
+public class FindGameUseCase {
 
     private GameRepository repo;
 
-    public LoadGameUseCase(GameRepository repo) {
+    public FindGameUseCase(GameRepository repo) {
         this.repo = repo;
     }
 

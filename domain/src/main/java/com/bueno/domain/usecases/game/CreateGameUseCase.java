@@ -26,6 +26,7 @@ import com.bueno.domain.entities.player.util.BotFactory;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 
 import java.util.Objects;
 import java.util.UUID;

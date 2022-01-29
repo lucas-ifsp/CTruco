@@ -38,9 +38,9 @@ public abstract class PlayingStrategy{
     public static PlayingStrategy of(List<Card> hand, Player player){
         final int roundsPlayed = player.getIntel().roundsPlayed();
         return switch (roundsPlayed){
-            case 0 -> new FirstRoundMineiroStrategy(hand, player);
-            case 1 -> new SecondRoundMineiroStrategy(hand, player);
-            case 2 -> new ThirdRoundMineiroStrategy(hand, player);
+            case 0 -> new FirstRoundStrategy(hand, player);
+            case 1 -> new SecondRoundStrategy(hand, player);
+            case 2 -> new ThirdRoundStrategy(hand, player);
             default -> throw new GameRuleViolationException("Illegal number of rounds to play: " + roundsPlayed + 1);
         };
     }
@@ -57,10 +57,8 @@ public abstract class PlayingStrategy{
 
         if(bestCard + mediumCard >= 20 )
             return true;
-        if(opponentScore >= 8 && bestCard > 10 && mediumCard >= 8)
-            return true;
 
-        return false;
+        return opponentScore >= 8 && bestCard > 10 && mediumCard >= 8;
     }
 
     protected final Optional<Card> getPossibleCardToDraw(Card opponentCard) {
@@ -68,8 +66,7 @@ public abstract class PlayingStrategy{
     }
 
     protected Optional<Card> getPossibleEnoughCardToWin(Card opponentCard) {
-        return cards.stream()
-                .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+        return cards.stream().filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
     }
 

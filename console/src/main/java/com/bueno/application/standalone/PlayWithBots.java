@@ -20,7 +20,7 @@
 
 package com.bueno.application.standalone;
 
-import com.bueno.domain.usecases.game.PlayGameWithBotsUseCase;
+import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class PlayWithBots {
 
         final Callable<UUID> game = () -> {
             final InMemoryGameRepository repo = new InMemoryGameRepository();
-            PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
+            PlayWithBotsUseCase uc = new PlayWithBotsUseCase(repo);
             return uc.playWithBots(bot1Name, bot2Name);
         };
 
