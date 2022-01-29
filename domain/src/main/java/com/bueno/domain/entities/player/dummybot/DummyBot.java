@@ -39,7 +39,7 @@ public class DummyBot extends Bot {
     }
 
     @Override
-    public boolean wantsToRaise() {
+    public boolean decideIfRaises() {
         return false;
     }
 

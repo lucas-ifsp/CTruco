@@ -43,7 +43,7 @@ public abstract class Bot extends Player{
     }
 
     public abstract CardToPlay decideCardToPlay();
-    public abstract boolean wantsToRaise();
+    public abstract boolean decideIfRaises();
     public abstract int getRaiseResponse(HandScore newHandScore);
     public abstract boolean getMaoDeOnzeResponse();
 
@@ -60,7 +60,7 @@ public abstract class Bot extends Player{
                 decideMaoDeOnze(proposalUseCase);
                 return;
             }
-            if(canStartRaiseRequest(possibleActions) && wantsToRaise()){
+            if(canStartRaiseRequest(possibleActions) && decideIfRaises()){
                 proposalUseCase.raise(getUuid());
                 return;
             }

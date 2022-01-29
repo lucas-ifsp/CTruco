@@ -45,9 +45,9 @@ public abstract class PlayingStrategy{
         };
     }
 
-    public abstract CardToPlay playCard();
-    public abstract int getTrucoResponse(int newScoreValue);
-    public abstract boolean requestTruco();
+    public abstract CardToPlay decideCardToPlay();
+    public abstract int getRaiseResponse(int newScoreValue);
+    public abstract boolean decideIfRaises();
 
     public final boolean getMaoDeOnzeResponse(){
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
@@ -83,20 +83,19 @@ public abstract class PlayingStrategy{
     }
 
     protected final int getCardValue(Card card, Card vira){
-
         final List<Card> openCards = intel.openCards();
 
-        int higherManilhasAlreadyPlayed = (int) openCards.stream()
+        final int higherManilhasAlreadyPlayed = (int) openCards.stream()
                 .filter(c -> c.compareValueTo(card, vira) > 1)
                 .filter(c -> c.isManilha(vira))
                 .count();
 
-        int higherCardsAlreadyPlayedFourTimes = (int) openCards.stream()
+        final int higherCardsAlreadyPlayedFourTimes = (int) openCards.stream()
                 .filter(c -> c.compareValueTo(card, vira) > 1)
                 .filter(c -> Collections.frequency(openCards, c) == 4)
                 .count();
 
-        int offset = higherManilhasAlreadyPlayed + higherCardsAlreadyPlayedFourTimes;
+        final int offset = higherManilhasAlreadyPlayed + higherCardsAlreadyPlayedFourTimes;
 
         if(card.isOuros(vira)) return  10 + offset;
         if(card.isEspadilha(vira)) return  11 + offset;
@@ -105,9 +104,5 @@ public abstract class PlayingStrategy{
 
         final int actualValue = card.getRank().value() - 1;
         return actualValue + offset;
-    }
-
-    protected final Card discard(Card card){
-        return player.discard(card);
     }
 }

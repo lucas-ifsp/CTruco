@@ -38,7 +38,7 @@ public class SecondRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public CardToPlay playCard() {
+    public CardToPlay decideCardToPlay() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
@@ -55,7 +55,7 @@ public class SecondRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public int getTrucoResponse(int newScoreValue) {
+    public int getRaiseResponse(int newScoreValue) {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
         final int bestCardValue = getCardValue(cards.get(0), vira);
@@ -83,7 +83,7 @@ public class SecondRoundStrategy extends PlayingStrategy {
     }
 
     @Override
-    public boolean requestTruco() {
+    public boolean decideIfRaises() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
         final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
