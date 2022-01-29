@@ -24,7 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.BotFactory;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.player.EntityNotFoundException;
+import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.player.UserRepository;
 
 import java.util.Objects;

@@ -212,9 +212,6 @@ public class GameTableController {
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
             final var event = intel.event().orElse("");
-
-            System.out.println(intel);
-
             if (hasHandScoreChange(intel)) builder.append(0.5, () -> updateHandScore(intel));
             if (isBotEvent(intel)) addBotAnimation(builder, intel, event);
             addSupportingAnimation(builder, intel);

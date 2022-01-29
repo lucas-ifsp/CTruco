@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.player;
+package com.bueno.domain.usecases.utils;
 
 public class EntityAlreadyExistsException extends RuntimeException{
     public EntityAlreadyExistsException(String message) {

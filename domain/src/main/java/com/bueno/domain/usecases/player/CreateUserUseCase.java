@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.player;
 
 import com.bueno.domain.entities.player.util.User;
+import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
