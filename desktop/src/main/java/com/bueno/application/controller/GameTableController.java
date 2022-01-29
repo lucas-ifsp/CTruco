@@ -97,10 +97,7 @@ public class GameTableController {
     private Intel lastIntel;
     private AtomicBoolean isAnimating;
 
-    //TODO BOT Jogar somente aberto na mão de onze
-    //TODO BOT Mostrar carta em caso de empate na última rodada
-    //TODO BOT Ver truco na terceira rodada
-    //TODO BOT Aceitar qualquer valor se já ganhou o jogo
+    //TODO Solve not showing 12 points match result bug
     //TODO Testar o jogo em modo console
     public GameTableController() {
         final GameRepository gameRepo = new InMemoryGameRepository();
@@ -283,10 +280,11 @@ public class GameTableController {
         final var builder = new TimelineBuilder();
         hideMessage();
         isAnimating = new AtomicBoolean(true);
-
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
             final var event = intel.event().orElse("");
+            System.out.println(intel);
+
             if (hasHandScoreChange(intel)) builder.append(0.5, () -> updateHandScore(intel));
             if (isBotEvent(intel)) addBotAnimation(builder, intel, event);
             addSupportingAnimation(builder, intel);

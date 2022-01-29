@@ -225,6 +225,20 @@ class MineiroBotTest {
 
                 assertEquals(Card.of(Rank.ACE, Suit.HEARTS), sut.decideCardToPlay().value());
             }
+
+            @Test
+            @DisplayName("Should not discard in any case if both players have 11 points")
+            void shouldNotDiscardInAnyCaseIfBothPlayersHave11Points() {
+                sut.setCards(List.of(Card.of(Rank.THREE, Suit.SPADES), Card.of(Rank.FOUR, Suit.HEARTS)));
+
+                when(intel.roundsPlayed()).thenReturn(1);
+                when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername())));
+                when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
+                when(intel.currentPlayerScore()).thenReturn(11);
+                when(intel.currentOpponentScore()).thenReturn(11);
+
+                assertNotEquals(Card.closed(), sut.decideCardToPlay().value());
+            }
         }
 
         @Nested
@@ -247,6 +261,18 @@ class MineiroBotTest {
 
                 when(intel.roundsPlayed()).thenReturn(2);
                 when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.SEVEN, Suit.CLUBS)));
+                when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
+
+                assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.decideCardToPlay().value());
+            }
+
+            @Test
+            @DisplayName("Should use remaining card if can tie round")
+            void shouldUseRemainingCardIfCanTieRound() {
+                sut.setCards(List.of(Card.of(Rank.QUEEN, Suit.SPADES)));
+
+                when(intel.roundsPlayed()).thenReturn(2);
+                when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.QUEEN, Suit.CLUBS)));
                 when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
 
                 assertEquals(Card.of(Rank.QUEEN, Suit.SPADES), sut.decideCardToPlay().value());
@@ -317,22 +343,9 @@ class MineiroBotTest {
         }
 
         @Test
-        @DisplayName("Should request to raise if lost first and already played second and remaining card value is lower than 10")
-        void shouldRequestToRaiseIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsHigherThan11() {
+        @DisplayName("Should accept if lost first and already played second and remaining card value is Higher than 11")
+        void shouldAcceptIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsHigherThan11() {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.HEARTS)));
-
-            when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
-            when(intel.openCards()).thenReturn(List.of(Card.of(Rank.FIVE, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.SEVEN, Suit.CLUBS)));
-            when(intel.roundsPlayed()).thenReturn(1);
-            when(intel.roundWinners()).thenReturn(List.of(Optional.of(opponentUsername)));
-
-            assertEquals(1, sut.getRaiseResponse(HandScore.THREE));
-        }
-
-        @Test
-        @DisplayName("Should request to raise if if lost first and already played second and remaining card value is lower than 10")
-        void shouldAcceptIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIs10or11() {
-            sut.setCards(List.of(Card.of(Rank.SIX, Suit.SPADES)));
 
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.openCards()).thenReturn(List.of(Card.of(Rank.FIVE, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS), Card.of(Rank.SEVEN, Suit.CLUBS)));
@@ -419,6 +432,33 @@ class MineiroBotTest {
 
             assertEquals(0, sut.getRaiseResponse(HandScore.THREE));
         }
+
+        @Test
+        @DisplayName("Should request to raise if can win after tying first round")
+        void shouldRequestToRaiseIfCanWinAfterTyingFirstRound() {
+            sut.setCards(List.of(Card.of(Rank.FOUR, Suit.HEARTS), Card.of(Rank.FIVE, Suit.DIAMONDS)));
+
+            when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
+            when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FOUR, Suit.CLUBS)));
+            when(intel.roundsPlayed()).thenReturn(1);
+            when(intel.roundWinners()).thenReturn(List.of(Optional.empty()));
+
+            assertEquals(1, sut.getRaiseResponse(HandScore.NINE));
+        }
+
+        @Test
+        @DisplayName("Should request to raise if can win after winning first round")
+        void shouldRequestToRaiseIfCanWinAfterWinningFirstRound() {
+            sut.setCards(List.of(Card.of(Rank.FOUR, Suit.HEARTS), Card.of(Rank.FIVE, Suit.DIAMONDS)));
+
+            when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
+            when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FOUR, Suit.CLUBS)));
+            when(intel.roundsPlayed()).thenReturn(1);
+            when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername())));
+
+            assertEquals(1, sut.getRaiseResponse(HandScore.NINE));
+        }
+
 
         @Test
         @DisplayName("Should quit in call for 3 if user card value is lower than 9 in third round")
@@ -579,7 +619,6 @@ class MineiroBotTest {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.DIAMONDS)));
 
             when(intel.roundsPlayed()).thenReturn(2);
-            when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername()), Optional.of(opponentUsername)));
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
@@ -593,7 +632,6 @@ class MineiroBotTest {
             sut.setCards(List.of(Card.of(Rank.SIX, Suit.HEARTS)));
 
             when(intel.roundsPlayed()).thenReturn(2);
-            when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername()), Optional.of(opponentUsername)));
             when(intel.handScore()).thenReturn(3);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.empty());
@@ -621,7 +659,6 @@ class MineiroBotTest {
             sut.setCards(List.of(Card.of(Rank.FIVE, Suit.HEARTS)));
 
             when(intel.roundsPlayed()).thenReturn(2);
-            when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername()), Optional.of(opponentUsername)));
             when(intel.handScore()).thenReturn(3);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FIVE, Suit.CLUBS)));
@@ -635,7 +672,6 @@ class MineiroBotTest {
             sut.setCards(List.of(Card.of(Rank.FOUR, Suit.HEARTS)));
 
             when(intel.roundsPlayed()).thenReturn(2);
-            when(intel.roundWinners()).thenReturn(List.of(Optional.of(sut.getUsername()), Optional.of(opponentUsername)));
             when(intel.handScore()).thenReturn(1);
             when(intel.vira()).thenReturn(Card.of(Rank.FIVE, Suit.CLUBS));
             when(intel.cardToPlayAgainst()).thenReturn(Optional.of(Card.of(Rank.FIVE, Suit.CLUBS)));
