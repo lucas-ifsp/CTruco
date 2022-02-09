@@ -49,14 +49,6 @@ public abstract class Player {
         this.uuid = uuid;
     }
 
-    public void setIntel(Intel intel){
-        this.intel = intel;
-    }
-
-    public Intel getIntel() {
-        return intel;
-    }
-
     public final Card play(Card card){
         Card cardToPlay = Objects.requireNonNull(card);
         if(doesNotOwn(cardToPlay))
@@ -87,6 +79,14 @@ public abstract class Player {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public void setIntel(Intel intel){
+        this.intel = intel;
+    }
+
+    public Intel getIntel() {
+        return intel;
     }
 
     public String getUsername() {

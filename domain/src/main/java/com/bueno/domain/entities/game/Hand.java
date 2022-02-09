@@ -188,10 +188,6 @@ public class Hand {
         return eventPlayer;
     }
 
-    void setEventPlayer(Player eventPlayer) {
-        this.eventPlayer = eventPlayer;
-    }
-
     void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
