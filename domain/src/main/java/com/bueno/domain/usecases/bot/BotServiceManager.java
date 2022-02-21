@@ -20,14 +20,11 @@
 
 package com.bueno.domain.usecases.bot;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
-
 public class BotServiceManager {
-    final ServiceLoader<BotService> loader = ServiceLoader.load(BotService.class);
+  /*  final ServiceLoader<BotService> loader = ServiceLoader.load(BotService.class);
 
     public Iterator<BotService> providers(boolean refresh) {
         if (refresh) loader.reload();
         return loader.iterator();
-    }
+    }*/
 }
