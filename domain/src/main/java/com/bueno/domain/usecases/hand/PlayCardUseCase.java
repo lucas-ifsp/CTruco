@@ -21,13 +21,15 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.*;
+import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.Hand;
+import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
 import com.bueno.domain.usecases.utils.Notification;
+import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Validator;
 
 import java.util.Objects;
@@ -35,7 +37,7 @@ import java.util.UUID;
 
 public class PlayCardUseCase {
 
-    private GameRepository repo;
+    private final GameRepository repo;
 
     public PlayCardUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
