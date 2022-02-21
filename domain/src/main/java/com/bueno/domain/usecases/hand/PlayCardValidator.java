@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,29 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.validators;
+package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
-import java.util.UUID;
+public class PlayCardValidator extends Validator<PlayCardUseCase.RequestModel> {
 
-public class GameValidator extends Validator<UUID> {
+    private final ActionValidator actionValidator;
 
-    private final GameRepository repo;
-
-    public GameValidator(GameRepository repo) {
-        this.repo = repo;
+    public PlayCardValidator(GameRepository repo, PossibleAction action) {
+        this.actionValidator = new ActionValidator(repo, action);
     }
 
     @Override
-    public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
-        final Game game = repo.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        if(game.isDone()) return new Notification("Game is over. Start a new game.");
-        return new Notification();
+    public Notification validate(PlayCardUseCase.RequestModel input) {
+        if(input.card() == null) return new Notification("Card is null");
+        return actionValidator.validate(input.requester());
     }
 }
