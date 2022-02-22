@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,14 +18,14 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.bots.mineirobot;
+package com.bueno.domain.usecases.bot.impl;
 
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.bot.BotService;
+import com.bueno.domain.usecases.bot.spi.BotService;
 
-public class MineiroBotService implements BotService {
+public class MineiroBot implements BotService {
 
     @Override
     public int getRaiseResponse(Player bot, Intel intel) {

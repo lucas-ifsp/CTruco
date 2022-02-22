@@ -22,21 +22,31 @@ package com.bueno.domain.entities.player.util;
 
 import java.util.UUID;
 
-public class User extends Player{
+public class User {
     private final String email;
+    private final String username;
+    private final UUID uuid;
 
     public User(String username, String email) {
-        super(username);
-        this.email = email;
+        this(null, username, email);
     }
 
     public User(UUID uuid, String username, String email) {
-        super(uuid, username);
+        this.uuid = uuid == null? UUID.randomUUID() : uuid;
+        this.username = username;
         this.email = email;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     @Override

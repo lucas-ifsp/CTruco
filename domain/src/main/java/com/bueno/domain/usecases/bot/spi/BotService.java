@@ -18,15 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.spi;
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
 
 import java.util.EnumSet;
 import java.util.UUID;
@@ -48,6 +48,10 @@ public interface BotService {
         else if (wantToRaiseRequest(bot, intel)) startRaiseRequest(botUuid, repo);
         else if (shouldPlayCard(intel)) playCard(bot, intel, repo);
         else answerRaiseRequest(bot, intel, repo);
+    }
+
+    default String getName(){
+        return getClass().getSimpleName();
     }
 
     private boolean isNotCurrentPlayer(UUID botUUID, Intel intel) {

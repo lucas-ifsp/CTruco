@@ -18,13 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.spi;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class BotServiceManager {
-  /*  final ServiceLoader<BotService> loader = ServiceLoader.load(BotService.class);
 
-    public Iterator<BotService> providers(boolean refresh) {
-        if (refresh) loader.reload();
-        return loader.iterator();
-    }*/
+    public static BotService load(String botServiceName){
+        final Predicate<BotService> hasName = botService -> botService.getName().equals(botServiceName);
+        final Optional<BotService> possibleBot = providers().filter(hasName).findAny();
+        if(possibleBot.isPresent()) return possibleBot.get();
+        throw new NoSuchElementException("BotService not available: " + botServiceName);
+    }
+
+    public static Stream<BotService> providers() {
+        return ServiceLoader.load(BotService.class).stream().map(ServiceLoader.Provider::get);
+    }
 }

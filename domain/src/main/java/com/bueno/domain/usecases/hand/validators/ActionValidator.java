@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.validators;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
@@ -35,12 +35,12 @@ import java.util.UUID;
 public class ActionValidator extends Validator<UUID> {
 
     private final GameRepository repo;
-    private final GameValidator gameValidator;
+    private final OngoingGameValidator gameValidator;
     private final PossibleAction action;
 
     public ActionValidator(GameRepository repo, PossibleAction action) {
         this.repo = repo;
-        this.gameValidator = new GameValidator(repo);
+        this.gameValidator = new OngoingGameValidator(repo);
         this.action = action;
     }
 

@@ -24,8 +24,8 @@ import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
 
 import java.util.EnumSet;
 import java.util.Objects;

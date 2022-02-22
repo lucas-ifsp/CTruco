@@ -18,24 +18,28 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.validators;
 
-import com.bueno.domain.entities.game.PossibleAction;
+import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
-public class PlayCardValidator extends Validator<PlayCardUseCase.RequestModel> {
+import java.util.UUID;
 
-    private final ActionValidator actionValidator;
+public class IntelRequestValidator extends Validator<UUID> {
 
-    public PlayCardValidator(GameRepository repo, PossibleAction action) {
-        this.actionValidator = new ActionValidator(repo, action);
+    private final GameRepository repo;
+
+    public IntelRequestValidator(GameRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public Notification validate(PlayCardUseCase.RequestModel input) {
-        if(input.card() == null) return new Notification("Card is null");
-        return actionValidator.validate(input.requester());
+    public Notification validate(UUID uuid) {
+        if(uuid == null) return new Notification("UUID is null.");
+        final Game game = repo.findByUserUuid(uuid).orElse(null);
+        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
+        return new Notification();
     }
 }

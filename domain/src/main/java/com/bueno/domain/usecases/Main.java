@@ -20,11 +20,11 @@
 
 package com.bueno.domain.usecases;
 
-import com.bueno.domain.usecases.bot.BotServiceManager;
+import com.bueno.domain.usecases.bot.spi.BotServiceManager;
 
 public class Main {
     public static void main(String[] args) {
         BotServiceManager manager = new BotServiceManager();
-        manager.providers(true).forEachRemaining(System.out::println);
+        manager.providers().forEach(provider -> System.out.println(provider.getName()));
     }
 }
