@@ -22,10 +22,10 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.BotFactory;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
+import com.bueno.domain.entities.player.util.User;
 import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 
 import java.util.Objects;
@@ -34,8 +34,8 @@ import java.util.logging.Logger;
 
 public class CreateGameUseCase {
 
-    private GameRepository gameRepo;
-    private UserRepository userRepo;
+    private final GameRepository gameRepo;
+    private final UserRepository userRepo;
     private final static Logger LOGGER = Logger.getLogger(CreateGameUseCase.class.getName());
 
     public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo) {
@@ -47,24 +47,27 @@ public class CreateGameUseCase {
         Objects.requireNonNull(user1UUID);
         Objects.requireNonNull(user2UUID);
 
-        final Player user1 = userRepo.findByUUID(user1UUID)
+        final User user1 = userRepo.findByUUID(user1UUID)
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + user1UUID));
-        final Player user2 = userRepo.findByUUID(user2UUID)
+        final User user2 = userRepo.findByUUID(user2UUID)
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + user2UUID));
 
-        return create(user1, user2);
+        return create(Player.of(user1), Player.of(user2));
     }
 
     public Intel create(UUID userUUID, String botName){
         Objects.requireNonNull(userUUID);
         Objects.requireNonNull(botName);
 
-        final Player user = userRepo.findByUUID(userUUID)
+        final User user = userRepo.findByUUID(userUUID)
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + userUUID));
 
-        final Player bot = BotFactory.create(botName, gameRepo);
+        final Player userPlayer = Player.of(user);
+        final Player botPlayer = Player.ofBot(botName);
 
-        return create(user, bot);
+        //final Player bot = BotFactory.create(botName, gameRepo);
+
+        return create(userPlayer, botPlayer);
     }
 
     Intel create(Player p1, Player p2) {

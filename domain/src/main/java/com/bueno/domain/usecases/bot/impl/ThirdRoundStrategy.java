@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.bots.mineirobot;
+package com.bueno.domain.usecases.bot.impl;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bueno.bots.mineirobot.PlayingStrategy.*;
+import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.*;
 
 public class ThirdRoundStrategy implements PlayingStrategy {
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,16 +18,17 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.usecases;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
-import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.bot.spi.BotServiceManager;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Validator;
@@ -67,7 +68,11 @@ public class PlayCardUseCase {
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
         if(game.isDone()) return game.getIntel();
-        if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
+        //if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
+        final Player currentPlayer = game.currentHand().getCurrentPlayer();
+        if(currentPlayer.isBot())
+            BotServiceManager.load(currentPlayer.getUsername()).handle(currentPlayer, game.getIntel(), repo);
+            //bot.playTurn(game.getIntel());
         return game.getIntel();
     }
 

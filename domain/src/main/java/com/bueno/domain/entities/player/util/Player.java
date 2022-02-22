@@ -29,9 +29,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class Player {
+public class Player {
 
     public static final int MAX_SCORE = 12;
+
+    private User user;
 
     private List<Card> cards;
     private final String username;
@@ -47,6 +49,21 @@ public abstract class Player {
     public Player(UUID uuid, String username) {
         this.username = username;
         this.uuid = uuid;
+    }
+
+    public static Player of(User user){
+        Player player = new Player(user.getUuid(), user.getUsername());
+        player.user = user;
+
+        return player;
+    }
+
+    public static Player ofBot(String botName){
+        return new Player(botName);
+    }
+
+    public boolean isBot(){
+        return user == null;
     }
 
     public final Card play(Card card){

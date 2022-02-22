@@ -1,3 +1,5 @@
+import com.bueno.domain.usecases.bot.impl.MineiroBot;
+
 module domain {
     requires java.logging;
 
@@ -8,6 +10,10 @@ module domain {
     exports com.bueno.domain.usecases.utils;
     exports com.bueno.domain.usecases.game;
     exports com.bueno.domain.usecases.player;
-    exports com.bueno.domain.usecases.hand;
-    exports com.bueno.domain.usecases.bot;
+    exports com.bueno.domain.usecases.hand.usecases;
+    exports com.bueno.domain.usecases.bot.spi;
+    exports com.bueno.domain.usecases.hand.validators;
+
+    provides com.bueno.domain.usecases.bot.spi.BotService with MineiroBot;
+    uses com.bueno.domain.usecases.bot.spi.BotService;
 }

@@ -23,8 +23,8 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.Bot;
 import com.bueno.domain.entities.player.util.BotFactory;
-import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.PlayCardUseCase.RequestModel;
+import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
 
 import java.util.UUID;
 
