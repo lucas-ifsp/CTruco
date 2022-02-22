@@ -23,9 +23,9 @@ package com.bueno.domain.usecases.bot.impl;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.bot.spi.BotService;
+import com.bueno.domain.usecases.bot.spi.BotServiceProvider;
 
-public class MineiroBot implements BotService {
+public class MineiroBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(Player bot, Intel intel) {

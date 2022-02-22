@@ -14,6 +14,6 @@ module domain {
     exports com.bueno.domain.usecases.bot.spi;
     exports com.bueno.domain.usecases.hand.validators;
 
-    provides com.bueno.domain.usecases.bot.spi.BotService with MineiroBot;
-    uses com.bueno.domain.usecases.bot.spi.BotService;
+    provides com.bueno.domain.usecases.bot.spi.BotServiceProvider with MineiroBot;
+    uses com.bueno.domain.usecases.bot.spi.BotServiceProvider;
 }
