@@ -23,7 +23,7 @@ import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.entities.player.util.Player;
 
-public interface BotService {
+public interface BotServiceProvider {
     int getRaiseResponse(Player bot, Intel intel);
     boolean getMaoDeOnzeResponse(Player bot, Intel intel);
     boolean decideIfRaises(Player bot, Intel intel);

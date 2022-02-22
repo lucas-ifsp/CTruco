@@ -20,22 +20,27 @@
 
 package com.bueno.domain.usecases.bot.spi;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BotServiceManager {
 
-    public static BotService load(String botServiceName){
-        final Predicate<BotService> hasName = botService -> botService.getName().equals(botServiceName);
-        final Optional<BotService> possibleBot = providers().filter(hasName).findAny();
-        if(possibleBot.isPresent()) return possibleBot.get();
-        throw new NoSuchElementException("BotService not available: " + botServiceName);
+    public static BotServiceProvider load(String botServiceName){
+        final Predicate<BotServiceProvider> hasName = botImpl -> botImpl.getName().equals(botServiceName);
+        final Optional<BotServiceProvider> possibleBot = providers().filter(hasName).findAny();
+        return possibleBot.orElseThrow(() -> new NoSuchElementException("BotService not available: " + botServiceName));
     }
 
-    public static Stream<BotService> providers() {
-        return ServiceLoader.load(BotService.class).stream().map(ServiceLoader.Provider::get);
+    public static Stream<BotServiceProvider> providers() {
+        return ServiceLoader.load(BotServiceProvider.class).stream().map(ServiceLoader.Provider::get);
+    }
+
+    public static List<String> providersNames(){
+        return providers().map(BotServiceProvider::getName).collect(Collectors.toList());
     }
 }
