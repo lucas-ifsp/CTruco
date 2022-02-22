@@ -26,7 +26,7 @@ import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.bot.spi.BotServiceManager;
+import com.bueno.domain.usecases.bot.helper.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
 import com.bueno.domain.usecases.utils.Notification;
@@ -39,9 +39,11 @@ import java.util.UUID;
 public class PlayCardUseCase {
 
     private final GameRepository repo;
+    private final BotUseCase botUseCase;
 
     public PlayCardUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
+        this.botUseCase = new BotUseCase(repo);
     }
 
     public Intel playCard(RequestModel requestModel) {
@@ -68,11 +70,9 @@ public class PlayCardUseCase {
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
         if(game.isDone()) return game.getIntel();
-        //if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
-        final Player currentPlayer = game.currentHand().getCurrentPlayer();
-        if(currentPlayer.isBot())
-            BotServiceManager.load(currentPlayer.getUsername()).handle(currentPlayer, game.getIntel(), repo);
-            //bot.playTurn(game.getIntel());
+
+        botUseCase.playWhenNecessary(game);
+
         return game.getIntel();
     }
 

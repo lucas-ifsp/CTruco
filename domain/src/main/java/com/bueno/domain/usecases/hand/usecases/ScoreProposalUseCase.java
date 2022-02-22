@@ -25,7 +25,7 @@ import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.bot.spi.BotServiceManager;
+import com.bueno.domain.usecases.bot.helper.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validators.ActionValidator;
 import com.bueno.domain.usecases.utils.Notification;
@@ -38,9 +38,11 @@ import java.util.UUID;
 public class ScoreProposalUseCase {
 
     private final GameRepository repo;
+    private final BotUseCase botUseCase;
 
     public ScoreProposalUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
+        this.botUseCase = new BotUseCase(repo);
     }
 
     public Intel raise(UUID usedUuid){
@@ -51,12 +53,7 @@ public class ScoreProposalUseCase {
         final Player player = hand.getCurrentPlayer();
 
         hand.raise(player);
-
-        //if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
-
-        final Player currentPlayer = game.currentHand().getCurrentPlayer();
-        if(currentPlayer.isBot())
-            BotServiceManager.load(currentPlayer.getUsername()).handle(currentPlayer, game.getIntel(), repo);
+        botUseCase.playWhenNecessary(game);
 
         return game.getIntel();
     }
@@ -69,11 +66,7 @@ public class ScoreProposalUseCase {
         final Player player = hand.getCurrentPlayer();
 
         hand.accept(player);
-
-        //if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
-        final Player currentPlayer = game.currentHand().getCurrentPlayer();
-        if(currentPlayer.isBot())
-            BotServiceManager.load(currentPlayer.getUsername()).handle(currentPlayer, game.getIntel(), repo);
+        botUseCase.playWhenNecessary(game);
 
         return game.getIntel();
     }
@@ -89,11 +82,7 @@ public class ScoreProposalUseCase {
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
         if(game.isDone()) return game.getIntel();
-        //if(game.currentHand().getCurrentPlayer() instanceof Bot bot) bot.playTurn(game.getIntel());
-
-        final Player currentPlayer = game.currentHand().getCurrentPlayer();
-        if(currentPlayer.isBot())
-            BotServiceManager.load(currentPlayer.getUsername()).handle(currentPlayer, game.getIntel(), repo);
+        botUseCase.playWhenNecessary(game);
 
         return game.getIntel();
     }
