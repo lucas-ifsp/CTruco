@@ -26,18 +26,22 @@ import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.bot.spi.BotServiceManager;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bueno.domain.entities.game.PossibleAction.*;
+import static com.bueno.domain.usecases.bot.spi.GameIntel.*;
 
 public class BotUseCase {
-    private GameRepository repo;
+    private final GameRepository repo;
 
     public BotUseCase(GameRepository repo) {
         this.repo = repo;
@@ -123,5 +127,21 @@ public class BotUseCase {
             case 0 -> {if(actions.contains(ACCEPT)) useCase.accept(botUuid);}
             case 1 -> {if(actions.contains(RAISE)) useCase.raise(botUuid);}
         }
+    }
+
+    private GameIntel toGameIntel(Player player, Intel intel){
+        final Function<String, RoundResult> toRoundResult = name -> name == null ? RoundResult.DREW
+                : name.equals(player.getUsername()) ? RoundResult.WON : RoundResult.LOST;
+
+        final List<RoundResult> roundResults = intel.roundWinners().stream()
+                .map(winner -> winner.orElse(null))
+                .map(toRoundResult).collect(Collectors.toList());
+
+        return StepBuilder.with()
+                .gameInfo(roundResults, intel.openCards(), intel.vira(), intel.handScore())
+                .botInfo(player.getCards(), intel.currentPlayerScore())
+                .opponentScore(intel.currentOpponentScore())
+                .opponentCard(intel.cardToPlayAgainst().orElse(null))
+                .build();
     }
 }
