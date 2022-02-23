@@ -33,7 +33,7 @@ public class BotServiceManager {
     public static BotServiceProvider load(String botServiceName){
         final Predicate<BotServiceProvider> hasName = botImpl -> botImpl.getName().equals(botServiceName);
         final Optional<BotServiceProvider> possibleBot = providers().filter(hasName).findAny();
-        return possibleBot.orElseThrow(() -> new NoSuchElementException("BotService not available: " + botServiceName));
+        return possibleBot.orElseThrow(() -> new NoSuchElementException("Service implentation not available: " + botServiceName));
     }
 
     public static Stream<BotServiceProvider> providers() {
