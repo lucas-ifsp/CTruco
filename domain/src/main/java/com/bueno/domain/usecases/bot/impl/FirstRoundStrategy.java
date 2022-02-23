@@ -58,7 +58,7 @@ public class FirstRoundStrategy implements PlayingStrategy {
         if(possibleOpponentCard.isPresent()) {
             Card opponentCard = possibleOpponentCard.get();
 
-            Optional<Card> possibleEnoughCardToWin = getPossibleEnoughCardToWin(cards, intel.vira(), opponentCard);
+            Optional<Card> possibleEnoughCardToWin = getPossibleEnoughCardToWin(cards, vira, opponentCard);
             if (possibleEnoughCardToWin.isPresent()) return CardToPlay.of(possibleEnoughCardToWin.get());
 
             Optional<Card> possibleCardToDraw = getPossibleCardToDraw(cards, vira, opponentCard);
