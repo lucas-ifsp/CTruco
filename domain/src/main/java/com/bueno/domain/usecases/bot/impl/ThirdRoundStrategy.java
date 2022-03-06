@@ -21,9 +21,9 @@
 package com.bueno.domain.usecases.bot.impl;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.GameIntel.RoundResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,24 +33,22 @@ import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.*;
 
 public class ThirdRoundStrategy implements PlayingStrategy {
 
-    private final Player player;
     private final List<Card> cards;
     private final Card vira;
-    private final Intel intel;
+    private final GameIntel intel;
     private final List<Card> openCards;
 
-    public ThirdRoundStrategy(Player player, Intel intel) {
-        this.player = player;
+    public ThirdRoundStrategy(GameIntel intel) {
         this.intel = intel;
-        this.vira = intel.vira();
-        this.cards = new ArrayList<>(player.getCards());
+        this.vira = intel.getVira();
+        this.cards = new ArrayList<>(intel.getCards());
         this.cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        this.openCards = intel.openCards();
+        this.openCards = intel.getOpenCards();
     }
 
     @Override
     public CardToPlay chooseCard() {
-        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
         final Card remainingCard = cards.get(0);
 
         if (possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
@@ -63,9 +61,9 @@ public class ThirdRoundStrategy implements PlayingStrategy {
 
     @Override
     public int getRaiseResponse(int newScoreValue) {
-        if(knowsTheOdds() && canWin(cards.get(0), intel.cardToPlayAgainst().orElseThrow())) return 1;
+        if(knowsTheOdds() && canWin()) return 1;
 
-        final Card lastOpenedCard = intel.openCards().get(intel.openCards().size() - 1);
+        final Card lastOpenedCard = openCards.get(openCards.size() - 1);
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(openCards, lastOpenedCard, vira) : getCardValue(openCards, cards.get(0), vira);
 
@@ -75,32 +73,32 @@ public class ThirdRoundStrategy implements PlayingStrategy {
     }
 
     private boolean knowsTheOdds() {
-        return cards.size() == 1 && intel.cardToPlayAgainst().isPresent();
+        return cards.size() == 1 && intel.getOpponentCard().isPresent();
     }
 
 
     @Override
     public boolean decideIfRaises() {
-        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
-        final int handScoreValue = intel.handScore();
+        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final int handPoints = intel.getHandPoints();
         final Card playingCard = cards.get(0);
 
         if (possibleOpponentCard.isEmpty()) {
-            if (handScoreValue > 1 && getCardValue(openCards, playingCard, vira) >= 12) return true;
+            if (handPoints > 1 && getCardValue(openCards, playingCard, vira) >= 12) return true;
             return getCardValue(openCards, playingCard, vira) >= 10;
         }
 
-        final Card opponentCard = possibleOpponentCard.get();
+        if (getCardValue(openCards, possibleOpponentCard.get(), vira) < 5) return true;
 
-        if (getCardValue(openCards, opponentCard, vira) < 5) return true;
-        return canWin(playingCard, opponentCard);
+        return canWin();
     }
 
-    private boolean canWin(Card remainingCard, Card opponentCard) {
-        final String firstRoundWinner = intel.roundWinners().get(0).orElse(null);
-        return (!isPlayerFirstRoundLoser(firstRoundWinner, player.getUsername())
-                && remainingCard.compareValueTo(opponentCard, vira) > 0)
-                || (isPlayerFirstRoundWinner(firstRoundWinner, player.getUsername())
-                && remainingCard.compareValueTo(opponentCard, vira) == 0);
+    private boolean canWin() {
+        final RoundResult firstRoundResult = intel.getRoundResults().get(0);
+        final Card card = cards.get(0);
+        final Card opponentCard = intel.getOpponentCard().orElseThrow();
+
+        return (!firstRoundResult.equals(RoundResult.LOST) && card.compareValueTo(opponentCard, vira) > 0)
+                || (firstRoundResult.equals(RoundResult.WON) && card.compareValueTo(opponentCard, vira) == 0);
     }
 }

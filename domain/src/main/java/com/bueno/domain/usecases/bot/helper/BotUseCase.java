@@ -75,7 +75,7 @@ public class BotUseCase {
         final var botUuid = bot.getUuid();
         final var botService = BotServiceManager.load(bot.getUsername());
         final var useCase = new ScoreProposalUseCase(repo);
-        final var hasAccepted = botService.getMaoDeOnzeResponse(bot, intel);
+        final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot,intel));
 
         if(hasAccepted) useCase.accept(botUuid);
         else useCase.quit(botUuid);
@@ -90,7 +90,7 @@ public class BotUseCase {
         final var canNotStartRequest = !actions.contains(RAISE) || actions.contains(QUIT);
 
         if(canNotStartRequest) return false;
-        return botService.decideIfRaises(bot, intel);
+        return botService.decideIfRaises(toGameIntel(bot,intel));
     }
 
     private void startRaiseRequest(UUID botUuid, GameRepository repo) {
@@ -107,7 +107,7 @@ public class BotUseCase {
     private void playCard(Player bot, Intel intel, GameRepository repo) {
         final var botUuid = bot.getUuid();
         final var botService = BotServiceManager.load(bot.getUsername());
-        final var chosenCard = botService.chooseCard(bot, intel);
+        final var chosenCard = botService.chooseCard(toGameIntel(bot,intel));
         final var useCase = new PlayCardUseCase(repo);
 
         if(chosenCard.isDiscard()) useCase.discard(new PlayCardUseCase.RequestModel(botUuid, chosenCard.content()));
@@ -122,7 +122,7 @@ public class BotUseCase {
                 .map(PossibleAction::valueOf)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-        switch (botService.getRaiseResponse(bot, intel)){
+        switch (botService.getRaiseResponse(toGameIntel(bot,intel))){
             case -1 -> {if(actions.contains(QUIT)) useCase.quit(botUuid);}
             case 0 -> {if(actions.contains(ACCEPT)) useCase.accept(botUuid);}
             case 1 -> {if(actions.contains(RAISE)) useCase.raise(botUuid);}
