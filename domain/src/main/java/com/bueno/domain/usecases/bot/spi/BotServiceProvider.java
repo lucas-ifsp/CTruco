@@ -19,15 +19,13 @@
  */
 
 package com.bueno.domain.usecases.bot.spi;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
 
 public interface BotServiceProvider {
-    int getRaiseResponse(Player bot, Intel intel);
-    boolean getMaoDeOnzeResponse(Player bot, Intel intel);
-    boolean decideIfRaises(Player bot, Intel intel);
-    CardToPlay chooseCard(Player bot, Intel intel);
+    int getRaiseResponse(GameIntel intel);
+    boolean getMaoDeOnzeResponse(GameIntel intel);
+    boolean decideIfRaises(GameIntel intel);
+    CardToPlay chooseCard(GameIntel intel);
     default String getName(){
         return getClass().getSimpleName();
     }

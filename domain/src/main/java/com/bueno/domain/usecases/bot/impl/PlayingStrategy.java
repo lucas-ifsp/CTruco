@@ -21,9 +21,8 @@
 package com.bueno.domain.usecases.bot.impl;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,12 +31,12 @@ import java.util.Optional;
 
 interface PlayingStrategy{
 
-    static PlayingStrategy of(Player bot, Intel intel){
-        final int roundsPlayed = intel.roundsPlayed();
+    static PlayingStrategy of(GameIntel intel){
+        final int roundsPlayed = intel.getRoundResults().size();
         return switch (roundsPlayed){
-            case 0 -> new FirstRoundStrategy(bot, intel);
-            case 1 -> new SecondRoundStrategy(bot, intel);
-            case 2 -> new ThirdRoundStrategy(bot, intel);
+            case 0 -> new FirstRoundStrategy(intel);
+            case 1 -> new SecondRoundStrategy(intel);
+            case 2 -> new ThirdRoundStrategy(intel);
             default -> throw new IllegalStateException("Illegal number of rounds to play: " + roundsPlayed + 1);
         };
     }
@@ -46,13 +45,13 @@ interface PlayingStrategy{
     int getRaiseResponse(int newScoreValue);
     boolean decideIfRaises();
 
-    static boolean getMaoDeOnzeResponse(Player bot, Intel intel){
-        final Card vira = intel.vira();
-        final List<Card> cards = new ArrayList<>(bot.getCards());
+    static boolean getMaoDeOnzeResponse(GameIntel intel){
+        final Card vira = intel.getVira();
+        final List<Card> cards = new ArrayList<>(intel.getCards());
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final int bestCard = getCardValue(intel.openCards(), cards.get(0), vira);
-        final int mediumCard = getCardValue(intel.openCards(), cards.get(1), vira);
-        final int opponentScore = intel.currentOpponentScore();
+        final int bestCard = getCardValue(intel.getOpenCards(), cards.get(0), vira);
+        final int mediumCard = getCardValue(intel.getOpenCards(), cards.get(1), vira);
+        final int opponentScore = intel.getOpponentScore();
 
         if(bestCard + mediumCard >= 20 ) return true;
         return opponentScore >= 8 && bestCard > 10 && mediumCard >= 8;
@@ -68,18 +67,6 @@ interface PlayingStrategy{
         return botCards.stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
-    }
-
-    default boolean isPlayerFirstRoundWinner(String possibleWinner, String botUserName) {
-        return possibleWinner != null && possibleWinner.equals(botUserName);
-    }
-
-    default boolean isPlayerFirstRoundLoser(String possibleWinner, String botUserName) {
-        return possibleWinner != null && !possibleWinner.equals(botUserName);
-    }
-
-    default boolean isFirstRoundTied(String possibleWinner) {
-        return possibleWinner == null;
     }
 
     static int getCardValue(List<Card> openCards, Card card, Card vira){

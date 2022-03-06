@@ -21,9 +21,8 @@
 package com.bueno.domain.usecases.bot.impl;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,20 +35,20 @@ public class FirstRoundStrategy implements PlayingStrategy {
     
     private final List<Card> cards;
     private final Card vira;
-    private final Intel intel;
     private final List<Card> openCards;
+    private final GameIntel intel;
 
-    public FirstRoundStrategy(Player player, Intel intel) {
+    public FirstRoundStrategy(GameIntel intel) {
         this.intel = intel;
-        this.vira = intel.vira();
-        this.cards = new ArrayList<>(player.getCards());
+        this.vira = intel.getVira();
+        this.cards = new ArrayList<>(intel.getCards());
         this.cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        this.openCards = intel.openCards();
+        this.openCards = intel.getOpenCards();
     }
 
     @Override
     public CardToPlay chooseCard() {
-        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
+        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
         final int numberOfTopThreeCards = countCardsBetween(11, 13);
         final int numberOfMediumCards = countCardsBetween(8,9);
 

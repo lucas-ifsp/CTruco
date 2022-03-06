@@ -22,9 +22,9 @@ package com.bueno.domain.usecases.bot.impl;
 
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.GameIntel.RoundResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,62 +34,57 @@ import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.*;
 
 public class SecondRoundStrategy implements PlayingStrategy {
 
-    private final Player player;
     private final List<Card> cards;
     private final Card vira;
-    private final Intel intel;
+    private final GameIntel intel;
     private final List<Card> openCards;
 
-    public SecondRoundStrategy(Player player, Intel intel) {
-        this.player = player;
+    public SecondRoundStrategy(GameIntel intel) {
         this.intel = intel;
-        this.vira = intel.vira();
-        this.cards = new ArrayList<>(player.getCards());
+        this.vira = intel.getVira();
+        this.cards = new ArrayList<>(intel.getCards());
         this.cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        this.openCards = intel.openCards();
+        this.openCards = intel.getOpenCards();
     }
 
     @Override
     public CardToPlay chooseCard() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
-        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
+        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final RoundResult firstRoundResult = intel.getRoundResults().get(0);
 
-        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null), player.getUsername())) {
+        if (firstRoundResult.equals(RoundResult.WON)) {
             if (!isMaoDeFerro() && cards.stream().anyMatch(c -> getCardValue(openCards, c, vira) >= 8) )
                 return CardToPlay.ofDiscard(cards.get(1));
             return CardToPlay.of(cards.get(0));
         }
 
-        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))) return CardToPlay.of(cards.get(0));
+        if (firstRoundResult.equals(RoundResult.DREW)) return CardToPlay.of(cards.get(0));
 
         Optional<Card> enoughCardToWin = getPossibleEnoughCardToWin(cards, vira, possibleOpponentCard.orElseThrow());
         return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard(cards.get(1)));
     }
 
     private boolean isMaoDeFerro() {
-        return intel.currentPlayerScore() == 11 && intel.currentOpponentScore() == 11;
+        return intel.getScore() == 11 && intel.getOpponentScore() == 11;
     }
 
     @Override
     public int getRaiseResponse(int newScoreValue) {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final String possibleFirstRoundWinner = intel.roundWinners().get(0).orElse(null);
+        final RoundResult firstRoundResult = intel.getRoundResults().get(0);
         final int bestCardValue = getCardValue(openCards, cards.get(0), vira);
 
-        if(canWin(cards.get(0), possibleFirstRoundWinner)) return 1;
+        if(canWin(cards.get(0), firstRoundResult)) return 1;
 
-        if (isFirstRoundTied(possibleFirstRoundWinner)) {
+        if (firstRoundResult.equals(RoundResult.DREW)) {
             if (bestCardValue < 10) return -1;
             if (bestCardValue > 11) return 1;
         }
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner, player.getUsername())
-                && hasAlreadyPlayedRound() && bestCardValue < 10) {
-            return -1;
-        }
+        if (firstRoundResult.equals(RoundResult.LOST) && hasAlreadyPlayedRound() && bestCardValue < 10) return -1;
 
-        if (isPlayerFirstRoundLoser(possibleFirstRoundWinner, player.getUsername()) && !hasAlreadyPlayedRound()) {
+        if (firstRoundResult.equals(RoundResult.LOST)  && !hasAlreadyPlayedRound()) {
             final int remainingCardsValue = getCardValue(openCards, cards.get(0), vira) + getCardValue(openCards, cards.get(1), vira);
             if (remainingCardsValue < 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
             if (remainingCardsValue >= 23) return 1;
@@ -97,12 +92,11 @@ public class SecondRoundStrategy implements PlayingStrategy {
         return 0;
     }
 
-    private boolean canWin(Card bestCard, String possibleFirstRoundWinner) {
+    private boolean canWin(Card bestCard, RoundResult firstRoundResult) {
         if(cards.size() < 2) return false;
-        if(intel.cardToPlayAgainst().isEmpty()) return false;
-        final Card opponentCard = intel.cardToPlayAgainst().get();
-        return !isPlayerFirstRoundLoser(possibleFirstRoundWinner, player.getUsername())
-                && bestCard.compareValueTo(opponentCard, intel.vira()) > 0;
+        if(intel.getOpponentCard().isEmpty()) return false;
+        final Card opponentCard = intel.getOpponentCard().get();
+        return !firstRoundResult.equals(RoundResult.LOST) && bestCard.compareValueTo(opponentCard, vira) > 0;
     }
 
     private boolean hasAlreadyPlayedRound() {
@@ -112,21 +106,21 @@ public class SecondRoundStrategy implements PlayingStrategy {
     @Override
     public boolean decideIfRaises() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<String> possibleFirstRoundWinner = intel.roundWinners().get(0);
-        final Optional<Card> possibleOpponentCard = intel.cardToPlayAgainst();
-        final int handScoreValue = intel.handScore();
+        final RoundResult firstRoundResult = intel.getRoundResults().get(0);
+        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final int handPoints = intel.getHandPoints();
         final Card higherCard = cards.get(0);
 
-        if (isPlayerFirstRoundWinner(possibleFirstRoundWinner.orElse(null),player.getUsername())) return false;
+        if (firstRoundResult.equals(RoundResult.WON)) return false;
 
-        if (isFirstRoundTied(possibleFirstRoundWinner.orElse(null))){
+        if (firstRoundResult.equals(RoundResult.DREW)){
             if(isCardValueBetween(higherCard,13,13)
                     || isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))) return true;
-            if(handScoreValue == 1 && isCardValueBetween(higherCard, 10, 12)) return true;
-            if(handScoreValue == 3 && isCardValueBetween(higherCard, 12, 12)) return true;
+            if(handPoints == 1 && isCardValueBetween(higherCard, 10, 12)) return true;
+            if(handPoints == 3 && isCardValueBetween(higherCard, 12, 12)) return true;
         }
 
-        if(handScoreValue > 1) return false;
+        if(handPoints > 1) return false;
 
         return isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))
                 && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)), 10, 13);

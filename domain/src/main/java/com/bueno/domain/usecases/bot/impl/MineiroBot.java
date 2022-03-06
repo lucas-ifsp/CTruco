@@ -20,30 +20,30 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.bot.spi.BotServiceProvider;
+import com.bueno.domain.usecases.bot.spi.GameIntel;
 
 public class MineiroBot implements BotServiceProvider {
 
     @Override
-    public int getRaiseResponse(Player bot, Intel intel) {
-        return PlayingStrategy.of(bot, intel).getRaiseResponse(intel.scoreProposal().orElseThrow());
+    public int getRaiseResponse(GameIntel intel) {
+        int handPointsProposal = intel.getHandPoints() == 1 ? 3 : intel.getHandPoints() + 3;
+        return PlayingStrategy.of(intel).getRaiseResponse(handPointsProposal);
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(Player bot, Intel intel) {
-        return PlayingStrategy.getMaoDeOnzeResponse(bot, intel);
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        return PlayingStrategy.getMaoDeOnzeResponse(intel);
     }
 
     @Override
-    public boolean decideIfRaises(Player bot, Intel intel) {
-        return PlayingStrategy.of(bot, intel).decideIfRaises();
+    public boolean decideIfRaises(GameIntel intel) {
+        return PlayingStrategy.of(intel).decideIfRaises();
     }
 
     @Override
-    public CardToPlay chooseCard(Player bot, Intel intel) {
-        return PlayingStrategy.of(bot, intel).chooseCard();
+    public CardToPlay chooseCard(GameIntel intel) {
+        return PlayingStrategy.of(intel).chooseCard();
     }
 }
