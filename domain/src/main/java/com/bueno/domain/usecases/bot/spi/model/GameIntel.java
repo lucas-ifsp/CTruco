@@ -18,9 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
-
-import com.bueno.domain.entities.deck.Card;
+package com.bueno.domain.usecases.bot.spi.model;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,16 +27,16 @@ public class GameIntel {
 
     public enum RoundResult {WON, DREW, LOST}
 
-    private final List<Card> cards;
-    private final List<Card> openCards;
-    private final Card vira;
-    private final Card opponentCard;
+    private final List<TrucoCard> cards;
+    private final List<TrucoCard> openCards;
+    private final TrucoCard vira;
+    private final TrucoCard opponentCard;
     private final List<RoundResult> roundResults;
     private final int score;
     private final int opponentScore;
     private final int handPoints;
 
-    private GameIntel(List<Card> cards, List<Card> openCards, Card vira, Card opponentCard,
+    private GameIntel(List<TrucoCard> cards, List<TrucoCard> openCards, TrucoCard vira, TrucoCard opponentCard,
                       List<RoundResult> roundResults, int score, int opponentScore, int handPoints) {
         this.cards = cards;
         this.openCards = openCards;
@@ -50,19 +48,19 @@ public class GameIntel {
         this.handPoints = handPoints;
     }
 
-    public List<Card> getCards() {
+    public List<TrucoCard> getCards() {
         return cards;
     }
 
-    public List<Card> getOpenCards() {
+    public List<TrucoCard> getOpenCards() {
         return openCards;
     }
 
-    public Card getVira() {
+    public TrucoCard getVira() {
         return vira;
     }
 
-    public Optional<Card> getOpponentCard() {
+    public Optional<TrucoCard> getOpponentCard() {
         return Optional.ofNullable(opponentCard);
     }
 
@@ -83,11 +81,11 @@ public class GameIntel {
     }
 
     public interface GeneralIntel{
-        BotIntel gameInfo(List<RoundResult> roundResults, List<Card> openCards, Card vira, int handPoints);
+        BotIntel gameInfo(List<RoundResult> roundResults, List<TrucoCard> openCards, TrucoCard vira, int handPoints);
     }
 
     public interface BotIntel{
-        OpponentIntel botInfo(List<Card> cards, int score);
+        OpponentIntel botInfo(List<TrucoCard> cards, int score);
     }
 
     public interface OpponentIntel{
@@ -96,10 +94,10 @@ public class GameIntel {
 
 
     public static final class StepBuilder implements  GeneralIntel, BotIntel, OpponentIntel{
-        private List<Card> cards;
-        private List<Card> openCards;
-        private Card vira;
-        private Card opponentCard;
+        private List<TrucoCard> cards;
+        private List<TrucoCard> openCards;
+        private TrucoCard vira;
+        private TrucoCard opponentCard;
         private List<RoundResult> roundResults;
         private int score;
         private int opponentScore;
@@ -112,7 +110,7 @@ public class GameIntel {
         }
 
         @Override
-        public BotIntel gameInfo(List<RoundResult> roundResults, List<Card> openCards, Card vira, int handPoints) {
+        public BotIntel gameInfo(List<RoundResult> roundResults, List<TrucoCard> openCards, TrucoCard vira, int handPoints) {
             this.roundResults = List.copyOf((roundResults));
             this.openCards = List.copyOf(openCards);
             this.vira = vira;
@@ -121,7 +119,7 @@ public class GameIntel {
         }
 
         @Override
-        public OpponentIntel botInfo(List<Card> cards, int score) {
+        public OpponentIntel botInfo(List<TrucoCard> cards, int score) {
             this.cards = cards;
             this.score = score;
             return this;
@@ -133,7 +131,7 @@ public class GameIntel {
             return this;
         }
 
-        public StepBuilder opponentCard(Card card){
+        public StepBuilder opponentCard(TrucoCard card){
             this.opponentCard = card;
             return this;
         }

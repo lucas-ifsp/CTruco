@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,17 +18,36 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
+package com.bueno.domain.usecases.bot.spi.model;
 
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+public enum CardRank {
+    HIDDEN(0, 'X'), FOUR(1, '4'), FIVE(2, '5'),
+    SIX(3, '6'), SEVEN(4, '7'), QUEEN(5, 'Q'),
+    JACK(6, 'J'), KING(7, 'K'), ACE(8, 'A'),
+    TWO(9, '2'), THREE(10, '3');
 
-public interface BotServiceProvider {
-    int getRaiseResponse(GameIntel intel);
-    boolean getMaoDeOnzeResponse(GameIntel intel);
-    boolean decideIfRaises(GameIntel intel);
-    CardToPlay chooseCard(GameIntel intel);
-    default String getName(){
-        return getClass().getSimpleName();
+    private int value;
+    private char symbol;
+
+    CardRank(int value, char symbol) {
+        this.value = value;
+        this.symbol = symbol;
+    }
+
+    public int value() {
+        return value;
+    }
+
+    public CardRank next() {
+        return switch (value){
+            case 0 -> HIDDEN;
+            case 10 -> FOUR;
+            default -> values()[value + 1];
+        };
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(symbol);
     }
 }

@@ -20,9 +20,9 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
+import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,9 @@ import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.getCardValue;
 
 public class FirstRoundStrategy implements PlayingStrategy {
     
-    private final List<Card> cards;
-    private final Card vira;
-    private final List<Card> openCards;
+    private final List<TrucoCard> cards;
+    private final TrucoCard vira;
+    private final List<TrucoCard> openCards;
     private final GameIntel intel;
 
     public FirstRoundStrategy(GameIntel intel) {
@@ -48,19 +48,19 @@ public class FirstRoundStrategy implements PlayingStrategy {
 
     @Override
     public CardToPlay chooseCard() {
-        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
         final int numberOfTopThreeCards = countCardsBetween(11, 13);
         final int numberOfMediumCards = countCardsBetween(8,9);
 
         if(numberOfTopThreeCards == 2) return CardToPlay.ofDiscard(cards.get(2));
 
         if(possibleOpponentCard.isPresent()) {
-            Card opponentCard = possibleOpponentCard.get();
+            TrucoCard opponentCard = possibleOpponentCard.get();
 
-            Optional<Card> possibleEnoughCardToWin = getPossibleEnoughCardToWin(cards, vira, opponentCard);
+            Optional<TrucoCard> possibleEnoughCardToWin = getPossibleEnoughCardToWin(cards, vira, opponentCard);
             if (possibleEnoughCardToWin.isPresent()) return CardToPlay.of(possibleEnoughCardToWin.get());
 
-            Optional<Card> possibleCardToDraw = getPossibleCardToDraw(cards, vira, opponentCard);
+            Optional<TrucoCard> possibleCardToDraw = getPossibleCardToDraw(cards, vira, opponentCard);
             return possibleCardToDraw.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard((cards.get(2))));
         }
         if(numberOfTopThreeCards == 1 && numberOfMediumCards > 0) return CardToPlay.of(cards.get(1));
@@ -68,8 +68,8 @@ public class FirstRoundStrategy implements PlayingStrategy {
     }
 
     private int countCardsBetween(int lowerValue, int upperValue){
-        Predicate<Card> hasValueHigherOrEqualThan = c ->  lowerValue <= getCardValue(openCards, c, vira);
-        Predicate<Card> hasValueLowerOrEqualThan = c ->  getCardValue(openCards, c, vira) <= upperValue;
+        Predicate<TrucoCard> hasValueHigherOrEqualThan = c ->  lowerValue <= getCardValue(openCards, c, vira);
+        Predicate<TrucoCard> hasValueLowerOrEqualThan = c ->  getCardValue(openCards, c, vira) <= upperValue;
         return (int) cards.stream()
                 .filter(hasValueHigherOrEqualThan)
                 .filter(hasValueLowerOrEqualThan)
@@ -84,8 +84,8 @@ public class FirstRoundStrategy implements PlayingStrategy {
             if (!cards.get(0).isManilha(vira) || cards.get(0).isOuros(vira) || getCardValue(openCards, cards.get(1), vira) < 9) return -1;
             return 0;
         }
-        final List<Card> openCards = this.openCards;
-        final Card cardPlayed = openCards.get(openCards.size()-1);
+        final List<TrucoCard> openCards = this.openCards;
+        final TrucoCard cardPlayed = openCards.get(openCards.size() - 1);
         if(getCardValue(this.openCards, cardPlayed, vira) < 9 && remainingCardsValue < 17) return -1;
         return 0;
     }

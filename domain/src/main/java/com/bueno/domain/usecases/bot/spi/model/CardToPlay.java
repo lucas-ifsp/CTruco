@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,17 +18,34 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
+package com.bueno.domain.usecases.bot.spi.model;
 
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
 
-public interface BotServiceProvider {
-    int getRaiseResponse(GameIntel intel);
-    boolean getMaoDeOnzeResponse(GameIntel intel);
-    boolean decideIfRaises(GameIntel intel);
-    CardToPlay chooseCard(GameIntel intel);
-    default String getName(){
-        return getClass().getSimpleName();
+public final class CardToPlay {
+    private final TrucoCard content;
+    private final boolean discard;
+
+    private CardToPlay(TrucoCard card, boolean discard) {
+        this.content = card;
+        this.discard = discard;
+    }
+    public static CardToPlay of(TrucoCard card){
+        return new CardToPlay(card, false);
+    }
+
+    public static CardToPlay ofDiscard(TrucoCard card){
+        return new CardToPlay(card, true);
+    }
+
+    public TrucoCard value() {
+        return discard ? TrucoCard.closed() : content;
+    }
+
+    public TrucoCard content() {
+        return content;
+    }
+
+    public boolean isDiscard() {
+        return discard;
     }
 }

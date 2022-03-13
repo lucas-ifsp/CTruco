@@ -20,24 +20,23 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
-import com.bueno.domain.usecases.bot.spi.GameIntel.RoundResult;
+import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
+import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel.RoundResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.*;
+import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.getCardValue;
 
 public class SecondRoundStrategy implements PlayingStrategy {
 
-    private final List<Card> cards;
-    private final Card vira;
+    private final List<TrucoCard> cards;
+    private final TrucoCard vira;
     private final GameIntel intel;
-    private final List<Card> openCards;
+    private final List<TrucoCard> openCards;
 
     public SecondRoundStrategy(GameIntel intel) {
         this.intel = intel;
@@ -50,7 +49,7 @@ public class SecondRoundStrategy implements PlayingStrategy {
     @Override
     public CardToPlay chooseCard() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
         final RoundResult firstRoundResult = intel.getRoundResults().get(0);
 
         if (firstRoundResult.equals(RoundResult.WON)) {
@@ -61,7 +60,7 @@ public class SecondRoundStrategy implements PlayingStrategy {
 
         if (firstRoundResult.equals(RoundResult.DREW)) return CardToPlay.of(cards.get(0));
 
-        Optional<Card> enoughCardToWin = getPossibleEnoughCardToWin(cards, vira, possibleOpponentCard.orElseThrow());
+        Optional<TrucoCard> enoughCardToWin = getPossibleEnoughCardToWin(cards, vira, possibleOpponentCard.orElseThrow());
         return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard(cards.get(1)));
     }
 
@@ -92,10 +91,10 @@ public class SecondRoundStrategy implements PlayingStrategy {
         return 0;
     }
 
-    private boolean canWin(Card bestCard, RoundResult firstRoundResult) {
+    private boolean canWin(TrucoCard bestCard, RoundResult firstRoundResult) {
         if(cards.size() < 2) return false;
         if(intel.getOpponentCard().isEmpty()) return false;
-        final Card opponentCard = intel.getOpponentCard().get();
+        final TrucoCard opponentCard = intel.getOpponentCard().get();
         return !firstRoundResult.equals(RoundResult.LOST) && bestCard.compareValueTo(opponentCard, vira) > 0;
     }
 
@@ -107,9 +106,9 @@ public class SecondRoundStrategy implements PlayingStrategy {
     public boolean decideIfRaises() {
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final RoundResult firstRoundResult = intel.getRoundResults().get(0);
-        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
         final int handPoints = intel.getHandPoints();
-        final Card higherCard = cards.get(0);
+        final TrucoCard higherCard = cards.get(0);
 
         if (firstRoundResult.equals(RoundResult.WON)) return false;
 
@@ -126,19 +125,19 @@ public class SecondRoundStrategy implements PlayingStrategy {
                 && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)), 10, 13);
     }
 
-    private boolean isCardValueBetween(Card card, int lowerValue, int upperValue){
+    private boolean isCardValueBetween(TrucoCard card, int lowerValue, int upperValue){
         final int value = getCardValue(openCards, card, vira);
         return lowerValue <= value &&  value <= upperValue;
     }
 
-    private boolean isAbleToWinWith(Card playingCard, Card possibleOpponentCard) {
+    private boolean isAbleToWinWith(TrucoCard playingCard, TrucoCard possibleOpponentCard) {
         return possibleOpponentCard != null && playingCard.compareValueTo(possibleOpponentCard, vira) > 0;
     }
 
-    private Card getThirdRoundCard(Card possibleOpponentCard){
+    private TrucoCard getThirdRoundCard(TrucoCard possibleOpponentCard){
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        final Card higherCard = cards.get(0);
-        final Card worstCard = cards.get(1);
+        final TrucoCard higherCard = cards.get(0);
+        final TrucoCard worstCard = cards.get(1);
         if(isAbleToWinWith(worstCard, possibleOpponentCard)) return higherCard;
         return worstCard;
     }

@@ -20,9 +20,9 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-import com.bueno.domain.entities.player.util.CardToPlay;
 import com.bueno.domain.usecases.bot.spi.BotServiceProvider;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
 
 public class MineiroBot implements BotServiceProvider {
 

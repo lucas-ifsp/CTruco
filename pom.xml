@@ -11,6 +11,7 @@
         <module>console</module>
         <module>desktop</module>
         <module>persistence</module>
+        <module>bot-spi</module>
     </modules>
 
     <parent>
