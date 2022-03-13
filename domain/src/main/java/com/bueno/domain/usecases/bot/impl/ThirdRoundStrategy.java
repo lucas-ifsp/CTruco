@@ -20,23 +20,23 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
-import com.bueno.domain.usecases.bot.spi.GameIntel.RoundResult;
+import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
+import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel.RoundResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.*;
+import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.getCardValue;
 
 public class ThirdRoundStrategy implements PlayingStrategy {
 
-    private final List<Card> cards;
-    private final Card vira;
+    private final List<TrucoCard> cards;
+    private final TrucoCard vira;
     private final GameIntel intel;
-    private final List<Card> openCards;
+    private final List<TrucoCard> openCards;
 
     public ThirdRoundStrategy(GameIntel intel) {
         this.intel = intel;
@@ -48,12 +48,12 @@ public class ThirdRoundStrategy implements PlayingStrategy {
 
     @Override
     public CardToPlay chooseCard() {
-        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
-        final Card remainingCard = cards.get(0);
+        final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
+        final TrucoCard remainingCard = cards.get(0);
 
         if (possibleOpponentCard.isEmpty()) return CardToPlay.of(remainingCard);
 
-        final Card opponentCard = possibleOpponentCard.get();
+        final TrucoCard opponentCard = possibleOpponentCard.get();
         if (remainingCard.compareValueTo(opponentCard, vira) >= 0) return CardToPlay.of(remainingCard);
 
         return CardToPlay.ofDiscard(remainingCard);
@@ -63,7 +63,7 @@ public class ThirdRoundStrategy implements PlayingStrategy {
     public int getRaiseResponse(int newScoreValue) {
         if(knowsTheOdds() && canWin()) return 1;
 
-        final Card lastOpenedCard = openCards.get(openCards.size() - 1);
+        final TrucoCard lastOpenedCard = openCards.get(openCards.size() - 1);
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(openCards, lastOpenedCard, vira) : getCardValue(openCards, cards.get(0), vira);
 
@@ -79,9 +79,9 @@ public class ThirdRoundStrategy implements PlayingStrategy {
 
     @Override
     public boolean decideIfRaises() {
-        final Optional<Card> possibleOpponentCard = intel.getOpponentCard();
+        final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
         final int handPoints = intel.getHandPoints();
-        final Card playingCard = cards.get(0);
+        final TrucoCard playingCard = cards.get(0);
 
         if (possibleOpponentCard.isEmpty()) {
             if (handPoints > 1 && getCardValue(openCards, playingCard, vira) >= 12) return true;
@@ -95,8 +95,8 @@ public class ThirdRoundStrategy implements PlayingStrategy {
 
     private boolean canWin() {
         final RoundResult firstRoundResult = intel.getRoundResults().get(0);
-        final Card card = cards.get(0);
-        final Card opponentCard = intel.getOpponentCard().orElseThrow();
+        final TrucoCard card = cards.get(0);
+        final TrucoCard opponentCard = intel.getOpponentCard().orElseThrow();
 
         return (!firstRoundResult.equals(RoundResult.LOST) && card.compareValueTo(opponentCard, vira) > 0)
                 || (firstRoundResult.equals(RoundResult.WON) && card.compareValueTo(opponentCard, vira) == 0);

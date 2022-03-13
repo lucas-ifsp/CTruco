@@ -20,9 +20,9 @@
 
 package com.bueno.domain.usecases.bot.impl;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
+import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +46,8 @@ interface PlayingStrategy{
     boolean decideIfRaises();
 
     static boolean getMaoDeOnzeResponse(GameIntel intel){
-        final Card vira = intel.getVira();
-        final List<Card> cards = new ArrayList<>(intel.getCards());
+        final TrucoCard vira = intel.getVira();
+        final List<TrucoCard> cards = new ArrayList<>(intel.getCards());
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final int bestCard = getCardValue(intel.getOpenCards(), cards.get(0), vira);
         final int mediumCard = getCardValue(intel.getOpenCards(), cards.get(1), vira);
@@ -57,20 +57,20 @@ interface PlayingStrategy{
         return opponentScore >= 8 && bestCard > 10 && mediumCard >= 8;
     }
 
-    default Optional<Card> getPossibleCardToDraw(List<Card> botCards, Card vira, Card opponentCard) {
+    default Optional<TrucoCard> getPossibleCardToDraw(List<TrucoCard> botCards, TrucoCard vira, TrucoCard opponentCard) {
         return botCards.stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) == 0)
                 .findAny();
     }
 
-    default Optional<Card> getPossibleEnoughCardToWin(List<Card> botCards, Card vira, Card opponentCard) {
+    default Optional<TrucoCard> getPossibleEnoughCardToWin(List<TrucoCard> botCards, TrucoCard vira, TrucoCard opponentCard) {
         return botCards.stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
     }
 
-    static int getCardValue(List<Card> openCards, Card card, Card vira){
-        final List<Card> cards = new ArrayList<>(openCards);
+    static int getCardValue(List<TrucoCard> openCards, TrucoCard card, TrucoCard vira){
+        final List<TrucoCard> cards = new ArrayList<>(openCards);
 
         final int higherManilhasAlreadyPlayed = (int) cards.stream()
                 .filter(c -> c.compareValueTo(card, vira) > 1)

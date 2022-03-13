@@ -20,13 +20,19 @@
 
 package com.bueno.domain.usecases.bot.helper;
 
+import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
+import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
 import com.bueno.domain.usecases.bot.spi.BotServiceManager;
-import com.bueno.domain.usecases.bot.spi.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.CardRank;
+import com.bueno.domain.usecases.bot.spi.model.CardSuit;
+import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
@@ -38,7 +44,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bueno.domain.entities.game.PossibleAction.*;
-import static com.bueno.domain.usecases.bot.spi.GameIntel.*;
+import static com.bueno.domain.usecases.bot.spi.model.GameIntel.RoundResult;
+import static com.bueno.domain.usecases.bot.spi.model.GameIntel.StepBuilder;
 
 public class BotUseCase {
     private final GameRepository repo;
@@ -47,12 +54,12 @@ public class BotUseCase {
         this.repo = repo;
     }
 
-    public void playWhenNecessary(Game game){
+    public void playWhenNecessary(Game game) {
         final Player currentPlayer = game.currentHand().getCurrentPlayer();
         final UUID uuid = currentPlayer.getUuid();
         final Intel intel = game.getIntel();
 
-        if(!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return;
+        if (!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return;
         if (isNotCurrentPlayer(uuid, intel)) return;
         if (shouldDecideMaoDeOnze(intel)) decideMaoDeOnze(currentPlayer, intel, repo);
         else if (wantToRaiseRequest(currentPlayer, intel)) startRaiseRequest(uuid, repo);
@@ -75,9 +82,9 @@ public class BotUseCase {
         final var botUuid = bot.getUuid();
         final var botService = BotServiceManager.load(bot.getUsername());
         final var useCase = new ScoreProposalUseCase(repo);
-        final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot,intel));
+        final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
 
-        if(hasAccepted) useCase.accept(botUuid);
+        if (hasAccepted) useCase.accept(botUuid);
         else useCase.quit(botUuid);
     }
 
@@ -89,8 +96,8 @@ public class BotUseCase {
         final var botService = BotServiceManager.load(bot.getUsername());
         final var canNotStartRequest = !actions.contains(RAISE) || actions.contains(QUIT);
 
-        if(canNotStartRequest) return false;
-        return botService.decideIfRaises(toGameIntel(bot,intel));
+        if (canNotStartRequest) return false;
+        return botService.decideIfRaises(toGameIntel(bot, intel));
     }
 
     private void startRaiseRequest(UUID botUuid, GameRepository repo) {
@@ -99,7 +106,7 @@ public class BotUseCase {
     }
 
     private boolean shouldPlayCard(Intel intel) {
-        return  intel.possibleActions().stream()
+        return intel.possibleActions().stream()
                 .map(PossibleAction::valueOf)
                 .anyMatch(action -> action.equals(PLAY));
     }
@@ -107,11 +114,12 @@ public class BotUseCase {
     private void playCard(Player bot, Intel intel, GameRepository repo) {
         final var botUuid = bot.getUuid();
         final var botService = BotServiceManager.load(bot.getUsername());
-        final var chosenCard = botService.chooseCard(toGameIntel(bot,intel));
+        final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
+        final var card = toCard(chosenCard.content());
         final var useCase = new PlayCardUseCase(repo);
 
-        if(chosenCard.isDiscard()) useCase.discard(new PlayCardUseCase.RequestModel(botUuid, chosenCard.content()));
-        else useCase.playCard(new PlayCardUseCase.RequestModel(botUuid, chosenCard.content()));
+        if (chosenCard.isDiscard()) useCase.discard(new PlayCardUseCase.RequestModel(botUuid, card));
+        else useCase.playCard(new PlayCardUseCase.RequestModel(botUuid, card));
     }
 
     private void answerRaiseRequest(Player bot, Intel intel, GameRepository repo) {
@@ -122,14 +130,14 @@ public class BotUseCase {
                 .map(PossibleAction::valueOf)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-        switch (botService.getRaiseResponse(toGameIntel(bot,intel))){
-            case -1 -> {if(actions.contains(QUIT)) useCase.quit(botUuid);}
-            case 0 -> {if(actions.contains(ACCEPT)) useCase.accept(botUuid);}
-            case 1 -> {if(actions.contains(RAISE)) useCase.raise(botUuid);}
+        switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
+            case -1 -> {if (actions.contains(QUIT)) useCase.quit(botUuid);}
+            case 0 -> {if (actions.contains(ACCEPT)) useCase.accept(botUuid);}
+            case 1 -> {if (actions.contains(RAISE)) useCase.raise(botUuid);}
         }
     }
 
-    private GameIntel toGameIntel(Player player, Intel intel){
+    private GameIntel toGameIntel(Player player, Intel intel) {
         final Function<String, RoundResult> toRoundResult = name -> name == null ? RoundResult.DREW
                 : name.equals(player.getUsername()) ? RoundResult.WON : RoundResult.LOST;
 
@@ -137,11 +145,31 @@ public class BotUseCase {
                 .map(winner -> winner.orElse(null))
                 .map(toRoundResult).collect(Collectors.toList());
 
+        final Function<List<Card>, List<TrucoCard>> toTrucoCardList = cardList ->
+                cardList.stream().map(this::toTrucoCard).collect(Collectors.toList());
+
+        final List<TrucoCard> openCards = toTrucoCardList.apply(intel.openCards());
+        final List<TrucoCard> botCards = toTrucoCardList.apply(player.getCards());
+
         return StepBuilder.with()
-                .gameInfo(roundResults, intel.openCards(), intel.vira(), intel.handScore())
-                .botInfo(player.getCards(), intel.currentPlayerScore())
+                .gameInfo(roundResults, openCards, toTrucoCard(intel.vira()), intel.handScore())
+                .botInfo(botCards, intel.currentPlayerScore())
                 .opponentScore(intel.currentOpponentScore())
-                .opponentCard(intel.cardToPlayAgainst().orElse(null))
+                .opponentCard(toTrucoCard(intel.cardToPlayAgainst().orElse(null)))
                 .build();
+    }
+
+    private Card toCard(TrucoCard card){
+        if(card == null) return null;
+        final String rankName = card.getRank().toString();
+        final String suitName = card.getSuit().toString();
+        return Card.of(Rank.valueOf(rankName), Suit.valueOf(suitName));
+    }
+
+    private TrucoCard toTrucoCard(Card card){
+        if(card == null) return null;
+        final String rankName = card.getRank().toString();
+        final String suitName = card.getSuit().toString();
+        return TrucoCard.of(CardRank.valueOf(rankName), CardSuit.valueOf(suitName));
     }
 }

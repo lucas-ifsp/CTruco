@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,17 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
+package com.bueno.domain.usecases.bot.spi.model;
 
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+public enum CardSuit {
+    HIDDEN("x", 0),
+    DIAMONDS("\u2666", 1),
+    SPADES("\u2660", 2),
+    HEARTS("\u2665", 3),
+    CLUBS("\u2663", 4);
 
-public interface BotServiceProvider {
-    int getRaiseResponse(GameIntel intel);
-    boolean getMaoDeOnzeResponse(GameIntel intel);
-    boolean decideIfRaises(GameIntel intel);
-    CardToPlay chooseCard(GameIntel intel);
-    default String getName(){
-        return getClass().getSimpleName();
+    private String symbol;
+    private int ordinalValue;
+
+    CardSuit(String symbol, int ordinalValue) {
+        this.symbol = symbol;
+        this.ordinalValue = ordinalValue;
+    }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
+
+    int value() {
+        return ordinalValue;
     }
 }

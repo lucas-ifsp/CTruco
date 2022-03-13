@@ -13,6 +13,7 @@ module domain {
     exports com.bueno.domain.usecases.hand.usecases;
     exports com.bueno.domain.usecases.bot.spi;
     exports com.bueno.domain.usecases.hand.validators;
+    exports com.bueno.domain.usecases.bot.spi.model;
 
     provides com.bueno.domain.usecases.bot.spi.BotServiceProvider with MineiroBot;
     uses com.bueno.domain.usecases.bot.spi.BotServiceProvider;
