@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

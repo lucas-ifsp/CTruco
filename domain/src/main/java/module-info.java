@@ -6,7 +6,7 @@ module domain {
     requires bot.impl;
 
     exports com.bueno.domain.entities.deck;
-    exports com.bueno.domain.entities.player.util;
+    exports com.bueno.domain.entities.player;
     exports com.bueno.domain.entities.game;
 
     exports com.bueno.domain.usecases.utils;

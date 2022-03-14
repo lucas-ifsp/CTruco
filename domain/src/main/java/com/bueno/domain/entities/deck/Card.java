@@ -76,22 +76,6 @@ public final class Card {
         return getRank() == vira.getRank().next();
     }
 
-    public boolean isZap(Card vira){
-        return isManilha(vira) && suit == Suit.CLUBS;
-    }
-
-    public boolean isCopas(Card vira){
-        return isManilha(vira) && suit == Suit.HEARTS;
-    }
-
-    public boolean isEspadilha(Card vira){
-        return isManilha(vira) && suit == Suit.SPADES;
-    }
-
-    public boolean isOuros(Card vira){
-        return isManilha(vira) && suit == Suit.DIAMONDS;
-    }
-
     public Rank getRank() {
         return rank;
     }

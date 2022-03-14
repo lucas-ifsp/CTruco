@@ -25,13 +25,11 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Hand;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
-import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.Validator;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -55,8 +53,8 @@ public class PlayCardUseCase {
     }
 
     private Intel playCard(RequestModel request, boolean discard){
-        final Validator<RequestModel> validator = new PlayCardValidator(repo, PossibleAction.PLAY);
-        final Notification notification = validator.validate(request);
+        final var validator = new PlayCardValidator(repo, PossibleAction.PLAY);
+        final var notification = validator.validate(request);
 
         if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
 

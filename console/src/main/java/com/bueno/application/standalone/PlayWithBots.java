@@ -21,18 +21,16 @@
 package com.bueno.application.standalone;
 
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
+import com.bueno.domain.usecases.game.PlayWithBotsUseCase.ResponseModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
-
-import static com.bueno.domain.entities.player.util.BotFactory.getBot;
 
 public class PlayWithBots {
 
@@ -49,10 +47,10 @@ public class PlayWithBots {
         System.out.println("Starting simulation... it may take a while: ");
 
         final PlayWithBots main = new PlayWithBots();
-        final List<UUID> results = main.play(bot1Name, bot2Name, times);
+        final List<ResponseModel> results = main.play(bot1Name, bot2Name, times);
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .forEach((uuid, wins) -> System.out.println(getBot(uuid).getUsername() + ": " + wins));
+                .forEach((bot, wins) -> System.out.println(bot.name() + "(" + bot.uuid() + "): " + wins));
     }
 
 /*
@@ -67,23 +65,23 @@ public class PlayWithBots {
     }
 */
 
-    public List<UUID> play(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
+    public List<ResponseModel> play(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        final List<Callable<UUID>> games = new ArrayList<>();
+        final List<Callable<ResponseModel>> games = new ArrayList<>();
 
-        final Callable<UUID> game = () -> {
-            final InMemoryGameRepository repo = new InMemoryGameRepository();
-            PlayWithBotsUseCase uc = new PlayWithBotsUseCase(repo);
-            return uc.playWithBots(bot1Name, bot2Name);
+        final Callable<ResponseModel> game = () -> {
+            final var repo = new InMemoryGameRepository();
+            var useCase = new PlayWithBotsUseCase(repo);
+            return useCase.playWithBots(bot1Name, bot2Name);
         };
 
         for (int i = 0; i < times; i++) {
             games.add(game);
         }
 
-        final List<UUID> result = new ArrayList<>();
-        for (Future<UUID> future : executor.invokeAll(games)) {
+        final List<ResponseModel> result = new ArrayList<>();
+        for (Future<ResponseModel> future : executor.invokeAll(games)) {
             result.add(future.get());
         }
 

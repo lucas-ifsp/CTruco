@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.util;
+package com.bueno.domain.entities.player;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.HandScore;
@@ -34,7 +34,6 @@ public class Player {
     public static final int MAX_SCORE = 12;
 
     private User user;
-
     private List<Card> cards;
     private final String username;
     private final UUID uuid;
@@ -54,12 +53,15 @@ public class Player {
     public static Player of(User user){
         Player player = new Player(user.getUuid(), user.getUsername());
         player.user = user;
-
         return player;
     }
 
     public static Player ofBot(String botName){
         return new Player(botName);
+    }
+
+    public static Player ofBot(UUID uuid, String botName){
+        return new Player(uuid, botName);
     }
 
     public boolean isBot(){

@@ -22,8 +22,7 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.dummybot.DummyBot;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,8 +86,8 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should not create new game if one of the players is enrolled in another game")
     void shouldNotCreateNewGameIfOneOfThePlayersEnrolledInAnotherGame() {
-        final DummyBot bot1 = new DummyBot(repo, UUID.randomUUID());
-        final DummyBot bot2 = new DummyBot(repo, UUID.randomUUID());
+        final Player bot1 = Player.ofBot(UUID.randomUUID(), "MineiroBot");
+        final Player bot2 = Player.ofBot(UUID.randomUUID(), "MineiroBot");
         when(repo.findByPlayerUsername(any())).thenReturn(Optional.of(new Game(bot1, bot2)));
         assertThrows(UnsupportedGameRequestException.class, () -> sut.create(p1, p2));
     }

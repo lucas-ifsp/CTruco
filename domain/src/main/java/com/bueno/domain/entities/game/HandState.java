@@ -21,7 +21,7 @@
 package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 
 public interface HandState {
     void playFirstCard(Player player, Card card);

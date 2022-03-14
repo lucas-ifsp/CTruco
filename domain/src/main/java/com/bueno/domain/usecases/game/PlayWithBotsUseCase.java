@@ -20,11 +20,8 @@
 
 package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.BotFactory;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
+import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.BotUseCase;
 
 import java.util.UUID;
 
@@ -38,17 +35,23 @@ public class PlayWithBotsUseCase {
         this.repo = repo;
     }
 
-    public UUID playWithBots(String bot1Name, String bot2Name){
-        final Bot bot1 = BotFactory.create(uuid1, bot1Name, repo);
-        final Bot bot2 = BotFactory.create(uuid2, bot2Name, repo);
+    public ResponseModel playWithBots(String bot1Name, String bot2Name){
+        final var gameUseCase = new CreateGameUseCase(repo, null);
 
-        CreateGameUseCase gameUseCase = new CreateGameUseCase(repo, null);
-        Intel intel = gameUseCase.create(bot1, bot2);
-        bot1.setIntel(intel);
+        final var bot1 = Player.ofBot(uuid1, bot1Name);
+        final var bot2 = Player.ofBot(uuid2, bot2Name);
 
-        PlayCardUseCase playCardUseCase = new PlayCardUseCase(repo);
-        intel = playCardUseCase.playCard(new RequestModel(bot1.getUuid(), bot1.decideCardToPlay().content()));
+        var intel = gameUseCase.create(bot1, bot2);
+        final var game = repo.findByUserUuid(uuid1).orElseThrow();
 
-        return intel.gameWinner().orElseThrow();
+        final var botUseCase = new BotUseCase(repo);
+        intel = botUseCase.playWhenNecessary(game);
+
+        final UUID winnerUUID = intel.gameWinner().orElseThrow();
+        final String winnerName = winnerUUID.equals(uuid1) ? bot1Name : bot2Name;
+
+        return new ResponseModel(winnerUUID, winnerName);
     }
+
+    public record ResponseModel(UUID uuid, String name){}
 }

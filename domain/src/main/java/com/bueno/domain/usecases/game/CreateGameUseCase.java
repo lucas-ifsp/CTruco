@@ -22,8 +22,8 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.entities.player.util.User;
+import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.player.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
@@ -43,18 +43,6 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public Intel create(UUID user1UUID, UUID user2UUID){
-        Objects.requireNonNull(user1UUID);
-        Objects.requireNonNull(user2UUID);
-
-        final User user1 = userRepo.findByUUID(user1UUID)
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + user1UUID));
-        final User user2 = userRepo.findByUUID(user2UUID)
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + user2UUID));
-
-        return create(Player.of(user1), Player.of(user2));
-    }
-
     public Intel create(UUID userUUID, String botName){
         Objects.requireNonNull(userUUID);
         Objects.requireNonNull(botName);
@@ -65,12 +53,10 @@ public class CreateGameUseCase {
         final Player userPlayer = Player.of(user);
         final Player botPlayer = Player.ofBot(botName);
 
-        //final Player bot = BotFactory.create(botName, gameRepo);
-
         return create(userPlayer, botPlayer);
     }
 
-    Intel create(Player p1, Player p2) {
+    public Intel create(Player p1, Player p2) {
         gameRepo.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p1.getUsername() + " is already playing a game.");});
 
