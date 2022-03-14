@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,9 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi.model;
+package com.bueno.spi.model;
+
+import java.util.Arrays;
 
 public enum CardSuit {
     HIDDEN("x", 0),
@@ -27,12 +29,18 @@ public enum CardSuit {
     HEARTS("\u2665", 3),
     CLUBS("\u2663", 4);
 
-    private String symbol;
-    private int ordinalValue;
+    private final String symbol;
+    private final int ordinalValue;
 
     CardSuit(String symbol, int ordinalValue) {
         this.symbol = symbol;
         this.ordinalValue = ordinalValue;
+    }
+
+    public static CardSuit ofSymbol(String symbol){
+        return Arrays.stream(values())
+                .filter(suit -> suit.symbol.equals(symbol))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown suit symbol"));
     }
 
     @Override

@@ -18,18 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.impl;
+package com.bueno.impl.mineirobot;
 
-import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel.RoundResult;
+import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.GameIntel.RoundResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bueno.domain.usecases.bot.impl.PlayingStrategy.getCardValue;
+import static com.bueno.impl.mineirobot.PlayingStrategy.getCardValue;
 
 public class ThirdRoundStrategy implements PlayingStrategy {
 

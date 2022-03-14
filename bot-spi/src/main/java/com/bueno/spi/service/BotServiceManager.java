@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
+package com.bueno.spi.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,9 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi.model;
+package com.bueno.spi.model;
+
+import java.util.Arrays;
 
 public enum CardRank {
     HIDDEN(0, 'X'), FOUR(1, '4'), FIVE(2, '5'),
@@ -26,8 +28,8 @@ public enum CardRank {
     JACK(6, 'J'), KING(7, 'K'), ACE(8, 'A'),
     TWO(9, '2'), THREE(10, '3');
 
-    private int value;
-    private char symbol;
+    private final int value;
+    private final char symbol;
 
     CardRank(int value, char symbol) {
         this.value = value;
@@ -44,6 +46,12 @@ public enum CardRank {
             case 10 -> FOUR;
             default -> values()[value + 1];
         };
+    }
+
+    public static CardRank ofSymbol(String symbol){
+        return Arrays.stream(values())
+                .filter(rank -> String.valueOf(rank.symbol).equals(symbol))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown rank symbol"));
     }
 
     @Override

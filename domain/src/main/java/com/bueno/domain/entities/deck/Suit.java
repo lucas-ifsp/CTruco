@@ -20,6 +20,8 @@
 
 package com.bueno.domain.entities.deck;
 
+import java.util.Arrays;
+
 public enum Suit {
     HIDDEN("x", 0),
     DIAMONDS("\u2666", 1),
@@ -27,12 +29,18 @@ public enum Suit {
     HEARTS("\u2665", 3),
     CLUBS("\u2663", 4);
 
-    private String symbol;
-    private int ordinalValue;
+    private final String symbol;
+    private final int ordinalValue;
 
     Suit(String symbol, int ordinalValue) {
         this.symbol = symbol;
         this.ordinalValue = ordinalValue;
+    }
+
+    public static Suit ofSymbol(String symbol){
+        return Arrays.stream(values())
+                .filter(suit -> suit.symbol.equals(symbol))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown suit symbol"));
     }
 
     @Override

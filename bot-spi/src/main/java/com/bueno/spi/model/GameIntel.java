@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi.model;
+package com.bueno.spi.model;
 
 import java.util.List;
 import java.util.Optional;
