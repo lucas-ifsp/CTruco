@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,39 +18,31 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.dummybot;
+package com.bueno.impl.dummybot;
 
-import com.bueno.domain.entities.game.HandScore;
-import com.bueno.domain.entities.player.util.Bot;
-import com.bueno.domain.entities.player.util.CardToPlay;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.UUID;
-
-public class DummyBot extends Bot {
-
-    public DummyBot(GameRepository repo, UUID uuid) {
-        super(repo, uuid, "DummyBot");
-    }
+public class DummyBot implements BotServiceProvider {
 
     @Override
-    public CardToPlay decideCardToPlay() {
-        return CardToPlay.of(getCards().get(0));
-    }
-
-    @Override
-    public boolean decideIfRaises() {
-        return false;
-    }
-
-    @Override
-    public int getRaiseResponse(HandScore newHandScore) {
+    public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse() {
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
     }
 
+    @Override
+    public boolean decideIfRaises(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public CardToPlay chooseCard(GameIntel intel) {
+        return CardToPlay.of(intel.getCards().get(0));
+    }
 }

@@ -21,7 +21,7 @@
 package com.bueno.persistence.inmemory;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 
 import java.util.HashMap;

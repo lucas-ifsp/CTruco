@@ -20,7 +20,7 @@
 
 package com.bueno.domain.entities.game;
 
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

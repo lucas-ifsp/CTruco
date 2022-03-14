@@ -22,7 +22,7 @@ package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 
 import java.util.*;
 import java.util.function.Predicate;

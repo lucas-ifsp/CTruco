@@ -55,7 +55,7 @@ public class GameCLI {
 
     public static void main(String[] args) {
         LogManager.getLogManager().reset();
-        final GameCLI cli = new GameCLI();
+        final var cli = new GameCLI();
         cli.createAccount();
         cli.createGame();
         cli.play();

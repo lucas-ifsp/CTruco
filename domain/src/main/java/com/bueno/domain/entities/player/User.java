@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,36 +18,39 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player.util;
+package com.bueno.domain.entities.player;
 
-import com.bueno.domain.entities.deck.Card;
+import java.util.UUID;
 
-public final class CardToPlay {
-    private final Card content;
-    private final boolean discard;
+public class User {
+    private final String email;
+    private final String username;
+    private final UUID uuid;
 
-    private CardToPlay(Card card, boolean discard) {
-        this.content = card;
-        this.discard = discard;
+    public User(String username, String email) {
+        this(null, username, email);
     }
 
-    public static CardToPlay of(Card card){
-        return new CardToPlay(card, false);
+    public User(UUID uuid, String username, String email) {
+        this.uuid = uuid == null? UUID.randomUUID() : uuid;
+        this.username = username;
+        this.email = email;
     }
 
-    public static CardToPlay ofDiscard(Card card){
-        return new CardToPlay(card, true);
+    public String getEmail() {
+        return email;
     }
 
-    public Card value() {
-        return discard ? Card.closed() : content;
+    public String getUsername() {
+        return username;
     }
 
-    public Card content() {
-        return content;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public boolean isDiscard() {
-        return discard;
+    @Override
+    public String toString() {
+        return getUsername() + " (" + getUuid() + ")";
     }
 }

@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;

@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.player;
 
-import com.bueno.domain.entities.player.util.User;
+import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 
 import java.util.Objects;

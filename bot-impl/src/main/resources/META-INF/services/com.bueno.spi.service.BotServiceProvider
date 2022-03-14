@@ -19,3 +19,4 @@
 #
 
 com.bueno.impl.mineirobot.MineiroBot
+com.bueno.impl.dummybot.DummyBot

@@ -27,7 +27,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
@@ -54,17 +54,18 @@ public class BotUseCase {
         this.repo = repo;
     }
 
-    public void playWhenNecessary(Game game) {
+    public Intel playWhenNecessary(Game game) {
         final Player currentPlayer = game.currentHand().getCurrentPlayer();
         final UUID uuid = currentPlayer.getUuid();
         final Intel intel = game.getIntel();
 
-        if (!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return;
-        if (isNotCurrentPlayer(uuid, intel)) return;
+        if (!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return intel;
+        if (isNotCurrentPlayer(uuid, intel)) return intel;
         if (shouldDecideMaoDeOnze(intel)) decideMaoDeOnze(currentPlayer, intel, repo);
         else if (wantToRaiseRequest(currentPlayer, intel)) startRaiseRequest(uuid, repo);
         else if (shouldPlayCard(intel)) playCard(currentPlayer, intel, repo);
         else answerRaiseRequest(currentPlayer, intel, repo);
+        return game.getIntel();
     }
 
     private boolean isNotCurrentPlayer(UUID botUUID, Intel intel) {

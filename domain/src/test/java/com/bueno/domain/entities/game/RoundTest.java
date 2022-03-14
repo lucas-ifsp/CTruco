@@ -23,7 +23,7 @@ package com.bueno.domain.entities.game;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
-import com.bueno.domain.entities.player.util.Player;
+import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
