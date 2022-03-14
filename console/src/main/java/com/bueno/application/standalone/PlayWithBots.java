@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 public class PlayWithBots {
 
+    //TO DO 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
