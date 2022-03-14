@@ -18,11 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.impl;
+package com.bueno.impl.mineirobot;
 
-import com.bueno.domain.usecases.bot.spi.BotServiceProvider;
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.service.BotServiceProvider;
 
 public class MineiroBot implements BotServiceProvider {
 

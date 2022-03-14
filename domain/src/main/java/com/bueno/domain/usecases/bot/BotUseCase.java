@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.helper;
+package com.bueno.domain.usecases.bot;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
@@ -28,11 +28,11 @@ import com.bueno.domain.entities.game.HandScore;
 import com.bueno.domain.entities.game.Intel;
 import com.bueno.domain.entities.game.PossibleAction;
 import com.bueno.domain.entities.player.util.Player;
-import com.bueno.domain.usecases.bot.spi.BotServiceManager;
-import com.bueno.domain.usecases.bot.spi.model.CardRank;
-import com.bueno.domain.usecases.bot.spi.model.CardSuit;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
-import com.bueno.domain.usecases.bot.spi.model.TrucoCard;
+import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
@@ -44,8 +44,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bueno.domain.entities.game.PossibleAction.*;
-import static com.bueno.domain.usecases.bot.spi.model.GameIntel.RoundResult;
-import static com.bueno.domain.usecases.bot.spi.model.GameIntel.StepBuilder;
+import static com.bueno.spi.model.GameIntel.RoundResult;
+import static com.bueno.spi.model.GameIntel.StepBuilder;
 
 public class BotUseCase {
     private final GameRepository repo;
@@ -163,13 +163,13 @@ public class BotUseCase {
         if(card == null) return null;
         final String rankName = card.getRank().toString();
         final String suitName = card.getSuit().toString();
-        return Card.of(Rank.valueOf(rankName), Suit.valueOf(suitName));
+        return Card.of(Rank.ofSymbol(rankName), Suit.ofSymbol(suitName));
     }
 
     private TrucoCard toTrucoCard(Card card){
         if(card == null) return null;
         final String rankName = card.getRank().toString();
         final String suitName = card.getSuit().toString();
-        return TrucoCard.of(CardRank.valueOf(rankName), CardSuit.valueOf(suitName));
+        return TrucoCard.of(CardRank.ofSymbol(rankName), CardSuit.ofSymbol(suitName));
     }
 }

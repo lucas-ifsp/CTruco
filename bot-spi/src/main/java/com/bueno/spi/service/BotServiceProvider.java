@@ -18,10 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot.spi;
+package com.bueno.spi.service;
 
-import com.bueno.domain.usecases.bot.spi.model.CardToPlay;
-import com.bueno.domain.usecases.bot.spi.model.GameIntel;
+
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
 
 public interface BotServiceProvider {
     int getRaiseResponse(GameIntel intel);
