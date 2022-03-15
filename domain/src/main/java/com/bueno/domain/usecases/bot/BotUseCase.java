@@ -68,6 +68,10 @@ public class BotUseCase {
         return game.getIntel();
     }
 
+    public static List<String> availableBots(){
+        return BotServiceManager.providersNames();
+    }
+
     private boolean isNotCurrentPlayer(UUID botUUID, Intel intel) {
         final var currentPlayerUUID = intel.currentPlayerUuid();
         if (currentPlayerUUID.isEmpty() || intel.isGameDone()) return true;
