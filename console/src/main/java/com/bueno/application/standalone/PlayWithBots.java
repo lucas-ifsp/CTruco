@@ -20,9 +20,11 @@
 
 package com.bueno.application.standalone;
 
+import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase.ResponseModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,26 +34,54 @@ import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("UnstableApiUsage")
 public class PlayWithBots {
 
-    //TO DO 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
+        final List<String> botNames = BotUseCase.availableBots();
+        printAvailableBots(botNames);
+
+        final Integer bot1 = scanBotOption(botNames);
+        final Integer bot2 = scanBotOption(botNames);
+        final int times = scanNumberOfSimulations();
+
+        final PlayWithBots main = new PlayWithBots();
+        final List<ResponseModel> results = main.play(botNames.get(bot1-1), botNames.get(bot2-1), times);
+
+        results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
+    }
+
+    private static void printAvailableBots(List<String> botNames) {
+        for (int i = 0; i < botNames.size(); i++){
+            System.out.print("[" + (i + 1) + "] " + botNames.get(i) + "\t");
+        }
+        System.out.print("\n");
+    }
+
+    private static Integer scanBotOption(List<String> botNames) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Bot1: ");
-        final String bot1Name = scanner.nextLine();
-        System.out.print("Bot2: ");
-        final String bot2Name = scanner.nextLine();
+        Integer botNumber;
+        while (true){
+            System.out.print("Select a bot by number: ");
+            botNumber = Ints.tryParse(scanner.nextLine());
+            if(botNumber == null || botNumber < 1 || botNumber > botNames.size()){
+                System.out.println("Invalid input!");
+                continue;
+            }
+            break;
+        }
+        return botNumber;
+    }
+
+    private static int scanNumberOfSimulations() {
+        Scanner scanner = new Scanner(System.in);
         System.out.print("Number of simulations: ");
         final int times = scanner.nextInt();
         System.out.println("Starting simulation... it may take a while: ");
-
-        final PlayWithBots main = new PlayWithBots();
-        final List<ResponseModel> results = main.play(bot1Name, bot2Name, times);
-
-        results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .forEach((bot, wins) -> System.out.println(bot.name() + "(" + bot.uuid() + "): " + wins));
+        return times;
     }
 
 /*

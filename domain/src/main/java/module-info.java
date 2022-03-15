@@ -14,4 +14,5 @@ module domain {
     exports com.bueno.domain.usecases.player;
     exports com.bueno.domain.usecases.hand.usecases;
     exports com.bueno.domain.usecases.hand.validators;
+    exports com.bueno.domain.usecases.bot;
 }

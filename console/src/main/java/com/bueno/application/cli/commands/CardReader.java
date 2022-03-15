@@ -22,11 +22,13 @@ package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
 import com.bueno.domain.entities.deck.Card;
-import com.google.common.primitives.Ints;
 
 import java.util.List;
 import java.util.Scanner;
 
+import static com.google.common.primitives.Ints.tryParse;
+
+@SuppressWarnings("UnstableApiUsage")
 public class CardReader implements Command<Card> {
 
     private final GameCLI mainCli;
@@ -45,7 +47,7 @@ public class CardReader implements Command<Card> {
 
             System.out.print("Carta a jogar [índice] > ");
 
-            final Integer choice = Ints.tryParse(scanner.nextLine());
+            final Integer choice = tryParse(scanner.nextLine());
             if (choice == null || cardIndexOf(choice) < 0 || cardIndexOf(choice) > userCards.size() - 1) {
                 printErrorMessage("Valor inválido!");
                 continue;

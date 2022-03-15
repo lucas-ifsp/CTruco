@@ -23,6 +23,7 @@ package com.bueno.application.cli;
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.HandleIntelUseCase;
@@ -33,6 +34,7 @@ import com.bueno.domain.usecases.player.CreateUserUseCase;
 import com.bueno.domain.usecases.player.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
+import com.google.common.primitives.Ints;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -41,6 +43,7 @@ import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
 import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GameCLI {
 
     private final CreateUserUseCase createUserUseCase;
@@ -96,8 +99,29 @@ public class GameCLI {
     }
 
     private void createGame(){
-        lastIntel = gameUseCase.create(userUUID, "MineiroBot");
+        final List<String> botNames = BotUseCase.availableBots();
+        final String bot = readBotName(botNames);
+        lastIntel = gameUseCase.create(userUUID, bot);
         missingIntel.add(lastIntel);
+    }
+
+    private String readBotName(List<String> botNames) {
+        Integer botId;
+        while (true){
+            for (int i = 0; i < botNames.size(); i++) {
+                System.out.print("[" + (i + 1) + "] " + botNames.get(i) + "\t");
+            }
+            System.out.print("\n");
+            System.out.print("Selecione um bot pelo número: ");
+            final Scanner scanner = new Scanner(System.in);
+            botId = Ints.tryParse(scanner.nextLine());
+            if (botId == null || botId < 1 || botId > botNames.size()){
+                System.out.println("Invalid input!");
+                continue;
+            }
+            break;
+        }
+        return botNames.get(botId - 1);
     }
 
     private void handleCardPlaying(){
