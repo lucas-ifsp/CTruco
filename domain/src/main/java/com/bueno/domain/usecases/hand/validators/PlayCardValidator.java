@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.hand.validators;
 
-import com.bueno.domain.entities.game.PossibleAction;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.utils.Notification;

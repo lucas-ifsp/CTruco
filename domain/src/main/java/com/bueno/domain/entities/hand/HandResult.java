@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.player.Player;
 
@@ -28,29 +28,40 @@ import java.util.Optional;
 public class HandResult {
 
     private final Player winner;
-    private final HandScore score;
+    private final HandPoints points;
 
-    public HandResult() {
-        winner = null;
-        score = null;
+    private HandResult(Player winner, HandPoints handPoints) {
+        this.winner = winner;
+        this.points = handPoints;
     }
 
-    public HandResult(Player winner, HandScore handScore) {
-        this.winner = Objects.requireNonNull(winner, "Player must not be null!");
-        this.score = Objects.requireNonNull(handScore, "Hand score must not be null!");
+    public static HandResult of(Player winner, HandPoints handPoints){
+        Objects.requireNonNull(winner, "Player must not be null!");
+        Objects.requireNonNull(handPoints, "Hand score must not be null!");
+
+        if(handPoints.equals(HandPoints.ZERO))
+            throw new IllegalArgumentException("Points of an untied hand must not be zero.");
+
+        return new HandResult(winner, handPoints);
+    }
+
+    public static HandResult ofDraw(){
+        return new HandResult(null, HandPoints.ZERO);
     }
 
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
     }
 
-    public HandScore getScore() {
-        return score;
+    public HandPoints getPoints() {
+        return points;
     }
 
     @Override
     public String toString() {
-        return "HandResult{winner=" + winner + ", score=" + score + '}';
+        String result = winner == null ? "draw" : (winner.getUsername() + " (" + winner.getUuid() + ") won");
+        final int pointsValue = points.get();
+        return "HandResult = " + result + " " + points.get() + " point(s)";
     }
 
     @Override
@@ -58,11 +69,6 @@ public class HandResult {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HandResult that = (HandResult) o;
-        return Objects.equals(winner, that.winner) && score == that.score;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(winner, score);
+        return Objects.equals(winner, that.winner) && points == that.points;
     }
 }

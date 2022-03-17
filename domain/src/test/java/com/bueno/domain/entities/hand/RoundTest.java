@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,11 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RoundTest {
@@ -51,45 +53,9 @@ class RoundTest {
         Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
     }
 
-    @ParameterizedTest
-    @CsvSource({"FOUR,FIVE,SIX,FIVE", "FIVE,FOUR,SIX,FIVE", "SEVEN,ACE,FIVE,ACE", "ACE,THREE,FIVE,THREE"})
-    @DisplayName("Should return correct winner for non manilhas")
-    void shouldReturnCorrectWinnerCardForNonManilhas(Rank card1Rank, Rank card2Rank, Rank viraRank, Rank winnerRank) {
-        final Card card1 = Card.of(card1Rank, Suit.SPADES);
-        final Card card2 = Card.of(card2Rank, Suit.SPADES);
-        final Card vira = Card.of(viraRank, Suit.SPADES);
-        var round = new Round(p1, card1, p2, card2, vira);
-        round.play();
-        assertEquals(Card.of(winnerRank, Suit.SPADES), round.getWinnerCard().orElse(null));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"FOUR,DIAMONDS,FOUR,HEARTS,THREE,FOUR,HEARTS", "FIVE,CLUBS,FIVE,HEARTS,FOUR,FIVE,CLUBS",
-            "KING,SPADES,KING,HEARTS,JACK,KING,HEARTS", "KING,SPADES,JACK,HEARTS,JACK,KING,SPADES"})
-    @DisplayName("Should return correct winner card for manilhas")
-    void shouldReturnCorrectWinnerCardForManilhas(Rank card1Rank, Suit card1Suit, Rank card2Rank, Suit card2Suit, Rank viraRank, Rank winnerRank, Suit winnerSuit) {
-        final Card card1 = Card.of(card1Rank, card1Suit);
-        final Card card2 = Card.of(card2Rank, card2Suit);
-        final Card vira = Card.of(viraRank, Suit.SPADES);
-        var round = new Round(p1, card1, p2, card2, vira);
-        round.play();
-        assertEquals(Card.of(winnerRank, winnerSuit), round.getWinnerCard().orElse(null));
-    }
-
     @Test
-    @DisplayName("Should draw when comparing equal non manilha ranks")
-    void shouldDrawWhenComparingEqualNonManilhaRanks() {
-        final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
-        final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
-        final Card vira = Card.of(Rank.SIX, Suit.SPADES);
-        var round = new Round(p1, card1, p2, card2, vira);
-        round.play();
-        assertTrue(round.getWinner().isEmpty());
-    }
-
-    @Test
-    @DisplayName("Should not draw when comparing equal manilha ranks")
-    void shouldNotDrawWhenComparingEqualManilhaRanks() {
+    @DisplayName("Should the player of the highest card be the winner")
+    void shouldThePlayerOfTheHighestCardBeTheWinner() {
         final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
@@ -97,6 +63,29 @@ class RoundTest {
         round.play();
         assertEquals(p2, round.getWinner().orElseThrow());
     }
+
+    @Test
+    @DisplayName("Should the player of the lowest card be the loser")
+    void shouldThePlayerOfTheLowestCardBeTheLoser() {
+        final Card card1 = Card.of(Rank.ACE, Suit.SPADES);
+        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+        final Card vira = Card.of(Rank.THREE, Suit.SPADES);
+        var round = new Round(p1, card1, p2, card2, vira);
+        round.play();
+        assertNotEquals(p1, round.getWinner().orElseThrow());
+    }
+
+    @Test
+    @DisplayName("Should have no winner if players play cards of equal value")
+    void shouldHaveNoWinnerIfPlayersPlayCardsOfEqualValue() {
+        final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
+        final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
+        final Card vira = Card.of(Rank.ACE, Suit.SPADES);
+        var round = new Round(p1, card1, p2, card2, vira);
+        round.play();
+        assertTrue(round.getWinner().isEmpty());
+    }
+
 
     @Test
     @DisplayName("Should throw if any constructor parameter is null")
@@ -122,4 +111,32 @@ class RoundTest {
         final Card vira = Card.of(viraRank, Suit.SPADES);
         assertThrows(GameRuleViolationException.class, () -> new Round(p1,card1, p2, card2, vira));
     }
+
+    @Test
+    @DisplayName("Should correctly toString")
+    void shouldCorrectlyToString() {
+        when(p1.getUsername()).thenReturn("p1");
+        when(p2.getUsername()).thenReturn("p2");
+        final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
+        final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
+
+        final Round roundA = new Round(p1, card1, p2, card2, Card.of(Rank.FOUR, Suit.DIAMONDS));
+        roundA.play();
+
+        final Round roundB = new Round(p1, card1, p2, card2, Card.of(Rank.THREE, Suit.DIAMONDS));
+        roundB.play();
+
+        final Round roundC = new Round(p1, card2, p2, card1, Card.of(Rank.THREE, Suit.DIAMONDS));
+        roundC.play();
+
+        final Round nonPlayedRound = new Round(p1, card1, p2, card2, Card.of(Rank.THREE, Suit.DIAMONDS));
+
+        assertAll(
+                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [4\u2666]) - Result: Draw (--)", roundA.toString()),
+                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [3\u2666]) - Result: p2 wins ([4\u2663])", roundB.toString()),
+                () -> assertEquals("Round = [4\u2663] x [4\u2660] (Vira [3\u2666]) - Result: p1 wins ([4\u2663])", roundC.toString()),
+                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [3\u2666]) - Result: Draw (--)", nonPlayedRound.toString())
+        );
+    }
+
 }

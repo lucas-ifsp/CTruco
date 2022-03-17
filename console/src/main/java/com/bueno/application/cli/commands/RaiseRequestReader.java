@@ -21,7 +21,6 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.entities.game.HandScore;
 
 import java.util.Scanner;
 

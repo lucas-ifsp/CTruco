@@ -22,7 +22,7 @@ package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;

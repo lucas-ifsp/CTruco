@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,12 +18,14 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -156,14 +158,6 @@ class HandTest {
             sut  = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
             assertThrows(GameRuleViolationException.class, () -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.HEARTS)));
         }
-
-        /*@Test
-        @DisplayName("Should get correct last round winner")
-        void shouldGetCorrectLastRoundWinner() {
-            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.SPADES));
-            sut.playSecondCard(player2, Card.of(Rank.FOUR, Suit.SPADES));
-            assertEquals(player1, sut.getLastRoundWinner().orElse(null));
-        }*/
 
         @Test
         @DisplayName("Should win hand winning first two rounds")
@@ -305,11 +299,11 @@ class HandTest {
         }
 
         @Test
-        @DisplayName("Should raise hand score if bet is accepted")
-        void shouldRaiseHandScoreIfBetIsAccepted() {
+        @DisplayName("Should raise hand points if bet is accepted")
+        void shouldRaiseHandPointsIfBetIsAccepted() {
             sut.raise(player1);
             sut.accept(player2);
-            assertEquals(HandScore.THREE, sut.getScore());
+            assertEquals(HandPoints.THREE, sut.getPoints());
         }
 
         @Test
@@ -318,7 +312,7 @@ class HandTest {
             sut.raise(player1);
             sut.raise(player2);
             sut.accept(player1);
-            assertEquals(HandScore.SIX, sut.getScore());
+            assertEquals(HandPoints.SIX, sut.getPoints());
         }
 
         @Test
@@ -388,7 +382,7 @@ class HandTest {
             sut.raise(player2);
             sut.accept(player1);
             assertAll(
-                    () -> assertEquals(HandScore.TWELVE, sut.getScore()),
+                    () -> assertEquals(HandPoints.TWELVE, sut.getPoints()),
                     () -> assertNull(getPossibleWinner())
             );
         }
@@ -400,7 +394,7 @@ class HandTest {
             sut.raise(player2);
             sut.quit(player1);
             assertAll(
-                    () -> assertEquals(HandScore.THREE, sut.getScore()),
+                    () -> assertEquals(HandPoints.THREE, sut.getPoints()),
                     () -> assertEquals(player2, getPossibleWinner())
             );
         }
@@ -427,7 +421,7 @@ class HandTest {
             sut.raise(player2);
             sut.raise(player1);
             sut.accept(player2);
-            assertEquals(HandScore.NINE, sut.getScore());
+            assertEquals(HandPoints.NINE, sut.getPoints());
         }
 
         @Test
@@ -450,11 +444,11 @@ class HandTest {
         }
 
         @Test
-        @DisplayName("Should have not score proposal after quitting")
-        void shouldHaveNotScoreProposalAfterQuitting() {
+        @DisplayName("Should have not points proposal after quitting")
+        void shouldHaveNotPointsProposalAfterQuitting() {
             sut.raise(player1);
             sut.quit(player2);
-            assertNull(sut.getScoreProposal());
+            assertNull(sut.getPointsProposal());
         }
 
         @Test
@@ -485,8 +479,8 @@ class HandTest {
         }
 
         @Test
-        @DisplayName("Should not be able to raise when hand reaches max score")
-        void shouldNotBeAbleToRaiseWhenHandReachesMaxScore() {
+        @DisplayName("Should not be able to raise when hand reaches the max of points")
+        void shouldNotBeAbleToRaiseWhenHandReachesMaxPoints() {
             when(player1.getScore()).thenReturn(10);
             when(player2.getScore()).thenReturn(10);
             sut.raise(player1);
@@ -497,8 +491,8 @@ class HandTest {
         }
 
         @Test
-        @DisplayName("Should not be able to re-raise the bet when already reached the max hand score")
-        void shouldNotBeAbleToReRaiseTheBetWhenAlreadyReachedTheMaxHandScore() {
+        @DisplayName("Should not be able to re-raise the bet when already reached the max of hand points")
+        void shouldNotBeAbleToReRaiseTheBetWhenAlreadyReachedTheMaxHandPoints() {
             when(player1.getScore()).thenReturn(5);
             when(player2.getScore()).thenReturn(8);
             sut.raise(player1);
@@ -585,7 +579,7 @@ class HandTest {
             when(player1.getScore()).thenReturn(11);
             sut = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
             sut.accept(player1);
-            assertEquals(HandScore.THREE, sut.getScore());
+            assertEquals(HandPoints.THREE, sut.getPoints());
         }
 
         @Test
@@ -594,7 +588,7 @@ class HandTest {
             when(player1.getScore()).thenReturn(11);
             sut = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
             sut.quit(player1);
-            assertEquals(new HandResult(player2, HandScore.ONE), sut.getResult().orElse(null));
+            assertEquals(HandResult.of(player2, HandPoints.ONE), sut.getResult().orElse(null));
         }
 
         @Test

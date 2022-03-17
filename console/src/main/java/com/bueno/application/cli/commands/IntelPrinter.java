@@ -21,7 +21,7 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.intel.Intel;
 
 import java.util.List;
 import java.util.Optional;

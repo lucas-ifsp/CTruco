@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,9 +18,17 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.hand.states.Done;
+import com.bueno.domain.entities.hand.states.HandState;
+import com.bueno.domain.entities.hand.states.NoCard;
+import com.bueno.domain.entities.hand.states.WaitingMaoDeOnze;
+import com.bueno.domain.entities.intel.Event;
+import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.intel.Intel;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.*;
@@ -41,13 +49,13 @@ public class Hand {
     private Player eventPlayer;
 
     private Card cardToPlayAgainst;
-    private HandScore score;
-    private HandScore scoreProposal;
+    private HandPoints points;
+    private HandPoints pointsProposal;
 
     private HandResult result;
     private HandState state;
 
-    Hand(Player firstToPlay, Player lastToPlay, Card vira){
+    public Hand(Player firstToPlay, Player lastToPlay, Card vira){
         this.firstToPlay = Objects.requireNonNull(firstToPlay);
         this.lastToPlay = Objects.requireNonNull(lastToPlay);
         this.vira = Objects.requireNonNull(vira);
@@ -57,21 +65,27 @@ public class Hand {
         dealtCards.addAll(firstToPlay.getCards());
         dealtCards.addAll(lastToPlay.getCards());
 
-        score = HandScore.ONE;
+        points = HandPoints.ONE;
         roundsPlayed = new ArrayList<>();
         openCards = new ArrayList<>();
         history = new ArrayList<>();
 
         addOpenCard(vira);
 
-        if(isMaoDeOnze()){
-            currentPlayer = firstToPlay.getScore() == 11 ? firstToPlay : lastToPlay;
-            state = new WaitingMaoDeOnzeState(this);
-        } else{
-            currentPlayer = firstToPlay;
-            state = new NoCardState(this);
-        }
+        if(isMaoDeOnze()) setMaoDeOnzeMode();
+        else setOrdinaryMode();
+
         updateHistory(Event.HAND_START);
+    }
+
+    private void setMaoDeOnzeMode() {
+        currentPlayer = this.firstToPlay.getScore() == 11 ? this.firstToPlay : this.lastToPlay;
+        state = new WaitingMaoDeOnze(this);
+    }
+
+    private void setOrdinaryMode() {
+        currentPlayer = this.firstToPlay;
+        state = new NoCard(this);
     }
 
     public void playFirstCard(Player player, Card card){
@@ -118,20 +132,19 @@ public class Hand {
             throw new IllegalStateException("Can not " + action + ", but " + possibleActions + ".");
     }
 
-    void updateHistory(Event event) {
+    public void updateHistory(Event event) {
         history.add(Intel.ofHand(this, event));
     }
 
-    void playRound(Card lastCard){
+    public void playRound(Card lastCard){
         final var round = new Round(firstToPlay, cardToPlayAgainst, lastToPlay, lastCard, vira);
         round.play();
         roundsPlayed.add(round);
     }
 
-    void defineRoundPlayingOrder() {
+    public void defineRoundPlayingOrder() {
         final var lastRoundWinner = roundsPlayed.isEmpty() ?
                 Optional.empty() : roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
-
         lastRoundWinner.filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
         currentPlayer = firstToPlay;
     }
@@ -142,7 +155,7 @@ public class Hand {
         lastToPlay = referenceHolder;
     }
 
-    void addOpenCard(Card card){
+    public void addOpenCard(Card card){
         if(!dealtCards.contains(card) && !card.equals(Card.closed()))
             throw new GameRuleViolationException("Card has not been dealt in this hand.");
         if(openCards.contains(card) && !card.equals(Card.closed()) )
@@ -150,33 +163,33 @@ public class Hand {
         openCards.add(card);
     }
 
-    void checkForWinnerAfterSecondRound() {
+    public void checkForWinnerAfterSecondRound() {
         var firstRoundWinner = roundsPlayed.get(0).getWinner();
         var secondRoundWinner = roundsPlayed.get(1).getWinner();
 
         if (firstRoundWinner.isEmpty() && secondRoundWinner.isPresent())
-            result = new HandResult(secondRoundWinner.get(), score);
+            result = HandResult.of(secondRoundWinner.get(), points);
         else if (firstRoundWinner.isPresent() && secondRoundWinner.isEmpty())
-            result =  new HandResult(firstRoundWinner.get(), score);
+            result =  HandResult.of(firstRoundWinner.get(), points);
         else if (secondRoundWinner.isPresent() && secondRoundWinner.get().equals(firstRoundWinner.get()))
-            result = new HandResult(secondRoundWinner.get(), score);
+            result = HandResult.of(secondRoundWinner.get(), points);
     }
 
-    void checkForWinnerAfterThirdRound() {
+    public void checkForWinnerAfterThirdRound() {
         var firstRoundWinner = roundsPlayed.get(0).getWinner();
         var lastRoundWinner = roundsPlayed.get(2).getWinner();
 
         if (lastRoundWinner.isEmpty() && firstRoundWinner.isPresent())
-            result = new HandResult(firstRoundWinner.get(), score);
+            result = HandResult.of(firstRoundWinner.get(), points);
         else
-            result = lastRoundWinner.map(player -> new HandResult(player, score)).orElseGet(HandResult::new);
+            result = lastRoundWinner.map(player -> HandResult.of(player, points)).orElseGet(HandResult::ofDraw);
     }
 
     public Optional<Card> getCardToPlayAgainst() {
         return Optional.ofNullable(cardToPlayAgainst);
     }
 
-    void setCardToPlayAgainst(Card cardToPlayAgainst) {
+    public void setCardToPlayAgainst(Card cardToPlayAgainst) {
         this.cardToPlayAgainst = cardToPlayAgainst;
     }
 
@@ -188,7 +201,7 @@ public class Hand {
         return eventPlayer;
     }
 
-    void setCurrentPlayer(Player currentPlayer) {
+    public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
@@ -204,87 +217,87 @@ public class Hand {
         return possibleActions;
     }
 
-    void setPossibleActions(EnumSet<PossibleAction> actions){
+    public void setPossibleActions(EnumSet<PossibleAction> actions){
         this.possibleActions = EnumSet.copyOf(actions);
     }
 
-    Intel getLastIntel(){
+    public Intel getLastIntel(){
         return history.get(history.size() - 1);
     }
 
-    List<Intel> getIntelHistory(){
+    public List<Intel> getIntelHistory(){
         return List.copyOf(history);
     }
 
-    Player getOpponentOf(Player player){
+    public Player getOpponentOf(Player player){
         return player.equals(firstToPlay)? lastToPlay : firstToPlay;
     }
 
-    List<Round> getRoundsPlayed() {
+    public List<Round> getRoundsPlayed() {
         return new ArrayList<>(roundsPlayed);
     }
 
-    int numberOfRoundsPlayed(){
+    public int numberOfRoundsPlayed(){
         return roundsPlayed.size();
     }
 
-    boolean isDone(){
-        return state instanceof DoneState;
+    public boolean isDone(){
+        return state instanceof Done;
     }
 
-    void setResult(HandResult result) {
+    public void setResult(HandResult result) {
         this.result = result;
     }
 
-    void setScore(HandScore score) {
-        this.score = score;
+    public void setPoints(HandPoints points) {
+        this.points = points;
     }
 
-    Player getFirstToPlay() {
+    public Player getFirstToPlay() {
         return firstToPlay;
     }
 
-    Player getLastToPlay() {
+    public Player getLastToPlay() {
         return lastToPlay;
     }
 
-    HandScore getScore() {
-        return score;
+    public HandPoints getPoints() {
+        return points;
     }
 
-    void setLastBetRaiser(Player lastBetRaiser) {
+    public void setLastBetRaiser(Player lastBetRaiser) {
         this.lastBetRaiser = lastBetRaiser;
     }
 
-    List<Card> getOpenCards() {
+    public List<Card> getOpenCards() {
         return openCards;
     }
 
-    void setState(HandState state) {
+    public void setState(HandState state) {
         this.state = state;
     }
 
-    Card getVira() {
+    public Card getVira() {
         return vira;
     }
 
-    boolean isMaoDeOnze() {
+    public boolean isMaoDeOnze() {
         return firstToPlay.getScore() == 11 ^ lastToPlay.getScore() == 11;
     }
 
-    void addScoreProposal() {
-        scoreProposal = score.increase();
+    public void addPointsProposal() {
+        pointsProposal = points.increase();
     }
 
-    void removeScoreProposal(){
-        scoreProposal = null;
+    public void removePointsProposal(){
+        pointsProposal = null;
     }
 
-    HandScore getScoreProposal() {
-        return scoreProposal;
+    public HandPoints getPointsProposal() {
+        return pointsProposal;
     }
 
-    boolean canRaiseBet(){
+    public boolean canRaiseBet(){
         return isPlayerAllowedToRaise() && isAllowedToRaise() && isAllowedToReRaise();
     }
 
@@ -293,19 +306,19 @@ public class Hand {
     }
 
     private boolean isAllowedToRaise() {
-        return score.get() < 12 && score.increase().get() <= getMaxHandScore()
+        return points.get() < 12 && points.increase().get() <= getMaxHandPoints()
                 && firstToPlay.getScore() < 11 && lastToPlay.getScore() < 11;
     }
 
     private boolean isAllowedToReRaise() {
-        return scoreProposal == null || scoreProposal.get() < 12 && scoreProposal.increase().get() <= getMaxHandScore();
+        return pointsProposal == null || pointsProposal.get() < 12 && pointsProposal.increase().get() <= getMaxHandPoints();
     }
 
-    private int getMaxHandScore(){
+    private int getMaxHandPoints(){
         final int firstToPlayScore = firstToPlay.getScore();
         final int lastToPlayScore = lastToPlay.getScore();
-        final int scoreToLosingPlayerWin = Player.MAX_SCORE - Math.min(firstToPlayScore, lastToPlayScore);
-        return scoreToLosingPlayerWin % 3 == 0 ? scoreToLosingPlayerWin
-                : scoreToLosingPlayerWin + (3 - scoreToLosingPlayerWin % 3);
+        final int pointsToLosingPlayerWin = Player.MAX_SCORE - Math.min(firstToPlayScore, lastToPlayScore);
+        return pointsToLosingPlayerWin % 3 == 0 ? pointsToLosingPlayerWin
+                : pointsToLosingPlayerWin + (3 - pointsToLosingPlayerWin % 3);
     }
 }

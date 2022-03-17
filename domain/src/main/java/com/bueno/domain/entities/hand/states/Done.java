@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,51 +18,44 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class WaitingMaoDeOnzeState implements HandState {
+public class Done implements HandState {
 
-    private final Hand context;
-
-    WaitingMaoDeOnzeState(Hand context) {
-        this.context = context;
-        this.context.setPossibleActions(EnumSet.of(PossibleAction.ACCEPT, PossibleAction.QUIT));
+    public Done(Hand context){
+        context.setCurrentPlayer(null);
+        context.setPossibleActions(EnumSet.noneOf(PossibleAction.class));
     }
 
     @Override
     public void playFirstCard(Player player, Card card) {
-        throw new IllegalStateException("Can not play first card before deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not play card because hand is done.");
     }
 
     @Override
     public void playSecondCard(Player player, Card card) {
-        throw new IllegalStateException("Can not play second card before deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not play card because hand is done.");
     }
 
     @Override
     public void accept(Player responder) {
-        context.setScore(HandScore.THREE);
-        context.setCurrentPlayer(context.getFirstToPlay());
-        context.setPossibleActions(EnumSet.of(PossibleAction.PLAY));
-        context.setState(new NoCardState(context));
-        context.updateHistory(Event.ACCEPT_HAND);
+        throw new IllegalStateException("Can not accept bet because hand is done.");
     }
 
     @Override
     public void quit(Player responder) {
-        Player opponent = context.getOpponentOf(responder);
-        context.setResult(new HandResult(opponent, HandScore.ONE));
-        context.setState(new DoneState(context));
-        context.updateHistory(Event.QUIT_HAND);
+        throw new IllegalStateException("Can not quit hand because hand is done.");
     }
 
     @Override
     public void raise(Player requester) {
-        throw new IllegalStateException("Can not raise while deciding if plays mão de onze.");
+        throw new IllegalStateException("Can not bet because hand is done.");
     }
 }

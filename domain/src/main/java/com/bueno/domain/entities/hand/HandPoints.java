@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,40 +18,44 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
+
+import com.bueno.domain.entities.game.GameRuleViolationException;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-public enum HandScore {
+public enum HandPoints {
     ZERO(0), ONE(1), THREE(3), SIX(6), NINE(9), TWELVE(12);
 
-    private final int score;
+    private final int points;
 
-    HandScore(int score) {
-        this.score = score;
+    HandPoints(int points) {
+        this.points = points;
     }
 
-    public HandScore increase() {
+    public HandPoints increase() {
         return switch (this){
             case ONE -> THREE;
             case THREE -> SIX;
             case SIX -> NINE;
             case NINE -> TWELVE;
-            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase score from " + this);
+            case ZERO, TWELVE -> throw new GameRuleViolationException("Can not increase points from " + this);
         };
     }
 
     public int get() {
-        return score;
+        return points;
     }
 
-    public static Optional<HandScore> fromIntValue(Integer score){
-        return Arrays.stream(values()).filter(value -> value.score == score).findFirst();
+    public static HandPoints fromIntValue(Integer points){
+        return Arrays.stream(values())
+                .filter(value -> value.points == points)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Illegal point value" + points));
     }
 
     @Override
     public String toString() {
-        return "HandScore{" + "score=" + score + '}';
+        return "Hand points = " + points;
     }
 }

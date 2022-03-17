@@ -39,7 +39,7 @@ public class Deck {
     }
 
     public List<Card> take(int numberOfCards) {
-        List<Card> cardsTaken = new ArrayList<>(cards.subList(0, numberOfCards));
+        final List<Card> cardsTaken = new ArrayList<>(cards.subList(0, numberOfCards));
         cards.removeAll(cardsTaken);
         return cardsTaken;
     }

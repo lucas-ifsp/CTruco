@@ -20,6 +20,7 @@
 
 package com.bueno.domain.entities.player;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class User {
@@ -33,8 +34,8 @@ public class User {
 
     public User(UUID uuid, String username, String email) {
         this.uuid = uuid == null? UUID.randomUUID() : uuid;
-        this.username = username;
-        this.email = email;
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
     }
 
     public String getEmail() {
@@ -51,6 +52,19 @@ public class User {
 
     @Override
     public String toString() {
-        return getUsername() + " (" + getUuid() + ")";
+        return String.format("User = %s (%s), %s", username, uuid, email);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username) && uuid.equals(user.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, uuid);
     }
 }

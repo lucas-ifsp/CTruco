@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,18 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.hand.HandResult;
+import com.bueno.domain.entities.hand.HandPoints;
+import com.bueno.domain.entities.intel.Event;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class WaitingRaiseResponseState implements HandState {
+class WaitingRaiseResponse implements HandState {
 
     private final Hand context;
 
-    WaitingRaiseResponseState(Hand context) {
+    public WaitingRaiseResponse(Hand context) {
         this.context = context;
         final EnumSet<PossibleAction> actions = EnumSet.of(PossibleAction.QUIT, PossibleAction.ACCEPT);
         if(context.canRaiseBet()) actions.add(PossibleAction.RAISE);
@@ -48,8 +53,8 @@ class WaitingRaiseResponseState implements HandState {
 
     @Override
     public void accept(Player responder) {
-        context.setScore(context.getScoreProposal());
-        context.removeScoreProposal();
+        context.setPoints(context.getPointsProposal());
+        context.removePointsProposal();
         context.setCurrentPlayer(defineCurrentPlayer());
         context.setState(defineNextState());
         context.updateHistory(Event.ACCEPT);
@@ -60,26 +65,26 @@ class WaitingRaiseResponseState implements HandState {
     }
 
     private HandState defineNextState() {
-        return context.getCardToPlayAgainst().isPresent() ? new OneCardState(context) : new NoCardState(context);
+        return context.getCardToPlayAgainst().isPresent() ? new OneCard(context) : new NoCard(context);
     }
 
     @Override
     public void quit(Player responder) {
         context.setLastBetRaiser(null);
-        context.removeScoreProposal();
-        context.setResult(new HandResult(context.getOpponentOf(responder), context.getScore()));
-        context.setState(new DoneState(context));
+        context.removePointsProposal();
+        context.setResult(HandResult.of(context.getOpponentOf(responder), context.getPoints()));
+        context.setState(new Done(context));
         context.updateHistory(Event.QUIT);
     }
 
     @Override
     public void raise(Player requester) {
-        final HandScore score = context.getScoreProposal() != null ? context.getScoreProposal() : context.getScore();
-        context.setScore(score);
-        context.addScoreProposal();
+        final HandPoints score = context.getPointsProposal() != null ? context.getPointsProposal() : context.getPoints();
+        context.setPoints(score);
+        context.addPointsProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getOpponentOf(requester));
-        context.setState(new WaitingRaiseResponseState(context));
+        context.setState(new WaitingRaiseResponse(context));
         context.updateHistory(Event.RAISE);
     }
 }
