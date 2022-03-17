@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,9 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand.states;
 
-import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.entities.hand.Hand;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,26 +32,36 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class HandResultTest {
+class OneCardTest {
 
-    @Mock
-    private Player player;
+    @Mock Hand hand;
+    OneCard sut;
 
-    @Test
-    void shouldAllowCreatingHandResultWithValidArguments(){
-        HandResult handResult = new HandResult(player, HandScore.THREE);
-        assertAll(
-                () -> assertEquals(player, handResult.getWinner().orElseThrow()),
-                () -> assertEquals(HandScore.THREE, handResult.getScore())
-        );
+    @BeforeEach
+    void setUp() {
+        sut = new OneCard(hand);
+    }
+
+    @AfterEach
+    void tearDown() {
+        sut = null;
     }
 
     @Test
-    @DisplayName("Should not allow creating hand result with partial parameters")
-    void shouldNotAllowCreatingHandResultWithPartialParameters() {
-        assertAll(
-                () -> assertThrows(NullPointerException.class, () -> new HandResult(null, HandScore.ONE)),
-                () -> assertThrows(NullPointerException.class, () -> new HandResult(player, null))
-        );
+    @DisplayName("Should throw if plays first card in one card state")
+    void shouldThrowIfPlaysFirstCardInOneCardState() {
+        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(null, null));
+    }
+
+    @Test
+    @DisplayName("Should throw if accepts request or mao de onze in one card state")
+    void shouldThrowIfAcceptsRequestOrMaoDeOnzeInOneCardState() {
+        assertThrows(IllegalStateException.class, () -> sut.accept(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if quits request or mao de onze in one card state")
+    void shouldThrowIfQuitsRequestOrMaoDeOnzeInOneCardState() {
+        assertThrows(IllegalStateException.class, () -> sut.quit(null));
     }
 }

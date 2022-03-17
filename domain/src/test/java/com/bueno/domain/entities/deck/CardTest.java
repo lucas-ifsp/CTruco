@@ -54,26 +54,13 @@ class CardTest {
         }
 
         @Test
-        @DisplayName("creating closed card")
-        void creatingClosedCardWithHiddenRankAndSuit(){
-            Card card = Card.of(Rank.HIDDEN, Suit.HIDDEN);
-            assertAll(
-                    () -> assertEquals(Rank.HIDDEN, card.getRank()),
-                    () -> assertEquals(Suit.HIDDEN, card.getSuit())
-            );
+        @DisplayName("create card from symbols")
+        void createCardFromSymbols() {
+            final Rank rank = Rank.ofSymbol("A");
+            final Suit suit = Suit.ofSymbol("\u2663");
+            assertEquals(Card.of(Rank.ACE, Suit.CLUBS), Card.of(rank, suit));
         }
 
-        @Test
-        @DisplayName("create get same reference for same values")
-        void createGetSameReferenceForSameValues() {
-            Card card = Card.of(Rank.SEVEN, Suit.CLUBS);
-            Card closedCard = Card.closed();
-
-            assertAll(
-                    () -> assertEquals(Card.of(Rank.SEVEN, Suit.CLUBS), card),
-                    () -> assertEquals(Card.closed(), closedCard)
-            );
-        }
     }
 
     @Nested
@@ -144,5 +131,57 @@ class CardTest {
     @DisplayName("Should same cards be equals")
     void shouldSameCardsBeEquals(){
         assertEquals(Card.of(Rank.TWO, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.DIAMONDS));
+    }
+
+    @Test
+    @DisplayName("Should cards of different suit not be equals")
+    void shouldCardsOfDifferentSuitNotBeEquals() {
+        assertNotEquals(Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.TWO, Suit.DIAMONDS));
+    }
+
+    @Test
+    @DisplayName("Should cards of same rank worth the same if they are not manilhas")
+    void shouldCardsOfSameRankWorthTheSameIfTheyAreNotManilhas() {
+        final Card vira = Card.of(Rank.ACE, Suit.CLUBS);
+        final Card card1 = Card.of(Rank.THREE, Suit.DIAMONDS);
+        final Card card2 = Card.of(Rank.THREE, Suit.SPADES);
+        assertEquals(0, card1.compareValueTo(card2, vira));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"FOUR,THREE", "SEVEN,QUEEN", "QUEEN,JACK", "JACK,KING", "KING,ACE"})
+    @DisplayName("Should return correct winner for non manilhas")
+    void shouldReturnCorrectWinnerCardForNonManilhas(Rank lowerRank, Rank higherRank) {
+        final Card lowerCard = Card.of(lowerRank, Suit.SPADES);
+        final Card higherCard = Card.of(higherRank, Suit.SPADES);
+        final Card vira = Card.of(Rank.FIVE, Suit.SPADES);
+        assertTrue(lowerCard.compareValueTo(higherCard, vira) < 0);
+    }
+
+    @Test
+    @DisplayName("Should espadilha worth more than ouros")
+    void shouldEspadilhaWorthMoreThanOuros() {
+        final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
+        final Card ouros = Card.of(Rank.THREE, Suit.DIAMONDS);
+        final Card espadilha = Card.of(Rank.THREE, Suit.SPADES);
+        assertEquals(1, espadilha.compareValueTo(ouros, vira));
+    }
+
+    @Test
+    @DisplayName("Should copas worth more than espadilha")
+    void shouldCopasWorthMoreThanEspadilha() {
+        final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
+        final Card espadilha = Card.of(Rank.THREE, Suit.SPADES);
+        final Card copas = Card.of(Rank.THREE, Suit.HEARTS);
+        assertEquals(1, copas.compareValueTo(espadilha, vira));
+    }
+
+    @Test
+    @DisplayName("Should zap worth more than copas")
+    void shouldZapWorthMoreThanCopas() {
+        final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
+        final Card copas = Card.of(Rank.THREE, Suit.HEARTS);
+        final Card zap = Card.of(Rank.THREE, Suit.CLUBS);
+        assertEquals(1, zap.compareValueTo(copas, vira));
     }
 }

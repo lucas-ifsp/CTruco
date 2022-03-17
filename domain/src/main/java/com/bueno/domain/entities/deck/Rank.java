@@ -36,7 +36,7 @@ public enum Rank {
         this.symbol = symbol;
     }
 
-    public int value() {
+    int value() {
         return value;
     }
 

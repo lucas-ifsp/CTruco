@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,18 +18,21 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.intel.Event;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class OneCardState implements HandState {
+class OneCard implements HandState {
 
     private final Hand context;
 
-    OneCardState(Hand context) {
+    public OneCard(Hand context) {
         this.context = context;
         setPossibleHandActions();
     }
@@ -60,22 +63,22 @@ class OneCardState implements HandState {
 
     private void handleFirstRoundPostConditions() {
         context.defineRoundPlayingOrder();
-        context.setState(new NoCardState(context));
+        context.setState(new NoCard(context));
     }
 
     private void handleSecondRoundPostConditions() {
         context.checkForWinnerAfterSecondRound();
-        if (context.hasWinner()) context.setState(new DoneState(context));
+        if (context.hasWinner()) context.setState(new Done(context));
         else {
             context.defineRoundPlayingOrder();
             context.setCurrentPlayer(context.getFirstToPlay());
-            context.setState(new NoCardState(context));
+            context.setState(new NoCard(context));
         }
     }
 
     private void handleThirdRoundPostConditions() {
         context.checkForWinnerAfterThirdRound();
-        context.setState(new DoneState(context));
+        context.setState(new Done(context));
     }
 
     @Override
@@ -90,10 +93,10 @@ class OneCardState implements HandState {
 
     @Override
     public void raise(Player requester) {
-        context.addScoreProposal();
+        context.addPointsProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getFirstToPlay());
-        context.setState(new WaitingRaiseResponseState(context));
+        context.setState(new WaitingRaiseResponse(context));
         context.updateHistory(Event.RAISE);
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,8 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.intel;
 
+import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.hand.HandPoints;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +67,7 @@ class IntelTest {
         lenient().when(p1.getScore()).thenReturn(0);
         lenient().when(p2.getScore()).thenReturn(0);
         lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleAction.ACCEPT));
-        lenient().when(hand.getScore()).thenReturn(HandScore.ONE);
+        lenient().when(hand.getPoints()).thenReturn(HandPoints.ONE);
         lenient().when(hand.getFirstToPlay()).thenReturn(p1);
         lenient().when(hand.getLastToPlay()).thenReturn(p2);
     }

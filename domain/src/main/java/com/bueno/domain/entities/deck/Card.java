@@ -68,7 +68,7 @@ public final class Card {
                 case SPADES -> 12;
                 case HEARTS -> 13;
                 case CLUBS -> 14;
-                case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
+                default -> throw new IllegalStateException("Closed card can not be manilha!");
             };
     }
 

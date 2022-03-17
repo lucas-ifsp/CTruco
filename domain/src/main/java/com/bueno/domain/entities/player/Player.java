@@ -21,8 +21,7 @@
 package com.bueno.domain.entities.player;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.game.HandScore;
-import com.bueno.domain.entities.game.Intel;
+import com.bueno.domain.entities.hand.HandPoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +36,9 @@ public class Player {
     private List<Card> cards;
     private final String username;
     private final UUID uuid;
-
     private int score;
-    private Intel intel;
 
-    public Player(String username) {
-        this(UUID.randomUUID(), username);
-    }
-
-    public Player(UUID uuid, String username) {
+    private Player(UUID uuid, String username) {
         this.username = username;
         this.uuid = uuid;
     }
@@ -57,15 +50,11 @@ public class Player {
     }
 
     public static Player ofBot(String botName){
-        return new Player(botName);
+        return new Player(UUID.randomUUID(), botName);
     }
 
     public static Player ofBot(UUID uuid, String botName){
         return new Player(uuid, botName);
-    }
-
-    public boolean isBot(){
-        return user == null;
     }
 
     public final Card play(Card card){
@@ -88,8 +77,8 @@ public class Player {
         return !getCards().contains(discard);
     }
 
-    public final void addScore(HandScore handScore){
-        this.score = Math.min(MAX_SCORE, this.score + handScore.get());
+    public final void addScore(HandPoints handPoints){
+        this.score = Math.min(MAX_SCORE, this.score + handPoints.get());
     }
 
     public final void setCards(List<Card> cards){
@@ -98,14 +87,6 @@ public class Player {
 
     public List<Card> getCards() {
         return cards;
-    }
-
-    public void setIntel(Intel intel){
-        this.intel = intel;
-    }
-
-    public Intel getIntel() {
-        return intel;
     }
 
     public String getUsername() {
@@ -120,9 +101,13 @@ public class Player {
         return uuid;
     }
 
+    public boolean isBot(){
+        return user == null;
+    }
+
     @Override
     public String toString() {
-        return getUsername() + " (" + getUuid() + ")";
+        return String.format("Player = %s (%s) has %d point(s)", username, uuid, score);
     }
 
     @Override

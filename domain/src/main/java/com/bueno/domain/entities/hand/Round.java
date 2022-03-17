@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,9 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.Objects;
@@ -69,6 +70,8 @@ public class Round {
 
     @Override
     public String toString() {
-        return "Round{winner=" + winner + '}';
+        String result = winner == null ? "Draw" : winner.getUsername() + " wins";
+        String winningCard = getWinnerCard().isEmpty() || winner == null ? "--" : getWinnerCard().get().toString();
+        return String.format("Round = %s x %s (Vira %s) - Result: %s (%s)", firstCard, lastCard, vira, result, winningCard);
     }
 }

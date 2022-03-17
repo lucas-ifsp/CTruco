@@ -24,9 +24,9 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.game.HandScore;
-import com.bueno.domain.entities.game.Intel;
-import com.bueno.domain.entities.game.PossibleAction;
+import com.bueno.domain.entities.hand.HandPoints;
+import com.bueno.domain.entities.intel.Intel;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.model.CardRank;
@@ -43,7 +43,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.bueno.domain.entities.game.PossibleAction.*;
+import static com.bueno.domain.entities.intel.PossibleAction.*;
 import static com.bueno.spi.model.GameIntel.RoundResult;
 import static com.bueno.spi.model.GameIntel.StepBuilder;
 
@@ -79,7 +79,7 @@ public class BotUseCase {
     }
 
     private boolean shouldDecideMaoDeOnze(Intel intel) {
-        final var hasNotDecided = HandScore.fromIntValue(intel.handScore()).orElse(null) == HandScore.ONE;
+        final var hasNotDecided = HandPoints.fromIntValue(intel.handScore()) == HandPoints.ONE;
         return intel.isMaoDeOnze() && hasNotDecided;
     }
 

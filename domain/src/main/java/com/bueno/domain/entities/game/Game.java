@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -22,6 +22,9 @@ package com.bueno.domain.entities.game;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Deck;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.hand.HandResult;
+import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.*;
@@ -51,7 +54,7 @@ public class Game {
         prepareNewHand();
     }
 
-    public Hand prepareNewHand() {
+    public void prepareNewHand() {
         defineHandPlayingOrder();
 
         final Deck deck = new Deck();
@@ -63,7 +66,6 @@ public class Game {
 
         final Hand hand = new Hand(firstToPlay, lastToPlay, vira);
         hands.add(hand);
-        return hand;
     }
 
     private void defineHandPlayingOrder() {
@@ -76,8 +78,8 @@ public class Game {
         Optional<Player> winner = result.getWinner();
 
         if (winner.isEmpty()) return;
-        if (winner.get().equals(player1)) player1.addScore(result.getScore());
-        else player2.addScore(result.getScore());
+        if (winner.get().equals(player1)) player1.addScore(result.getPoints());
+        else player2.addScore(result.getPoints());
     }
 
     public Optional<Player> getWinner() {
@@ -146,11 +148,17 @@ public class Game {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
-        return uuid.equals(game.uuid) && player1.equals(game.player1) && player2.equals(game.player2);
+        return uuid.equals(game.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, player1, player2);
+        return Objects.hash(uuid);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Game = %s, %s %d x %d %s",
+                uuid, player1.getUsername(), player1.getScore(), player2.getScore(), player2.getUsername());
     }
 }

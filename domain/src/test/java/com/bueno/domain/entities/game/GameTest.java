@@ -23,6 +23,8 @@ package com.bueno.domain.entities.game;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -166,4 +169,35 @@ class GameTest {
 
         assertEquals(6, sut.getIntelSince(firstHandIntel).size());
     }
+
+    @Test
+    @DisplayName("Should games with same uuid be equal")
+    void shouldGamesWithSameUuidBeEqual() {
+        final UUID uuid = UUID.randomUUID();
+        assertEquals(new Game(player1, player2, uuid), new Game(player1, player2, uuid));
+    }
+
+    @Test
+    @DisplayName("Should games of same uuid have the same hashcode")
+    void shouldGamesOfSameUuidHaveTheSameHashcode() {
+        final UUID uuid = UUID.randomUUID();
+        assertEquals(new Game(player1, player2, uuid).hashCode(), new Game(player1, player2, uuid).hashCode());
+    }
+
+    @Test
+    @DisplayName("Should correctly toString")
+    void shouldCorrectlyToString() {
+        final UUID uuid = UUID.randomUUID();
+        when(player1.getUsername()).thenReturn("Player1");
+        when(player2.getUsername()).thenReturn("Player2");
+        when(player1.getScore()).thenReturn(2);
+        when(player2.getScore()).thenReturn(8);
+
+        final String expected = String.format("Game = %s, %s %d x %d %s",
+                uuid, player1.getUsername(), player1.getScore(), player2.getScore(), player2.getUsername());
+
+        assertEquals(expected, new Game(player1, player2, uuid).toString());
+    }
+
+
 }

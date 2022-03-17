@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.intel;
 
 public enum Event {
     HAND_START,

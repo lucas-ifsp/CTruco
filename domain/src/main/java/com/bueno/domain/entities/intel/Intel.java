@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,9 +18,13 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.intel;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.hand.HandResult;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.player.Player;
 
 import java.time.Instant;
@@ -59,7 +63,7 @@ public class Intel{
     private Set<String> possibleActions;
     private String handWinner;
 
-    static Intel ofHand(Hand currentHand, Event event){
+    static public Intel ofHand(Hand currentHand, Event event){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();
         result.event = event.toString();
@@ -68,7 +72,7 @@ public class Intel{
         return result;
     }
 
-    static Intel ofGame(Game currentGame){
+    static public Intel ofGame(Game currentGame){
         final Game game = Objects.requireNonNull(currentGame);
         final Intel result = ofHand(game.currentHand(), Event.GAME_OVER);
         result.setGameIntel(game);
@@ -77,8 +81,8 @@ public class Intel{
 
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
-        handScore = hand.getScore().get();
-        if(hand.getScoreProposal() != null) handScoreProposal = hand.getScoreProposal().get();
+        handScore = hand.getPoints().get();
+        if(hand.getPointsProposal() != null) handScoreProposal = hand.getPointsProposal().get();
         roundWinners = getRoundWinners(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();

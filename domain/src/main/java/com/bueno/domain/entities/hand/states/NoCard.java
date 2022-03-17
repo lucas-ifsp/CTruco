@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,18 +18,21 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.game;
+package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.intel.Event;
+import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class NoCardState implements HandState {
+public class NoCard implements HandState {
 
     private final Hand context;
 
-    NoCardState(Hand context) {
+    public NoCard(Hand context) {
         this.context = context;
         setPossibleHandActions();
     }
@@ -45,7 +48,7 @@ class NoCardState implements HandState {
         context.addOpenCard(card);
         context.setCardToPlayAgainst(card);
         context.setCurrentPlayer(context.getLastToPlay());
-        context.setState(new OneCardState(context));
+        context.setState(new OneCard(context));
         context.updateHistory(Event.PLAY);
     }
 
@@ -65,10 +68,10 @@ class NoCardState implements HandState {
 
     @Override
     public void raise(Player requester) {
-        context.addScoreProposal();
+        context.addPointsProposal();
         context.setLastBetRaiser(requester);
         context.setCurrentPlayer(context.getLastToPlay());
-        context.setState(new WaitingRaiseResponseState(context));
+        context.setState(new WaitingRaiseResponse(context));
         context.updateHistory(Event.RAISE);
     }
 }
