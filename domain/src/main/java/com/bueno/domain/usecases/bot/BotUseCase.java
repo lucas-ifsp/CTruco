@@ -39,6 +39,7 @@ import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class BotUseCase {
     private final GameRepository repo;
 
     public BotUseCase(GameRepository repo) {
-        this.repo = repo;
+        this.repo = Objects.requireNonNull(repo, "GameRepository must not be null.");
     }
 
     public Intel playWhenNecessary(Game game) {
@@ -60,7 +61,6 @@ public class BotUseCase {
         final Intel intel = game.getIntel();
 
         if (!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return intel;
-        if (isNotCurrentPlayer(uuid, intel)) return intel;
         if (shouldDecideMaoDeOnze(intel)) decideMaoDeOnze(currentPlayer, intel, repo);
         else if (wantToRaiseRequest(currentPlayer, intel)) startRaiseRequest(uuid, repo);
         else if (shouldPlayCard(intel)) playCard(currentPlayer, intel, repo);
@@ -79,7 +79,7 @@ public class BotUseCase {
     }
 
     private boolean shouldDecideMaoDeOnze(Intel intel) {
-        final var hasNotDecided = HandPoints.fromIntValue(intel.handScore()) == HandPoints.ONE;
+        final var hasNotDecided = HandPoints.fromIntValue(intel.handPoints()) == HandPoints.ONE;
         return intel.isMaoDeOnze() && hasNotDecided;
     }
 
@@ -157,7 +157,7 @@ public class BotUseCase {
         final List<TrucoCard> botCards = toTrucoCardList.apply(player.getCards());
 
         return StepBuilder.with()
-                .gameInfo(roundResults, openCards, toTrucoCard(intel.vira()), intel.handScore())
+                .gameInfo(roundResults, openCards, toTrucoCard(intel.vira()), intel.handPoints())
                 .botInfo(botCards, intel.currentPlayerScore())
                 .opponentScore(intel.currentOpponentScore())
                 .opponentCard(toTrucoCard(intel.cardToPlayAgainst().orElse(null)))

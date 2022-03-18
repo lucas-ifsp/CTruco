@@ -39,8 +39,8 @@ public class Intel{
     private UUID gameWinner;
     private boolean maoDeOnze;
 
-    private Integer handScore;
-    private Integer handScoreProposal;
+    private Integer handPoints;
+    private Integer handPointsProposal;
     private List<Optional<String>> roundWinners;
     private int roundsPlayed;
 
@@ -81,8 +81,8 @@ public class Intel{
 
     private void setHandIntel(Hand hand){
         maoDeOnze = hand.isMaoDeOnze();
-        handScore = hand.getPoints().get();
-        if(hand.getPointsProposal() != null) handScoreProposal = hand.getPointsProposal().get();
+        handPoints = hand.getPoints().get();
+        if(hand.getPointsProposal() != null) handPointsProposal = hand.getPointsProposal().get();
         roundWinners = getRoundWinners(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();
@@ -171,12 +171,12 @@ public class Intel{
         return maoDeOnze;
     }
 
-    public Integer handScore() {
-        return handScore;
+    public Integer handPoints() {
+        return handPoints;
     }
 
-    public Optional<Integer> scoreProposal() {
-        return Optional.ofNullable(handScoreProposal);
+    public Optional<Integer> pointsProposal() {
+        return Optional.ofNullable(handPointsProposal);
     }
 
     public List<Optional<String>> roundWinners() {
@@ -266,8 +266,8 @@ public class Intel{
                 " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +
                 " | Rounds = " + roundWinners +
-                " | Hand Score = " + handScore +
-                (scoreProposal().isPresent() ? " | Score Proposal = " + scoreProposal().get() : "") +
+                " | Hand Score = " + handPoints +
+                (pointsProposal().isPresent() ? " | Score Proposal = " + pointsProposal().get() : "") +
                 (isMaoDeOnze() ? " | Mão de Onze = " + userInMaoDeOnze  :  "") +
                 " | Winner = " + handWinner;
     }

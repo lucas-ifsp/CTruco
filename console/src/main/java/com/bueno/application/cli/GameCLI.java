@@ -164,7 +164,7 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        RaiseRequestReader requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handScore()));
+        RaiseRequestReader requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handPoints()));
         if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(userUUID);
     }
 
@@ -179,7 +179,7 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        RaiseResponseReader responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handScore()));
+        RaiseResponseReader responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handPoints()));
         switch (responseReader.execute()){
             case QUIT -> scoreProposalUseCase.quit(userUUID);
             case ACCEPT -> scoreProposalUseCase.accept(userUUID);
