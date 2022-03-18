@@ -134,7 +134,7 @@ class ScoreProposalUseCaseTest {
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
         final Intel intel = sut.raise(p1Uuid);
-        assertEquals(3, intel.scoreProposal().orElse(null));
+        assertEquals(3, intel.pointsProposal().orElse(null));
     }
 
     @Test
@@ -142,7 +142,7 @@ class ScoreProposalUseCaseTest {
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
         sut.raise(p1Uuid);
         final Intel intel = sut.accept(p2Uuid);
-        assertEquals(3, intel.handScore());
+        assertEquals(3, intel.handPoints());
     }
 
     @Test
@@ -158,7 +158,7 @@ class ScoreProposalUseCaseTest {
         final Intel quitIntel = intelSince.get(intelSince.size() - 1);
 
         assertAll(
-                () -> assertEquals(1, quitIntel.handScore()),
+                () -> assertEquals(1, quitIntel.handPoints()),
                 () -> assertEquals(player1.getUsername(), quitIntel.handWinner().orElse(null))
         );
     }

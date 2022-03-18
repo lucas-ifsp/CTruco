@@ -152,7 +152,7 @@ public class GameTableController {
     }
 
     private void updateHandScore(Intel intel) {
-        final var value = intel != null ? String.valueOf(intel.handScore()) : "1";
+        final var value = intel != null ? String.valueOf(intel.handPoints()) : "1";
         lbHandPointsValue.setText(value);
     }
 
@@ -177,7 +177,7 @@ public class GameTableController {
 
     private void configureButtons(Intel intel){
         final Predicate<String> shouldDisable = a -> !intel.possibleActions().contains(a) || !isUserNextPlayer(intel);
-        final var baseScore = intel.scoreProposal().orElse(intel.handScore());
+        final var baseScore = intel.pointsProposal().orElse(intel.handPoints());
         if(baseScore != 0 && baseScore != 12)
             btnRaise.setText("Pedir " + scoreToString(baseScore == 1? 3 : baseScore + 3) + "!");
 
@@ -431,17 +431,17 @@ public class GameTableController {
             builder.append(0.5, () -> showMessage("Sua mão de onze"));
         }
         if (hasRaiseProposal(intel)) {
-            final var value = scoreToString(intel.scoreProposal().orElseThrow());
+            final var value = scoreToString(intel.pointsProposal().orElseThrow());
             builder.append(0.25, () -> showMessage(botName + " pediu " + value + " !"));
         }
     }
 
     private boolean shouldDecideMaoDeOnze(Intel intel) {
-        return intel.isMaoDeOnze() && intel.handScore() == 1;
+        return intel.isMaoDeOnze() && intel.handPoints() == 1;
     }
 
     private boolean hasRaiseProposal(Intel intel) {
-        return intel.scoreProposal().isPresent();
+        return intel.pointsProposal().isPresent();
     }
 
     public void accept(ActionEvent a) {

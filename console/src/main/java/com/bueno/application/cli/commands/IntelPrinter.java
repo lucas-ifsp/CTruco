@@ -90,7 +90,7 @@ public class IntelPrinter implements Command<Void>{
 
             System.out.println(" Vez do (a): " + intel.currentPlayerUsername());
         }
-        System.out.println(" Ponto da mão: " + intel.handScore());
+        System.out.println(" Ponto da mão: " + intel.handPoints());
     }
 
     private void printRounds(Intel intel) {
