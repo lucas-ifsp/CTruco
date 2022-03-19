@@ -20,161 +20,63 @@
 
 package com.bueno.domain.usecases.bot;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Rank;
-import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.spi.service.BotServiceManager;
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.spi.service.BotServiceManager;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.bueno.domain.entities.intel.PossibleAction.*;
-import static com.bueno.spi.model.GameIntel.RoundResult;
-import static com.bueno.spi.model.GameIntel.StepBuilder;
 
 public class BotUseCase {
     private final GameRepository repo;
+    private MaoDeOnzeHandler maoDeOnzeHandler;
+    private RaiseHandler raiseHandler;
+    private CardPlayingHandler cardHandler;
+    private RaiseRequestHandler requestHandler;
 
     public BotUseCase(GameRepository repo) {
+        this(repo, null, null, null, null);
+    }
+
+    BotUseCase(GameRepository repo, MaoDeOnzeHandler maoDeOnze, RaiseHandler raise, CardPlayingHandler card, RaiseRequestHandler request){
         this.repo = Objects.requireNonNull(repo, "GameRepository must not be null.");
+        this.maoDeOnzeHandler = maoDeOnze;
+        this.raiseHandler = raise;
+        this.cardHandler = card;
+        this.requestHandler = request;
     }
 
     public Intel playWhenNecessary(Game game) {
         final Player currentPlayer = game.currentHand().getCurrentPlayer();
-        final UUID uuid = currentPlayer.getUuid();
         final Intel intel = game.getIntel();
 
-        if (!currentPlayer.isBot() || isNotCurrentPlayer(uuid, intel)) return intel;
-        if (shouldDecideMaoDeOnze(intel)) decideMaoDeOnze(currentPlayer, intel, repo);
-        else if (wantToRaiseRequest(currentPlayer, intel)) startRaiseRequest(uuid, repo);
-        else if (shouldPlayCard(intel)) playCard(currentPlayer, intel, repo);
-        else answerRaiseRequest(currentPlayer, intel, repo);
+        if (!isBotTurn(currentPlayer, intel)) return intel;
+
+        initializeNullHandlers(currentPlayer, intel);
+
+        if (maoDeOnzeHandler.handle()) return game.getIntel();
+        if (raiseHandler.handle()) return game.getIntel();
+        if (cardHandler.handle()) return game.getIntel();
+        requestHandler.handle();
         return game.getIntel();
+    }
+
+    private boolean isBotTurn(Player handPlayer, Intel intel) {
+        final var currentPlayerUUID = intel.currentPlayerUuid();
+        if (currentPlayerUUID.isEmpty() || intel.isGameDone() || !handPlayer.isBot()) return false;
+        return handPlayer.getUuid().equals(currentPlayerUUID.get());
+    }
+
+    private void initializeNullHandlers(Player currentPlayer, Intel intel) {
+        if (maoDeOnzeHandler == null) maoDeOnzeHandler = new MaoDeOnzeHandler(currentPlayer, intel, repo);
+        if (raiseHandler == null) raiseHandler = new RaiseHandler(currentPlayer, intel, repo);
+        if (cardHandler == null) cardHandler = new CardPlayingHandler(currentPlayer, intel, repo);
+        if (requestHandler == null) requestHandler = new RaiseRequestHandler(currentPlayer, intel, repo);
     }
 
     public static List<String> availableBots(){
         return BotServiceManager.providersNames();
-    }
-
-    private boolean isNotCurrentPlayer(UUID botUUID, Intel intel) {
-        final var currentPlayerUUID = intel.currentPlayerUuid();
-        if (currentPlayerUUID.isEmpty() || intel.isGameDone()) return true;
-        return !currentPlayerUUID.get().equals(botUUID);
-    }
-
-    private boolean shouldDecideMaoDeOnze(Intel intel) {
-        final var hasNotDecided = HandPoints.fromIntValue(intel.handPoints()) == HandPoints.ONE;
-        return intel.isMaoDeOnze() && hasNotDecided;
-    }
-
-    private void decideMaoDeOnze(Player bot, Intel intel, GameRepository repo) {
-        final var botUuid = bot.getUuid();
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var useCase = new ScoreProposalUseCase(repo);
-        final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
-
-        if (hasAccepted) useCase.accept(botUuid);
-        else useCase.quit(botUuid);
-    }
-
-    private boolean wantToRaiseRequest(Player bot, Intel intel) {
-        final var actions = intel.possibleActions().stream()
-                .map(PossibleAction::valueOf)
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
-
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var canNotStartRequest = !actions.contains(RAISE) || actions.contains(QUIT);
-
-        if (canNotStartRequest) return false;
-        return botService.decideIfRaises(toGameIntel(bot, intel));
-    }
-
-    private void startRaiseRequest(UUID botUuid, GameRepository repo) {
-        final var useCase = new ScoreProposalUseCase(repo);
-        useCase.raise(botUuid);
-    }
-
-    private boolean shouldPlayCard(Intel intel) {
-        return intel.possibleActions().stream()
-                .map(PossibleAction::valueOf)
-                .anyMatch(action -> action.equals(PLAY));
-    }
-
-    private void playCard(Player bot, Intel intel, GameRepository repo) {
-        final var botUuid = bot.getUuid();
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
-        final var card = toCard(chosenCard.content());
-        final var useCase = new PlayCardUseCase(repo);
-
-        if (chosenCard.isDiscard()) useCase.discard(new PlayCardUseCase.RequestModel(botUuid, card));
-        else useCase.playCard(new PlayCardUseCase.RequestModel(botUuid, card));
-    }
-
-    private void answerRaiseRequest(Player bot, Intel intel, GameRepository repo) {
-        final var botUuid = bot.getUuid();
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var useCase = new ScoreProposalUseCase(repo);
-        final var actions = intel.possibleActions().stream()
-                .map(PossibleAction::valueOf)
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
-
-        switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
-            case -1 -> {if (actions.contains(QUIT)) useCase.quit(botUuid);}
-            case 0 -> {if (actions.contains(ACCEPT)) useCase.accept(botUuid);}
-            case 1 -> {if (actions.contains(RAISE)) useCase.raise(botUuid);}
-        }
-    }
-
-    private GameIntel toGameIntel(Player player, Intel intel) {
-        final Function<String, RoundResult> toRoundResult = name -> name == null ? RoundResult.DREW
-                : name.equals(player.getUsername()) ? RoundResult.WON : RoundResult.LOST;
-
-        final List<RoundResult> roundResults = intel.roundWinners().stream()
-                .map(winner -> winner.orElse(null))
-                .map(toRoundResult).collect(Collectors.toList());
-
-        final Function<List<Card>, List<TrucoCard>> toTrucoCardList = cardList ->
-                cardList.stream().map(this::toTrucoCard).collect(Collectors.toList());
-
-        final List<TrucoCard> openCards = toTrucoCardList.apply(intel.openCards());
-        final List<TrucoCard> botCards = toTrucoCardList.apply(player.getCards());
-
-        return StepBuilder.with()
-                .gameInfo(roundResults, openCards, toTrucoCard(intel.vira()), intel.handPoints())
-                .botInfo(botCards, intel.currentPlayerScore())
-                .opponentScore(intel.currentOpponentScore())
-                .opponentCard(toTrucoCard(intel.cardToPlayAgainst().orElse(null)))
-                .build();
-    }
-
-    private Card toCard(TrucoCard card){
-        if(card == null) return null;
-        final String rankName = card.getRank().toString();
-        final String suitName = card.getSuit().toString();
-        return Card.of(Rank.ofSymbol(rankName), Suit.ofSymbol(suitName));
-    }
-
-    private TrucoCard toTrucoCard(Card card){
-        if(card == null) return null;
-        final String rankName = card.getRank().toString();
-        final String suitName = card.getSuit().toString();
-        return TrucoCard.of(CardRank.ofSymbol(rankName), CardSuit.ofSymbol(suitName));
     }
 }
