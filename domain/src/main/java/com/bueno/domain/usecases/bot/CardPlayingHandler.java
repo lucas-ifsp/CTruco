@@ -23,9 +23,8 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.entities.intel.PossibleAction.PLAY;
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toCard;
@@ -33,29 +32,32 @@ import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
 class CardPlayingHandler extends Handler {
 
-    CardPlayingHandler(Player bot, Intel intel, GameRepository repo) {
+    private final BotServiceProvider botService;
+    private final PlayCardUseCase cardUseCase;
+
+    public CardPlayingHandler(PlayCardUseCase cardUseCase, BotServiceProvider botService, Player bot, Intel intel) {
         this.bot = bot;
         this.intel = intel;
-        this.repo = repo;
+        this.botService = botService;
+        this.cardUseCase = cardUseCase;
     }
 
     @Override
     boolean handle() {
         if(shouldHandle()) {
             final var botUuid = bot.getUuid();
-            final var botService = BotServiceManager.load(bot.getUsername());
             final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
             final var card = toCard(chosenCard.content());
-            final var useCase = new PlayCardUseCase(repo);
 
-            if (chosenCard.isDiscard()) useCase.discard(new PlayCardUseCase.RequestModel(botUuid, card));
-            else useCase.playCard(new PlayCardUseCase.RequestModel(botUuid, card));
+            if (chosenCard.isDiscard()) cardUseCase.discard(new PlayCardUseCase.RequestModel(botUuid, card));
+            else cardUseCase.playCard(new PlayCardUseCase.RequestModel(botUuid, card));
             return true;
         }
         return false;
     }
 
-    private boolean shouldHandle() {
+    @Override
+    boolean shouldHandle() {
         return intel.possibleActions().stream()
                 .map(PossibleAction::valueOf)
                 .anyMatch(action -> action.equals(PLAY));

@@ -23,33 +23,36 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
-import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.service.BotServiceProvider;
+
+import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
 class MaoDeOnzeHandler extends Handler {
 
-    MaoDeOnzeHandler(Player bot, Intel intel, GameRepository repo) {
+    private final BotServiceProvider botService;
+    private final ScoreProposalUseCase scoreUseCase;
+
+    MaoDeOnzeHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+        this.scoreUseCase = scoreUseCase;
+        this.botService = botService;
         this.bot = bot;
         this.intel = intel;
-        this.repo = repo;
     }
 
     boolean handle() {
         if(shouldHandle()) {
             final var botUuid = bot.getUuid();
-            final var botService = BotServiceManager.load(bot.getUsername());
-            final var useCase = new ScoreProposalUseCase(repo);
-            final var hasAccepted = botService.getMaoDeOnzeResponse(SpiModelAdapter.toGameIntel(bot, intel));
-
-            if (hasAccepted) useCase.accept(botUuid);
-            else useCase.quit(botUuid);
+            final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
+            if (hasAccepted) scoreUseCase.accept(botUuid);
+            else scoreUseCase.quit(botUuid);
             return true;
         }
         return false;
     }
 
-    private boolean shouldHandle() {
+    @Override
+    boolean shouldHandle() {
         final var hasNotDecided = HandPoints.fromIntValue(intel.handPoints()) == HandPoints.ONE;
         return intel.isMaoDeOnze() && hasNotDecided;
     }

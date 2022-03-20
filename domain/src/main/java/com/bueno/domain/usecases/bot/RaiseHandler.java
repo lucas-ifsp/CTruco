@@ -23,9 +23,8 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
-import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
@@ -36,30 +35,31 @@ import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
 class RaiseHandler extends Handler {
 
-    RaiseHandler(Player bot, Intel intel, GameRepository repo) {
+    private final BotServiceProvider botService;
+    private final ScoreProposalUseCase scoreUseCase;
+
+    RaiseHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+        this.scoreUseCase = scoreUseCase;
+        this.botService = botService;
         this.bot = bot;
         this.intel = intel;
-        this.repo = repo;
     }
 
     boolean handle(){
         if(shouldHandle()) {
-            final var useCase = new ScoreProposalUseCase(repo);
-            useCase.raise(bot.getUuid());
+            final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
+            if(wantToRaise) scoreUseCase.raise(bot.getUuid());
             return true;
         }
         return false;
     }
 
-    private boolean shouldHandle(){
+    @Override
+    boolean shouldHandle(){
         final var actions = intel.possibleActions().stream()
                 .map(PossibleAction::valueOf)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var canNotStartRequest = !actions.contains(RAISE) || actions.contains(QUIT);
-
-        if (canNotStartRequest) return false;
-        return botService.decideIfRaises(toGameIntel(bot, intel));
+        return actions.contains(RAISE) && !actions.contains(QUIT);
     }
 }
