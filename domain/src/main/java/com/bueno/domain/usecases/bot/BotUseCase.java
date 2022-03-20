@@ -24,7 +24,10 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +57,7 @@ public class BotUseCase {
 
         if (!isBotTurn(currentPlayer, intel)) return intel;
 
-        initializeNullHandlers(currentPlayer, intel);
+        initializeNullHandlers(currentPlayer, intel, BotServiceManager.load(currentPlayer.getUsername()));
 
         if (maoDeOnzeHandler.handle()) return game.getIntel();
         if (raiseHandler.handle()) return game.getIntel();
@@ -69,11 +72,15 @@ public class BotUseCase {
         return handPlayer.getUuid().equals(currentPlayerUUID.get());
     }
 
-    private void initializeNullHandlers(Player currentPlayer, Intel intel) {
-        if (maoDeOnzeHandler == null) maoDeOnzeHandler = new MaoDeOnzeHandler(currentPlayer, intel, repo);
-        if (raiseHandler == null) raiseHandler = new RaiseHandler(currentPlayer, intel, repo);
-        if (cardHandler == null) cardHandler = new CardPlayingHandler(currentPlayer, intel, repo);
-        if (requestHandler == null) requestHandler = new RaiseRequestHandler(currentPlayer, intel, repo);
+    private void initializeNullHandlers(Player currentPlayer, Intel intel, BotServiceProvider botService) {
+        if (maoDeOnzeHandler == null)
+            maoDeOnzeHandler = new MaoDeOnzeHandler(new ScoreProposalUseCase(repo), botService, currentPlayer, intel);
+        if (raiseHandler == null)
+            raiseHandler = new RaiseHandler(new ScoreProposalUseCase(repo), botService, currentPlayer, intel);
+        if (cardHandler == null)
+            cardHandler = new CardPlayingHandler(new PlayCardUseCase(repo), botService, currentPlayer, intel);
+        if (requestHandler == null)
+            requestHandler = new RaiseRequestHandler(new ScoreProposalUseCase(repo), botService, currentPlayer, intel);
     }
 
     public static List<String> availableBots(){

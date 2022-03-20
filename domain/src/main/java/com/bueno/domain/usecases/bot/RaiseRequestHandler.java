@@ -23,9 +23,8 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
-import com.bueno.spi.service.BotServiceManager;
+import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
@@ -35,26 +34,35 @@ import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
 class RaiseRequestHandler extends Handler{
 
-    RaiseRequestHandler(Player bot, Intel intel, GameRepository repo) {
+    private final BotServiceProvider botService;
+    private final ScoreProposalUseCase scoreUseCase;
+
+    RaiseRequestHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+        this.scoreUseCase = scoreUseCase;
+        this.botService = botService;
         this.bot = bot;
         this.intel = intel;
-        this.repo = repo;
     }
 
     @Override
     boolean handle() {
-        final var botUuid = bot.getUuid();
-        final var botService = BotServiceManager.load(bot.getUsername());
-        final var useCase = new ScoreProposalUseCase(repo);
-        final var actions = intel.possibleActions().stream()
-                .map(PossibleAction::valueOf)
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
+        if(shouldHandle()) {
+            final var botUuid = bot.getUuid();
+            final var actions = intel.possibleActions().stream()
+                    .map(PossibleAction::valueOf)
+                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-        switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
-            case -1 -> {if (actions.contains(QUIT)) useCase.quit(botUuid);}
-            case 0 -> {if (actions.contains(ACCEPT)) useCase.accept(botUuid);}
-            case 1 -> {if (actions.contains(RAISE)) useCase.raise(botUuid);}
+            switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
+                case -1 -> { if (actions.contains(QUIT)) scoreUseCase.quit(botUuid); }
+                case 0 -> { if (actions.contains(ACCEPT)) scoreUseCase.accept(botUuid); }
+                case 1 -> { if (actions.contains(RAISE)) scoreUseCase.raise(botUuid); }
+            }
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    boolean shouldHandle(){
+        return !intel.isMaoDeOnze() && !intel.possibleActions().contains("PLAY");
     }
 }
