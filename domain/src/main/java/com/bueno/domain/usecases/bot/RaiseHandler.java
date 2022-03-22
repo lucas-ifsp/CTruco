@@ -48,8 +48,11 @@ class RaiseHandler extends Handler {
     boolean handle(){
         if(shouldHandle()) {
             final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
-            if(wantToRaise) scoreUseCase.raise(bot.getUuid());
-            return true;
+            if(wantToRaise){
+                scoreUseCase.raise(bot.getUuid());
+                return true;
+            }
+            return false;
         }
         return false;
     }

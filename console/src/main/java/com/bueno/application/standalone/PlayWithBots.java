@@ -31,6 +31,7 @@ import com.google.common.primitives.Ints;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.logging.LogManager;
@@ -41,18 +42,13 @@ public class PlayWithBots {
 
     //TODO Fix this class to work after refactoring
     //TODO Test all playing modes
-    private final CreateGameUseCase createGameUseCase;
-    private final FindGameUseCase findGameUseCase;
-    private final BotUseCase botUseCase;
+    private final UUID uuidBot1;
+    private final UUID uuidBot2;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
 
-        final var repo = new InMemoryGameRepository();
-        CreateGameUseCase createGameUseCase = new CreateGameUseCase(repo, null);
-        FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
-        BotUseCase botUseCase = new BotUseCase(repo);
-        final PlayWithBots main = new PlayWithBots(createGameUseCase, findGameUseCase, botUseCase);
+        final PlayWithBots main = new PlayWithBots();
 
         final List<String> botNames = BotUseCase.availableBots();
         printAvailableBots(botNames);
@@ -61,16 +57,16 @@ public class PlayWithBots {
         final Integer bot2 = scanBotOption(botNames);
         final int times = scanNumberOfSimulations();
 
-        final List<ResponseModel> results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        final List<ResponseModel> results = main.playInParallel(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        //final List<ResponseModel> results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
     }
 
-    public PlayWithBots(CreateGameUseCase createGameUseCase, FindGameUseCase findGameUseCase, BotUseCase botUseCase) {
-        this.createGameUseCase = createGameUseCase;
-        this.findGameUseCase = findGameUseCase;
-        this.botUseCase = botUseCase;
+    public PlayWithBots(){
+        this.uuidBot1 = UUID.randomUUID();
+        this.uuidBot2 = UUID.randomUUID();
     }
 
     private static void printAvailableBots(List<String> botNames) {
@@ -103,26 +99,36 @@ public class PlayWithBots {
         return times;
     }
 
-/*
-    public static void main(String[] args) throws InterruptedException {
-        for (int i = 0; i < 100; i++) {
-            final InMemoryGameRepository repo = new InMemoryGameRepository();
-            PlayGameWithBotsUseCase uc = new PlayGameWithBotsUseCase(repo);
-            final UUID uuid = uc.playWithBots(new MineiroBot(repo, uuid1), new MineiroBot(repo, uuid2));
-            System.err.println("Winner: " + (uuid.equals(uuid1) ? "MineiroBot1" : "MineiroBot2"));
-            //TimeUnit.SECONDS.sleep(1);
+    public List<ResponseModel> play(String bot1Name, String bot2Name, int times) throws InterruptedException {
+        List<ResponseModel> result = new ArrayList<>();
+        for (int i = 0; i < times; i++) {
+            final PlayWithBotsUseCase useCase = createNewGameSettings();
+            final ResponseModel responseModel = useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            result.add(responseModel);
+            final UUID winnerUuid = responseModel.uuid();
+            final String winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
+            System.err.printf("Winner: %s (%s).\n", winnerName, winnerUuid);
+            TimeUnit.SECONDS.sleep(1);
         }
+        return result;
     }
-*/
 
-    public List<ResponseModel> play(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
+    private PlayWithBotsUseCase createNewGameSettings() {
+        final var repo = new InMemoryGameRepository();
+        final var createGameUseCase = new CreateGameUseCase(repo, null);
+        final var findGameUseCase = new FindGameUseCase(repo);
+        final var botUseCase = new BotUseCase(repo);
+        return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, botUseCase);
+    }
+
+    public List<ResponseModel> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         final List<Callable<ResponseModel>> games = new ArrayList<>();
 
         final Callable<ResponseModel> game = () -> {
-            var useCase = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, botUseCase);
-            return useCase.playWithBots(bot1Name, bot2Name);
+            var useCase = createNewGameSettings();
+            return useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
         };
 
         for (int i = 0; i < times; i++) {

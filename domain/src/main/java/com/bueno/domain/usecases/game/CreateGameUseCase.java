@@ -50,11 +50,14 @@ public class CreateGameUseCase {
         if(hasNoBotServiceWith(botName))
             throw new NoSuchElementException("Service implementation not available: " + botName);
 
-        final User user = userRepo.findByUUID(userUUID)
+        final User user = userRepo.findByUuid(userUUID)
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + userUUID));
 
         final Player userPlayer = Player.of(user);
         final Player botPlayer = Player.ofBot(botName);
+
+        gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
+            throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
 
         return create(userPlayer, botPlayer);
     }
@@ -82,15 +85,8 @@ public class CreateGameUseCase {
     }
 
     private Intel create(Player p1, Player p2) {
-        gameRepo.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
-            throw new UnsupportedGameRequestException(p1.getUsername() + " is already playing a game.");});
-
-        gameRepo.findByPlayerUsername(p2.getUsername()).ifPresent(unused -> {
-            throw new UnsupportedGameRequestException(p2.getUsername() + " is already playing a game.");});
-
         Game game = new Game(p1, p2);
         gameRepo.save(game);
-
         return game.getIntel();
     }
 }

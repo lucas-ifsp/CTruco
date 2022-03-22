@@ -23,6 +23,7 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.game.PlayWithBotsUseCase.ResponseModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,9 +52,27 @@ class PlayWithBotsUseCaseTest {
     @DisplayName("Should throw if any injected use case is null")
     void shouldThrowIfAnyInjectedUseCaseIsNull() {
         assertAll(
-                () -> assertThrows(NullPointerException.class, () -> new PlayWithBotsUseCase(null, findGameUseCase, botUseCase)),
-                () -> assertThrows(NullPointerException.class, () -> new PlayWithBotsUseCase(createGameUseCase, null, botUseCase)),
-                () -> assertThrows(NullPointerException.class, () -> new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, null))
+                () -> assertThrows(NullPointerException.class,
+                        () -> new PlayWithBotsUseCase(null, findGameUseCase, botUseCase)),
+                () -> assertThrows(NullPointerException.class,
+                        () -> new PlayWithBotsUseCase(createGameUseCase, null, botUseCase)),
+                () -> assertThrows(NullPointerException.class,
+                        () -> new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, null))
+        );
+    }
+
+    @Test
+    @DisplayName("Should throw if play with bots receive any null parameters")
+    void shouldThrowIfPlayWithBotsReceiveAnyNullParameters() {
+        assertAll(
+                () -> assertThrows(NullPointerException.class,
+                        () -> sut.playWithBots(null, "BotA", UUID.randomUUID(), "BotB")),
+                () -> assertThrows(NullPointerException.class,
+                        () -> sut.playWithBots(UUID.randomUUID(), null, UUID.randomUUID(), "BotB")),
+                () -> assertThrows(NullPointerException.class,
+                        () -> sut.playWithBots(UUID.randomUUID(), "BotA", null, "BotB")),
+                () -> assertThrows(NullPointerException.class,
+                        () -> sut.playWithBots(UUID.randomUUID(), "BotA", UUID.randomUUID(), null))
         );
     }
 
@@ -61,11 +80,27 @@ class PlayWithBotsUseCaseTest {
     @DisplayName("Should play with bots if preconditions are met")
     void shouldPlayWithBotsIfPreconditionsAreMet() {
         final UUID uuidA = UUID.randomUUID();
+        final UUID uuidB = UUID.randomUUID();
         when(createGameUseCase.createWithBots(any(), any(), any(), any())).thenReturn(any());
         when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
         when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
         when(intel.gameWinner()).thenReturn(Optional.of(uuidA));
-        assertNotNull(sut.playWithBots("BotA", "BotB"));
+        assertNotNull(sut.playWithBots(uuidA, "BotA", uuidB, "BotB"));
     }
 
+    @Test
+    @DisplayName("Should Bot B be the winner if preconditions are met")
+    void shouldBotBBeTheWinnerIfPreconditionsAreMet() {
+        final UUID uuidA = UUID.randomUUID();
+        final UUID uuidB = UUID.randomUUID();
+        when(createGameUseCase.createWithBots(any(), any(), any(), any())).thenReturn(any());
+        when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
+        when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
+        when(intel.gameWinner()).thenReturn(Optional.of(uuidB));
+        final ResponseModel result = sut.playWithBots(uuidA, "BotA", uuidB,"BotB");
+        assertAll(
+                () -> assertEquals("BotB", result.name()),
+                () -> assertEquals(uuidB, result.uuid())
+        );
+    }
 }

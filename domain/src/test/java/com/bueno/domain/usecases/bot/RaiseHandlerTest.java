@@ -83,10 +83,10 @@ class RaiseHandlerTest {
     }
 
     @Test
-    @DisplayName("Should not raise if bot service implementation decides to not raise")
-    void shouldNotRaiseIfBotServiceImplementationDecidesToNotRaise() {
+    @DisplayName("Should not handle if bot service implementation decides to not raise")
+    void shouldNotHandleIfBotServiceImplementationDecidesToNotRaise() {
         when(botService.decideIfRaises(any())).thenReturn(false);
-        assertTrue(sut.handle());
+        assertFalse(sut.handle());
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
     }
 }

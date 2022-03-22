@@ -56,7 +56,7 @@ public class InMemoryGameRepository implements GameRepository {
 
 
     @Override
-    public Optional<Game> findByPlayerUsername(String username) {
+    public Optional<Game> findByUserUsername(String username) {
         Predicate<Game> hasPlayer =
                 game -> hasUsername(game.getPlayer1(), username) || hasUsername(game.getPlayer2(), username);
         return games.values().stream().filter(hasPlayer).findAny();

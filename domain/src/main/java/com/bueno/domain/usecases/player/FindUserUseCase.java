@@ -35,7 +35,7 @@ public class FindUserUseCase {
     }
 
     public ResponseModel findByUUID(UUID uuid){
-        final User user = repo.findByUUID(Objects.requireNonNull(uuid))
+        final User user = repo.findByUuid(Objects.requireNonNull(uuid))
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
         return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
