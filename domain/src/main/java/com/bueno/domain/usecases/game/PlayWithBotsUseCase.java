@@ -31,9 +31,6 @@ public class PlayWithBotsUseCase {
     private final FindGameUseCase findGameUseCase;
     private final BotUseCase botUseCase;
 
-    private final static UUID uuid1 = UUID.randomUUID();
-    private final static UUID uuid2 = UUID.randomUUID();
-
     public PlayWithBotsUseCase(CreateGameUseCase createGameUse, FindGameUseCase findGameUseCase, BotUseCase botUseCase) {
         this.createGameUseCase = Objects.requireNonNull(createGameUse);
         this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
@@ -41,13 +38,18 @@ public class PlayWithBotsUseCase {
     }
 
 
-    public ResponseModel playWithBots(String bot1Name, String bot2Name){
-        createGameUseCase.createWithBots(uuid1, bot1Name, uuid2, bot2Name);
+    public ResponseModel playWithBots(UUID uuidBot1, String bot1Name, UUID uuidBot2, String bot2Name){
+        Objects.requireNonNull(uuidBot1);
+        Objects.requireNonNull(bot1Name);
+        Objects.requireNonNull(uuidBot2);
+        Objects.requireNonNull(bot2Name);
 
-        final var game = findGameUseCase.loadUserGame(uuid1).orElseThrow();
+        createGameUseCase.createWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+
+        final var game = findGameUseCase.loadUserGame(uuidBot1).orElseThrow();
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
-        final var winnerName = winnerUUID.equals(uuid1) ? bot1Name : bot2Name;
+        final var winnerName = winnerUUID.equals(uuidBot1) ? bot1Name : bot2Name;
 
         return new ResponseModel(winnerUUID, winnerName);
     }

@@ -52,7 +52,7 @@ class FindUserUseCaseTest {
     void shouldRetrieveUserByUuidIfAvailableInTheRepository() {
         final UUID uuid = UUID.randomUUID();
         final User user = new User(uuid, "name", "email@email.com");
-        when(repo.findByUUID(uuid)).thenReturn(Optional.of(user));
+        when(repo.findByUuid(uuid)).thenReturn(Optional.of(user));
         final ResponseModel model = sut.findByUUID(uuid);
         assertAll(
                 () -> assertEquals(user.getUuid(), model.uuid()),

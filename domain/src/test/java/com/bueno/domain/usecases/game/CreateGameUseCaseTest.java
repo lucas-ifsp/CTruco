@@ -59,7 +59,7 @@ class CreateGameUseCaseTest {
     void shouldCreateGameWithValidUserAndBot() {
         when(user.getUsername()).thenReturn("User");
         when(user.getUuid()).thenReturn(userUUID);
-        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
+        when(userRepo.findByUuid(user.getUuid())).thenReturn(Optional.of(user));
         assertNotNull(sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
         verify(gameRepo, times(1)).save(any());
     }
@@ -68,7 +68,7 @@ class CreateGameUseCaseTest {
     @DisplayName("Should throw if user UUID is not registered in database")
     void shouldThrowIfUserUuidIsNotRegisteredInDatabase() {
         when(user.getUuid()).thenReturn(userUUID);
-        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.empty());
+        when(userRepo.findByUuid(user.getUuid())).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
     }
 
@@ -78,22 +78,10 @@ class CreateGameUseCaseTest {
         final Game game = new Game(Player.of(user), Player.ofBot("DummyBot"));
         when(user.getUsername()).thenReturn("User");
         when(user.getUuid()).thenReturn(userUUID);
-        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
-        when(gameRepo.findByPlayerUsername(user.getUsername())).thenReturn(Optional.of(game));
+        when(userRepo.findByUuid(user.getUuid())).thenReturn(Optional.of(user));
+        when(gameRepo.findByUserUuid(user.getUuid())).thenReturn(Optional.of(game));
         assertThrows(UnsupportedGameRequestException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
-        verify(gameRepo, times(1)).findByPlayerUsername(user.getUsername());
-    }
-
-    @Test
-    @DisplayName("Should throw if second user is already playing another game")
-    void shouldThrowIfSecondUserIsAlreadyPlayingAnotherGame() {
-        final Game game = new Game(Player.of(user), Player.of(user));
-        when(user.getUsername()).thenReturn("User");
-        when(user.getUuid()).thenReturn(userUUID);
-        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
-        when(gameRepo.findByPlayerUsername(any())).thenReturn(Optional.empty()).thenReturn(Optional.of(game));
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
-        verify(gameRepo, times(2)).findByPlayerUsername(any());
+        verify(gameRepo, times(1)).findByUserUuid(user.getUuid());
     }
 
     @Test

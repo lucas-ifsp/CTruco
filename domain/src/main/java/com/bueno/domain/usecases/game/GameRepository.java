@@ -29,5 +29,5 @@ public interface GameRepository {
     void save(Game game);
     Optional<Game> findByUuid(UUID uuid);
     Optional<Game> findByUserUuid(UUID uuid);
-    Optional<Game> findByPlayerUsername(String userName);
+    Optional<Game> findByUserUsername(String userName);
 }

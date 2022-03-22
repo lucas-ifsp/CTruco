@@ -33,5 +33,5 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUUID(UUID uuid);
+    Optional<User> findByUuid(UUID uuid);
 }
