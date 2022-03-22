@@ -97,8 +97,6 @@ public class GameTableController {
     private Intel lastIntel;
     private AtomicBoolean isAnimating;
 
-    //TODO Solve not showing 12 points match result bug
-    //TODO Testar o jogo em modo console
     public GameTableController() {
         final GameRepository gameRepo = new InMemoryGameRepository();
         final UserRepository userRepo = new InMemoryUserRepository();
@@ -201,7 +199,7 @@ public class GameTableController {
         this.botName = botName;
 
         userUUID = createUserUseCase.create(new CreateUserUseCase.RequestModel(username, "user@email.com"));
-        lastIntel = gameUseCase.create(userUUID, this.botName);
+        lastIntel = gameUseCase.createWithUserAndBot(userUUID, this.botName);
 
         missingIntel.add(lastIntel);
 

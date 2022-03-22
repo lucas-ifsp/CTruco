@@ -21,74 +21,104 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreateGameUseCaseTest {
 
-    @Mock private Player p1;
-    @Mock private Player p2;
+    @Mock private User user;
 
-    @Mock private GameRepository repo;
+    @Mock private GameRepository gameRepo;
+    @Mock private UserRepository userRepo;
 
+    @InjectMocks
     private CreateGameUseCase sut;
 
-    @BeforeAll
-    static void init(){
-        LogManager.getLogManager().reset();
-    }
+    final UUID userUUID = UUID.randomUUID();
 
-    @BeforeEach
-    void setUp(){
-        sut = new CreateGameUseCase(repo, null);
+    @Test
+    @DisplayName("Should create game with valid user and bot")
+    void shouldCreateGameWithValidUserAndBot() {
+        when(user.getUsername()).thenReturn("User");
+        when(user.getUuid()).thenReturn(userUUID);
+        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
+        assertNotNull(sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
+        verify(gameRepo, times(1)).save(any());
     }
 
     @Test
-    @DisplayName("Should create game with valid parameters")
-    void shouldCreateGameWithValidParameters() {
-        when(p1.getUsername()).thenReturn("p1");
-        when(p2.getUsername()).thenReturn("p2");
-        Intel intel = sut.create(p1, p2);
+    @DisplayName("Should throw if user UUID is not registered in database")
+    void shouldThrowIfUserUuidIsNotRegisteredInDatabase() {
+        when(user.getUuid()).thenReturn(userUUID);
+        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
+    }
+
+    @Test
+    @DisplayName("Should throw if first user is already playing another game")
+    void shouldThrowIfFirstUserIsAlreadyPlayingAnotherGame() {
+        final Game game = new Game(Player.of(user), Player.ofBot("DummyBot"));
+        when(user.getUsername()).thenReturn("User");
+        when(user.getUuid()).thenReturn(userUUID);
+        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
+        when(gameRepo.findByPlayerUsername(user.getUsername())).thenReturn(Optional.of(game));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
+        verify(gameRepo, times(1)).findByPlayerUsername(user.getUsername());
+    }
+
+    @Test
+    @DisplayName("Should throw if second user is already playing another game")
+    void shouldThrowIfSecondUserIsAlreadyPlayingAnotherGame() {
+        final Game game = new Game(Player.of(user), Player.of(user));
+        when(user.getUsername()).thenReturn("User");
+        when(user.getUuid()).thenReturn(userUUID);
+        when(userRepo.findByUUID(user.getUuid())).thenReturn(Optional.of(user));
+        when(gameRepo.findByPlayerUsername(any())).thenReturn(Optional.empty()).thenReturn(Optional.of(game));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.createWithUserAndBot(user.getUuid(), "DummyBot"));
+        verify(gameRepo, times(2)).findByPlayerUsername(any());
+    }
+
+    @Test
+    @DisplayName("Should throw if bot name is not a valid bot service implementation name")
+    void shouldThrowIfBotNameIsNotAValidBotServiceImplementationName() {
+        when(user.getUuid()).thenReturn(userUUID);
+        assertThrows(NoSuchElementException.class, () -> sut.createWithUserAndBot(user.getUuid(), "NoBot"));
+    }
+
+    @Test
+    @DisplayName("Should create game with valid bots")
+    void shouldCreateGameWithValidBots() {
+        assertNotNull(sut.createWithBots(UUID.randomUUID(), "DummyBot", UUID.randomUUID(), "DummyBot"));
+        verify(gameRepo, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("Should throw if any of bot names is an unavailable bot service implementation")
+    void shouldThrowIfAnyOfBotNamesIsAnUnavailableBotServiceImplementation() {
+        final UUID uuid = UUID.randomUUID();
         assertAll(
-                () -> assertEquals(p1.getUsername(), intel.currentPlayerUsername()),
-                () -> assertEquals(p2.getUsername(), intel.currentOpponentUsername()),
-                () -> assertNotNull(intel.timestamp())
+                () ->  assertThrows(NoSuchElementException.class,
+                        () -> sut.createWithBots(uuid, "DummyBot", uuid,"NoBot")),
+                () ->  assertThrows(NoSuchElementException.class,
+                        () -> sut.createWithBots(uuid, "NoBot", uuid,"DummyBot"))
         );
-    }
-
-    @Test
-    @DisplayName("Should throw if any player parameter is null")
-    @SuppressWarnings("ConstantConditions")
-    void shouldThrowIfAnyPlayerParameterIsNull() {
-        assertAll(
-                () -> assertThrows(NullPointerException.class, () -> sut.create(null, p2)),
-                () -> assertThrows(NullPointerException.class, () -> sut.create(p1, null))
-        );
-    }
-
-    @Test
-    @DisplayName("Should not create new game if one of the players is enrolled in another game")
-    void shouldNotCreateNewGameIfOneOfThePlayersEnrolledInAnotherGame() {
-        final Player bot1 = Player.ofBot(UUID.randomUUID(), "MineiroBot");
-        final Player bot2 = Player.ofBot(UUID.randomUUID(), "MineiroBot");
-        when(repo.findByPlayerUsername(any())).thenReturn(Optional.of(new Game(bot1, bot2)));
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.create(p1, p2));
     }
 }

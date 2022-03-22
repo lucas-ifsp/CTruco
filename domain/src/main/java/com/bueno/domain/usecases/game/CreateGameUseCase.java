@@ -27,25 +27,28 @@ import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.player.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.spi.service.BotServiceManager;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class CreateGameUseCase {
 
     private final GameRepository gameRepo;
     private final UserRepository userRepo;
-    private final static Logger LOGGER = Logger.getLogger(CreateGameUseCase.class.getName());
 
     public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
         this.userRepo = userRepo;
     }
 
-    public Intel create(UUID userUUID, String botName){
-        Objects.requireNonNull(userUUID);
-        Objects.requireNonNull(botName);
+    public Intel createWithUserAndBot(UUID userUUID, String botName){
+        Objects.requireNonNull(userUUID, "User UUID must not be null!");
+        Objects.requireNonNull(botName, "Bot name must not be null!");
+
+        if(hasNoBotServiceWith(botName))
+            throw new NoSuchElementException("Service implementation not available: " + botName);
 
         final User user = userRepo.findByUUID(userUUID)
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + userUUID));
@@ -56,7 +59,29 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    public Intel create(Player p1, Player p2) {
+    private boolean hasNoBotServiceWith(String botName) {
+        return !BotServiceManager.providersNames().contains(botName);
+    }
+
+    public Intel createWithBots(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name){
+        Objects.requireNonNull(bot1Uuid, "Bot UUID must not be null!");
+        Objects.requireNonNull(bot1Name, "Bot name must not be null!");
+        Objects.requireNonNull(bot2Uuid, "Bot UUID must not be null!");
+        Objects.requireNonNull(bot2Name, "Bot name must not be null!");
+
+        if(hasNoBotServiceWith(bot1Name))
+            throw new NoSuchElementException("Service implementation not available: " + bot1Name);
+
+        if(hasNoBotServiceWith(bot2Name))
+            throw new NoSuchElementException("Service implementation not available: " + bot2Name);
+
+        final var bot1 = Player.ofBot(bot1Uuid, bot1Name);
+        final var bot2 = Player.ofBot(bot2Uuid, bot2Name);
+
+        return create(bot1, bot2);
+    }
+
+    private Intel create(Player p1, Player p2) {
         gameRepo.findByPlayerUsername(p1.getUsername()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(p1.getUsername() + " is already playing a game.");});
 
@@ -65,8 +90,6 @@ public class CreateGameUseCase {
 
         Game game = new Game(p1, p2);
         gameRepo.save(game);
-
-        LOGGER.info("Game has been created with UUID: " + game.getUuid());
 
         return game.getIntel();
     }

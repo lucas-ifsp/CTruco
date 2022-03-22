@@ -21,56 +21,53 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.player.Player;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FindGameUseCaseTest {
 
-    private FindGameUseCase sut;
-    private Game game;
-
-    @Mock private Player player1;
-    @Mock private Player player2;
     @Mock private GameRepository repo;
+    @Mock private Game game;
+    @InjectMocks private FindGameUseCase sut;
 
-    @BeforeAll
-    static void init(){
-        LogManager.getLogManager().reset();
-    }
-
-    @BeforeEach
-    void setUp(){
-        game = new Game(player1, player2);
-        sut = new FindGameUseCase(repo);
+    @Test
+    @DisplayName("Should load game by UUID")
+    void shouldLoadGameByUuid() {
+        final UUID uuid = UUID.randomUUID();
+        when(repo.findByUuid(uuid)).thenReturn(Optional.of(game));
+        assertEquals(Optional.of(game), sut.load(uuid));
+        verify(repo, times(1)).findByUuid(uuid);
     }
 
     @Test
     @DisplayName("Should load game by user UUID")
-    void shouldLoadGameByUuid() {
-        when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
-        final UUID userUUID = UUID.randomUUID();
-        assertEquals(game.getIntel(), sut.loadUserGame(userUUID).map(Game::getIntel).orElse(null));
+    void shouldLoadGameByUserUuid() {
+        final UUID uuid = UUID.randomUUID();
+        when(repo.findByUserUuid(uuid)).thenReturn(Optional.of(game));
+        assertEquals(Optional.of(game), sut.loadUserGame(uuid));
+        verify(repo, times(1)).findByUserUuid(uuid);
     }
 
     @Test
-    @DisplayName("Should throw if key is null")
-    void shouldThrowIfKeyIsNull() {
+    @DisplayName("Should throw if game uuid is null")
+    void shouldThrowIfGameUuidIsNull() {
         assertThrows(NullPointerException.class, () -> sut.load(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if player uuid is null")
+    void shouldThrowIfPlayerUuidIsNull() {
+        assertThrows(NullPointerException.class, () -> sut.loadUserGame(null));
     }
 }
