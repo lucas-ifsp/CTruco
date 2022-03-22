@@ -46,7 +46,7 @@ class GameTest {
     @Mock private Player player2;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         LogManager.getLogManager().reset();
     }
 
@@ -62,9 +62,10 @@ class GameTest {
 
     @Test
     @DisplayName("Should correctly create game")
-    void shouldCorrectlyCreateGame(){
+    void shouldCorrectlyCreateGame() {
         assertAll(
                 () -> assertEquals(1, sut.getHands().size()),
+                () -> assertNotNull(sut.getUuid()),
                 () -> assertEquals(player1, sut.getPlayer1()),
                 () -> assertEquals(player2, sut.getPlayer2())
         );
@@ -72,7 +73,7 @@ class GameTest {
 
     @Test
     @DisplayName("Should correctly prepare hand")
-    void shouldCorrectlyPrepareHand(){
+    void shouldCorrectlyPrepareHand() {
         assertAll(
                 () -> assertEquals(player1, sut.getFirstToPlay()),
                 () -> assertEquals(player2, sut.getLastToPlay()),
@@ -83,14 +84,14 @@ class GameTest {
 
     @Test
     @DisplayName("Should have winner when game ends")
-    void shouldGetWinnerWhenGameEnds(){
+    void shouldGetWinnerWhenGameEnds() {
         when(player1.getScore()).thenReturn(12);
         assertEquals(player1, sut.getWinner().orElse(null));
     }
 
     @Test
     @DisplayName("Should have no winner before game ends")
-    void shouldGetNoWinnerBeforeGameEnds(){
+    void shouldGetNoWinnerBeforeGameEnds() {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
         assertTrue(sut.getWinner().isEmpty());

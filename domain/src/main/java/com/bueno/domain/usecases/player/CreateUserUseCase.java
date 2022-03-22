@@ -25,13 +25,15 @@ import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CreateUserUseCase {
+
     private final UserRepository repo;
 
     public CreateUserUseCase(UserRepository repo) {
-        this.repo = repo;
+        this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
     public UUID create(RequestModel model){
@@ -41,7 +43,10 @@ public class CreateUserUseCase {
         if(notification.hasErrors()) throw new IllegalArgumentException(notification.errorMessage());
 
         repo.findByUsername(model.username).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use.");});
+            throw new EntityAlreadyExistsException("This username is already in use: " + model.username);});
+
+        repo.findByEmail(model.email).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This email is already in use: " + model.email);});
 
         final User user = new User(model.username, model.email);
 

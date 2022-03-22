@@ -31,11 +31,17 @@ public class FindUserUseCase {
     private final UserRepository repo;
 
     public FindUserUseCase(UserRepository repo) {
-        this.repo = repo;
+        this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
     public ResponseModel findByUUID(UUID uuid){
         final User user = repo.findByUUID(Objects.requireNonNull(uuid))
+                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
+    }
+
+    public ResponseModel findByUsername(String username){
+        final User user = repo.findByUsername(Objects.requireNonNull(username))
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
         return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }

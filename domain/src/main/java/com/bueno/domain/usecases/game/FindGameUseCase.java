@@ -28,17 +28,19 @@ import java.util.UUID;
 
 public class FindGameUseCase {
 
-    private GameRepository repo;
+    private final GameRepository repo;
 
     public FindGameUseCase(GameRepository repo) {
         this.repo = repo;
     }
 
     public Optional<Game> load(UUID uuid) {
-        return repo.findByUuid(Objects.requireNonNull(uuid));
+        final UUID gameUuid = Objects.requireNonNull(uuid, "Game UUID must not be null.");
+        return repo.findByUuid(gameUuid);
     }
 
-    public Optional<Game> loadUserGame(UUID userUUID) {
-        return repo.findByUserUuid(Objects.requireNonNull(userUUID));
+    public Optional<Game> loadUserGame(UUID userUuid) {
+        final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
+        return repo.findByUserUuid(Objects.requireNonNull(uuid));
     }
 }

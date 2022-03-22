@@ -20,11 +20,16 @@
 
 package com.bueno.domain.entities.intel;
 
+import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
+import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.hand.Round;
+import com.bueno.domain.entities.intel.Intel.PlayerIntel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.entities.player.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,6 +75,7 @@ class IntelTest {
         lenient().when(hand.getPoints()).thenReturn(HandPoints.ONE);
         lenient().when(hand.getFirstToPlay()).thenReturn(p1);
         lenient().when(hand.getLastToPlay()).thenReturn(p2);
+        lenient().when(hand.getVira()).thenReturn(Card.of(Rank.THREE, Suit.CLUBS));
     }
 
     @Test
@@ -121,6 +127,51 @@ class IntelTest {
     }
 
     @Test
+    @DisplayName("Should intel created with same data in different moments have different hashcode")
+    void shouldIntelCreatedWithSameDataInDifferentMomentsHaveDifferentHashcode() {
+        assertNotEquals(Intel.ofHand(hand, Event.HAND_START).hashCode(), Intel.ofHand(hand, Event.HAND_START).hashCode());
+    }
+
+    @Test
+    @DisplayName("Should intel created with same data differ only by the timestamp")
+    void shouldIntelCreatedWithSameDataDifferOnlyByTheTimestamp() {
+        final Intel intel1 = Intel.ofHand(hand, Event.HAND_START);
+        final Intel intel2 = Intel.ofHand(hand, Event.HAND_START);
+
+        final String[] intelString1 = intel1.toString().split("] ");
+        final String[] intelString2 = intel2.toString().split("] ");
+
+        assertAll(
+                () -> assertNotEquals(intelString1[0], intelString2[0]),
+                () -> assertEquals(intelString1[1], intelString2[1])
+        );
+    }
+
+    @Test
+    @DisplayName("Should intel return current hand vira")
+    void shouldIntelReturnCurrentHandVira() {
+        assertEquals(hand.getVira(), Intel.ofHand(hand, Event.HAND_START).vira());
+    }
+
+    @Test
+    @DisplayName("Should correctly return event and event player")
+    void shouldCorrectlyReturnEventAndEventPlayer() {
+        final Hand hand = new Hand(p1, p2, Card.of(Rank.THREE, Suit.CLUBS));
+        hand.playFirstCard(p1, Card.closed());
+        final Intel sut = hand.getLastIntel();
+        assertAll(
+                () -> assertEquals(hand.getVira(), sut.vira()),
+                () -> assertIterableEquals(hand.getOpenCards(), sut.openCards()),
+                () -> assertNotSame(hand.getOpenCards(), sut.openCards()),
+                () -> assertEquals(p1.getUuid(), sut.eventPlayer().orElseThrow()),
+                () -> assertEquals("PLAY", sut.event().orElseThrow()),
+                () -> assertIterableEquals(List.of(new PlayerIntel (p1), new PlayerIntel(p2)), sut.players()),
+                () -> assertIterableEquals(List.of("PLAY", "RAISE"), sut.possibleActions())
+        );
+    }
+
+
+    @Test
     @DisplayName("Should get default values of player and opponent if current player is null")
     void shouldGetDefaultValuesOfPlayerAndOpponentIfCurrentPlayerIsNull() {
         final Intel intel = Intel.ofHand(hand, Event.HAND_START);
@@ -143,5 +194,23 @@ class IntelTest {
         final Intel intel = Intel.ofHand(hand, Event.PLAY);
 
         assertEquals(expected, intel.roundWinners());
+    }
+
+    @Test
+    @DisplayName("Should correctly create player intel")
+    void shouldCorrectlyCreatePlayerIntel() {
+        final UUID uuid = UUID.randomUUID();
+        final Player player = Player.of(new User(uuid, "name", "email"));
+        final List<Card> cards = List.of(Card.of(Rank.THREE, Suit.CLUBS));
+        player.setCards(cards);
+        final PlayerIntel playerIntel = new PlayerIntel(player);
+
+        assertAll(
+                () -> assertEquals(player.getUsername(), playerIntel.getUsername()),
+                () -> assertEquals(player.getUuid(), playerIntel.getUuid()),
+                () -> assertEquals(player.getScore(), playerIntel.getScore()),
+                () -> assertIterableEquals(player.getCards(), playerIntel.getCards()),
+                () -> assertNotSame(player.getCards(), playerIntel.getCards())
+        );
     }
 }

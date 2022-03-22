@@ -21,6 +21,8 @@
 package com.bueno.application.standalone;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase.ResponseModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
@@ -37,8 +39,20 @@ import java.util.stream.Collectors;
 @SuppressWarnings("UnstableApiUsage")
 public class PlayWithBots {
 
+    //TODO Fix this class to work after refactoring
+    //TODO Test all playing modes
+    private final CreateGameUseCase createGameUseCase;
+    private final FindGameUseCase findGameUseCase;
+    private final BotUseCase botUseCase;
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         LogManager.getLogManager().reset();
+
+        final var repo = new InMemoryGameRepository();
+        CreateGameUseCase createGameUseCase = new CreateGameUseCase(repo, null);
+        FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
+        BotUseCase botUseCase = new BotUseCase(repo);
+        final PlayWithBots main = new PlayWithBots(createGameUseCase, findGameUseCase, botUseCase);
 
         final List<String> botNames = BotUseCase.availableBots();
         printAvailableBots(botNames);
@@ -47,11 +61,16 @@ public class PlayWithBots {
         final Integer bot2 = scanBotOption(botNames);
         final int times = scanNumberOfSimulations();
 
-        final PlayWithBots main = new PlayWithBots();
-        final List<ResponseModel> results = main.play(botNames.get(bot1-1), botNames.get(bot2-1), times);
+        final List<ResponseModel> results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
+    }
+
+    public PlayWithBots(CreateGameUseCase createGameUseCase, FindGameUseCase findGameUseCase, BotUseCase botUseCase) {
+        this.createGameUseCase = createGameUseCase;
+        this.findGameUseCase = findGameUseCase;
+        this.botUseCase = botUseCase;
     }
 
     private static void printAvailableBots(List<String> botNames) {
@@ -102,8 +121,7 @@ public class PlayWithBots {
         final List<Callable<ResponseModel>> games = new ArrayList<>();
 
         final Callable<ResponseModel> game = () -> {
-            final var repo = new InMemoryGameRepository();
-            var useCase = new PlayWithBotsUseCase(repo);
+            var useCase = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, botUseCase);
             return useCase.playWithBots(bot1Name, bot2Name);
         };
 

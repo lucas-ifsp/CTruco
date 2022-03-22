@@ -43,6 +43,11 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return db.values().stream().filter(user -> user.getEmail().equals(email)).findAny();
+    }
+
+    @Override
     public Optional<User> findByUUID(UUID uuid) {
         return db.values().stream().filter(user -> user.getUuid().equals(uuid)).findAny();
     }

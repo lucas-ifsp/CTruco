@@ -22,7 +22,6 @@ package com.bueno.domain.usecases.bot;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
@@ -31,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -49,18 +49,25 @@ class BotUseCaseTest {
     @Mock private Player player;
     @Mock private GameRepository repo;
 
-    private UUID playerUUID;
+    @Mock private MaoDeOnzeHandler maoDeOnzeHandler;
+    @Mock private CardPlayingHandler cardPlayingHandler;
+    @Mock private RaiseHandler raiseHandler;
+    @Mock private RaiseRequestHandler raiseRequestHandler;
+
+    @InjectMocks
     private BotUseCase sut;
 
     @BeforeEach
     void setUp() {
-        playerUUID = UUID.randomUUID();
+        UUID playerUUID = UUID.randomUUID();
         lenient().when(game.currentHand()).thenReturn(hand);
         lenient().when(game.getIntel()).thenReturn(intel);
         lenient().when(hand.getCurrentPlayer()).thenReturn(player);
+        lenient().when(intel.isGameDone()).thenReturn(false);
+        lenient().when(intel.currentPlayerUuid()).thenReturn(Optional.of(playerUUID));
         lenient().when(player.getUuid()).thenReturn(playerUUID);
-        sut = new BotUseCase(repo);
-
+        lenient().when(player.isBot()).thenReturn(true);
+        lenient().when(player.getUsername()).thenReturn("DummyBot");
     }
 
     @AfterEach
@@ -71,7 +78,24 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should not accept null repo")
     void shouldNotAcceptNullRepo() {
-        assertThrows(NullPointerException.class, () -> new BotUseCase(null));
+        repo = null;
+        assertThrows(NullPointerException.class, () -> new BotUseCase(repo));
+    }
+
+    @Test
+    @DisplayName("Should do nothing if there is no current player")
+    void shouldDoNothingIfThereIsNoCurrentPlayer() {
+        when(intel.currentPlayerUuid()).thenReturn(Optional.empty());
+        assertEquals(intel, sut.playWhenNecessary(game));
+        verify(intel, times(1)).currentPlayerUuid();
+    }
+
+    @Test
+    @DisplayName("Should do nothing if the game is done")
+    void shouldDoNothingIfTheGameIsDone() {
+        when(intel.isGameDone()).thenReturn(true);
+        assertEquals(intel, sut.playWhenNecessary(game));
+        verify(intel, times(1)).isGameDone();
     }
 
     @Test
@@ -83,37 +107,57 @@ class BotUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should do nothing if it is no player turn")
-    void shouldDoNothingIfItIsNoPlayerTurn() {
-        when(player.isBot()).thenReturn(true);
-        when(intel.currentPlayerUuid()).thenReturn(Optional.empty());
-        assertEquals(intel, sut.playWhenNecessary(game));
-        verify(intel, times(1)).currentPlayerUuid();
+    @DisplayName("Should not throw if preconditions are met")
+    void shouldNotThrowIfPreconditionsAreMet() {
+        assertEquals(game.getIntel(), sut.playWhenNecessary(game));
     }
 
     @Test
-    @DisplayName("Do nothing if the game is done")
-    void doNothingIfTheGameIsDone() {
-        when(player.isBot()).thenReturn(true);
-        when(intel.currentPlayerUuid()).thenReturn(Optional.of(playerUUID));
-        when(intel.isGameDone()).thenReturn(true);
-        assertEquals(intel, sut.playWhenNecessary(game));
-        verify(intel, times(1)).isGameDone();
+    @DisplayName("Should first handle mao de onze")
+    void shouldFirstHandleMaoDeOnze() {
+        when(maoDeOnzeHandler.handle()).thenReturn(true);
+        assertEquals(game.getIntel(), sut.playWhenNecessary(game));
+        verify(maoDeOnzeHandler, times(1)).handle();
+        verify(raiseHandler, times(0)).handle();
     }
 
     @Test
-    @DisplayName("Should decide mao de onze if is mao de onze and hand points is ONE")
-    void shouldDecideMaoDeOnzeIfIsMaoDeOnzeAndHandPointsIsOne() {
-        when(player.isBot()).thenReturn(true);
-        when(intel.currentPlayerUuid()).thenReturn(Optional.of(playerUUID));
-        when(intel.isGameDone()).thenReturn(false);
-        when(intel.isMaoDeOnze()).thenReturn(true);
-        when(intel.handPoints()).thenReturn(HandPoints.ONE.get());
-        assertEquals(intel, sut.playWhenNecessary(game));
-        verify(intel, times(1)).isMaoDeOnze();
-        verify(intel, times(1)).handPoints();
+    @DisplayName("Should handle raise decision before choosing card")
+    void shouldHandleRaiseDecisionBeforeChoosingCard() {
+        when(maoDeOnzeHandler.handle()).thenReturn(false);
+        when(raiseHandler.handle()).thenReturn(true);
+        assertEquals(game.getIntel(), sut.playWhenNecessary(game));
+        verify(raiseHandler, times(1)).handle();
+        verify(cardPlayingHandler, times(0)).handle();
     }
 
+    @Test
+    @DisplayName("Should handle card playing if already decided to raise of not")
+    void shouldHandleCardPlayingIfAlreadyDecidedToRaiseOfNot() {
+        when(raiseHandler.handle()).thenReturn(false);
+        when(cardPlayingHandler.handle()).thenReturn(true);
+        assertEquals(game.getIntel(), sut.playWhenNecessary(game));
+        verify(cardPlayingHandler, times(1)).handle();
+        verify(raiseRequestHandler, times(0)).handle();
+    }
 
+    @Test
+    @DisplayName("Should handle if is bot turn just because it must decide about raise request")
+    void shouldHandleIfIsBotTurnJustBecauseItMustDecideAboutRaiseRequest() {
+        assertEquals(game.getIntel(), sut.playWhenNecessary(game));
+        verify(raiseRequestHandler, times(1)).handle();
+    }
 
+    @Test
+    @DisplayName("Should create default handlers if they are not injected in constructor")
+    void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
+        sut = new BotUseCase(repo, null, null, null, null);
+        assertDoesNotThrow(() -> sut.playWhenNecessary(game));
+    }
+
+    @Test
+    @DisplayName("Should have at least one default bot implementation of bot spi")
+    void shouldHaveAtLeastOneDefaultBotImplementationOfBotSpi() {
+        assertFalse(BotUseCase.availableBots().isEmpty());
+    }
 }

@@ -144,6 +144,14 @@ public class Intel{
         public List<Card> getCards() {
             return cards;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PlayerIntel that = (PlayerIntel) o;
+            return score == that.score && uuid.equals(that.uuid) && username.equals(that.username) && cards.equals(that.cards);
+        }
     }
 
     private List<Optional<String>> getRoundWinners(Hand hand) {
@@ -254,8 +262,7 @@ public class Intel{
 
     @Override
     public String toString() {
-        final String userInMaoDeOnze = currentPlayerScore < currentOpponentScore ?
-                currentOpponentUsername : currentPlayerUsername;
+        final String userInMaoDeOnze = currentPlayerScore < currentOpponentScore ? currentOpponentUsername : currentPlayerUsername;
 
         return "[" + timestamp +
                 "] Event = " + (event == null ? "--" : event) +

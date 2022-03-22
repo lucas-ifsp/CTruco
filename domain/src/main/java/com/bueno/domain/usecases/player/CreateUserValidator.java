@@ -29,7 +29,7 @@ public class CreateUserValidator extends Validator<CreateUserUseCase.RequestMode
 
     @Override
     public Notification validate(CreateUserUseCase.RequestModel model) {
-        if(model == null) return new Notification("Request model is null");
+        Objects.requireNonNull(model,"Request model must not be null.");
 
         final Notification notification = new Notification();
         if(model.username() == null) notification.addError("Username is null.");

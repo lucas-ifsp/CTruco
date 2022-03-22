@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 public class SpiModelAdapter {
 
     static GameIntel toGameIntel(Player player, Intel intel) {
+        //TODO Check if using player username is not a bug when playing with same bot service
         final Function<String, GameIntel.RoundResult> toRoundResult = name -> name == null ? GameIntel.RoundResult.DREW
                 : name.equals(player.getUsername()) ? GameIntel.RoundResult.WON : GameIntel.RoundResult.LOST;
 

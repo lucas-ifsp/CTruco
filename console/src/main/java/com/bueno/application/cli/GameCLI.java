@@ -101,7 +101,7 @@ public class GameCLI {
     private void createGame(){
         final List<String> botNames = BotUseCase.availableBots();
         final String bot = readBotName(botNames);
-        lastIntel = gameUseCase.create(userUUID, bot);
+        lastIntel = gameUseCase.createWithUserAndBot(userUUID, bot);
         missingIntel.add(lastIntel);
     }
 

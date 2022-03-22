@@ -21,6 +21,7 @@
 package com.bueno.spi.model;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class GameIntel {
@@ -92,7 +93,6 @@ public class GameIntel {
         StepBuilder opponentScore(int opponentScore);
     }
 
-
     public static final class StepBuilder implements  GeneralIntel, BotIntel, OpponentIntel{
         private List<TrucoCard> cards;
         private List<TrucoCard> openCards;
@@ -139,5 +139,20 @@ public class GameIntel {
         public GameIntel build(){
             return new GameIntel(cards, openCards, vira, opponentCard, roundResults, score, opponentScore, handPoints);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameIntel gameIntel = (GameIntel) o;
+        return score == gameIntel.score && opponentScore == gameIntel.opponentScore && handPoints == gameIntel.handPoints
+                && cards.equals(gameIntel.cards) && openCards.equals(gameIntel.openCards) && vira.equals(gameIntel.vira)
+                && Objects.equals(opponentCard, gameIntel.opponentCard) && roundResults.equals(gameIntel.roundResults);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cards, openCards, vira, opponentCard, roundResults, score, opponentScore, handPoints);
     }
 }

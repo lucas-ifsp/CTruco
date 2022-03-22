@@ -57,7 +57,6 @@ class HandleIntelUseCaseTest {
     @Mock private GameRepository repo;
 
     private UUID p1Uuid;
-    private UUID p2Uuid;
     private Game game;
 
     @BeforeAll
@@ -68,7 +67,7 @@ class HandleIntelUseCaseTest {
     @BeforeEach
     void setUp() {
         p1Uuid = UUID.randomUUID();
-        p2Uuid = UUID.randomUUID();
+        UUID p2Uuid = UUID.randomUUID();
 
         lenient().when(player1.getUuid()).thenReturn(p1Uuid);
         lenient().when(player1.getUsername()).thenReturn(p1Uuid.toString());

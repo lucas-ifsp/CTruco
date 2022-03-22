@@ -143,8 +143,8 @@ public class Hand {
     }
 
     public void defineRoundPlayingOrder() {
-        final var lastRoundWinner = roundsPlayed.isEmpty() ?
-                Optional.empty() : roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
+        final var lastRoundWinner =
+                roundsPlayed.isEmpty() ? Optional.empty() : roundsPlayed.get(roundsPlayed.size() - 1).getWinner();
         lastRoundWinner.filter(lastToPlay::equals).ifPresent(unused -> changePlayingOrder());
         currentPlayer = firstToPlay;
     }

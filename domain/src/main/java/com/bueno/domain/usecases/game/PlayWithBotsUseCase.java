@@ -20,35 +20,34 @@
 
 package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayWithBotsUseCase {
 
-    private final GameRepository repo;
+    private final CreateGameUseCase createGameUseCase;
+    private final FindGameUseCase findGameUseCase;
+    private final BotUseCase botUseCase;
+
     private final static UUID uuid1 = UUID.randomUUID();
     private final static UUID uuid2 = UUID.randomUUID();
 
-    public PlayWithBotsUseCase(GameRepository repo) {
-        this.repo = repo;
+    public PlayWithBotsUseCase(CreateGameUseCase createGameUse, FindGameUseCase findGameUseCase, BotUseCase botUseCase) {
+        this.createGameUseCase = Objects.requireNonNull(createGameUse);
+        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+        this.botUseCase = Objects.requireNonNull(botUseCase);
     }
 
+
     public ResponseModel playWithBots(String bot1Name, String bot2Name){
-        final var gameUseCase = new CreateGameUseCase(repo, null);
+        createGameUseCase.createWithBots(uuid1, bot1Name, uuid2, bot2Name);
 
-        final var bot1 = Player.ofBot(uuid1, bot1Name);
-        final var bot2 = Player.ofBot(uuid2, bot2Name);
-
-        var intel = gameUseCase.create(bot1, bot2);
-        final var game = repo.findByUserUuid(uuid1).orElseThrow();
-
-        final var botUseCase = new BotUseCase(repo);
-        intel = botUseCase.playWhenNecessary(game);
-
-        final UUID winnerUUID = intel.gameWinner().orElseThrow();
-        final String winnerName = winnerUUID.equals(uuid1) ? bot1Name : bot2Name;
+        final var game = findGameUseCase.loadUserGame(uuid1).orElseThrow();
+        final var intel = botUseCase.playWhenNecessary(game);
+        final var winnerUUID = intel.gameWinner().orElseThrow();
+        final var winnerName = winnerUUID.equals(uuid1) ? bot1Name : bot2Name;
 
         return new ResponseModel(winnerUUID, winnerName);
     }
