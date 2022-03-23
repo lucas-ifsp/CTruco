@@ -46,6 +46,7 @@ public class WindowGameTable extends Application {
 
         Scene scene = new Scene(graph, 1024, 740);
         stage.setScene(scene);
+        stage.setTitle("CTruco: Truco game for didactic purposes -- Developed with \u2665 by Prof. Lucas Oliveira");
         stage.setResizable(false);
         stage.show();
     }

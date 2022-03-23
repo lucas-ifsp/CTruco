@@ -33,20 +33,18 @@ import static com.bueno.domain.entities.intel.PossibleAction.QUIT;
 import static com.bueno.domain.entities.intel.PossibleAction.RAISE;
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
-class RaiseHandler extends Handler {
+class RaiseHandler implements Handler {
 
     private final BotServiceProvider botService;
     private final ScoreProposalUseCase scoreUseCase;
 
-    RaiseHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+    RaiseHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
-        this.bot = bot;
-        this.intel = intel;
     }
 
-    boolean handle(){
-        if(shouldHandle()) {
+    public boolean handle(Intel intel, Player bot){
+        if(shouldHandle(intel)) {
             final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
             if(wantToRaise){
                 scoreUseCase.raise(bot.getUuid());
@@ -58,7 +56,7 @@ class RaiseHandler extends Handler {
     }
 
     @Override
-    boolean shouldHandle(){
+    public boolean shouldHandle(Intel intel){
         final var actions = intel.possibleActions().stream()
                 .map(PossibleAction::valueOf)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));

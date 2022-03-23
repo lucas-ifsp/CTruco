@@ -28,20 +28,19 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
-class MaoDeOnzeHandler extends Handler {
+class MaoDeOnzeHandler implements Handler {
 
     private final BotServiceProvider botService;
     private final ScoreProposalUseCase scoreUseCase;
 
-    MaoDeOnzeHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+    MaoDeOnzeHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
-        this.bot = bot;
-        this.intel = intel;
     }
 
-    boolean handle() {
-        if(shouldHandle()) {
+    @Override
+    public boolean handle(Intel intel, Player bot) {
+        if(shouldHandle(intel)) {
             final var botUuid = bot.getUuid();
             final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
             if (hasAccepted) scoreUseCase.accept(botUuid);
@@ -52,7 +51,7 @@ class MaoDeOnzeHandler extends Handler {
     }
 
     @Override
-    boolean shouldHandle() {
+    public boolean shouldHandle(Intel intel) {
         final var hasNotDecided = HandPoints.fromIntValue(intel.handPoints()) == HandPoints.ONE;
         return intel.isMaoDeOnze() && hasNotDecided;
     }

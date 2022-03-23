@@ -40,8 +40,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("UnstableApiUsage")
 public class PlayWithBots {
 
-    //TODO Fix this class to work after refactoring
-    //TODO Test all playing modes
     private final UUID uuidBot1;
     private final UUID uuidBot2;
 

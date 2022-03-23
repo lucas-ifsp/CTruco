@@ -32,21 +32,19 @@ import java.util.stream.Collectors;
 import static com.bueno.domain.entities.intel.PossibleAction.*;
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
-class RaiseRequestHandler extends Handler{
+class RaiseRequestHandler implements Handler{
 
     private final BotServiceProvider botService;
     private final ScoreProposalUseCase scoreUseCase;
 
-    RaiseRequestHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService, Player bot, Intel intel) {
+    RaiseRequestHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
-        this.bot = bot;
-        this.intel = intel;
     }
 
     @Override
-    boolean handle() {
-        if(shouldHandle()) {
+    public boolean handle(Intel intel, Player bot) {
+        if(shouldHandle(intel)) {
             final var botUuid = bot.getUuid();
             final var actions = intel.possibleActions().stream()
                     .map(PossibleAction::valueOf)
@@ -62,7 +60,7 @@ class RaiseRequestHandler extends Handler{
         return false;
     }
 
-    boolean shouldHandle(){
+    public boolean shouldHandle(Intel intel){
         return !intel.isMaoDeOnze() && !intel.possibleActions().contains("PLAY");
     }
 }

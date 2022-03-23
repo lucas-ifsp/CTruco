@@ -64,21 +64,21 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should not handle if is not mao de onze")
     void shouldNotHandleIfIsNotMaoDeOnze() {
         when(intel.isMaoDeOnze()).thenReturn(false);
-        assertFalse(sut.handle());
+        assertFalse(sut.handle(intel, bot));
     }
 
     @Test
     @DisplayName("Should not handle if has already handled")
     void shouldNotHandleIfHasAlreadyHandled() {
         when(intel.handPoints()).thenReturn(3);
-        assertFalse(sut.handle());
+        assertFalse(sut.handle(intel, bot));
     }
 
     @Test
     @DisplayName("Should accept if bot service implementation decides to accept")
     void shouldAcceptIfBotServiceImplementationDecidesToAccept() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(true);
-        assertTrue(sut.handle());
+        assertTrue(sut.handle(intel, bot));
         verify(scoreUseCase, times(1)).accept(any());
         verify(scoreUseCase, times(0)).quit(any());
     }
@@ -87,7 +87,7 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should quit if bot service implementation decides to quit")
     void shouldQuitIfBotServiceImplementationDecidesToQuit() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(false);
-        assertTrue(sut.handle());
+        assertTrue(sut.handle(intel, bot));
         verify(scoreUseCase, times(0)).accept(any());
         verify(scoreUseCase, times(1)).quit(any());
     }

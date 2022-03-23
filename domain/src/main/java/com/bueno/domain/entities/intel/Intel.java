@@ -42,6 +42,7 @@ public class Intel{
     private Integer handPoints;
     private Integer handPointsProposal;
     private List<Optional<String>> roundWinners;
+    private List<Optional<UUID>> roundWinnersUuid;
     private int roundsPlayed;
 
     private Player currentPlayer;
@@ -84,6 +85,7 @@ public class Intel{
         handPoints = hand.getPoints().get();
         if(hand.getPointsProposal() != null) handPointsProposal = hand.getPointsProposal().get();
         roundWinners = getRoundWinners(hand);
+        roundWinnersUuid = getRoundWinnersUuid(hand);
         roundsPlayed = roundWinners.size();
         vira = hand.getVira();
         handWinner = hand.getResult().flatMap(HandResult::getWinner).map(Player::getUsername).orElse(null);
@@ -163,6 +165,15 @@ public class Intel{
                 .toList();
     }
 
+    private List<Optional<UUID>> getRoundWinnersUuid(Hand hand) {
+        return hand.getRoundsPlayed().stream()
+                .map(Round::getWinner)
+                .map(maybeWinner -> maybeWinner.orElse(null))
+                .map(player -> player != null ? player.getUuid() : null)
+                .map(Optional::ofNullable)
+                .toList();
+    }
+
     public Instant timestamp() {
         return timestamp;
     }
@@ -189,6 +200,10 @@ public class Intel{
 
     public List<Optional<String>> roundWinners() {
         return roundWinners;
+    }
+
+    public List<Optional<UUID>> roundWinnersUuid() {
+        return roundWinnersUuid;
     }
 
     public int roundsPlayed() {

@@ -68,14 +68,14 @@ class CardPlayingHandlerTest {
     @DisplayName("Should not handle if can not play")
     void shouldNotHandleIfCanNotPlay() {
         when(intel.possibleActions()).thenReturn(Set.of("RAISE"));
-        assertFalse(sut.handle());
+        assertFalse(sut.handle(intel, bot));
     }
 
     @Test
     @DisplayName("Should handle playing card and return true")
     void shouldHandlePlayingCardAndReturnTrue() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertTrue(sut.handle());
+        assertTrue(sut.handle(intel, bot));
         verify(cardUseCase, times(1)).playCard(any());
         verify(cardUseCase, times(0)).discard(any());
     }
@@ -84,7 +84,7 @@ class CardPlayingHandlerTest {
     @DisplayName("Should handle discard and return true")
     void shouldHandleDiscardAndReturnTrue() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.ofDiscard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertTrue(sut.handle());
+        assertTrue(sut.handle(intel, bot));
         verify(cardUseCase, times(0)).playCard(any());
         verify(cardUseCase, times(1)).discard(any());
     }

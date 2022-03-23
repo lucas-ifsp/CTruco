@@ -30,8 +30,6 @@ import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.GameIntel.RoundResult;
 import com.bueno.spi.model.TrucoCard;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,24 +50,16 @@ class SpiModelAdapterTest {
     @Mock private Player player;
     @Mock private Intel intel;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
-    @AfterEach
-    void tearDown() {
-
-    }
-
     @Test
     @DisplayName("Should create GameIntel from Player and Info")
     void shouldCreateGameIntelFromPlayerAndInfo() {
-        final List<Optional<String>> results = List.of(Optional.of("p1"), Optional.of("other"), Optional.empty());
+        final UUID p1Uuid = UUID.randomUUID();
+        final List<Optional<UUID>> results = List.of(Optional.of(p1Uuid), Optional.of(UUID.randomUUID()), Optional.empty());
         final List<Card> openCards = List.of(Card.of(Rank.THREE, Suit.CLUBS), Card.closed(), Card.of(Rank.ACE, Suit.CLUBS));
         final List<Card> botCards = List.of(Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.ACE, Suit.SPADES));
-        when(player.getUsername()).thenReturn("p1");
-        when(intel.roundWinners()).thenReturn(results);
+
+        when(player.getUuid()).thenReturn(p1Uuid);
+        when(intel.roundWinnersUuid()).thenReturn(results);
         when(intel.openCards()).thenReturn(openCards);
         when(intel.vira()).thenReturn(Card.of(Rank.THREE, Suit.CLUBS));
         when(player.getCards()).thenReturn(botCards);
@@ -100,6 +91,4 @@ class SpiModelAdapterTest {
         TrucoCard trucoCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
         assertEquals(Card.of(Rank.ACE, Suit.CLUBS), SpiModelAdapter.toCard(trucoCard));
     }
-
-
 }
