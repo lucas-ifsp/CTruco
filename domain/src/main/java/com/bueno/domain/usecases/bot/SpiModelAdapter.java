@@ -28,20 +28,21 @@ import com.bueno.domain.entities.player.Player;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.GameIntel.RoundResult;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SpiModelAdapter {
 
     static GameIntel toGameIntel(Player player, Intel intel) {
-        //TODO Check if using player username is not a bug when playing with same bot service
-        final Function<String, GameIntel.RoundResult> toRoundResult = name -> name == null ? GameIntel.RoundResult.DREW
-                : name.equals(player.getUsername()) ? GameIntel.RoundResult.WON : GameIntel.RoundResult.LOST;
+        final Function<UUID, RoundResult> toRoundResult = uuid -> uuid == null ? RoundResult.DREW
+                : uuid.equals(player.getUuid()) ? RoundResult.WON : RoundResult.LOST;
 
-        final List<GameIntel.RoundResult> roundResults = intel.roundWinners().stream()
+        final List<RoundResult> roundResults = intel.roundWinnersUuid().stream()
                 .map(winner -> winner.orElse(null))
                 .map(toRoundResult).collect(Collectors.toList());
 

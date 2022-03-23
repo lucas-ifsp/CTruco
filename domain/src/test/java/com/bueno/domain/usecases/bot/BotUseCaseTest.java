@@ -115,37 +115,37 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should first handle mao de onze")
     void shouldFirstHandleMaoDeOnze() {
-        when(maoDeOnzeHandler.handle()).thenReturn(true);
+        when(maoDeOnzeHandler.handle(intel, player)).thenReturn(true);
         assertEquals(game.getIntel(), sut.playWhenNecessary(game));
-        verify(maoDeOnzeHandler, times(1)).handle();
-        verify(raiseHandler, times(0)).handle();
+        verify(maoDeOnzeHandler, times(1)).handle(intel, player);
+        verify(raiseHandler, times(0)).handle(intel, player);
     }
 
     @Test
     @DisplayName("Should handle raise decision before choosing card")
     void shouldHandleRaiseDecisionBeforeChoosingCard() {
-        when(maoDeOnzeHandler.handle()).thenReturn(false);
-        when(raiseHandler.handle()).thenReturn(true);
+        when(maoDeOnzeHandler.handle(intel, player)).thenReturn(false);
+        when(raiseHandler.handle(intel, player)).thenReturn(true);
         assertEquals(game.getIntel(), sut.playWhenNecessary(game));
-        verify(raiseHandler, times(1)).handle();
-        verify(cardPlayingHandler, times(0)).handle();
+        verify(raiseHandler, times(1)).handle(intel, player);
+        verify(cardPlayingHandler, times(0)).handle(intel, player);
     }
 
     @Test
     @DisplayName("Should handle card playing if already decided to raise of not")
     void shouldHandleCardPlayingIfAlreadyDecidedToRaiseOfNot() {
-        when(raiseHandler.handle()).thenReturn(false);
-        when(cardPlayingHandler.handle()).thenReturn(true);
+        when(raiseHandler.handle(intel, player)).thenReturn(false);
+        when(cardPlayingHandler.handle(intel, player)).thenReturn(true);
         assertEquals(game.getIntel(), sut.playWhenNecessary(game));
-        verify(cardPlayingHandler, times(1)).handle();
-        verify(raiseRequestHandler, times(0)).handle();
+        verify(cardPlayingHandler, times(1)).handle(intel, player);
+        verify(raiseRequestHandler, times(0)).handle(intel, player);
     }
 
     @Test
     @DisplayName("Should handle if is bot turn just because it must decide about raise request")
     void shouldHandleIfIsBotTurnJustBecauseItMustDecideAboutRaiseRequest() {
         assertEquals(game.getIntel(), sut.playWhenNecessary(game));
-        verify(raiseRequestHandler, times(1)).handle();
+        verify(raiseRequestHandler, times(1)).handle(intel, player);
     }
 
     @Test

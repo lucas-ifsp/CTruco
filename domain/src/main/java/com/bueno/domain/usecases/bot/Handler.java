@@ -23,10 +23,7 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 
-abstract class Handler {
-    Player bot;
-    Intel intel;
-
-    abstract boolean handle();
-    abstract boolean shouldHandle();
+interface Handler {
+    boolean handle(Intel intel, Player bot);
+    boolean shouldHandle(Intel intel);
 }

@@ -45,7 +45,7 @@ interface PlayingStrategy{
     int getRaiseResponse(int newScoreValue);
     boolean decideIfRaises();
 
-    static boolean getMaoDeOnzeResponse(GameIntel intel){
+    default boolean getMaoDeOnzeResponse(GameIntel intel){
         final TrucoCard vira = intel.getVira();
         final List<TrucoCard> cards = new ArrayList<>(intel.getCards());
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));

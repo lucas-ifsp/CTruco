@@ -34,7 +34,7 @@ public class MineiroBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return PlayingStrategy.getMaoDeOnzeResponse(intel);
+        return PlayingStrategy.of(intel).getMaoDeOnzeResponse(intel);
     }
 
     @Override

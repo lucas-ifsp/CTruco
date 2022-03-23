@@ -30,21 +30,19 @@ import static com.bueno.domain.entities.intel.PossibleAction.PLAY;
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toCard;
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 
-class CardPlayingHandler extends Handler {
+class CardPlayingHandler implements Handler{
 
     private final BotServiceProvider botService;
     private final PlayCardUseCase cardUseCase;
 
-    public CardPlayingHandler(PlayCardUseCase cardUseCase, BotServiceProvider botService, Player bot, Intel intel) {
-        this.bot = bot;
-        this.intel = intel;
+    public CardPlayingHandler(PlayCardUseCase cardUseCase, BotServiceProvider botService) {
         this.botService = botService;
         this.cardUseCase = cardUseCase;
     }
 
     @Override
-    boolean handle() {
-        if(shouldHandle()) {
+    public boolean handle(Intel intel, Player bot) {
+        if(shouldHandle(intel)) {
             final var botUuid = bot.getUuid();
             final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
             final var card = toCard(chosenCard.content());
@@ -57,7 +55,7 @@ class CardPlayingHandler extends Handler {
     }
 
     @Override
-    boolean shouldHandle() {
+    public boolean shouldHandle(Intel intel) {
         return intel.possibleActions().stream()
                 .map(PossibleAction::valueOf)
                 .anyMatch(action -> action.equals(PLAY));
