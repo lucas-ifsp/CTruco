@@ -85,7 +85,7 @@ public class SecondRoundStrategy implements PlayingStrategy {
 
         if (firstRoundResult.equals(RoundResult.LOST)  && !hasAlreadyPlayedRound()) {
             final int remainingCardsValue = getCardValue(openCards, cards.get(0), vira) + getCardValue(openCards, cards.get(1), vira);
-            if (remainingCardsValue < 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
+            if (remainingCardsValue <= 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
             if (remainingCardsValue >= 23) return 1;
         }
         return 0;

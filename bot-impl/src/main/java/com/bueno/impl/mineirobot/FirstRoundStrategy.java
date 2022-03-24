@@ -78,16 +78,19 @@ public class FirstRoundStrategy implements PlayingStrategy {
 
     @Override
     public int getRaiseResponse(int newScoreValue) {
-        final int remainingCardsValue = getCardValue(openCards, cards.get(0), vira) + getCardValue(openCards, cards.get(1), vira);
-        if(cards.size() == 3) {
-            if (remainingCardsValue >= 23) return 1;
-            if (!cards.get(0).isManilha(vira) || cards.get(0).isOuros(vira) || getCardValue(openCards, cards.get(1), vira) < 9) return -1;
-            return 0;
+        int remainingCardsValue = cards.stream()
+                .map(c -> getCardValue(openCards, c, vira))
+                .reduce(0, Integer::sum);
+
+        if(cards.size() == 2){
+            final TrucoCard cardPlayed = openCards.get(openCards.size() - 1);
+            final int cardPlayedValue = getCardValue(this.openCards, cardPlayed, vira);
+            remainingCardsValue += cardPlayedValue;
         }
-        final List<TrucoCard> openCards = this.openCards;
-        final TrucoCard cardPlayed = openCards.get(openCards.size() - 1);
-        if(getCardValue(this.openCards, cardPlayed, vira) < 9 && remainingCardsValue < 17) return -1;
-        return 0;
+
+        if ((cards.get(0).isZap(vira) || cards.get(0).isCopas(vira)) && remainingCardsValue > 30) return 1;
+        if (remainingCardsValue >= 27) return 0;
+        return -1;
     }
 
     @Override

@@ -67,8 +67,8 @@ public class ThirdRoundStrategy implements PlayingStrategy {
         final int playerCardValue = cards.isEmpty() ?
                 getCardValue(openCards, lastOpenedCard, vira) : getCardValue(openCards, cards.get(0), vira);
 
-        if (playerCardValue < 9 || (playerCardValue < 12 && newScoreValue >= 6)) return -1;
         if (playerCardValue == 13) return 1;
+        if (playerCardValue < 9 || (playerCardValue < 12 && newScoreValue >= 6)) return -1;
         return 0;
     }
 
@@ -98,7 +98,12 @@ public class ThirdRoundStrategy implements PlayingStrategy {
         final TrucoCard card = cards.get(0);
         final TrucoCard opponentCard = intel.getOpponentCard().orElseThrow();
 
-        return (!firstRoundResult.equals(RoundResult.LOST) && card.compareValueTo(opponentCard, vira) > 0)
-                || (firstRoundResult.equals(RoundResult.WON) && card.compareValueTo(opponentCard, vira) == 0);
+        final boolean didNotLostFirstAndWinsThird = !firstRoundResult.equals(RoundResult.LOST)
+                && card.compareValueTo(opponentCard, vira) > 0;
+
+        final boolean wonFirstAndCanDrawThird = firstRoundResult.equals(RoundResult.WON)
+                && card.compareValueTo(opponentCard, vira) == 0;
+
+        return didNotLostFirstAndWinsThird || wonFirstAndCanDrawThird;
     }
 }

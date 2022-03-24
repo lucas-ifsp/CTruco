@@ -20,20 +20,20 @@
 
 package com.bueno.impl.mineirobot;
 
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-interface PlayingStrategy{
+interface PlayingStrategy {
 
-    static PlayingStrategy of(GameIntel intel){
+    static PlayingStrategy of(GameIntel intel) {
         final int roundsPlayed = intel.getRoundResults().size();
-        return switch (roundsPlayed){
+        return switch (roundsPlayed) {
             case 0 -> new FirstRoundStrategy(intel);
             case 1 -> new SecondRoundStrategy(intel);
             case 2 -> new ThirdRoundStrategy(intel);
@@ -42,19 +42,25 @@ interface PlayingStrategy{
     }
 
     CardToPlay chooseCard();
+
     int getRaiseResponse(int newScoreValue);
+
     boolean decideIfRaises();
 
-    default boolean getMaoDeOnzeResponse(GameIntel intel){
+    default boolean getMaoDeOnzeResponse(GameIntel intel) {
         final TrucoCard vira = intel.getVira();
         final List<TrucoCard> cards = new ArrayList<>(intel.getCards());
         cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
         final int bestCard = getCardValue(intel.getOpenCards(), cards.get(0), vira);
         final int mediumCard = getCardValue(intel.getOpenCards(), cards.get(1), vira);
+        final int lowerCard = getCardValue(intel.getOpenCards(), cards.get(2), vira);
         final int opponentScore = intel.getOpponentScore();
 
-        if(bestCard + mediumCard >= 20 ) return true;
-        return opponentScore >= 8 && bestCard > 10 && mediumCard >= 8;
+        if (opponentScore < 8) {
+            if (bestCard + mediumCard + lowerCard >= 27) return true;
+            if (bestCard >= 10 && mediumCard + lowerCard >= 14) return true;
+        }
+        return bestCard > 10 && mediumCard + lowerCard >= 15;
     }
 
     default Optional<TrucoCard> getPossibleCardToDraw(List<TrucoCard> botCards, TrucoCard vira, TrucoCard opponentCard) {
@@ -69,25 +75,28 @@ interface PlayingStrategy{
                 .min((c1, c2) -> c1.compareValueTo(c2, vira));
     }
 
-    static int getCardValue(List<TrucoCard> openCards, TrucoCard card, TrucoCard vira){
+    static int getCardValue(List<TrucoCard> openCards, TrucoCard card, TrucoCard vira) {
         final List<TrucoCard> cards = new ArrayList<>(openCards);
 
         final int higherManilhasAlreadyPlayed = (int) cards.stream()
-                .filter(c -> c.compareValueTo(card, vira) > 1)
+                .filter(c -> c.compareValueTo(card, vira) >= 1)
                 .filter(c -> c.isManilha(vira))
                 .count();
 
-        final int higherCardsAlreadyPlayedFourTimes = (int) cards.stream()
-                .filter(c -> c.compareValueTo(card, vira) > 1)
-                .filter(c -> Collections.frequency(cards, c) == 4)
+        final int higherCardsAlreadyPlayedFourTimes = (int) openCards.stream()
+                .filter(c -> c.compareValueTo(card, vira) >= 1)
+                .filter(c -> !c.isManilha(vira))
+                .collect(Collectors.groupingBy(TrucoCard::getRank, Collectors.counting()))
+                .values().stream()
+                .filter(occurrences -> occurrences == 4)
                 .count();
 
         final int offset = higherManilhasAlreadyPlayed + higherCardsAlreadyPlayedFourTimes;
 
-        if(card.isOuros(vira)) return  10 + offset;
-        if(card.isEspadilha(vira)) return  11 + offset;
-        if(card.isCopas(vira)) return 12 + offset;
-        if(card.isZap(vira)) return 13;
+        if (card.isOuros(vira)) return 10 + offset;
+        if (card.isEspadilha(vira)) return 11 + offset;
+        if (card.isCopas(vira)) return 12 + offset;
+        if (card.isZap(vira)) return 13;
 
         final int actualValue = card.getRank().value() - 1;
         return actualValue + offset;
