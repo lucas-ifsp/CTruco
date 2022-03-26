@@ -37,6 +37,10 @@ public enum CardSuit {
         this.ordinalValue = ordinalValue;
     }
 
+    int value() {
+        return ordinalValue;
+    }
+
     public static CardSuit ofSymbol(String symbol){
         return Arrays.stream(values())
                 .filter(suit -> suit.symbol.equals(symbol))
@@ -46,9 +50,5 @@ public enum CardSuit {
     @Override
     public String toString() {
         return symbol;
-    }
-
-    int value() {
-        return ordinalValue;
     }
 }

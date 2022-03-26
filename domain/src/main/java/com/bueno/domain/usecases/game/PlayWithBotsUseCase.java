@@ -37,7 +37,6 @@ public class PlayWithBotsUseCase {
         this.botUseCase = Objects.requireNonNull(botUseCase);
     }
 
-
     public ResponseModel playWithBots(UUID uuidBot1, String bot1Name, UUID uuidBot2, String bot2Name){
         Objects.requireNonNull(uuidBot1);
         Objects.requireNonNull(bot1Name);

@@ -30,14 +30,14 @@ import java.util.stream.Stream;
 
 public class BotServiceManager {
 
+    public static Stream<BotServiceProvider> providers() {
+        return ServiceLoader.load(BotServiceProvider.class).stream().map(ServiceLoader.Provider::get);
+    }
+
     public static BotServiceProvider load(String botServiceName){
         final Predicate<BotServiceProvider> hasName = botImpl -> botImpl.getName().equals(botServiceName);
         final Optional<BotServiceProvider> possibleBot = providers().filter(hasName).findAny();
         return possibleBot.orElseThrow(() -> new NoSuchElementException("Service implementation not available: " + botServiceName));
-    }
-
-    public static Stream<BotServiceProvider> providers() {
-        return ServiceLoader.load(BotServiceProvider.class).stream().map(ServiceLoader.Provider::get);
     }
 
     public static List<String> providersNames(){

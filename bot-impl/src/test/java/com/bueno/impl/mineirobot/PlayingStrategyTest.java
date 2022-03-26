@@ -27,6 +27,8 @@ import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -71,10 +73,10 @@ class PlayingStrategyTest {
     }
 
     @Test
-    @DisplayName("Should accept mao de onze if has one card higher than 10 and remaining worth at least 14")
-    void shouldAcceptMaoDeOnzeIfHasOneCardHigherThan10AndRemainingWorthAtLeast14() {
+    @DisplayName("Should accept mao de onze if has one card higher than 9 and remaining worth at least 13")
+    void shouldAcceptMaoDeOnzeIfHasOneCardHigherThan9AndRemainingWorthAtLeast13() {
         final var botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(botCards);
@@ -83,10 +85,10 @@ class PlayingStrategyTest {
     }
 
     @Test
-    @DisplayName("Should accept mao de onze if has one card higher than 10 and remaining worth at least 15 if opponent has 8 or more points")
-    void shouldAcceptMaoDeOnzeIfHasOneCardHigherThan11AndRemainingWorthAtLeast14IfOpponentHas8OrMorePoints() {
+    @DisplayName("Should accept mao de onze if has one card higher than 9 and remaining worth at least 14 if opponent has 8 or more points")
+    void shouldAcceptMaoDeOnzeIfHasOneCardHigherThan9AndRemainingWorthAtLeast14IfOpponentHas8OrMorePoints() {
         final var botCards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(botCards);
@@ -96,8 +98,8 @@ class PlayingStrategyTest {
     }
 
     @Test
-    @DisplayName("Should accept mao de onze if has 27 in cards")
-    void shouldAcceptMaoDeOnzeIfHas27InCards() {
+    @DisplayName("Should accept mao de onze if has 24 in cards")
+    void shouldAcceptMaoDeOnzeIfHas24InCards() {
         final var botCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
@@ -108,8 +110,8 @@ class PlayingStrategyTest {
     }
 
     @Test
-    @DisplayName("Should not accept mao de onze if has no manilha")
-    void shouldNotAcceptMaoDeOnzeIfHasManilhaAndRemainingWorthLessThan14() {
+    @DisplayName("Should not accept mao de onze if has no manilha or remaining card worth less than 14")
+    void shouldNotAcceptMaoDeOnzeIfHasManilhaOrRemainingWorthLessThan14() {
         final var botCards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
 
@@ -200,7 +202,7 @@ class PlayingStrategyTest {
     void shouldGetCorrectCardValueForRegularCards() {
         final var vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final var card = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
-        assertEquals(9, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
+        assertEquals(8, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
     }
 
     @Test
@@ -213,12 +215,12 @@ class PlayingStrategyTest {
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
 
         when(intel.getOpenCards()).thenReturn(openCards);
-        assertEquals(9, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
+        assertEquals(8, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
     }
 
     @Test
-    @DisplayName("Should value of rank three be 13 if all manilhas have been played")
-    void shouldValueOfRankThreeBe13IfAllManilhasHaveBeenPlayed() {
+    @DisplayName("Should value of rank three be 12 if all manilhas have been played")
+    void shouldValueOfRankThreeBe12IfAllManilhasHaveBeenPlayed() {
         final var vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
         final var card = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
         final List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
@@ -226,25 +228,24 @@ class PlayingStrategyTest {
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
 
         when(intel.getOpenCards()).thenReturn(openCards);
-        assertEquals(13, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
+        assertEquals(12, PlayingStrategy.getCardValue(intel.getOpenCards(), card, vira));
     }
 
     @Test
-    @DisplayName("Should ouros value be 11 if zap has already been played")
-    void shouldOurosValueBe11IfZapHasAlreadyBeenPlayed() {
+    @DisplayName("Should ouros value be 10 if zap has already been played")
+    void shouldOurosValueBe10IfZapHasAlreadyBeenPlayed() {
         final var vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final var ouros = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         final List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
-        assertEquals(11, PlayingStrategy.getCardValue(openCards, ouros, vira));
+        assertEquals(10, PlayingStrategy.getCardValue(openCards, ouros, vira));
     }
 
-    /*@ParameterizedTest
+    @ParameterizedTest
     @CsvSource({"FOUR,0", "FIVE,1", "SIX,2", "SEVEN,3", "QUEEN,4", "KING,5", "ACE,6", "TWO,7", "THREE,8", "JACK,9"})
     @DisplayName("Should get correct card values")
     void shouldGetCorrectCardValues(CardRank rank, int value) {
         final var vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         final TrucoCard card = TrucoCard.of(rank, CardSuit.DIAMONDS);
         assertEquals(value, PlayingStrategy.getCardValue(List.of(), card, vira));
-    }*/
-
+    }
 }

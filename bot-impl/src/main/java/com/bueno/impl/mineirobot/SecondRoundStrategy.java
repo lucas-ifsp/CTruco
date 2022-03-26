@@ -53,7 +53,7 @@ public class SecondRoundStrategy implements PlayingStrategy {
         final RoundResult firstRoundResult = intel.getRoundResults().get(0);
 
         if (firstRoundResult.equals(RoundResult.WON)) {
-            if (!isMaoDeFerro() && cards.stream().anyMatch(c -> getCardValue(openCards, c, vira) >= 8) )
+            if (!isMaoDeFerro() && cards.stream().anyMatch(c -> getCardValue(openCards, c, vira) >= 7) )
                 return CardToPlay.ofDiscard(cards.get(1));
             return CardToPlay.of(cards.get(0));
         }
@@ -77,16 +77,16 @@ public class SecondRoundStrategy implements PlayingStrategy {
         if(canWin(cards.get(0), firstRoundResult)) return 1;
 
         if (firstRoundResult.equals(RoundResult.DREW)) {
-            if (bestCardValue < 10) return -1;
-            if (bestCardValue > 11) return 1;
+            if (bestCardValue < 9) return -1;
+            if (bestCardValue > 10) return 1;
         }
 
-        if (firstRoundResult.equals(RoundResult.LOST) && hasAlreadyPlayedRound() && bestCardValue < 10) return -1;
+        if (firstRoundResult.equals(RoundResult.LOST) && hasAlreadyPlayedRound() && bestCardValue < 9) return -1;
 
         if (firstRoundResult.equals(RoundResult.LOST)  && !hasAlreadyPlayedRound()) {
             final int remainingCardsValue = getCardValue(openCards, cards.get(0), vira) + getCardValue(openCards, cards.get(1), vira);
-            if (remainingCardsValue <= 18 || (newScoreValue >= 6 && remainingCardsValue < 20)) return -1;
-            if (remainingCardsValue >= 23) return 1;
+            if (remainingCardsValue < 16 || (newScoreValue >= 6 && remainingCardsValue < 18)) return -1;
+            if (remainingCardsValue >= 21) return 1;
         }
         return 0;
     }
@@ -115,14 +115,14 @@ public class SecondRoundStrategy implements PlayingStrategy {
         if (firstRoundResult.equals(RoundResult.DREW)){
             if(isCardValueBetween(higherCard,13,13)
                     || isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))) return true;
-            if(handPoints == 1 && isCardValueBetween(higherCard, 10, 12)) return true;
+            if(handPoints == 1 && isCardValueBetween(higherCard, 9, 12)) return true;
             if(handPoints == 3 && isCardValueBetween(higherCard, 12, 12)) return true;
         }
 
         if(handPoints > 1) return false;
 
         return isAbleToWinWith(higherCard, possibleOpponentCard.orElse(null))
-                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)), 10, 13);
+                && isCardValueBetween(getThirdRoundCard(possibleOpponentCard.orElse(null)), 9, 12);
     }
 
     private boolean isCardValueBetween(TrucoCard card, int lowerValue, int upperValue){

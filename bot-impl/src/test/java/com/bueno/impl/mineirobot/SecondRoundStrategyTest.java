@@ -94,7 +94,7 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should discard worst card to open round after winning first if has card of value higher than 8")
+        @DisplayName("Should discard worst card to open round after winning first if has card of value 7 or higher")
         void shouldDiscardWorstCardToOpenRoundAfterWinningFirstIfHasCardOfValueHigherThan8() {
             final var botCards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
@@ -109,8 +109,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should use best card to open round after winning first if remaining cards have values lower than 8")
-        void shouldUseBestCardToOpenRoundAfterWinningFirstIfRemainingCardsHaveValuesLowerThan8() {
+        @DisplayName("Should use best card to open round after winning first if remaining cards have values lower than 7")
+        void shouldUseBestCardToOpenRoundAfterWinningFirstIfRemainingCardsHaveValuesLowerThan7() {
             final var botCards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
 
@@ -145,8 +145,8 @@ class SecondRoundStrategyTest {
     class ResponseRequestTest {
 
         @Test
-        @DisplayName("Should quit if lost first and already played second and remaining card value is lower than 10")
-        void shouldQuitIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsLowerThan10() {
+        @DisplayName("Should quit if lost first and already played second and remaining card value is lower than 9")
+        void shouldQuitIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsLowerThan9() {
             final var botCards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
@@ -161,9 +161,9 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should accept if lost first and already played second and remaining card value is Higher than 11")
-        void shouldAcceptIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsHigherThan11() {
-            final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+        @DisplayName("Should accept if lost first and already played second and remaining card value is higher than 9")
+        void shouldAcceptIfLostFirstAndAlreadyPlayedSecondAndRemainingCardValueIsHigherThan9() {
+            final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
 
@@ -177,8 +177,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should quit if lost first round and dont have at least cards of value 18")
-        void shouldQuitIfLostFirstRoundAndDontHaveAtLeastCardsOfValue18() {
+        @DisplayName("Should quit if lost first round and dont have at least cards of value 16")
+        void shouldQuitIfLostFirstRoundAndDontHaveAtLeastCardsOfValue16() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -194,8 +194,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should quit if lost first round and dont have at least cards of value 20 for point call of 6 or more")
-        void shouldQuitIfLostFirstRoundAndDontHaveAtLeastCardsOfValue20ForPointCallOf6OrMore() {
+        @DisplayName("Should quit if lost first round and dont have at least cards of value 18 for point call of 6 or more")
+        void shouldQuitIfLostFirstRoundAndDontHaveAtLeastCardsOfValue18ForPointCallOf6OrMore() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -211,8 +211,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request to raise if lost first round and has at least cards of value 23")
-        void shouldRequestToRaiseIfLostFirstRoundAndHasAtLeastCardsOfValue23() {
+        @DisplayName("Should request to raise if lost first round and has at least cards of value 21")
+        void shouldRequestToRaiseIfLostFirstRoundAndHasAtLeastCardsOfValue21() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -262,8 +262,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should accept call if tied first and untying card value is between 10 and 11")
-        void shouldAcceptCallIfTiedFirstAndUntyingCardValueIsBetween10And11() {
+        @DisplayName("Should accept call if tied first and untying card value is between 9 and 10")
+        void shouldAcceptCallIfTiedFirstAndUntyingCardValueIsBetween9And10() {
             final var botCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
             final var openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -310,10 +310,10 @@ class SecondRoundStrategyTest {
     }
 
     @Nested
-    @DisplayName("When deciding on hand score ")
+    @DisplayName("When deciding on hand points ")
     class RequestScoreRaiseTest {
         @Test
-        @DisplayName("Should not request score raise in second round if won first")
+        @DisplayName("Should not request points raise in second round if won first")
         void shouldNotRequestScoreRaiseInSecondRoundIfWonFirst() {
             final var botCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
@@ -328,9 +328,9 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request truco if tied first and is untying with a card of value 10 or higher")
-        void shouldRequestTrucoIfTiedFirstAndIsUntyingWithCardOfValue10OrHigher() {
-            final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+        @DisplayName("Should request truco if tied first and is untying with a card of value 9 or higher")
+        void shouldRequestTrucoIfTiedFirstAndIsUntyingWithCardOfValue9OrHigher() {
+            final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
             when(intel.getCards()).thenReturn(botCards);
             when(intel.getRoundResults()).thenReturn(List.of(DREW));
@@ -342,9 +342,9 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should not request truco if tied first and is untying with a card of value lower than 10")
-        void shouldNotRequestTrucoIfTiedFirstAndIsUntyingWithCardOfValueLowerThan10() {
-            final var botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        @DisplayName("Should not request truco if tied first and is untying with a card of value lower than 9")
+        void shouldNotRequestTrucoIfTiedFirstAndIsUntyingWithCardOfValueLowerThan9() {
+            final var botCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
             when(intel.getCards()).thenReturn(botCards);
             when(intel.getRoundResults()).thenReturn(List.of(DREW));
@@ -371,8 +371,8 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request any raise if tied first and has card of value 13")
-        void shouldRequestAnyRaiseIfTiedFirstAndHasCardOfValue13() {
+        @DisplayName("Should request any raise if tied first and has card of value 12")
+        void shouldRequestAnyRaiseIfTiedFirstAndHasCardOfValue12() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
 
             when(intel.getCards()).thenReturn(botCards);
@@ -398,10 +398,10 @@ class SecondRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request truco if lost first but can win second and have card of value 10 or higher for the third")
+        @DisplayName("Should request truco if lost first but can win second and have card of value 9 or higher for the third")
         void shouldRequestTrucoIfLostFirstButCanWinSecondAndHaveCardOfValue9OrHigherForTheThird() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
             when(intel.getCards()).thenReturn(botCards);
             when(intel.getRoundResults()).thenReturn(List.of(LOST));
@@ -413,4 +413,5 @@ class SecondRoundStrategyTest {
             assertTrue(sut.decideIfRaises());
         }
     }
+
 }
