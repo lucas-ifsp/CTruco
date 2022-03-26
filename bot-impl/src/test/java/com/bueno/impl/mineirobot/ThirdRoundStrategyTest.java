@@ -99,8 +99,8 @@ class ThirdRoundStrategyTest {
     class ResponseRequestTest {
 
         @Test
-        @DisplayName("Should quit in call for 3 if user card value is lower than 9 in third round")
-        void shouldQuitInCallFor3IfUserCardValueIsLowerThan9InThirdRound() {
+        @DisplayName("Should quit in call for 3 if user card value is lower than 8 in third round")
+        void shouldQuitInCallFor3IfUserCardValueIsLowerThan8InThirdRound() {
             final var openCards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(intel.getCards()).thenReturn(List.of());
             when(intel.getOpenCards()).thenReturn(openCards);
@@ -110,8 +110,8 @@ class ThirdRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should quit in call for 6 if card value is lower than 12 in third round")
-        void shouldQuitInCallFor6IfCardValueIsLowerThan12InThirdRound() {
+        @DisplayName("Should quit in call for 6 if card value is lower than 11 in third round")
+        void shouldQuitInCallFor6IfCardValueIsLowerThan11InThirdRound() {
             final var openCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
             when(intel.getOpenCards()).thenReturn(openCards);
             when(intel.getCards()).thenReturn(List.of());
@@ -122,8 +122,8 @@ class ThirdRoundStrategyTest {
 
 
         @Test
-        @DisplayName("Should accept call for 3 if user card value is between 9 and 11 in third round")
-        void shouldQuitInCallFor3IfUserCardValueIsBetween9And11InThirdRound() {
+        @DisplayName("Should accept call for 3 if user card value is between 8 and 10 in third round")
+        void shouldQuitInCallFor3IfUserCardValueIsBetween8And10InThirdRound() {
             final var openCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
             when(intel.getOpenCards()).thenReturn(openCards);
             when(intel.getCards()).thenReturn(List.of());
@@ -149,8 +149,8 @@ class ThirdRoundStrategyTest {
     class RequestScoreRaiseTest {
 
         @Test
-        @DisplayName("Should request truco in third round if plays first and have card of value 10 or higher")
-        void shouldRequestTrucoInThirdRoundIfPlaysFirstAndHaveCardOfValue10OrHigher() {
+        @DisplayName("Should request truco in third round if plays first and have card of value 9 or higher")
+        void shouldRequestTrucoInThirdRoundIfPlaysFirstAndHaveCardOfValue9OrHigher() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
             when(intel.getCards()).thenReturn(botCards);
@@ -163,8 +163,8 @@ class ThirdRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request to raise in third round if plays first and have card of value 12 or higher")
-        void shouldRequestToRaiseInThirdRoundIfPlaysFirstAndHaveCardOfValue12OrHigher() {
+        @DisplayName("Should request to raise in third round if plays first and have card of value 11 or higher")
+        void shouldRequestToRaiseInThirdRoundIfPlaysFirstAndHaveCardOfValue11OrHigher() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
 
             when(intel.getCards()).thenReturn(botCards);
@@ -206,7 +206,7 @@ class ThirdRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request to raise in third round if opponent card value is lower than 5")
+        @DisplayName("Should request to raise in third round if opponent card value is lower than 4")
         void shouldRequestToRaiseInThirdRoundIfOpponentCardValueIsLowerThan5() {
             final var botCards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
 

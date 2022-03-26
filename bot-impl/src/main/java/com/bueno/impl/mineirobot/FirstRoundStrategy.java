@@ -49,8 +49,8 @@ public class FirstRoundStrategy implements PlayingStrategy {
     @Override
     public CardToPlay chooseCard() {
         final Optional<TrucoCard> possibleOpponentCard = intel.getOpponentCard();
-        final int numberOfTopThreeCards = countCardsBetween(11, 13);
-        final int numberOfMediumCards = countCardsBetween(8,9);
+        final int numberOfTopThreeCards = countCardsBetween(10, 12);
+        final int numberOfMediumCards = countCardsBetween(7,8);
 
         if(numberOfTopThreeCards == 2) return CardToPlay.ofDiscard(cards.get(2));
 
@@ -88,8 +88,8 @@ public class FirstRoundStrategy implements PlayingStrategy {
             remainingCardsValue += cardPlayedValue;
         }
 
-        if ((cards.get(0).isZap(vira) || cards.get(0).isCopas(vira)) && remainingCardsValue > 30) return 1;
-        if (remainingCardsValue >= 27) return 0;
+        if ((cards.get(0).isZap(vira) || cards.get(0).isCopas(vira)) && remainingCardsValue > 27) return 1;
+        if (remainingCardsValue >= 24) return 0;
         return -1;
     }
 

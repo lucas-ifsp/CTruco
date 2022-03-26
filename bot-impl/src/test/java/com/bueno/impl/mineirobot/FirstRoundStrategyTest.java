@@ -178,8 +178,8 @@ class FirstRoundStrategyTest {
     class ResponseRequestTest {
 
         @Test
-        @DisplayName("Should request raise if has cards of value higher than 30 and zap or copas")
-        void shouldRequestRaiseIfHasCardsOfValueHigherThan30AndZapOrCopas() {
+        @DisplayName("Should request raise if has cards of value higher than 27 and zap or copas")
+        void shouldRequestRaiseIfHasCardsOfValueHigherThan27AndZapOrCopas() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
 
@@ -191,12 +191,12 @@ class FirstRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should request raise if already played and has cards of value higher than 30 and zap or copas")
-        void shouldRequestRaiseIfAlreadyPlayedAndHasCardsOfValueHigherThan30AndZapOrCopas() {
+        @DisplayName("Should request raise if already played and has cards of value higher than 27 and zap or copas")
+        void shouldRequestRaiseIfAlreadyPlayedAndHasCardsOfValueHigherThan27AndZapOrCopas() {
             final var botCards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             final var vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
-            final var openCards = List.of(vira, TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+            final var openCards = List.of(vira, TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
             when(intel.getCards()).thenReturn(botCards);
             when(intel.getOpenCards()).thenReturn(openCards);
@@ -208,8 +208,8 @@ class FirstRoundStrategyTest {
 
 
         @Test
-        @DisplayName("Should accept if has cards of value equal or higher than 30")
-        void shouldAcceptIfHasCardsOfValueEqualOrHigherThan30() {
+        @DisplayName("Should accept if has cards of value equal or higher than 24")
+        void shouldAcceptIfHasCardsOfValueEqualOrHigherThan24() {
             final var botCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES), TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
@@ -221,8 +221,8 @@ class FirstRoundStrategyTest {
         }
 
         @Test
-        @DisplayName("Should quit if has cards of value lower than 30")
-        void shouldQuitIfHasCardsOfValueLowerThan30() {
+        @DisplayName("Should quit if has cards of value lower than 24")
+        void shouldQuitIfHasCardsOfValueLowerThan24() {
             final var botCards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES), TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 

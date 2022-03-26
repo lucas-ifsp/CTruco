@@ -57,10 +57,10 @@ interface PlayingStrategy {
         final int opponentScore = intel.getOpponentScore();
 
         if (opponentScore < 8) {
-            if (bestCard + mediumCard + lowerCard >= 27) return true;
-            if (bestCard >= 10 && mediumCard + lowerCard >= 14) return true;
+            if (bestCard + mediumCard + lowerCard >= 24) return true;
+            if (bestCard >= 9 && mediumCard + lowerCard >= 13) return true;
         }
-        return bestCard > 10 && mediumCard + lowerCard >= 15;
+        return bestCard > 9 && mediumCard + lowerCard >= 14;
     }
 
     default Optional<TrucoCard> getPossibleCardToDraw(List<TrucoCard> botCards, TrucoCard vira, TrucoCard opponentCard) {
@@ -93,12 +93,24 @@ interface PlayingStrategy {
 
         final int offset = higherManilhasAlreadyPlayed + higherCardsAlreadyPlayedFourTimes;
 
-        if (card.isOuros(vira)) return 10 + offset;
-        if (card.isEspadilha(vira)) return 11 + offset;
-        if (card.isCopas(vira)) return 12 + offset;
-        if (card.isZap(vira)) return 13;
+        if (card.isOuros(vira)) return 9 + offset;
+        if (card.isEspadilha(vira)) return 10 + offset;
+        if (card.isCopas(vira)) return 11 + offset;
+        if (card.isZap(vira)) return 12;
 
+        final int discount = card.getRank().value() > vira.getRank().value() ? 1 : 0;
         final int actualValue = card.getRank().value() - 1;
-        return actualValue + offset;
+        return actualValue + offset - discount;
     }
+
+    //4 0
+    //5 1
+    //6 2
+    //7 3
+    //Q 4
+    //J 5
+    //K 6
+    //A 7
+    //2 8
+    //3 9
 }

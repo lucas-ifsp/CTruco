@@ -20,7 +20,6 @@
 
 package com.bueno.spi.model;
 
-
 public final class CardToPlay {
     private final TrucoCard content;
     private final boolean discard;
@@ -29,6 +28,7 @@ public final class CardToPlay {
         this.content = card;
         this.discard = discard;
     }
+
     public static CardToPlay of(TrucoCard card){
         return new CardToPlay(card, false);
     }
