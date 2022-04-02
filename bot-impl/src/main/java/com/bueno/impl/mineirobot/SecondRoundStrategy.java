@@ -54,14 +54,14 @@ public class SecondRoundStrategy implements PlayingStrategy {
 
         if (firstRoundResult.equals(RoundResult.WON)) {
             if (!isMaoDeFerro() && cards.stream().anyMatch(c -> getCardValue(openCards, c, vira) >= 7) )
-                return CardToPlay.ofDiscard(cards.get(1));
+                return CardToPlay.discard(cards.get(1));
             return CardToPlay.of(cards.get(0));
         }
 
         if (firstRoundResult.equals(RoundResult.DREW)) return CardToPlay.of(cards.get(0));
 
         Optional<TrucoCard> enoughCardToWin = getPossibleEnoughCardToWin(cards, vira, possibleOpponentCard.orElseThrow());
-        return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard(cards.get(1)));
+        return enoughCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.discard(cards.get(1)));
     }
 
     private boolean isMaoDeFerro() {

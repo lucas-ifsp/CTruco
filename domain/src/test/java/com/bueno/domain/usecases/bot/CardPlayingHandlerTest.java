@@ -83,7 +83,7 @@ class CardPlayingHandlerTest {
     @Test
     @DisplayName("Should handle discard and return true")
     void shouldHandleDiscardAndReturnTrue() {
-        when(botService.chooseCard(any())).thenReturn(CardToPlay.ofDiscard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+        when(botService.chooseCard(any())).thenReturn(CardToPlay.discard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
         assertTrue(sut.handle(intel, bot));
         verify(cardUseCase, times(0)).playCard(any());
         verify(cardUseCase, times(1)).discard(any());

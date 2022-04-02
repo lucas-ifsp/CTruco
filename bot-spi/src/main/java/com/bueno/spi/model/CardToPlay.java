@@ -33,7 +33,7 @@ public final class CardToPlay {
         return new CardToPlay(card, false);
     }
 
-    public static CardToPlay ofDiscard(TrucoCard card){
+    public static CardToPlay discard(TrucoCard card){
         return new CardToPlay(card, true);
     }
 

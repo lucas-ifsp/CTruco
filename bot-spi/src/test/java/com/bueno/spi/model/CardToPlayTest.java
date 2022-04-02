@@ -44,7 +44,7 @@ class CardToPlayTest {
     @DisplayName("Should correctly create discard")
     void shouldCorrectlyCreateDiscard() {
         final TrucoCard card = TrucoCard.of(TWO, CLUBS);
-        final CardToPlay sut = CardToPlay.ofDiscard(card);
+        final CardToPlay sut = CardToPlay.discard(card);
         assertAll(
                 () -> assertEquals(TrucoCard.closed(), sut.value()),
                 () -> assertTrue(sut.isDiscard())
@@ -63,7 +63,7 @@ class CardToPlayTest {
     @DisplayName("Should content of discard be the underlying TrucoCard")
     void shouldContentOfDiscardBeTheUnderlyingTrucoCard() {
         final TrucoCard card = TrucoCard.of(TWO, CLUBS);
-        final CardToPlay sut = CardToPlay.ofDiscard(card);
+        final CardToPlay sut = CardToPlay.discard(card);
         assertEquals(card, sut.content());
     }
 }
