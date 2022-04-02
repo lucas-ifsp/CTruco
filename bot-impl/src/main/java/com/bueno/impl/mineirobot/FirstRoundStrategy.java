@@ -52,7 +52,7 @@ public class FirstRoundStrategy implements PlayingStrategy {
         final int numberOfTopThreeCards = countCardsBetween(10, 12);
         final int numberOfMediumCards = countCardsBetween(7,8);
 
-        if(numberOfTopThreeCards == 2) return CardToPlay.ofDiscard(cards.get(2));
+        if(numberOfTopThreeCards == 2) return CardToPlay.discard(cards.get(2));
 
         if(possibleOpponentCard.isPresent()) {
             TrucoCard opponentCard = possibleOpponentCard.get();
@@ -61,7 +61,7 @@ public class FirstRoundStrategy implements PlayingStrategy {
             if (possibleEnoughCardToWin.isPresent()) return CardToPlay.of(possibleEnoughCardToWin.get());
 
             Optional<TrucoCard> possibleCardToDraw = getPossibleCardToDraw(cards, vira, opponentCard);
-            return possibleCardToDraw.map(CardToPlay::of).orElseGet(() -> CardToPlay.ofDiscard((cards.get(2))));
+            return possibleCardToDraw.map(CardToPlay::of).orElseGet(() -> CardToPlay.discard((cards.get(2))));
         }
         if(numberOfTopThreeCards == 1 && numberOfMediumCards > 0) return CardToPlay.of(cards.get(1));
         return CardToPlay.of(cards.get(0));

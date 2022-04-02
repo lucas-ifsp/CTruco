@@ -56,7 +56,7 @@ public class ThirdRoundStrategy implements PlayingStrategy {
         final TrucoCard opponentCard = possibleOpponentCard.get();
         if (remainingCard.compareValueTo(opponentCard, vira) >= 0) return CardToPlay.of(remainingCard);
 
-        return CardToPlay.ofDiscard(remainingCard);
+        return CardToPlay.discard(remainingCard);
     }
 
     @Override
