@@ -107,6 +107,8 @@ public final class TrucoCard {
      * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null
      */
     public int compareValueTo(TrucoCard otherCard, TrucoCard vira) {
+        Objects.requireNonNull(otherCard, "TrucoCard to be compared must not be null.");
+        Objects.requireNonNull(vira, "TrucoCard representing the vira must not be null.");
         return computeCardValue(this, vira) - computeCardValue(otherCard, vira);
     }
 
@@ -134,6 +136,7 @@ public final class TrucoCard {
      * @throws NullPointerException if {@code vira} is null
      */
     public boolean isManilha(TrucoCard vira) {
+        Objects.requireNonNull(vira, "TrucoCard representing the vira must not be null.");
         return getRank() == vira.getRank().next();
     }
 
