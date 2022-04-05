@@ -36,10 +36,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameIntelTest {
 
     private StepBuilder stepBuilder;
-    List<GameIntel.RoundResult> results;
-    List<TrucoCard> openCards;
-    List<TrucoCard> botCards;
-    TrucoCard vira;
+    private List<GameIntel.RoundResult> results;
+    private List<TrucoCard> openCards;
+    private List<TrucoCard> botCards;
+    private TrucoCard vira;
 
     @BeforeEach
     void setUp() {

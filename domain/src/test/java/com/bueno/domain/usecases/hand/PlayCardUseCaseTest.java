@@ -58,7 +58,6 @@ class PlayCardUseCaseTest {
 
     private UUID p1Uuid;
     private UUID p2Uuid;
-    private Game game;
 
     @BeforeAll
     static void init() {
@@ -79,7 +78,7 @@ class PlayCardUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
-        game = new Game(player1, player2);
+        Game game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
 
         sut = new PlayCardUseCase(repo);
@@ -198,5 +197,4 @@ class PlayCardUseCaseTest {
         sut.discard(new RequestModel(p2Uuid, card2));
         assertThrows(IllegalArgumentException.class, () -> sut.discard(new RequestModel(p1Uuid, card1)));
     }
-
 }

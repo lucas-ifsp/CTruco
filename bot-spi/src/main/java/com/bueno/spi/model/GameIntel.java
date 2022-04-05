@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * <p>Represents the game intel from the current player point of view, including its card, the vira card, etc.
+ * All information that a player can know about the game is available through getter methods.
+ * Objects of this class are final and must be created using the {@link StepBuilder} supporting class.
+ * */
 public class GameIntel {
 
     public enum RoundResult {WON, DREW, LOST}

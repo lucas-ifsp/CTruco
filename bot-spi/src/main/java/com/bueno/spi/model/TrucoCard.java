@@ -22,6 +22,13 @@ package com.bueno.spi.model;
 
 import java.util.Objects;
 
+/**
+ * <p>Represents a valid truco card described in terms of a {@link CardRank} and a {@link CardSuit}. It also
+ * encompasses a method to compare its value based on a vira card, as well as methods to check if the card is
+ * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final, cached,
+ * and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
+ * {@link #closed()}.
+ * */
 public final class TrucoCard {
 
     private static final TrucoCard[] cache = new TrucoCard[41];
