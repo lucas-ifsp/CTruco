@@ -66,4 +66,17 @@ class CardToPlayTest {
         final CardToPlay sut = CardToPlay.discard(card);
         assertEquals(card, sut.content());
     }
+
+    @Test
+    @DisplayName("Should throw if tries to create a card to played from a null TrucoCard")
+    void shouldThrowIfTriesToCreateACardToPlayedFromANullTrucoCard() {
+        assertThrows(NullPointerException.class, () -> CardToPlay.of(null));
+    }
+
+    @Test
+    @DisplayName("Should throw if tries to create a card to discarded from a null TrucoCard")
+    void shouldThrowIfTriesToCreateACardToDiscardedFromANullTrucoCard() {
+        assertThrows(NullPointerException.class, () -> CardToPlay.discard(null));
+    }
+
 }

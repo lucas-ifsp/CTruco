@@ -38,6 +38,7 @@ public final class CardToPlay {
      * @throws NullPointerException if {@code card} is null
      * */
     public static CardToPlay of(TrucoCard card){
+        Objects.requireNonNull(card, "The card to be played must not be null.");
         return new CardToPlay(card, false);
     }
 
@@ -50,6 +51,7 @@ public final class CardToPlay {
      * @throws NullPointerException if {@code card} is null
      * */
     public static CardToPlay discard(TrucoCard card){
+        Objects.requireNonNull(card, "The card to be discarded must not be null.");
         return new CardToPlay(card, true);
     }
 
