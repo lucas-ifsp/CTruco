@@ -1,4 +1,4 @@
-#CTruco - Truco game for didactic purpose
+# CTruco - Truco game for didactic purpose
 
 ## Overview
 
