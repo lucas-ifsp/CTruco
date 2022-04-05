@@ -20,6 +20,7 @@
 
 package com.bueno.spi.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -179,6 +180,26 @@ class TrucoCardTest {
         final TrucoCard otherCard = TrucoCard.of(TWO, DIAMONDS);
         assertNotEquals(card, otherCard);
     }
+
+    @Test
+    @DisplayName("Should throw if any parameter is null in compareValueTo method")
+    void shouldThrowIfAnyParameterIsNullInCompareValueToMethod() {
+        final TrucoCard card = TrucoCard.of(TWO, SPADES);
+        Assertions.assertAll(
+                () -> assertThrows(NullPointerException.class,
+                        () -> TrucoCard.closed().compareValueTo(null, card)),
+                () -> assertThrows(NullPointerException.class,
+                        () -> TrucoCard.closed().compareValueTo(card, null))
+
+        );
+    }
+
+    @Test
+    @DisplayName("Should throw if vira parameter is null while checking if the card is a manilha")
+    void shouldThrowIfViraParameterIsNullWhileCheckingIfTheCardIsAManilha() {
+        assertThrows(NullPointerException.class, () -> TrucoCard.closed().isEspadilha(null));
+    }
+
 
     @Test
     @DisplayName("Should cards of same rank and suit be the same")
