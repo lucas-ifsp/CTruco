@@ -112,7 +112,7 @@ public final class TrucoCard {
 
     private int computeCardValue(TrucoCard card, TrucoCard vira) {
         if (!card.isManilha(vira)) return card.getRank().value();
-        else return switch (card.getSuit()) {
+        return switch (card.getSuit()) {
             case DIAMONDS -> 11;
             case SPADES -> 12;
             case HEARTS -> 13;
