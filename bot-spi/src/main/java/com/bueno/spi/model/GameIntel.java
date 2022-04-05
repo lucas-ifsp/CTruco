@@ -49,34 +49,74 @@ public class GameIntel {
         this.handPoints = handPoints;
     }
 
+    /**
+     * <p>Returns the cards owned by the bot in the current hand.</p>
+     * @return an unmodifiable List of non-null TrucoCards or an empty {@code List} if the user has no cards left
+     */
     public List<TrucoCard> getCards() {
         return cards;
     }
 
+    /**
+     * <p>Returns cards in the order they were played in the current hand, including the vira as the first {@code List}
+     * element.</p>
+     * @return an unmodifiable List of non-null {@link TrucoCard} sorted by the ascending order they
+     * were played in the current hand. The vira card is the element of index 0.
+     */
     public List<TrucoCard> getOpenCards() {
         return openCards;
     }
 
+    /**
+     * <p>Returns the vira card of the current hand </p>
+     * @return a non-null {@link TrucoCard} describing the vira card of the current hand
+     */
     public TrucoCard getVira() {
         return vira;
     }
 
+    /**
+     * <p>Returns an {@code Optional<TrucoCard>} that may contain a {@link TrucoCard} played by the opponent to start
+     * the round, or empty if the current player is the one that should start the round.</p>
+     * @return an {@code Optional<TrucoCard>} containing a {@link TrucoCard} played by opponent or
+     * {@code Optional.empty()} if nothing was played and the current player is the first to play in the round.
+     */
     public Optional<TrucoCard> getOpponentCard() {
         return Optional.ofNullable(opponentCard);
     }
 
+    /**
+     * <p>Returns an unmodifiable {@code List} that contains the round results of the current hand from the point of
+     * view of the current player. The results are represented by the values of {@link RoundResult} (WON, DREW, or LOST).
+     * For example, if the current player lost the first round, won second and is playing the third, the list size is 2,
+     * the first element is LOST, and the second is WON.</p>
+     * @return an unmodifiable {@code List} of non-null {@link RoundResult} elements in the order the rounds
+     * were played in the current hand, or an empty list if no round was concluded yet.
+     */
     public List<RoundResult> getRoundResults() {
         return roundResults;
     }
 
+    /**
+     * <p>Returns the player game score.</p>
+     * @return a non-negative int representing the current player score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * <p>Returns the opponent game score.</p>
+     * @return a non-negative int representing the current opponent score
+     */
     public int getOpponentScore() {
         return opponentScore;
     }
 
+    /**
+     * <p>Returns the number of points in dispute in the current hand.</p>
+     * @return a non-negative int representing the number of points in dispute
+     */
     public int getHandPoints() {
         return handPoints;
     }
@@ -93,7 +133,12 @@ public class GameIntel {
         StepBuilder opponentScore(int opponentScore);
     }
 
-    public static final class StepBuilder implements  GeneralIntel, BotIntel, OpponentIntel{
+    /**
+     * <p>A Builder pattern implementation that supports the creation of GameIntel objects. To start the build, the
+     * method {@link #with()} should be invoked. To conclude the build, the {@link #build()} method should be invoked.
+     * The method {@link #opponentCard(TrucoCard card)} is the only optional step of building process.</p>
+     */
+    public static final class StepBuilder implements GeneralIntel, BotIntel, OpponentIntel{
         private List<TrucoCard> cards;
         private List<TrucoCard> openCards;
         private TrucoCard vira;
@@ -105,6 +150,9 @@ public class GameIntel {
 
         private StepBuilder(){}
 
+        /**
+         * <p>Starts the building process of a GameIntel object.</p>
+         */
         public static GeneralIntel with(){
             return new StepBuilder();
         }
@@ -131,11 +179,18 @@ public class GameIntel {
             return this;
         }
 
+        /**
+         * <p>Optional step of the building process. If this method is invoked more than once, only the last
+         * value will be used.</p>
+         */
         public StepBuilder opponentCard(TrucoCard card){
             this.opponentCard = card;
             return this;
         }
 
+        /**
+         * <p>Concludes the building process of a GameIntel object.</p>
+         */
         public GameIntel build(){
             return new GameIntel(cards, openCards, vira, opponentCard, roundResults, score, opponentScore, handPoints);
         }
