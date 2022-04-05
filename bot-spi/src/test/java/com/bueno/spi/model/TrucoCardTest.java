@@ -200,7 +200,6 @@ class TrucoCardTest {
         assertThrows(NullPointerException.class, () -> TrucoCard.closed().isEspadilha(null));
     }
 
-
     @Test
     @DisplayName("Should cards of same rank and suit be the same")
     void shouldCardsOfSameRankAndSuitBeTheSame() {
