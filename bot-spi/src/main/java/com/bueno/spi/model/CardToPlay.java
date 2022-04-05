@@ -20,6 +20,13 @@
 
 package com.bueno.spi.model;
 
+import java.util.Objects;
+
+/**
+ * <p>Represents a playing order containing a {@link TrucoCard} and a decision whether this card should be played
+ * or discarded. Objects of this class are final and must be created using the static constructors
+ * {@link #of(TrucoCard card)} or {@link #discard(TrucoCard card)}.
+ * */
 public final class CardToPlay {
     private final TrucoCard content;
     private final boolean discard;
