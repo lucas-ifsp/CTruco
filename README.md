@@ -3,13 +3,13 @@
 ## Overview
 
 This project was designed to serve as supporting material in classes involving object-oriented design and programming,
-Java language, testing, and backend development. In the source code, students and practitioners will find implementation 
+Java language, testing, and backend development. In the source code, students and practitioners will find implementations 
 of concepts such as: 
 
-- Modern Java programming (functional API, Streams, pattern matching, switch expressions...)
+- Modern Java programming (functional API, Streams, modules, switch expressions, etc.)
 - Clean Code and Clean Architecture (SOLID);
 - GRASP patterns;
-- Design Patterns (Singleton, State, Strategy, DAO...);
+- Design Patterns (Singleton, State, Strategy, DAO, etc.);
 - Object Calisthenics;
 - Testing Driven Development (TDD) using JUnit 5 and Mockito;
 - Domain Driven Design (DDD).
@@ -31,7 +31,7 @@ dependencies, so no additional config is needed.
 
 CTruco is composed of the following modules: 
 
-- `domain:` encompasses game business rules, including core entities and use cases. All application modules must depend on this module;
+- `domain:` encompasses game business rules, including core entities and use cases. All application modules depend on this module;
 - `persistence:` provides concrete implementations for persistence interfaces specified in `domain` module use cases;
 - `bot-spi:` contains a [Service Provider Interface (SPI)](https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html) named `BotServiceProvider`, which enables any future bot implementation to be seamlessly integrated into `domain` use cases;
 - `bot-impl:` provides two default implementations of `BotServiceProvider` interface: `DummyBot` (silly one), `MineiroBot` (not so silly);
@@ -46,7 +46,7 @@ please apply regression tests to assure proper code behaviour.
 
 ## Developing Your Own Bot Service
 
-One of the ideas behind **CTruco** is to design a software flexible enough to receive new implementations of bot provided by
+One of the ideas behind **CTruco** is to design a software flexible enough to receive new implementations of bot services provided by
 the community without changing a single line of code. Implementing and integrating a bot into the game is straightforward:
 
 1. Create a module with Maven;
@@ -73,17 +73,17 @@ the community without changing a single line of code. Implementing and integrati
    ```
    module your.mod.name {
        requires bot.spi;
-       exports name.of.the.package.where.you.the.service.implementation.is;
+       exports name.of.the.package.where.your.service.implementation.is;
        provides com.bueno.spi.service.BotServiceProvider with YourServiceClass;
    }
    ```
    
 6. In your `resources` folder, create a folder named `META-INF` and, inside the folder, create another folder named `services`. 
-Create a file named `com.bueno.spi.service.BotServiceProvider`, open the file, and put the fully qualified name of your service
-implementation. For example: 
+In the `services` folder, create a file named `com.bueno.spi.service.BotServiceProvider`, open it, and put the fully qualified 
+name of your service implementation. For example: 
 
    ```
-   name.of.the.package.where.you.the.service.implementation.is.YourServiceClass
+   name.of.the.package.where.your.service.implementation.is.YourServiceClass
    ```
 
 
@@ -100,7 +100,7 @@ implementation. For example:
 
 An example on how to implement a bot service can be found [here](https://github.com/lucas-ifsp/CTruco/tree/master/bot-impl). 
 
-To test if you configured it right, run the `standalone/PlayWithBots` class in `console` module. Your bot service implementation class should be available as a bot option.
+To check if you have configured it right, run the `standalone/PlayWithBots` class in `console` module. Your bot service implementation class should be available as a bot option.
 
 Now that everything is set, you can develop the business logic of your bot service. The `BotServiceProvider` 
 has four abstract methods to be implemented: 
@@ -110,13 +110,14 @@ has four abstract methods to be implemented:
 - `boolean decideIfRaises(GameIntel intel)`: choose if bot starts a point raise request.  Returning `false` means do nothing. Returning `true` means requesting a point raise;
 - `CardToPlay chooseCard(GameIntel intel)`: provided the card will be played or discarded in the current round.
 
-There are only three entities related to the service implementation:
+There are only three model classes related to the service implementation:
 
 - `GameIntel`: describes the current state of the game, including: bot cards, open cards in the table, vira, bot score, opponent score, etc.;
 - `TrucoCard`: represents a valid card in the truco game, with fields such as CardRank and CardSuit;
 - `CardToPlay`: wraps a TrucoCard as a card to be played in the round or discarded.
 
-***The funny part: you can develop a bot to challenge other bots proposed by the community. If your bot is good enough, please pull request it.***
+
+***THE FUNNY PART:  you can develop a bot to challenge other bots proposed by the community. If your bot is good enough, please pull request it.***
 
 
 
