@@ -25,7 +25,7 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.service.BotServiceProvider;
 
@@ -74,13 +74,13 @@ public class BotUseCase {
 
     private void initializeNullHandlers(BotServiceProvider botService) {
         if (maoDeOnzeHandler == null)
-            maoDeOnzeHandler = new MaoDeOnzeHandler(new ScoreProposalUseCase(repo), botService);
+            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(repo), botService);
         if (raiseHandler == null)
-            raiseHandler = new RaiseHandler(new ScoreProposalUseCase(repo), botService);
+            raiseHandler = new RaiseHandler(new PointsProposalUseCase(repo), botService);
         if (cardHandler == null)
             cardHandler = new CardPlayingHandler(new PlayCardUseCase(repo), botService);
         if (requestHandler == null)
-            requestHandler = new RaiseRequestHandler(new ScoreProposalUseCase(repo), botService);
+            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(repo), botService);
     }
 
     public static List<String> availableBots(){

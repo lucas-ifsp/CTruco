@@ -18,10 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.player;
+package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.player.FindUserUseCase.ResponseModel;
+import com.bueno.domain.usecases.user.FindUserUseCase.ResponseModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

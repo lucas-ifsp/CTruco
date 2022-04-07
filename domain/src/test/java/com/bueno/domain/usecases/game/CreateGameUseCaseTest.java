@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.DisplayName;

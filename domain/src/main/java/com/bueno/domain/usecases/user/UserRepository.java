@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.player;
+package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
 

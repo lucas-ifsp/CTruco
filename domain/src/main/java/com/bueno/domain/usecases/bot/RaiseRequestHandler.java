@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.EnumSet;
@@ -35,9 +35,9 @@ import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 class RaiseRequestHandler implements Handler{
 
     private final BotServiceProvider botService;
-    private final ScoreProposalUseCase scoreUseCase;
+    private final PointsProposalUseCase scoreUseCase;
 
-    RaiseRequestHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService) {
+    RaiseRequestHandler(PointsProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
     }

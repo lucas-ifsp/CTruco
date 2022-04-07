@@ -18,13 +18,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.player;
+package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.player.CreateUserUseCase.RequestModel;
+import com.bueno.domain.usecases.user.CreateUserUseCase.RequestModel;
 import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
