@@ -24,7 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.spi.service.BotServiceManager;
@@ -43,6 +43,14 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
+
+    public Intel createWithUserAndBot(UserAndBotRequestModel requestModel){
+        System.out.println("Hello!!!");
+       Objects.requireNonNull(requestModel);
+       return createWithUserAndBot(requestModel.userUUID, requestModel.botName);
+    }
+
+    //TODO Remove all calls to this method by the request method one.
     public Intel createWithUserAndBot(UUID userUUID, String botName){
         Objects.requireNonNull(userUUID, "User UUID must not be null!");
         Objects.requireNonNull(botName, "Bot name must not be null!");
@@ -88,5 +96,8 @@ public class CreateGameUseCase {
         Game game = new Game(p1, p2);
         gameRepo.save(game);
         return game.getIntel();
+    }
+
+    public record UserAndBotRequestModel(UUID userUUID, String botName) {
     }
 }

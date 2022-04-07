@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.bot;
 
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class RaiseHandlerTest {
     @Mock Player bot;
     @Mock Intel intel;
     @Mock BotServiceProvider botService;
-    @Mock ScoreProposalUseCase scoreUseCase;
+    @Mock PointsProposalUseCase scoreUseCase;
     @InjectMocks RaiseHandler sut;
 
     @BeforeEach

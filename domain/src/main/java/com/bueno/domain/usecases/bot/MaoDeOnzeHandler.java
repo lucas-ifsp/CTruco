@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
@@ -31,9 +31,9 @@ import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
 class MaoDeOnzeHandler implements Handler {
 
     private final BotServiceProvider botService;
-    private final ScoreProposalUseCase scoreUseCase;
+    private final PointsProposalUseCase scoreUseCase;
 
-    MaoDeOnzeHandler(ScoreProposalUseCase scoreUseCase, BotServiceProvider botService) {
+    MaoDeOnzeHandler(PointsProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
     }

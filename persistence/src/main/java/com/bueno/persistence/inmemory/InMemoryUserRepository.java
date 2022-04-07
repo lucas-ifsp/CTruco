@@ -21,7 +21,7 @@
 package com.bueno.persistence.inmemory;
 
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.user.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -35,12 +35,12 @@ import com.bueno.domain.usecases.utils.Validator;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ScoreProposalUseCase {
+public class PointsProposalUseCase {
 
     private final GameRepository repo;
     private final BotUseCase botUseCase;
 
-    public ScoreProposalUseCase(GameRepository repo) {
+    public PointsProposalUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
         this.botUseCase = new BotUseCase(repo);
     }

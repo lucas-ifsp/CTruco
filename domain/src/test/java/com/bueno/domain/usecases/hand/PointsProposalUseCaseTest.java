@@ -25,7 +25,7 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,9 +43,9 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ScoreProposalUseCaseTest {
+class PointsProposalUseCaseTest {
 
-    private ScoreProposalUseCase sut;
+    private PointsProposalUseCase sut;
 
     @Mock private Player player1;
     @Mock private Player player2;
@@ -73,7 +73,7 @@ class ScoreProposalUseCaseTest {
 
         game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
-        sut = new ScoreProposalUseCase(repo);
+        sut = new PointsProposalUseCase(repo);
     }
 
     @AfterEach

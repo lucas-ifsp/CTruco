@@ -28,9 +28,9 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
-import com.bueno.domain.usecases.player.CreateUserUseCase;
-import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
+import com.bueno.domain.usecases.user.CreateUserUseCase;
+import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;
@@ -86,7 +86,7 @@ public class GameTableController {
     private final CreateUserUseCase createUserUseCase;
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
-    private final ScoreProposalUseCase scoreProposalUseCase;
+    private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
     private UUID userUUID;
@@ -103,7 +103,7 @@ public class GameTableController {
         createUserUseCase = new CreateUserUseCase(userRepo);
         gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
         playCardUseCase = new PlayCardUseCase(gameRepo);
-        scoreProposalUseCase = new ScoreProposalUseCase(gameRepo);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
@@ -443,15 +443,15 @@ public class GameTableController {
     }
 
     public void accept(ActionEvent a) {
-        handleScoreChange("ACCEPT", () -> scoreProposalUseCase.accept(userUUID));
+        handleScoreChange("ACCEPT", () -> pointsProposalUseCase.accept(userUUID));
     }
 
     public void quit(ActionEvent a) {
-        handleScoreChange("QUIT", () -> scoreProposalUseCase.quit(userUUID));
+        handleScoreChange("QUIT", () -> pointsProposalUseCase.quit(userUUID));
     }
 
     public void raise(ActionEvent a) {
-        handleScoreChange("RAISE", () -> scoreProposalUseCase.raise(userUUID));
+        handleScoreChange("RAISE", () -> pointsProposalUseCase.raise(userUUID));
     }
 
     private void handleScoreChange(String action, Runnable request){

@@ -29,9 +29,9 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.usecases.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
-import com.bueno.domain.usecases.hand.usecases.ScoreProposalUseCase;
-import com.bueno.domain.usecases.player.CreateUserUseCase;
-import com.bueno.domain.usecases.player.UserRepository;
+import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
+import com.bueno.domain.usecases.user.CreateUserUseCase;
+import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import com.google.common.primitives.Ints;
@@ -49,7 +49,7 @@ public class GameCLI {
     private final CreateUserUseCase createUserUseCase;
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
-    private final ScoreProposalUseCase scoreProposalUseCase;
+    private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
     private final List<Intel> missingIntel;
@@ -71,7 +71,7 @@ public class GameCLI {
         createUserUseCase = new CreateUserUseCase(userRepo);
         gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
         playCardUseCase = new PlayCardUseCase(gameRepo);
-        scoreProposalUseCase = new ScoreProposalUseCase(gameRepo);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }
@@ -165,7 +165,7 @@ public class GameCLI {
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
         RaiseRequestReader requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handPoints()));
-        if(requestReader.execute() == REQUEST) scoreProposalUseCase.raise(userUUID);
+        if(requestReader.execute() == REQUEST) pointsProposalUseCase.raise(userUUID);
     }
 
     private int nextScore(int score){
@@ -181,9 +181,9 @@ public class GameCLI {
 
         RaiseResponseReader responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handPoints()));
         switch (responseReader.execute()){
-            case QUIT -> scoreProposalUseCase.quit(userUUID);
-            case ACCEPT -> scoreProposalUseCase.accept(userUUID);
-            case RAISE -> scoreProposalUseCase.raise(userUUID);
+            case QUIT -> pointsProposalUseCase.quit(userUUID);
+            case ACCEPT -> pointsProposalUseCase.accept(userUUID);
+            case RAISE -> pointsProposalUseCase.raise(userUUID);
         }
     }
 
@@ -193,8 +193,8 @@ public class GameCLI {
 
         MaoDeOnzeResponseReader responseReader = new MaoDeOnzeResponseReader(this);
         if(responseReader.execute() == ACCEPT) {
-            scoreProposalUseCase.accept(userUUID);}
-        scoreProposalUseCase.quit(userUUID);
+            pointsProposalUseCase.accept(userUUID);}
+        pointsProposalUseCase.quit(userUUID);
     }
 
     public void printGameIntel(int delayInMilliseconds){
