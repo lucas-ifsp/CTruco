@@ -41,28 +41,28 @@ public class Intel{
 
     private Integer handPoints;
     private Integer handPointsProposal;
-    private List<Optional<String>> roundWinners;
+    private List<Optional<String>> roundWinnersUsernames;
     private List<Optional<UUID>> roundWinnersUuid;
     private int roundsPlayed;
+    private Card vira;
+    private List<Card> openCards;
+    private String handWinner;
 
     private Player currentPlayer;
     private int currentPlayerScore;
     private String currentPlayerUsername;
+    private int currentOpponentScore;
+    private String currentOpponentUsername;
+    private Card cardToPlayAgainst;
+    private List<PlayerIntel> players;
 
     private String eventPlayerUsername;
     private UUID eventPlayerUUID;
-
-    private int currentOpponentScore;
-    private String currentOpponentUsername;
-
-    private List<PlayerIntel> players;
-
-    private Card vira;
-    private Card cardToPlayAgainst;
-    private List<Card> openCards;
     private String event;
     private Set<String> possibleActions;
-    private String handWinner;
+
+
+
 
     static public Intel ofHand(Hand currentHand, Event event){
         final Hand hand = Objects.requireNonNull(currentHand);
@@ -84,9 +84,9 @@ public class Intel{
         maoDeOnze = hand.isMaoDeOnze();
         handPoints = hand.getPoints().get();
         if(hand.getPointsProposal() != null) handPointsProposal = hand.getPointsProposal().get();
-        roundWinners = getRoundWinners(hand);
+        roundWinnersUsernames = getRoundWinnersUsernames(hand);
         roundWinnersUuid = getRoundWinnersUuid(hand);
-        roundsPlayed = roundWinners.size();
+        roundsPlayed = roundWinnersUsernames.size();
         vira = hand.getVira();
         handWinner = hand.getResult().flatMap(HandResult::getWinner).map(Player::getUsername).orElse(null);
         openCards = List.copyOf(hand.getOpenCards());
@@ -156,7 +156,7 @@ public class Intel{
         }
     }
 
-    private List<Optional<String>> getRoundWinners(Hand hand) {
+    private List<Optional<String>> getRoundWinnersUsernames(Hand hand) {
         return hand.getRoundsPlayed().stream()
                 .map(Round::getWinner)
                 .map(maybeWinner -> maybeWinner.orElse(null))
@@ -198,8 +198,8 @@ public class Intel{
         return Optional.ofNullable(handPointsProposal);
     }
 
-    public List<Optional<String>> roundWinners() {
-        return roundWinners;
+    public List<Optional<String>> roundWinnersUsernames() {
+        return roundWinnersUsernames;
     }
 
     public List<Optional<UUID>> roundWinnersUuid() {
@@ -258,9 +258,14 @@ public class Intel{
         return Optional.ofNullable(event);
     }
 
-    public Optional<UUID> eventPlayer() {
+    public Optional<UUID> eventPlayerUuid() {
         return Optional.ofNullable(eventPlayerUUID);
     }
+
+    public Optional<String> eventPlayerUsername() {
+        return Optional.ofNullable(eventPlayerUsername);
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -287,7 +292,7 @@ public class Intel{
                 " | Vira = " + vira +
                 " | Card to play against = " + cardToPlayAgainst +
                 " | Open cards = " + openCards +
-                " | Rounds = " + roundWinners +
+                " | Rounds = " + roundWinnersUsernames +
                 " | Hand Score = " + handPoints +
                 (pointsProposal().isPresent() ? " | Score Proposal = " + pointsProposal().get() : "") +
                 (isMaoDeOnze() ? " | Mão de Onze = " + userInMaoDeOnze  :  "") +
