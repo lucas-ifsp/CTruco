@@ -54,6 +54,12 @@ public class HandleIntelUseCase {
         return List.copyOf(player.getCards());
     }
 
+    public Boolean isPlayerTurn(UUID userUuid) {
+        validateInput(userUuid);
+        final Game game = repo.findByUserUuid(userUuid).orElseThrow();
+        return userUuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
+    }
+
     private void validateInput(UUID usedUuid) {
         final Validator<UUID> validator = new IntelRequestValidator(repo);
         final Notification notification = validator.validate(usedUuid);

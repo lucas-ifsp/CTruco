@@ -309,7 +309,7 @@ public class GameTableController {
     }
 
     private boolean isBotEvent(Intel intel) {
-        return botUUID.equals(intel.eventPlayer().orElse(null));
+        return botUUID.equals(intel.eventPlayerUuid().orElse(null));
     }
 
     private void addBotAnimation(TimelineBuilder builder, Intel intel, String event) {
@@ -364,7 +364,7 @@ public class GameTableController {
 
         if (roundIndex >= roundsPlayed) return;
 
-        final var resultText = intel.roundWinners().get(roundNumber - 1).orElse("Empate");
+        final var resultText = intel.roundWinnersUsernames().get(roundNumber - 1).orElse("Empate");
         roundResultLabel.setText(resultText);
         roundLabel.setVisible(true);
         roundResultLabel.setVisible(true);

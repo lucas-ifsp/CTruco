@@ -163,7 +163,7 @@ class IntelTest {
                 () -> assertEquals(hand.getVira(), sut.vira()),
                 () -> assertIterableEquals(hand.getOpenCards(), sut.openCards()),
                 () -> assertNotSame(hand.getOpenCards(), sut.openCards()),
-                () -> assertEquals(p1.getUuid(), sut.eventPlayer().orElseThrow()),
+                () -> assertEquals(p1.getUuid(), sut.eventPlayerUuid().orElseThrow()),
                 () -> assertEquals("PLAY", sut.event().orElseThrow()),
                 () -> assertIterableEquals(List.of(new PlayerIntel (p1), new PlayerIntel(p2)), sut.players()),
                 () -> assertIterableEquals(List.of("PLAY", "RAISE"), sut.possibleActions())
@@ -193,7 +193,7 @@ class IntelTest {
         final List<Optional<String>> expected = List.of(Optional.of("name1"), Optional.empty(), Optional.of("name2"));
         final Intel intel = Intel.ofHand(hand, Event.PLAY);
 
-        assertEquals(expected, intel.roundWinners());
+        assertEquals(expected, intel.roundWinnersUsernames());
     }
 
     @Test

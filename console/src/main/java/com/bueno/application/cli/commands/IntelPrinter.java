@@ -94,7 +94,7 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printRounds(Intel intel) {
-        final List<Optional<String>> roundWinners = intel.roundWinners();
+        final List<Optional<String>> roundWinners = intel.roundWinnersUsernames();
         if (roundWinners.size() > 0) {
             final String roundResults = roundWinners.stream()
                     .map(possibleWinner -> possibleWinner.orElse("Empate"))
