@@ -126,7 +126,7 @@ class HandleIntelUseCaseTest {
         final Intel initialIntel = game.getIntel();
         hand.playFirstCard(player1, Card.closed());
 
-        final List<Intel> intelSinceBeginning = sut.findIntelSince(p1Uuid, initialIntel);
-        assertEquals(game.getIntelSince(initialIntel), intelSinceBeginning);
+        final List<Intel> intelSinceBeginning = sut.findIntelSince(p1Uuid, initialIntel.timestamp());
+        assertEquals(game.getIntelSince(initialIntel.timestamp()), intelSinceBeginning);
     }
 }

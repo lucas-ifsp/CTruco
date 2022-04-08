@@ -153,7 +153,7 @@ class PointsProposalUseCaseTest {
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
 
-        final List<Intel> intelSince = game.getIntelSince(firstIntel);
+        final List<Intel> intelSince = game.getIntelSince(firstIntel.timestamp());
         intelSince.remove(lastIntel);
         final Intel quitIntel = intelSince.get(intelSince.size() - 1);
 

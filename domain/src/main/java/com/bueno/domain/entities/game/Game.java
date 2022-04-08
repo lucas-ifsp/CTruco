@@ -27,6 +27,7 @@ import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -92,12 +93,11 @@ public class Game {
         return isDone() ? Intel.ofGame(this) : currentHand().getLastIntel();
     }
 
-    public List<Intel> getIntelSince(Intel lastIntel) {
+    public List<Intel> getIntelSince(Instant lastIntelTimestamp) {
         final List<Intel> wholeHistory = hands.stream().flatMap(hand -> hand.getIntelHistory().stream()).collect(Collectors.toList());
         if (isDone()) wholeHistory.add(Intel.ofGame(this));
-        if (lastIntel == null) return wholeHistory;
-        final Comparator<Intel> byTimestamp = Comparator.comparing(Intel::timestamp);
-        final Predicate<Intel> isAfter = intel -> byTimestamp.compare(intel, lastIntel) > 0;
+        if (lastIntelTimestamp == null) return wholeHistory;
+        final Predicate<Intel> isAfter = intel -> intel.timestamp().isAfter(lastIntelTimestamp);
         return wholeHistory.stream().filter(isAfter).collect(Collectors.toList());
     }
 

@@ -142,7 +142,7 @@ public class GameCLI {
     }
 
     private void updateIntel() {
-        List<Intel> newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel);
+        List<Intel> newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
         missingIntel.addAll(newIntel);
         if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
