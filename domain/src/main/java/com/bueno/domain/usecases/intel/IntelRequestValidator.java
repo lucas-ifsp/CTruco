@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.validators;
+package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.GameRepository;

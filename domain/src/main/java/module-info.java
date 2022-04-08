@@ -19,4 +19,5 @@ module domain {
     exports com.bueno.domain.entities.hand;
     exports com.bueno.domain.entities.intel;
     exports com.bueno.domain.entities.hand.states;
+    exports com.bueno.domain.usecases.intel;
 }

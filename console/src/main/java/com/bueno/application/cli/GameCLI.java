@@ -26,7 +26,7 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.usecases.HandleIntelUseCase;
+import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
 import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
