@@ -29,6 +29,7 @@ import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -41,10 +42,10 @@ public class HandleIntelUseCase {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public List<Intel> findIntelSince(UUID usedUuid, Intel lastIntel){
+    public List<Intel> findIntelSince(UUID usedUuid, Instant lastIntelTimestamp){
         validateInput(usedUuid);
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
-        return game.getIntelSince(lastIntel);
+        return game.getIntelSince(lastIntelTimestamp);
     }
 
     public List<Card> getOwnedCards(UUID usedUuid){

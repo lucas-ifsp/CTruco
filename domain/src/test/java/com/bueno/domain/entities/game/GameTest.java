@@ -147,7 +147,7 @@ class GameTest {
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.CLUBS));
         hand.playSecondCard(player2, Card.closed());
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
-        assertEquals(3, sut.getIntelSince(firstHandIntel).size());
+        assertEquals(3, sut.getIntelSince(firstHandIntel.timestamp()).size());
     }
 
     @Test
@@ -168,7 +168,7 @@ class GameTest {
         final Hand newHand = sut.currentHand();
         newHand.playFirstCard(player2, Card.closed());
 
-        assertEquals(6, sut.getIntelSince(firstHandIntel).size());
+        assertEquals(6, sut.getIntelSince(firstHandIntel.timestamp()).size());
     }
 
     @Test

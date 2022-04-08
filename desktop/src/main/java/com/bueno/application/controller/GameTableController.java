@@ -219,7 +219,7 @@ public class GameTableController {
     }
 
     private void updateIntel() {
-        final var newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel);
+        final var newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
         missingIntel.addAll(newIntel);
         if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
