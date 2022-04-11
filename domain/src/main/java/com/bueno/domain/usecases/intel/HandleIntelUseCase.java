@@ -28,12 +28,14 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class HandleIntelUseCase {
 
     private final GameRepository repo;

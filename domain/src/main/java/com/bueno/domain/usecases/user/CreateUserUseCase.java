@@ -24,10 +24,12 @@ import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class CreateUserUseCase {
 
     private final UserRepository repo;

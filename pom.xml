@@ -13,6 +13,7 @@
         <module>persistence</module>
         <module>bot-spi</module>
         <module>bot-impl</module>
+        <module>web</module>
     </modules>
 
     <parent>

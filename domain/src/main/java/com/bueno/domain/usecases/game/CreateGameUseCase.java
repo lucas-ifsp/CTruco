@@ -28,11 +28,13 @@ import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.spi.service.BotServiceManager;
+import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class CreateGameUseCase {
 
     private final GameRepository gameRepo;
@@ -43,11 +45,9 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-
     public Intel createWithUserAndBot(UserAndBotRequestModel requestModel){
-        System.out.println("Hello!!!");
        Objects.requireNonNull(requestModel);
-       return createWithUserAndBot(requestModel.userUUID, requestModel.botName);
+       return createWithUserAndBot(requestModel.userUuid, requestModel.botName);
     }
 
     //TODO Remove all calls to this method by the request method one.
@@ -98,6 +98,6 @@ public class CreateGameUseCase {
         return game.getIntel();
     }
 
-    public record UserAndBotRequestModel(UUID userUUID, String botName) {
+    public record UserAndBotRequestModel(UUID userUuid, String botName) {
     }
 }

@@ -30,6 +30,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>bot-spi</artifactId>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

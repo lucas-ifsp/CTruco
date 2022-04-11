@@ -31,10 +31,12 @@ import com.bueno.domain.usecases.hand.validators.ActionValidator;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Validator;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class PointsProposalUseCase {
 
     private final GameRepository repo;

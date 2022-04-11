@@ -1,0 +1,24 @@
+### Create a user
+POST http://localhost:8080/api/v1/user
+Content-Type: application/json
+
+{
+  "username":"lucas",
+  "email":"lucas@email.com"
+}
+
+### Create a game for this user
+POST http://localhost:8080/api/v1/game/user_bot
+Content-Type: application/json
+
+{
+  "userUuid": "5640d8c1-f5ca-4665-8ca2-52bb6ffe0a63",
+  "botName" : "MineiroBot"
+}
+
+### Check if it is player turn
+GET http://localhost:8080/api/v1/game/player/5640d8c1-f5ca-4665-8ca2-52bb6ffe0a63/in_turn
+
+
+
+

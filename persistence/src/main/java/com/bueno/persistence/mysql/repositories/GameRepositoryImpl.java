@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,31 +18,41 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.persistence.mysql.repositories;
 
 import com.bueno.domain.entities.game.Game;
-import org.springframework.stereotype.Service;
+import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.persistence.mysql.dao.GameDao;
+import com.bueno.persistence.mysql.dto.GameDto;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
-public class FindGameUseCase {
+public class GameRepositoryImpl implements GameRepository {
 
-    private final GameRepository repo;
+    private final GameDao dao;
 
-    public FindGameUseCase(GameRepository repo) {
-        this.repo = repo;
+    public GameRepositoryImpl(GameDao dao) {
+        this.dao = dao;
     }
 
-    public Optional<Game> load(UUID uuid) {
-        final UUID gameUuid = Objects.requireNonNull(uuid, "Game UUID must not be null.");
-        return repo.findByUuid(gameUuid);
+    @Override
+    public void save(Game game) {
+        dao.save(GameDto.of(game));
     }
 
-    public Optional<Game> loadUserGame(UUID userUuid) {
-        final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
-        return repo.findByUserUuid(Objects.requireNonNull(uuid));
+    @Override
+    public Optional<Game> findByUuid(UUID uuid) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Game> findByUserUuid(UUID uuid) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Game> findByUserUsername(String userName) {
+        return Optional.empty();
     }
 }
