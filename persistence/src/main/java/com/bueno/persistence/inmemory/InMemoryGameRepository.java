@@ -23,6 +23,7 @@ package com.bueno.persistence.inmemory;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Repository
 public class InMemoryGameRepository implements GameRepository {
 
     private final Map<UUID, Game> games = new HashMap<>();
@@ -53,7 +55,6 @@ public class InMemoryGameRepository implements GameRepository {
     private static boolean hasUuid(Player player, UUID uuid) {
         return player.getUuid().equals(uuid);
     }
-
 
     @Override
     public Optional<Game> findByUserUsername(String username) {

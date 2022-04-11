@@ -30,10 +30,12 @@ import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class PlayCardUseCase {
 
     private final GameRepository repo;

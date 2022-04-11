@@ -22,10 +22,12 @@ package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
+@Service
 public class FindUserUseCase {
 
     private final UserRepository repo;

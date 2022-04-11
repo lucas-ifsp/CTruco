@@ -4,10 +4,10 @@ module domain {
     requires java.logging;
     requires bot.spi;
     requires bot.impl;
+    requires spring.context;
 
     exports com.bueno.domain.entities.deck;
     exports com.bueno.domain.entities.player;
-    //exports com.bueno.domain.entities.game to application.persistence;
     exports com.bueno.domain.entities.game;
 
     exports com.bueno.domain.usecases.utils;

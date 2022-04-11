@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,31 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.persistence.mysql.dao;
 
-import com.bueno.domain.entities.game.Game;
-import org.springframework.stereotype.Service;
+import com.bueno.persistence.mysql.dto.UserDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
-@Service
-public class FindGameUseCase {
-
-    private final GameRepository repo;
-
-    public FindGameUseCase(GameRepository repo) {
-        this.repo = repo;
-    }
-
-    public Optional<Game> load(UUID uuid) {
-        final UUID gameUuid = Objects.requireNonNull(uuid, "Game UUID must not be null.");
-        return repo.findByUuid(gameUuid);
-    }
-
-    public Optional<Game> loadUserGame(UUID userUuid) {
-        final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
-        return repo.findByUserUuid(Objects.requireNonNull(uuid));
-    }
+public interface UserDao extends JpaRepository<UserDto, Long> {
+    UserDto getByUuid(UUID uuid);
+    UserDto getByEmail(String email);
+    UserDto getByUsername(String username);
 }
