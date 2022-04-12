@@ -18,25 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.validators;
+package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.entities.intel.PossibleAction;
-import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
+import java.util.Objects;
 
-public class PlayCardValidator extends Validator<PlayCardUseCase.RequestModel> {
-
-    private final ActionValidator actionValidator;
-
-    public PlayCardValidator(GameRepository repo, PossibleAction action) {
-        this.actionValidator = new ActionValidator(repo, action);
-    }
-
-    @Override
-    public Notification validate(PlayCardUseCase.RequestModel input) {
-        if(input.card() == null) return new Notification("Card is null");
-        return actionValidator.validate(input.requester());
+public record RequestModel(String username, String email) {
+    public RequestModel(String username, String email) {
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
+        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
     }
 }

@@ -25,6 +25,7 @@ import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase.ResponseModel;
+import com.bueno.domain.usecases.game.RequestModelOfBots;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.google.common.primitives.Ints;
 
@@ -100,11 +101,12 @@ public class PlayWithBots {
     public List<ResponseModel> play(String bot1Name, String bot2Name, int times) throws InterruptedException {
         List<ResponseModel> result = new ArrayList<>();
         for (int i = 0; i < times; i++) {
-            final PlayWithBotsUseCase useCase = createNewGameSettings();
-            final ResponseModel responseModel = useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            final var useCase = createNewGameSettings();
+            final var requestModel = new RequestModelOfBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            final var responseModel = useCase.playWithBots(requestModel);
             result.add(responseModel);
-            final UUID winnerUuid = responseModel.uuid();
-            final String winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
+            final var winnerUuid = responseModel.uuid();
+            final var winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
             System.err.printf("Winner: %s (%s).\n", winnerName, winnerUuid);
             TimeUnit.SECONDS.sleep(1);
         }
@@ -126,7 +128,8 @@ public class PlayWithBots {
 
         final Callable<ResponseModel> game = () -> {
             var useCase = createNewGameSettings();
-            return useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            final RequestModelOfBots requestModel = new RequestModelOfBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            return useCase.playWithBots(requestModel);
         };
 
         for (int i = 0; i < times; i++) {

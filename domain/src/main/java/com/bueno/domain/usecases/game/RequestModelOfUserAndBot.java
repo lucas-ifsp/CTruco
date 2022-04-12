@@ -18,29 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.validators;
+package com.bueno.domain.usecases.game;
 
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
-
+import java.util.Objects;
 import java.util.UUID;
 
-public class OngoingGameValidator extends Validator<UUID> {
-
-    private final GameRepository repo;
-
-    public OngoingGameValidator(GameRepository repo) {
-        this.repo = repo;
-    }
-
-    @Override
-    public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
-        final Game game = repo.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        if(game.isDone()) return new Notification("Game is over. Start a new game.");
-        return new Notification();
+public record RequestModelOfUserAndBot(UUID userUuid, String botName) {
+    public RequestModelOfUserAndBot(UUID userUuid, String botName) {
+        this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
+        this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
+        if(botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
     }
 }

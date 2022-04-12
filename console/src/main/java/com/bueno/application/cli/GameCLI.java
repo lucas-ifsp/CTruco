@@ -26,11 +26,12 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.RequestModelOfUserAndBot;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
-import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
+import com.bueno.domain.usecases.user.RequestModel;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
@@ -95,13 +96,15 @@ public class GameCLI {
     private void createAccount(){
         final UsernameReader usernameReader = new UsernameReader();
         final String username = usernameReader.execute();
-        userUUID = createUserUseCase.create(new CreateUserUseCase.RequestModel(username, "unused@email.com"));
+        final var response = createUserUseCase.create(new RequestModel(username, "unused@email.com"));
+        userUUID = response.uuid();
     }
 
     private void createGame(){
-        final List<String> botNames = BotUseCase.availableBots();
-        final String bot = readBotName(botNames);
-        lastIntel = gameUseCase.createWithUserAndBot(userUUID, bot);
+        final var botNames = BotUseCase.availableBots();
+        final var bot = readBotName(botNames);
+        final var requestModel = new RequestModelOfUserAndBot(userUUID, bot);
+        lastIntel = gameUseCase.createWithUserAndBot(requestModel);
         missingIntel.add(lastIntel);
     }
 
@@ -137,8 +140,9 @@ public class GameCLI {
         final Card card = cardReader.execute();
         final CardModeReader.CardMode mode = cardModeReader.execute();
 
-        if(mode == OPEN) playCardUseCase.playCard(new RequestModel(userUUID, card));
-        else playCardUseCase.discard(new RequestModel(userUUID, card));
+        final var requestModel = new com.bueno.domain.usecases.hand.RequestModel(userUUID, card);
+        if(mode == OPEN) playCardUseCase.playCard(requestModel);
+        else playCardUseCase.discard(requestModel);
     }
 
     private void updateIntel() {

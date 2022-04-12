@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
@@ -28,7 +28,6 @@ import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,7 +88,7 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if requests owned cards with null uuid")
     void shouldThrowIfRequestsOwnedCardsWithNullUuid() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.getOwnedCards(null));
+        assertThrows(NullPointerException.class, () -> sut.getOwnedCards(null));
     }
 
     @Test
@@ -101,7 +100,7 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if requests intel history with null uuid")
     void shouldThrowIfRequestsIntelHistoryWithNullUuid() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.findIntelSince(null, null));
+        assertThrows(NullPointerException.class, () -> sut.findIntelSince(null, null));
     }
 
     @Test

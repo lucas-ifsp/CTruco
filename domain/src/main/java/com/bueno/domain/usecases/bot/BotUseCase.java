@@ -24,8 +24,8 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.service.BotServiceProvider;
 

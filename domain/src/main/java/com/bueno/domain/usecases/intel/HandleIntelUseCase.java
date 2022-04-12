@@ -26,8 +26,6 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -44,28 +42,25 @@ public class HandleIntelUseCase {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public List<Intel> findIntelSince(UUID usedUuid, Instant lastIntelTimestamp){
-        validateInput(usedUuid);
-        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+    public List<Intel> findIntelSince(UUID uuid, Instant lastIntelTimestamp){
+        final Game game = getGameOrThrow(uuid);
         return game.getIntelSince(lastIntelTimestamp);
     }
 
-    public List<Card> getOwnedCards(UUID usedUuid){
-        validateInput(usedUuid);
-        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
-        final Player player = game.getPlayer1().getUuid().equals(usedUuid) ? game.getPlayer1() : game.getPlayer2();
+    public List<Card> getOwnedCards(UUID uuid){
+        final Game game = getGameOrThrow(uuid);
+        final Player player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
         return List.copyOf(player.getCards());
     }
 
-    public Boolean isPlayerTurn(UUID userUuid) {
-        validateInput(userUuid);
-        final Game game = repo.findByUserUuid(userUuid).orElseThrow();
-        return userUuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
+    public Boolean isPlayerTurn(UUID uuid) {
+        final Game game = getGameOrThrow(uuid);
+        return uuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
     }
 
-    private void validateInput(UUID usedUuid) {
-        final Validator<UUID> validator = new IntelRequestValidator(repo);
-        final Notification notification = validator.validate(usedUuid);
-        if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
+    private Game getGameOrThrow(UUID uuid) {
+        Objects.requireNonNull(uuid, "UUID must not be null.");
+        return repo.findByUserUuid(uuid).orElseThrow(
+                () -> new UnsupportedGameRequestException("User with UUID " + uuid + " is not in an active game."));
     }
 }

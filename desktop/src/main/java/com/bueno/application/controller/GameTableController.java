@@ -26,10 +26,12 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.RequestModelOfUserAndBot;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
+import com.bueno.domain.usecases.user.RequestModel;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
@@ -198,8 +200,10 @@ public class GameTableController {
         this.username = username;
         this.botName = botName;
 
-        userUUID = createUserUseCase.create(new CreateUserUseCase.RequestModel(username, "user@email.com"));
-        lastIntel = gameUseCase.createWithUserAndBot(userUUID, this.botName);
+        final var response = createUserUseCase.create(new RequestModel(username, "user@email.com"));
+        userUUID = response.uuid();
+        final var requestModel = new RequestModelOfUserAndBot(userUUID, this.botName);
+        lastIntel = gameUseCase.createWithUserAndBot(requestModel);
 
         missingIntel.add(lastIntel);
 
@@ -254,8 +258,9 @@ public class GameTableController {
     }
 
     private void playCard(Card card, ImageView imageView) {
-        if (isClosed(imageView)) playCardUseCase.discard(new PlayCardUseCase.RequestModel(userUUID, card));
-        else playCardUseCase.playCard(new PlayCardUseCase.RequestModel(userUUID, card));
+        final var requestModel = new com.bueno.domain.usecases.hand.RequestModel(userUUID, card);
+        if (isClosed(imageView)) playCardUseCase.discard(requestModel);
+        else playCardUseCase.playCard(requestModel);
 
         firstCard.setImage(imageView.getImage());
         imageView.setImage(CardImage.ofNoCard().getImage());

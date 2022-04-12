@@ -18,9 +18,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.usecases;
+package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.Intel;
@@ -28,58 +27,75 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.validators.PlayCardValidator;
+import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class PlayCardUseCase {
+public class PointsProposalUseCase {
 
     private final GameRepository repo;
     private final BotUseCase botUseCase;
 
-    public PlayCardUseCase(GameRepository repo) {
+    public PointsProposalUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
         this.botUseCase = new BotUseCase(repo);
     }
 
-    public Intel playCard(RequestModel requestModel) {
-        return playCard(requestModel, false);
-    }
+    public Intel raise(UUID usedUuid){
+        validateInput(usedUuid, PossibleAction.RAISE);
 
-    public Intel discard(RequestModel requestModel) {
-        return playCard(requestModel, true);
-    }
-
-    private Intel playCard(RequestModel request, boolean discard){
-        final var validator = new PlayCardValidator(repo, PossibleAction.PLAY);
-        final var notification = validator.validate(request);
-
-        if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
-
-        final Game game = repo.findByUserUuid(request.requester).orElseThrow();
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
-        final Card playingCard = discard ? player.discard(request.card) : player.play(request.card);
 
-        if(hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playingCard);
-        else hand.playSecondCard(player, playingCard);
-        hand.getResult().ifPresent(unused -> updateGameStatus(game));
-
-        if(game.isDone()) return game.getIntel();
-
+        hand.raise(player);
         botUseCase.playWhenNecessary(game);
 
         return game.getIntel();
+    }
+
+    public Intel accept(UUID usedUuid){
+        validateInput(usedUuid, PossibleAction.ACCEPT);
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
+        final Player player = hand.getCurrentPlayer();
+
+        hand.accept(player);
+        botUseCase.playWhenNecessary(game);
+
+        return game.getIntel();
+    }
+
+    public Intel quit(UUID usedUuid){
+        validateInput(usedUuid, PossibleAction.QUIT);
+
+        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Hand hand = game.currentHand();
+        final Player player = hand.getCurrentPlayer();
+
+        hand.quit(player);
+        hand.getResult().ifPresent(unused -> updateGameStatus(game));
+
+        if(game.isDone()) return game.getIntel();
+        botUseCase.playWhenNecessary(game);
+
+        return game.getIntel();
+    }
+
+    private void validateInput(UUID usedUuid, PossibleAction raise) {
+        final Validator<UUID> validator = new ActionValidator(repo, raise);
+        final Notification notification = validator.validate(usedUuid);
+        if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
     }
 
     private void updateGameStatus(Game game) {
         game.updateScores();
         if(!game.isDone()) game.prepareNewHand();
     }
-
-    public record RequestModel(UUID requester, Card card){}
 }

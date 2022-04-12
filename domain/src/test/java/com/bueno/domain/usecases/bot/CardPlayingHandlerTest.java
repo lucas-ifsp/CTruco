@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.bot;
 
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;

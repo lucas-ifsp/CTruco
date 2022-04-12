@@ -18,32 +18,34 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
-import org.springframework.stereotype.Service;
+import com.bueno.domain.entities.deck.Card;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
 import java.util.UUID;
 
-@Service
-public class FindUserUseCase {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private final UserRepository repo;
+public class RequestModelTest {
 
-    public FindUserUseCase(UserRepository repo) {
-        this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
+    @Test
+    @DisplayName("Should not throw if all parameters are valid")
+    void shouldNotThrowIfAllParametersAreValid() {
+        assertDoesNotThrow(() -> new RequestModel(UUID.randomUUID(), Card.closed()));
     }
 
-    public ResponseModel findByUUID(UUID uuid){
-        return repo.findByUuid(Objects.requireNonNull(uuid))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+    @Test
+    @DisplayName("Should throw if uuid is null")
+    void shouldThrowIfUuidIsNull() {
+        assertThrows(NullPointerException.class, () -> new RequestModel(null, Card.closed()));
+
     }
 
-    public ResponseModel findByUsername(String username){
-        return repo.findByUsername(Objects.requireNonNull(username))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+    @Test
+    @DisplayName("Should throw if card is null")
+    void shouldThrowIfCardIsNull() {
+        assertThrows(NullPointerException.class, () -> new RequestModel(UUID.randomUUID(), null));
     }
 }

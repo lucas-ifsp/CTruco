@@ -37,18 +37,14 @@ public class PlayWithBotsUseCase {
         this.botUseCase = Objects.requireNonNull(botUseCase);
     }
 
-    public ResponseModel playWithBots(UUID uuidBot1, String bot1Name, UUID uuidBot2, String bot2Name){
-        Objects.requireNonNull(uuidBot1);
-        Objects.requireNonNull(bot1Name);
-        Objects.requireNonNull(uuidBot2);
-        Objects.requireNonNull(bot2Name);
+    public ResponseModel playWithBots(RequestModelOfBots requestModel){
+        createGameUseCase.createWithBots(requestModel);
 
-        createGameUseCase.createWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name);
-
-        final var game = findGameUseCase.loadUserGame(uuidBot1).orElseThrow();
+        final var game = findGameUseCase.loadUserGame(requestModel.bot1Uuid()).orElseThrow();
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
-        final var winnerName = winnerUUID.equals(uuidBot1) ? bot1Name : bot2Name;
+        final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
+                requestModel.bot1Name() : requestModel.bot2Name();
 
         return new ResponseModel(winnerUUID, winnerName);
     }
