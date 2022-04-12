@@ -18,43 +18,40 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand.validators;
+package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.Validator;
 
-import java.util.EnumSet;
 import java.util.Objects;
 import java.util.UUID;
 
 public class ActionValidator extends Validator<UUID> {
 
     private final GameRepository repo;
-    private final OngoingGameValidator gameValidator;
     private final PossibleAction action;
 
     public ActionValidator(GameRepository repo, PossibleAction action) {
         this.repo = repo;
-        this.gameValidator = new OngoingGameValidator(repo);
         this.action = action;
     }
 
     @Override
     public Notification validate(UUID uuid) {
-        final Notification gameNotification = gameValidator.validate(uuid);
-        if(gameNotification.hasErrors()) return gameNotification;
+        if(uuid == null) return new Notification("UUID is null.");
+        final var game = repo.findByUserUuid(uuid).orElse(null);
+        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
+        if(game.isDone()) return new Notification("Game is over. Start a new game.");
 
-        final Game game = repo.findByUserUuid(uuid).orElse(null);
-        final Player requester = getRequester(uuid, Objects.requireNonNull(game));
-        final Hand currentHand = game.currentHand();
-        final EnumSet<PossibleAction> possibleActions = currentHand.getPossibleActions();
+        final var requester = getRequester(uuid, Objects.requireNonNull(game));
+        final var currentHand = game.currentHand();
+        final var possibleActions = currentHand.getPossibleActions();
 
-        Notification notification = new Notification();
+        final var notification = new Notification();
 
         if(!currentHand.getCurrentPlayer().equals(requester))
             notification.addError("User with UUID " + uuid + " is not in not the current player.");

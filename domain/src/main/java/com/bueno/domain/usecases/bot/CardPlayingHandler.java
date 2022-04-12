@@ -23,7 +23,8 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.RequestModel;
 import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.entities.intel.PossibleAction.PLAY;
@@ -46,9 +47,10 @@ class CardPlayingHandler implements Handler{
             final var botUuid = bot.getUuid();
             final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
             final var card = toCard(chosenCard.content());
+            final var requestModel = new RequestModel(botUuid, card);
 
-            if (chosenCard.isDiscard()) cardUseCase.discard(new PlayCardUseCase.RequestModel(botUuid, card));
-            else cardUseCase.playCard(new PlayCardUseCase.RequestModel(botUuid, card));
+            if (chosenCard.isDiscard()) cardUseCase.discard(requestModel);
+            else cardUseCase.playCard(requestModel);
             return true;
         }
         return false;

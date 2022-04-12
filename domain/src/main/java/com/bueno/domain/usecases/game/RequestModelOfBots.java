@@ -18,32 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
-
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
-import org.springframework.stereotype.Service;
+package com.bueno.domain.usecases.game;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@Service
-public class FindUserUseCase {
-
-    private final UserRepository repo;
-
-    public FindUserUseCase(UserRepository repo) {
-        this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
-    }
-
-    public ResponseModel findByUUID(UUID uuid){
-        return repo.findByUuid(Objects.requireNonNull(uuid))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-    }
-
-    public ResponseModel findByUsername(String username){
-        return repo.findByUsername(Objects.requireNonNull(username))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+public record RequestModelOfBots(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+    public RequestModelOfBots(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+        this.bot1Uuid = Objects.requireNonNull(bot1Uuid, "Bot1 UUID must not be null!");
+        this.bot1Name = Objects.requireNonNull(bot1Name, "Bot1 name must not be null!");
+        if(bot1Name.isEmpty()) throw new IllegalArgumentException("Bot1 name must not be empty!");
+        this.bot2Uuid = Objects.requireNonNull(bot2Uuid, "Bot2 UUID must not be null!");
+        this.bot2Name = Objects.requireNonNull(bot2Name, "Bot2 name must not be null!");
+        if(bot2Name.isEmpty()) throw new IllegalArgumentException("Bot2 name must not be empty!");
     }
 }

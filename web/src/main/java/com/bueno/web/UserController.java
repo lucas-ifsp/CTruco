@@ -21,10 +21,8 @@
 package com.bueno.web;
 
 import com.bueno.domain.usecases.user.CreateUserUseCase;
-import com.bueno.domain.usecases.user.CreateUserUseCase.RequestModel;
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.FindUserUseCase.ResponseModel;
-import com.bueno.model.CreateUserResponse;
+import com.bueno.domain.usecases.user.RequestModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,13 +42,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody RequestModel requestModel){
-        final UUID uuid = createUserUseCase.create(requestModel);
-        return ResponseEntity.ok(new CreateUserResponse(uuid, requestModel.username(), requestModel.email()));
+        final var response = createUserUseCase.create(requestModel);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/by_uuid/{playerUuid}")
     public ResponseEntity<?> find(@PathVariable UUID playerUuid){
-        final ResponseModel user = findUserUseCase.findByUUID(playerUuid);
-        return ResponseEntity.ok(user);
+        final var response = findUserUseCase.findByUUID(playerUuid);
+        return ResponseEntity.ok(response);
     }
 }

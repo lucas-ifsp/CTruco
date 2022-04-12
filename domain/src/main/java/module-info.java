@@ -13,8 +13,7 @@ module domain {
     exports com.bueno.domain.usecases.utils;
     exports com.bueno.domain.usecases.game;
     exports com.bueno.domain.usecases.user;
-    exports com.bueno.domain.usecases.hand.usecases;
-    exports com.bueno.domain.usecases.hand.validators;
+    exports com.bueno.domain.usecases.hand;
     exports com.bueno.domain.usecases.bot;
     exports com.bueno.domain.entities.hand;
     exports com.bueno.domain.entities.intel;

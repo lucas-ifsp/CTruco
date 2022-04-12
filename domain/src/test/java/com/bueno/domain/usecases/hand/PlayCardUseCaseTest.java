@@ -28,9 +28,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -89,17 +87,6 @@ class PlayCardUseCaseTest {
         sut = null;
         p1Uuid = null;
         p2Uuid = null;
-    }
-
-    @Test
-    @DisplayName("Should throw if playCard method parameters are null")
-    void shouldThrowIfPlayCardMethodParametersAreNull() {
-        assertAll(
-                () -> assertThrows(UnsupportedGameRequestException.class,
-                        () -> sut.playCard(new RequestModel(null, Card.closed()))),
-                () -> assertThrows(UnsupportedGameRequestException.class,
-                        () -> sut.playCard(new RequestModel(player1.getUuid(), null)))
-        );
     }
 
     @Test

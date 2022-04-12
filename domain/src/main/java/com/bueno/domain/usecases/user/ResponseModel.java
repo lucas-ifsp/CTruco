@@ -18,28 +18,14 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel;
+package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
+import com.bueno.domain.entities.player.User;
 
 import java.util.UUID;
 
-public class IntelRequestValidator extends Validator<UUID> {
-
-    private final GameRepository repo;
-
-    public IntelRequestValidator(GameRepository repo) {
-        this.repo = repo;
-    }
-
-    @Override
-    public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
-        final Game game = repo.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        return new Notification();
+public record ResponseModel (UUID uuid, String username, String email){
+    public static ResponseModel of(User user){
+        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
 }

@@ -21,7 +21,6 @@
 package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.user.CreateUserUseCase.RequestModel;
 import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,34 +46,6 @@ class CreateUserUseCaseTest {
     @DisplayName("Should throw if injected repository is null")
     void shouldThrowIfInjectedRepositoryIsNull() {
         assertThrows(NullPointerException.class, () -> new CreateUserUseCase(null));
-    }
-
-    @Test
-    @DisplayName("Should throw if user username is null")
-    void shouldThrowIfUserUsernameIsNull() {
-        var requestModel = new RequestModel(null, "email@email.com");
-        assertThrows(IllegalArgumentException.class, () -> sut.create(requestModel));
-    }
-
-    @Test
-    @DisplayName("Should throw if user username is empty")
-    void shouldThrowIfUserUsernameIsEmpty() {
-        var requestModel = new RequestModel( "", "email@email.com");
-        assertThrows(IllegalArgumentException.class, () -> sut.create(requestModel));
-    }
-
-    @Test
-    @DisplayName("Should throw if user email is null")
-    void shouldThrowIfUserEmailIsNull() {
-        var requestModel = new RequestModel("name", null);
-        assertThrows(IllegalArgumentException.class, () -> sut.create(requestModel));
-    }
-
-    @Test
-    @DisplayName("Should throw if user email is empty")
-    void shouldThrowIfUserEmailIsEmpty() {
-        var requestModel = new RequestModel("name", "");
-        assertThrows(IllegalArgumentException.class, () -> sut.create(requestModel));
     }
 
     @Test

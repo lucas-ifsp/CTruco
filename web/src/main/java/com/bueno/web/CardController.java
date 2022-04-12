@@ -22,8 +22,8 @@ package com.bueno.web;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase;
-import com.bueno.domain.usecases.hand.usecases.PlayCardUseCase.RequestModel;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.RequestModel;
 import com.bueno.model.GameIntelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

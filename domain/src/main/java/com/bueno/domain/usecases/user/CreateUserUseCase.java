@@ -22,12 +22,9 @@ package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
 import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class CreateUserUseCase {
@@ -38,23 +35,19 @@ public class CreateUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public UUID create(RequestModel model){
-        final Validator<RequestModel> validator = new CreateUserValidator();
-        final Notification notification = validator.validate(model);
+    //TODO change every use case to return response model or receive request model
+    public ResponseModel create(RequestModel requestModel){
+        Objects.requireNonNull(requestModel,"Request model must not be null.");
 
-        if(notification.hasErrors()) throw new IllegalArgumentException(notification.errorMessage());
+        repo.findByUsername(requestModel.username()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This username is already in use: " + requestModel.username());});
 
-        repo.findByUsername(model.username).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use: " + model.username);});
+        repo.findByEmail(requestModel.email()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This email is already in use: " + requestModel.email());});
 
-        repo.findByEmail(model.email).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This email is already in use: " + model.email);});
-
-        final User user = new User(model.username, model.email);
+        final User user = new User(requestModel.username(), requestModel.email());
 
         repo.save(user);
-        return user.getUuid();
+        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
-
-    public record RequestModel(String username, String email){}
 }

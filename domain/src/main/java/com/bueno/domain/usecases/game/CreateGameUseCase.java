@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class CreateGameUseCase {
@@ -45,24 +44,17 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public Intel createWithUserAndBot(UserAndBotRequestModel requestModel){
-       Objects.requireNonNull(requestModel);
-       return createWithUserAndBot(requestModel.userUuid, requestModel.botName);
-    }
+    public Intel createWithUserAndBot(RequestModelOfUserAndBot requestModel){
+        Objects.requireNonNull(requestModel, "Request model not be null!");
 
-    //TODO Remove all calls to this method by the request method one.
-    public Intel createWithUserAndBot(UUID userUUID, String botName){
-        Objects.requireNonNull(userUUID, "User UUID must not be null!");
-        Objects.requireNonNull(botName, "Bot name must not be null!");
+        if(hasNoBotServiceWith(requestModel.botName()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.botName());
 
-        if(hasNoBotServiceWith(botName))
-            throw new NoSuchElementException("Service implementation not available: " + botName);
-
-        final User user = userRepo.findByUuid(userUUID)
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + userUUID));
+        final User user = userRepo.findByUuid(requestModel.userUuid())
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + requestModel.userUuid()));
 
         final Player userPlayer = Player.of(user);
-        final Player botPlayer = Player.ofBot(botName);
+        final Player botPlayer = Player.ofBot(requestModel.botName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
@@ -74,20 +66,17 @@ public class CreateGameUseCase {
         return !BotServiceManager.providersNames().contains(botName);
     }
 
-    public Intel createWithBots(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name){
-        Objects.requireNonNull(bot1Uuid, "Bot UUID must not be null!");
-        Objects.requireNonNull(bot1Name, "Bot name must not be null!");
-        Objects.requireNonNull(bot2Uuid, "Bot UUID must not be null!");
-        Objects.requireNonNull(bot2Name, "Bot name must not be null!");
+    Intel createWithBots(RequestModelOfBots requestModel){
+        Objects.requireNonNull(requestModel);
 
-        if(hasNoBotServiceWith(bot1Name))
-            throw new NoSuchElementException("Service implementation not available: " + bot1Name);
+        if(hasNoBotServiceWith(requestModel.bot1Name()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.bot1Name());
 
-        if(hasNoBotServiceWith(bot2Name))
-            throw new NoSuchElementException("Service implementation not available: " + bot2Name);
+        if(hasNoBotServiceWith(requestModel.bot2Name()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.bot2Name());
 
-        final var bot1 = Player.ofBot(bot1Uuid, bot1Name);
-        final var bot2 = Player.ofBot(bot2Uuid, bot2Name);
+        final var bot1 = Player.ofBot(requestModel.bot1Uuid(), requestModel.bot1Name());
+        final var bot2 = Player.ofBot(requestModel.bot2Uuid(), requestModel.bot2Name());
 
         return create(bot1, bot2);
     }
@@ -96,8 +85,5 @@ public class CreateGameUseCase {
         Game game = new Game(p1, p2);
         gameRepo.save(game);
         return game.getIntel();
-    }
-
-    public record UserAndBotRequestModel(UUID userUuid, String botName) {
     }
 }

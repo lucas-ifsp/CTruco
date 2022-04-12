@@ -25,7 +25,6 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

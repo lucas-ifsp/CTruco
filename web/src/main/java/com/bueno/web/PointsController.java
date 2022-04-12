@@ -21,7 +21,7 @@
 package com.bueno.web;
 
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.usecases.hand.usecases.PointsProposalUseCase;
+import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.model.GameIntelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

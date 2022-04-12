@@ -18,32 +18,16 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
-import org.springframework.stereotype.Service;
+import com.bueno.domain.entities.deck.Card;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@Service
-public class FindUserUseCase {
-
-    private final UserRepository repo;
-
-    public FindUserUseCase(UserRepository repo) {
-        this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
-    }
-
-    public ResponseModel findByUUID(UUID uuid){
-        return repo.findByUuid(Objects.requireNonNull(uuid))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-    }
-
-    public ResponseModel findByUsername(String username){
-        return repo.findByUsername(Objects.requireNonNull(username))
-                .map(ResponseModel::of)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+public record RequestModel (UUID uuid, Card card){
+    public RequestModel(UUID uuid, Card card) {
+        this.uuid = Objects.requireNonNull(uuid, "UUID must not be null.");
+        this.card = Objects.requireNonNull(card, "Card must not be null.");
     }
 }
