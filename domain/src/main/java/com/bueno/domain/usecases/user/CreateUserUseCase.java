@@ -35,7 +35,6 @@ public class CreateUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    //TODO change every use case to return response model or receive request model
     public ResponseModel create(RequestModel requestModel){
         Objects.requireNonNull(requestModel,"Request model must not be null.");
 
