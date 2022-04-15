@@ -21,9 +21,9 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
@@ -44,17 +44,17 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public Intel createWithUserAndBot(RequestModelOfUserAndBot requestModel){
+    public IntelResponseModel createForUserAndBot(CreateForUserAndBotRequestModel requestModel){
         Objects.requireNonNull(requestModel, "Request model not be null!");
 
-        if(hasNoBotServiceWith(requestModel.botName()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.botName());
+        if(hasNoBotServiceWith(requestModel.getBotName()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBotName());
 
-        final User user = userRepo.findByUuid(requestModel.userUuid())
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + requestModel.userUuid()));
+        final User user = userRepo.findByUuid(requestModel.getUserUuid())
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + requestModel.getUserUuid()));
 
         final Player userPlayer = Player.of(user);
-        final Player botPlayer = Player.ofBot(requestModel.botName());
+        final Player botPlayer = Player.ofBot(requestModel.getBotName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
@@ -66,24 +66,24 @@ public class CreateGameUseCase {
         return !BotServiceManager.providersNames().contains(botName);
     }
 
-    Intel createWithBots(RequestModelOfBots requestModel){
+    IntelResponseModel createForBots(CreateForBotsRequestModel requestModel){
         Objects.requireNonNull(requestModel);
 
-        if(hasNoBotServiceWith(requestModel.bot1Name()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.bot1Name());
+        if(hasNoBotServiceWith(requestModel.getBot1Name()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBot1Name());
 
-        if(hasNoBotServiceWith(requestModel.bot2Name()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.bot2Name());
+        if(hasNoBotServiceWith(requestModel.getBot2Name()))
+            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBot2Name());
 
-        final var bot1 = Player.ofBot(requestModel.bot1Uuid(), requestModel.bot1Name());
-        final var bot2 = Player.ofBot(requestModel.bot2Uuid(), requestModel.bot2Name());
+        final var bot1 = Player.ofBot(requestModel.getBot1Uuid(), requestModel.getBot1Name());
+        final var bot2 = Player.ofBot(requestModel.getBot2Uuid(), requestModel.getBot2Name());
 
         return create(bot1, bot2);
     }
 
-    private Intel create(Player p1, Player p2) {
-        Game game = new Game(p1, p2);
+    private IntelResponseModel create(Player p1, Player p2) {
+        final Game game = new Game(p1, p2);
         gameRepo.save(game);
-        return game.getIntel();
+        return IntelResponseModel.of(game.getIntel());
     }
 }

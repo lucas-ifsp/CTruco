@@ -52,11 +52,11 @@ class FindUserUseCaseTest {
         final UUID uuid = UUID.randomUUID();
         final User user = new User(uuid, "name", "email@email.com");
         when(repo.findByUuid(uuid)).thenReturn(Optional.of(user));
-        final ResponseModel model = sut.findByUUID(uuid);
+        final UserResponseModel model = sut.findByUUID(uuid);
         assertAll(
-                () -> assertEquals(user.getUuid(), model.uuid()),
-                () -> assertEquals(user.getUsername(), model.username()),
-                () -> assertEquals(user.getEmail(), model.email())
+                () -> assertEquals(user.getUuid(), model.getUuid()),
+                () -> assertEquals(user.getUsername(), model.getUsername()),
+                () -> assertEquals(user.getEmail(), model.getEmail())
         );
     }
 
@@ -67,11 +67,11 @@ class FindUserUseCaseTest {
         final String email = "email@email.com";
         final User user = new User(uuid, "name", email);
         when(repo.findByUsername(email)).thenReturn(Optional.of(user));
-        final ResponseModel model = sut.findByUsername(email);
+        final UserResponseModel model = sut.findByUsername(email);
         assertAll(
-                () -> assertEquals(user.getUuid(), model.uuid()),
-                () -> assertEquals(user.getUsername(), model.username()),
-                () -> assertEquals(user.getEmail(), model.email())
+                () -> assertEquals(user.getUuid(), model.getUuid()),
+                () -> assertEquals(user.getUsername(), model.getUsername()),
+                () -> assertEquals(user.getEmail(), model.getEmail())
         );
     }
 

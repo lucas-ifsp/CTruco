@@ -22,6 +22,9 @@ package com.bueno.application.cli.commands;
 
 import java.util.Scanner;
 
+import static com.bueno.application.cli.commands.CardModeReader.CardMode.*;
+import static com.bueno.application.cli.commands.CardModeReader.CardMode.DISCARDED;
+
 public class CardModeReader implements Command<CardModeReader.CardMode> {
 
     public enum CardMode{OPEN, DISCARDED}
@@ -31,17 +34,17 @@ public class CardModeReader implements Command<CardModeReader.CardMode> {
 
     @Override
     public CardMode execute() {
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         while (true){
             System.out.print("Descartar [s, n] > ");
 
-            final String choice = scanner.nextLine();
+            final var choice = scanner.nextLine();
             if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            if (choice.equalsIgnoreCase("n")) return CardMode.OPEN;
-            return CardMode.DISCARDED;
+            if (choice.equalsIgnoreCase("n")) return OPEN;
+            return DISCARDED;
         }
     }
 }

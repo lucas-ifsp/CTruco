@@ -25,9 +25,9 @@ import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,13 +93,13 @@ class PlayCardUseCaseTest {
     @DisplayName("Should throw if there is no active game for player UUID")
     void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
         assertThrows(UnsupportedGameRequestException.class,
-                () -> sut.playCard(new RequestModel(UUID.randomUUID(), Card.closed())));
+                () -> sut.playCard(new PlayCardRequestModel(UUID.randomUUID(), Card.closed())));
     }
 
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(new RequestModel(p2Uuid, Card.closed())));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(new PlayCardRequestModel(p2Uuid, Card.closed())));
     }
 
     @Test
@@ -107,7 +107,7 @@ class PlayCardUseCaseTest {
     void shouldThrowIfRequestsActionWhenGameIsDone() {
         when(player1.getScore()).thenReturn(12);
         assertThrows(UnsupportedGameRequestException.class,
-                () -> sut.playCard(new RequestModel(p1Uuid, Card.closed())));
+                () -> sut.playCard(new PlayCardRequestModel(p1Uuid, Card.closed())));
     }
 
     @Test
@@ -115,8 +115,8 @@ class PlayCardUseCaseTest {
     void shouldCorrectlyPlayFirstCardIfInvariantsAreMet() {
         final Card card = Card.of(Rank.THREE, Suit.CLUBS);
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
-        final Intel intel = sut.playCard(new RequestModel(p1Uuid, card));
-        assertEquals(card, intel.cardToPlayAgainst().orElse(null));
+        final IntelResponseModel intel = sut.playCard(new PlayCardRequestModel(p1Uuid, card));
+        assertEquals(card, intel.getCardToPlayAgainst());
     }
 
     @Test
@@ -133,11 +133,11 @@ class PlayCardUseCaseTest {
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1P1, card2P1)));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card1P2, card2P2)));
 
-        sut.discard(new RequestModel(p1Uuid, card1P1));
-        sut.playCard(new RequestModel(p2Uuid, card1P2));
-        sut.playCard(new RequestModel(p2Uuid, card2P2));
+        sut.discard(new PlayCardRequestModel(p1Uuid, card1P1));
+        sut.playCard(new PlayCardRequestModel(p2Uuid, card1P2));
+        sut.playCard(new PlayCardRequestModel(p2Uuid, card2P2));
 
-        assertDoesNotThrow(() -> sut.discard(new RequestModel(p1Uuid, card2P1)));
+        assertDoesNotThrow(() -> sut.discard(new PlayCardRequestModel(p1Uuid, card2P1)));
     }
 
     @Test
@@ -149,11 +149,11 @@ class PlayCardUseCaseTest {
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
 
-        sut.discard(new RequestModel(p1Uuid, card1));
-        final Intel intel = sut.playCard(new RequestModel(p2Uuid, card2));
+        sut.discard(new PlayCardRequestModel(p1Uuid, card1));
+        final IntelResponseModel intel = sut.playCard(new PlayCardRequestModel(p2Uuid, card2));
         assertAll(
-                () -> assertNull(intel.cardToPlayAgainst().orElse(null)),
-                () -> assertEquals(1, intel.roundsPlayed())
+                () -> assertNull(intel.getCardToPlayAgainst()),
+                () -> assertEquals(1, intel.getRoundsPlayed())
         );
     }
 
@@ -166,9 +166,9 @@ class PlayCardUseCaseTest {
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
 
-        sut.playCard(new RequestModel(p1Uuid, card1));
-        sut.discard(new RequestModel(p2Uuid, card2));
-        assertThrows(IllegalArgumentException.class, () -> sut.playCard(new RequestModel(p1Uuid, card1)));
+        sut.playCard(new PlayCardRequestModel(p1Uuid, card1));
+        sut.discard(new PlayCardRequestModel(p2Uuid, card2));
+        assertThrows(IllegalArgumentException.class, () -> sut.playCard(new PlayCardRequestModel(p1Uuid, card1)));
     }
 
     @Test
@@ -180,8 +180,8 @@ class PlayCardUseCaseTest {
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
 
-        sut.playCard(new RequestModel(p1Uuid, card1));
-        sut.discard(new RequestModel(p2Uuid, card2));
-        assertThrows(IllegalArgumentException.class, () -> sut.discard(new RequestModel(p1Uuid, card1)));
+        sut.playCard(new PlayCardRequestModel(p1Uuid, card1));
+        sut.discard(new PlayCardRequestModel(p2Uuid, card2));
+        assertThrows(IllegalArgumentException.class, () -> sut.discard(new PlayCardRequestModel(p1Uuid, card1)));
     }
 }

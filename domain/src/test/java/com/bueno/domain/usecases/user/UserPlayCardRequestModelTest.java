@@ -25,36 +25,36 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RequestModelTest {
+class UserPlayCardRequestModelTest {
 
     @Test
     @DisplayName("Should not throw if parameters are valid")
     void shouldNotThrowIfParametersAreValid() {
-        assertDoesNotThrow(() -> new RequestModel("username", "email@email.com"));
+        assertDoesNotThrow(() -> new UserRequestModel("username", "email@email.com"));
 
     }
 
     @Test
     @DisplayName("Should throw if username is null")
     void shouldThrowIfUsernameIsNull() {
-        assertThrows(NullPointerException.class, () -> new RequestModel(null, "email@email.com"));
+        assertThrows(NullPointerException.class, () -> new UserRequestModel(null, "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if username is empty")
     void shouldThrowIfUsernameIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new RequestModel("", "email@email.com"));
+        assertThrows(IllegalArgumentException.class, () -> new UserRequestModel("", "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if user email is null")
     void shouldThrowIfUserEmailIsNull() {
-        assertThrows(NullPointerException.class, () -> new RequestModel("username", null));
+        assertThrows(NullPointerException.class, () -> new UserRequestModel("username", null));
     }
 
     @Test
     @DisplayName("Should throw if email is empty")
     void shouldThrowIfEmailIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new RequestModel("username", ""));
+        assertThrows(IllegalArgumentException.class, () -> new UserRequestModel("username", ""));
     }
 }

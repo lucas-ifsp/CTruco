@@ -22,11 +22,11 @@ package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
 import com.bueno.domain.usecases.utils.Notification;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.Validator;
@@ -46,7 +46,7 @@ public class PointsProposalUseCase {
         this.botUseCase = new BotUseCase(repo);
     }
 
-    public Intel raise(UUID usedUuid){
+    public IntelResponseModel raise(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.RAISE);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -56,10 +56,10 @@ public class PointsProposalUseCase {
         hand.raise(player);
         botUseCase.playWhenNecessary(game);
 
-        return game.getIntel();
+        return IntelResponseModel.of(game.getIntel());
     }
 
-    public Intel accept(UUID usedUuid){
+    public IntelResponseModel accept(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.ACCEPT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -69,10 +69,10 @@ public class PointsProposalUseCase {
         hand.accept(player);
         botUseCase.playWhenNecessary(game);
 
-        return game.getIntel();
+        return IntelResponseModel.of(game.getIntel());
     }
 
-    public Intel quit(UUID usedUuid){
+    public IntelResponseModel quit(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.QUIT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -82,10 +82,10 @@ public class PointsProposalUseCase {
         hand.quit(player);
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        if(game.isDone()) return game.getIntel();
+        if(game.isDone()) return IntelResponseModel.of(game.getIntel());
         botUseCase.playWhenNecessary(game);
 
-        return game.getIntel();
+        return IntelResponseModel.of(game.getIntel());
     }
 
     private void validateInput(UUID usedUuid, PossibleAction raise) {

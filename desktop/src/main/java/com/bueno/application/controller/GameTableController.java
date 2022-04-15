@@ -23,16 +23,16 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.intel.Intel;
+import com.bueno.domain.usecases.game.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.game.RequestModelOfUserAndBot;
+import com.bueno.domain.usecases.hand.PlayCardRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
+import com.bueno.domain.usecases.intel.IntelResponseModel.PlayerIntel;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
-import com.bueno.domain.usecases.user.RequestModel;
-import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.user.UserRequestModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;
@@ -95,13 +95,13 @@ public class GameTableController {
     private UUID botUUID;
     private List<Card> userCards;
     private int lastUserPlayedCardPosition;
-    private final List<Intel> missingIntel;
-    private Intel lastIntel;
+    private final List<IntelResponseModel> missingIntel;
+    private IntelResponseModel lastIntel;
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
-        final GameRepository gameRepo = new InMemoryGameRepository();
-        final UserRepository userRepo = new InMemoryUserRepository();
+        final var gameRepo = new InMemoryGameRepository();
+        final var userRepo = new InMemoryUserRepository();
         createUserUseCase = new CreateUserUseCase(userRepo);
         gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
         playCardUseCase = new PlayCardUseCase(gameRepo);
@@ -116,7 +116,7 @@ public class GameTableController {
         organizeNewHand(null);
     }
 
-    public void organizeNewHand(Intel intel) {
+    public void organizeNewHand(IntelResponseModel intel) {
         opponentCardImages = new ArrayList<>(List.of(cardOpponentLeft, cardOpponentCenter, cardOpponentRight));
         Collections.shuffle(opponentCardImages);
         resetCardImages();
@@ -151,13 +151,13 @@ public class GameTableController {
         lb3rdValue.setVisible(false);
     }
 
-    private void updateHandScore(Intel intel) {
-        final var value = intel != null ? String.valueOf(intel.handPoints()) : "1";
+    private void updateHandScore(IntelResponseModel intel) {
+        final var value = intel != null ? String.valueOf(intel.getHandPoints()) : "1";
         lbHandPointsValue.setText(value);
     }
 
-    private void dealCards(Intel intel) {
-        final var card = CardImage.of(intel.vira());
+    private void dealCards(IntelResponseModel intel) {
+        final var card = CardImage.of(intel.getVira());
         userCards = getPlayerCards(intel, userUUID);
 
         if(userCards.isEmpty()) return;
@@ -168,16 +168,17 @@ public class GameTableController {
         cardOwnedRight.setImage(CardImage.of(userCards.get(2)).getImage());
     }
 
-    private List<Card> getPlayerCards(Intel intel, UUID playerUUID) {
-        return intel.players().stream()
+    private List<Card> getPlayerCards(IntelResponseModel intel, UUID playerUUID) {
+        return intel.getPlayers().stream()
                 .filter(p -> p.getUuid().equals(playerUUID))
-                .map(Intel.PlayerIntel::getCards)
+                .map(PlayerIntel::getCards)
                 .findAny().orElse(null);
     }
 
-    private void configureButtons(Intel intel){
-        final Predicate<String> shouldDisable = a -> !intel.possibleActions().contains(a) || !isUserNextPlayer(intel);
-        final var baseScore = intel.pointsProposal().orElse(intel.handPoints());
+    private void configureButtons(IntelResponseModel intel){
+        final Predicate<String> shouldDisable = a -> !intel.getPossibleActions().contains(a) || !isUserNextPlayer(intel);
+        final var baseScore = intel.getHandPointsProposal() == null ?
+                intel.getHandPoints() : intel.getHandPointsProposal();
         if(baseScore != 0 && baseScore != 12)
             btnRaise.setText("Pedir " + scoreToString(baseScore == 1? 3 : baseScore + 3) + "!");
 
@@ -200,15 +201,15 @@ public class GameTableController {
         this.username = username;
         this.botName = botName;
 
-        final var response = createUserUseCase.create(new RequestModel(username, "user@email.com"));
-        userUUID = response.uuid();
-        final var requestModel = new RequestModelOfUserAndBot(userUUID, this.botName);
-        lastIntel = gameUseCase.createWithUserAndBot(requestModel);
+        final var response = createUserUseCase.create(new UserRequestModel(username, "user@email.com"));
+        userUUID = response.getUuid();
+        final var requestModel = new CreateForUserAndBotRequestModel(userUUID, this.botName);
+        lastIntel = gameUseCase.createForUserAndBot(requestModel);
 
         missingIntel.add(lastIntel);
 
-        this.botUUID = lastIntel.players().stream()
-                .map(Intel.PlayerIntel::getUuid)
+        this.botUUID = lastIntel.getPlayers().stream()
+                .map(PlayerIntel::getUuid)
                 .filter(uuid -> !uuid.equals(userUUID))
                 .findAny().orElseThrow();
 
@@ -223,8 +224,8 @@ public class GameTableController {
     }
 
     private void updateIntel() {
-        final var newIntel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
-        missingIntel.addAll(newIntel);
+        final var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.getTimestamp());
+        missingIntel.addAll(responseModel.getIntelSince());
         if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
@@ -250,22 +251,22 @@ public class GameTableController {
     }
 
     private boolean canPerform(String action) {
-        final var possibleUuid = lastIntel.currentPlayerUuid();
-        if (possibleUuid.isEmpty()) return false;
-        final var isCurrentPlayer = possibleUuid.get().equals(userUUID);
-        final var isPerformingAllowedAction = lastIntel.possibleActions().contains(action);
+        final var possibleUuid = lastIntel.getCurrentPlayerUuid();
+        if (possibleUuid == null) return false;
+        final var isCurrentPlayer = possibleUuid.equals(userUUID);
+        final var isPerformingAllowedAction = lastIntel.getPossibleActions().contains(action);
         return !isAnimating.get() && isCurrentPlayer && isPerformingAllowedAction;
     }
 
     private void playCard(Card card, ImageView imageView) {
-        final var requestModel = new com.bueno.domain.usecases.hand.RequestModel(userUUID, card);
+        final var requestModel = new PlayCardRequestModel(userUUID, card);
         if (isClosed(imageView)) playCardUseCase.discard(requestModel);
         else playCardUseCase.playCard(requestModel);
 
         firstCard.setImage(imageView.getImage());
         imageView.setImage(CardImage.ofNoCard().getImage());
 
-        lastUserPlayedCardPosition = lastIntel.openCards().size() + 1;
+        lastUserPlayedCardPosition = lastIntel.getOpenCards().size() + 1;
         updateIntel();
         updateView();
     }
@@ -285,7 +286,7 @@ public class GameTableController {
         isAnimating = new AtomicBoolean(true);
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
-            final var event = intel.event().orElse("");
+            final var event = intel.getEvent() != null? intel.getEvent() : "";
             System.out.println(intel);
 
             if (hasHandScoreChange(intel)) builder.append(0.5, () -> updateHandScore(intel));
@@ -308,16 +309,17 @@ public class GameTableController {
         lbMessage.setText(message);
     }
 
-    private boolean hasHandScoreChange(Intel intel) {
-        final var event = intel.event().orElse("");
+    private boolean hasHandScoreChange(IntelResponseModel intel) {
+        final var event = intel.getEvent();
+        if(event == null) return false;
         return event.equals("RAISE") || event.equals("ACCEPT") || event.equals("ACCEPT_HAND");
     }
 
-    private boolean isBotEvent(Intel intel) {
-        return botUUID.equals(intel.eventPlayerUuid().orElse(null));
+    private boolean isBotEvent(IntelResponseModel intel) {
+        return botUUID.equals(intel.getEventPlayerUUID());
     }
 
-    private void addBotAnimation(TimelineBuilder builder, Intel intel, String event) {
+    private void addBotAnimation(TimelineBuilder builder, IntelResponseModel intel, String event) {
         switch (event) {
             case "PLAY" -> {
                 if (hasOpponentCardToShow(intel)) builder.append(0.5, () -> showOpponentCard(intel));
@@ -338,12 +340,12 @@ public class GameTableController {
         }
     }
 
-    private boolean hasOpponentCardToShow(Intel intel) {
-        return lastUserPlayedCardPosition < intel.openCards().size();
+    private boolean hasOpponentCardToShow(IntelResponseModel intel) {
+        return lastUserPlayedCardPosition < intel.getOpenCards().size();
     }
 
-    private void showOpponentCard(Intel intel) {
-        final var openCards = intel.openCards();
+    private void showOpponentCard(IntelResponseModel intel) {
+        final var openCards = intel.getOpenCards();
         final var card = openCards.get(openCards.size() - 1);
         final var cardImage = CardImage.of(card).getImage();
         final var randomCardImage = removeRandomOpponentCard();
@@ -355,27 +357,27 @@ public class GameTableController {
         return opponentCardImages.remove(0);
     }
 
-    private void updateRoundResults(Intel intel) {
-        final var roundsPlayed = intel.roundsPlayed();
+    private void updateRoundResults(IntelResponseModel intel) {
+        final var roundsPlayed = intel.getRoundsPlayed();
         if (roundsPlayed == 0) setRoundLabelsInvisible();
         if (roundsPlayed >= 1) showRoundResult(1, lb1st, lb1stValue, intel);
         if (roundsPlayed >= 2) showRoundResult(2, lb2nd, lb2ndValue, intel);
         if (roundsPlayed >= 3) showRoundResult(3, lb3rd, lb3rdValue, intel);
     }
 
-    private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel, Intel intel) {
-        final var roundsPlayed = intel.roundsPlayed();
+    private void showRoundResult(int roundNumber, Label roundLabel, Label roundResultLabel, IntelResponseModel intel) {
+        final var roundsPlayed = intel.getRoundsPlayed();
         final var roundIndex = roundNumber - 1;
 
         if (roundIndex >= roundsPlayed) return;
 
-        final var resultText = intel.roundWinnersUsernames().get(roundNumber - 1).orElse("Empate");
+        final var resultText = intel.getRoundWinnersUsernames().get(roundNumber - 1).orElse("Empate");
         roundResultLabel.setText(resultText);
         roundLabel.setVisible(true);
         roundResultLabel.setVisible(true);
     }
 
-    private void addSupportingAnimation(TimelineBuilder builder, Intel intel) {
+    private void addSupportingAnimation(TimelineBuilder builder, IntelResponseModel intel) {
         builder.append(1.0, () -> updateRoundResults(intel));
         if (hasCardsToClean(intel)) {
             builder.append(0.5, () -> updateRoundResults(intel));
@@ -396,10 +398,11 @@ public class GameTableController {
         builder.append(() -> configureButtons(intel));
     }
 
-    private boolean hasCardsToClean(Intel intel) {
-        final var cardsPlayed = intel.openCards().size();
+    private boolean hasCardsToClean(IntelResponseModel intel) {
+        final var cardsPlayed = intel.getOpenCards().size();
         final var isSecondCardOfRound = cardsPlayed % 2 == 1;
-        final var event = intel.event().orElse("");
+        final var event = intel.getEvent();
+        if(event == null) return false;
         return event.equals("PLAY") && cardsPlayed > 1 && isSecondCardOfRound;
     }
 
@@ -408,43 +411,45 @@ public class GameTableController {
         firstCard.setImage(CardImage.ofNoCard().getImage());
     }
 
-    private boolean isNewRound(Intel intel) {
-        final boolean isFirstHand = getPlayerScore(intel, userUUID) == 0 && getPlayerScore(intel, botUUID) == 0;
-        return intel.event().orElse("").equals("HAND_START") && !isFirstHand;
+    private boolean isNewRound(IntelResponseModel intel) {
+        final var isFirstHand = getPlayerScore(intel, userUUID) == 0 && getPlayerScore(intel, botUUID) == 0;
+        final var event = intel.getEvent();
+        if(event == null) return false;
+        return event.equals("HAND_START") && !isFirstHand;
     }
 
-    private int getPlayerScore(Intel intel, UUID playerUUID) {
-        return intel.players().stream()
+    private int getPlayerScore(IntelResponseModel intel, UUID playerUUID) {
+        return intel.getPlayers().stream()
                 .filter(p -> p.getUuid().equals(playerUUID))
-                .mapToInt(Intel.PlayerIntel::getScore)
+                .mapToInt(PlayerIntel::getScore)
                 .findAny().orElse(0);
     }
 
-    private void updatePlayerScores(Intel intel) {
+    private void updatePlayerScores(IntelResponseModel intel) {
         lbPlayerScoreValue.setText(String.valueOf(getPlayerScore(intel, userUUID)));
         lbOpponentScoreValue.setText(String.valueOf(getPlayerScore(intel, botUUID)));
     }
 
-    private boolean isUserNextPlayer(Intel intel) {
-        return userUUID.equals(intel.currentPlayerUuid().orElse(null));
+    private boolean isUserNextPlayer(IntelResponseModel intel) {
+        return userUUID.equals(intel.getCurrentPlayerUuid());
     }
 
-    private void addNotificationToUser(TimelineBuilder builder, Intel intel) {
+    private void addNotificationToUser(TimelineBuilder builder, IntelResponseModel intel) {
         if (shouldDecideMaoDeOnze(intel)) {
             builder.append(0.5, () -> showMessage("Sua mão de onze"));
         }
         if (hasRaiseProposal(intel)) {
-            final var value = scoreToString(intel.pointsProposal().orElseThrow());
+            final var value = scoreToString(intel.getHandPointsProposal());
             builder.append(0.25, () -> showMessage(botName + " pediu " + value + " !"));
         }
     }
 
-    private boolean shouldDecideMaoDeOnze(Intel intel) {
-        return intel.isMaoDeOnze() && intel.handPoints() == 1;
+    private boolean shouldDecideMaoDeOnze(IntelResponseModel intel) {
+        return intel.isMaoDeOnze() && intel.getHandPoints() == 1;
     }
 
-    private boolean hasRaiseProposal(Intel intel) {
-        return intel.pointsProposal().isPresent();
+    private boolean hasRaiseProposal(IntelResponseModel intel) {
+        return intel.getHandPointsProposal() != null;
     }
 
     public void accept(ActionEvent a) {

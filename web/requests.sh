@@ -56,13 +56,13 @@ INTEL_2=$(curl -s -H "Content-Type:application/json" -d "$FIRST_CARD" http://loc
 echo "RECEIVED: $INTEL_2"
 echo "---"
 
-
 echo "POSTING http://localhost:8080/api/v1/game/player/${UUID}/points/raise"
 INTEL_3=$(curl -s -X POST http://localhost:8080/api/v1/game/player/"$UUID"/points/raise | jq '.')
 echo "RECEIVED: $INTEL_3"
 echo "---"
 
-
+#INTEL_SINCE=$(curl -s GET http://localhost:8080/api/v1/game/player/"$UUID"/intel_since/{{lastIntelTimestamp}})
+#echo "RECEIVED: $INTEL_SINCE"
 
 
 

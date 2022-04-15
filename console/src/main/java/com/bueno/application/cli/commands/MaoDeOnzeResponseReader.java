@@ -35,11 +35,11 @@ public class MaoDeOnzeResponseReader implements Command<MaoDeOnzeResponseReader.
 
     @Override
     public MaoDeOnzeChoice execute() {
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         while (true) {
             mainCli.printGameIntel(3000);
             System.out.print("O jogo está em mão de onze. Você aceita [s, n]: ");
-            final String choice = scanner.nextLine().toLowerCase();
+            final var choice = scanner.nextLine().toLowerCase();
 
             if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");

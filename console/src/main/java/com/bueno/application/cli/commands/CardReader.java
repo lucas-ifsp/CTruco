@@ -31,6 +31,7 @@ import static com.google.common.primitives.Ints.tryParse;
 @SuppressWarnings("UnstableApiUsage")
 public class CardReader implements Command<Card> {
 
+    public static final int DELAY_IN_MILLISECONDS = 3000;
     private final GameCLI mainCli;
     private final List<Card> userCards;
 
@@ -41,13 +42,13 @@ public class CardReader implements Command<Card> {
 
     @Override
     public Card execute() {
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         while (true){
-            mainCli.printGameIntel(3000);
+            mainCli.printGameIntel(DELAY_IN_MILLISECONDS);
 
             System.out.print("Carta a jogar [índice] > ");
 
-            final Integer choice = tryParse(scanner.nextLine());
+            final var choice = tryParse(scanner.nextLine());
             if (choice == null || cardIndexOf(choice) < 0 || cardIndexOf(choice) > userCards.size() - 1) {
                 printErrorMessage("Valor inválido!");
                 continue;

@@ -23,11 +23,11 @@ package com.bueno.domain.usecases.hand;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.springframework.stereotype.Service;
 
@@ -44,34 +44,34 @@ public class PlayCardUseCase {
         this.botUseCase = new BotUseCase(repo);
     }
 
-    public Intel playCard(RequestModel requestModel) {
-        return playCard(requestModel, false);
+    public IntelResponseModel playCard(PlayCardRequestModel playCardRequestModel) {
+        return playCard(playCardRequestModel, false);
     }
 
-    public Intel discard(RequestModel requestModel) {
-        return playCard(requestModel, true);
+    public IntelResponseModel discard(PlayCardRequestModel playCardRequestModel) {
+        return playCard(playCardRequestModel, true);
     }
 
-    private Intel playCard(RequestModel request, boolean discard){
+    private IntelResponseModel playCard(PlayCardRequestModel request, boolean discard){
         final var validator = new ActionValidator(repo, PossibleAction.PLAY);
-        final var notification = validator.validate(request.uuid());
+        final var notification = validator.validate(request.getUuid());
 
         if(notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
 
-        final Game game = repo.findByUserUuid(request.uuid()).orElseThrow();
+        final Game game = repo.findByUserUuid(request.getUuid()).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
-        final Card playingCard = discard ? player.discard(request.card()) : player.play(request.card());
+        final Card playingCard = discard ? player.discard(request.getCard()) : player.play(request.getCard());
 
         if(hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playingCard);
         else hand.playSecondCard(player, playingCard);
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        if(game.isDone()) return game.getIntel();
+        if(game.isDone()) return IntelResponseModel.of(game.getIntel());
 
         botUseCase.playWhenNecessary(game);
 
-        return game.getIntel();
+        return IntelResponseModel.of(game.getIntel());
     }
 
     private void updateGameStatus(Game game) {

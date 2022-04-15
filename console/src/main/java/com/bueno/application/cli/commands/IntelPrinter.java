@@ -21,22 +21,21 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.intel.Intel;
+import com.bueno.domain.usecases.intel.IntelResponseModel;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class IntelPrinter implements Command<Void>{
 
-    private final List<Intel> history;
+    private final List<IntelResponseModel> history;
     private final int delayInMilliseconds;
     private final UUID userUUID;
     private final List<Card> userCards;
 
-    public IntelPrinter(UUID userUUID, List<Card> userCards, List<Intel> history, int delayInMilliseconds) {
+    public IntelPrinter(UUID userUUID, List<Card> userCards, List<IntelResponseModel> history, int delayInMilliseconds) {
         this.userUUID = userUUID;
         this.userCards = List.copyOf(userCards);
         this.history = history;
@@ -51,13 +50,13 @@ public class IntelPrinter implements Command<Void>{
         return null;
     }
 
-    private void print(Intel intel) {
+    private void print(IntelResponseModel intel) {
         clearAfter(delayInMilliseconds);
         printDelimiter(false);
         printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
-        printVira(intel.vira());
+        printVira(intel.getVira());
         if(isUserTurn(intel)) {
             printCardToPlayAgainst(intel);
             printOwnedCards();
@@ -78,33 +77,33 @@ public class IntelPrinter implements Command<Void>{
         System.out.println("+==========================================================+" + (blankLine ? "\n" : ""));
     }
 
-    private void printGameMainInfo(Intel intel) {
-        if(intel.currentPlayerUuid().isPresent()) {
-            final Intel.PlayerIntel user = intel.players().stream()
+    private void printGameMainInfo(IntelResponseModel intel) {
+        if(intel.getCurrentPlayerUuid() != null) {
+            final var user = intel.getPlayers().stream()
                     .filter(p -> p.getUuid().equals(userUUID)).findAny().orElseThrow();
-            final Intel.PlayerIntel bot = intel.players().stream()
+            final var bot = intel.getPlayers().stream()
                     .filter(p -> !p.getUuid().equals(userUUID)).findAny().orElseThrow();
 
             System.out.println(" Placar: " + user.getUsername() + " " + user.getScore() + " x "
                     + bot.getScore() + " " + bot.getUsername());
 
-            System.out.println(" Vez do (a): " + intel.currentPlayerUsername());
+            System.out.println(" Vez do (a): " + intel.getCurrentPlayerUsername());
         }
-        System.out.println(" Ponto da mão: " + intel.handPoints());
+        System.out.println(" Pontos da mão: " + intel.getHandPoints());
     }
 
-    private void printRounds(Intel intel) {
-        final List<Optional<String>> roundWinners = intel.roundWinnersUsernames();
+    private void printRounds(IntelResponseModel intel) {
+        final var roundWinners = intel.getRoundWinnersUsernames();
         if (roundWinners.size() > 0) {
-            final String roundResults = roundWinners.stream()
+            final var roundResults = roundWinners.stream()
                     .map(possibleWinner -> possibleWinner.orElse("Empate"))
                     .collect(Collectors.joining(" | ", "[ ", " ] "));
             System.out.println(" Ganhadores das Rodadas: " + roundResults);
         }
     }
 
-    private void printCardsOpenInTable(Intel intel) {
-        final List<Card> openCards = intel.openCards();
+    private void printCardsOpenInTable(IntelResponseModel intel) {
+        final var openCards = intel.getOpenCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
             openCards.forEach(card -> System.out.print(card + " "));
@@ -116,13 +115,13 @@ public class IntelPrinter implements Command<Void>{
         System.out.println(" Vira: " + vira);
     }
 
-    private boolean isUserTurn(Intel intel) {
-        return intel.currentPlayerUuid().filter(uuid -> uuid.equals(userUUID)).isPresent();
+    private boolean isUserTurn(IntelResponseModel intel) {
+        return userUUID.equals(intel.getCurrentPlayerUuid());
     }
 
-    private void printCardToPlayAgainst(Intel intel) {
-        final Optional<Card> cardToPlayAgainst = intel.cardToPlayAgainst();
-        cardToPlayAgainst.ifPresent(card -> System.out.println(" Carta do Oponente: " + card));
+    private void printCardToPlayAgainst(IntelResponseModel intel) {
+        final var cardToPlayAgainst = intel.getCardToPlayAgainst();
+        if(cardToPlayAgainst != null) System.out.println(" Carta do Oponente: " + cardToPlayAgainst);
     }
 
     private void printOwnedCards() {
@@ -133,14 +132,10 @@ public class IntelPrinter implements Command<Void>{
         System.out.print("\n");
     }
 
-    private void printResultIfAvailable(Intel intel) {
-        final var possibleWinner = intel.handWinner();
-        if (possibleWinner.isPresent()) {
-            final String resultString = possibleWinner
-                    .map(String::toUpperCase)
-                    .map(name -> name.concat(" VENCEU!"))
-                    .orElse("EMPATE.");
-            System.out.println(" RESULTADO: " + resultString);
-        }
+    private void printResultIfAvailable(IntelResponseModel intel) {
+        final var possibleWinner = intel.getHandWinner();
+        if (possibleWinner == null) return;
+        final String resultString = possibleWinner.toUpperCase().concat(" VENCEU!");
+        System.out.println(" RESULTADO: " + resultString);
     }
 }

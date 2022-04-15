@@ -35,18 +35,18 @@ public class CreateUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public ResponseModel create(RequestModel requestModel){
-        Objects.requireNonNull(requestModel,"Request model must not be null.");
+    public UserResponseModel create(UserRequestModel userRequestModel){
+        Objects.requireNonNull(userRequestModel,"Request model must not be null.");
 
-        repo.findByUsername(requestModel.username()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use: " + requestModel.username());});
+        repo.findByUsername(userRequestModel.getUsername()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This username is already in use: " + userRequestModel.getUsername());});
 
-        repo.findByEmail(requestModel.email()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This email is already in use: " + requestModel.email());});
+        repo.findByEmail(userRequestModel.getEmail()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This email is already in use: " + userRequestModel.getEmail());});
 
-        final User user = new User(requestModel.username(), requestModel.email());
+        final User user = new User(userRequestModel.getUsername(), userRequestModel.getEmail());
 
         repo.save(user);
-        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
+        return new UserResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
 }

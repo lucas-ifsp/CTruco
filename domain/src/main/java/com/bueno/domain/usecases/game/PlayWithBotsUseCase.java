@@ -23,7 +23,6 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.usecases.bot.BotUseCase;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class PlayWithBotsUseCase {
 
@@ -37,17 +36,15 @@ public class PlayWithBotsUseCase {
         this.botUseCase = Objects.requireNonNull(botUseCase);
     }
 
-    public ResponseModel playWithBots(RequestModelOfBots requestModel){
-        createGameUseCase.createWithBots(requestModel);
+    public PlayWithBotsResponseModel playWithBots(CreateForBotsRequestModel requestModel){
+        createGameUseCase.createForBots(requestModel);
 
-        final var game = findGameUseCase.loadUserGame(requestModel.bot1Uuid()).orElseThrow();
+        final var game = findGameUseCase.loadUserGame(requestModel.getBot1Uuid()).orElseThrow();
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
-        final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
-                requestModel.bot1Name() : requestModel.bot2Name();
+        final var winnerName = winnerUUID.equals(requestModel.getBot1Uuid()) ?
+                requestModel.getBot1Name() : requestModel.getBot2Name();
 
-        return new ResponseModel(winnerUUID, winnerName);
+        return new PlayWithBotsResponseModel(winnerUUID, winnerName);
     }
-
-    public record ResponseModel(UUID uuid, String name){}
 }

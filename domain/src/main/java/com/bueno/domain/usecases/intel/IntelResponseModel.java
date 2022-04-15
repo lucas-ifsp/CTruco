@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.model;
+package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.intel.Intel;
@@ -27,16 +27,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
 @Builder
 @ToString
-public class GameIntelResponse {
+public final class IntelResponseModel {
     private Instant timestamp;
 
     private boolean isGameDone;
@@ -65,12 +62,12 @@ public class GameIntelResponse {
     private String eventPlayerUsername;
     private Set<String> possibleActions;
 
-    public static GameIntelResponse of(Intel intel){
+    public static IntelResponseModel of(Intel intel){
         final List<PlayerIntel> playersIntel = intel.players().stream()
-                .map(GameIntelResponse::toPlayerIntel)
+                .map(IntelResponseModel::toPlayerIntel)
                 .collect(Collectors.toList());
 
-        return GameIntelResponse.builder()
+        return IntelResponseModel.builder()
                 .timestamp(intel.timestamp())
                 .isGameDone(intel.isGameDone())
                 .gameWinner(intel.gameWinner().orElse(null))
@@ -108,5 +105,28 @@ public class GameIntelResponse {
                 .score(playerIntel.getScore())
                 .cards(List.copyOf(playerIntel.getCards()))
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IntelResponseModel that = (IntelResponseModel) o;
+        return timestamp.equals(that.timestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp);
+    }
+
+    @Builder
+    @Getter
+    @ToString
+    public static class PlayerIntel {
+        private final UUID uuid;
+        private final String username;
+        private final int score;
+        private final List<Card> cards;
     }
 }
