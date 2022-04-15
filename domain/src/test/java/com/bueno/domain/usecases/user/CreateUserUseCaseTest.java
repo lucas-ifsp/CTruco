@@ -58,7 +58,7 @@ class CreateUserUseCaseTest {
     @DisplayName("Should throw if a user with same username is already registered in the database")
     void shouldThrowIfAUserWithSameUsernameIsAlreadyRegisteredInTheDatabase() {
         when(repo.findByUsername(any())).thenReturn(Optional.of(new User("name", "email")));
-        var requestModel = new RequestModel("name", "email");
+        var requestModel = new UserRequestModel("name", "email");
         assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
     }
 
@@ -66,14 +66,14 @@ class CreateUserUseCaseTest {
     @DisplayName("Should throw if a user with same email is already registered in the database")
     void shouldThrowIfAUserWithSameEmailIsAlreadyRegisteredInTheDatabase() {
         when(repo.findByEmail(any())).thenReturn(Optional.of(new User("name", "email")));
-        var requestModel = new RequestModel("name", "email");
+        var requestModel = new UserRequestModel("name", "email");
         assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
     }
 
     @Test
     @DisplayName("Should create user in database if preconditions are met")
     void shouldCreateUserInDatabaseIfPreconditionsAreMet() {
-        var requestModel = new RequestModel("name", "email");
+        var requestModel = new UserRequestModel("name", "email");
         assertNotNull(sut.create(requestModel));
         verify(repo, times(1)).save(any());
     }

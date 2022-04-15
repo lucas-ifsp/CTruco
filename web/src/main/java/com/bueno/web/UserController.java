@@ -22,7 +22,7 @@ package com.bueno.web;
 
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.RequestModel;
+import com.bueno.domain.usecases.user.UserRequestModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +41,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody RequestModel requestModel){
-        final var response = createUserUseCase.create(requestModel);
+    public ResponseEntity<?> create(@RequestBody UserRequestModel userRequestModel){
+        final var response = createUserUseCase.create(userRequestModel);
         return ResponseEntity.ok(response);
     }
 

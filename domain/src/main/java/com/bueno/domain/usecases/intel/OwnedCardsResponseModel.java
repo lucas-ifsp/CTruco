@@ -18,14 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.intel;
 
-import com.bueno.domain.entities.player.User;
+import com.bueno.domain.entities.deck.Card;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.util.UUID;
+import java.util.List;
 
-public record ResponseModel (UUID uuid, String username, String email){
-    public static ResponseModel of(User user){
-        return new ResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
-    }
+@Getter
+@AllArgsConstructor
+@ToString
+public final class OwnedCardsResponseModel {
+    private final List<Card> cards;
 }

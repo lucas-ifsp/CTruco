@@ -61,9 +61,6 @@ public class Intel{
     private String event;
     private Set<String> possibleActions;
 
-
-
-
     static public Intel ofHand(Hand currentHand, Event event){
         final Hand hand = Objects.requireNonNull(currentHand);
         final Intel result = new Intel();

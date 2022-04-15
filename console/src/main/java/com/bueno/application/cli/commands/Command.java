@@ -20,8 +20,6 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.domain.entities.game.GameRuleViolationException;
-
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -51,7 +49,7 @@ public interface Command <T>{
             case 6 -> "seis";
             case 9 -> "nove";
             case 12 -> "doze";
-            default -> throw new GameRuleViolationException("Invalid hand value!");
+            default -> throw new IllegalStateException("Invalid hand value!");
         };
     }
 }

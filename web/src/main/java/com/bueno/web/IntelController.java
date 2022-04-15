@@ -21,9 +21,6 @@
 package com.bueno.web;
 
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.model.GameIntelResponse;
-import com.bueno.model.PlayerCardsResponse;
-import com.bueno.model.PlayerTurnResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/game/player/{playerId}")
@@ -46,22 +42,19 @@ public class IntelController {
 
     @GetMapping(path = "/cards")
     private ResponseEntity<?> getCards(@PathVariable UUID playerId){
-        final var cards = intelUseCase.getOwnedCards(playerId);
-        return ResponseEntity.ok(new PlayerCardsResponse(cards));
+        final var responseModel = intelUseCase.ownedCards(playerId);
+        return ResponseEntity.ok(responseModel);
     }
 
     @GetMapping(path = "/in_turn")
     private ResponseEntity<?> isPlayerTurn(@PathVariable UUID playerId){
-        final var isPlayerTurn = intelUseCase.isPlayerTurn(playerId);
-        return ResponseEntity.ok(new PlayerTurnResponse(isPlayerTurn));
+        final var responseModel = intelUseCase.isPlayerTurn(playerId);
+        return ResponseEntity.ok(responseModel);
     }
 
     @GetMapping(path = "/intel_since/{lastIntelTimestamp}")
     private ResponseEntity<?> getIntelSince(@PathVariable UUID playerId, @PathVariable Instant lastIntelTimestamp){
         final var intelSince = intelUseCase.findIntelSince(playerId, lastIntelTimestamp);
-        final var response = intelSince.stream()
-                .map(GameIntelResponse::of)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(intelSince);
     }
 }

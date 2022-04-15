@@ -20,10 +20,7 @@
 
 package com.bueno.domain.usecases.intel;
 
-import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
 import org.springframework.stereotype.Service;
@@ -32,6 +29,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class HandleIntelUseCase {
@@ -42,20 +40,24 @@ public class HandleIntelUseCase {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public List<Intel> findIntelSince(UUID uuid, Instant lastIntelTimestamp){
-        final Game game = getGameOrThrow(uuid);
-        return game.getIntelSince(lastIntelTimestamp);
+    public IntelSinceResponseModel findIntelSince(UUID uuid, Instant lastIntelTimestamp){
+        final var game = getGameOrThrow(uuid);
+        final var intelSince = game.getIntelSince(lastIntelTimestamp).stream()
+                .map(IntelResponseModel::of)
+                .collect(Collectors.toList());
+        return new IntelSinceResponseModel(intelSince);
     }
 
-    public List<Card> getOwnedCards(UUID uuid){
-        final Game game = getGameOrThrow(uuid);
-        final Player player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
-        return List.copyOf(player.getCards());
+    public OwnedCardsResponseModel ownedCards(UUID uuid){
+        final var game = getGameOrThrow(uuid);
+        final var player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
+        return new OwnedCardsResponseModel(List.copyOf(player.getCards()));
     }
 
-    public Boolean isPlayerTurn(UUID uuid) {
-        final Game game = getGameOrThrow(uuid);
-        return uuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
+    public PlayerTurnResponseModel isPlayerTurn(UUID uuid) {
+        final var game = getGameOrThrow(uuid);
+        final var playerTurn = uuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
+        return new PlayerTurnResponseModel(playerTurn);
     }
 
     private Game getGameOrThrow(UUID uuid) {

@@ -18,15 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.intel;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-public record RequestModel(String username, String email) {
-    public RequestModel(String username, String email) {
-        this.username = Objects.requireNonNull(username, "Username must not be null.");
-        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
-        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
-        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
-    }
+import java.util.List;
+
+@Getter
+@ToString
+@AllArgsConstructor
+public final class IntelSinceResponseModel {
+    private final List<IntelResponseModel> intelSince;
+
 }

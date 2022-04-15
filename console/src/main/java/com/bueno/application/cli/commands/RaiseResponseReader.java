@@ -36,12 +36,12 @@ public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseRes
 
     @Override
     public RaiseResponseChoice execute() {
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         while (true) {
             System.out.print(mainCli.getOpponentUsername() + " está pedindo " + toRequestString(nextScore)
                     + ". Escolha uma opção [(T)opa, (C)orre, (A)umenta]: ");
 
-            final String choice = scanner.nextLine();
+            final var choice = scanner.nextLine();
             if (isValidChoice(choice, "t", "c", "a")) {
                 printErrorMessage("Valor inválido!");
                 continue;

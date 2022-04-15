@@ -18,34 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.entities.deck.Card;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.bueno.domain.entities.player.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+@Getter
+@ToString
+@AllArgsConstructor
+public final class UserResponseModel{
+    private final UUID uuid;
+    private final String username;
+    private final String email;
 
-public class RequestModelTest {
-
-    @Test
-    @DisplayName("Should not throw if all parameters are valid")
-    void shouldNotThrowIfAllParametersAreValid() {
-        assertDoesNotThrow(() -> new RequestModel(UUID.randomUUID(), Card.closed()));
-    }
-
-    @Test
-    @DisplayName("Should throw if uuid is null")
-    void shouldThrowIfUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> new RequestModel(null, Card.closed()));
-
-    }
-
-    @Test
-    @DisplayName("Should throw if card is null")
-    void shouldThrowIfCardIsNull() {
-        assertThrows(NullPointerException.class, () -> new RequestModel(UUID.randomUUID(), null));
+    public static UserResponseModel of(User user){
+        return new UserResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
     }
 }

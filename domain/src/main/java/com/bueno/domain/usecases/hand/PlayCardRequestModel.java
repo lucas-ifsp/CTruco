@@ -18,15 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.model;
+package com.bueno.domain.usecases.hand;
 
-import lombok.AllArgsConstructor;
+import com.bueno.domain.entities.deck.Card;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+import java.util.UUID;
+
 @Getter
-@AllArgsConstructor
 @ToString
-public class PlayerTurnResponse {
-    private final boolean isPlayerTurn;
+public final class PlayCardRequestModel {
+    private final UUID uuid;
+    private final Card card;
+
+    public PlayCardRequestModel(UUID uuid, Card card) {
+        this.uuid = Objects.requireNonNull(uuid, "UUID must not be null.");
+        this.card = Objects.requireNonNull(card, "Card must not be null.");
+    }
 }

@@ -25,7 +25,6 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
@@ -41,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.LogManager;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
@@ -82,13 +82,13 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if player requesting owned cards is not playing a game")
     void shouldThrowIfPlayerRequestingOwnedCardsIsNotPlayingAGame() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.getOwnedCards(UUID.randomUUID()));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.ownedCards(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Should throw if requests owned cards with null uuid")
     void shouldThrowIfRequestsOwnedCardsWithNullUuid() {
-        assertThrows(NullPointerException.class, () -> sut.getOwnedCards(null));
+        assertThrows(NullPointerException.class, () -> sut.ownedCards(null));
     }
 
     @Test
@@ -114,7 +114,7 @@ class HandleIntelUseCaseTest {
     void shouldCorrectlyGetOwnedCardsIfInvariantsAreMet() {
         final List<Card> cards = List.of(Card.of(Rank.THREE, Suit.CLUBS), Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS));
         when(player1.getCards()).thenReturn(cards);
-        final List<Card> ownedCards = sut.getOwnedCards(p1Uuid);
+        final List<Card> ownedCards = sut.ownedCards(p1Uuid).getCards();
         assertEquals(cards, ownedCards);
     }
 
@@ -122,10 +122,14 @@ class HandleIntelUseCaseTest {
     @DisplayName("Should correctly get intel history if invariants are met")
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
         final Hand hand = game.currentHand();
-        final Intel initialIntel = game.getIntel();
+        final IntelResponseModel initialIntel = IntelResponseModel.of(game.getIntel());
         hand.playFirstCard(player1, Card.closed());
 
-        final List<Intel> intelSinceBeginning = sut.findIntelSince(p1Uuid, initialIntel.timestamp());
-        assertEquals(game.getIntelSince(initialIntel.timestamp()), intelSinceBeginning);
+        final var obtained = sut.findIntelSince(p1Uuid, initialIntel.getTimestamp());
+        final var expected = game.getIntelSince(initialIntel.getTimestamp()).stream()
+                .map(IntelResponseModel::of)
+                .collect(Collectors.toList());
+
+        assertEquals(expected, obtained.getIntelSince());
     }
 }

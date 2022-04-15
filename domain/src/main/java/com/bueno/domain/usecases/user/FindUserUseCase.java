@@ -35,15 +35,15 @@ public class FindUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public ResponseModel findByUUID(UUID uuid){
+    public UserResponseModel findByUUID(UUID uuid){
         return repo.findByUuid(Objects.requireNonNull(uuid))
-                .map(ResponseModel::of)
+                .map(UserResponseModel::of)
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
     }
 
-    public ResponseModel findByUsername(String username){
+    public UserResponseModel findByUsername(String username){
         return repo.findByUsername(Objects.requireNonNull(username))
-                .map(ResponseModel::of)
+                .map(UserResponseModel::of)
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
     }
 }

@@ -20,9 +20,7 @@
 
 package com.bueno.web;
 
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
-import com.bueno.model.GameIntelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,19 +41,19 @@ public class PointsController {
 
     @PostMapping("/raise")
     private ResponseEntity<?> raise(@PathVariable UUID playerUuid){
-        final Intel intel = pointsUseCase.raise(playerUuid);
-        return ResponseEntity.ok(GameIntelResponse.of(intel));
+        final var intel = pointsUseCase.raise(playerUuid);
+        return ResponseEntity.ok(intel);
     }
 
     @PostMapping("/accept")
     private ResponseEntity<?> accept(@PathVariable UUID playerUuid){
-        final Intel intel = pointsUseCase.accept(playerUuid);
-        return ResponseEntity.ok(GameIntelResponse.of(intel));
+        final var intel = pointsUseCase.accept(playerUuid);
+        return ResponseEntity.ok(intel);
     }
 
     @PostMapping("/quit")
     private ResponseEntity<?> quit(@PathVariable UUID playerUuid){
-        final Intel intel = pointsUseCase.quit(playerUuid);
-        return ResponseEntity.ok(GameIntelResponse.of(intel));
+        final var intel = pointsUseCase.quit(playerUuid);
+        return ResponseEntity.ok(intel);
     }
 }

@@ -18,18 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.model;
+package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.entities.deck.Card;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.Objects;
 
 @Getter
-@AllArgsConstructor
 @ToString
-public class PlayerCardsResponse {
-    private final List<Card> cards;
+public final class UserRequestModel{
+
+    private final String username;
+    private final String email;
+
+    public UserRequestModel(String username, String email) {
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
+        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
+    }
 }

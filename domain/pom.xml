@@ -11,19 +11,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>domain</artifactId>
-    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.bueno</groupId>
             <artifactId>bot-spi</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.bueno</groupId>
             <artifactId>bot-impl</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -41,11 +44,9 @@
             <artifactId>spring-context</artifactId>
             <version>5.3.17</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
-    </properties>
-
 </project>
