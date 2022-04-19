@@ -32,7 +32,7 @@ public class CardImage {
 
     private static final String IMAGES_PATH = "/images";
     private static final String IMAGES_EXTENTION = ".png";
-    private Card card;
+
     private Image image;
 
     private static final HashMap<String, CardImage> cache = new HashMap<>();
@@ -55,9 +55,8 @@ public class CardImage {
 
         CardImage newInstance = new CardImage();
         newInstance.loadImage(imagePath);
-        newInstance.card = card;
-
         cache.put(imagePath, newInstance);
+
         return newInstance;
     }
 
