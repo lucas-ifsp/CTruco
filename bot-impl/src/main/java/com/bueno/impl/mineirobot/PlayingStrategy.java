@@ -102,15 +102,4 @@ interface PlayingStrategy {
         final int actualValue = card.getRank().value() - 1;
         return actualValue + offset - discount;
     }
-
-    //4 0
-    //5 1
-    //6 2
-    //7 3
-    //Q 4
-    //J 5
-    //K 6
-    //A 7
-    //2 8
-    //3 9
 }
