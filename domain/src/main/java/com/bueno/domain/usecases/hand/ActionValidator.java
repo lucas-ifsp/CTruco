@@ -24,8 +24,8 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.Validator;
+import com.bueno.domain.usecases.utils.validation.Notification;
+import com.bueno.domain.usecases.utils.validation.Validator;
 
 import java.util.Objects;
 import java.util.UUID;

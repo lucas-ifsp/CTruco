@@ -18,10 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.utils;
+package com.bueno.domain.usecases.utils.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException(String message) {
+public class EntityAlreadyExistsException extends RuntimeException{
+    public EntityAlreadyExistsException(String message) {
         super(message);
     }
 }

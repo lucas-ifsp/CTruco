@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.utils;
+package com.bueno.domain.usecases.utils.exceptions;
 
 public class UnsupportedGameRequestException extends RuntimeException{
     public UnsupportedGameRequestException(String message) {

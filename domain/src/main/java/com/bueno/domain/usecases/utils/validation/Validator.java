@@ -18,25 +18,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.utils.validation;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
-import java.util.Objects;
-import java.util.UUID;
-
-@Getter
-@ToString
-public final class CreateForUserAndBotRequestModel {
-
-    private final UUID userUuid;
-    private final String botName;
-
-    public CreateForUserAndBotRequestModel(UUID userUuid, String botName) {
-        this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
-        this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
-        if(botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
-    }
+public abstract class Validator<T> {
+    public abstract Notification validate(T type);
 }

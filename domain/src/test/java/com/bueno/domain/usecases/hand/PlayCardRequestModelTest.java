@@ -20,27 +20,27 @@
 
 package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UserPlayCardRequestModelTest {
+public class PlayCardRequestModelTest {
 
     @Test
     @DisplayName("Should not throw if all parameters are valid")
     void shouldNotThrowIfAllParametersAreValid() {
-        assertDoesNotThrow(() -> new PlayCardRequestModel(UUID.randomUUID(), Card.closed()));
+        assertDoesNotThrow(() -> new PlayCardRequestModel(UUID.randomUUID(), new CardDto("X", "X")));
     }
 
     @Test
     @DisplayName("Should throw if uuid is null")
     void shouldThrowIfUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> new PlayCardRequestModel(null, Card.closed()));
-
+        assertThrows(NullPointerException.class, () -> new PlayCardRequestModel(null, new CardDto("X", "X")));
     }
 
     @Test

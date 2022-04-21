@@ -27,8 +27,10 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.converters.CardConverter;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -93,13 +95,13 @@ class PlayCardUseCaseTest {
     @DisplayName("Should throw if there is no active game for player UUID")
     void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
         assertThrows(UnsupportedGameRequestException.class,
-                () -> sut.playCard(new PlayCardRequestModel(UUID.randomUUID(), Card.closed())));
+                () -> sut.playCard(new PlayCardRequestModel(UUID.randomUUID(), new CardDto("X", "X"))));
     }
 
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(new PlayCardRequestModel(p2Uuid, Card.closed())));
+        assertThrows(UnsupportedGameRequestException.class, () -> sut.playCard(new PlayCardRequestModel(p2Uuid, new CardDto("X", "X"))));
     }
 
     @Test
@@ -107,31 +109,32 @@ class PlayCardUseCaseTest {
     void shouldThrowIfRequestsActionWhenGameIsDone() {
         when(player1.getScore()).thenReturn(12);
         assertThrows(UnsupportedGameRequestException.class,
-                () -> sut.playCard(new PlayCardRequestModel(p1Uuid, Card.closed())));
+                () -> sut.playCard(new PlayCardRequestModel(p1Uuid, new CardDto("X", "X"))));
     }
 
     @Test
     @DisplayName("Should correctly play first card if invariants are met")
     void shouldCorrectlyPlayFirstCardIfInvariantsAreMet() {
         final Card card = Card.of(Rank.THREE, Suit.CLUBS);
+        final CardDto cardDto = CardConverter.toEntity(card);
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
-        final IntelResponseModel intel = sut.playCard(new PlayCardRequestModel(p1Uuid, card));
-        assertEquals(card, intel.getCardToPlayAgainst());
+        final IntelDto intel = sut.playCard(new PlayCardRequestModel(p1Uuid, cardDto));
+        assertEquals(cardDto, intel.getCardToPlayAgainst());
     }
 
     @Test
     @DisplayName("Should correctly play hand if invariants are met")
     void shouldCorrectlyPlayHandIfInvariantsAreMet() {
-        final Card card1P1 = Card.of(Rank.THREE, Suit.CLUBS);
-        final Card card2P1 = Card.of(Rank.TWO, Suit.CLUBS);
-        final Card card1P2 = Card.of(Rank.ACE, Suit.CLUBS);
-        final Card card2P2 = Card.of(Rank.KING, Suit.CLUBS);
+        final CardDto card1P1 = new CardDto("3", "C");
+        final CardDto card2P1 = new CardDto("2", "C");
+        final CardDto card1P2 = new CardDto("A", "C");
+        final CardDto card2P2 = new CardDto("K", "C");
 
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1P1, card2P1)));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card1P2, card2P2)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1P1), CardConverter.toDto(card2P1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1P2), CardConverter.toDto(card2P2))));
 
         sut.discard(new PlayCardRequestModel(p1Uuid, card1P1));
         sut.playCard(new PlayCardRequestModel(p2Uuid, card1P2));
@@ -143,14 +146,14 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should correctly play second card if invariants are met")
     void shouldCorrectlyPlaySecondCardIfInvariantsAreMet() {
-        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
-        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+        final CardDto card1 = new CardDto("3", "C");
+        final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
 
         sut.discard(new PlayCardRequestModel(p1Uuid, card1));
-        final IntelResponseModel intel = sut.playCard(new PlayCardRequestModel(p2Uuid, card2));
+        final IntelDto intel = sut.playCard(new PlayCardRequestModel(p2Uuid, card2));
         assertAll(
                 () -> assertNull(intel.getCardToPlayAgainst()),
                 () -> assertEquals(1, intel.getRoundsPlayed())
@@ -160,11 +163,11 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should not allow playing the same card twice in the same hand")
     void shouldNotAllowPlayingTheSameCardTwiceInTheSameHand() {
-        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
-        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+        final CardDto card1 = new CardDto("3", "C");
+        final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
 
         sut.playCard(new PlayCardRequestModel(p1Uuid, card1));
         sut.discard(new PlayCardRequestModel(p2Uuid, card2));
@@ -174,11 +177,11 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should not allow discard a card already played in the same hand")
     void shouldNotAllowDiscardingACardAlreadyPlayedInTheSameHand() {
-        final Card card1 = Card.of(Rank.THREE, Suit.CLUBS);
-        final Card card2 = Card.of(Rank.TWO, Suit.CLUBS);
+        final CardDto card1 = new CardDto("3", "C");
+        final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card1)));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(card2)));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
 
         sut.playCard(new PlayCardRequestModel(p1Uuid, card1));
         sut.discard(new PlayCardRequestModel(p2Uuid, card2));

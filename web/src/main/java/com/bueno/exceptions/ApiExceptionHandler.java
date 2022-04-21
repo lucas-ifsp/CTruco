@@ -21,9 +21,9 @@
 package com.bueno.exceptions;
 
 import com.bueno.domain.entities.game.GameRuleViolationException;
-import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

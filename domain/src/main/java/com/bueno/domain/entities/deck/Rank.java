@@ -51,7 +51,7 @@ public enum Rank {
     public static Rank ofSymbol(String symbol){
         return Arrays.stream(values())
                 .filter(rank -> String.valueOf(rank.symbol).equals(symbol))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown rank symbol"));
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown rank symbol:" + symbol));
     }
 
     @Override

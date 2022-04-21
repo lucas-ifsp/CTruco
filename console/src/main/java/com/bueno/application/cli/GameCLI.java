@@ -21,7 +21,6 @@
 package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
-import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
@@ -29,8 +28,9 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayCardRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.UserRequestModel;
@@ -54,8 +54,8 @@ public class GameCLI {
     private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
 
-    private final List<IntelResponseModel> missingIntel;
-    private IntelResponseModel lastIntel;
+    private final List<IntelDto> missingIntel;
+    private IntelDto lastIntel;
     private UUID userUUID;
 
     public static void main(String[] args) {
@@ -90,7 +90,7 @@ public class GameCLI {
         }
     }
 
-    private boolean isCurrentHandDone(IntelResponseModel intel) {
+    private boolean isCurrentHandDone(IntelDto intel) {
         final String event = intel.getEvent();
         if(event == null) return false;
         return event.equals("NEW_HAND");
@@ -207,7 +207,7 @@ public class GameCLI {
 
     public void printGameIntel(int delayInMilliseconds){
         if(missingIntel.size() == 1) delayInMilliseconds = 0;
-        final List<Card> ownedCards = handleIntelUseCase.ownedCards(userUUID).getCards();
+        final List<CardDto> ownedCards = handleIntelUseCase.ownedCards(userUUID).getCards();
         var intelPrinter  = new IntelPrinter(userUUID, ownedCards, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
     }

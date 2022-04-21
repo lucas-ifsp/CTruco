@@ -32,7 +32,7 @@ class CardSuitTest {
     @Test
     @DisplayName("Should correctly toString")
     void shouldCorrectlyToString() {
-        assertEquals("\u2660", SPADES.toString());
+        assertEquals("S", SPADES.toString());
     }
 
     @Test
@@ -44,7 +44,7 @@ class CardSuitTest {
     @Test
     @DisplayName("Should create enum suit from valid symbol")
     void shouldCreateEnumSuitFromValidSymbol() {
-        assertEquals(HEARTS, CardSuit.ofSymbol("\u2665"));
+        assertEquals(HEARTS, CardSuit.ofSymbol("H"));
     }
 
     @Test

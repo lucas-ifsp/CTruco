@@ -22,6 +22,7 @@ package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -30,6 +31,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public final class UserResponseModel{
     private final UUID uuid;
     private final String username;

@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.utils.EntityAlreadyExistsException;
+import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

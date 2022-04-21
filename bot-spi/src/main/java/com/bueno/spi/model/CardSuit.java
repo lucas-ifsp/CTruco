@@ -23,11 +23,11 @@ package com.bueno.spi.model;
 import java.util.Arrays;
 
 public enum CardSuit {
-    HIDDEN("x", 0),
-    DIAMONDS("\u2666", 1),
-    SPADES("\u2660", 2),
-    HEARTS("\u2665", 3),
-    CLUBS("\u2663", 4);
+    HIDDEN("X", 0),
+    DIAMONDS("D", 1),
+    SPADES("S", 2),
+    HEARTS("H", 3),
+    CLUBS("C", 4);
 
     private final String symbol;
     private final int ordinalValue;

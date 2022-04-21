@@ -57,7 +57,7 @@ class CardTest {
         @DisplayName("create card from symbols")
         void createCardFromSymbols() {
             final Rank rank = Rank.ofSymbol("A");
-            final Suit suit = Suit.ofSymbol("\u2663");
+            final Suit suit = Suit.ofSymbol("C");
             assertEquals(Card.of(Rank.ACE, Suit.CLUBS), Card.of(rank, suit));
         }
 
@@ -90,7 +90,7 @@ class CardTest {
 
     @ParameterizedTest(name = "[{index}]: rank {0} and suit {1} = {2}")
     @DisplayName("Should correctly toString() open cards")
-    @CsvSource({"SEVEN,DIAMONDS,[7\u2666]", "ACE,HEARTS,[A\u2665]", "QUEEN,CLUBS,[Q\u2663]", "JACK,SPADES,[J\u2660]", "KING,SPADES,[K\u2660]"})
+    @CsvSource({"SEVEN,DIAMONDS,[7D]", "ACE,HEARTS,[AH]", "QUEEN,CLUBS,[QC]", "JACK,SPADES,[JS]", "KING,SPADES,[KS]"})
     void shouldCorrectlyToStringOpenCard(Rank rank, Suit suit, String output){
         assertEquals(output, Card.of(rank, suit).toString());
     }
@@ -116,7 +116,7 @@ class CardTest {
     @Test
     @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
-        assertEquals("[Xx]", Card.closed().toString());
+        assertEquals("[XX]", Card.closed().toString());
     }
 
     @Test

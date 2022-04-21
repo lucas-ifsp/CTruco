@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.intel;
 
-import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,5 +31,5 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public final class OwnedCardsResponseModel {
-    private final List<Card> cards;
+    private final List<CardDto> cards;
 }

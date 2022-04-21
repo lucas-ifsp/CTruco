@@ -24,8 +24,9 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.converters.IntelConverter;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -133,7 +134,7 @@ class PointsProposalUseCaseTest {
     @Test
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
-        final IntelResponseModel intel = sut.raise(p1Uuid);
+        final IntelDto intel = sut.raise(p1Uuid);
         assertEquals(3, intel.getHandPointsProposal());
     }
 
@@ -141,20 +142,20 @@ class PointsProposalUseCaseTest {
     @DisplayName("Should be able to accept bet if invariants are met")
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
         sut.raise(p1Uuid);
-        final IntelResponseModel intel = sut.accept(p2Uuid);
+        final IntelDto intel = sut.accept(p2Uuid);
         assertEquals(3, intel.getHandPoints());
     }
 
     @Test
     @DisplayName("Should be able to quit bet if invariants are met")
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
-        final IntelResponseModel firstIntel = sut.raise(p1Uuid);
-        final IntelResponseModel lastIntel = sut.quit(p2Uuid);//last intel is already pointing to a new hand.
+        final IntelDto firstIntel = sut.raise(p1Uuid);
+        final IntelDto lastIntel = sut.quit(p2Uuid);//last intel is already pointing to a new hand.
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
 
-        final List<IntelResponseModel> intelSince = game.getIntelSince(firstIntel.getTimestamp()).stream().map(IntelResponseModel::of).collect(Collectors.toList());
-        final IntelResponseModel quitIntel = intelSince.get(intelSince.size() - 2);
+        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.getTimestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
+        final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);
         assertAll(
                 () -> assertEquals(1, quitIntel.getHandPoints()),
                 () -> assertEquals(player1.getUsername(), quitIntel.getHandWinner())
