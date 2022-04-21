@@ -29,8 +29,8 @@ import java.util.UUID;
 
 @Getter
 @ToString
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 public final class PlayWithBotsResponseModel {
     private final UUID uuid;
     private final String name;

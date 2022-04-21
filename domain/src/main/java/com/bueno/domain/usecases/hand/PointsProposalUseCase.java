@@ -26,10 +26,11 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
-import com.bueno.domain.usecases.utils.Notification;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.Validator;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.converters.IntelConverter;
+import com.bueno.domain.usecases.utils.validation.Notification;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -46,7 +47,7 @@ public class PointsProposalUseCase {
         this.botUseCase = new BotUseCase(repo);
     }
 
-    public IntelResponseModel raise(UUID usedUuid){
+    public IntelDto raise(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.RAISE);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -56,10 +57,10 @@ public class PointsProposalUseCase {
         hand.raise(player);
         botUseCase.playWhenNecessary(game);
 
-        return IntelResponseModel.of(game.getIntel());
+        return IntelConverter.of(game.getIntel());
     }
 
-    public IntelResponseModel accept(UUID usedUuid){
+    public IntelDto accept(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.ACCEPT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -69,10 +70,10 @@ public class PointsProposalUseCase {
         hand.accept(player);
         botUseCase.playWhenNecessary(game);
 
-        return IntelResponseModel.of(game.getIntel());
+        return IntelConverter.of(game.getIntel());
     }
 
-    public IntelResponseModel quit(UUID usedUuid){
+    public IntelDto quit(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.QUIT);
 
         final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
@@ -82,10 +83,10 @@ public class PointsProposalUseCase {
         hand.quit(player);
         hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        if(game.isDone()) return IntelResponseModel.of(game.getIntel());
+        if(game.isDone()) return IntelConverter.of(game.getIntel());
         botUseCase.playWhenNecessary(game);
 
-        return IntelResponseModel.of(game.getIntel());
+        return IntelConverter.of(game.getIntel());
     }
 
     private void validateInput(UUID usedUuid, PossibleAction raise) {

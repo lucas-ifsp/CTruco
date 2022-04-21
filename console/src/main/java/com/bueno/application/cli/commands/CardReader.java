@@ -21,7 +21,7 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 
 import java.util.List;
 import java.util.Scanner;
@@ -29,19 +29,19 @@ import java.util.Scanner;
 import static com.google.common.primitives.Ints.tryParse;
 
 @SuppressWarnings("UnstableApiUsage")
-public class CardReader implements Command<Card> {
+public class CardReader implements Command<CardDto> {
 
     public static final int DELAY_IN_MILLISECONDS = 3000;
     private final GameCLI mainCli;
-    private final List<Card> userCards;
+    private final List<CardDto> userCards;
 
-    public CardReader(GameCLI mainCli, List<Card> userCards) {
+    public CardReader(GameCLI mainCli, List<CardDto> userCards) {
         this.mainCli = mainCli;
         this.userCards = userCards;
     }
 
     @Override
-    public Card execute() {
+    public CardDto execute() {
         var scanner = new Scanner(System.in);
         while (true){
             mainCli.printGameIntel(DELAY_IN_MILLISECONDS);

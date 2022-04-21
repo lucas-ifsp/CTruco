@@ -20,8 +20,8 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
 
 public class IntelPrinter implements Command<Void>{
 
-    private final List<IntelResponseModel> history;
+    private final List<IntelDto> history;
     private final int delayInMilliseconds;
     private final UUID userUUID;
-    private final List<Card> userCards;
+    private final List<CardDto> userCards;
 
-    public IntelPrinter(UUID userUUID, List<Card> userCards, List<IntelResponseModel> history, int delayInMilliseconds) {
+    public IntelPrinter(UUID userUUID, List<CardDto> userCards, List<IntelDto> history, int delayInMilliseconds) {
         this.userUUID = userUUID;
         this.userCards = List.copyOf(userCards);
         this.history = history;
@@ -50,7 +50,7 @@ public class IntelPrinter implements Command<Void>{
         return null;
     }
 
-    private void print(IntelResponseModel intel) {
+    private void print(IntelDto intel) {
         clearAfter(delayInMilliseconds);
         printDelimiter(false);
         printGameMainInfo(intel);
@@ -77,7 +77,7 @@ public class IntelPrinter implements Command<Void>{
         System.out.println("+==========================================================+" + (blankLine ? "\n" : ""));
     }
 
-    private void printGameMainInfo(IntelResponseModel intel) {
+    private void printGameMainInfo(IntelDto intel) {
         if(intel.getCurrentPlayerUuid() != null) {
             final var user = intel.getPlayers().stream()
                     .filter(p -> p.getUuid().equals(userUUID)).findAny().orElseThrow();
@@ -92,7 +92,7 @@ public class IntelPrinter implements Command<Void>{
         System.out.println(" Pontos da mão: " + intel.getHandPoints());
     }
 
-    private void printRounds(IntelResponseModel intel) {
+    private void printRounds(IntelDto intel) {
         final var roundWinners = intel.getRoundWinnersUsernames();
         if (roundWinners.size() > 0) {
             final var roundResults = roundWinners.stream()
@@ -102,40 +102,55 @@ public class IntelPrinter implements Command<Void>{
         }
     }
 
-    private void printCardsOpenInTable(IntelResponseModel intel) {
+    private void printCardsOpenInTable(IntelDto intel) {
         final var openCards = intel.getOpenCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
-            openCards.forEach(card -> System.out.print(card + " "));
+            openCards.forEach(card -> System.out.print(formatCard(card) + " "));
             System.out.print("\n");
         }
     }
 
-    private void printVira(Card vira) {
-        System.out.println(" Vira: " + vira);
+    private void printVira(CardDto vira) {
+        System.out.println(" Vira: " + formatCard(vira));
     }
 
-    private boolean isUserTurn(IntelResponseModel intel) {
+    private boolean isUserTurn(IntelDto intel) {
         return userUUID.equals(intel.getCurrentPlayerUuid());
     }
 
-    private void printCardToPlayAgainst(IntelResponseModel intel) {
+    private void printCardToPlayAgainst(IntelDto intel) {
         final var cardToPlayAgainst = intel.getCardToPlayAgainst();
-        if(cardToPlayAgainst != null) System.out.println(" Carta do Oponente: " + cardToPlayAgainst);
+        if(cardToPlayAgainst != null) System.out.println(" Carta do Oponente: " + formatCard(cardToPlayAgainst));
     }
 
     private void printOwnedCards() {
         System.out.print(" Cartas na mão: ");
         for (int i = 0; i < userCards.size(); i++) {
-            System.out.print((i + 1) + ") " + userCards.get(i) + "\t");
+            System.out.print((i + 1) + ") " + formatCard(userCards.get(i)) + "\t");
         }
         System.out.print("\n");
     }
 
-    private void printResultIfAvailable(IntelResponseModel intel) {
+    private void printResultIfAvailable(IntelDto intel) {
         final var possibleWinner = intel.getHandWinner();
         if (possibleWinner == null) return;
         final String resultString = possibleWinner.toUpperCase().concat(" VENCEU!");
         System.out.println(" RESULTADO: " + resultString);
+    }
+
+    public String formatCard(CardDto card){
+        final String rank = card.getRank();
+        final String suit = card.getSuit();
+        final String rankSymbol = rank.equals("X") ? ":" : rank;
+        final String suitSymbol = switch (suit){
+            case "D" -> "\u2666";
+            case "S" -> "\u2660";
+            case "H" -> "\u2665";
+            case "C" -> "\u2663";
+            case "X" -> ":";
+            default -> throw new IllegalStateException("Invalid card suit: " + suit);
+        };
+        return String.format("[%s%s]", rankSymbol, suitSymbol);
     }
 }

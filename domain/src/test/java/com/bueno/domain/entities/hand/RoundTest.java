@@ -132,10 +132,10 @@ class RoundTest {
         final Round nonPlayedRound = new Round(p1, card1, p2, card2, Card.of(Rank.THREE, Suit.DIAMONDS));
 
         assertAll(
-                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [4\u2666]) - Result: Draw (--)", roundA.toString()),
-                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [3\u2666]) - Result: p2 wins ([4\u2663])", roundB.toString()),
-                () -> assertEquals("Round = [4\u2663] x [4\u2660] (Vira [3\u2666]) - Result: p1 wins ([4\u2663])", roundC.toString()),
-                () -> assertEquals("Round = [4\u2660] x [4\u2663] (Vira [3\u2666]) - Result: Draw (--)", nonPlayedRound.toString())
+                () -> assertEquals("Round = [4S] x [4C] (Vira [4D]) - Result: Draw (--)", roundA.toString()),
+                () -> assertEquals("Round = [4S] x [4C] (Vira [3D]) - Result: p2 wins ([4C])", roundB.toString()),
+                () -> assertEquals("Round = [4C] x [4S] (Vira [3D]) - Result: p1 wins ([4C])", roundC.toString()),
+                () -> assertEquals("Round = [4S] x [4C] (Vira [3D]) - Result: Draw (--)", nonPlayedRound.toString())
         );
     }
 

@@ -22,11 +22,12 @@ package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.converters.CardConverter;
+import com.bueno.domain.usecases.utils.converters.IntelConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class HandleIntelUseCase {
     public IntelSinceResponseModel findIntelSince(UUID uuid, Instant lastIntelTimestamp){
         final var game = getGameOrThrow(uuid);
         final var intelSince = game.getIntelSince(lastIntelTimestamp).stream()
-                .map(IntelResponseModel::of)
+                .map(IntelConverter::of)
                 .collect(Collectors.toList());
         return new IntelSinceResponseModel(intelSince);
     }
@@ -51,7 +52,7 @@ public class HandleIntelUseCase {
     public OwnedCardsResponseModel ownedCards(UUID uuid){
         final var game = getGameOrThrow(uuid);
         final var player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
-        return new OwnedCardsResponseModel(List.copyOf(player.getCards()));
+        return new OwnedCardsResponseModel(player.getCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()));
     }
 
     public PlayerTurnResponseModel isPlayerTurn(UUID uuid) {

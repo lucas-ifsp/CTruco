@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.intel;
 
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -30,6 +31,6 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 public final class IntelSinceResponseModel {
-    private final List<IntelResponseModel> intelSince;
+    private final List<IntelDto> intelSince;
 
 }

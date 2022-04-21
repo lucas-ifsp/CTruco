@@ -210,7 +210,7 @@ class TrucoCardTest {
 
     @ParameterizedTest(name = "[{index}]: rank {0} and suit {1} = {2}")
     @DisplayName("Should correctly toString() open cards")
-    @CsvSource({"SEVEN,DIAMONDS,[7\u2666]", "ACE,HEARTS,[A\u2665]", "QUEEN,CLUBS,[Q\u2663]", "JACK,SPADES,[J\u2660]", "KING,SPADES,[K\u2660]"})
+    @CsvSource({"SEVEN,DIAMONDS,[7D]", "ACE,HEARTS,[AH]", "QUEEN,CLUBS,[QC]", "JACK,SPADES,[JS]", "KING,SPADES,[KS]"})
     void shouldCorrectlyToStringOpenCard(CardRank rank, CardSuit suit, String output){
         assertEquals(output, TrucoCard.of(rank, suit).toString());
     }
@@ -218,7 +218,7 @@ class TrucoCardTest {
     @Test
     @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
-        assertEquals("[Xx]", TrucoCard.closed().toString());
+        assertEquals("[XX]", TrucoCard.closed().toString());
     }
 
 }

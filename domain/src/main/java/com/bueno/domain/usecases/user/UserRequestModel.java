@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -27,6 +28,7 @@ import java.util.Objects;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public final class UserRequestModel{
 
     private final String username;

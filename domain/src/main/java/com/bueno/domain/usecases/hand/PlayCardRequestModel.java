@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -31,9 +31,9 @@ import java.util.UUID;
 @ToString
 public final class PlayCardRequestModel {
     private final UUID uuid;
-    private final Card card;
+    private final CardDto card;
 
-    public PlayCardRequestModel(UUID uuid, Card card) {
+    public PlayCardRequestModel(UUID uuid, CardDto card) {
         this.uuid = Objects.requireNonNull(uuid, "UUID must not be null.");
         this.card = Objects.requireNonNull(card, "Card must not be null.");
     }

@@ -18,25 +18,34 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.utils.dtos;
 
-import lombok.AllArgsConstructor;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Objects;
-import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Getter
+@EqualsAndHashCode
 @ToString
-public final class CreateForUserAndBotRequestModel {
+public final class CardDto {
+    private final String rank;
+    private final String suit;
 
-    private final UUID userUuid;
-    private final String botName;
-
-    public CreateForUserAndBotRequestModel(UUID userUuid, String botName) {
-        this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
-        this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
-        if(botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
+    public CardDto(String rank, String suit) {
+        this.rank = Objects.requireNonNull(rank, "Rank must not be null.").toUpperCase();
+        this.suit = Objects.requireNonNull(suit, "Suit must not be null.").toUpperCase();
+        final boolean isValidRank = Pattern.compile("[A2-7QJKX]").matcher(this.rank).matches();
+        final boolean isValidSuit = Pattern.compile("[DCHSX]").matcher(this.suit).matches();
+        if(!isValidRank) throw new IllegalArgumentException("Rank value is not valid: " + this.rank);
+        if(!isValidSuit) throw new IllegalArgumentException("Suit value is not valid: " + this.suit);
     }
+
+    public static CardDto closed(){
+        return new CardDto("X", "X");
+    }
+
 }

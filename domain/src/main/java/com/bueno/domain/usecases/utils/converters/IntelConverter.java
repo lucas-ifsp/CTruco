@@ -18,63 +18,28 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel;
+package com.bueno.domain.usecases.utils.converters;
 
-import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.intel.Intel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 
-import java.time.Instant;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Builder
-@ToString
-public final class IntelResponseModel {
-    private Instant timestamp;
-
-    private boolean isGameDone;
-    private UUID gameWinner;
-    private boolean isMaoDeOnze;
-
-    private Integer handPoints;
-    private Integer handPointsProposal;
-    private List<Optional<String>> roundWinnersUsernames;
-    private List<Optional<UUID>> roundWinnersUuid;
-    private int roundsPlayed;
-    private Card vira;
-    private List<Card> openCards;
-    private String handWinner;
-
-    private UUID currentPlayerUuid;
-    private int currentPlayerScore;
-    private String currentPlayerUsername;
-    private int currentOpponentScore;
-    private String currentOpponentUsername;
-    private Card cardToPlayAgainst;
-    private List<PlayerIntel> players;
-
-    private String event;
-    private UUID eventPlayerUUID;
-    private String eventPlayerUsername;
-    private Set<String> possibleActions;
-
-    public static IntelResponseModel of(Intel intel){
-        final List<PlayerIntel> playersIntel = intel.players().stream()
-                .map(IntelResponseModel::toPlayerIntel)
+public class IntelConverter {
+    public static IntelDto of(Intel intel){
+        final List<IntelDto.PlayerInfo> playersIntel = intel.players().stream()
+                .map(IntelConverter::ofPlayerIntel)
                 .collect(Collectors.toList());
 
-        return IntelResponseModel.builder()
+        return IntelDto.builder()
                 .timestamp(intel.timestamp())
                 .isGameDone(intel.isGameDone())
                 .gameWinner(intel.gameWinner().orElse(null))
                 .isMaoDeOnze(intel.isMaoDeOnze())
 
-                .vira(intel.vira())
-                .openCards(intel.openCards())
+                .vira(CardConverter.toEntity(intel.vira()))
+                .openCards(intel.openCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()))
                 .roundsPlayed(intel.roundsPlayed())
                 .roundWinnersUsernames(intel.roundWinnersUsernames())
                 .roundWinnersUuid(intel.roundWinnersUuid())
@@ -87,7 +52,7 @@ public final class IntelResponseModel {
                 .currentPlayerScore(intel.currentPlayerScore())
                 .currentOpponentUsername(intel.currentOpponentUsername())
                 .currentOpponentScore(intel.currentOpponentScore())
-                .cardToPlayAgainst(intel.cardToPlayAgainst().orElse(null))
+                .cardToPlayAgainst(intel.cardToPlayAgainst().map(CardConverter::toEntity).orElse(null))
                 .players(playersIntel)
 
                 .event(intel.event().orElse(null))
@@ -98,35 +63,17 @@ public final class IntelResponseModel {
                 .build();
     }
 
-    private static PlayerIntel toPlayerIntel(Intel.PlayerIntel playerIntel){
-        return PlayerIntel.builder()
+    private static IntelDto.PlayerInfo ofPlayerIntel(Intel.PlayerIntel playerIntel){
+        final var playerCards = playerIntel.getCards().stream()
+                .map(CardConverter::toEntity)
+                .collect(Collectors.toList());
+
+        return IntelDto.PlayerInfo.builder()
                 .username(playerIntel.getUsername())
                 .uuid(playerIntel.getUuid())
                 .score(playerIntel.getScore())
-                .cards(List.copyOf(playerIntel.getCards()))
+                .cards(playerCards)
                 .build();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IntelResponseModel that = (IntelResponseModel) o;
-        return timestamp.equals(that.timestamp);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(timestamp);
-    }
-
-    @Builder
-    @Getter
-    @ToString
-    public static class PlayerIntel {
-        private final UUID uuid;
-        private final String username;
-        private final int score;
-        private final List<Card> cards;
-    }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,8 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.utils;
+package com.bueno.domain.usecases.utils.converters;
 
-public abstract class Validator<T> {
-    public abstract Notification validate(T type);
+import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.deck.Rank;
+import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
+
+public class CardConverter {
+    public static Card toDto(CardDto cardDto) {
+        final Rank rank = Rank.ofSymbol(cardDto.getRank());
+        final Suit suit = Suit.ofSymbol(cardDto.getSuit());
+        return Card.of(rank, suit);
+    }
+
+    public static CardDto toEntity(Card card) {
+        final String rank = card.getRank().toString();
+        final String suit = card.getSuit().toString();
+        return new CardDto(rank, suit);
+    }
 }

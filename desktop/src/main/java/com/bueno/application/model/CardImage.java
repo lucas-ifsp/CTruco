@@ -20,9 +20,7 @@
 
 package com.bueno.application.model;
 
-import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.deck.Rank;
-import com.bueno.domain.entities.deck.Suit;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
@@ -41,14 +39,14 @@ public class CardImage {
     }
 
     public static CardImage ofClosedCard(){
-        return of(Card.closed());
+        return of(new CardDto("X", "X"));
     }
 
     public static CardImage ofNoCard(){
         return of(null);
     }
 
-    public static CardImage of(Card card){
+    public static CardImage of(CardDto card){
         final String imagePath = buildImagePath(getCardFileName(card));
         if(cache.containsKey(imagePath))
             return cache.get(imagePath);
@@ -64,21 +62,10 @@ public class CardImage {
         return IMAGES_PATH + "/" + fileName + IMAGES_EXTENTION;
     }
 
-    private static String getCardFileName(Card card) {
+    private static String getCardFileName(CardDto card) {
         if(card == null) return "table";
-        if(card.equals(Card.closed())) return "red_back";
-
-        final Rank rank = card.getRank();
-        final Suit suit = card.getSuit();
-
-        String suitName = switch (suit) {
-            case HEARTS -> "H";
-            case CLUBS -> "C";
-            case SPADES -> "S";
-            case DIAMONDS -> "D";
-            case HIDDEN -> "";
-        };
-        return rank + suitName;
+        if(card.equals(new CardDto("X", "X"))) return "red_back";
+        return card.getRank() + card.getSuit();
     }
 
     private void loadImage(String imagePath) {

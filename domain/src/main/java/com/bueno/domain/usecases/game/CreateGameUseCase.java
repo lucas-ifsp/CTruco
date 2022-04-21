@@ -23,10 +23,11 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.intel.IntelResponseModel;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.utils.EntityNotFoundException;
-import com.bueno.domain.usecases.utils.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.converters.IntelConverter;
 import com.bueno.spi.service.BotServiceManager;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public IntelResponseModel createForUserAndBot(CreateForUserAndBotRequestModel requestModel){
+    public IntelDto createForUserAndBot(CreateForUserAndBotRequestModel requestModel){
         Objects.requireNonNull(requestModel, "Request model not be null!");
 
         if(hasNoBotServiceWith(requestModel.getBotName()))
@@ -66,7 +67,7 @@ public class CreateGameUseCase {
         return !BotServiceManager.providersNames().contains(botName);
     }
 
-    IntelResponseModel createForBots(CreateForBotsRequestModel requestModel){
+    IntelDto createForBots(CreateForBotsRequestModel requestModel){
         Objects.requireNonNull(requestModel);
 
         if(hasNoBotServiceWith(requestModel.getBot1Name()))
@@ -81,9 +82,9 @@ public class CreateGameUseCase {
         return create(bot1, bot2);
     }
 
-    private IntelResponseModel create(Player p1, Player p2) {
+    private IntelDto create(Player p1, Player p2) {
         final Game game = new Game(p1, p2);
         gameRepo.save(game);
-        return IntelResponseModel.of(game.getIntel());
+        return IntelConverter.of(game.getIntel());
     }
 }
