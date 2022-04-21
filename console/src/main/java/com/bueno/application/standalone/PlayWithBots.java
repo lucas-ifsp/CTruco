@@ -22,6 +22,8 @@ package com.bueno.application.standalone;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.*;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
+import com.bueno.domain.usecases.game.model.PlayWithBotsResponseModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.google.common.primitives.Ints;
 

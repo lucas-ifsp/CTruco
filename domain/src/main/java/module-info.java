@@ -7,6 +7,7 @@ module domain {
 
     exports com.bueno.domain.entities.game to application.persistence;
     exports com.bueno.domain.entities.player to application.persistence;
+    exports com.bueno.domain.entities.deck to application.persistence;
 
     exports com.bueno.domain.usecases.game;
     exports com.bueno.domain.usecases.user;
@@ -14,6 +15,8 @@ module domain {
     exports com.bueno.domain.usecases.bot;
     exports com.bueno.domain.usecases.intel;
     exports com.bueno.domain.usecases.utils.exceptions;
-    exports com.bueno.domain.usecases.utils.validation;
     exports com.bueno.domain.usecases.utils.dtos;
+    exports com.bueno.domain.usecases.game.model;
+    exports com.bueno.domain.usecases.intel.model;
+    exports com.bueno.domain.usecases.user.model;
 }

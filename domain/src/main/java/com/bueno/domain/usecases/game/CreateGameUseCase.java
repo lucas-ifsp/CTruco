@@ -23,6 +23,8 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;

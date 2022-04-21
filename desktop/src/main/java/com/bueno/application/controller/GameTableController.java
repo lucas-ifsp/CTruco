@@ -22,7 +22,7 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
-import com.bueno.domain.usecases.game.CreateForUserAndBotRequestModel;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.hand.PlayCardRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
@@ -32,7 +32,7 @@ import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.dtos.IntelDto.PlayerInfo;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
-import com.bueno.domain.usecases.user.UserRequestModel;
+import com.bueno.domain.usecases.user.model.UserRequestModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;

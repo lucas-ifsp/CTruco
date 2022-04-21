@@ -22,7 +22,7 @@ package com.bueno.web;
 
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.UserRequestModel;
+import com.bueno.domain.usecases.user.model.UserRequestModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

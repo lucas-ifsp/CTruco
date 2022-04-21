@@ -38,10 +38,6 @@ public class Notification {
         addError(message, null);
     }
 
-    public void addError(Exception e){
-        addError(e.getMessage(), e);
-    }
-
     private void addError(String message, Exception e){
         errors.add(new Error(message, e));
     }

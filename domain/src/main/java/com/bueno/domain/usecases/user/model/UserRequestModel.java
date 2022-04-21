@@ -18,29 +18,26 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.user.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @ToString
-public final class CreateForBotsRequestModel {
+@EqualsAndHashCode
+public final class UserRequestModel{
 
-    private final UUID bot1Uuid;
-    private final String bot1Name;
-    private final UUID bot2Uuid;
-    private final String bot2Name;
+    private final String username;
+    private final String email;
 
-    public CreateForBotsRequestModel(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
-        this.bot1Uuid = Objects.requireNonNull(bot1Uuid, "Bot1 UUID must not be null!");
-        this.bot1Name = Objects.requireNonNull(bot1Name, "Bot1 name must not be null!");
-        if(bot1Name.isEmpty()) throw new IllegalArgumentException("Bot1 name must not be empty!");
-        this.bot2Uuid = Objects.requireNonNull(bot2Uuid, "Bot2 UUID must not be null!");
-        this.bot2Name = Objects.requireNonNull(bot2Name, "Bot2 name must not be null!");
-        if(bot2Name.isEmpty()) throw new IllegalArgumentException("Bot2 name must not be empty!");
+    public UserRequestModel(String username, String email) {
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
+        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
     }
 }

@@ -21,6 +21,8 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
+import com.bueno.domain.usecases.game.model.PlayWithBotsResponseModel;
 
 import java.util.Objects;
 

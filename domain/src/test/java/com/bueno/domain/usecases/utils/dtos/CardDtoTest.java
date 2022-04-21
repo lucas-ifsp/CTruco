@@ -25,8 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CardDtoTest {
 
@@ -62,5 +61,14 @@ class CardDtoTest {
     @DisplayName("Should throw if suit is invalid")
     void shouldThrowIfSuitIsInvalid(String suit) {
         assertThrows(IllegalArgumentException.class, () -> new CardDto("A", suit));
+    }
+
+    @Test
+    @DisplayName("Should correctly create closed card")
+    void shouldCorrectlyCreateClosedCard() {
+        assertAll(
+                () -> assertEquals("X", CardDto.closed().getRank()),
+                () -> assertEquals("X", CardDto.closed().getSuit())
+        );
     }
 }

@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
+import com.bueno.domain.usecases.user.model.UserResponseModel;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
