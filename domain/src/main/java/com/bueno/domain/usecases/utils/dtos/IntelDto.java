@@ -94,6 +94,4 @@ public final class IntelDto {
     public int hashCode() {
         return Objects.hash(timestamp);
     }
-
-
 }

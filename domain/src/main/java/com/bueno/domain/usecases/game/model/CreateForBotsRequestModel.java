@@ -18,26 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.game.model;
 
-import com.bueno.domain.entities.player.User;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @ToString
-@AllArgsConstructor
-@EqualsAndHashCode
-public final class UserResponseModel{
-    private final UUID uuid;
-    private final String username;
-    private final String email;
+public final class CreateForBotsRequestModel {
 
-    public static UserResponseModel of(User user){
-        return new UserResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
+    private final UUID bot1Uuid;
+    private final String bot1Name;
+    private final UUID bot2Uuid;
+    private final String bot2Name;
+
+    public CreateForBotsRequestModel(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+        this.bot1Uuid = Objects.requireNonNull(bot1Uuid, "Bot1 UUID must not be null!");
+        this.bot1Name = Objects.requireNonNull(bot1Name, "Bot1 name must not be null!");
+        if(bot1Name.isEmpty()) throw new IllegalArgumentException("Bot1 name must not be empty!");
+        this.bot2Uuid = Objects.requireNonNull(bot2Uuid, "Bot2 UUID must not be null!");
+        this.bot2Name = Objects.requireNonNull(bot2Name, "Bot2 name must not be null!");
+        if(bot2Name.isEmpty()) throw new IllegalArgumentException("Bot2 name must not be empty!");
     }
 }

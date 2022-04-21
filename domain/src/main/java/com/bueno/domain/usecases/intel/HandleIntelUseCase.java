@@ -22,6 +22,9 @@ package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.intel.model.IntelSinceResponseModel;
+import com.bueno.domain.usecases.intel.model.OwnedCardsResponseModel;
+import com.bueno.domain.usecases.intel.model.PlayerTurnResponseModel;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.converters.CardConverter;
 import com.bueno.domain.usecases.utils.converters.IntelConverter;

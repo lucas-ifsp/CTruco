@@ -26,6 +26,7 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.converters.IntelConverter;
 import com.bueno.domain.usecases.utils.validation.Notification;

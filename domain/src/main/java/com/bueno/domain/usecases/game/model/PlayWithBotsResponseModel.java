@@ -18,15 +18,20 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel;
+package com.bueno.domain.usecases.game.model;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
-@AllArgsConstructor
 @ToString
-public final class PlayerTurnResponseModel {
-    private final boolean isPlayerTurn;
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class PlayWithBotsResponseModel {
+    private final UUID uuid;
+    private final String name;
 }

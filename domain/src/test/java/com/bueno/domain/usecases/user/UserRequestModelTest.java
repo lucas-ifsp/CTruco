@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
+import com.bueno.domain.usecases.user.model.UserRequestModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

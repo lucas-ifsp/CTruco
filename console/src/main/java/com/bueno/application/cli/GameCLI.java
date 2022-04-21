@@ -22,7 +22,7 @@ package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.CreateForUserAndBotRequestModel;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayCardRequestModel;
@@ -33,7 +33,7 @@ import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.UserRequestModel;
+import com.bueno.domain.usecases.user.model.UserRequestModel;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import com.google.common.primitives.Ints;

@@ -18,26 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user;
+package com.bueno.domain.usecases.intel.model;
 
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
-
 @Getter
+@AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public final class UserRequestModel{
-
-    private final String username;
-    private final String email;
-
-    public UserRequestModel(String username, String email) {
-        this.username = Objects.requireNonNull(username, "Username must not be null.");
-        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
-        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
-        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
-    }
+public final class PlayerTurnResponseModel {
+    private final boolean isPlayerTurn;
 }

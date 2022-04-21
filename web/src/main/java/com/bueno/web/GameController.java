@@ -21,7 +21,7 @@
 package com.bueno.web;
 
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.CreateForUserAndBotRequestModel;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
