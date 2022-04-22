@@ -18,11 +18,12 @@ of concepts such as:
 
 **CTruco** `domain` module was implemented using vanilla Java to exemplify the features the language provides. 
 It isolates the core business rules from libraries and third party plugins, thus enabling the creation of applications in
-different formats, for multiple platforms. The following playing modes are already available (Spring backend will be ready soon): 
+different formats, for multiple platforms. The following playing modes are already available: 
 
 - Console game between a player and a bot (run `cli/GameCLI` class in `console` module);
 - Console simulation of games between two bots (run `standalone/PlayWithBots` class in `console` module); and
 - JavaFX game between a player and a bot (run `view/WindowGameTable` class in `desktop` module);
+- Spring Boot backend for games between a player and a bot (run `WebApp` class in `web` module);
 
 The project uses Java 16 language features. Therefore, JDK 16+ is required. Further requirements are declared as Maven
 dependencies, so no additional config is needed.  
@@ -37,6 +38,7 @@ CTruco is composed of the following modules:
 - `bot-impl:` provides two default implementations of `BotServiceProvider` interface: `DummyBot` (silly one), `MineiroBot` (not so silly);
 - `console:` contains console versions of truco game applications that enable playing against bots or between bots;
 - `desktop:`provides a JavaFX/FXML version of the truco game for users to play against bots;
+- `web:`provides Spring Boot backend for a web version of the truco game for users to play against bots;
 
 
 ## Testing
@@ -127,7 +129,7 @@ This software was developed for non-commercial, didactic purposes. It is provide
 
 ## Contributors
 
-**CTruco** was initially designed and developed by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos.
+**CTruco** was initially designed and developed with :heart: by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos.
 
 
 
