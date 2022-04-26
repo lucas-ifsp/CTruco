@@ -22,17 +22,17 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
-import com.bueno.domain.usecases.utils.dtos.CardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
-import com.bueno.domain.usecases.utils.dtos.IntelDto.PlayerInfo;
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.model.UserRequestModel;
+import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.dtos.IntelDto.PlayerInfo;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;
@@ -201,7 +201,7 @@ public class GameTableController {
         this.username = username;
         this.botName = botName;
 
-        final var response = createUserUseCase.create(new UserRequestModel(username, "user@email.com"));
+        final var response = createUserUseCase.create(new UserRequestModel(username, username + "@email.com"));
         userUUID = response.getUuid();
         final var requestModel = new CreateForUserAndBotRequestModel(userUUID, this.botName);
         lastIntel = gameUseCase.createForUserAndBot(requestModel);

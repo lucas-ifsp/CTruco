@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="219.0"
+            prefWidth="290.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bueno.application.controller.LandingController">
+   <Label layoutX="100.0" layoutY="19.0" text="Partida Única">
+      <font>
+         <Font name="System Bold" size="16.0"/>
+      </font>
+   </Label>
+   <Label layoutX="38.0" layoutY="69.0" text="Jogador:"/>
+   <Label layoutX="24.0" layoutY="112.0" text="Adversário:"/>
+   <TextField fx:id="txtPlayer" layoutX="104.0" layoutY="65.0" promptText="Tião Carreiro"/>
+   <ComboBox fx:id="cbBot" layoutX="104.0" layoutY="108.0" prefHeight="26.0" prefWidth="160.0"/>
+   <Button layoutX="202.0" layoutY="160.0" mnemonicParsing="false" onAction="#play" prefHeight="34.0" prefWidth="62.0"
+           text="Jogar"/>
+   <Button layoutX="122.0" layoutY="160.0" mnemonicParsing="false" onAction="#close" prefHeight="34.0" prefWidth="62.0"
+           text="Sair"/>
+</AnchorPane>

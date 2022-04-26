@@ -21,33 +21,35 @@
 package com.bueno.application.view;
 
 import com.bueno.application.controller.GameTableController;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.LogManager;
 
-public class WindowGameTable extends Application {
+public class GameTableWindow {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
+    public void show(String username, String botName) {
         LogManager.getLogManager().reset();
-        FXMLLoader loader = new FXMLLoader();
-        Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("game_table.fxml")).openStream());
-        GameTableController controller = loader.getController();
-        controller.createGame("Lucas", "MineiroBot");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Pane graph = loader.load(Objects.requireNonNull(getClass().getResource("game_table.fxml")).openStream());
+            GameTableController controller = loader.getController();
+            controller.createGame(username, botName);
 
-        Scene scene = new Scene(graph, 1024, 740);
-        stage.setScene(scene);
-        stage.setTitle("CTruco: Truco game for didactic purposes -- Developed with \u2665 by Prof. Lucas Oliveira");
-        stage.setResizable(false);
-        stage.show();
+            Scene scene = new Scene(graph, 1024, 740);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setOnCloseRequest(unused -> new LandingWindow().start(new Stage()));
+            stage.setTitle("CTruco: Truco game for didactic purposes -- Developed with \u2665 by Prof. Lucas Oliveira");
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
