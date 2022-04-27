@@ -42,29 +42,31 @@ class PlayerTest {
 
     private List<Card> cards;
     private Card c1;
-    private Card c2;
-    private Card c3;
 
     @BeforeEach
     void setUp() {
         c1 = Card.of(Rank.THREE, Suit.CLUBS);
-        c2 = Card.of(Rank.TWO, Suit.CLUBS);
-        c3 = Card.of(Rank.ACE, Suit.SPADES);
+        Card c2 = Card.of(Rank.TWO, Suit.CLUBS);
+        Card c3 = Card.of(Rank.ACE, Suit.SPADES);
         cards = new ArrayList<>(List.of(c1, c2, c3));
     }
 
     @AfterEach
     void tearDown() {
+        c1 = null;
+        cards = null;
     }
 
     @Test
     @DisplayName("Should create a player from a user")
     void shouldCreateAPlayerFromAUser() {
-        final User user = new User("Test", "test@test.com");
-        final Player sut = Player.of(user);
+        final UUID uuid = UUID.randomUUID();
+        final String username = "Test";
+        final Player sut = Player.of(uuid, username);
         assertAll(
-                () -> assertEquals(user.getUsername(), sut.getUsername()),
-                () -> assertNotNull(sut.getUuid())
+                () -> assertEquals(username, sut.getUsername()),
+                () -> assertEquals(uuid, sut.getUuid()),
+                () -> assertFalse(sut.isBot())
         );
     }
 
@@ -170,6 +172,4 @@ class PlayerTest {
         String out = String.format("Player = %s (%s) has %d point(s)", sut.getUsername(), sut.getUuid(), sut.getScore());
         assertEquals(out, sut.toString());
     }
-
-
 }

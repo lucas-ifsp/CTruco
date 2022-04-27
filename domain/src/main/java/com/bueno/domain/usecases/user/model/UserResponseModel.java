@@ -20,7 +20,6 @@
 
 package com.bueno.domain.usecases.user.model;
 
-import com.bueno.domain.entities.player.User;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

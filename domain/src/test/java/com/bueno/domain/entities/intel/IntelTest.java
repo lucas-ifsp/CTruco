@@ -29,7 +29,6 @@ import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.intel.Intel.PlayerIntel;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.entities.player.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -200,7 +199,7 @@ class IntelTest {
     @DisplayName("Should correctly create player intel")
     void shouldCorrectlyCreatePlayerIntel() {
         final UUID uuid = UUID.randomUUID();
-        final Player player = Player.of(new User(uuid, "name", "email"));
+        final Player player = Player.of(uuid, "name");
         final List<Card> cards = List.of(Card.of(Rank.THREE, Suit.CLUBS));
         player.setCards(cards);
         final PlayerIntel playerIntel = new PlayerIntel(player);

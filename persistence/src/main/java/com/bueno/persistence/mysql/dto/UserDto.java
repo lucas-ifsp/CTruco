@@ -20,7 +20,7 @@
 
 package com.bueno.persistence.mysql.dto;
 
-import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

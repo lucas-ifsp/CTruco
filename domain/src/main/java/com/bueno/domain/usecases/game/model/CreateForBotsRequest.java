@@ -28,14 +28,14 @@ import java.util.UUID;
 
 @Getter
 @ToString
-public final class CreateForBotsRequestModel {
+public final class CreateForBotsRequest {
 
     private final UUID bot1Uuid;
     private final String bot1Name;
     private final UUID bot2Uuid;
     private final String bot2Name;
 
-    public CreateForBotsRequestModel(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+    public CreateForBotsRequest(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
         this.bot1Uuid = Objects.requireNonNull(bot1Uuid, "Bot1 UUID must not be null!");
         this.bot1Name = Objects.requireNonNull(bot1Name, "Bot1 name must not be null!");
         if(bot1Name.isEmpty()) throw new IllegalArgumentException("Bot1 name must not be empty!");

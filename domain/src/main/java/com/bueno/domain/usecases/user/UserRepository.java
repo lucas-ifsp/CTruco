@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.user.model.User;
 
 import java.util.Optional;
 import java.util.UUID;

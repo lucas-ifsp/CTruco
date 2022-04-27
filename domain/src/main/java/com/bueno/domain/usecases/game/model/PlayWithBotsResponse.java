@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,17 +18,20 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.domain.usecases.game.model;
 
-import java.util.Scanner;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-public class UsernameReader implements Command<String>{
+import java.util.UUID;
 
-    @Override
-    public String execute() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("====== CLEAN TRUCO - Let's Play! ======");
-        System.out.print("Nome do(a) jogador(a) > ");
-        return scanner.nextLine();
-    }
+@Getter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+public final class PlayWithBotsResponse {
+    private final UUID uuid;
+    private final String name;
 }

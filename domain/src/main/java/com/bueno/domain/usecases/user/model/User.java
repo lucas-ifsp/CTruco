@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.entities.player;
+package com.bueno.domain.usecases.user.model;
 
 import java.util.Objects;
 import java.util.UUID;

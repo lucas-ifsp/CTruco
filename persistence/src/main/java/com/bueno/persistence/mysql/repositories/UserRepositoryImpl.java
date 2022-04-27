@@ -20,7 +20,7 @@
 
 package com.bueno.persistence.mysql.repositories;
 
-import com.bueno.domain.entities.player.User;
+import com.bueno.domain.usecases.user.model.User;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.mysql.dao.UserDao;
 import com.bueno.persistence.mysql.dto.UserDto;

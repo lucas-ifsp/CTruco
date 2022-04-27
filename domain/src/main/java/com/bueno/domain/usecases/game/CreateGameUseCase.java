@@ -22,9 +22,10 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.entities.player.User;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
+import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
+import com.bueno.domain.usecases.user.model.User;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
@@ -47,17 +48,17 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public IntelDto createForUserAndBot(CreateForUserAndBotRequestModel requestModel){
-        Objects.requireNonNull(requestModel, "Request model not be null!");
+    public IntelDto createForUserAndBot(CreateForUserAndBotRequest request){
+        Objects.requireNonNull(request, "Request not be null!");
 
-        if(hasNoBotServiceWith(requestModel.getBotName()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBotName());
+        if(hasNoBotServiceWith(request.getBotName()))
+            throw new NoSuchElementException("Service implementation not available: " + request.getBotName());
 
-        final User user = userRepo.findByUuid(requestModel.getUserUuid())
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + requestModel.getUserUuid()));
+        final User user = userRepo.findByUuid(request.getUserUuid())
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + request.getUserUuid()));
 
-        final Player userPlayer = Player.of(user);
-        final Player botPlayer = Player.ofBot(requestModel.getBotName());
+        final Player userPlayer = Player.of(user.getUuid(), user.getUsername());
+        final Player botPlayer = Player.ofBot(request.getBotName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
@@ -69,17 +70,29 @@ public class CreateGameUseCase {
         return !BotServiceManager.providersNames().contains(botName);
     }
 
-    IntelDto createForBots(CreateForBotsRequestModel requestModel){
-        Objects.requireNonNull(requestModel);
+    public IntelDto createDetached(CreateDetachedRequest request){
+        Objects.requireNonNull(request, "Request model not be null!");
 
-        if(hasNoBotServiceWith(requestModel.getBot1Name()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBot1Name());
+        if(hasNoBotServiceWith(request.getBotName()))
+            throw new NoSuchElementException("Service implementation not available: " + request.getBotName());
 
-        if(hasNoBotServiceWith(requestModel.getBot2Name()))
-            throw new NoSuchElementException("Service implementation not available: " + requestModel.getBot2Name());
+        final Player userPlayer = Player.of(request.getUserUuid(), request.getUsername());
+        final Player botPlayer = Player.ofBot(request.getBotName());
 
-        final var bot1 = Player.ofBot(requestModel.getBot1Uuid(), requestModel.getBot1Name());
-        final var bot2 = Player.ofBot(requestModel.getBot2Uuid(), requestModel.getBot2Name());
+        return create(userPlayer, botPlayer);
+    }
+
+    IntelDto createForBots(CreateForBotsRequest request){
+        Objects.requireNonNull(request);
+
+        if(hasNoBotServiceWith(request.getBot1Name()))
+            throw new NoSuchElementException("Service implementation not available: " + request.getBot1Name());
+
+        if(hasNoBotServiceWith(request.getBot2Name()))
+            throw new NoSuchElementException("Service implementation not available: " + request.getBot2Name());
+
+        final var bot1 = Player.ofBot(request.getBot1Uuid(), request.getBot1Name());
+        final var bot2 = Player.ofBot(request.getBot2Uuid(), request.getBot2Name());
 
         return create(bot1, bot2);
     }

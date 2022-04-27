@@ -22,6 +22,7 @@ package com.bueno.domain.entities.player;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.hand.HandPoints;
+import com.bueno.domain.usecases.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,29 +33,37 @@ public class Player {
 
     public static final int MAX_SCORE = 12;
 
-    private User user;
     private List<Card> cards;
     private final String username;
     private final UUID uuid;
     private int score;
+    private boolean isBot;
 
     private Player(UUID uuid, String username) {
         this.username = username;
         this.uuid = uuid;
     }
 
+    public static Player of(UUID uuid, String username){
+        final Player player = new Player(uuid, username);
+        player.isBot = false;
+        return player;
+    }
+
     public static Player of(User user){
-        Player player = new Player(user.getUuid(), user.getUsername());
-        player.user = user;
+        final Player player = new Player(user.getUuid(), user.getUsername());
+        player.isBot = false;
         return player;
     }
 
     public static Player ofBot(String botName){
-        return new Player(UUID.randomUUID(), botName);
+        return ofBot(UUID.randomUUID(), botName);
     }
 
     public static Player ofBot(UUID uuid, String botName){
-        return new Player(uuid, botName);
+        final Player bot = new Player(uuid, botName);
+        bot.isBot = true;
+        return bot;
     }
 
     public final Card play(Card card){
@@ -102,7 +111,7 @@ public class Player {
     }
 
     public boolean isBot(){
-        return user == null;
+        return isBot;
     }
 
     @Override
