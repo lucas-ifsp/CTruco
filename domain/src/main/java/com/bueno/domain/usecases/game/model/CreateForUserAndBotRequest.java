@@ -20,18 +20,22 @@
 
 package com.bueno.domain.usecases.game.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class PlayWithBotsResponseModel {
-    private final UUID uuid;
-    private final String name;
+public final class CreateForUserAndBotRequest {
+
+    private final UUID userUuid;
+    private final String botName;
+
+    public CreateForUserAndBotRequest(UUID userUuid, String botName) {
+        this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
+        this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
+        if(botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
+    }
 }

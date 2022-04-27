@@ -23,18 +23,15 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequestModel;
+import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
 import com.bueno.domain.usecases.hand.PlayCardRequestModel;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.user.CreateUserUseCase;
-import com.bueno.domain.usecases.user.model.UserRequestModel;
 import com.bueno.domain.usecases.utils.dtos.CardDto;
 import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.dtos.IntelDto.PlayerInfo;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
-import com.bueno.persistence.inmemory.InMemoryUserRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -85,7 +82,6 @@ public class GameTableController {
     private String botName;
     private List<ImageView> opponentCardImages;
 
-    private final CreateUserUseCase createUserUseCase;
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final PointsProposalUseCase pointsProposalUseCase;
@@ -101,9 +97,7 @@ public class GameTableController {
 
     public GameTableController() {
         final var gameRepo = new InMemoryGameRepository();
-        final var userRepo = new InMemoryUserRepository();
-        createUserUseCase = new CreateUserUseCase(userRepo);
-        gameUseCase = new CreateGameUseCase(gameRepo, userRepo);
+        gameUseCase = new CreateGameUseCase(gameRepo, null);
         playCardUseCase = new PlayCardUseCase(gameRepo);
         pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
@@ -200,11 +194,10 @@ public class GameTableController {
     public void createGame(String username, String botName) {
         this.username = username;
         this.botName = botName;
+        userUUID = UUID.randomUUID();
 
-        final var response = createUserUseCase.create(new UserRequestModel(username, username + "@email.com"));
-        userUUID = response.getUuid();
-        final var requestModel = new CreateForUserAndBotRequestModel(userUUID, this.botName);
-        lastIntel = gameUseCase.createForUserAndBot(requestModel);
+        final var request = new CreateDetachedRequest(userUUID, username, this.botName);
+        lastIntel = gameUseCase.createDetached(request);
 
         missingIntel.add(lastIntel);
 

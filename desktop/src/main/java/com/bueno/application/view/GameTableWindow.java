@@ -41,6 +41,7 @@ public class GameTableWindow {
             controller.createGame(username, botName);
 
             Scene scene = new Scene(graph, 1024, 740);
+
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setOnCloseRequest(unused -> new LandingWindow().start(new Stage()));

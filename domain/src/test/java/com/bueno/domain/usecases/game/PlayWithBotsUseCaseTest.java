@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,13 +66,13 @@ class PlayWithBotsUseCaseTest {
     void shouldThrowIfPlayWithBotsReceiveAnyNullParameters() {
         assertAll(
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequestModel(null, "BotA", UUID.randomUUID(), "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsRequest(null, "BotA", UUID.randomUUID(), "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequestModel(UUID.randomUUID(), null, UUID.randomUUID(), "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), null, UUID.randomUUID(), "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequestModel(UUID.randomUUID(), "BotA", null, "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), "BotA", null, "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequestModel(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
+                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
         );
     }
 
@@ -81,7 +81,7 @@ class PlayWithBotsUseCaseTest {
     void shouldPlayWithBotsIfPreconditionsAreMet() {
         final UUID uuidA = UUID.randomUUID();
         final UUID uuidB = UUID.randomUUID();
-        final var requestModel = new CreateForBotsRequestModel(uuidA, "BotA", uuidB, "BotB");
+        final var requestModel = new CreateForBotsRequest(uuidA, "BotA", uuidB, "BotB");
         when(createGameUseCase.createForBots(any())).thenReturn(any());
         when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
         when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
@@ -98,7 +98,7 @@ class PlayWithBotsUseCaseTest {
         when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
         when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
         when(intel.gameWinner()).thenReturn(Optional.of(uuidB));
-        final var requestModel = new CreateForBotsRequestModel(uuidA, "BotA", uuidB, "BotB");
+        final var requestModel = new CreateForBotsRequest(uuidA, "BotA", uuidB, "BotB");
         final var result = sut.playWithBots(requestModel);
         assertAll(
                 () -> assertEquals("BotB", result.getName()),

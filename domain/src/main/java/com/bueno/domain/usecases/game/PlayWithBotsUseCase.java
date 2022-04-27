@@ -21,8 +21,8 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequestModel;
-import com.bueno.domain.usecases.game.model.PlayWithBotsResponseModel;
+import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
+import com.bueno.domain.usecases.game.model.PlayWithBotsResponse;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class PlayWithBotsUseCase {
         this.botUseCase = Objects.requireNonNull(botUseCase);
     }
 
-    public PlayWithBotsResponseModel playWithBots(CreateForBotsRequestModel requestModel){
+    public PlayWithBotsResponse playWithBots(CreateForBotsRequest requestModel){
         createGameUseCase.createForBots(requestModel);
 
         final var game = findGameUseCase.loadUserGame(requestModel.getBot1Uuid()).orElseThrow();
@@ -47,6 +47,6 @@ public class PlayWithBotsUseCase {
         final var winnerName = winnerUUID.equals(requestModel.getBot1Uuid()) ?
                 requestModel.getBot1Name() : requestModel.getBot2Name();
 
-        return new PlayWithBotsResponseModel(winnerUUID, winnerName);
+        return new PlayWithBotsResponse(winnerUUID, winnerName);
     }
 }
