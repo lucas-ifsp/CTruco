@@ -23,14 +23,14 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.user.model.User;
 import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
 import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.utils.converters.IntelConverter;
+import com.bueno.domain.usecases.utils.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.converters.IntelConverter;
 import com.bueno.spi.service.BotServiceManager;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +54,10 @@ public class CreateGameUseCase {
         if(hasNoBotServiceWith(request.getBotName()))
             throw new NoSuchElementException("Service implementation not available: " + request.getBotName());
 
-        final User user = userRepo.findByUuid(request.getUserUuid())
+        final ApplicationUserDTO user = userRepo.findByUuid(request.getUserUuid())
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + request.getUserUuid()));
 
-        final Player userPlayer = Player.of(user.getUuid(), user.getUsername());
+        final Player userPlayer = Player.of(user.uuid(), user.username());
         final Player botPlayer = Player.ofBot(request.getBotName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {

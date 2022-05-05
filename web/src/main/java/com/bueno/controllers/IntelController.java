@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.web;
+package com.bueno.controllers;
 
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import org.springframework.http.ResponseEntity;

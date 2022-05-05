@@ -20,8 +20,8 @@
 
 package com.bueno.persistence.mysql.repositories;
 
-import com.bueno.domain.usecases.user.model.User;
 import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import com.bueno.persistence.mysql.dao.UserDao;
 import com.bueno.persistence.mysql.dto.UserDto;
 import org.springframework.stereotype.Repository;
@@ -38,25 +38,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(User user) {
+    public void save(ApplicationUserDTO user) {
         dao.save(UserDto.from(user));
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<ApplicationUserDTO> findByUsername(String username) {
         final UserDto dto = dao.getByUsername(username);
-        return Optional.ofNullable(UserDto.toUser(dto));
+        return Optional.ofNullable(UserDto.toApplicationUser(dto));
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public Optional<ApplicationUserDTO> findByEmail(String email) {
         final UserDto dto = dao.getByEmail(email);
-        return Optional.ofNullable(UserDto.toUser(dto));
+        return Optional.ofNullable(UserDto.toApplicationUser(dto));
     }
 
     @Override
-    public Optional<User> findByUuid(UUID uuid) {
+    public Optional<ApplicationUserDTO> findByUuid(UUID uuid) {
         final UserDto dto = dao.getByUuid(uuid);
-        return Optional.ofNullable(UserDto.toUser(dto));
+        return Optional.ofNullable(UserDto.toApplicationUser(dto));
     }
 }

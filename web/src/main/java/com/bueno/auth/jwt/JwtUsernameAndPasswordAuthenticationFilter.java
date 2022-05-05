@@ -20,7 +20,7 @@
 
 package com.bueno.auth.jwt;
 
-import com.bueno.auth.user.ApplicationUser;
+import com.bueno.auth.security.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;

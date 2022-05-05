@@ -18,19 +18,22 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.auth.user;
+package com.bueno.auth.security;
 
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Builder
 public class ApplicationUser implements UserDetails {
+
     private final UUID uuid;
     private final String username;
     private final String password;
@@ -40,4 +43,18 @@ public class ApplicationUser implements UserDetails {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
+
+    public static ApplicationUser ofUserDTO(ApplicationUserDTO userResponse) {
+        return ApplicationUser.builder()
+                .uuid(userResponse.uuid())
+                .username(userResponse.username())
+                .password(userResponse.password())
+                .email(userResponse.email())
+                .authorities(List.of())
+                .isAccountNonLocked(true)
+                .isAccountNonExpired(true)
+                .isCredentialsNonExpired(true)
+                .isEnabled(true)
+                .build();
+    }
 }

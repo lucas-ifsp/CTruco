@@ -22,7 +22,6 @@ package com.bueno.domain.entities.player;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.hand.HandPoints;
-import com.bueno.domain.usecases.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

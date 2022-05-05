@@ -20,8 +20,7 @@
 
 package com.bueno.persistence.mysql.dto;
 
-import com.bueno.domain.usecases.user.model.User;
-import lombok.AllArgsConstructor;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -30,31 +29,30 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
 @Table(name = "USER")
 public class UserDto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private UUID uuid;
     private String username;
     private String email;
+    private String password;
 
-    private UserDto(UUID uuid, String username, String email) {
+    private UserDto(UUID uuid, String username, String password, String email) {
         this.uuid = uuid;
         this.username = username;
+        this.password = password;
         this.email = email;
     }
 
-    public static UserDto from(User user) {
-        return new UserDto(user.getUuid(), user.getUsername(), user.getEmail());
+    public static UserDto from(ApplicationUserDTO user) {
+        return new UserDto(user.uuid(), user.username(), user.password(), user.email());
     }
 
-    public static User toUser(UserDto dto){
+    public static ApplicationUserDTO toApplicationUser(UserDto dto){
         if(dto == null) return null;
-        return new User(dto.uuid, dto.username, dto.email);
+        return new ApplicationUserDTO(dto.uuid, dto.username, dto.password, dto.email);
     }
 }

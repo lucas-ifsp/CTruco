@@ -18,12 +18,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.auth.services;
+package com.bueno.domain.usecases.user.model;
 
-import com.bueno.auth.user.ApplicationUser;
+import java.util.UUID;
 
-import java.util.Optional;
-
-public interface ApplicationUserDAO {
-    Optional<ApplicationUser> findUserByUsername(String username);
-}
+public record ApplicationUserDTO(UUID uuid, String username, String password, String email) {}

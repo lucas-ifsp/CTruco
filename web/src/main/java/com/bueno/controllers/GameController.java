@@ -18,42 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.web;
+package com.bueno.controllers;
 
-import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
-@RequestMapping(path = "/api/v1/game/player/{playerUuid}/points")
-public class PointsController {
+@RequestMapping(path = "/api/v1/game")
+public class GameController {
 
-    private final PointsProposalUseCase pointsUseCase;
+    private final CreateGameUseCase createGameUseCase;
 
-    public PointsController(PointsProposalUseCase pointsUseCase) {
-        this.pointsUseCase = pointsUseCase;
+    public GameController(CreateGameUseCase createGameUseCase) {
+        this.createGameUseCase = createGameUseCase;
     }
 
-    @PostMapping("/raise")
-    private ResponseEntity<?> raise(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.raise(playerUuid);
-        return ResponseEntity.ok(intel);
-    }
-
-    @PostMapping("/accept")
-    private ResponseEntity<?> accept(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.accept(playerUuid);
-        return ResponseEntity.ok(intel);
-    }
-
-    @PostMapping("/quit")
-    private ResponseEntity<?> quit(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.quit(playerUuid);
+    @PostMapping(path = "/user_bot")
+    public ResponseEntity<?> createForUserAndBot(@RequestBody CreateForUserAndBotRequest requestModel){
+        final var intel = createGameUseCase.createForUserAndBot(requestModel);
         return ResponseEntity.ok(intel);
     }
 }

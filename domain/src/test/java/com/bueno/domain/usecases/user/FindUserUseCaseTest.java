@@ -20,8 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.User;
-import com.bueno.domain.usecases.user.model.UserResponseModel;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,32 +50,28 @@ class FindUserUseCaseTest {
     @DisplayName("Should retrieve user by uuid if available in the repository")
     void shouldRetrieveUserByUuidIfAvailableInTheRepository() {
         final UUID uuid = UUID.randomUUID();
-        final User user = new User(uuid, "name", "email@email.com");
+        final var user = new ApplicationUserDTO(uuid, "name", "email@email.com", "password");
         when(repo.findByUuid(uuid)).thenReturn(Optional.of(user));
-        final UserResponseModel model = sut.findByUUID(uuid);
+        final ApplicationUserDTO model = sut.findByUUID(uuid);
         assertAll(
-                () -> assertEquals(user.getUuid(), model.getUuid()),
-                () -> assertEquals(user.getUsername(), model.getUsername()),
-                () -> assertEquals(user.getEmail(), model.getEmail())
+                () -> assertEquals(user.uuid(), model.uuid()),
+                () -> assertEquals(user.username(), model.username()),
+                () -> assertEquals(user.email(), model.email())
         );
     }
 
     @Test
     @DisplayName("Should retrieve user by username if available in the repository")
     void shouldRetrieveUserByUsernameIfAvailableInTheRepository() {
-        final UUID uuid = UUID.randomUUID();
-        final String email = "email@email.com";
-        final User user = new User(uuid, "name", email);
+        final var uuid = UUID.randomUUID();
+        final var email = "email@email.com";
+        final var user = new ApplicationUserDTO(uuid, "name", "password", email);
         when(repo.findByUsername(email)).thenReturn(Optional.of(user));
-        final UserResponseModel model = sut.findByUsername(email);
+        final ApplicationUserDTO model = sut.findByUsername(email);
         assertAll(
-                () -> assertEquals(user.getUuid(), model.getUuid()),
-                () -> assertEquals(user.getUsername(), model.getUsername()),
-                () -> assertEquals(user.getEmail(), model.getEmail())
+                () -> assertEquals(user.uuid(), model.uuid()),
+                () -> assertEquals(user.username(), model.username()),
+                () -> assertEquals(user.email(), model.email())
         );
     }
-
-
-
-
 }

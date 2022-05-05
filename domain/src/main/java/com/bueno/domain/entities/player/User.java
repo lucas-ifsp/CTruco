@@ -18,23 +18,25 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user.model;
+package com.bueno.domain.entities.player;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public class User {
-    private final String email;
-    private final String username;
     private final UUID uuid;
+    private final String username;
+    private final String password;
+    private final String email;
 
-    public User(String username, String email) {
-        this(null, username, email);
+    public User(String username, String email, String password) {
+        this(null, username, email, password);
     }
 
-    public User(UUID uuid, String username, String email) {
+    public User(UUID uuid, String username, String email, String password) {
         this.uuid = uuid == null? UUID.randomUUID() : uuid;
         this.username = Objects.requireNonNull(username, "Username must not be null.");
+        this.password = Objects.requireNonNull(password, "Password must not be null.");
         this.email = Objects.requireNonNull(email, "E-mail must not be null.");
     }
 
@@ -48,6 +50,10 @@ public class User {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

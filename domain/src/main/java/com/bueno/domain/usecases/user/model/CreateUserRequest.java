@@ -20,23 +20,4 @@
 
 package com.bueno.domain.usecases.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-import java.util.UUID;
-
-@Getter
-@ToString
-@AllArgsConstructor
-@EqualsAndHashCode
-public final class UserResponseModel{
-    private final UUID uuid;
-    private final String username;
-    private final String email;
-
-    public static UserResponseModel of(User user){
-        return new UserResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
-    }
-}
+public record CreateUserRequest(String username, String password, String email) {}

@@ -18,37 +18,54 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.web;
+package com.bueno.controllers;
 
 import com.bueno.domain.usecases.user.CreateUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.model.UserRequestModel;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.model.CreateUserRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/api/v1/user")
+@RequestMapping
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
     private final FindUserUseCase findUserUseCase;
+    private final PasswordEncoder encoder;
 
-    public UserController(CreateUserUseCase createUserUseCase, FindUserUseCase findUserUseCase) {
+
+    public UserController(CreateUserUseCase createUserUseCase, FindUserUseCase findUserUseCase, PasswordEncoder encoder) {
         this.createUserUseCase = createUserUseCase;
         this.findUserUseCase = findUserUseCase;
+        this.encoder = encoder;
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserRequestModel userRequestModel){
-        final var response = createUserUseCase.create(userRequestModel);
+    @PostMapping(path = "/register")
+    public ResponseEntity<?> create(@RequestBody CreateUserRequest request){
+        final String encodedPassword = encoder.encode(request.password());
+        final CreateUserRequest encodedPasswordRequest = new CreateUserRequest(
+                request.username(),
+                encodedPassword,
+                request.email());
+
+        final var response = createUserUseCase.create(encodedPasswordRequest);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "/by_uuid/{playerUuid}")
+    @GetMapping(path = "/api/v1/user/by_uuid/{playerUuid}")
     public ResponseEntity<?> find(@PathVariable UUID playerUuid){
         final var response = findUserUseCase.findByUUID(playerUuid);
-        return ResponseEntity.ok(response);
+        final ApplicationUserDTO responseWithoutPassword = new ApplicationUserDTO(
+                response.uuid(),
+                response.username(),
+                null,
+                response.email());
+
+        return ResponseEntity.ok(responseWithoutPassword);
     }
 }

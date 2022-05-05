@@ -20,13 +20,15 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.User;
-import com.bueno.domain.usecases.user.model.UserRequestModel;
-import com.bueno.domain.usecases.user.model.UserResponseModel;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.model.CreateUserRequest;
+import com.bueno.domain.usecases.user.model.CreateUserResponse;
 import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CreateUserUseCase {
@@ -37,18 +39,23 @@ public class CreateUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public UserResponseModel create(UserRequestModel userRequestModel){
-        Objects.requireNonNull(userRequestModel,"Request model must not be null.");
+    public CreateUserResponse create(CreateUserRequest request){
+        Objects.requireNonNull(request,"Request model must not be null.");
 
-        repo.findByUsername(userRequestModel.getUsername()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use: " + userRequestModel.getUsername());});
+        repo.findByUsername(request.username()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This username is already in use: " + request.username());});
 
-        repo.findByEmail(userRequestModel.getEmail()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This email is already in use: " + userRequestModel.getEmail());});
+        repo.findByEmail(request.email()).ifPresent(unused -> {
+            throw new EntityAlreadyExistsException("This email is already in use: " + request.email());});
 
-        final User user = new User(userRequestModel.getUsername(), userRequestModel.getEmail());
+        final ApplicationUserDTO user = new ApplicationUserDTO(
+                UUID.randomUUID(),
+                request.username(),
+                request.password(),
+                request.email());
 
         repo.save(user);
-        return new UserResponseModel(user.getUuid(), user.getUsername(), user.getEmail());
+        final Optional<ApplicationUserDTO> byUuid = repo.findByUuid(user.uuid());
+        return new CreateUserResponse(user.uuid(), user.username(), user.email());
     }
 }
