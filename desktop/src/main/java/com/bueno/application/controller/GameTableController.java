@@ -24,7 +24,7 @@ import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.hand.PlayCardRequestModel;
+import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
@@ -252,7 +252,7 @@ public class GameTableController {
     }
 
     private void playCard(CardDto card, ImageView imageView) {
-        final var requestModel = new PlayCardRequestModel(userUUID, card);
+        final var requestModel = new PlayCardRequest(userUUID, card);
         if (isClosed(imageView)) playCardUseCase.discard(requestModel);
         else playCardUseCase.playCard(requestModel);
 

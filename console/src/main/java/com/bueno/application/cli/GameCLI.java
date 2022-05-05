@@ -24,7 +24,7 @@ import com.bueno.application.cli.commands.*;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.hand.PlayCardRequestModel;
+import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
@@ -106,7 +106,7 @@ public class GameCLI {
         final var card = cardReader.execute();
         final var mode = cardModeReader.execute();
 
-        final var requestModel = new PlayCardRequestModel(userUUID, card);
+        final var requestModel = new PlayCardRequest(userUUID, card);
         if(mode == OPEN) playCardUseCase.playCard(requestModel);
         else playCardUseCase.discard(requestModel);
     }
