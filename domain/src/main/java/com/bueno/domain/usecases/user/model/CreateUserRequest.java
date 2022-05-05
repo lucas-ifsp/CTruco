@@ -20,4 +20,15 @@
 
 package com.bueno.domain.usecases.user.model;
 
-public record CreateUserRequest(String username, String password, String email) {}
+import java.util.Objects;
+
+public record CreateUserRequest(String username, String password, String email) {
+    public CreateUserRequest(String username, String password, String email) {
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
+        this.password = Objects.requireNonNull(password, "Password must not be null.");
+        if(password.isEmpty()) throw new IllegalArgumentException("Password must not be empty.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
+        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
+    }
+}

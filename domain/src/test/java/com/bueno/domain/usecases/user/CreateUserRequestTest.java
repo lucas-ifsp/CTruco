@@ -48,6 +48,18 @@ class CreateUserRequestTest {
     }
 
     @Test
+    @DisplayName("Should throw if password is null")
+    void shouldThrowIfPasswordIsNull() {
+        assertThrows(NullPointerException.class, () -> new CreateUserRequest("username", null, "email@email.com"));
+    }
+
+    @Test
+    @DisplayName("Should throw if password is empty")
+    void shouldThrowIfPasswordIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> new CreateUserRequest("username", "", "email@email.com"));
+    }
+
+    @Test
     @DisplayName("Should throw if user email is null")
     void shouldThrowIfUserEmailIsNull() {
         assertThrows(NullPointerException.class, () -> new CreateUserRequest("username", "password", null));
