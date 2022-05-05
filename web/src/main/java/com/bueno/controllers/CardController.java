@@ -20,7 +20,7 @@
 
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.hand.PlayCardRequestModel;
+import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.utils.dtos.CardDto;
 import org.springframework.http.ResponseEntity;
@@ -40,14 +40,14 @@ public class CardController {
 
     @PostMapping("/play")
     private ResponseEntity<?> play(@PathVariable UUID playerUuid, @RequestBody CardDto card){
-        final var requestModel = new PlayCardRequestModel(playerUuid, card);
+        final var requestModel = new PlayCardRequest(playerUuid, card);
         final var intel = playCardUseCase.playCard(requestModel);
         return ResponseEntity.ok(intel);
     }
 
     @PostMapping("/discard")
     private ResponseEntity<?>  discard(@PathVariable UUID playerUuid, @RequestBody CardDto card){
-        final var requestModel = new PlayCardRequestModel(playerUuid, card);
+        final var requestModel = new PlayCardRequest(playerUuid, card);
         final var intel = playCardUseCase.discard(requestModel);
         return ResponseEntity.ok(intel);
     }

@@ -21,20 +21,31 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.usecases.utils.dtos.CardDto;
-import lombok.Getter;
-import lombok.ToString;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
 import java.util.UUID;
 
-@Getter
-@ToString
-public final class PlayCardRequestModel {
-    private final UUID uuid;
-    private final CardDto card;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    public PlayCardRequestModel(UUID uuid, CardDto card) {
-        this.uuid = Objects.requireNonNull(uuid, "UUID must not be null.");
-        this.card = Objects.requireNonNull(card, "Card must not be null.");
+public class PlayCardRequestTest {
+
+    @Test
+    @DisplayName("Should not throw if all parameters are valid")
+    void shouldNotThrowIfAllParametersAreValid() {
+        assertDoesNotThrow(() -> new PlayCardRequest(UUID.randomUUID(), new CardDto("X", "X")));
+    }
+
+    @Test
+    @DisplayName("Should throw if uuid is null")
+    void shouldThrowIfUuidIsNull() {
+        assertThrows(NullPointerException.class, () -> new PlayCardRequest(null, new CardDto("X", "X")));
+    }
+
+    @Test
+    @DisplayName("Should throw if card is null")
+    void shouldThrowIfCardIsNull() {
+        assertThrows(NullPointerException.class, () -> new PlayCardRequest(UUID.randomUUID(), null));
     }
 }
