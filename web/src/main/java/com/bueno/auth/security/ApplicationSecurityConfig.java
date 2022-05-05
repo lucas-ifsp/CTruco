@@ -22,7 +22,6 @@ package com.bueno.auth.security;
 
 import com.bueno.auth.jwt.JwtTokenVerifier;
 import com.bueno.auth.jwt.JwtUsernameAndPasswordAuthenticationFilter;
-import com.bueno.auth.services.ApplicationUserService;
 import com.bueno.auth.jwt.JwtProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,7 +65,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), secretKey, jwtProperties))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtProperties), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers( "/login").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/api/v1/**").authenticated()
                 .anyRequest()

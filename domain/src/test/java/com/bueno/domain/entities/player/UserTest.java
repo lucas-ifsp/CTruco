@@ -20,7 +20,6 @@
 
 package com.bueno.domain.entities.player;
 
-import com.bueno.domain.usecases.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ class UserTest {
     @Test
     @DisplayName("Should be able to create user without providing uuid")
     void shouldBeAbleToCreateUserWithoutProvidingUuid() {
-        final User sut = new User("test", "test@test.com");
+        final User sut = new User("test", "test@test.com", "password");
         assertNotNull(sut.getUuid());
         assertAll(
                 () -> assertNotNull(sut.getUuid()),
@@ -45,21 +44,21 @@ class UserTest {
     @Test
     @DisplayName("Should throw if calls constructor with null username")
     void shouldThrowIfCallsConstructorWithNullUsername() {
-        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), null,"test@test.com"));
+        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), null,"test@test.com", "password"));
     }
 
     @Test
     @DisplayName("Should throw if calls constructor with null email")
     void shouldThrowIfCallsConstructorWithNullEmail() {
-        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), "test", null));
+        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), "test", null, "password"));
     }
 
     @Test
     @DisplayName("Should users with same uuid and username be the same")
     void shouldUsersWithSameUuidAndUsernameBeTheSame() {
         final UUID uuid = UUID.randomUUID();
-        final User user1 = new User(uuid, "test", "test@test.com");
-        final User user2 = new User(uuid, "test", "email@email.uk");
+        final User user1 = new User(uuid, "test", "test@test.com", "password");
+        final User user2 = new User(uuid, "test", "email@email.uk", "password");
         assertEquals(user1, user2);
     }
 
@@ -67,15 +66,15 @@ class UserTest {
     @DisplayName("Should users with same uuid and username have the same hashcode")
     void shouldUsersWithSameUuidAndUsernameHaveTheSameHashcode() {
         final UUID uuid = UUID.randomUUID();
-        final User user1 = new User(uuid, "test", "test@test.com");
-        final User user2 = new User(uuid, "test", "email@email.uk");
+        final User user1 = new User(uuid, "test", "test@test.com", "password");
+        final User user2 = new User(uuid, "test", "email@email.uk", "password");
         assertEquals(user1.hashCode(), user2.hashCode());
     }
 
     @Test
     @DisplayName("Should correctly toString")
     void shouldCorrectlyToString() {
-        final User sut = new User("test", "test@test.com");
+        final User sut = new User("test", "test@test.com", "password");
         String expected = String.format("User = %s (%s), %s", sut.getUsername(), sut.getUuid(), sut.getEmail());
         assertEquals(expected, sut.toString());
     }

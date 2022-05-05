@@ -20,24 +20,10 @@
 
 package com.bueno.domain.usecases.user.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.UUID;
 
-import java.util.Objects;
-
-@Getter
-@ToString
-@EqualsAndHashCode
-public final class UserRequestModel{
-
-    private final String username;
-    private final String email;
-
-    public UserRequestModel(String username, String email) {
-        this.username = Objects.requireNonNull(username, "Username must not be null.");
-        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
-        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
-        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
+public record CreateUserResponse(UUID uuid, String username, String email) {
+    public static CreateUserResponse of(ApplicationUserDTO user) {
+        return new CreateUserResponse(user.uuid(), user.username(), user.email());
     }
 }

@@ -20,8 +20,8 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.User;
-import com.bueno.domain.usecases.user.model.UserRequestModel;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.model.CreateUserRequest;
 import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,23 +58,23 @@ class CreateUserUseCaseTest {
     @Test
     @DisplayName("Should throw if a user with same username is already registered in the database")
     void shouldThrowIfAUserWithSameUsernameIsAlreadyRegisteredInTheDatabase() {
-        when(repo.findByUsername(any())).thenReturn(Optional.of(new User("name", "email")));
-        var requestModel = new UserRequestModel("name", "email");
+        when(repo.findByUsername(any())).thenReturn(Optional.of(new ApplicationUserDTO(null , "name", "email", "password")));
+        var requestModel = new CreateUserRequest("name", "password", "email");
         assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
     }
 
     @Test
     @DisplayName("Should throw if a user with same email is already registered in the database")
     void shouldThrowIfAUserWithSameEmailIsAlreadyRegisteredInTheDatabase() {
-        when(repo.findByEmail(any())).thenReturn(Optional.of(new User("name", "email")));
-        var requestModel = new UserRequestModel("name", "email");
+        when(repo.findByEmail(any())).thenReturn(Optional.of(new ApplicationUserDTO(null, "name", "password", "email")));
+        var requestModel = new CreateUserRequest("name", "password", "email");
         assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
     }
 
     @Test
     @DisplayName("Should create user in database if preconditions are met")
     void shouldCreateUserInDatabaseIfPreconditionsAreMet() {
-        var requestModel = new UserRequestModel("name", "email");
+        var requestModel = new CreateUserRequest("name", "password", "email");
         assertNotNull(sut.create(requestModel));
         verify(repo, times(1)).save(any());
     }

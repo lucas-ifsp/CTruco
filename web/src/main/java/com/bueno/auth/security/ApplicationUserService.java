@@ -18,8 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.auth.services;
+package com.bueno.auth.security;
 
+import com.bueno.domain.usecases.user.FindUserUseCase;
+import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,16 +30,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
-    private final ApplicationUserDAO applicationUserDAO;
+    private final FindUserUseCase findUserUseCase;
 
-    public ApplicationUserService(ApplicationUserDAO applicationUserDAO) {
-        this.applicationUserDAO = applicationUserDAO;
+    public ApplicationUserService(FindUserUseCase findUserUseCase) {
+        this.findUserUseCase = findUserUseCase;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return applicationUserDAO
-                .findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found:" + username));
+        final ApplicationUserDTO dto = findUserUseCase.findByUsername(username);
+        return ApplicationUser.ofUserDTO(dto);
     }
 }
