@@ -20,13 +20,4 @@
 
 package com.bueno.domain.usecases.intel.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@AllArgsConstructor
-@ToString
-public final class PlayerTurnResponseModel {
-    private final boolean isPlayerTurn;
-}
+public record PlayerTurnResponseModel(boolean isPlayerTurn) {}

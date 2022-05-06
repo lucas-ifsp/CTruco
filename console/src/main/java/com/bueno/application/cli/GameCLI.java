@@ -28,8 +28,8 @@ import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.utils.dtos.CardDto;
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.*;
@@ -100,7 +100,7 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        final var ownedCards = handleIntelUseCase.ownedCards(userUUID).getCards();
+        final var ownedCards = handleIntelUseCase.ownedCards(userUUID).cards();
         final var cardReader = new CardReader(this, ownedCards);
         final var cardModeReader = new CardModeReader();
         final var card = cardReader.execute();
@@ -113,7 +113,7 @@ public class GameCLI {
 
     private void updateIntel() {
         var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.getTimestamp());
-        missingIntel.addAll(responseModel.getIntelSince());
+        missingIntel.addAll(responseModel.intelSince());
         if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
@@ -169,7 +169,7 @@ public class GameCLI {
 
     public void printGameIntel(int delayInMilliseconds){
         if(missingIntel.size() == 1) delayInMilliseconds = 0;
-        final List<CardDto> ownedCards = handleIntelUseCase.ownedCards(userUUID).getCards();
+        final List<CardDto> ownedCards = handleIntelUseCase.ownedCards(userUUID).cards();
         var intelPrinter  = new IntelPrinter(userUUID, ownedCards, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
     }

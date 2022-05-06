@@ -28,9 +28,9 @@ import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.utils.dtos.CardDto;
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
-import com.bueno.domain.usecases.utils.dtos.IntelDto.PlayerInfo;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto.PlayerInfo;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -218,7 +218,7 @@ public class GameTableController {
 
     private void updateIntel() {
         final var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.getTimestamp());
-        missingIntel.addAll(responseModel.getIntelSince());
+        missingIntel.addAll(responseModel.intelSince());
         if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }

@@ -27,10 +27,10 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.converters.CardConverter;
-import com.bueno.domain.usecases.utils.converters.IntelConverter;
+import com.bueno.domain.usecases.intel.converters.CardConverter;
+import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -118,7 +118,7 @@ class HandleIntelUseCaseTest {
         final List<Card> cards = List.of(Card.of(Rank.THREE, Suit.CLUBS), Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS));
         when(player1.getCards()).thenReturn(cards);
         final List<Card> ownedCards = sut.ownedCards(p1Uuid)
-                .getCards()
+                .cards()
                 .stream()
                 .map(CardConverter::toDto)
                 .collect(Collectors.toList());
@@ -137,6 +137,6 @@ class HandleIntelUseCaseTest {
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
 
-        assertEquals(expected, obtained.getIntelSince());
+        assertEquals(expected, obtained.intelSince());
     }
 }

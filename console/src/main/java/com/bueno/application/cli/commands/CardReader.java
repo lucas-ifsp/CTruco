@@ -21,7 +21,7 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 
 import java.util.List;
 import java.util.Scanner;

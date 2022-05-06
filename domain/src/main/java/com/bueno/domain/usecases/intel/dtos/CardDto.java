@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.utils.dtos;
+package com.bueno.domain.usecases.intel.dtos;
 
 
 import lombok.EqualsAndHashCode;
@@ -43,7 +43,6 @@ public final class CardDto {
         if(!isValidRank) throw new IllegalArgumentException("Rank value is not valid: " + this.rank);
         if(!isValidSuit) throw new IllegalArgumentException("Suit value is not valid: " + this.suit);
     }
-
     public static CardDto closed(){
         return new CardDto("X", "X");
     }

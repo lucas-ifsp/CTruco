@@ -25,7 +25,7 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PlayCardRequest;
-import com.bueno.domain.usecases.utils.converters.CardConverter;
+import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.entities.intel.PossibleAction.PLAY;

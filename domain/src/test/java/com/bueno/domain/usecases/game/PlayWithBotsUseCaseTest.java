@@ -87,8 +87,8 @@ class PlayWithBotsUseCaseTest {
         final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
         final var response = sut.playWithBots(requestModel);
         assertAll(
-                () -> assertNotNull(response.getUuid()),
-                () -> assertNotNull(response.getName())
+                () -> assertNotNull(response.uuid()),
+                () -> assertNotNull(response.name())
         );
     }
 

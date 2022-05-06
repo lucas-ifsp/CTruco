@@ -26,8 +26,8 @@ import com.bueno.domain.usecases.intel.model.IntelSinceResponseModel;
 import com.bueno.domain.usecases.intel.model.OwnedCardsResponseModel;
 import com.bueno.domain.usecases.intel.model.PlayerTurnResponseModel;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.utils.converters.CardConverter;
-import com.bueno.domain.usecases.utils.converters.IntelConverter;
+import com.bueno.domain.usecases.intel.converters.CardConverter;
+import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
