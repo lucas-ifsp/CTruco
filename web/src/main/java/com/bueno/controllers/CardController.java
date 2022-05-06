@@ -22,7 +22,7 @@ package com.bueno.controllers;
 
 import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
-import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

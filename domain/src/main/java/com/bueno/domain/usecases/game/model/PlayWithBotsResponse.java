@@ -20,18 +20,13 @@
 
 package com.bueno.domain.usecases.game.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
+import java.util.Objects;
 import java.util.UUID;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class PlayWithBotsResponse {
-    private final UUID uuid;
-    private final String name;
+
+public record PlayWithBotsResponse(UUID uuid, String name) {
+    public PlayWithBotsResponse(UUID uuid, String name) {
+        this.uuid = Objects.requireNonNull(uuid);
+        this.name = Objects.requireNonNull(name);
+    }
 }

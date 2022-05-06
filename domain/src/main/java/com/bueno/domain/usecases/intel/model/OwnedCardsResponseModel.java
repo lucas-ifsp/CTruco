@@ -20,16 +20,13 @@
 
 package com.bueno.domain.usecases.intel.model;
 
-import com.bueno.domain.usecases.utils.dtos.CardDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 
 import java.util.List;
+import java.util.Objects;
 
-@Getter
-@AllArgsConstructor
-@ToString
-public final class OwnedCardsResponseModel {
-    private final List<CardDto> cards;
+public record OwnedCardsResponseModel(List<CardDto> cards) {
+    public OwnedCardsResponseModel(List<CardDto> cards) {
+        this.cards = Objects.requireNonNull(cards);
+    }
 }

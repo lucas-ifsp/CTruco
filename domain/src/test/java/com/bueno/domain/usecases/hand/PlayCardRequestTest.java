@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.usecases.utils.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

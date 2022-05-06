@@ -62,7 +62,7 @@ public class PlayWithBots {
         //final List<ResponseModel> results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .forEach((bot, wins) -> System.out.println(bot.getName() + " (" + bot.getUuid() + "): " + wins));
+                .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
     }
 
     public PlayWithBots(){
@@ -107,7 +107,7 @@ public class PlayWithBots {
             final var requestModel = new CreateForBotsRequest(uuidBot1, bot1Name, uuidBot2, bot2Name);
             final var responseModel = useCase.playWithBots(requestModel);
             result.add(responseModel);
-            final var winnerUuid = responseModel.getUuid();
+            final var winnerUuid = responseModel.uuid();
             final var winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
             System.err.printf("Winner: %s (%s).\n", winnerName, winnerUuid);
             TimeUnit.SECONDS.sleep(1);

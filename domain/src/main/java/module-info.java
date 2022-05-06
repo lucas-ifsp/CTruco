@@ -18,5 +18,5 @@ module domain {
     exports com.bueno.domain.usecases.hand;
     exports com.bueno.domain.usecases.bot.providers;
     exports com.bueno.domain.usecases.utils.exceptions;
-    exports com.bueno.domain.usecases.utils.dtos;
+    exports com.bueno.domain.usecases.intel.dtos;
 }
