@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.intel.converters;
 
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.usecases.intel.model.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

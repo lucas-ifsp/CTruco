@@ -21,23 +21,23 @@
 package com.bueno.application.cli.commands;
 
 import com.bueno.domain.usecases.bot.providers.BotProviders;
-import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
+import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.google.common.primitives.Ints;
 
 import java.util.Scanner;
 import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
-public class GameSettingsReader implements Command<CreateDetachedRequest>{
+public class GameSettingsReader implements Command<CreateDetachedDto>{
 
     @Override
-    public CreateDetachedRequest execute() {
+    public CreateDetachedDto execute() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("====== CLEAN TRUCO - Let's Play! ======");
         System.out.print("Nome do(a) jogador(a) > ");
         final String username = scanner.nextLine();
         final String bot = readBotName();
-        return new CreateDetachedRequest(UUID.randomUUID(), username, bot);
+        return new CreateDetachedDto(UUID.randomUUID(), username, bot);
     }
 
     private String readBotName() {

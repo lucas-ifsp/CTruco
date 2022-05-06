@@ -23,14 +23,14 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.hand.PlayCardRequest;
+import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
+import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.intel.model.CardDto;
-import com.bueno.domain.usecases.intel.model.IntelDto;
-import com.bueno.domain.usecases.intel.model.IntelDto.PlayerInfo;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto.PlayerInfo;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -196,7 +196,7 @@ public class GameTableController {
         this.botName = botName;
         userUUID = UUID.randomUUID();
 
-        final var request = new CreateDetachedRequest(userUUID, username, this.botName);
+        final var request = new CreateDetachedDto(userUUID, username, this.botName);
         lastIntel = gameUseCase.createDetached(request);
 
         missingIntel.add(lastIntel);
@@ -252,7 +252,7 @@ public class GameTableController {
     }
 
     private void playCard(CardDto card, ImageView imageView) {
-        final var requestModel = new PlayCardRequest(userUUID, card);
+        final var requestModel = new PlayCardDto(userUUID, card);
         if (isClosed(imageView)) playCardUseCase.discard(requestModel);
         else playCardUseCase.playCard(requestModel);
 

@@ -20,7 +20,7 @@
 
 package com.bueno.persistence.mysql.dto;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -47,12 +47,12 @@ public class UserDto {
         this.email = email;
     }
 
-    public static UserDto from(ApplicationUserDTO user) {
+    public static UserDto from(ApplicationUserDto user) {
         return new UserDto(user.uuid(), user.username(), user.password(), user.email());
     }
 
-    public static ApplicationUserDTO toApplicationUser(UserDto dto){
+    public static ApplicationUserDto toApplicationUser(UserDto dto){
         if(dto == null) return null;
-        return new ApplicationUserDTO(dto.uuid, dto.username, dto.password, dto.email);
+        return new ApplicationUserDto(dto.uuid, dto.username, dto.password, dto.email);
     }
 }

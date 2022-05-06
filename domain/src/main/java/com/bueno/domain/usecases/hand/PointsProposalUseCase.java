@@ -27,7 +27,7 @@ import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
-import com.bueno.domain.usecases.intel.model.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;

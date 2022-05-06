@@ -24,8 +24,8 @@ import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
-import com.bueno.domain.usecases.game.model.PlayWithBotsResponse;
+import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 import com.google.common.primitives.Ints;
 
@@ -100,11 +100,11 @@ public class PlayWithBots {
         return times;
     }
 
-    public List<PlayWithBotsResponse> play(String bot1Name, String bot2Name, int times) throws InterruptedException {
-        final List<PlayWithBotsResponse> result = new ArrayList<>();
+    public List<PlayWithBotsDto> play(String bot1Name, String bot2Name, int times) throws InterruptedException {
+        final List<PlayWithBotsDto> result = new ArrayList<>();
         for (int i = 0; i < times; i++) {
             final var useCase = createNewGameSettings();
-            final var requestModel = new CreateForBotsRequest(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
             final var responseModel = useCase.playWithBots(requestModel);
             result.add(responseModel);
             final var winnerUuid = responseModel.uuid();
@@ -122,14 +122,14 @@ public class PlayWithBots {
         return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
     }
 
-    public List<PlayWithBotsResponse> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
+    public List<PlayWithBotsDto> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        final List<Callable<PlayWithBotsResponse>> games = new ArrayList<>();
+        final List<Callable<PlayWithBotsDto>> games = new ArrayList<>();
 
-        final Callable<PlayWithBotsResponse> game = () -> {
+        final Callable<PlayWithBotsDto> game = () -> {
             final var useCase = createNewGameSettings();
-            final var requestModel = new CreateForBotsRequest(uuidBot1, bot1Name, uuidBot2, bot2Name);
+            final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
             return useCase.playWithBots(requestModel);
         };
 
@@ -137,8 +137,8 @@ public class PlayWithBots {
             games.add(game);
         }
 
-        final List<PlayWithBotsResponse> result = new ArrayList<>();
-        for (Future<PlayWithBotsResponse> future : executor.invokeAll(games)) {
+        final List<PlayWithBotsDto> result = new ArrayList<>();
+        for (Future<PlayWithBotsDto> future : executor.invokeAll(games)) {
             result.add(future.get());
         }
 

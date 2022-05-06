@@ -21,7 +21,7 @@
 package com.bueno.controllers;
 
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
+import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +39,7 @@ public class GameController {
     }
 
     @PostMapping(path = "/user_bot")
-    public ResponseEntity<?> createForUserAndBot(@RequestBody CreateForUserAndBotRequest requestModel){
+    public ResponseEntity<?> createForUserAndBot(@RequestBody CreateForUserAndBotDto requestModel){
         final var intel = createGameUseCase.createForUserAndBot(requestModel);
         return ResponseEntity.ok(intel);
     }

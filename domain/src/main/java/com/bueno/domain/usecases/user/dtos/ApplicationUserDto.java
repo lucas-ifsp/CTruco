@@ -18,13 +18,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel.model;
+package com.bueno.domain.usecases.user.dtos;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
-public record OwnedCardsResponseModel(List<CardDto> cards) {
-    public OwnedCardsResponseModel(List<CardDto> cards) {
-        this.cards = Objects.requireNonNull(cards);
-    }
-}
+public record ApplicationUserDto(UUID uuid, String username, String password, String email) {}

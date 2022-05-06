@@ -18,15 +18,13 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.model;
+package com.bueno.domain.usecases.intel.dtos;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-
-public record PlayWithBotsResponse(UUID uuid, String name) {
-    public PlayWithBotsResponse(UUID uuid, String name) {
-        this.uuid = Objects.requireNonNull(uuid);
-        this.name = Objects.requireNonNull(name);
+public record IntelSinceDto(List<IntelDto> intelSince) {
+    public IntelSinceDto(List<IntelDto> intelSince) {
+        this.intelSince = Objects.requireNonNull(intelSince);
     }
 }

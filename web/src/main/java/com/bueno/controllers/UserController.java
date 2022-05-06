@@ -20,10 +20,10 @@
 
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.user.CreateUserUseCase;
+import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
-import com.bueno.domain.usecases.user.model.CreateUserRequest;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -34,33 +34,33 @@ import java.util.UUID;
 @RequestMapping
 public class UserController {
 
-    private final CreateUserUseCase createUserUseCase;
+    private final RegisterUserUseCase registerUserUseCase;
     private final FindUserUseCase findUserUseCase;
     private final PasswordEncoder encoder;
 
 
-    public UserController(CreateUserUseCase createUserUseCase, FindUserUseCase findUserUseCase, PasswordEncoder encoder) {
-        this.createUserUseCase = createUserUseCase;
+    public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, PasswordEncoder encoder) {
+        this.registerUserUseCase = registerUserUseCase;
         this.findUserUseCase = findUserUseCase;
         this.encoder = encoder;
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> create(@RequestBody CreateUserRequest request){
+    public ResponseEntity<?> create(@RequestBody RegisterUserRequestDto request){
         final String encodedPassword = encoder.encode(request.password());
-        final CreateUserRequest encodedPasswordRequest = new CreateUserRequest(
+        final RegisterUserRequestDto encodedPasswordRequest = new RegisterUserRequestDto(
                 request.username(),
                 encodedPassword,
                 request.email());
 
-        final var response = createUserUseCase.create(encodedPasswordRequest);
+        final var response = registerUserUseCase.create(encodedPasswordRequest);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/api/v1/user/by_uuid/{playerUuid}")
     public ResponseEntity<?> find(@PathVariable UUID playerUuid){
         final var response = findUserUseCase.findByUUID(playerUuid);
-        final ApplicationUserDTO responseWithoutPassword = new ApplicationUserDTO(
+        final ApplicationUserDto responseWithoutPassword = new ApplicationUserDto(
                 response.uuid(),
                 response.username(),
                 null,

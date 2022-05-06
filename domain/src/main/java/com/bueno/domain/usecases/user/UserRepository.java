@@ -20,15 +20,15 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
 
-    void save(ApplicationUserDTO user);
-    Optional<ApplicationUserDTO> findByUsername(String username);
-    Optional<ApplicationUserDTO> findByEmail(String email);
-    Optional<ApplicationUserDTO> findByUuid(UUID uuid);
+    void save(ApplicationUserDto user);
+    Optional<ApplicationUserDto> findByUsername(String username);
+    Optional<ApplicationUserDto> findByEmail(String email);
+    Optional<ApplicationUserDto> findByUuid(UUID uuid);
 }

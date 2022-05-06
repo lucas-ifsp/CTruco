@@ -18,8 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user.model;
+package com.bueno.domain.usecases.game.dtos;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public record ApplicationUserDTO(UUID uuid, String username, String password, String email) {}
+
+public record PlayWithBotsDto(UUID uuid, String name) {
+    public PlayWithBotsDto(UUID uuid, String name) {
+        this.uuid = Objects.requireNonNull(uuid);
+        this.name = Objects.requireNonNull(name);
+    }
+}

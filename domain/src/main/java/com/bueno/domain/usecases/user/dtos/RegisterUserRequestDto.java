@@ -18,19 +18,17 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel.model;
+package com.bueno.domain.usecases.user.dtos;
 
-import com.bueno.domain.usecases.utils.dtos.IntelDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.Objects;
 
-import java.util.List;
-
-@Getter
-@ToString
-@AllArgsConstructor
-public final class IntelSinceResponseModel {
-    private final List<IntelDto> intelSince;
-
+public record RegisterUserRequestDto(String username, String password, String email) {
+    public RegisterUserRequestDto(String username, String password, String email) {
+        this.username = Objects.requireNonNull(username, "Username must not be null.");
+        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty.");
+        this.password = Objects.requireNonNull(password, "Password must not be null.");
+        if(password.isEmpty()) throw new IllegalArgumentException("Password must not be empty.");
+        this.email = Objects.requireNonNull(email, "E-mail must not be null.");
+        if(email.isEmpty()) throw new IllegalArgumentException("E-mail must not be empty.");
+    }
 }

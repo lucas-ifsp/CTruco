@@ -22,9 +22,9 @@ package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.model.IntelSinceResponseModel;
-import com.bueno.domain.usecases.intel.model.OwnedCardsResponseModel;
-import com.bueno.domain.usecases.intel.model.PlayerTurnResponseModel;
+import com.bueno.domain.usecases.intel.dtos.IntelSinceDto;
+import com.bueno.domain.usecases.intel.dtos.OwnedCardsDto;
+import com.bueno.domain.usecases.intel.dtos.PlayerTurnDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
@@ -44,24 +44,24 @@ public class HandleIntelUseCase {
         this.repo = Objects.requireNonNull(repo);
     }
 
-    public IntelSinceResponseModel findIntelSince(UUID uuid, Instant lastIntelTimestamp){
+    public IntelSinceDto findIntelSince(UUID uuid, Instant lastIntelTimestamp){
         final var game = getGameOrThrow(uuid);
         final var intelSince = game.getIntelSince(lastIntelTimestamp).stream()
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
-        return new IntelSinceResponseModel(intelSince);
+        return new IntelSinceDto(intelSince);
     }
 
-    public OwnedCardsResponseModel ownedCards(UUID uuid){
+    public OwnedCardsDto ownedCards(UUID uuid){
         final var game = getGameOrThrow(uuid);
         final var player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
-        return new OwnedCardsResponseModel(player.getCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()));
+        return new OwnedCardsDto(player.getCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()));
     }
 
-    public PlayerTurnResponseModel isPlayerTurn(UUID uuid) {
+    public PlayerTurnDto isPlayerTurn(UUID uuid) {
         final var game = getGameOrThrow(uuid);
         final var playerTurn = uuid.equals(game.getIntel().currentPlayerUuid().orElse(null));
-        return new PlayerTurnResponseModel(playerTurn);
+        return new PlayerTurnDto(playerTurn);
     }
 
     private Game getGameOrThrow(UUID uuid) {

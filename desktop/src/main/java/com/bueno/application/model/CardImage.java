@@ -20,7 +20,7 @@
 
 package com.bueno.application.model;
 
-import com.bueno.domain.usecases.intel.model.CardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;

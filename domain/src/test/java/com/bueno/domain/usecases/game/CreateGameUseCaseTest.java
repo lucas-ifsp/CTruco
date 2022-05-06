@@ -22,10 +22,10 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
+import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
+import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.junit.jupiter.api.DisplayName;
@@ -57,9 +57,9 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should create game with valid user and bot")
     void shouldCreateGameWithValidUserAndBot() {
-        final var user = new ApplicationUserDTO(userUUID, "User", null, "email@email.com");
+        final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
-        final var requestModel = new CreateForUserAndBotRequest(user.uuid(), "DummyBot");
+        final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertNotNull(sut.createForUserAndBot(requestModel));
         verify(gameRepo, times(1)).save(any());
     }
@@ -67,20 +67,20 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should throw if user UUID is not registered in database")
     void shouldThrowIfUserUuidIsNotRegisteredInDatabase() {
-        final var user = new ApplicationUserDTO(userUUID, "User", null, "email@email.com");
+        final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.empty());
-        final var requestModel = new CreateForUserAndBotRequest(user.uuid(), "DummyBot");
+        final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertThrows(EntityNotFoundException.class, () -> sut.createForUserAndBot(requestModel));
     }
 
     @Test
     @DisplayName("Should throw if first user is already playing another game")
     void shouldThrowIfFirstUserIsAlreadyPlayingAnotherGame() {
-        final var user = new ApplicationUserDTO(userUUID, "User", null, "email@email.com");
+        final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         final Game game = new Game(Player.of(user.uuid(), user.username()), Player.ofBot("DummyBot"));
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         when(gameRepo.findByUserUuid(user.uuid())).thenReturn(Optional.of(game));
-        final var requestModel = new CreateForUserAndBotRequest(user.uuid(), "DummyBot");
+        final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertThrows(UnsupportedGameRequestException.class, () -> sut.createForUserAndBot(requestModel));
         verify(gameRepo, times(1)).findByUserUuid(user.uuid());
     }
@@ -88,14 +88,14 @@ class CreateGameUseCaseTest {
     @Test
     @DisplayName("Should throw if bot name is not a valid bot service implementation name")
     void shouldThrowIfBotNameIsNotAValidBotServiceImplementationName() {
-        final var requestModel = new CreateForUserAndBotRequest(userUUID, "NoBot");
+        final var requestModel = new CreateForUserAndBotDto(userUUID, "NoBot");
         assertThrows(NoSuchElementException.class, () -> sut.createForUserAndBot(requestModel));
     }
 
     @Test
     @DisplayName("Should create game with valid bots")
     void shouldCreateGameWithValidBots() {
-        final CreateForBotsRequest requestModel = new CreateForBotsRequest(
+        final CreateForBotsDto requestModel = new CreateForBotsDto(
                 UUID.randomUUID(),
                 "DummyBot",
                 UUID.randomUUID(),
@@ -110,9 +110,9 @@ class CreateGameUseCaseTest {
         final UUID uuid = UUID.randomUUID();
         assertAll(
                 () ->  assertThrows(NoSuchElementException.class,
-                        () -> sut.createForBots(new CreateForBotsRequest(uuid, "DummyBot", uuid,"NoBot"))),
+                        () -> sut.createForBots(new CreateForBotsDto(uuid, "DummyBot", uuid,"NoBot"))),
                 () ->  assertThrows(NoSuchElementException.class,
-                        () -> sut.createForBots(new CreateForBotsRequest(uuid, "NoBot", uuid,"DummyBot")))
+                        () -> sut.createForBots(new CreateForBotsDto(uuid, "NoBot", uuid,"DummyBot")))
         );
     }
 }

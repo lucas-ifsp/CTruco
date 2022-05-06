@@ -20,9 +20,9 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
-import com.bueno.domain.usecases.user.model.CreateUserRequest;
-import com.bueno.domain.usecases.user.model.CreateUserResponse;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
+import com.bueno.domain.usecases.user.dtos.RegisterUserResponseDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +31,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CreateUserUseCase {
+public class RegisterUserUseCase {
 
     private final UserRepository repo;
 
-    public CreateUserUseCase(UserRepository repo) {
+    public RegisterUserUseCase(UserRepository repo) {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public CreateUserResponse create(CreateUserRequest request){
+    public RegisterUserResponseDto create(RegisterUserRequestDto request){
         Objects.requireNonNull(request,"Request model must not be null.");
 
         repo.findByUsername(request.username()).ifPresent(unused -> {
@@ -48,14 +48,14 @@ public class CreateUserUseCase {
         repo.findByEmail(request.email()).ifPresent(unused -> {
             throw new EntityAlreadyExistsException("This email is already in use: " + request.email());});
 
-        final ApplicationUserDTO user = new ApplicationUserDTO(
+        final ApplicationUserDto user = new ApplicationUserDto(
                 UUID.randomUUID(),
                 request.username(),
                 request.password(),
                 request.email());
 
         repo.save(user);
-        final Optional<ApplicationUserDTO> byUuid = repo.findByUuid(user.uuid());
-        return new CreateUserResponse(user.uuid(), user.username(), user.email());
+        final Optional<ApplicationUserDto> byUuid = repo.findByUuid(user.uuid());
+        return new RegisterUserResponseDto(user.uuid(), user.username(), user.email());
     }
 }
