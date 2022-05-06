@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.model.CardDto;
 
 import java.util.Objects;
 import java.util.UUID;

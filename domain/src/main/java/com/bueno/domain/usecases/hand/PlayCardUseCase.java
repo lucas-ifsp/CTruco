@@ -30,7 +30,7 @@ import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.model.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.springframework.stereotype.Service;
 

@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.utils.dtos;
 
-import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.model.CardDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

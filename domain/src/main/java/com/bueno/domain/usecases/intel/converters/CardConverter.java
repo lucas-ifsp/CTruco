@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.intel.converters;
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
-import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.model.CardDto;
 
 public class CardConverter {
     public static Card toDto(CardDto cardDto) {

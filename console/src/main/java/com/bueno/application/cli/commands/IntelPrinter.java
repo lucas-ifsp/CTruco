@@ -20,8 +20,8 @@
 
 package com.bueno.application.cli.commands;
 
-import com.bueno.domain.usecases.intel.dtos.CardDto;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.model.CardDto;
+import com.bueno.domain.usecases.intel.model.IntelDto;
 
 import java.util.List;
 import java.util.UUID;

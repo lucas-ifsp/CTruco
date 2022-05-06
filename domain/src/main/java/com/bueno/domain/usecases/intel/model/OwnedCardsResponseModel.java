@@ -20,8 +20,6 @@
 
 package com.bueno.domain.usecases.intel.model;
 
-import com.bueno.domain.usecases.intel.dtos.CardDto;
-
 import java.util.List;
 import java.util.Objects;
 
