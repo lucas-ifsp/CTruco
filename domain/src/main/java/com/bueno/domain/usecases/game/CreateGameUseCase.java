@@ -73,11 +73,11 @@ public class CreateGameUseCase {
     public IntelDto createDetached(CreateDetachedRequest request){
         Objects.requireNonNull(request, "Request model not be null!");
 
-        if(hasNoBotServiceWith(request.getBotName()))
-            throw new NoSuchElementException("Service implementation not available: " + request.getBotName());
+        if(hasNoBotServiceWith(request.botName()))
+            throw new NoSuchElementException("Service implementation not available: " + request.botName());
 
-        final Player userPlayer = Player.of(request.getUserUuid(), request.getUsername());
-        final Player botPlayer = Player.ofBot(request.getBotName());
+        final Player userPlayer = Player.of(request.userUuid(), request.username());
+        final Player botPlayer = Player.ofBot(request.botName());
 
         return create(userPlayer, botPlayer);
     }

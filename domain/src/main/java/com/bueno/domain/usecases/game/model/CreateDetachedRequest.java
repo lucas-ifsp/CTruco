@@ -20,24 +20,15 @@
 
 package com.bueno.domain.usecases.game.model;
 
-import lombok.Getter;
-import lombok.ToString;
-
 import java.util.Objects;
 import java.util.UUID;
 
-@Getter
-@ToString
-public class CreateDetachedRequest {
-    private final UUID userUuid;
-    private final String username;
-    private final String botName;
-
+public record CreateDetachedRequest(UUID userUuid, String username, String botName) {
     public CreateDetachedRequest(UUID userUuid, String username, String botName) {
         this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
         this.username = Objects.requireNonNull(username, "Username must not be null!");
-        if(username.isEmpty()) throw new IllegalArgumentException("Username must not be empty!");
+        if (username.isEmpty()) throw new IllegalArgumentException("Username must not be empty!");
         this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
-        if(botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
+        if (botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
     }
 }
