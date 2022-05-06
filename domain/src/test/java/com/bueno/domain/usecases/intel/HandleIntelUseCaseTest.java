@@ -27,7 +27,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.model.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;

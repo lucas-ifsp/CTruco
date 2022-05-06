@@ -28,8 +28,8 @@ import com.bueno.domain.usecases.hand.PlayCardRequest;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.intel.dtos.CardDto;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.model.CardDto;
+import com.bueno.domain.usecases.intel.model.IntelDto;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.*;

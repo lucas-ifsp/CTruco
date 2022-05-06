@@ -28,7 +28,7 @@ import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.intel.model.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.spi.service.BotServiceManager;
