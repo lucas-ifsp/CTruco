@@ -85,14 +85,14 @@ public class CreateGameUseCase {
     IntelDto createForBots(CreateForBotsRequest request){
         Objects.requireNonNull(request);
 
-        if(hasNoBotServiceWith(request.getBot1Name()))
-            throw new NoSuchElementException("Service implementation not available: " + request.getBot1Name());
+        if(hasNoBotServiceWith(request.bot1Name()))
+            throw new NoSuchElementException("Service implementation not available: " + request.bot1Name());
 
-        if(hasNoBotServiceWith(request.getBot2Name()))
-            throw new NoSuchElementException("Service implementation not available: " + request.getBot2Name());
+        if(hasNoBotServiceWith(request.bot2Name()))
+            throw new NoSuchElementException("Service implementation not available: " + request.bot2Name());
 
-        final var bot1 = Player.ofBot(request.getBot1Uuid(), request.getBot1Name());
-        final var bot2 = Player.ofBot(request.getBot2Uuid(), request.getBot2Name());
+        final var bot1 = Player.ofBot(request.bot1Uuid(), request.bot1Name());
+        final var bot2 = Player.ofBot(request.bot2Uuid(), request.bot2Name());
 
         return create(bot1, bot2);
     }

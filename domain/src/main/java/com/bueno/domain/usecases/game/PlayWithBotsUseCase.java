@@ -42,11 +42,11 @@ public class PlayWithBotsUseCase {
         createGameUseCase.createForBots(requestModel);
 
         final var botUseCase = new BotUseCase(gameRepo);
-        final var game = findGameUseCase.loadUserGame(requestModel.getBot1Uuid()).orElseThrow();
+        final var game = findGameUseCase.loadUserGame(requestModel.bot1Uuid()).orElseThrow();
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
-        final var winnerName = winnerUUID.equals(requestModel.getBot1Uuid()) ?
-                requestModel.getBot1Name() : requestModel.getBot2Name();
+        final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
+                requestModel.bot1Name() : requestModel.bot2Name();
 
         return new PlayWithBotsResponse(winnerUUID, winnerName);
     }
