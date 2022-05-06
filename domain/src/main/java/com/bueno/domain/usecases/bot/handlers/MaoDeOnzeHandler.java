@@ -18,49 +18,41 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.handlers;
 
+import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.EnumSet;
-import java.util.stream.Collectors;
+import static com.bueno.domain.usecases.bot.converter.SpiModelAdapter.toGameIntel;
 
-import static com.bueno.domain.entities.intel.PossibleAction.QUIT;
-import static com.bueno.domain.entities.intel.PossibleAction.RAISE;
-import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
-
-class RaiseHandler implements Handler {
+public class MaoDeOnzeHandler implements Handler {
 
     private final BotServiceProvider botService;
     private final PointsProposalUseCase scoreUseCase;
 
-    RaiseHandler(PointsProposalUseCase scoreUseCase, BotServiceProvider botService) {
+    public MaoDeOnzeHandler(PointsProposalUseCase scoreUseCase, BotServiceProvider botService) {
         this.scoreUseCase = scoreUseCase;
         this.botService = botService;
     }
 
-    public boolean handle(Intel intel, Player bot){
+    @Override
+    public boolean handle(Intel intel, Player bot) {
         if(shouldHandle(intel)) {
-            final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
-            if(wantToRaise){
-                scoreUseCase.raise(bot.getUuid());
-                return true;
-            }
-            return false;
+            final var botUuid = bot.getUuid();
+            final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
+            if (hasAccepted) scoreUseCase.accept(botUuid);
+            else scoreUseCase.quit(botUuid);
+            return true;
         }
         return false;
     }
 
     @Override
-    public boolean shouldHandle(Intel intel){
-        final var actions = intel.possibleActions().stream()
-                .map(PossibleAction::valueOf)
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
-
-        return actions.contains(RAISE) && !actions.contains(QUIT);
+    public boolean shouldHandle(Intel intel) {
+        final var hasNotDecided = HandPoints.fromIntValue(intel.handPoints()) == HandPoints.ONE;
+        return intel.isMaoDeOnze() && hasNotDecided;
     }
 }

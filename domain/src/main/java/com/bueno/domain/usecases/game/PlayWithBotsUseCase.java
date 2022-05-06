@@ -30,17 +30,18 @@ public class PlayWithBotsUseCase {
 
     private final CreateGameUseCase createGameUseCase;
     private final FindGameUseCase findGameUseCase;
-    private final BotUseCase botUseCase;
+    private final GameRepository gameRepo;
 
-    public PlayWithBotsUseCase(CreateGameUseCase createGameUse, FindGameUseCase findGameUseCase, BotUseCase botUseCase) {
+    public PlayWithBotsUseCase(CreateGameUseCase createGameUse, FindGameUseCase findGameUseCase, GameRepository gameRepo) {
         this.createGameUseCase = Objects.requireNonNull(createGameUse);
         this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
-        this.botUseCase = Objects.requireNonNull(botUseCase);
+        this.gameRepo = Objects.requireNonNull(gameRepo);
     }
 
     public PlayWithBotsResponse playWithBots(CreateForBotsRequest requestModel){
         createGameUseCase.createForBots(requestModel);
 
+        final var botUseCase = new BotUseCase(gameRepo);
         final var game = findGameUseCase.loadUserGame(requestModel.getBot1Uuid()).orElseThrow();
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
