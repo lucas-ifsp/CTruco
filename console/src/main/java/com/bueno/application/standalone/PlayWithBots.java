@@ -20,8 +20,10 @@
 
 package com.bueno.application.standalone;
 
-import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.*;
+import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
 import com.bueno.domain.usecases.game.model.PlayWithBotsResponse;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
@@ -47,7 +49,7 @@ public class PlayWithBots {
 
         final var main = new PlayWithBots();
 
-        final var botNames = BotUseCase.availableBots();
+        final var botNames = BotProviders.availableBots();
         printAvailableBots(botNames);
 
         final var bot1 = scanBotOption(botNames);
@@ -117,8 +119,7 @@ public class PlayWithBots {
         final var repo = new InMemoryGameRepository();
         final var createGameUseCase = new CreateGameUseCase(repo, null);
         final var findGameUseCase = new FindGameUseCase(repo);
-        final var botUseCase = new BotUseCase(repo);
-        return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, botUseCase);
+        return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
     }
 
     public List<PlayWithBotsResponse> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {

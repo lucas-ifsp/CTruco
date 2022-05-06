@@ -25,6 +25,7 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.converter.SpiModelAdapter;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;

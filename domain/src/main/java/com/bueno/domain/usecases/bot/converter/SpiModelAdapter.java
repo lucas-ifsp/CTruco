@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.converter;
 
 import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class SpiModelAdapter {
 
-    static GameIntel toGameIntel(Player player, Intel intel) {
+    public static GameIntel toGameIntel(Player player, Intel intel) {
         final Function<UUID, RoundResult> toRoundResult = uuid -> uuid == null ? RoundResult.DREW
                 : uuid.equals(player.getUuid()) ? RoundResult.WON : RoundResult.LOST;
 
@@ -60,7 +60,7 @@ public class SpiModelAdapter {
                 .build();
     }
 
-    static Card toCard(TrucoCard card){
+    public static Card toCard(TrucoCard card){
         if(card == null) return null;
         final String rankName = card.getRank().toString();
         final String suitName = card.getSuit().toString();

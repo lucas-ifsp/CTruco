@@ -18,49 +18,49 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.handlers;
 
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.hand.PlayCardRequest;
+import com.bueno.domain.usecases.utils.converters.CardConverter;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.EnumSet;
-import java.util.stream.Collectors;
+import static com.bueno.domain.entities.intel.PossibleAction.PLAY;
+import static com.bueno.domain.usecases.bot.converter.SpiModelAdapter.toCard;
+import static com.bueno.domain.usecases.bot.converter.SpiModelAdapter.toGameIntel;
 
-import static com.bueno.domain.entities.intel.PossibleAction.*;
-import static com.bueno.domain.usecases.bot.SpiModelAdapter.toGameIntel;
-
-class RaiseRequestHandler implements Handler{
+public class CardPlayingHandler implements Handler{
 
     private final BotServiceProvider botService;
-    private final PointsProposalUseCase scoreUseCase;
+    private final PlayCardUseCase cardUseCase;
 
-    RaiseRequestHandler(PointsProposalUseCase scoreUseCase, BotServiceProvider botService) {
-        this.scoreUseCase = scoreUseCase;
+    public CardPlayingHandler(PlayCardUseCase cardUseCase, BotServiceProvider botService) {
         this.botService = botService;
+        this.cardUseCase = cardUseCase;
     }
 
     @Override
     public boolean handle(Intel intel, Player bot) {
         if(shouldHandle(intel)) {
             final var botUuid = bot.getUuid();
-            final var actions = intel.possibleActions().stream()
-                    .map(PossibleAction::valueOf)
-                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
+            final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
+            final var card = toCard(chosenCard.content());
+            final var requestModel = new PlayCardRequest(botUuid, CardConverter.toEntity(card));
 
-            switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
-                case -1 -> { if (actions.contains(QUIT)) scoreUseCase.quit(botUuid); }
-                case 0 -> { if (actions.contains(ACCEPT)) scoreUseCase.accept(botUuid); }
-                case 1 -> { if (actions.contains(RAISE)) scoreUseCase.raise(botUuid); }
-            }
+            if (chosenCard.isDiscard()) cardUseCase.discard(requestModel);
+            else cardUseCase.playCard(requestModel);
             return true;
         }
         return false;
     }
 
-    public boolean shouldHandle(Intel intel){
-        return !intel.isMaoDeOnze() && !intel.possibleActions().contains("PLAY");
+    @Override
+    public boolean shouldHandle(Intel intel) {
+        return intel.possibleActions().stream()
+                .map(PossibleAction::valueOf)
+                .anyMatch(action -> action.equals(PLAY));
     }
 }

@@ -24,6 +24,11 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
+import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
+import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
+import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
+import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.GameRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -158,6 +163,6 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should have at least one default bot implementation of bot spi")
     void shouldHaveAtLeastOneDefaultBotImplementationOfBotSpi() {
-        assertFalse(BotUseCase.availableBots().isEmpty());
+        assertFalse(BotProviders.availableBots().isEmpty());
     }
 }

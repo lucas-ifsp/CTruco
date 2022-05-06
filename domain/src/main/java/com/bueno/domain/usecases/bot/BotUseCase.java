@@ -23,13 +23,16 @@ package com.bueno.domain.usecases.bot;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
+import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
+import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
+import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
 import com.bueno.domain.usecases.game.GameRepository;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.List;
 import java.util.Objects;
 
 public class BotUseCase {
@@ -81,9 +84,5 @@ public class BotUseCase {
             cardHandler = new CardPlayingHandler(new PlayCardUseCase(repo), botService);
         if (requestHandler == null)
             requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(repo), botService);
-    }
-
-    public static List<String> availableBots(){
-        return BotServiceManager.providersNames();
     }
 }

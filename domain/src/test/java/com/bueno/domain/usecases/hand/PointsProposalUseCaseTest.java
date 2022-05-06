@@ -150,7 +150,7 @@ class PointsProposalUseCaseTest {
     @DisplayName("Should be able to quit bet if invariants are met")
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
         final IntelDto firstIntel = sut.raise(p1Uuid);
-        final IntelDto lastIntel = sut.quit(p2Uuid);//last intel is already pointing to a new hand.
+        sut.quit(p2Uuid);//last intel is already pointing to a new hand.
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
 

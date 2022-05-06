@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.bot;
+package com.bueno.domain.usecases.bot.handlers;
 
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;

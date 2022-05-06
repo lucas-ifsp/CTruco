@@ -22,7 +22,6 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,27 +34,25 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlayWithBotsUseCaseTest {
 
     @Mock CreateGameUseCase createGameUseCase;
     @Mock FindGameUseCase findGameUseCase;
-    @Mock BotUseCase botUseCase;
+    @Mock GameRepository gameRepo;
     @Mock Intel intel;
     @Mock Game game;
     @InjectMocks PlayWithBotsUseCase sut;
 
     @Test
-    @DisplayName("Should throw if any injected use case is null")
-    void shouldThrowIfAnyInjectedUseCaseIsNull() {
+    @DisplayName("Should throw if any injected parameter is null")
+    void shouldThrowIfAnyInjectedParameterIsNull() {
         assertAll(
                 () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(null, findGameUseCase, botUseCase)),
+                        () -> new PlayWithBotsUseCase(null, findGameUseCase, gameRepo)),
                 () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(createGameUseCase, null, botUseCase)),
+                        () -> new PlayWithBotsUseCase(createGameUseCase, null, gameRepo)),
                 () -> assertThrows(NullPointerException.class,
                         () -> new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, null))
         );
@@ -79,30 +76,27 @@ class PlayWithBotsUseCaseTest {
     @Test
     @DisplayName("Should play with bots if preconditions are met")
     void shouldPlayWithBotsIfPreconditionsAreMet() {
-        final UUID uuidA = UUID.randomUUID();
-        final UUID uuidB = UUID.randomUUID();
-        final var requestModel = new CreateForBotsRequest(uuidA, "BotA", uuidB, "BotB");
-        when(createGameUseCase.createForBots(any())).thenReturn(any());
-        when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
-        when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
-        when(intel.gameWinner()).thenReturn(Optional.of(uuidA));
-        assertNotNull(sut.playWithBots(requestModel));
+        final var uuidA = UUID.randomUUID();
+        final var uuidB = UUID.randomUUID();
+        final var repo = new MockRepo();
+        final var createGameUseCase = new CreateGameUseCase(repo, null);
+        final var findGameUseCase = new FindGameUseCase(repo);
+        final var requestModel = new CreateForBotsRequest(uuidA, "DummyBot", uuidB, "DummyBot");
+        createGameUseCase.createForBots(requestModel);
+
+        final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
+        final var response = sut.playWithBots(requestModel);
+        assertAll(
+                () -> assertNotNull(response.getUuid()),
+                () -> assertNotNull(response.getName())
+        );
     }
 
-    @Test
-    @DisplayName("Should Bot B be the winner if preconditions are met")
-    void shouldBotBBeTheWinnerIfPreconditionsAreMet() {
-        final UUID uuidA = UUID.randomUUID();
-        final UUID uuidB = UUID.randomUUID();
-        when(createGameUseCase.createForBots(any())).thenReturn(any());
-        when(findGameUseCase.loadUserGame(uuidA)).thenReturn(Optional.of(game));
-        when(botUseCase.playWhenNecessary(game)).thenReturn(intel);
-        when(intel.gameWinner()).thenReturn(Optional.of(uuidB));
-        final var requestModel = new CreateForBotsRequest(uuidA, "BotA", uuidB, "BotB");
-        final var result = sut.playWithBots(requestModel);
-        assertAll(
-                () -> assertEquals("BotB", result.getName()),
-                () -> assertEquals(uuidB, result.getUuid())
-        );
+    static class MockRepo implements GameRepository{
+        private Game game;
+        @Override public void save(Game game) {this.game = game;}
+        @Override public Optional<Game> findByUuid(UUID uuid) {return Optional.ofNullable(game);}
+        @Override public Optional<Game> findByUserUuid(UUID uuid) {return Optional.ofNullable(game);}
+        @Override public Optional<Game> findByUserUsername(String userName) {return Optional.ofNullable(game);}
     }
 }
