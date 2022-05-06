@@ -68,8 +68,8 @@ class CardDtoTest {
     @DisplayName("Should correctly create closed card")
     void shouldCorrectlyCreateClosedCard() {
         assertAll(
-                () -> assertEquals("X", CardDto.closed().getRank()),
-                () -> assertEquals("X", CardDto.closed().getSuit())
+                () -> assertEquals("X", CardDto.closed().rank()),
+                () -> assertEquals("X", CardDto.closed().suit())
         );
     }
 }
