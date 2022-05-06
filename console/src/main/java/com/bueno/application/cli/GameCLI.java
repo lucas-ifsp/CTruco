@@ -87,8 +87,8 @@ public class GameCLI {
     private void createGame(){
         final var gameSettingsReader = new GameSettingsReader();
         final var settings = gameSettingsReader.execute();
-        userUUID = settings.getUserUuid();
-        final var request = new CreateDetachedRequest(userUUID, settings.getUsername(), settings.getBotName());
+        userUUID = settings.userUuid();
+        final var request = new CreateDetachedRequest(userUUID, settings.username(), settings.botName());
         lastIntel = gameUseCase.createDetached(request);
         missingIntel.add(lastIntel);
     }
