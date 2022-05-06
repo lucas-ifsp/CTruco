@@ -21,7 +21,7 @@
 package com.bueno.auth.security;
 
 import com.bueno.domain.usecases.user.FindUserUseCase;
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,7 +38,7 @@ public class ApplicationUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final ApplicationUserDTO dto = findUserUseCase.findByUsername(username);
+        final ApplicationUserDto dto = findUserUseCase.findByUsername(username);
         return ApplicationUser.ofUserDTO(dto);
     }
 }

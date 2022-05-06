@@ -21,7 +21,7 @@
 package com.bueno.persistence.inmemory;
 
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,25 +30,25 @@ import java.util.UUID;
 
 public class InMemoryUserRepository implements UserRepository {
 
-    private final Map<String, ApplicationUserDTO> db = new HashMap<>();
+    private final Map<String, ApplicationUserDto> db = new HashMap<>();
 
     @Override
-    public void save(ApplicationUserDTO user) {
+    public void save(ApplicationUserDto user) {
         db.put(user.username(), user);
     }
 
     @Override
-    public Optional<ApplicationUserDTO> findByUsername(String username) {
+    public Optional<ApplicationUserDto> findByUsername(String username) {
         return Optional.ofNullable(db.get(username));
     }
 
     @Override
-    public Optional<ApplicationUserDTO> findByEmail(String email) {
+    public Optional<ApplicationUserDto> findByEmail(String email) {
         return db.values().stream().filter(user -> user.email().equals(email)).findAny();
     }
 
     @Override
-    public Optional<ApplicationUserDTO> findByUuid(UUID uuid) {
+    public Optional<ApplicationUserDto> findByUuid(UUID uuid) {
         return db.values().stream().filter(user -> user.uuid().equals(uuid)).findAny();
     }
 }

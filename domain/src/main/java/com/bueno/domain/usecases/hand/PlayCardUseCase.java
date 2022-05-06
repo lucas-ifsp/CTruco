@@ -27,10 +27,11 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.intel.model.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +48,15 @@ public class PlayCardUseCase {
         this.botUseCase = new BotUseCase(repo);
     }
 
-    public IntelDto playCard(PlayCardRequest request) {
+    public IntelDto playCard(PlayCardDto request) {
         return playCard(request, false);
     }
 
-    public IntelDto discard(PlayCardRequest request) {
+    public IntelDto discard(PlayCardDto request) {
         return playCard(request, true);
     }
 
-    private IntelDto playCard(PlayCardRequest request, boolean discard) {
+    private IntelDto playCard(PlayCardDto request, boolean discard) {
         final var validator = new ActionValidator(repo, PossibleAction.PLAY);
         final var notification = validator.validate(request.uuid());
 

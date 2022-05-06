@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,9 +50,9 @@ class FindUserUseCaseTest {
     @DisplayName("Should retrieve user by uuid if available in the repository")
     void shouldRetrieveUserByUuidIfAvailableInTheRepository() {
         final UUID uuid = UUID.randomUUID();
-        final var user = new ApplicationUserDTO(uuid, "name", "email@email.com", "password");
+        final var user = new ApplicationUserDto(uuid, "name", "email@email.com", "password");
         when(repo.findByUuid(uuid)).thenReturn(Optional.of(user));
-        final ApplicationUserDTO model = sut.findByUUID(uuid);
+        final ApplicationUserDto model = sut.findByUUID(uuid);
         assertAll(
                 () -> assertEquals(user.uuid(), model.uuid()),
                 () -> assertEquals(user.username(), model.username()),
@@ -65,9 +65,9 @@ class FindUserUseCaseTest {
     void shouldRetrieveUserByUsernameIfAvailableInTheRepository() {
         final var uuid = UUID.randomUUID();
         final var email = "email@email.com";
-        final var user = new ApplicationUserDTO(uuid, "name", "password", email);
+        final var user = new ApplicationUserDto(uuid, "name", "password", email);
         when(repo.findByUsername(email)).thenReturn(Optional.of(user));
-        final ApplicationUserDTO model = sut.findByUsername(email);
+        final ApplicationUserDto model = sut.findByUsername(email);
         assertAll(
                 () -> assertEquals(user.uuid(), model.uuid()),
                 () -> assertEquals(user.username(), model.username()),

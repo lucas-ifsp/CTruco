@@ -10,13 +10,13 @@ module domain {
     exports com.bueno.domain.entities.player to application.persistence;
 
     exports com.bueno.domain.usecases.game;
-    exports com.bueno.domain.usecases.game.model;
+    exports com.bueno.domain.usecases.game.dtos;
     exports com.bueno.domain.usecases.user;
-    exports com.bueno.domain.usecases.user.model;
+    exports com.bueno.domain.usecases.user.dtos;
     exports com.bueno.domain.usecases.intel;
-    exports com.bueno.domain.usecases.intel.model;
+    exports com.bueno.domain.usecases.intel.dtos;
     exports com.bueno.domain.usecases.hand;
     exports com.bueno.domain.usecases.bot.providers;
     exports com.bueno.domain.usecases.utils.exceptions;
-    exports com.bueno.domain.usecases.intel.dtos;
+    exports com.bueno.domain.usecases.hand.dtos;
 }

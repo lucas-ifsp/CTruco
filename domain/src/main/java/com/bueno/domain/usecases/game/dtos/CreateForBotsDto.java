@@ -18,23 +18,18 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel.model;
-
+package com.bueno.domain.usecases.game.dtos;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
-public record CardDto(String rank, String suit) {
-    public CardDto(String rank, String suit) {
-        this.rank = Objects.requireNonNull(rank, "Rank must not be null.").toUpperCase();
-        this.suit = Objects.requireNonNull(suit, "Suit must not be null.").toUpperCase();
-        final boolean isValidRank = Pattern.compile("[A2-7QJKX]").matcher(this.rank).matches();
-        final boolean isValidSuit = Pattern.compile("[DCHSX]").matcher(this.suit).matches();
-        if (!isValidRank) throw new IllegalArgumentException("Rank value is not valid: " + this.rank);
-        if (!isValidSuit) throw new IllegalArgumentException("Suit value is not valid: " + this.suit);
-    }
-
-    public static CardDto closed() {
-        return new CardDto("X", "X");
+public record CreateForBotsDto(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+    public CreateForBotsDto(UUID bot1Uuid, String bot1Name, UUID bot2Uuid, String bot2Name) {
+        this.bot1Uuid = Objects.requireNonNull(bot1Uuid, "Bot1 UUID must not be null!");
+        this.bot1Name = Objects.requireNonNull(bot1Name, "Bot1 name must not be null!");
+        if (bot1Name.isEmpty()) throw new IllegalArgumentException("Bot1 name must not be empty!");
+        this.bot2Uuid = Objects.requireNonNull(bot2Uuid, "Bot2 UUID must not be null!");
+        this.bot2Name = Objects.requireNonNull(bot2Name, "Bot2 name must not be null!");
+        if (bot2Name.isEmpty()) throw new IllegalArgumentException("Bot2 name must not be empty!");
     }
 }

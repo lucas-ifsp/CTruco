@@ -23,13 +23,13 @@ package com.bueno.application.cli;
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.hand.PlayCardRequest;
+import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
+import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
-import com.bueno.domain.usecases.intel.model.CardDto;
-import com.bueno.domain.usecases.intel.model.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.persistence.inmemory.InMemoryGameRepository;
 
 import java.util.*;
@@ -88,7 +88,7 @@ public class GameCLI {
         final var gameSettingsReader = new GameSettingsReader();
         final var settings = gameSettingsReader.execute();
         userUUID = settings.userUuid();
-        final var request = new CreateDetachedRequest(userUUID, settings.username(), settings.botName());
+        final var request = new CreateDetachedDto(userUUID, settings.username(), settings.botName());
         lastIntel = gameUseCase.createDetached(request);
         missingIntel.add(lastIntel);
     }
@@ -106,7 +106,7 @@ public class GameCLI {
         final var card = cardReader.execute();
         final var mode = cardModeReader.execute();
 
-        final var requestModel = new PlayCardRequest(userUUID, card);
+        final var requestModel = new PlayCardDto(userUUID, card);
         if(mode == OPEN) playCardUseCase.playCard(requestModel);
         else playCardUseCase.discard(requestModel);
     }

@@ -18,15 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.hand;
+package com.bueno.domain.usecases.hand.dtos;
 
-import com.bueno.domain.usecases.intel.model.CardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public record PlayCardRequest(UUID uuid, CardDto card) {
-    public PlayCardRequest(UUID uuid, CardDto card) {
+public record PlayCardDto(UUID uuid, CardDto card) {
+    public PlayCardDto(UUID uuid, CardDto card) {
         this.uuid = Objects.requireNonNull(uuid, "UUID must not be null.");
         this.card = Objects.requireNonNull(card, "Card must not be null.");
     }

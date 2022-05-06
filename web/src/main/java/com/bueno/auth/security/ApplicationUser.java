@@ -20,7 +20,7 @@
 
 package com.bueno.auth.security;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,7 +44,7 @@ public class ApplicationUser implements UserDetails {
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
 
-    public static ApplicationUser ofUserDTO(ApplicationUserDTO userResponse) {
+    public static ApplicationUser ofUserDTO(ApplicationUserDto userResponse) {
         return ApplicationUser.builder()
                 .uuid(userResponse.uuid())
                 .username(userResponse.username())

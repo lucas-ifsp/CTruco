@@ -20,7 +20,7 @@
 
 package com.bueno.domain.usecases.user;
 
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +36,12 @@ public class FindUserUseCase {
         this.repo = Objects.requireNonNull(repo, "User repository must not be null.");
     }
 
-    public ApplicationUserDTO findByUUID(UUID uuid){
+    public ApplicationUserDto findByUUID(UUID uuid){
         return repo.findByUuid(Objects.requireNonNull(uuid))
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
     }
 
-    public ApplicationUserDTO findByUsername(String username){
+    public ApplicationUserDto findByUsername(String username){
         return repo.findByUsername(Objects.requireNonNull(username))
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
     }

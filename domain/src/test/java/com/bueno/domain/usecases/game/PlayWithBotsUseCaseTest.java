@@ -22,7 +22,7 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
+import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,13 +63,13 @@ class PlayWithBotsUseCaseTest {
     void shouldThrowIfPlayWithBotsReceiveAnyNullParameters() {
         assertAll(
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequest(null, "BotA", UUID.randomUUID(), "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsDto(null, "BotA", UUID.randomUUID(), "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), null, UUID.randomUUID(), "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), null, UUID.randomUUID(), "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), "BotA", null, "BotB"))),
+                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", null, "BotB"))),
                 () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsRequest(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
+                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
         );
     }
 
@@ -81,7 +81,7 @@ class PlayWithBotsUseCaseTest {
         final var repo = new MockRepo();
         final var createGameUseCase = new CreateGameUseCase(repo, null);
         final var findGameUseCase = new FindGameUseCase(repo);
-        final var requestModel = new CreateForBotsRequest(uuidA, "DummyBot", uuidB, "DummyBot");
+        final var requestModel = new CreateForBotsDto(uuidA, "DummyBot", uuidB, "DummyBot");
         createGameUseCase.createForBots(requestModel);
 
         final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);

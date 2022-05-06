@@ -18,14 +18,16 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.model;
+package com.bueno.domain.usecases.game.dtos;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public record CreateForUserAndBotRequest(UUID userUuid, String botName) {
-    public CreateForUserAndBotRequest(UUID userUuid, String botName) {
+public record CreateDetachedDto(UUID userUuid, String username, String botName) {
+    public CreateDetachedDto(UUID userUuid, String username, String botName) {
         this.userUuid = Objects.requireNonNull(userUuid, "User UUID must not be null!");
+        this.username = Objects.requireNonNull(username, "Username must not be null!");
+        if (username.isEmpty()) throw new IllegalArgumentException("Username must not be empty!");
         this.botName = Objects.requireNonNull(botName, "Bot name must not be null!");
         if (botName.isEmpty()) throw new IllegalArgumentException("Bot name must not be empty!");
     }

@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.intel.model;
+package com.bueno.domain.usecases.intel.dtos;
 
 import lombok.Builder;
 import lombok.Getter;

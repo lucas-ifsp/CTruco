@@ -22,13 +22,13 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.model.CreateDetachedRequest;
-import com.bueno.domain.usecases.game.model.CreateForBotsRequest;
-import com.bueno.domain.usecases.game.model.CreateForUserAndBotRequest;
+import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
+import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
+import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.model.ApplicationUserDTO;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.intel.model.IntelDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.spi.service.BotServiceManager;
@@ -48,13 +48,13 @@ public class CreateGameUseCase {
         this.userRepo = userRepo;
     }
 
-    public IntelDto createForUserAndBot(CreateForUserAndBotRequest request){
+    public IntelDto createForUserAndBot(CreateForUserAndBotDto request){
         Objects.requireNonNull(request, "Request not be null!");
 
         if(hasNoBotServiceWith(request.botName()))
             throw new NoSuchElementException("Service implementation not available: " + request.botName());
 
-        final ApplicationUserDTO user = userRepo.findByUuid(request.userUuid())
+        final ApplicationUserDto user = userRepo.findByUuid(request.userUuid())
                 .orElseThrow(() -> new EntityNotFoundException("User not found:" + request.userUuid()));
 
         final Player userPlayer = Player.of(user.uuid(), user.username());
@@ -70,7 +70,7 @@ public class CreateGameUseCase {
         return !BotServiceManager.providersNames().contains(botName);
     }
 
-    public IntelDto createDetached(CreateDetachedRequest request){
+    public IntelDto createDetached(CreateDetachedDto request){
         Objects.requireNonNull(request, "Request model not be null!");
 
         if(hasNoBotServiceWith(request.botName()))
@@ -82,7 +82,7 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    IntelDto createForBots(CreateForBotsRequest request){
+    IntelDto createForBots(CreateForBotsDto request){
         Objects.requireNonNull(request);
 
         if(hasNoBotServiceWith(request.bot1Name()))

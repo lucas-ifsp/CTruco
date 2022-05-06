@@ -18,12 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.user.model;
+package com.bueno.domain.usecases.user.dtos;
 
 import java.util.UUID;
 
-public record CreateUserResponse(UUID uuid, String username, String email) {
-    public static CreateUserResponse of(ApplicationUserDTO user) {
-        return new CreateUserResponse(user.uuid(), user.username(), user.email());
+public record RegisterUserResponseDto(UUID uuid, String username, String email) {
+    public static RegisterUserResponseDto of(ApplicationUserDto user) {
+        return new RegisterUserResponseDto(user.uuid(), user.username(), user.email());
     }
 }

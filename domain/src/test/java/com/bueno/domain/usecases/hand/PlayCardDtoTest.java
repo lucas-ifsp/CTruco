@@ -20,7 +20,8 @@
 
 package com.bueno.domain.usecases.hand;
 
-import com.bueno.domain.usecases.intel.model.CardDto;
+import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,23 +30,23 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PlayCardRequestTest {
+public class PlayCardDtoTest {
 
     @Test
     @DisplayName("Should not throw if all parameters are valid")
     void shouldNotThrowIfAllParametersAreValid() {
-        assertDoesNotThrow(() -> new PlayCardRequest(UUID.randomUUID(), new CardDto("X", "X")));
+        assertDoesNotThrow(() -> new PlayCardDto(UUID.randomUUID(), new CardDto("X", "X")));
     }
 
     @Test
     @DisplayName("Should throw if uuid is null")
     void shouldThrowIfUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> new PlayCardRequest(null, new CardDto("X", "X")));
+        assertThrows(NullPointerException.class, () -> new PlayCardDto(null, new CardDto("X", "X")));
     }
 
     @Test
     @DisplayName("Should throw if card is null")
     void shouldThrowIfCardIsNull() {
-        assertThrows(NullPointerException.class, () -> new PlayCardRequest(UUID.randomUUID(), null));
+        assertThrows(NullPointerException.class, () -> new PlayCardDto(UUID.randomUUID(), null));
     }
 }
