@@ -65,7 +65,7 @@ public class CardImage {
     private static String getCardFileName(CardDto card) {
         if(card == null) return "table";
         if(card.equals(new CardDto("X", "X"))) return "red_back";
-        return card.getRank() + card.getSuit();
+        return card.rank() + card.suit();
     }
 
     private void loadImage(String imagePath) {

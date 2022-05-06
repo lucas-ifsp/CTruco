@@ -27,8 +27,8 @@ import com.bueno.domain.usecases.intel.dtos.CardDto;
 
 public class CardConverter {
     public static Card toDto(CardDto cardDto) {
-        final Rank rank = Rank.ofSymbol(cardDto.getRank());
-        final Suit suit = Suit.ofSymbol(cardDto.getSuit());
+        final Rank rank = Rank.ofSymbol(cardDto.rank());
+        final Suit suit = Suit.ofSymbol(cardDto.suit());
         return Card.of(rank, suit);
     }
 

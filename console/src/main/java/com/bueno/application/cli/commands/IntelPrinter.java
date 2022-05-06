@@ -140,8 +140,8 @@ public class IntelPrinter implements Command<Void>{
     }
 
     public String formatCard(CardDto card){
-        final String rank = card.getRank();
-        final String suit = card.getSuit();
+        final String rank = card.rank();
+        final String suit = card.suit();
         final String rankSymbol = rank.equals("X") ? ":" : rank;
         final String suitSymbol = switch (suit){
             case "D" -> "\u2666";
