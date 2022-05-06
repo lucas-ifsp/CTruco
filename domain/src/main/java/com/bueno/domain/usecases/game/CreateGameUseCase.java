@@ -51,14 +51,14 @@ public class CreateGameUseCase {
     public IntelDto createForUserAndBot(CreateForUserAndBotRequest request){
         Objects.requireNonNull(request, "Request not be null!");
 
-        if(hasNoBotServiceWith(request.getBotName()))
-            throw new NoSuchElementException("Service implementation not available: " + request.getBotName());
+        if(hasNoBotServiceWith(request.botName()))
+            throw new NoSuchElementException("Service implementation not available: " + request.botName());
 
-        final ApplicationUserDTO user = userRepo.findByUuid(request.getUserUuid())
-                .orElseThrow(() -> new EntityNotFoundException("User not found:" + request.getUserUuid()));
+        final ApplicationUserDTO user = userRepo.findByUuid(request.userUuid())
+                .orElseThrow(() -> new EntityNotFoundException("User not found:" + request.userUuid()));
 
         final Player userPlayer = Player.of(user.uuid(), user.username());
-        final Player botPlayer = Player.ofBot(request.getBotName());
+        final Player botPlayer = Player.ofBot(request.botName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
             throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
