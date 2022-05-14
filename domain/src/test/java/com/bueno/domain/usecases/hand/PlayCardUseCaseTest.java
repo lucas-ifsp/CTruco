@@ -120,7 +120,7 @@ class PlayCardUseCaseTest {
         final CardDto cardDto = CardConverter.toEntity(card);
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
         final IntelDto intel = sut.playCard(new PlayCardDto(p1Uuid, cardDto));
-        assertEquals(cardDto, intel.getCardToPlayAgainst());
+        assertEquals(cardDto, intel.cardToPlayAgainst());
     }
 
     @Test
@@ -156,8 +156,8 @@ class PlayCardUseCaseTest {
         sut.discard(new PlayCardDto(p1Uuid, card1));
         final IntelDto intel = sut.playCard(new PlayCardDto(p2Uuid, card2));
         assertAll(
-                () -> assertNull(intel.getCardToPlayAgainst()),
-                () -> assertEquals(1, intel.getRoundsPlayed())
+                () -> assertNull(intel.cardToPlayAgainst()),
+                () -> assertEquals(1, intel.roundsPlayed())
         );
     }
 

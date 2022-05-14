@@ -79,7 +79,7 @@ public class GameCLI {
     }
 
     private boolean isCurrentHandDone(IntelDto intel) {
-        final String event = intel.getEvent();
+        final String event = intel.event();
         if(event == null) return false;
         return event.equals("NEW_HAND");
     }
@@ -112,18 +112,18 @@ public class GameCLI {
     }
 
     private void updateIntel() {
-        var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.getTimestamp());
+        var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
         missingIntel.addAll(responseModel.intelSince());
         if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
     private boolean canNotPerform(Set<String> allowedActions, Set<String> notAllowedActions) {
-        final UUID possibleUuid = lastIntel.getCurrentPlayerUuid();
+        final UUID possibleUuid = lastIntel.currentPlayerUuid();
         if(possibleUuid == null) return true;
         final boolean isCurrentPlayer = possibleUuid.equals(userUUID);
-        final boolean isPerformingAllowedAction = lastIntel.getPossibleActions().containsAll(allowedActions);
-        final boolean isNotPerformingAnyNotAllowed = Collections.disjoint(lastIntel.getPossibleActions(), notAllowedActions);
+        final boolean isPerformingAllowedAction = lastIntel.possibleActions().containsAll(allowedActions);
+        final boolean isNotPerformingAnyNotAllowed = Collections.disjoint(lastIntel.possibleActions(), notAllowedActions);
         return !isCurrentPlayer || !isPerformingAllowedAction || !isNotPerformingAnyNotAllowed;
     }
 
@@ -134,7 +134,7 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        var requestReader = new RaiseRequestReader(this, nextScore(lastIntel.getHandPoints()));
+        var requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handPoints()));
         if(requestReader.execute() == REQUEST) pointsProposalUseCase.raise(userUUID);
     }
 
@@ -149,7 +149,7 @@ public class GameCLI {
         updateIntel();
         if(canNotPerform(allowedActions, notAllowedActions)) return;
 
-        var responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.getHandPoints()));
+        var responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handPoints()));
         switch (responseReader.execute()){
             case QUIT -> pointsProposalUseCase.quit(userUUID);
             case ACCEPT -> pointsProposalUseCase.accept(userUUID);
@@ -175,6 +175,6 @@ public class GameCLI {
     }
 
     public String getOpponentUsername(){
-        return lastIntel.getCurrentOpponentUsername();
+        return lastIntel.currentOpponentUsername();
     }
 }

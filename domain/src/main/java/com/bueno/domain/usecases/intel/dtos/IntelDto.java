@@ -20,67 +20,22 @@
 
 package com.bueno.domain.usecases.intel.dtos;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.time.Instant;
 import java.util.*;
 
-@Getter
-@Builder
-@ToString
-public final class IntelDto {
-    private Instant timestamp;
-
-    private boolean isGameDone;
-    private UUID gameWinner;
-    private boolean isMaoDeOnze;
-
-    private Integer handPoints;
-    private Integer handPointsProposal;
-    private List<Optional<String>> roundWinnersUsernames;
-    private List<Optional<UUID>> roundWinnersUuid;
-    private int roundsPlayed;
-    private CardDto vira;
-    private List<CardDto> openCards;
-    private String handWinner;
-
-    private UUID currentPlayerUuid;
-    private int currentPlayerScore;
-    private String currentPlayerUsername;
-    private int currentOpponentScore;
-    private String currentOpponentUsername;
-    private CardDto cardToPlayAgainst;
-    private List<PlayerInfo> players;
-
-    private String event;
-    private UUID eventPlayerUUID;
-    private String eventPlayerUsername;
-    private Set<String> possibleActions;
-
-    @Builder
-    @Getter
-    @ToString
-    public static class PlayerInfo {
-        private final UUID uuid;
-        private final String username;
-        private final int score;
-        private final List<CardDto> cards;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PlayerInfo that = (PlayerInfo) o;
-            return uuid.equals(that.uuid) && username.equals(that.username);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(uuid, username);
-        }
-    }
+public record IntelDto(Instant timestamp, boolean isGameDone, UUID gameWinner, boolean isMaoDeOnze,
+                       Integer handPoints, Integer handPointsProposal,
+                       List<Optional<String>> roundWinnersUsernames,
+                       List<Optional<UUID>> roundWinnersUuid, int roundsPlayed,
+                       CardDto vira,
+                       List<CardDto> openCards,
+                       String handWinner, UUID currentPlayerUuid, int currentPlayerScore,
+                       String currentPlayerUsername, int currentOpponentScore,
+                       String currentOpponentUsername,
+                       CardDto cardToPlayAgainst,
+                       List<PlayerInfo> players,
+                       String event, UUID eventPlayerUUID, String eventPlayerUsername,
+                       Set<String> possibleActions) {
 
     @Override
     public boolean equals(Object o) {
@@ -93,5 +48,20 @@ public final class IntelDto {
     @Override
     public int hashCode() {
         return Objects.hash(timestamp);
+    }
+
+    public record PlayerInfo(UUID uuid, String username, int score, List<CardDto> cards) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PlayerInfo that = (PlayerInfo) o;
+            return uuid.equals(that.uuid);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid);
+        }
     }
 }
