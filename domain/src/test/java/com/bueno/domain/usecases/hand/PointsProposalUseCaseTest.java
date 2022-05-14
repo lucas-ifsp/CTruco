@@ -135,7 +135,7 @@ class PointsProposalUseCaseTest {
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
         final IntelDto intel = sut.raise(p1Uuid);
-        assertEquals(3, intel.getHandPointsProposal());
+        assertEquals(3, intel.handPointsProposal());
     }
 
     @Test
@@ -143,7 +143,7 @@ class PointsProposalUseCaseTest {
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
         sut.raise(p1Uuid);
         final IntelDto intel = sut.accept(p2Uuid);
-        assertEquals(3, intel.getHandPoints());
+        assertEquals(3, intel.handPoints());
     }
 
     @Test
@@ -154,11 +154,11 @@ class PointsProposalUseCaseTest {
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
 
-        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.getTimestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
+        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
         final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);
         assertAll(
-                () -> assertEquals(1, quitIntel.getHandPoints()),
-                () -> assertEquals(player1.getUsername(), quitIntel.getHandWinner())
+                () -> assertEquals(1, quitIntel.handPoints()),
+                () -> assertEquals(player1.getUsername(), quitIntel.handWinner())
         );
     }
 }

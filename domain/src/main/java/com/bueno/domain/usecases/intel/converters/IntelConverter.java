@@ -32,35 +32,31 @@ public class IntelConverter {
                 .map(IntelConverter::ofPlayerIntel)
                 .collect(Collectors.toList());
 
-        return IntelDto.builder()
-                .timestamp(intel.timestamp())
-                .isGameDone(intel.isGameDone())
-                .gameWinner(intel.gameWinner().orElse(null))
-                .isMaoDeOnze(intel.isMaoDeOnze())
-
-                .vira(CardConverter.toEntity(intel.vira()))
-                .openCards(intel.openCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()))
-                .roundsPlayed(intel.roundsPlayed())
-                .roundWinnersUsernames(intel.roundWinnersUsernames())
-                .roundWinnersUuid(intel.roundWinnersUuid())
-                .handPoints(intel.handPoints())
-                .handPointsProposal(intel.pointsProposal().orElse(null))
-                .handWinner(intel.handWinner().orElse(null))
-
-                .currentPlayerUuid(intel.currentPlayerUuid().orElse(null))
-                .currentPlayerUsername(intel.currentPlayerUsername())
-                .currentPlayerScore(intel.currentPlayerScore())
-                .currentOpponentUsername(intel.currentOpponentUsername())
-                .currentOpponentScore(intel.currentOpponentScore())
-                .cardToPlayAgainst(intel.cardToPlayAgainst().map(CardConverter::toEntity).orElse(null))
-                .players(playersIntel)
-
-                .event(intel.event().orElse(null))
-                .eventPlayerUUID(intel.eventPlayerUuid().orElse(null))
-                .eventPlayerUsername(intel.eventPlayerUsername().orElse(null))
-                .possibleActions(intel.possibleActions())
-
-                .build();
+        return new IntelDto(
+                intel.timestamp(),
+                intel.isGameDone(),
+                intel.gameWinner().orElse(null),
+                intel.isMaoDeOnze(),
+                intel.handPoints(),
+                intel.pointsProposal().orElse(null),
+                intel.roundWinnersUsernames(),
+                intel.roundWinnersUuid(),
+                intel.roundsPlayed(),
+                CardConverter.toEntity(intel.vira()),
+                intel.openCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()),
+                intel.handWinner().orElse(null),
+                intel.currentPlayerUuid().orElse(null),
+                intel.currentPlayerScore(),
+                intel.currentPlayerUsername(),
+                intel.currentOpponentScore(),
+                intel.currentOpponentUsername(),
+                intel.cardToPlayAgainst().map(CardConverter::toEntity).orElse(null),
+                playersIntel,
+                intel.event().orElse(null),
+                intel.eventPlayerUuid().orElse(null),
+                intel.eventPlayerUsername().orElse(null),
+                intel.possibleActions()
+        );
     }
 
     private static IntelDto.PlayerInfo ofPlayerIntel(Intel.PlayerIntel playerIntel){
@@ -68,11 +64,10 @@ public class IntelConverter {
                 .map(CardConverter::toEntity)
                 .collect(Collectors.toList());
 
-        return IntelDto.PlayerInfo.builder()
-                .username(playerIntel.getUsername())
-                .uuid(playerIntel.getUuid())
-                .score(playerIntel.getScore())
-                .cards(playerCards)
-                .build();
+        return new IntelDto.PlayerInfo(
+                playerIntel.getUuid(),
+                playerIntel.getUsername(),
+                playerIntel.getScore(),
+                playerCards);
     }
 }

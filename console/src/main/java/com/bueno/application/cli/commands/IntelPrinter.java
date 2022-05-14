@@ -56,7 +56,7 @@ public class IntelPrinter implements Command<Void>{
         printGameMainInfo(intel);
         printRounds(intel);
         printCardsOpenInTable(intel);
-        printVira(intel.getVira());
+        printVira(intel.vira());
         if(isUserTurn(intel)) {
             printCardToPlayAgainst(intel);
             printOwnedCards();
@@ -78,22 +78,22 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printGameMainInfo(IntelDto intel) {
-        if(intel.getCurrentPlayerUuid() != null) {
-            final var user = intel.getPlayers().stream()
-                    .filter(p -> p.getUuid().equals(userUUID)).findAny().orElseThrow();
-            final var bot = intel.getPlayers().stream()
-                    .filter(p -> !p.getUuid().equals(userUUID)).findAny().orElseThrow();
+        if(intel.currentPlayerUuid() != null) {
+            final var user = intel.players().stream()
+                    .filter(p -> p.uuid().equals(userUUID)).findAny().orElseThrow();
+            final var bot = intel.players().stream()
+                    .filter(p -> !p.uuid().equals(userUUID)).findAny().orElseThrow();
 
-            System.out.println(" Placar: " + user.getUsername() + " " + user.getScore() + " x "
-                    + bot.getScore() + " " + bot.getUsername());
+            System.out.println(" Placar: " + user.username() + " " + user.score() + " x "
+                    + bot.score() + " " + bot.username());
 
-            System.out.println(" Vez do (a): " + intel.getCurrentPlayerUsername());
+            System.out.println(" Vez do (a): " + intel.currentPlayerUsername());
         }
-        System.out.println(" Pontos da mão: " + intel.getHandPoints());
+        System.out.println(" Pontos da mão: " + intel.handPoints());
     }
 
     private void printRounds(IntelDto intel) {
-        final var roundWinners = intel.getRoundWinnersUsernames();
+        final var roundWinners = intel.roundWinnersUsernames();
         if (roundWinners.size() > 0) {
             final var roundResults = roundWinners.stream()
                     .map(possibleWinner -> possibleWinner.orElse("Empate"))
@@ -103,7 +103,7 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printCardsOpenInTable(IntelDto intel) {
-        final var openCards = intel.getOpenCards();
+        final var openCards = intel.openCards();
         if (openCards.size() > 0) {
             System.out.print(" Cartas na mesa: ");
             openCards.forEach(card -> System.out.print(formatCard(card) + " "));
@@ -116,11 +116,11 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private boolean isUserTurn(IntelDto intel) {
-        return userUUID.equals(intel.getCurrentPlayerUuid());
+        return userUUID.equals(intel.currentPlayerUuid());
     }
 
     private void printCardToPlayAgainst(IntelDto intel) {
-        final var cardToPlayAgainst = intel.getCardToPlayAgainst();
+        final var cardToPlayAgainst = intel.cardToPlayAgainst();
         if(cardToPlayAgainst != null) System.out.println(" Carta do Oponente: " + formatCard(cardToPlayAgainst));
     }
 
@@ -133,7 +133,7 @@ public class IntelPrinter implements Command<Void>{
     }
 
     private void printResultIfAvailable(IntelDto intel) {
-        final var possibleWinner = intel.getHandWinner();
+        final var possibleWinner = intel.handWinner();
         if (possibleWinner == null) return;
         final String resultString = possibleWinner.toUpperCase().concat(" VENCEU!");
         System.out.println(" RESULTADO: " + resultString);

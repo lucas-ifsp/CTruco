@@ -132,8 +132,8 @@ class HandleIntelUseCaseTest {
         final IntelDto initialIntel = IntelConverter.of(game.getIntel());
         hand.playFirstCard(player1, Card.closed());
 
-        final var obtained = sut.findIntelSince(p1Uuid, initialIntel.getTimestamp());
-        final var expected = game.getIntelSince(initialIntel.getTimestamp()).stream()
+        final var obtained = sut.findIntelSince(p1Uuid, initialIntel.timestamp());
+        final var expected = game.getIntelSince(initialIntel.timestamp()).stream()
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
 
