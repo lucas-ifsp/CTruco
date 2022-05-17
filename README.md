@@ -129,7 +129,7 @@ This software was developed for non-commercial, didactic purposes. It is provide
 
 ## Contributors
 
-**CTruco** was initially designed and developed with :heart: by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos.
+**CTruco** is designed and developed with :heart: by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos.
 
 
 
