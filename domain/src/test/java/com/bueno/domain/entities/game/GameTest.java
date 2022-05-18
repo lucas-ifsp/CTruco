@@ -26,16 +26,17 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
-import org.junit.jupiter.api.*;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,48 +46,35 @@ class GameTest {
     @Mock private Player player1;
     @Mock private Player player2;
 
-    @BeforeAll
-    static void init() {
-        LogManager.getLogManager().reset();
-    }
-
-    @BeforeEach
-    void setUp() {
-        sut = new Game(player1, player2);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sut = null;
-    }
-
     @Test
     @DisplayName("Should correctly create game")
     void shouldCorrectlyCreateGame() {
-        assertAll(
-                () -> assertEquals(1, sut.getHands().size()),
-                () -> assertNotNull(sut.getUuid()),
-                () -> assertEquals(player1, sut.getPlayer1()),
-                () -> assertEquals(player2, sut.getPlayer2())
-        );
+        sut = new Game(player1, player2);
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(sut.getHands().size()).isOne();
+        assertions.assertThat(sut.getUuid()).isNotNull();
+        assertions.assertThat(sut.getPlayer1()).isEqualTo(player1);
+        assertions.assertThat(sut.getPlayer2()).isEqualTo(player2);
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should correctly prepare hand")
     void shouldCorrectlyPrepareHand() {
-        assertAll(
-                () -> assertEquals(player1, sut.getFirstToPlay()),
-                () -> assertEquals(player2, sut.getLastToPlay()),
-                () -> assertNotEquals(sut.getFirstToPlay(), sut.getLastToPlay()),
-                () -> assertEquals(1, sut.handsPlayed())
-        );
+        sut = new Game(player1, player2);
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(sut.getFirstToPlay()).isEqualTo(player1);
+        assertions.assertThat(sut.getLastToPlay()).isEqualTo(player2);
+        assertions.assertThat(sut.handsPlayed()).isOne();
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should have winner when game ends")
     void shouldGetWinnerWhenGameEnds() {
         when(player1.getScore()).thenReturn(12);
-        assertEquals(player1, sut.getWinner().orElse(null));
+        sut = new Game(player1, player2);
+        assertThat(sut.getWinner().orElse(null)).isEqualTo(player1);
     }
 
     @Test
@@ -94,7 +82,8 @@ class GameTest {
     void shouldGetNoWinnerBeforeGameEnds() {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
-        assertTrue(sut.getWinner().isEmpty());
+        sut = new Game(player1, player2);
+        assertThat(sut.getWinner().isEmpty()).isTrue();
     }
 
     @Test
@@ -102,7 +91,8 @@ class GameTest {
     void shouldBeMaoDeOnzeIfOnlyOnePlayerHas11Points() {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(3);
-        assertTrue(sut.isMaoDeOnze());
+        sut = new Game(player1, player2);
+        assertThat(sut.isMaoDeOnze()).isTrue();
     }
 
     @Test
@@ -110,7 +100,8 @@ class GameTest {
     void shouldNotBeMaoDeOnzeIfBothPlayersHave11Points() {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
-        assertFalse(sut.isMaoDeOnze());
+        sut = new Game(player1, player2);
+        assertThat(sut.isMaoDeOnze()).isFalse();
     }
 
     @Test
@@ -118,28 +109,30 @@ class GameTest {
     void shouldNotBeMaoDeOnzeIfNoPlayerHas11Points() {
         when(player1.getScore()).thenReturn(10);
         when(player2.getScore()).thenReturn(8);
-        assertFalse(sut.isMaoDeOnze());
+        sut = new Game(player1, player2);
+        assertThat(sut.isMaoDeOnze()).isFalse();
     }
 
     @Test
     @DisplayName("Should get intel from current hand")
     void shouldGetIntelFromCurrentHand() {
-        assertNotNull(sut.getIntel());
+        sut = new Game(player1, player2);
+        assertThat(sut.getIntel()).isNotNull();
     }
 
     @Test
     @DisplayName("Should get all history when base intel is null")
     void shouldGetAllHistoryWhenBaseIntelIsNull() {
+        sut = new Game(player1, player2);
         sut.prepareNewHand();
         sut.prepareNewHand();
-        assertEquals(3, sut.getIntelSince(null).size());
+        assertThat(sut.getIntelSince(null).size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("Should correctly get intel in the same hand")
     void shouldCorrectlyGetIntelInTheSameHand() {
         when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.KING, Suit.SPADES)));
-
         sut = new Game(player1, player2);
         final Intel firstHandIntel = sut.getIntel();
         final Hand hand = sut.currentHand();
@@ -147,14 +140,14 @@ class GameTest {
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.CLUBS));
         hand.playSecondCard(player2, Card.closed());
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
-        assertEquals(3, sut.getIntelSince(firstHandIntel.timestamp()).size());
+
+        assertThat(sut.getIntelSince(firstHandIntel.timestamp()).size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("Should correctly get intel between hands")
     void shouldCorrectlyGetIntelBetweenHands() {
         when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.KING, Suit.SPADES)));
-
         sut = new Game(player1, player2);
         final Intel firstHandIntel = sut.getIntel();
         final Hand hand = sut.currentHand();
@@ -163,26 +156,25 @@ class GameTest {
         hand.playSecondCard(player2, Card.closed());
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
         hand.playSecondCard(player2, Card.closed());
-
         sut.prepareNewHand();
         final Hand newHand = sut.currentHand();
         newHand.playFirstCard(player2, Card.closed());
 
-        assertEquals(6, sut.getIntelSince(firstHandIntel.timestamp()).size());
+        assertThat(sut.getIntelSince(firstHandIntel.timestamp()).size()).isEqualTo(6);
     }
 
     @Test
     @DisplayName("Should games with same uuid be equal")
     void shouldGamesWithSameUuidBeEqual() {
         final UUID uuid = UUID.randomUUID();
-        assertEquals(new Game(player1, player2, uuid), new Game(player1, player2, uuid));
+        assertThat(new Game(player1, player2, uuid)).isEqualTo(new Game(player1, player2, uuid));
     }
 
     @Test
     @DisplayName("Should games of same uuid have the same hashcode")
     void shouldGamesOfSameUuidHaveTheSameHashcode() {
         final UUID uuid = UUID.randomUUID();
-        assertEquals(new Game(player1, player2, uuid).hashCode(), new Game(player1, player2, uuid).hashCode());
+        assertThat(new Game(player1, player2, uuid).hashCode()).isEqualTo(new Game(player1, player2, uuid).hashCode());
     }
 
     @Test
@@ -197,8 +189,6 @@ class GameTest {
         final String expected = String.format("Game = %s, %s %d x %d %s",
                 uuid, player1.getUsername(), player1.getScore(), player2.getScore(), player2.getUsername());
 
-        assertEquals(expected, new Game(player1, player2, uuid).toString());
+        assertThat(new Game(player1, player2, uuid).toString()).isEqualTo(expected);
     }
-
-
 }
