@@ -20,6 +20,7 @@
 
 package com.bueno.domain.entities.deck;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DeckTest {
@@ -55,32 +57,36 @@ class DeckTest {
         List<Card> firstEight = List.of(
                 Card.of(Rank.FOUR, Suit.DIAMONDS), Card.of(Rank.FOUR, Suit.SPADES), Card.of(Rank.FOUR, Suit.HEARTS), Card.of(Rank.FOUR, Suit.CLUBS),
                 Card.of(Rank.FIVE, Suit.DIAMONDS), Card.of(Rank.FIVE, Suit.SPADES), Card.of(Rank.FIVE, Suit.HEARTS), Card.of(Rank.FIVE, Suit.CLUBS));
-        assertEquals(firstEight, deck.take(8));
+        assertThat(deck.take(8)).isEqualTo(firstEight);
     }
 
     @Test
     @DisplayName("Should get shuffled cards after shuffling")
     void shouldGetShuffledCardsAfterShuffling() {
-        deck.shuffle();
-        List<Card> firstEight = List.of(
+        var firstEight = List.of(
                 Card.of(Rank.ACE, Suit.DIAMONDS), Card.of(Rank.ACE, Suit.SPADES), Card.of(Rank.ACE, Suit.HEARTS), Card.of(Rank.ACE, Suit.CLUBS),
                 Card.of(Rank.TWO, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.SPADES), Card.of(Rank.TWO, Suit.HEARTS), Card.of(Rank.TWO, Suit.CLUBS));
-        assertNotEquals(firstEight, deck.take(8));
+        deck.shuffle();
+        assertThat(deck.take(8)).isNotEqualTo(firstEight);
     }
 
     @Test
     @DisplayName("Should be able to deal multiple cards ")
     void shouldDealMultipleCorrectly() {
         List<Card> cards = deck.take(3);
-        assertAll(
-                () -> assertEquals(3, cards.size()),
-                () -> assertEquals(37, deck.size())
-        );
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(cards.size()).isEqualTo(3);
+        assertions.assertThat(deck.size()).isEqualTo(37);
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should be able to deal a single card")
     void shouldDealSingleCard() {
-        assertNotNull(deck.takeOne());
+        final Card card = deck.takeOne();
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(card).isNotNull();
+        assertions.assertThat(deck.size()).isEqualTo(39);
+        assertions.assertAll();
     }
 }

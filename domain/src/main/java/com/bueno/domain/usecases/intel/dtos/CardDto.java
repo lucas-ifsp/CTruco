@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public record CardDto(String rank, String suit) {
+
     public CardDto(String rank, String suit) {
         this.rank = Objects.requireNonNull(rank, "Rank must not be null.").toUpperCase();
         this.suit = Objects.requireNonNull(suit, "Suit must not be null.").toUpperCase();
