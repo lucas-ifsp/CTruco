@@ -21,41 +21,30 @@
 package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.hand.Hand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class WaitingRaiseResponseTest {
 
     @Mock Hand hand;
-    WaitingRaiseResponse sut;
-
-    @BeforeEach
-    void setUp() {
-        sut = new WaitingRaiseResponse(hand);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sut = null;
-    }
 
     @Test
     @DisplayName("Should throw if plays first card in waiting raise response state")
     void shouldThrowIfPlaysFirstCardInWaitingRaiseResponseState() {
-        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(null, null));
+        WaitingRaiseResponse sut = new WaitingRaiseResponse(hand);
+        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if plays second card in waiting raise response state")
     void shouldThrowIfPlaysSecondCardInWaitingRaiseResponseState() {
-        assertThrows(IllegalStateException.class, () -> sut.playSecondCard(null, null));
+        WaitingRaiseResponse sut = new WaitingRaiseResponse(hand);
+        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 }

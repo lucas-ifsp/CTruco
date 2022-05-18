@@ -21,59 +21,51 @@
 package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.hand.Hand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class DoneTest {
 
     @Mock Hand hand;
-    Done sut;
-
-    @BeforeEach
-    void setUp() {
-        sut = new Done(hand);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sut = null;
-    }
 
     @Test
     @DisplayName("Should throw if plays first card in done state")
     void shouldThrowIfPlaysFirstCardInDoneState() {
-        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(null, null));
+        Done sut = new Done(hand);
+        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if plays second card in done state")
     void shouldThrowIfPlaysSecondCardInDoneState() {
-        assertThrows(IllegalStateException.class, () -> sut.playSecondCard(null, null));
+        Done sut = new Done(hand);
+        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if accepts request or mao de onze in done state")
     void shouldThrowIfAcceptsRequestOrMaoDeOnzeInDoneState() {
-        assertThrows(IllegalStateException.class, () -> sut.accept(null));
+        Done sut = new Done(hand);
+        assertThatThrownBy(() -> sut.accept(null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if quits request or mao de onze in done state")
     void shouldThrowIfQuitsRequestOrMaoDeOnzeInDoneState() {
-        assertThrows(IllegalStateException.class, () -> sut.quit(null));
+        Done sut = new Done(hand);
+        assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if raises in done state")
     void shouldThrowIfRaisesInDoneState() {
-        assertThrows(IllegalStateException.class, () -> sut.raise(null));
+        Done sut = new Done(hand);
+        assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(IllegalStateException.class);
     }
 }

@@ -21,47 +21,37 @@
 package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.hand.Hand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class OneCardTest {
 
     @Mock Hand hand;
-    OneCard sut;
-
-    @BeforeEach
-    void setUp() {
-        sut = new OneCard(hand);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sut = null;
-    }
 
     @Test
     @DisplayName("Should throw if plays first card in one card state")
     void shouldThrowIfPlaysFirstCardInOneCardState() {
-        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(null, null));
+        OneCard sut = new OneCard(hand);
+        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if accepts request or mao de onze in one card state")
     void shouldThrowIfAcceptsRequestOrMaoDeOnzeInOneCardState() {
-        assertThrows(IllegalStateException.class, () -> sut.accept(null));
+        OneCard sut = new OneCard(hand);
+        assertThatThrownBy(() -> sut.accept(null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if quits request or mao de onze in one card state")
     void shouldThrowIfQuitsRequestOrMaoDeOnzeInOneCardState() {
-        assertThrows(IllegalStateException.class, () -> sut.quit(null));
+        OneCard sut = new OneCard(hand);
+        assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(IllegalStateException.class);
     }
 }

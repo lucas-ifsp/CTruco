@@ -21,47 +21,37 @@
 package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.hand.Hand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 class WaitingMaoDeOnzeTest {
 
     @Mock Hand hand;
-    WaitingMaoDeOnze sut;
-
-    @BeforeEach
-    void setUp() {
-        sut = new WaitingMaoDeOnze(hand);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sut = null;
-    }
 
     @Test
     @DisplayName("Should throw if plays first card in waiting mao de onze state")
     void shouldThrowIfPlaysFirstCardInWaitingMaoDeOnzeState() {
-        assertThrows(IllegalStateException.class, () -> sut.playFirstCard(null, null));
+        WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
+        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if plays second card in waiting mao de onze state")
     void shouldThrowIfPlaysSecondCardInWaitingMaoDeOnzeState() {
-        assertThrows(IllegalStateException.class, () -> sut.playSecondCard(null, null));
+        WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
+        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     @DisplayName("Should throw if raises in waiting mao de onze state")
     void shouldThrowIfRaisesInWaitingMaoDeOnzeState() {
-        assertThrows(IllegalStateException.class, () -> sut.raise(null));
+        WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
+        assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(IllegalStateException.class);
     }
 }
