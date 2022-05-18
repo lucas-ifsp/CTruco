@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.player.Player;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,40 +40,41 @@ class HandResultTest {
     @Mock Player player1;
     @Mock Player player2;
 
-
     @Test
     @DisplayName("Should allow creating result with winner and hand points")
     void shouldAllowCreatingResultWithWinnerAndHandPoints() {
-        final HandResult result = HandResult.of(player1, HandPoints.ONE);
-        assertAll(
-                () -> assertEquals(player1, result.getWinner().orElse(null)),
-                () -> assertEquals(HandPoints.ONE, result.getPoints())
-        );
+        HandResult sut = HandResult.of(player1, HandPoints.ONE);
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(sut.getWinner().orElse(null)).isEqualTo(player1);
+        assertions.assertThat(sut.getPoints()).isEqualTo(HandPoints.ONE);
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should allow creating result of a draw hand")
     void shouldAllowCreatingResultOfADrawHand() {
-        final HandResult result = HandResult.ofDraw();
-        assertAll(
-                () -> assertTrue(result.getWinner().isEmpty()),
-                () -> assertEquals(HandPoints.ZERO, result.getPoints())
-        );
+        HandResult sut = HandResult.ofDraw();
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(sut.getWinner().isEmpty()).isTrue();
+        assertions.assertThat(sut.getPoints()).isEqualTo(HandPoints.ZERO);
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should not allow creating hand result with partial parameters")
     void shouldNotAllowCreatingHandResultWithPartialParameters() {
-        assertAll(
-                () -> assertThrows(NullPointerException.class, () -> HandResult.of(null, HandPoints.ONE)),
-                () -> assertThrows(NullPointerException.class, () -> HandResult.of(player1, null))
-        );
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThatThrownBy(() -> HandResult.of(null, HandPoints.ONE))
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> HandResult.of(player1, null))
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertAll();
     }
 
     @Test
     @DisplayName("Should not allow creating a result with winner and zero points")
     void shouldNotAllowCreatingAResultWithWinnerAndZeroPoints() {
-        assertThrows(IllegalArgumentException.class, () -> HandResult.of(player1, HandPoints.ZERO));
+        assertThatThrownBy(() -> HandResult.of(player1, HandPoints.ZERO)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -81,8 +84,8 @@ class HandResultTest {
         final HandResult result = HandResult.of(player1, HandPoints.NINE);
         when(player1.getUsername()).thenReturn("p1");
         when(player1.getUuid()).thenReturn(uuid);
-        String expected = "HandResult = p1 ("+ uuid + ") won 9 point(s)";
-        assertEquals(expected, result.toString());
+        String expected = "HandResult = p1 (" + uuid + ") won 9 point(s)";
+        assertThat(result.toString()).isEqualTo(expected);
     }
 
     @Test
@@ -90,24 +93,23 @@ class HandResultTest {
     void shouldCorrectlyToStringDrewHand() {
         final HandResult result = HandResult.ofDraw();
         String expected = "HandResult = draw 0 point(s)";
-        assertEquals(expected, result.toString());
+        assertThat(result.toString()).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("Should hand results of same winner and points be equal")
     void shouldHandResultsOfSameWinnerAndPointsBeEqual() {
-        assertEquals(HandResult.ofDraw(), HandResult.ofDraw());
+        assertThat(HandResult.ofDraw()).isEqualTo(HandResult.ofDraw());
     }
 
     @Test
     @DisplayName("Should hand results of different winner or points not be equal")
     void shouldHandResultsOfDifferentWinnerOrPointsNotBeEqual() {
-        assertAll(
-                () -> assertNotEquals(HandResult.of(player1, HandPoints.ONE), HandResult.of(player2, HandPoints.ONE)),
-                () -> assertNotEquals(HandResult.of(player1, HandPoints.ONE), HandResult.of(player1, HandPoints.THREE))
-        );
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(HandResult.of(player1, HandPoints.ONE))
+                .isNotEqualTo(HandResult.of(player2, HandPoints.ONE));
+        assertions.assertThat(HandResult.of(player1, HandPoints.ONE))
+                .isNotEqualTo(HandResult.of(player1, HandPoints.THREE));
+        assertions.assertAll();
     }
-
-
-
 }
