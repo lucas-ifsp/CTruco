@@ -20,13 +20,15 @@
 
 package com.bueno.domain.entities.deck;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class CardTest {
 
@@ -35,22 +37,22 @@ class CardTest {
     class ShouldAllow{
         @Test
         @DisplayName("Creating a card with valid rank and suit")
-        void creatingCardWithValidRankAndSuit(){
+        void creatingCardWithValidRankAndSuit() {
             Card card = Card.of(Rank.SEVEN, Suit.SPADES);
-            assertAll(
-                    () -> assertEquals(Rank.SEVEN, card.getRank()),
-                    () -> assertEquals(Suit.SPADES, card.getSuit())
-            );
+            SoftAssertions assertions = new SoftAssertions();
+            assertions.assertThat(card.getRank()).isEqualTo(Rank.SEVEN);
+            assertions.assertThat(card.getSuit()).isEqualTo(Suit.SPADES);
+            assertions.assertAll();
         }
 
         @Test
         @DisplayName("creating closed card")
         void creatingClosedCard(){
             Card card = Card.closed();
-            assertAll(
-                    () -> assertEquals(Rank.HIDDEN, card.getRank()),
-                    () -> assertEquals(Suit.HIDDEN, card.getSuit())
-            );
+            SoftAssertions assertions = new SoftAssertions();
+            assertions.assertThat(card.getRank()).isEqualTo(Rank.HIDDEN);
+            assertions.assertThat(card.getSuit()).isEqualTo(Suit.HIDDEN);
+            assertions.assertAll();
         }
 
         @Test
@@ -58,9 +60,8 @@ class CardTest {
         void createCardFromSymbols() {
             final Rank rank = Rank.ofSymbol("A");
             final Suit suit = Suit.ofSymbol("C");
-            assertEquals(Card.of(Rank.ACE, Suit.CLUBS), Card.of(rank, suit));
+            assertThat(Card.of(Rank.ACE, Suit.CLUBS)).isEqualTo(Card.of(rank, suit));
         }
-
     }
 
     @Nested
@@ -69,22 +70,24 @@ class CardTest {
         @Test
         @DisplayName("creating a card with null rank")
         void creatingCardWithNullRank(){
-            assertThrows(NullPointerException.class, () -> Card.of(null, Suit.CLUBS));
+            assertThatThrownBy(() -> Card.of(null, Suit.CLUBS)).isInstanceOf(NullPointerException.class);
         }
 
         @Test
         @DisplayName("creating a card with null suit")
         void creatingCardWithNullSuit(){
-            assertThrows(NullPointerException.class, () -> Card.of(Rank.ACE, null));
+            assertThatThrownBy(() -> Card.of(Rank.ACE, null)).isInstanceOf(NullPointerException.class);
         }
 
         @Test
         @DisplayName("creating card with only rank or suit hidden")
         void creatingCardWithOnlyRankOrSuitHidden() {
-            assertAll(
-                    () -> assertThrows(IllegalArgumentException.class, () -> Card.of(Rank.HIDDEN, Suit.CLUBS)),
-                    () -> assertThrows(IllegalArgumentException.class, () -> Card.of(Rank.SEVEN, Suit.HIDDEN))
-            );
+            SoftAssertions assertions = new SoftAssertions();
+            assertions.assertThatThrownBy(() -> Card.of(Rank.HIDDEN, Suit.CLUBS))
+                    .isInstanceOf(IllegalArgumentException.class);
+            assertions.assertThatThrownBy(() -> Card.of(Rank.SEVEN, Suit.HIDDEN))
+                    .isInstanceOf(IllegalArgumentException.class);
+            assertions.assertAll();
         }
     }
 
@@ -92,31 +95,31 @@ class CardTest {
     @DisplayName("Should correctly toString() open cards")
     @CsvSource({"SEVEN,DIAMONDS,[7D]", "ACE,HEARTS,[AH]", "QUEEN,CLUBS,[QC]", "JACK,SPADES,[JS]", "KING,SPADES,[KS]"})
     void shouldCorrectlyToStringOpenCard(Rank rank, Suit suit, String output){
-        assertEquals(output, Card.of(rank, suit).toString());
+        assertThat(Card.of(rank, suit).toString()).isEqualTo(output);
     }
 
     @Test
     @DisplayName("Should next rank of hidden be hidden")
     void shouldNextRankOfHiddenBeHidden() {
-        assertEquals(Rank.HIDDEN, Rank.HIDDEN.next());
+        assertThat(Rank.HIDDEN.next()).isEqualTo(Rank.HIDDEN);
     }
 
     @Test
     @DisplayName("Should next rank of 3 be 4")
     void shouldNextRankOf3Be4() {
-        assertEquals(Rank.FOUR, Rank.THREE.next());
+        assertThat(Rank.THREE.next()).isEqualTo(Rank.FOUR);
     }
 
     @Test
     @DisplayName("Should next rank of King be Ace")
     void shouldNextRankOfKingBeAce() {
-        assertEquals(Rank.ACE, Rank.KING.next());
+        assertThat(Rank.KING.next()).isEqualTo(Rank.ACE);
     }
 
     @Test
     @DisplayName("Should correctly toString() closed cards")
     void shouldCorrectlyToStringClosedCard() {
-        assertEquals("[XX]", Card.closed().toString());
+        assertThat(Card.closed().toString()).isEqualTo("[XX]");
     }
 
     @Test
@@ -124,19 +127,19 @@ class CardTest {
     void shouldClosedCardWorthLessThanWorstCard() {
         Card worstCard = Card.of(Rank.FOUR, Suit.DIAMONDS);
         Card vira = Card.of(Rank.FOUR, Suit.CLUBS);
-        assertEquals(-1, Card.closed().compareValueTo(worstCard, vira));
+        assertThat(Card.closed().compareValueTo(worstCard, vira)).isNegative();
     }
 
     @Test
     @DisplayName("Should same cards be equals")
     void shouldSameCardsBeEquals(){
-        assertEquals(Card.of(Rank.TWO, Suit.DIAMONDS), Card.of(Rank.TWO, Suit.DIAMONDS));
+        assertThat(Card.of(Rank.TWO, Suit.DIAMONDS)).isEqualTo(Card.of(Rank.TWO, Suit.DIAMONDS));
     }
 
     @Test
     @DisplayName("Should cards of different suit not be equals")
     void shouldCardsOfDifferentSuitNotBeEquals() {
-        assertNotEquals(Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.TWO, Suit.DIAMONDS));
+        assertThat(Card.of(Rank.TWO, Suit.CLUBS)).isNotEqualTo(Card.of(Rank.TWO, Suit.DIAMONDS));
     }
 
     @Test
@@ -145,7 +148,7 @@ class CardTest {
         final Card vira = Card.of(Rank.ACE, Suit.CLUBS);
         final Card card1 = Card.of(Rank.THREE, Suit.DIAMONDS);
         final Card card2 = Card.of(Rank.THREE, Suit.SPADES);
-        assertEquals(0, card1.compareValueTo(card2, vira));
+        assertThat(card1.compareValueTo(card2, vira)).isZero();
     }
 
     @ParameterizedTest
@@ -155,7 +158,7 @@ class CardTest {
         final Card lowerCard = Card.of(lowerRank, Suit.SPADES);
         final Card higherCard = Card.of(higherRank, Suit.SPADES);
         final Card vira = Card.of(Rank.FIVE, Suit.SPADES);
-        assertTrue(lowerCard.compareValueTo(higherCard, vira) < 0);
+        assertThat(lowerCard.compareValueTo(higherCard, vira)).isNegative();
     }
 
     @Test
@@ -164,7 +167,7 @@ class CardTest {
         final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
         final Card ouros = Card.of(Rank.THREE, Suit.DIAMONDS);
         final Card espadilha = Card.of(Rank.THREE, Suit.SPADES);
-        assertEquals(1, espadilha.compareValueTo(ouros, vira));
+        assertThat(espadilha.compareValueTo(ouros, vira)).isPositive();
     }
 
     @Test
@@ -173,7 +176,7 @@ class CardTest {
         final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
         final Card espadilha = Card.of(Rank.THREE, Suit.SPADES);
         final Card copas = Card.of(Rank.THREE, Suit.HEARTS);
-        assertEquals(1, copas.compareValueTo(espadilha, vira));
+        assertThat(copas.compareValueTo(espadilha, vira)).isPositive();
     }
 
     @Test
@@ -182,6 +185,6 @@ class CardTest {
         final Card vira = Card.of(Rank.TWO, Suit.CLUBS);
         final Card copas = Card.of(Rank.THREE, Suit.HEARTS);
         final Card zap = Card.of(Rank.THREE, Suit.CLUBS);
-        assertEquals(1, zap.compareValueTo(copas, vira));
+        assertThat(zap.compareValueTo(copas, vira)).isPositive();
     }
 }
