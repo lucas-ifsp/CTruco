@@ -24,70 +24,68 @@ import com.bueno.domain.entities.game.GameRuleViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class HandPointsTest {
     @Test
     @DisplayName("Should increase from 1 to 3")
     void shouldIncreaseFrom1To3() {
-        assertEquals(HandPoints.THREE, HandPoints.ONE.increase());
+        assertThat(HandPoints.ONE.increase()).isEqualTo(HandPoints.THREE);
     }
 
     @Test
     @DisplayName("Should increase from 3 to 6")
     void shouldIncreaseFrom3To6() {
-        assertEquals(HandPoints.SIX, HandPoints.THREE.increase());
+        assertThat(HandPoints.THREE.increase()).isEqualTo(HandPoints.SIX);
     }
 
     @Test
     @DisplayName("Should increase from 6 to 9")
     void shouldIncreaseFrom6To9() {
-        assertEquals(HandPoints.NINE, HandPoints.SIX.increase());
+        assertThat(HandPoints.SIX.increase()).isEqualTo(HandPoints.NINE);
     }
 
     @Test
     @DisplayName("Should increase from 9 to 12")
     void shouldIncreaseFrom9To12() {
-        assertEquals(HandPoints.TWELVE, HandPoints.NINE.increase());
+        assertThat(HandPoints.NINE.increase()).isEqualTo(HandPoints.TWELVE);
     }
 
     @Test
     @DisplayName("Should throw if increases from 12")
     void shouldThrowIfIncreasesFrom12() {
-        assertThrows(GameRuleViolationException.class, HandPoints.TWELVE::increase);
+        assertThatThrownBy(HandPoints.TWELVE::increase).isInstanceOf(GameRuleViolationException.class);
     }
 
     @Test
     @DisplayName("Should throw if increases from 0")
     void shouldThrowIfIncreasesFrom0() {
-        assertThrows(GameRuleViolationException.class, HandPoints.ZERO::increase);
+        assertThatThrownBy(HandPoints.ZERO::increase).isInstanceOf(GameRuleViolationException.class);
     }
 
     @Test
     @DisplayName("Should create hand point from valid int value")
     void shouldCreateHandPointFromValidIntValue() {
-        final HandPoints handPoints = HandPoints.fromIntValue(1);
-        assertEquals(HandPoints.ONE, handPoints);
+        assertThat(HandPoints.fromIntValue(1)).isEqualTo(HandPoints.ONE);
     }
 
     @Test
     @DisplayName("Should throw if try to create hand point from invalid int value")
     void shouldThrowIfTryToCreateHandPointFromInvalidIntValue() {
-        assertThrows(IllegalArgumentException.class, () -> HandPoints.fromIntValue(4));
+        assertThatThrownBy(() -> HandPoints.fromIntValue(4)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("Should get correct int value from hand point")
     void shouldGetCorrectIntValueFromHandPoint() {
-        assertEquals(9, HandPoints.NINE.get());
+        assertThat(HandPoints.NINE.get()).isEqualTo(9);
     }
 
     @Test
     @DisplayName("Should correctly toString")
     void shouldCorrectlyToString() {
-        assertEquals("Hand points = 1", HandPoints.ONE.toString());
+        assertThat(HandPoints.ONE.toString()).isEqualTo("Hand points = 1");
     }
-
-
 }
