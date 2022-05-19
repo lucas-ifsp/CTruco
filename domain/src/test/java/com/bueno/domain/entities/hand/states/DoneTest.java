@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 @ExtendWith(MockitoExtension.class)
 class DoneTest {
@@ -38,34 +38,34 @@ class DoneTest {
     @DisplayName("Should throw if plays first card in done state")
     void shouldThrowIfPlaysFirstCardInDoneState() {
         Done sut = new Done(hand);
-        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.playFirstCard(null, null));
     }
 
     @Test
     @DisplayName("Should throw if plays second card in done state")
     void shouldThrowIfPlaysSecondCardInDoneState() {
         Done sut = new Done(hand);
-        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.playSecondCard(null, null));
     }
 
     @Test
     @DisplayName("Should throw if accepts request or mao de onze in done state")
     void shouldThrowIfAcceptsRequestOrMaoDeOnzeInDoneState() {
         Done sut = new Done(hand);
-        assertThatThrownBy(() -> sut.accept(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.accept(null));
     }
 
     @Test
     @DisplayName("Should throw if quits request or mao de onze in done state")
     void shouldThrowIfQuitsRequestOrMaoDeOnzeInDoneState() {
         Done sut = new Done(hand);
-        assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.quit(null));
     }
 
     @Test
     @DisplayName("Should throw if raises in done state")
     void shouldThrowIfRaisesInDoneState() {
         Done sut = new Done(hand);
-        assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.raise(null));
     }
 }

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 @ExtendWith(MockitoExtension.class)
 class WaitingMaoDeOnzeTest {
@@ -38,20 +38,20 @@ class WaitingMaoDeOnzeTest {
     @DisplayName("Should throw if plays first card in waiting mao de onze state")
     void shouldThrowIfPlaysFirstCardInWaitingMaoDeOnzeState() {
         WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
-        assertThatThrownBy(() -> sut.playFirstCard(null, null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.playFirstCard(null, null));
     }
 
     @Test
     @DisplayName("Should throw if plays second card in waiting mao de onze state")
     void shouldThrowIfPlaysSecondCardInWaitingMaoDeOnzeState() {
         WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
-        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.playSecondCard(null, null));
     }
 
     @Test
     @DisplayName("Should throw if raises in waiting mao de onze state")
     void shouldThrowIfRaisesInWaitingMaoDeOnzeState() {
         WaitingMaoDeOnze sut = new WaitingMaoDeOnze(hand);
-        assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.raise(null));
     }
 }
