@@ -25,7 +25,7 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.player.Player;
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,24 +34,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RoundTest {
 
-    @Mock
-    private Player p1;
-    @Mock
-    private Player p2;
-
-    @BeforeEach
-     void setUp(){
-        Logger.getLogger(Round.class.getName()).setLevel(Level.OFF);
-    }
+    @Mock private Player p1;
+    @Mock private Player p2;
 
     @Test
     @DisplayName("Should the player of the highest card be the winner")
@@ -61,7 +52,7 @@ class RoundTest {
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
         round.play();
-        assertEquals(p2, round.getWinner().orElseThrow());
+        assertThat(round.getWinner().orElseThrow()).isEqualTo(p2);
     }
 
     @Test
@@ -72,7 +63,7 @@ class RoundTest {
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
         round.play();
-        assertNotEquals(p1, round.getWinner().orElseThrow());
+        assertThat(round.getWinner().orElseThrow()).isNotEqualTo(p1);
     }
 
     @Test
@@ -83,7 +74,7 @@ class RoundTest {
         final Card vira = Card.of(Rank.ACE, Suit.SPADES);
         var round = new Round(p1, card1, p2, card2, vira);
         round.play();
-        assertTrue(round.getWinner().isEmpty());
+        assertThat(round.getWinner().isEmpty()).isTrue();
     }
 
 
@@ -93,13 +84,13 @@ class RoundTest {
         final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
-        assertAll(
-                () -> assertThrows(NullPointerException.class, () -> new Round(null, card1, p2, card2, vira)),
-                () -> assertThrows(NullPointerException.class, () -> new Round(p1, null, p2, card2, vira)),
-                () -> assertThrows(NullPointerException.class, () -> new Round(p1, card1, null, card2, vira)),
-                () -> assertThrows(NullPointerException.class, () -> new Round(p1, card1, p2, null, vira)),
-                () -> assertThrows(NullPointerException.class, () -> new Round(p1, card1, p2, card2, null))
-        );
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThatThrownBy(() -> new Round(null, card1, p2, card2, vira)).isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, null, p2, card2, vira)).isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, null, card2, vira)).isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, null, vira)).isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, card2, null)).isInstanceOf(NullPointerException.class);
+        assertions.assertAll();
     }
 
     @ParameterizedTest
@@ -109,7 +100,7 @@ class RoundTest {
         final Card card1 = Card.of(card1Rank, Suit.SPADES);
         final Card card2 = Card.of(card2Rank, Suit.SPADES);
         final Card vira = Card.of(viraRank, Suit.SPADES);
-        assertThrows(GameRuleViolationException.class, () -> new Round(p1,card1, p2, card2, vira));
+        assertThatThrownBy(() -> new Round(p1,card1, p2, card2, vira)).isInstanceOf(GameRuleViolationException.class);
     }
 
     @Test
@@ -131,12 +122,11 @@ class RoundTest {
 
         final Round nonPlayedRound = new Round(p1, card1, p2, card2, Card.of(Rank.THREE, Suit.DIAMONDS));
 
-        assertAll(
-                () -> assertEquals("Round = [4S] x [4C] (Vira [4D]) - Result: Draw (--)", roundA.toString()),
-                () -> assertEquals("Round = [4S] x [4C] (Vira [3D]) - Result: p2 wins ([4C])", roundB.toString()),
-                () -> assertEquals("Round = [4C] x [4S] (Vira [3D]) - Result: p1 wins ([4C])", roundC.toString()),
-                () -> assertEquals("Round = [4S] x [4C] (Vira [3D]) - Result: Draw (--)", nonPlayedRound.toString())
-        );
+        SoftAssertions assertions = new SoftAssertions();
+        assertions.assertThat(roundA.toString()).isEqualTo("Round = [4S] x [4C] (Vira [4D]) - Result: Draw (--)");
+        assertions.assertThat(roundB.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: p2 wins ([4C])");
+        assertions.assertThat(roundC.toString()).isEqualTo("Round = [4C] x [4S] (Vira [3D]) - Result: p1 wins ([4C])");
+        assertions.assertThat(nonPlayedRound.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: Draw (--)");
+        assertions.assertAll();
     }
-
 }
