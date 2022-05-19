@@ -30,8 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,7 +73,7 @@ class HandResultTest {
     @Test
     @DisplayName("Should not allow creating a result with winner and zero points")
     void shouldNotAllowCreatingAResultWithWinnerAndZeroPoints() {
-        assertThatThrownBy(() -> HandResult.of(player1, HandPoints.ZERO)).isInstanceOf(IllegalArgumentException.class);
+        assertThatIllegalArgumentException().isThrownBy(() -> HandResult.of(player1, HandPoints.ZERO));
     }
 
     @Test

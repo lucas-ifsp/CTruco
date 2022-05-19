@@ -153,8 +153,9 @@ class HandTest {
         void shouldNotAcceptRepeatedCards() {
             sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
             sut.playSecondCard(player2, Card.closed());
-            assertThatThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES)))
-                    .isInstanceOf(GameRuleViolationException.class);
+            assertThatExceptionOfType(GameRuleViolationException.class)
+                    .isThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES)));
+
         }
 
         @Test
@@ -162,8 +163,8 @@ class HandTest {
         void shouldNotAcceptCardThatHasNotBeenDealt() {
             when(player1.getCards()).thenReturn(List.of(Card.of(Rank.SEVEN, Suit.SPADES)));
             sut = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
-            assertThatThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.HEARTS)))
-                    .isInstanceOf(GameRuleViolationException.class);
+            assertThatExceptionOfType(GameRuleViolationException.class)
+                    .isThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.HEARTS)));
         }
 
         @Test

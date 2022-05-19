@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class CardTest {
 
@@ -70,13 +70,13 @@ class CardTest {
         @Test
         @DisplayName("creating a card with null rank")
         void creatingCardWithNullRank(){
-            assertThatThrownBy(() -> Card.of(null, Suit.CLUBS)).isInstanceOf(NullPointerException.class);
+            assertThatNullPointerException().isThrownBy(() -> Card.of(null, Suit.CLUBS));
         }
 
         @Test
         @DisplayName("creating a card with null suit")
         void creatingCardWithNullSuit(){
-            assertThatThrownBy(() -> Card.of(Rank.ACE, null)).isInstanceOf(NullPointerException.class);
+            assertThatNullPointerException().isThrownBy(() -> Card.of(Rank.ACE, null));
         }
 
         @Test

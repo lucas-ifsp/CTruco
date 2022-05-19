@@ -34,8 +34,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +99,8 @@ class RoundTest {
         final Card card1 = Card.of(card1Rank, Suit.SPADES);
         final Card card2 = Card.of(card2Rank, Suit.SPADES);
         final Card vira = Card.of(viraRank, Suit.SPADES);
-        assertThatThrownBy(() -> new Round(p1,card1, p2, card2, vira)).isInstanceOf(GameRuleViolationException.class);
+        assertThatExceptionOfType(GameRuleViolationException.class)
+                .isThrownBy(() -> new Round(p1,card1, p2, card2, vira));
     }
 
     @Test

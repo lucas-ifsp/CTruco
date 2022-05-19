@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 @ExtendWith(MockitoExtension.class)
 class NoCardTest {
@@ -38,20 +38,20 @@ class NoCardTest {
     @DisplayName("Should throw if plays second card in no card state")
     void shouldThrowIfPlaysSecondCardInNoCardState() {
         NoCard sut = new NoCard(hand);
-        assertThatThrownBy(() -> sut.playSecondCard(null, null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.playSecondCard(null, null));
     }
 
     @Test
     @DisplayName("Should throw if accepts request or mao de onze in no card state")
     void shouldThrowIfAcceptsRequestOrMaoDeOnzeInNoCardState() {
         NoCard sut = new NoCard(hand);
-        assertThatThrownBy(() -> sut.accept(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.accept(null));
     }
 
     @Test
     @DisplayName("Should throw if quits request or mao de onze in no card state")
     void shouldThrowIfQuitsRequestOrMaoDeOnzeInNoCardState() {
         NoCard sut = new NoCard(hand);
-        assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(IllegalStateException.class);
+        assertThatIllegalStateException().isThrownBy(() -> sut.quit(null));
     }
 }
