@@ -29,6 +29,7 @@ import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.intel.Intel.PlayerIntel;
 import com.bueno.domain.entities.player.Player;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,9 +44,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.LogManager;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+
+// TODO change all names from assertions to softly
 
 
 @ExtendWith(MockitoExtension.class)
@@ -80,13 +85,13 @@ class IntelTest {
     @Test
     @DisplayName("Should not allow null game in static constructor")
     void shouldNotAllowNullGameInStaticConstructor() {
-        assertThrows(NullPointerException.class, () -> Intel.ofGame(null));
+        assertThatNullPointerException().isThrownBy(() -> Intel.ofGame(null));
     }
 
     @Test
     @DisplayName("Should not allow null hand in static constructor")
     void shouldNotAllowNullHandInStaticConstructor() {
-        assertThrows(NullPointerException.class, () -> Intel.ofHand(null, Event.HAND_START));
+        assertThatNullPointerException().isThrownBy(() -> Intel.ofHand(null, Event.HAND_START));
     }
 
     @Test
@@ -95,40 +100,40 @@ class IntelTest {
         when(game.isDone()).thenReturn(true);
         when(game.currentHand()).thenReturn(hand);
         final Intel intel = Intel.ofGame(game);
-        assertTrue(intel.isGameDone());
+        assertThat(intel.isGameDone()).as("It is true that game is done.").isTrue();
     }
 
     @Test
     @DisplayName("Should have no game winner from hand static constructor")
     void shouldHaveNoGameWinnerFromHandStaticConstructor() {
         final Intel intel = Intel.ofHand(hand, Event.HAND_START);
-        assertTrue(intel.gameWinner().isEmpty());
+        assertThat(intel.gameWinner().isEmpty()).as("It is true that game has no winner.").isTrue();
     }
 
     @Test
     @DisplayName("Should game not be done from hand static constructor")
     void shouldGameNotBeDoneFromHandStaticConstructor() {
         final Intel intel = Intel.ofHand(hand, Event.HAND_START);
-        assertFalse(intel.isGameDone());
+        assertThat(intel.gameWinner().isEmpty()).as("It is false that game is done.").isTrue();
     }
 
     @Test
     @DisplayName("Should intel have non null timestamp")
     void shouldIntelHaveNonNullTimestamp() {
         final Intel intel = Intel.ofHand(hand, Event.HAND_START);
-        assertNotNull(intel.timestamp());
+        assertThat(intel.timestamp()).as("Any intel must have a timestamp").isNotNull();
     }
 
     @Test
     @DisplayName("Should two intel objects be different if created in different moments")
     void shouldTwoIntelObjectsBeDifferentIfCreatedInDifferentMoments() {
-        assertNotEquals(Intel.ofHand(hand, Event.HAND_START), Intel.ofHand(hand, Event.HAND_START));
+        assertThat(Intel.ofHand(hand, Event.HAND_START)).isNotEqualTo(Intel.ofHand(hand, Event.HAND_START));
     }
 
     @Test
     @DisplayName("Should intel created with same data in different moments have different hashcode")
     void shouldIntelCreatedWithSameDataInDifferentMomentsHaveDifferentHashcode() {
-        assertNotEquals(Intel.ofHand(hand, Event.HAND_START).hashCode(), Intel.ofHand(hand, Event.HAND_START).hashCode());
+        assertThat(Intel.ofHand(hand, Event.HAND_START).hashCode()).isNotEqualTo(Intel.ofHand(hand, Event.HAND_START).hashCode());
     }
 
     @Test
@@ -140,16 +145,16 @@ class IntelTest {
         final String[] intelString1 = intel1.toString().split("] ");
         final String[] intelString2 = intel2.toString().split("] ");
 
-        assertAll(
-                () -> assertNotEquals(intelString1[0], intelString2[0]),
-                () -> assertEquals(intelString1[1], intelString2[1])
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(intelString1[0]).isNotEqualTo(intelString2[0]);
+        softly.assertThat(intelString1[1]).isEqualTo(intelString2[1]);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should intel return current hand vira")
     void shouldIntelReturnCurrentHandVira() {
-        assertEquals(hand.getVira(), Intel.ofHand(hand, Event.HAND_START).vira());
+        assertThat(Intel.ofHand(hand, Event.HAND_START).vira()).isEqualTo(hand.getVira());
     }
 
     @Test
@@ -158,15 +163,15 @@ class IntelTest {
         final Hand hand = new Hand(p1, p2, Card.of(Rank.THREE, Suit.CLUBS));
         hand.playFirstCard(p1, Card.closed());
         final Intel sut = hand.getLastIntel();
-        assertAll(
-                () -> assertEquals(hand.getVira(), sut.vira()),
-                () -> assertIterableEquals(hand.getOpenCards(), sut.openCards()),
-                () -> assertNotSame(hand.getOpenCards(), sut.openCards()),
-                () -> assertEquals(p1.getUuid(), sut.eventPlayerUuid().orElseThrow()),
-                () -> assertEquals("PLAY", sut.event().orElseThrow()),
-                () -> assertIterableEquals(List.of(new PlayerIntel (p1), new PlayerIntel(p2)), sut.players()),
-                () -> assertIterableEquals(List.of("PLAY", "RAISE"), sut.possibleActions())
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.openCards()).hasSameElementsAs(hand.getOpenCards());
+        softly.assertThat(sut.openCards()).isEqualTo(hand.getOpenCards());
+        softly.assertThat(sut.eventPlayerUuid().orElseThrow()).isEqualTo(p1.getUuid());
+        softly.assertThat(sut.event().orElseThrow()).isEqualTo("PLAY");
+        softly.assertThat(sut.players()).isEqualTo(List.of(new PlayerIntel (p1), new PlayerIntel(p2)));
+        softly.assertThat(sut.possibleActions()).hasSameElementsAs(List.of("PLAY", "RAISE"));
+        softly.assertAll();
     }
 
 
@@ -192,7 +197,7 @@ class IntelTest {
         final List<Optional<String>> expected = List.of(Optional.of("name1"), Optional.empty(), Optional.of("name2"));
         final Intel intel = Intel.ofHand(hand, Event.PLAY);
 
-        assertEquals(expected, intel.roundWinnersUsernames());
+        assertThat(intel.roundWinnersUsernames()).isEqualTo(expected);
     }
 
     @Test
@@ -204,12 +209,12 @@ class IntelTest {
         player.setCards(cards);
         final PlayerIntel playerIntel = new PlayerIntel(player);
 
-        assertAll(
-                () -> assertEquals(player.getUsername(), playerIntel.getUsername()),
-                () -> assertEquals(player.getUuid(), playerIntel.getUuid()),
-                () -> assertEquals(player.getScore(), playerIntel.getScore()),
-                () -> assertIterableEquals(player.getCards(), playerIntel.getCards()),
-                () -> assertNotSame(player.getCards(), playerIntel.getCards())
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(playerIntel.getUsername()).isEqualTo(player.getUsername());
+        softly.assertThat(playerIntel.getUuid()).isEqualTo(player.getUuid());
+        softly.assertThat(playerIntel.getScore()).isEqualTo(player.getScore());
+        softly.assertThat(playerIntel.getCards()).hasSameElementsAs(player.getCards());
+        softly.assertThat(playerIntel.getCards()).isNotSameAs(player.getCards());
+        softly.assertAll();
     }
 }
