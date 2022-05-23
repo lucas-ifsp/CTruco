@@ -84,11 +84,21 @@ class RoundTest {
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
         SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThatThrownBy(() -> new Round(null, card1, p2, card2, vira)).isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, null, p2, card2, vira)).isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, null, card2, vira)).isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, null, vira)).isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, card2, null)).isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(null, card1, p2, card2, vira))
+                .as("First to play is null")
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, null, p2, card2, vira))
+                .as("First card is null")
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, null, card2, vira))
+                .as("Last to play is null")
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, null, vira))
+                .as("Last card is null")
+                .isInstanceOf(NullPointerException.class);
+        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, card2, null))
+                .as("Vira is null")
+                .isInstanceOf(NullPointerException.class);
         assertions.assertAll();
     }
 

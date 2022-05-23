@@ -117,9 +117,11 @@ class HandTest {
         void shouldNotAcceptFirstCardWhileWaitingBetResponse() {
             sut.raise(player1);
             SoftAssertions assertions = new SoftAssertions();
-            assertThatIllegalArgumentException()
-                    .isThrownBy(() -> sut.playFirstCard(player1, Card.closed()));
+            assertions.assertThatThrownBy(() -> sut.playFirstCard(player1, Card.closed()))
+                    .as("Player1 is playing card before responding request")
+                    .isInstanceOf(IllegalArgumentException.class);
             assertions.assertThatThrownBy(() -> sut.playFirstCard(player2, Card.closed()))
+                    .as("Player2 is playing out of turn")
                     .isInstanceOf(IllegalStateException.class);
             assertions.assertAll();
         }
@@ -354,11 +356,18 @@ class HandTest {
         @DisplayName("Should not allow accepting a bet if no bet raise has been made")
         void shouldNotAllowAcceptingABetIfNoBetRaiseHasBeenMade() {
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> sut.accept(player1)).isInstanceOf(IllegalStateException.class);
+
+            assertions.assertThatThrownBy(() -> sut.accept(player1))
+                    .as("There is no request to accept before playing first card")
+                    .isInstanceOf(IllegalStateException.class);
+
             assertions.assertThatThrownBy(() -> {
                         sut.playFirstCard(player1, Card.closed());
                         sut.accept(player2);
-                    }).isInstanceOf(IllegalStateException.class);
+                    })
+                    .as("There is no request to accept after playing first card")
+                    .isInstanceOf(IllegalStateException.class);
+
             assertions.assertAll();
         }
 
@@ -366,11 +375,17 @@ class HandTest {
         @DisplayName("Should not allow quiting a bet if no bet raise has been made")
         void shouldNotAllowQuitingABetIfNoBetRaiseHasBeenMade() {
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> sut.quit(player1)).isInstanceOf(IllegalStateException.class);
+            assertions.assertThatThrownBy(() -> sut.quit(player1))
+                    .as("There is no request to quit before playing first card")
+                    .isInstanceOf(IllegalStateException.class);
+
             assertions.assertThatThrownBy(() -> {
-                sut.playFirstCard(player1, Card.closed());
-                sut.quit(player2);
-            }).isInstanceOf(IllegalStateException.class);
+                        sut.playFirstCard(player1, Card.closed());
+                        sut.quit(player2);
+                    })
+                    .as("There is no request to quit before playing first card")
+                    .isInstanceOf(IllegalStateException.class);
+
             assertions.assertAll();
         }
 
@@ -382,7 +397,7 @@ class HandTest {
         }
 
         @Test
-        @DisplayName("Should return not winner and match worth 12 points")
+        @DisplayName("Should return no winner and match worth 12 points")
         void shouldReturnNoWinnerAndMatchWorth12Points() {
             sut.raise(player1);
             sut.raise(player2);
@@ -390,8 +405,8 @@ class HandTest {
             sut.raise(player2);
             sut.accept(player1);
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPoints()).isEqualTo(HandPoints.TWELVE);
-            assertions.assertThat(getPossibleWinner()).isNull();
+            assertions.assertThat(sut.getPoints()).as("Hand points").isEqualTo(HandPoints.TWELVE);
+            assertions.assertThat(getPossibleWinner()).as("Hand winner").isNull();
             assertions.assertAll();
         }
 
@@ -403,8 +418,8 @@ class HandTest {
             sut.quit(player1);
 
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPoints()).isEqualTo(THREE);
-            assertions.assertThat(getPossibleWinner()).isEqualTo(player2);
+            assertions.assertThat(sut.getPoints()).as("Hand points").isEqualTo(THREE);
+            assertions.assertThat(getPossibleWinner()).as("Hand winner").isEqualTo(player2);
             assertions.assertAll();
         }
 
@@ -418,8 +433,8 @@ class HandTest {
             final EnumSet<PossibleAction> actions = EnumSet.of(QUIT, ACCEPT);
 
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPossibleActions()).isEqualTo(actions);
-            assertions.assertThat(sut.getCurrentPlayer()).isEqualTo(player1);
+            assertions.assertThat(sut.getPossibleActions()).as("Possible actions").isEqualTo(actions);
+            assertions.assertThat(sut.getCurrentPlayer()).as("Current player").isEqualTo(player1);
             assertions.assertThatThrownBy(() -> sut.raise(player1)).isInstanceOf(IllegalStateException.class);
             assertions.assertAll();
         }
