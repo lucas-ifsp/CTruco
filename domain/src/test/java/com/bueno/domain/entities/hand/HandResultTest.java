@@ -46,31 +46,31 @@ class HandResultTest {
     @DisplayName("Should allow creating result with winner and hand points")
     void shouldAllowCreatingResultWithWinnerAndHandPoints() {
         HandResult sut = HandResult.of(player1, ONE);
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getWinner().orElse(null)).isEqualTo(player1);
-        assertions.assertThat(sut.getPoints()).isEqualTo(ONE);
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getWinner().orElse(null)).isEqualTo(player1);
+        softly.assertThat(sut.getPoints()).isEqualTo(ONE);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should allow creating result of a draw hand")
     void shouldAllowCreatingResultOfADrawHand() {
         HandResult sut = HandResult.ofDraw();
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getWinner().isEmpty()).isTrue();
-        assertions.assertThat(sut.getPoints()).isEqualTo(HandPoints.ZERO);
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getWinner().isEmpty()).isTrue();
+        softly.assertThat(sut.getPoints()).isEqualTo(HandPoints.ZERO);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should not allow creating hand result with partial parameters")
     void shouldNotAllowCreatingHandResultWithPartialParameters() {
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThatThrownBy(() -> HandResult.of(null, ONE))
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() -> HandResult.of(null, ONE))
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> HandResult.of(player1, null))
+        softly.assertThatThrownBy(() -> HandResult.of(player1, null))
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertAll();
+        softly.assertAll();
     }
 
     @Test
@@ -107,13 +107,13 @@ class HandResultTest {
     @Test
     @DisplayName("Should hand results of different winner or points not be equal")
     void shouldHandResultsOfDifferentWinnerOrPointsNotBeEqual() {
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(HandResult.of(player1, ONE))
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(HandResult.of(player1, ONE))
                 .as("Results with different winners")
                 .isNotEqualTo(HandResult.of(player2, ONE));
-        assertions.assertThat(HandResult.of(player1, ONE))
+        softly.assertThat(HandResult.of(player1, ONE))
                 .as("Results with different hand points")
                 .isNotEqualTo(HandResult.of(player1, THREE));
-        assertions.assertAll();
+        softly.assertAll();
     }
 }

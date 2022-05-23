@@ -50,23 +50,23 @@ class GameTest {
     @DisplayName("Should correctly create game")
     void shouldCorrectlyCreateGame() {
         sut = new Game(player1, player2);
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getHands().size()).as("Number of hands").isOne();
-        assertions.assertThat(sut.getUuid()).as("Game uuid").isNotNull();
-        assertions.assertThat(sut.getPlayer1()).as("Player 1").isEqualTo(player1);
-        assertions.assertThat(sut.getPlayer2()).as("Player 2").isEqualTo(player2);
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getHands().size()).as("Number of hands").isOne();
+        softly.assertThat(sut.getUuid()).as("Game uuid").isNotNull();
+        softly.assertThat(sut.getPlayer1()).as("Player 1").isEqualTo(player1);
+        softly.assertThat(sut.getPlayer2()).as("Player 2").isEqualTo(player2);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should correctly prepare hand")
     void shouldCorrectlyPrepareHand() {
         sut = new Game(player1, player2);
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getFirstToPlay()).as("First to play").isEqualTo(player1);
-        assertions.assertThat(sut.getLastToPlay()).as("Last to play").isEqualTo(player2);
-        assertions.assertThat(sut.handsPlayed()).as("Number of hands").isOne();
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getFirstToPlay()).as("First to play").isEqualTo(player1);
+        softly.assertThat(sut.getLastToPlay()).as("Last to play").isEqualTo(player2);
+        softly.assertThat(sut.handsPlayed()).as("Number of hands").isOne();
+        softly.assertAll();
     }
 
     @Test

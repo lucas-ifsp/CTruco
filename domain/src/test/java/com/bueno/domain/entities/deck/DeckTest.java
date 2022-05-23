@@ -74,19 +74,19 @@ class DeckTest {
     @DisplayName("Should be able to deal multiple cards ")
     void shouldDealMultipleCorrectly() {
         List<Card> cards = deck.take(3);
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(cards.size()).as("Dealt cards").isEqualTo(3);
-        assertions.assertThat(deck.size()).as("Number of remaining cards in the deck").isEqualTo(37);
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(cards.size()).as("Dealt cards").isEqualTo(3);
+        softly.assertThat(deck.size()).as("Number of remaining cards in the deck").isEqualTo(37);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should be able to deal a single card")
     void shouldDealSingleCard() {
         final Card card = deck.takeOne();
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(card).as("Dealt card").isNotNull();
-        assertions.assertThat(deck.size()).as("Number of remaining cards in the deck").isEqualTo(39);
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(card).as("Dealt card").isNotNull();
+        softly.assertThat(deck.size()).as("Number of remaining cards in the deck").isEqualTo(39);
+        softly.assertAll();
     }
 }

@@ -116,14 +116,14 @@ class HandTest {
         @DisplayName("Should not accept first card while waiting bet response")
         void shouldNotAcceptFirstCardWhileWaitingBetResponse() {
             sut.raise(player1);
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> sut.playFirstCard(player1, Card.closed()))
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThatThrownBy(() -> sut.playFirstCard(player1, Card.closed()))
                     .as("Player1 is playing card before responding request")
                     .isInstanceOf(IllegalArgumentException.class);
-            assertions.assertThatThrownBy(() -> sut.playFirstCard(player2, Card.closed()))
+            softly.assertThatThrownBy(() -> sut.playFirstCard(player2, Card.closed()))
                     .as("Player2 is playing out of turn")
                     .isInstanceOf(IllegalStateException.class);
-            assertions.assertAll();
+            softly.assertAll();
         }
 
         @Test
@@ -355,38 +355,38 @@ class HandTest {
         @Test
         @DisplayName("Should not allow accepting a bet if no bet raise has been made")
         void shouldNotAllowAcceptingABetIfNoBetRaiseHasBeenMade() {
-            SoftAssertions assertions = new SoftAssertions();
+            SoftAssertions softly = new SoftAssertions();
 
-            assertions.assertThatThrownBy(() -> sut.accept(player1))
+            softly.assertThatThrownBy(() -> sut.accept(player1))
                     .as("There is no request to accept before playing first card")
                     .isInstanceOf(IllegalStateException.class);
 
-            assertions.assertThatThrownBy(() -> {
+            softly.assertThatThrownBy(() -> {
                         sut.playFirstCard(player1, Card.closed());
                         sut.accept(player2);
                     })
                     .as("There is no request to accept after playing first card")
                     .isInstanceOf(IllegalStateException.class);
 
-            assertions.assertAll();
+            softly.assertAll();
         }
 
         @Test
         @DisplayName("Should not allow quiting a bet if no bet raise has been made")
         void shouldNotAllowQuitingABetIfNoBetRaiseHasBeenMade() {
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> sut.quit(player1))
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThatThrownBy(() -> sut.quit(player1))
                     .as("There is no request to quit before playing first card")
                     .isInstanceOf(IllegalStateException.class);
 
-            assertions.assertThatThrownBy(() -> {
+            softly.assertThatThrownBy(() -> {
                         sut.playFirstCard(player1, Card.closed());
                         sut.quit(player2);
                     })
                     .as("There is no request to quit before playing first card")
                     .isInstanceOf(IllegalStateException.class);
 
-            assertions.assertAll();
+            softly.assertAll();
         }
 
         @Test
@@ -404,10 +404,10 @@ class HandTest {
             sut.raise(player1);
             sut.raise(player2);
             sut.accept(player1);
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPoints()).as("Hand points").isEqualTo(HandPoints.TWELVE);
-            assertions.assertThat(getPossibleWinner()).as("Hand winner").isNull();
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(sut.getPoints()).as("Hand points").isEqualTo(HandPoints.TWELVE);
+            softly.assertThat(getPossibleWinner()).as("Hand winner").isNull();
+            softly.assertAll();
         }
 
         @Test
@@ -417,10 +417,10 @@ class HandTest {
             sut.raise(player2);
             sut.quit(player1);
 
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPoints()).as("Hand points").isEqualTo(THREE);
-            assertions.assertThat(getPossibleWinner()).as("Hand winner").isEqualTo(player2);
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(sut.getPoints()).as("Hand points").isEqualTo(THREE);
+            softly.assertThat(getPossibleWinner()).as("Hand winner").isEqualTo(player2);
+            softly.assertAll();
         }
 
         @Test
@@ -432,11 +432,11 @@ class HandTest {
             sut.raise(player2);
             final EnumSet<PossibleAction> actions = EnumSet.of(QUIT, ACCEPT);
 
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(sut.getPossibleActions()).as("Possible actions").isEqualTo(actions);
-            assertions.assertThat(sut.getCurrentPlayer()).as("Current player").isEqualTo(player1);
-            assertions.assertThatThrownBy(() -> sut.raise(player1)).isInstanceOf(IllegalStateException.class);
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(sut.getPossibleActions()).as("Possible actions").isEqualTo(actions);
+            softly.assertThat(sut.getCurrentPlayer()).as("Current player").isEqualTo(player1);
+            softly.assertThatThrownBy(() -> sut.raise(player1)).isInstanceOf(IllegalStateException.class);
+            softly.assertAll();
         }
 
         @Test
@@ -683,15 +683,15 @@ class HandTest {
         @DisplayName("Should not accept null parameters in any external request")
         void shouldNotAcceptNullParametersInAnyExternalRequest() {
             final Class<NullPointerException> exception = NullPointerException.class;
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> new Hand(null, null, null)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.playFirstCard(null, Card.closed())).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.playFirstCard(player1, null)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.playSecondCard(null, Card.closed())).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.playSecondCard(player2, null)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(exception);
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThatThrownBy(() -> new Hand(null, null, null)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.playFirstCard(null, Card.closed())).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.playFirstCard(player1, null)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.playSecondCard(null, Card.closed())).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.playSecondCard(player2, null)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.raise(null)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.quit(null)).isInstanceOf(exception);
+            softly.assertAll();
         }
 
         @Test
@@ -717,13 +717,13 @@ class HandTest {
             sut.raise(player1);
             sut.quit(player2);
             final Class<IllegalArgumentException> exception = IllegalArgumentException.class;
-            final SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> sut.playFirstCard(player1, Card.closed())).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.playSecondCard(player1, Card.closed())).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.accept(player2)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.quit(player2)).isInstanceOf(exception);
-            assertions.assertThatThrownBy(() -> sut.raise(player2)).isInstanceOf(exception);
-            assertions.assertAll();
+            final SoftAssertions softly = new SoftAssertions();
+            softly.assertThatThrownBy(() -> sut.playFirstCard(player1, Card.closed())).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.playSecondCard(player1, Card.closed())).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.accept(player2)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.quit(player2)).isInstanceOf(exception);
+            softly.assertThatThrownBy(() -> sut.raise(player2)).isInstanceOf(exception);
+            softly.assertAll();
         }
     }
 
