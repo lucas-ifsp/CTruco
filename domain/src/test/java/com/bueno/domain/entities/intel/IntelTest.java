@@ -30,7 +30,6 @@ import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.intel.Intel.PlayerIntel;
 import com.bueno.domain.entities.player.Player;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,16 +41,12 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-
-// TODO change all names from assertions to softly
-
 
 @ExtendWith(MockitoExtension.class)
 class IntelTest {
@@ -62,19 +57,8 @@ class IntelTest {
     @Mock Player p1;
     @Mock Player p2;
 
-    @BeforeAll
-    static void init(){
-        LogManager.getLogManager().reset();
-    }
-
     @BeforeEach
     void setUp() {
-        lenient().when(p1.getUuid()).thenReturn(UUID.randomUUID());
-        lenient().when(p2.getUuid()).thenReturn(UUID.randomUUID());
-        lenient().when(p1.getUsername()).thenReturn("name1");
-        lenient().when(p2.getUsername()).thenReturn("name2");
-        lenient().when(p1.getScore()).thenReturn(0);
-        lenient().when(p2.getScore()).thenReturn(0);
         lenient().when(hand.getPossibleActions()).thenReturn(EnumSet.of(PossibleAction.ACCEPT));
         lenient().when(hand.getPoints()).thenReturn(HandPoints.ONE);
         lenient().when(hand.getFirstToPlay()).thenReturn(p1);
@@ -160,6 +144,11 @@ class IntelTest {
     @Test
     @DisplayName("Should correctly return event and event player")
     void shouldCorrectlyReturnEventAndEventPlayer() {
+        when(p1.getUuid()).thenReturn(UUID.randomUUID());
+        when(p2.getUuid()).thenReturn(UUID.randomUUID());
+        when(p1.getUsername()).thenReturn("name1");
+        when(p2.getUsername()).thenReturn("name2");
+
         final Hand hand = new Hand(p1, p2, Card.of(Rank.THREE, Suit.CLUBS));
         hand.playFirstCard(p1, Card.closed());
         final Intel sut = hand.getLastIntel();
@@ -191,6 +180,8 @@ class IntelTest {
     @Test
     @DisplayName("Should correctly obtain the name of the round winners")
     void shouldCorrectlyObtainTheNameOfTheRoundWinners() {
+        when(p1.getUsername()).thenReturn("name1");
+        when(p2.getUsername()).thenReturn("name2");
         when(round.getWinner()).thenReturn(Optional.of(p1)).thenReturn(Optional.empty()).thenReturn(Optional.of(p2));
         when(hand.getRoundsPlayed()).thenReturn(List.of(round, round, round));
 

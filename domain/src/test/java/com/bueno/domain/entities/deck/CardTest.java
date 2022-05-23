@@ -39,20 +39,20 @@ class CardTest {
         @DisplayName("Creating a card with valid rank and suit")
         void creatingCardWithValidRankAndSuit() {
             Card card = Card.of(Rank.SEVEN, Suit.SPADES);
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.SEVEN);
-            assertions.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.SPADES);
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.SEVEN);
+            softly.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.SPADES);
+            softly.assertAll();
         }
 
         @Test
         @DisplayName("creating closed card")
         void creatingClosedCard(){
             Card card = Card.closed();
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.HIDDEN);
-            assertions.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.HIDDEN);
-            assertions.assertAll();
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.HIDDEN);
+            softly.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.HIDDEN);
+            softly.assertAll();
         }
 
         @Test
@@ -83,14 +83,14 @@ class CardTest {
         @Test
         @DisplayName("creating card with only rank or suit hidden")
         void creatingCardWithOnlyRankOrSuitHidden() {
-            SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThatThrownBy(() -> Card.of(Rank.HIDDEN, Suit.CLUBS))
+            SoftAssertions softly = new SoftAssertions();
+            softly.assertThatThrownBy(() -> Card.of(Rank.HIDDEN, Suit.CLUBS))
                     .as("Rank is hidden but Suit is not")
                     .isInstanceOf(IllegalArgumentException.class);
-            assertions.assertThatThrownBy(() -> Card.of(Rank.SEVEN, Suit.HIDDEN))
+            softly.assertThatThrownBy(() -> Card.of(Rank.SEVEN, Suit.HIDDEN))
                     .as("Suit is hidden but Rank is not")
                     .isInstanceOf(IllegalArgumentException.class);
-            assertions.assertAll();
+            softly.assertAll();
         }
     }
 

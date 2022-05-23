@@ -83,23 +83,23 @@ class RoundTest {
         final Card card1 = Card.of(Rank.FOUR, Suit.SPADES);
         final Card card2 = Card.of(Rank.FOUR, Suit.CLUBS);
         final Card vira = Card.of(Rank.THREE, Suit.SPADES);
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThatThrownBy(() -> new Round(null, card1, p2, card2, vira))
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() -> new Round(null, card1, p2, card2, vira))
                 .as("First to play is null")
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, null, p2, card2, vira))
+        softly.assertThatThrownBy(() -> new Round(p1, null, p2, card2, vira))
                 .as("First card is null")
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, null, card2, vira))
+        softly.assertThatThrownBy(() -> new Round(p1, card1, null, card2, vira))
                 .as("Last to play is null")
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, null, vira))
+        softly.assertThatThrownBy(() -> new Round(p1, card1, p2, null, vira))
                 .as("Last card is null")
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertThatThrownBy(() -> new Round(p1, card1, p2, card2, null))
+        softly.assertThatThrownBy(() -> new Round(p1, card1, p2, card2, null))
                 .as("Vira is null")
                 .isInstanceOf(NullPointerException.class);
-        assertions.assertAll();
+        softly.assertAll();
     }
 
     @ParameterizedTest
@@ -132,11 +132,11 @@ class RoundTest {
 
         final Round nonPlayedRound = new Round(p1, card1, p2, card2, Card.of(Rank.THREE, Suit.DIAMONDS));
 
-        SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(roundA.toString()).isEqualTo("Round = [4S] x [4C] (Vira [4D]) - Result: Draw (--)");
-        assertions.assertThat(roundB.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: p2 wins ([4C])");
-        assertions.assertThat(roundC.toString()).isEqualTo("Round = [4C] x [4S] (Vira [3D]) - Result: p1 wins ([4C])");
-        assertions.assertThat(nonPlayedRound.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: Draw (--)");
-        assertions.assertAll();
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(roundA.toString()).isEqualTo("Round = [4S] x [4C] (Vira [4D]) - Result: Draw (--)");
+        softly.assertThat(roundB.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: p2 wins ([4C])");
+        softly.assertThat(roundC.toString()).isEqualTo("Round = [4C] x [4S] (Vira [3D]) - Result: p1 wins ([4C])");
+        softly.assertThat(nonPlayedRound.toString()).isEqualTo("Round = [4S] x [4C] (Vira [3D]) - Result: Draw (--)");
+        softly.assertAll();
     }
 }
