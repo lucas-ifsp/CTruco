@@ -51,10 +51,10 @@ class GameTest {
     void shouldCorrectlyCreateGame() {
         sut = new Game(player1, player2);
         SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getHands().size()).isOne();
-        assertions.assertThat(sut.getUuid()).isNotNull();
-        assertions.assertThat(sut.getPlayer1()).isEqualTo(player1);
-        assertions.assertThat(sut.getPlayer2()).isEqualTo(player2);
+        assertions.assertThat(sut.getHands().size()).as("Number of hands").isOne();
+        assertions.assertThat(sut.getUuid()).as("Game uuid").isNotNull();
+        assertions.assertThat(sut.getPlayer1()).as("Player 1").isEqualTo(player1);
+        assertions.assertThat(sut.getPlayer2()).as("Player 2").isEqualTo(player2);
         assertions.assertAll();
     }
 
@@ -63,9 +63,9 @@ class GameTest {
     void shouldCorrectlyPrepareHand() {
         sut = new Game(player1, player2);
         SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(sut.getFirstToPlay()).isEqualTo(player1);
-        assertions.assertThat(sut.getLastToPlay()).isEqualTo(player2);
-        assertions.assertThat(sut.handsPlayed()).isOne();
+        assertions.assertThat(sut.getFirstToPlay()).as("First to play").isEqualTo(player1);
+        assertions.assertThat(sut.getLastToPlay()).as("Last to play").isEqualTo(player2);
+        assertions.assertThat(sut.handsPlayed()).as("Number of hands").isOne();
         assertions.assertAll();
     }
 

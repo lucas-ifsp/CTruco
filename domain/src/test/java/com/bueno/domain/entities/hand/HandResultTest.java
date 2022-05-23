@@ -30,7 +30,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.bueno.domain.entities.hand.HandPoints.ONE;
+import static com.bueno.domain.entities.hand.HandPoints.THREE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,10 +45,10 @@ class HandResultTest {
     @Test
     @DisplayName("Should allow creating result with winner and hand points")
     void shouldAllowCreatingResultWithWinnerAndHandPoints() {
-        HandResult sut = HandResult.of(player1, HandPoints.ONE);
+        HandResult sut = HandResult.of(player1, ONE);
         SoftAssertions assertions = new SoftAssertions();
         assertions.assertThat(sut.getWinner().orElse(null)).isEqualTo(player1);
-        assertions.assertThat(sut.getPoints()).isEqualTo(HandPoints.ONE);
+        assertions.assertThat(sut.getPoints()).isEqualTo(ONE);
         assertions.assertAll();
     }
 
@@ -63,7 +66,7 @@ class HandResultTest {
     @DisplayName("Should not allow creating hand result with partial parameters")
     void shouldNotAllowCreatingHandResultWithPartialParameters() {
         SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThatThrownBy(() -> HandResult.of(null, HandPoints.ONE))
+        assertions.assertThatThrownBy(() -> HandResult.of(null, ONE))
                 .isInstanceOf(NullPointerException.class);
         assertions.assertThatThrownBy(() -> HandResult.of(player1, null))
                 .isInstanceOf(NullPointerException.class);
@@ -105,10 +108,12 @@ class HandResultTest {
     @DisplayName("Should hand results of different winner or points not be equal")
     void shouldHandResultsOfDifferentWinnerOrPointsNotBeEqual() {
         SoftAssertions assertions = new SoftAssertions();
-        assertions.assertThat(HandResult.of(player1, HandPoints.ONE))
-                .isNotEqualTo(HandResult.of(player2, HandPoints.ONE));
-        assertions.assertThat(HandResult.of(player1, HandPoints.ONE))
-                .isNotEqualTo(HandResult.of(player1, HandPoints.THREE));
+        assertions.assertThat(HandResult.of(player1, ONE))
+                .as("Results with different winners")
+                .isNotEqualTo(HandResult.of(player2, ONE));
+        assertions.assertThat(HandResult.of(player1, ONE))
+                .as("Results with different hand points")
+                .isNotEqualTo(HandResult.of(player1, THREE));
         assertions.assertAll();
     }
 }

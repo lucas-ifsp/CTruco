@@ -40,8 +40,8 @@ class CardTest {
         void creatingCardWithValidRankAndSuit() {
             Card card = Card.of(Rank.SEVEN, Suit.SPADES);
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(card.getRank()).isEqualTo(Rank.SEVEN);
-            assertions.assertThat(card.getSuit()).isEqualTo(Suit.SPADES);
+            assertions.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.SEVEN);
+            assertions.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.SPADES);
             assertions.assertAll();
         }
 
@@ -50,8 +50,8 @@ class CardTest {
         void creatingClosedCard(){
             Card card = Card.closed();
             SoftAssertions assertions = new SoftAssertions();
-            assertions.assertThat(card.getRank()).isEqualTo(Rank.HIDDEN);
-            assertions.assertThat(card.getSuit()).isEqualTo(Suit.HIDDEN);
+            assertions.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.HIDDEN);
+            assertions.assertThat(card.getSuit()).as("Card Suit").isEqualTo(Suit.HIDDEN);
             assertions.assertAll();
         }
 
@@ -79,13 +79,16 @@ class CardTest {
             assertThatNullPointerException().isThrownBy(() -> Card.of(Rank.ACE, null));
         }
 
+        //TODO name all soft using as according to https://joel-costigliola.github.io/assertj/core/api/org/assertj/core/api/SoftAssertions.html
         @Test
         @DisplayName("creating card with only rank or suit hidden")
         void creatingCardWithOnlyRankOrSuitHidden() {
             SoftAssertions assertions = new SoftAssertions();
             assertions.assertThatThrownBy(() -> Card.of(Rank.HIDDEN, Suit.CLUBS))
+                    .as("Rank is hidden but Suit is not")
                     .isInstanceOf(IllegalArgumentException.class);
             assertions.assertThatThrownBy(() -> Card.of(Rank.SEVEN, Suit.HIDDEN))
+                    .as("Suit is hidden but Rank is not")
                     .isInstanceOf(IllegalArgumentException.class);
             assertions.assertAll();
         }
