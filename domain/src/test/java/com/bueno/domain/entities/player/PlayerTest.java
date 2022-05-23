@@ -24,6 +24,7 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.hand.HandPoints;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerTest {
@@ -63,17 +65,17 @@ class PlayerTest {
         final UUID uuid = UUID.randomUUID();
         final String username = "Test";
         final Player sut = Player.of(uuid, username);
-        assertAll(
-                () -> assertEquals(username, sut.getUsername()),
-                () -> assertEquals(uuid, sut.getUuid()),
-                () -> assertFalse(sut.isBot())
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getUsername()).isEqualTo(username);
+        softly.assertThat(sut.getUuid()).isEqualTo(uuid);
+        softly.assertThat(sut.isBot()).as("It is false that user is a bot.").isFalse();
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should create a player for a bot")
     void shouldCreateAPlayerForABot() {
-        assertTrue(Player.ofBot("TestBot").isBot());
+        assertThat(Player.ofBot("TestBot").isBot()).as("It is true that user is a bot.").isTrue();
     }
 
     @Test
@@ -81,7 +83,7 @@ class PlayerTest {
     void shouldCreateAPlayerWithSpecificUuidForABot() {
         final UUID uuid = UUID.randomUUID();
         final Player sut = Player.ofBot(uuid, "TestBot");
-        assertEquals(uuid, sut.getUuid());
+        assertThat(sut.getUuid()).isEqualTo(uuid);
     }
 
     @Test
@@ -90,10 +92,12 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         sut.setCards(cards);
         final Card playedCard = sut.play(c1);
-        assertAll(
-                () -> assertFalse(sut.getCards().contains(playedCard)),
-                () -> assertEquals(c1, playedCard)
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(playedCard).isEqualTo(c1);
+        softly.assertThat(sut.getCards().contains(playedCard))
+                .as("It's false that user owns the card")
+                .isFalse();
+        softly.assertAll();
     }
 
     @Test
@@ -102,10 +106,13 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         sut.setCards(cards);
         final Card discard = sut.discard(c1);
-        assertAll(
-                () -> assertFalse(sut.getCards().contains(discard)),
-                () -> assertEquals(Card.closed(), discard)
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(discard).isEqualTo(Card.closed());
+        softly.assertThat(sut.getCards().contains(discard))
+                .as("It's false that user owns the card")
+                .isFalse();
+        softly.assertAll();
     }
 
     @Test
@@ -114,7 +121,7 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         final Card otherCard = Card.of(Rank.FOUR, Suit.SPADES);
         sut.setCards(cards);
-        assertThrows(IllegalArgumentException.class, () -> sut.play(otherCard));
+        assertThatIllegalArgumentException().isThrownBy(() -> sut.play(otherCard));
     }
 
     @Test
@@ -123,7 +130,7 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         final Card otherCard = Card.of(Rank.FOUR, Suit.SPADES);
         sut.setCards(cards);
-        assertThrows(IllegalArgumentException.class, () -> sut.discard(otherCard));
+        assertThatIllegalArgumentException().isThrownBy(() -> sut.discard(otherCard));
     }
 
     @Test
@@ -132,7 +139,7 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         sut.addScore(HandPoints.THREE);
         sut.addScore(HandPoints.SIX);
-        assertEquals(HandPoints.NINE.get(), sut.getScore());
+        assertThat(sut.getScore()).isEqualTo(HandPoints.NINE.get());
     }
 
     @Test
@@ -141,27 +148,28 @@ class PlayerTest {
         final Player sut = Player.ofBot("Bot test");
         sut.addScore(HandPoints.NINE);
         sut.addScore(HandPoints.SIX);
-        assertEquals(HandPoints.TWELVE.get(), sut.getScore());
+        assertThat(sut.getScore()).isEqualTo(HandPoints.TWELVE.get());
     }
 
     @Test
     @DisplayName("Should players with the same uuid be the same")
     void shouldPlayersWithTheSameUuidBeTheSame() {
         final UUID uuid = UUID.randomUUID();
-        assertEquals(Player.ofBot(uuid, "Test1"), Player.ofBot(uuid, "Test2"));
+        assertThat(Player.ofBot(uuid, "Test1")).isEqualTo(Player.ofBot(uuid, "Test2"));
     }
 
     @Test
     @DisplayName("Should players with the same UUID have the same hashcode")
     void shouldPlayersWithTheSameUuidHaveTheSameHashcode() {
         final UUID uuid = UUID.randomUUID();
-        assertEquals(Player.ofBot(uuid, "Test1").hashCode(), Player.ofBot(uuid, "Test2").hashCode());
+        assertThat(Player.ofBot(uuid, "Test1").hashCode())
+                .isEqualTo(Player.ofBot(uuid, "Test2").hashCode());
     }
 
     @Test
     @DisplayName("Should players with different uuid not be the same")
     void shouldPlayersWithDifferentUuidNotBeTheSame() {
-        assertNotEquals(Player.ofBot("Test1"), Player.ofBot( "Test1"));
+        assertThat(Player.ofBot("Test1")).isNotEqualTo(Player.ofBot("Test1"));
     }
 
     @Test
@@ -170,6 +178,6 @@ class PlayerTest {
         final UUID uuid = UUID.randomUUID();
         final Player sut = Player.ofBot(uuid, "TestBot");
         String out = String.format("Player = %s (%s) has %d point(s)", sut.getUsername(), sut.getUuid(), sut.getScore());
-        assertEquals(out, sut.toString());
+        assertThat(sut.toString()).isEqualTo(out);
     }
 }
