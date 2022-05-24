@@ -28,6 +28,7 @@ import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +40,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -60,7 +62,7 @@ class CreateGameUseCaseTest {
         final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
-        assertNotNull(sut.createForUserAndBot(requestModel));
+        assertThat(sut.createForUserAndBot(requestModel)).isNotNull();
         verify(gameRepo, times(1)).save(any());
     }
 
@@ -70,7 +72,7 @@ class CreateGameUseCaseTest {
         final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.empty());
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
-        assertThrows(EntityNotFoundException.class, () -> sut.createForUserAndBot(requestModel));
+        assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(() -> sut.createForUserAndBot(requestModel));
     }
 
     @Test
@@ -81,7 +83,8 @@ class CreateGameUseCaseTest {
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         when(gameRepo.findByUserUuid(user.uuid())).thenReturn(Optional.of(game));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.createForUserAndBot(requestModel));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+                .isThrownBy(() -> sut.createForUserAndBot(requestModel));
         verify(gameRepo, times(1)).findByUserUuid(user.uuid());
     }
 
@@ -89,7 +92,8 @@ class CreateGameUseCaseTest {
     @DisplayName("Should throw if bot name is not a valid bot service implementation name")
     void shouldThrowIfBotNameIsNotAValidBotServiceImplementationName() {
         final var requestModel = new CreateForUserAndBotDto(userUUID, "NoBot");
-        assertThrows(NoSuchElementException.class, () -> sut.createForUserAndBot(requestModel));
+        assertThatExceptionOfType(NoSuchElementException.class)
+                .isThrownBy(() -> sut.createForUserAndBot(requestModel));
     }
 
     @Test
@@ -100,7 +104,7 @@ class CreateGameUseCaseTest {
                 "DummyBot",
                 UUID.randomUUID(),
                 "DummyBot");
-        assertNotNull(sut.createForBots(requestModel));
+        assertThat(sut.createForBots(requestModel)).isNotNull();
         verify(gameRepo, times(1)).save(any());
     }
 
@@ -108,11 +112,13 @@ class CreateGameUseCaseTest {
     @DisplayName("Should throw if any of bot names is an unavailable bot service implementation")
     void shouldThrowIfAnyOfBotNamesIsAnUnavailableBotServiceImplementation() {
         final UUID uuid = UUID.randomUUID();
-        assertAll(
-                () ->  assertThrows(NoSuchElementException.class,
-                        () -> sut.createForBots(new CreateForBotsDto(uuid, "DummyBot", uuid,"NoBot"))),
-                () ->  assertThrows(NoSuchElementException.class,
-                        () -> sut.createForBots(new CreateForBotsDto(uuid, "NoBot", uuid,"DummyBot")))
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() ->
+                sut.createForBots(new CreateForBotsDto(uuid, "DummyBot", uuid,"NoBot")))
+                .isInstanceOf(NoSuchElementException.class);
+        softly.assertThatThrownBy(() ->
+                sut.createForBots(new CreateForBotsDto(uuid, "NoBot", uuid,"DummyBot")))
+                .isInstanceOf(NoSuchElementException.class);
+        softly.assertAll();
     }
 }
