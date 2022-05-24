@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.user;
 
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +44,7 @@ class FindUserUseCaseTest {
     @Test
     @DisplayName("Should throw if injected repository is null")
     void shouldThrowIfInjectedRepositoryIsNull() {
-        assertThrows(NullPointerException.class, () -> new FindUserUseCase(null));
+        assertThatNullPointerException().isThrownBy(() -> new FindUserUseCase(null));
     }
 
     @Test
@@ -53,11 +54,12 @@ class FindUserUseCaseTest {
         final var user = new ApplicationUserDto(uuid, "name", "email@email.com", "password");
         when(repo.findByUuid(uuid)).thenReturn(Optional.of(user));
         final ApplicationUserDto model = sut.findByUUID(uuid);
-        assertAll(
-                () -> assertEquals(user.uuid(), model.uuid()),
-                () -> assertEquals(user.username(), model.username()),
-                () -> assertEquals(user.email(), model.email())
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(model.uuid()).isEqualTo(user.uuid());
+        softly.assertThat(model.username()).isEqualTo(user.username());
+        softly.assertThat(model.email()).isEqualTo(user.email());
+        softly.assertAll();
     }
 
     @Test
@@ -68,10 +70,11 @@ class FindUserUseCaseTest {
         final var user = new ApplicationUserDto(uuid, "name", "password", email);
         when(repo.findByUsername(email)).thenReturn(Optional.of(user));
         final ApplicationUserDto model = sut.findByUsername(email);
-        assertAll(
-                () -> assertEquals(user.uuid(), model.uuid()),
-                () -> assertEquals(user.username(), model.username()),
-                () -> assertEquals(user.email(), model.email())
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(model.uuid()).isEqualTo(user.uuid());
+        softly.assertThat(model.username()).isEqualTo(user.username());
+        softly.assertThat(model.email()).isEqualTo(user.email());
+        softly.assertAll();
     }
 }
