@@ -26,7 +26,8 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
@@ -56,7 +57,7 @@ class PlayCardUseCaseTest {
 
     @Mock private Player player1;
     @Mock private Player player2;
-    @Mock private GameRepository repo;
+    @Mock private ActiveGameRepository repo;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
@@ -83,7 +84,8 @@ class PlayCardUseCaseTest {
         Game game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
 
-        sut = new PlayCardUseCase(repo);
+        final var findGameUseCase = new FindGameUseCase(repo);
+        sut = new PlayCardUseCase(findGameUseCase);
     }
 
     @AfterEach
@@ -125,7 +127,7 @@ class PlayCardUseCaseTest {
         assertThat(intel.cardToPlayAgainst()).isEqualTo(cardDto);
     }
 
-   /* @Test
+    @Test
     @DisplayName("Should correctly play hand if invariants are met")
     void shouldCorrectlyPlayHandIfInvariantsAreMet() {
         final CardDto card1P1 = new CardDto("3", "C");
@@ -144,7 +146,7 @@ class PlayCardUseCaseTest {
         sut.playCard(new PlayCardDto(p2Uuid, card2P2));
 
         assertThatNoException().isThrownBy(() -> sut.discard(new PlayCardDto(p1Uuid, card2P1)));
-    }*/
+    }
 
     @Test
     @DisplayName("Should correctly play second card if invariants are met")

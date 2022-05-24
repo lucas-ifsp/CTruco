@@ -24,6 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
@@ -48,7 +49,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CreateGameUseCaseTest {
 
-    @Mock private GameRepository gameRepo;
+    @Mock private ActiveGameRepository gameRepo;
     @Mock private UserRepository userRepo;
 
     @InjectMocks

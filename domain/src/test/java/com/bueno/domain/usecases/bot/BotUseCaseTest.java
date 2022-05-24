@@ -29,7 +29,7 @@ import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,19 +48,19 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class BotUseCaseTest {
 
-    @Mock private Game game;
-    @Mock private Intel intel;
-    @Mock private Hand hand;
-    @Mock private Player player;
-    @Mock private GameRepository repo;
+    @Mock Game game;
+    @Mock Intel intel;
+    @Mock Hand hand;
+    @Mock Player player;
+    @Mock FindGameUseCase findGameUseCase;
 
-    @Mock private MaoDeOnzeHandler maoDeOnzeHandler;
-    @Mock private CardPlayingHandler cardPlayingHandler;
-    @Mock private RaiseHandler raiseHandler;
-    @Mock private RaiseRequestHandler raiseRequestHandler;
+    @Mock MaoDeOnzeHandler maoDeOnzeHandler;
+    @Mock CardPlayingHandler cardPlayingHandler;
+    @Mock RaiseHandler raiseHandler;
+    @Mock RaiseRequestHandler raiseRequestHandler;
 
     @InjectMocks
-    private BotUseCase sut;
+    BotUseCase sut;
 
     @BeforeEach
     void setUp() {
@@ -155,7 +155,7 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should create default handlers if they are not injected in constructor")
     void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
-        sut = new BotUseCase(repo, null, null, null, null);
+        sut = new BotUseCase(findGameUseCase, null, null, null, null);
         assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
 

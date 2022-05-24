@@ -26,7 +26,7 @@ import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
 import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
@@ -116,10 +116,10 @@ public class PlayWithBots {
     }
 
     private PlayWithBotsUseCase createNewGameSettings() {
-        final var repo = new InMemoryGameRepository();
+        final var repo = new InMemoryActiveGameRepository();
         final var createGameUseCase = new CreateGameUseCase(repo, null);
         final var findGameUseCase = new FindGameUseCase(repo);
-        return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
+        return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase);
     }
 
     public List<PlayWithBotsDto> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {

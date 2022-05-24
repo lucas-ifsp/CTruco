@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class FindGameUseCaseTest {
 
-    @Mock private GameRepository repo;
+    @Mock private ActiveGameRepository repo;
     @Mock private Game game;
     @InjectMocks private FindGameUseCase sut;
 
@@ -55,7 +56,7 @@ class FindGameUseCaseTest {
     void shouldLoadGameByUserUuid() {
         final UUID uuid = UUID.randomUUID();
         when(repo.findByUserUuid(uuid)).thenReturn(Optional.of(game));
-        assertEquals(Optional.of(game), sut.loadUserGame(uuid));
+        assertEquals(Optional.of(game), sut.findByUserUuid(uuid));
         verify(repo, times(1)).findByUserUuid(uuid);
     }
 
@@ -68,6 +69,6 @@ class FindGameUseCaseTest {
     @Test
     @DisplayName("Should throw if player uuid is null")
     void shouldThrowIfPlayerUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.loadUserGame(null));
+        assertThrows(NullPointerException.class, () -> sut.findByUserUuid(null));
     }
 }

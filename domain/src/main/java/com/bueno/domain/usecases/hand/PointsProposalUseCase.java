@@ -25,12 +25,12 @@ import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.utils.validation.Notification;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.validation.Validator;
 import org.springframework.stereotype.Service;
 
@@ -40,18 +40,18 @@ import java.util.UUID;
 @Service
 public class PointsProposalUseCase {
 
-    private final GameRepository repo;
+    private final FindGameUseCase findGameUseCase;
     private final BotUseCase botUseCase;
 
-    public PointsProposalUseCase(GameRepository repo) {
-        this.repo = Objects.requireNonNull(repo);
-        this.botUseCase = new BotUseCase(repo);
+    public PointsProposalUseCase(FindGameUseCase findGameUseCase) {
+        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+        this.botUseCase = new BotUseCase(findGameUseCase);
     }
 
     public IntelDto raise(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.RAISE);
 
-        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
@@ -64,7 +64,7 @@ public class PointsProposalUseCase {
     public IntelDto accept(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.ACCEPT);
 
-        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
@@ -77,7 +77,7 @@ public class PointsProposalUseCase {
     public IntelDto quit(UUID usedUuid){
         validateInput(usedUuid, PossibleAction.QUIT);
 
-        final Game game = repo.findByUserUuid(usedUuid).orElseThrow();
+        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
@@ -91,7 +91,7 @@ public class PointsProposalUseCase {
     }
 
     private void validateInput(UUID usedUuid, PossibleAction raise) {
-        final Validator<UUID> validator = new ActionValidator(repo, raise);
+        final Validator<UUID> validator = new ActionValidator(findGameUseCase, raise);
         final Notification notification = validator.validate(usedUuid);
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
     }

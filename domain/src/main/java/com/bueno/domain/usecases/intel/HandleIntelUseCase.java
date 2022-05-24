@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.dtos.IntelSinceDto;
 import com.bueno.domain.usecases.intel.dtos.OwnedCardsDto;
 import com.bueno.domain.usecases.intel.dtos.PlayerTurnDto;
@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 @Service
 public class HandleIntelUseCase {
 
-    private final GameRepository repo;
+    private final ActiveGameRepository repo;
 
-    public HandleIntelUseCase(GameRepository repo) {
+    public HandleIntelUseCase(ActiveGameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
     }
 

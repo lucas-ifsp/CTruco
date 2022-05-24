@@ -26,7 +26,7 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
@@ -54,7 +54,7 @@ class HandleIntelUseCaseTest {
 
     @Mock private Player player1;
     @Mock private Player player2;
-    @Mock private GameRepository repo;
+    @Mock private ActiveGameRepository repo;
 
     private UUID p1Uuid;
     private Game game;

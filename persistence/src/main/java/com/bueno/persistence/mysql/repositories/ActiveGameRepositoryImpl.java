@@ -21,18 +21,18 @@
 package com.bueno.persistence.mysql.repositories;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.persistence.mysql.dao.GameDao;
 import com.bueno.persistence.mysql.dto.GameDto;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class GameRepositoryImpl implements GameRepository {
+public class ActiveGameRepositoryImpl implements ActiveGameRepository {
 
     private final GameDao dao;
 
-    public GameRepositoryImpl(GameDao dao) {
+    public ActiveGameRepositoryImpl(GameDao dao) {
         this.dao = dao;
     }
 
