@@ -37,7 +37,7 @@ public class GameRepositoryImpl implements GameRepository {
     }
 
     @Override
-    public void save(Game game) {
+    public void create(Game game) {
         dao.save(GameDto.of(game));
     }
 
@@ -48,11 +48,6 @@ public class GameRepositoryImpl implements GameRepository {
 
     @Override
     public Optional<Game> findByUserUuid(UUID uuid) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Game> findByUserUsername(String userName) {
         return Optional.empty();
     }
 }

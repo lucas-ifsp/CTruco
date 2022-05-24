@@ -94,9 +94,8 @@ class PlayWithBotsUseCaseTest {
 
     static class MockRepo implements GameRepository{
         private Game game;
-        @Override public void save(Game game) {this.game = game;}
+        @Override public void create(Game game) {this.game = game;}
         @Override public Optional<Game> findByUuid(UUID uuid) {return Optional.ofNullable(game);}
         @Override public Optional<Game> findByUserUuid(UUID uuid) {return Optional.ofNullable(game);}
-        @Override public Optional<Game> findByUserUsername(String userName) {return Optional.ofNullable(game);}
     }
 }

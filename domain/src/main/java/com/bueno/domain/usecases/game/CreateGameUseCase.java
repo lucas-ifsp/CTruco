@@ -99,7 +99,7 @@ public class CreateGameUseCase {
 
     private IntelDto create(Player p1, Player p2) {
         final Game game = new Game(p1, p2);
-        gameRepo.save(game);
+        gameRepo.create(game);
         return IntelConverter.of(game.getIntel());
     }
 }

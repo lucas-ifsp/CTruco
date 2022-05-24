@@ -29,5 +29,4 @@ public interface GameDao extends JpaRepository<GameDto, Long> {
     GameDto getByUuid(UUID gameUuid);
     GameDto getByPlayer1UuidOrPlayer2Uuid(UUID player1Uuid, UUID player2Uuid);
     GameDto getByPlayer1UsernameOrPlayer2Username(String player1Username, String player2Username);
-
 }
