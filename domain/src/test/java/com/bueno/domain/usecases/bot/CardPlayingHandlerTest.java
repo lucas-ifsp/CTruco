@@ -40,8 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -70,14 +69,14 @@ class CardPlayingHandlerTest {
     @DisplayName("Should not handle if can not play")
     void shouldNotHandleIfCanNotPlay() {
         when(intel.possibleActions()).thenReturn(Set.of("RAISE"));
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should handle playing card and return true")
     void shouldHandlePlayingCardAndReturnTrue() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(cardUseCase, times(1)).playCard(any());
         verify(cardUseCase, times(0)).discard(any());
     }
@@ -86,7 +85,7 @@ class CardPlayingHandlerTest {
     @DisplayName("Should handle discard and return true")
     void shouldHandleDiscardAndReturnTrue() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.discard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(cardUseCase, times(0)).playCard(any());
         verify(cardUseCase, times(1)).discard(any());
     }

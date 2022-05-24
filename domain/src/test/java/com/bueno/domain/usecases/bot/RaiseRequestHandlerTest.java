@@ -36,8 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -66,7 +65,7 @@ class RaiseRequestHandlerTest {
     void shouldQuitIfBotServiceImplementationIsAnsweringToQuitAndQuitIsAllowed() {
         when(intel.possibleActions()).thenReturn(Set.of("QUIT"));
         when(botService.getRaiseResponse(any())).thenReturn(-1);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(1)).quit(bot.getUuid());
         verify(scoreUseCase, times(0)).accept(bot.getUuid());
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
@@ -77,7 +76,7 @@ class RaiseRequestHandlerTest {
     void shouldAcceptIfBotServiceImplementationIsAnsweringToAcceptAndAcceptIsAllowed() {
         when(intel.possibleActions()).thenReturn(Set.of("ACCEPT"));
         when(botService.getRaiseResponse(any())).thenReturn(0);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).quit(bot.getUuid());
         verify(scoreUseCase, times(1)).accept(bot.getUuid());
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
@@ -88,7 +87,7 @@ class RaiseRequestHandlerTest {
     void shouldRaiseIfBotServiceImplementationIsAnsweringToRaiseAndRaiseIsAllowed() {
         when(intel.possibleActions()).thenReturn(Set.of("RAISE"));
         when(botService.getRaiseResponse(any())).thenReturn(1);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).quit(bot.getUuid());
         verify(scoreUseCase, times(0)).accept(bot.getUuid());
         verify(scoreUseCase, times(1)).raise(bot.getUuid());
@@ -98,7 +97,7 @@ class RaiseRequestHandlerTest {
     @DisplayName("Should not quit if bot service implementation is answering to quit and quit is not allowed")
     void shouldNotQuitIfBotServiceImplementationIsAnsweringToQuitAndQuitIsNotAllowed() {
         when(botService.getRaiseResponse(any())).thenReturn(-1);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).quit(bot.getUuid());
     }
 
@@ -106,7 +105,7 @@ class RaiseRequestHandlerTest {
     @DisplayName("Should not accept if bot service implementation is answering to accept and accept is not allowed")
     void shouldNotAcceptIfBotServiceImplementationIsAnsweringToAcceptAndAcceptIsNotAllowed() {
         when(botService.getRaiseResponse(any())).thenReturn(0);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).accept(bot.getUuid());
     }
 
@@ -114,7 +113,7 @@ class RaiseRequestHandlerTest {
     @DisplayName("Should not raise if bot service implementation is answering to raise and raise is not allowed")
     void shouldNotRaiseIfBotServiceImplementationIsAnsweringToRaiseAndRaiseIsNotAllowed() {
         when(botService.getRaiseResponse(any())).thenReturn(1);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
     }
 
@@ -122,13 +121,13 @@ class RaiseRequestHandlerTest {
     @DisplayName("Should not handle if should play")
     void shouldNotHandleIfShouldPlay() {
         when(intel.possibleActions()).thenReturn(Set.of("PLAY"));
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should not handle in mao de onze")
     void shouldNotHandleInMaoDeOnze() {
         when(intel.isMaoDeOnze()).thenReturn(true);
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 }

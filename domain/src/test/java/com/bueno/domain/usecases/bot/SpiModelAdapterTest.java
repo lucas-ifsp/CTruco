@@ -42,7 +42,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,13 +83,13 @@ class SpiModelAdapterTest {
                 .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS))
                 .build();
 
-        assertEquals(expected, SpiModelAdapter.toGameIntel(player, intel));
+        assertThat(SpiModelAdapter.toGameIntel(player, intel)).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("ShouldConvertTrucoCardToCard")
     void shouldConvertTrucoCardToCard() {
         TrucoCard trucoCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        assertEquals(Card.of(Rank.ACE, Suit.CLUBS), SpiModelAdapter.toCard(trucoCard));
+        assertThat(SpiModelAdapter.toCard(trucoCard)).isEqualTo(Card.of(Rank.ACE, Suit.CLUBS));
     }
 }

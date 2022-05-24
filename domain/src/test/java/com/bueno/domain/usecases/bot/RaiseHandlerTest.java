@@ -36,8 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -66,21 +65,21 @@ class RaiseHandlerTest {
     @DisplayName("Should not handle if can not raise")
     void shouldNotHandleIfCanNotRaise() {
         when(intel.possibleActions()).thenReturn(Set.of("PLAY"));
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should not handle if is answering a raise request")
     void shouldNotHandleIfIsAnsweringARaiseRequest() {
         when(intel.possibleActions()).thenReturn(Set.of("PLAY", "ACCEPT", "QUIT"));
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should raise if bot service implementation decides to raise")
     void shouldRaiseIfBotServiceImplementationDecidesToRaise() {
         when(botService.decideIfRaises(any())).thenReturn(true);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(1)).raise(bot.getUuid());
     }
 
@@ -88,7 +87,7 @@ class RaiseHandlerTest {
     @DisplayName("Should not handle if bot service implementation decides to not raise")
     void shouldNotHandleIfBotServiceImplementationDecidesToNotRaise() {
         when(botService.decideIfRaises(any())).thenReturn(false);
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
     }
 }

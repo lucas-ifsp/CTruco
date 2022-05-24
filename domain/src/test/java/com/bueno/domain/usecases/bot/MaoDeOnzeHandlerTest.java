@@ -35,8 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -66,21 +65,21 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should not handle if is not mao de onze")
     void shouldNotHandleIfIsNotMaoDeOnze() {
         when(intel.isMaoDeOnze()).thenReturn(false);
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should not handle if has already handled")
     void shouldNotHandleIfHasAlreadyHandled() {
         when(intel.handPoints()).thenReturn(3);
-        assertFalse(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isFalse();
     }
 
     @Test
     @DisplayName("Should accept if bot service implementation decides to accept")
     void shouldAcceptIfBotServiceImplementationDecidesToAccept() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(true);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(1)).accept(any());
         verify(scoreUseCase, times(0)).quit(any());
     }
@@ -89,7 +88,7 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should quit if bot service implementation decides to quit")
     void shouldQuitIfBotServiceImplementationDecidesToQuit() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(false);
-        assertTrue(sut.handle(intel, bot));
+        assertThat(sut.handle(intel, bot)).isTrue();
         verify(scoreUseCase, times(0)).accept(any());
         verify(scoreUseCase, times(1)).quit(any());
     }
