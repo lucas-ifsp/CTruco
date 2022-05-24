@@ -27,26 +27,26 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 public class PlayCardDtoTest {
 
     @Test
     @DisplayName("Should not throw if all parameters are valid")
     void shouldNotThrowIfAllParametersAreValid() {
-        assertDoesNotThrow(() -> new PlayCardDto(UUID.randomUUID(), new CardDto("X", "X")));
+        assertThatNoException().isThrownBy(() -> new PlayCardDto(UUID.randomUUID(), new CardDto("X", "X")));
     }
 
     @Test
     @DisplayName("Should throw if uuid is null")
     void shouldThrowIfUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> new PlayCardDto(null, new CardDto("X", "X")));
+        assertThatNullPointerException().isThrownBy(() -> new PlayCardDto(null, new CardDto("X", "X")));
     }
 
     @Test
     @DisplayName("Should throw if card is null")
     void shouldThrowIfCardIsNull() {
-        assertThrows(NullPointerException.class, () -> new PlayCardDto(UUID.randomUUID(), null));
+        assertThatNullPointerException().isThrownBy(() -> new PlayCardDto(UUID.randomUUID(), null));
     }
 }
