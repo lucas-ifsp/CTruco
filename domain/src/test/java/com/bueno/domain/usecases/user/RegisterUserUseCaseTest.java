@@ -32,8 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -46,13 +45,13 @@ class RegisterUserUseCaseTest {
     @Test
     @DisplayName("Should throw if injected repository is null")
     void shouldThrowIfInjectedRepositoryIsNull() {
-        assertThrows(NullPointerException.class, () -> new RegisterUserUseCase(null));
+        assertThatNullPointerException().isThrownBy(() -> new RegisterUserUseCase(null));
     }
 
     @Test
     @DisplayName("Should throw if request model is null")
     void shouldThrowIfRequestModelIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.create(null));
+        assertThatNullPointerException().isThrownBy(() -> sut.create(null));
     }
 
     @Test
@@ -60,7 +59,7 @@ class RegisterUserUseCaseTest {
     void shouldThrowIfAUserWithSameUsernameIsAlreadyRegisteredInTheDatabase() {
         when(repo.findByUsername(any())).thenReturn(Optional.of(new ApplicationUserDto(null , "name", "email", "password")));
         var requestModel = new RegisterUserRequestDto("name", "password", "email");
-        assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
+        assertThatExceptionOfType(EntityAlreadyExistsException.class).isThrownBy(() -> sut.create(requestModel));
     }
 
     @Test
@@ -68,14 +67,14 @@ class RegisterUserUseCaseTest {
     void shouldThrowIfAUserWithSameEmailIsAlreadyRegisteredInTheDatabase() {
         when(repo.findByEmail(any())).thenReturn(Optional.of(new ApplicationUserDto(null, "name", "password", "email")));
         var requestModel = new RegisterUserRequestDto("name", "password", "email");
-        assertThrows(EntityAlreadyExistsException.class, () -> sut.create(requestModel));
+        assertThatExceptionOfType(EntityAlreadyExistsException.class).isThrownBy(() -> sut.create(requestModel));
     }
 
     @Test
     @DisplayName("Should create user in database if preconditions are met")
     void shouldCreateUserInDatabaseIfPreconditionsAreMet() {
         var requestModel = new RegisterUserRequestDto("name", "password", "email");
-        assertNotNull(sut.create(requestModel));
+        assertThat(sut.create(requestModel)).isNotNull();
         verify(repo, times(1)).save(any());
     }
 }
