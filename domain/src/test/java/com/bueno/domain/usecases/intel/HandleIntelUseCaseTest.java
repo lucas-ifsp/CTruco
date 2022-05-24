@@ -27,11 +27,10 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.GameRepository;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import org.junit.jupiter.api.BeforeAll;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,10 +41,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -60,11 +58,6 @@ class HandleIntelUseCaseTest {
 
     private UUID p1Uuid;
     private Game game;
-
-    @BeforeAll
-    static void init() {
-        LogManager.getLogManager().reset();
-    }
 
     @BeforeEach
     void setUp() {
@@ -85,31 +78,33 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if player requesting owned cards is not playing a game")
     void shouldThrowIfPlayerRequestingOwnedCardsIsNotPlayingAGame() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.ownedCards(UUID.randomUUID()));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+                .isThrownBy(() -> sut.ownedCards(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Should throw if requests owned cards with null uuid")
     void shouldThrowIfRequestsOwnedCardsWithNullUuid() {
-        assertThrows(NullPointerException.class, () -> sut.ownedCards(null));
+        assertThatNullPointerException().isThrownBy(() -> sut.ownedCards(null));
     }
 
     @Test
     @DisplayName("Should throw if player requesting intel history is not playing a game")
     void shouldThrowIfPlayerRequestingIntelHistoryIsNotPlayingAGame() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.findIntelSince(UUID.randomUUID(), null));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+                .isThrownBy(() -> sut.findIntelSince(UUID.randomUUID(), null));
     }
 
     @Test
     @DisplayName("Should throw if requests intel history with null uuid")
     void shouldThrowIfRequestsIntelHistoryWithNullUuid() {
-        assertThrows(NullPointerException.class, () -> sut.findIntelSince(null, null));
+        assertThatNullPointerException().isThrownBy(() -> sut.findIntelSince(null, null));
     }
 
     @Test
     @DisplayName("Should not throw if requests intel history with null base intel")
     void shouldNotThrowIfRequestsIntelHistoryWithNullBaseIntel() {
-        assertDoesNotThrow(() -> sut.findIntelSince(p1Uuid, null));
+        assertThatNoException().isThrownBy(() -> sut.findIntelSince(p1Uuid, null));
     }
 
     @Test
@@ -122,7 +117,7 @@ class HandleIntelUseCaseTest {
                 .stream()
                 .map(CardConverter::toDto)
                 .collect(Collectors.toList());
-        assertEquals(cards, ownedCards);
+        assertThat(ownedCards).isEqualTo(cards);
     }
 
     @Test
@@ -137,6 +132,6 @@ class HandleIntelUseCaseTest {
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
 
-        assertEquals(expected, obtained.intelSince());
+        assertThat(obtained.intelSince()).isEqualTo(expected);
     }
 }
