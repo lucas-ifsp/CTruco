@@ -21,11 +21,13 @@
 package com.bueno.domain.usecases.utils.dtos;
 
 import com.bueno.domain.usecases.intel.dtos.CardDto;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardDtoTest {
@@ -34,8 +36,7 @@ class CardDtoTest {
     @CsvSource({"A,C", "Q,S", "K,H", "J,D", "2,H", "X,x"})
     @DisplayName("Should not throw if parameters are valid")
     void shouldNotThrowIfParametersAreValid(String rank, String suit) {
-        assertDoesNotThrow(() -> new CardDto(rank, suit));
-
+        assertThatNoException().isThrownBy(() -> new CardDto(rank, suit));
     }
 
     @Test
@@ -48,28 +49,28 @@ class CardDtoTest {
     @CsvSource({"Aa,C", "8,H", "1,S"})
     @DisplayName("Should throw if rank is invalid")
     void shouldThrowIfRankIsInvalid(String rank) {
-        assertThrows(IllegalArgumentException.class, () -> new CardDto(rank, "C"));
+        assertThatIllegalArgumentException().isThrownBy(() -> new CardDto(rank, "C"));
     }
 
     @Test
     @DisplayName("Should throw if suit is null")
     void shouldThrowIfSuitIsNull() {
-        assertThrows(NullPointerException.class, () -> new CardDto("a", null));
+        assertThatNullPointerException().isThrownBy(() -> new CardDto("a", null));
     }
 
     @ParameterizedTest
     @CsvSource({"A,Cc", "Q,W", "K,"})
     @DisplayName("Should throw if suit is invalid")
     void shouldThrowIfSuitIsInvalid(String suit) {
-        assertThrows(IllegalArgumentException.class, () -> new CardDto("A", suit));
+        assertThatIllegalArgumentException().isThrownBy(() -> new CardDto("A", suit));
     }
 
     @Test
     @DisplayName("Should correctly create closed card")
     void shouldCorrectlyCreateClosedCard() {
-        assertAll(
-                () -> assertEquals("X", CardDto.closed().rank()),
-                () -> assertEquals("X", CardDto.closed().suit())
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(CardDto.closed().rank()).isEqualTo("X");
+        softly.assertThat(CardDto.closed().suit()).isEqualTo("X");
+        softly.assertAll();
     }
 }
