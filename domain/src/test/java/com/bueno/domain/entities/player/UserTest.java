@@ -20,12 +20,14 @@
 
 package com.bueno.domain.entities.player;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 class UserTest {
 
@@ -33,24 +35,25 @@ class UserTest {
     @DisplayName("Should be able to create user without providing uuid")
     void shouldBeAbleToCreateUserWithoutProvidingUuid() {
         final User sut = new User("test", "test@test.com", "password");
-        assertNotNull(sut.getUuid());
-        assertAll(
-                () -> assertNotNull(sut.getUuid()),
-                () -> assertEquals("test", sut.getUsername()),
-                () -> assertEquals("test@test.com", sut.getEmail())
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(sut.getUuid()).as("UUID").isNotNull();
+        softly.assertThat(sut.getUsername()).isEqualTo("test");
+        softly.assertThat(sut.getEmail()).isEqualTo("test@test.com");
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should throw if calls constructor with null username")
     void shouldThrowIfCallsConstructorWithNullUsername() {
-        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), null,"test@test.com", "password"));
+        assertThatNullPointerException()
+                .isThrownBy(() -> new User(UUID.randomUUID(), null,"test@test.com", "password"));
     }
 
     @Test
     @DisplayName("Should throw if calls constructor with null email")
     void shouldThrowIfCallsConstructorWithNullEmail() {
-        assertThrows(NullPointerException.class,() -> new User(UUID.randomUUID(), "test", null, "password"));
+        assertThatNullPointerException()
+                .isThrownBy(() -> new User(UUID.randomUUID(), "test", null, "password"));
     }
 
     @Test
@@ -59,7 +62,7 @@ class UserTest {
         final UUID uuid = UUID.randomUUID();
         final User user1 = new User(uuid, "test", "test@test.com", "password");
         final User user2 = new User(uuid, "test", "email@email.uk", "password");
-        assertEquals(user1, user2);
+        assertThat(user1).isEqualTo(user2);
     }
 
     @Test
@@ -68,7 +71,7 @@ class UserTest {
         final UUID uuid = UUID.randomUUID();
         final User user1 = new User(uuid, "test", "test@test.com", "password");
         final User user2 = new User(uuid, "test", "email@email.uk", "password");
-        assertEquals(user1.hashCode(), user2.hashCode());
+        assertThat(user1.hashCode()).isEqualTo(user2.hashCode());
     }
 
     @Test
@@ -76,6 +79,6 @@ class UserTest {
     void shouldCorrectlyToString() {
         final User sut = new User("test", "test@test.com", "password");
         String expected = String.format("User = %s (%s), %s", sut.getUsername(), sut.getUuid(), sut.getEmail());
-        assertEquals(expected, sut.toString());
+        assertThat(sut.toString()).isEqualTo(expected);
     }
 }
