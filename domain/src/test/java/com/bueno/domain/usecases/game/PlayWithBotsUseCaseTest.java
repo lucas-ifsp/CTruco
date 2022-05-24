@@ -23,6 +23,7 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class PlayWithBotsUseCaseTest {
 
     @Mock CreateGameUseCase createGameUseCase;
     @Mock FindGameUseCase findGameUseCase;
-    @Mock GameRepository gameRepo;
+    @Mock ActiveGameRepository gameRepo;
     @Mock Intel intel;
     @Mock Game game;
     @InjectMocks PlayWithBotsUseCase sut;
@@ -50,11 +51,9 @@ class PlayWithBotsUseCaseTest {
     void shouldThrowIfAnyInjectedParameterIsNull() {
         assertAll(
                 () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(null, findGameUseCase, gameRepo)),
+                        () -> new PlayWithBotsUseCase(null, findGameUseCase)),
                 () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(createGameUseCase, null, gameRepo)),
-                () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, null))
+                        () -> new PlayWithBotsUseCase(createGameUseCase, null))
         );
     }
 
@@ -84,7 +83,7 @@ class PlayWithBotsUseCaseTest {
         final var requestModel = new CreateForBotsDto(uuidA, "DummyBot", uuidB, "DummyBot");
         createGameUseCase.createForBots(requestModel);
 
-        final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase, repo);
+        final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase);
         final var response = sut.playWithBots(requestModel);
         assertAll(
                 () -> assertNotNull(response.uuid()),
@@ -92,7 +91,7 @@ class PlayWithBotsUseCaseTest {
         );
     }
 
-    static class MockRepo implements GameRepository{
+    static class MockRepo implements ActiveGameRepository {
         private Game game;
         @Override public void create(Game game) {this.game = game;}
         @Override public Optional<Game> findByUuid(UUID uuid) {return Optional.ofNullable(game);}

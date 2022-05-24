@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.hand.validator;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.validation.Validator;
 
@@ -32,18 +32,18 @@ import java.util.UUID;
 
 public class ActionValidator extends Validator<UUID> {
 
-    private final GameRepository repo;
+    private final FindGameUseCase findGameUseCase;
     private final PossibleAction action;
 
-    public ActionValidator(GameRepository repo, PossibleAction action) {
-        this.repo = repo;
+    public ActionValidator(FindGameUseCase findGameUseCase, PossibleAction action) {
+        this.findGameUseCase = findGameUseCase;
         this.action = action;
     }
 
     @Override
     public Notification validate(UUID uuid) {
         if(uuid == null) return new Notification("UUID is null.");
-        final var game = repo.findByUserUuid(uuid).orElse(null);
+        final var game = findGameUseCase.findByUserUuid(uuid).orElse(null);
         if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
         if(game.isDone()) return new Notification("Game is over. Start a new game.");
 

@@ -27,7 +27,7 @@ import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
 import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
@@ -36,18 +36,18 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.Objects;
 
 public class BotUseCase {
-    private final GameRepository repo;
+    private final FindGameUseCase findGameUseCase;
     private MaoDeOnzeHandler maoDeOnzeHandler;
     private RaiseHandler raiseHandler;
     private CardPlayingHandler cardHandler;
     private RaiseRequestHandler requestHandler;
 
-    public BotUseCase(GameRepository repo) {
-        this(repo, null, null, null, null);
+    public BotUseCase(FindGameUseCase findGameUseCase) {
+        this(findGameUseCase, null, null, null, null);
     }
 
-    BotUseCase(GameRepository repo, MaoDeOnzeHandler maoDeOnze, RaiseHandler raise, CardPlayingHandler card, RaiseRequestHandler request){
-        this.repo = Objects.requireNonNull(repo, "GameRepository must not be null.");
+    BotUseCase(FindGameUseCase findGameUseCase, MaoDeOnzeHandler maoDeOnze, RaiseHandler raise, CardPlayingHandler card, RaiseRequestHandler request){
+        this.findGameUseCase = Objects.requireNonNull(findGameUseCase, "GameRepository must not be null.");
         this.maoDeOnzeHandler = maoDeOnze;
         this.raiseHandler = raise;
         this.cardHandler = card;
@@ -77,12 +77,12 @@ public class BotUseCase {
 
     private void initializeNullHandlers(BotServiceProvider botService) {
         if (maoDeOnzeHandler == null)
-            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(repo), botService);
+            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(findGameUseCase), botService);
         if (raiseHandler == null)
-            raiseHandler = new RaiseHandler(new PointsProposalUseCase(repo), botService);
+            raiseHandler = new RaiseHandler(new PointsProposalUseCase(findGameUseCase), botService);
         if (cardHandler == null)
-            cardHandler = new CardPlayingHandler(new PlayCardUseCase(repo), botService);
+            cardHandler = new CardPlayingHandler(new PlayCardUseCase(findGameUseCase), botService);
         if (requestHandler == null)
-            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(repo), botService);
+            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(findGameUseCase), botService);
     }
 }

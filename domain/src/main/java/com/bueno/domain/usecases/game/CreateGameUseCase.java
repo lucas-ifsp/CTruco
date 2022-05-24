@@ -25,6 +25,7 @@ import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
@@ -40,10 +41,10 @@ import java.util.Objects;
 @Service
 public class CreateGameUseCase {
 
-    private final GameRepository gameRepo;
+    private final ActiveGameRepository gameRepo;
     private final UserRepository userRepo;
 
-    public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo) {
+    public CreateGameUseCase(ActiveGameRepository gameRepo, UserRepository userRepo) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
         this.userRepo = userRepo;
     }

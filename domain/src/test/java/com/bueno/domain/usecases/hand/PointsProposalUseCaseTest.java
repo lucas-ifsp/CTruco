@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.hand;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
@@ -52,7 +52,7 @@ class PointsProposalUseCaseTest {
 
     @Mock private Player player1;
     @Mock private Player player2;
-    @Mock private GameRepository repo;
+    @Mock private ActiveGameRepository repo;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
@@ -76,7 +76,9 @@ class PointsProposalUseCaseTest {
 
         game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
-        sut = new PointsProposalUseCase(repo);
+
+        final var findGameUseCase = new FindGameUseCase(repo);
+        sut = new PointsProposalUseCase(findGameUseCase);
     }
 
     @AfterEach
@@ -154,7 +156,7 @@ class PointsProposalUseCaseTest {
         final IntelDto firstIntel = sut.raise(p1Uuid);
         sut.quit(p2Uuid);//last intel is already pointing to a new hand.
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
-        final Game game = findGameUseCase.loadUserGame(p1Uuid).orElseThrow();
+        final Game game = findGameUseCase.findByUserUuid(p1Uuid).orElseThrow();
 
         final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
         final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);

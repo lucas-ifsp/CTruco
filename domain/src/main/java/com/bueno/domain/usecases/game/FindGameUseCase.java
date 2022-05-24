@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -30,9 +31,9 @@ import java.util.UUID;
 @Service
 public class FindGameUseCase {
 
-    private final GameRepository repo;
+    private final ActiveGameRepository repo;
 
-    public FindGameUseCase(GameRepository repo) {
+    public FindGameUseCase(ActiveGameRepository repo) {
         this.repo = repo;
     }
 
@@ -41,7 +42,7 @@ public class FindGameUseCase {
         return repo.findByUuid(gameUuid);
     }
 
-    public Optional<Game> loadUserGame(UUID userUuid) {
+    public Optional<Game> findByUserUuid(UUID userUuid) {
         final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
         return repo.findByUserUuid(Objects.requireNonNull(uuid));
     }

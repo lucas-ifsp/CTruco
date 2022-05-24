@@ -22,7 +22,7 @@ package com.bueno.persistence.inmemory;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 @Repository
-public class InMemoryGameRepository implements GameRepository {
+public class InMemoryActiveGameRepository implements ActiveGameRepository {
 
     private final Map<UUID, Game> games = new HashMap<>();
 

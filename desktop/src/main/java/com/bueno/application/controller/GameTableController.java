@@ -23,6 +23,7 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
@@ -31,7 +32,7 @@ import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto.PlayerInfo;
-import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -83,6 +84,7 @@ public class GameTableController {
     private List<ImageView> opponentCardImages;
 
     private final CreateGameUseCase gameUseCase;
+    private final FindGameUseCase findGameUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
@@ -96,10 +98,11 @@ public class GameTableController {
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
-        final var gameRepo = new InMemoryGameRepository();
+        final var gameRepo = new InMemoryActiveGameRepository();
         gameUseCase = new CreateGameUseCase(gameRepo, null);
-        playCardUseCase = new PlayCardUseCase(gameRepo);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
+        findGameUseCase = new FindGameUseCase(gameRepo);
+        playCardUseCase = new PlayCardUseCase(findGameUseCase);
+        pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);

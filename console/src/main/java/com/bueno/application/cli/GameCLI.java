@@ -22,7 +22,8 @@ package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
@@ -30,7 +31,7 @@ import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.persistence.inmemory.InMemoryGameRepository;
+import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -58,10 +59,11 @@ public class GameCLI {
     }
 
     public GameCLI() {
-        final GameRepository gameRepo = new InMemoryGameRepository();
+        final ActiveGameRepository gameRepo = new InMemoryActiveGameRepository();
         gameUseCase = new CreateGameUseCase(gameRepo, null);
-        playCardUseCase = new PlayCardUseCase(gameRepo);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
+        FindGameUseCase findGameUseCase = new FindGameUseCase(gameRepo);
+        playCardUseCase = new PlayCardUseCase(findGameUseCase);
+        pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }

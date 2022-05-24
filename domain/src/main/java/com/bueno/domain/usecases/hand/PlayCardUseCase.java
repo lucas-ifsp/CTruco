@@ -26,7 +26,7 @@ import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
@@ -40,12 +40,12 @@ import java.util.Objects;
 @Service
 public class PlayCardUseCase {
 
-    private final GameRepository repo;
+    private final FindGameUseCase findGameUseCase;
     private final BotUseCase botUseCase;
 
-    public PlayCardUseCase(GameRepository repo) {
-        this.repo = Objects.requireNonNull(repo);
-        this.botUseCase = new BotUseCase(repo);
+    public PlayCardUseCase(FindGameUseCase findGameUseCase) {
+        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+        this.botUseCase = new BotUseCase(findGameUseCase);
     }
 
     public IntelDto playCard(PlayCardDto request) {
@@ -57,12 +57,12 @@ public class PlayCardUseCase {
     }
 
     private IntelDto playCard(PlayCardDto request, boolean discard) {
-        final var validator = new ActionValidator(repo, PossibleAction.PLAY);
+        final var validator = new ActionValidator(findGameUseCase, PossibleAction.PLAY);
         final var notification = validator.validate(request.uuid());
 
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
 
-        final Game game = repo.findByUserUuid(request.uuid()).orElseThrow();
+        final Game game = findGameUseCase.findByUserUuid(request.uuid()).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
         final Card cardToPlay = CardConverter.toDto(request.card());
