@@ -24,50 +24,56 @@ import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 class RegisterUserRequestDtoTest {
 
     @Test
     @DisplayName("Should not throw if parameters are valid")
     void shouldNotThrowIfParametersAreValid() {
-        assertDoesNotThrow(() -> new RegisterUserRequestDto("username", "password", "email@email.com"));
-
+        assertThatNoException().isThrownBy(
+                () -> new RegisterUserRequestDto("username", "password", "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if username is null")
     void shouldThrowIfUsernameIsNull() {
-        assertThrows(NullPointerException.class, () -> new RegisterUserRequestDto(null, "password", "email@email.com"));
+        assertThatNullPointerException().isThrownBy(
+                () -> new RegisterUserRequestDto(null, "password", "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if username is empty")
     void shouldThrowIfUsernameIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new RegisterUserRequestDto("", "password", "email@email.com"));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new RegisterUserRequestDto("", "password", "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if password is null")
     void shouldThrowIfPasswordIsNull() {
-        assertThrows(NullPointerException.class, () -> new RegisterUserRequestDto("username", null, "email@email.com"));
+        assertThatNullPointerException().isThrownBy(
+                () -> new RegisterUserRequestDto("username", null, "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if password is empty")
     void shouldThrowIfPasswordIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new RegisterUserRequestDto("username", "", "email@email.com"));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new RegisterUserRequestDto("username", "", "email@email.com"));
     }
 
     @Test
     @DisplayName("Should throw if user email is null")
     void shouldThrowIfUserEmailIsNull() {
-        assertThrows(NullPointerException.class, () -> new RegisterUserRequestDto("username", "password", null));
+        assertThatNullPointerException().isThrownBy(
+                () -> new RegisterUserRequestDto("username", "password", null));
     }
 
     @Test
     @DisplayName("Should throw if email is empty")
     void shouldThrowIfEmailIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new RegisterUserRequestDto("username", "password", ""));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new RegisterUserRequestDto("username", "password", ""));
     }
 }
