@@ -26,8 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface GameRepository {
-    void save(Game game);
+    void create(Game game);
     Optional<Game> findByUuid(UUID uuid);
     Optional<Game> findByUserUuid(UUID uuid);
-    Optional<Game> findByUserUsername(String userName);
 }

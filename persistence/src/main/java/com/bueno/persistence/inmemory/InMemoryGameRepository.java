@@ -37,7 +37,7 @@ public class InMemoryGameRepository implements GameRepository {
     private final Map<UUID, Game> games = new HashMap<>();
 
     @Override
-    public void save(Game game) {
+    public void create(Game game) {
         games.put(game.getUuid(), game);
     }
 
@@ -54,13 +54,6 @@ public class InMemoryGameRepository implements GameRepository {
 
     private static boolean hasUuid(Player player, UUID uuid) {
         return player.getUuid().equals(uuid);
-    }
-
-    @Override
-    public Optional<Game> findByUserUsername(String username) {
-        Predicate<Game> hasPlayer =
-                game -> hasUsername(game.getPlayer1(), username) || hasUsername(game.getPlayer2(), username);
-        return games.values().stream().filter(hasPlayer).findAny();
     }
 
     private static boolean hasUsername(Player player, String username) {

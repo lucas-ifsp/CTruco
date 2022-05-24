@@ -63,7 +63,7 @@ class CreateGameUseCaseTest {
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertThat(sut.createForUserAndBot(requestModel)).isNotNull();
-        verify(gameRepo, times(1)).save(any());
+        verify(gameRepo, times(1)).create(any());
     }
 
     @Test
@@ -105,7 +105,7 @@ class CreateGameUseCaseTest {
                 UUID.randomUUID(),
                 "DummyBot");
         assertThat(sut.createForBots(requestModel)).isNotNull();
-        verify(gameRepo, times(1)).save(any());
+        verify(gameRepo, times(1)).create(any());
     }
 
     @Test
