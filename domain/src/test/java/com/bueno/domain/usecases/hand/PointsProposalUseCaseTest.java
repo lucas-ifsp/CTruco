@@ -24,9 +24,10 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.GameRepository;
+import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.intel.converters.IntelConverter;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -38,7 +39,8 @@ import java.util.UUID;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -88,54 +90,54 @@ class PointsProposalUseCaseTest {
     @Test
     @DisplayName("Should throw if accept method parameter is null")
     void shouldThrowIfAcceptMethodParameterIsNull() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.accept(null));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.accept(null));
     }
 
     @Test
     @DisplayName("Should throw if quit method parameter is null")
     void shouldThrowIfQuitMethodParameterIsNull() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.quit(null));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.quit(null));
     }
 
     @Test
     @DisplayName("Should throw if raiseBet method parameter is null")
     void shouldThrowIfRaiseBetMethodParameterIsNull() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(null));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(null));
     }
 
     @Test
     @DisplayName("Should throw if there is no active game for player UUID")
     void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(UUID.randomUUID()));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(p2Uuid));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(p2Uuid));
     }
 
     @Test
     @DisplayName("Should throw if requests actions not allowed in hand state")
     void shouldThrowIfRequestsActionsNotAllowedInHandState() {
-        assertAll(
-                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.accept(p1Uuid)),
-                () -> assertThrows(UnsupportedGameRequestException.class, () -> sut.quit(p1Uuid))
-                );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() -> sut.accept(p1Uuid)).isInstanceOf(UnsupportedGameRequestException.class);
+        softly.assertThatThrownBy(() -> sut.quit(p1Uuid)).isInstanceOf(UnsupportedGameRequestException.class);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should throw if requests action and the game is done")
     void shouldThrowIfRequestsActionAndTheGameIsDone() {
         when(player1.getScore()).thenReturn(12);
-        assertThrows(UnsupportedGameRequestException.class, () -> sut.raise(p1Uuid));
+        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(p1Uuid));
     }
 
     @Test
     @DisplayName("Should be able to raise bet if invariants are met")
     void shouldBeAbleToRaiseBetIfInvariantsAreMet() {
         final IntelDto intel = sut.raise(p1Uuid);
-        assertEquals(3, intel.handPointsProposal());
+        assertThat(intel.handPointsProposal()).isEqualTo(3);
     }
 
     @Test
@@ -143,7 +145,7 @@ class PointsProposalUseCaseTest {
     void shouldBeAbleToAcceptBetIfInvariantsAreMet() {
         sut.raise(p1Uuid);
         final IntelDto intel = sut.accept(p2Uuid);
-        assertEquals(3, intel.handPoints());
+        assertThat(intel.handPoints()).isEqualTo(3);
     }
 
     @Test
@@ -156,9 +158,10 @@ class PointsProposalUseCaseTest {
 
         final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
         final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);
-        assertAll(
-                () -> assertEquals(1, quitIntel.handPoints()),
-                () -> assertEquals(player1.getUsername(), quitIntel.handWinner())
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(quitIntel.handPoints()).isOne();
+        softly.assertThat(quitIntel.handWinner()).isEqualTo(player1.getUsername());
+        softly.assertAll();
     }
 }
