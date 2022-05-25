@@ -20,46 +20,47 @@
 
 package com.bueno.persistence.mysql.dto;
 
-import com.bueno.domain.entities.game.Game;
+
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
-@Table(name = "GAME")
-public class GameDto {
+@Table(name = "GAME_RESULT")
+public class GameResultEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long ID;
-    private UUID uuid;
+    @Column(name = "GAME_ID")
+    private UUID gameUuid;
+    @Column(name = "GAME_START_TIME")
+    private LocalDateTime gameStart;
+    @Column(name = "GAME_END_TIME")
+    private LocalDateTime gameEnd;
+    @Column(name = "WINNER")
+    private UUID winnerUuid;
+    @Column(name = "PLAYER1")
     private UUID player1Uuid;
-    private String player1Username;
+    @Column(name = "PLAYER1_SCORE")
+    private int player1Score;
+    @Column(name = "PLAYER2")
     private UUID player2Uuid;
-    private String player2Username;
+    @Column(name = "PLAYER2_SCORE")
+    private int player2Score;
 
-    private GameDto(UUID uuid, UUID player1Uuid, String player1Username, UUID player2Uuid, String player2Username) {
-        this.uuid = uuid;
-        this.player1Uuid = player1Uuid;
-        this.player1Username = player1Username;
-        this.player2Uuid = player2Uuid;
-        this.player2Username = player2Username;
-    }
 
-    public static GameDto of(Game game){
-        return new GameDto(
-                game.getUuid(),
-                game.getPlayer1().getUuid(),
-                game.getPlayer1().getUsername(),
-                game.getPlayer2().getUuid(),
-                game.getPlayer2().getUsername()
+    public static GameResultEntity from(GameResultDto dto){
+        return new GameResultEntity(dto.gameUuid(), dto.gameStart(), dto.gameEnd(),
+                dto.winnerUuid(), dto.player1Uuid(), dto.player1Score(), dto.player2Uuid(), dto.player2Score()
         );
     }
 }

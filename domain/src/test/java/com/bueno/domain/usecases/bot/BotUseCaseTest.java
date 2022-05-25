@@ -30,6 +30,7 @@ import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.SaveGameResultUseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +54,7 @@ class BotUseCaseTest {
     @Mock Hand hand;
     @Mock Player player;
     @Mock FindGameUseCase findGameUseCase;
+    @Mock SaveGameResultUseCase saveGameResultUseCase;
 
     @Mock MaoDeOnzeHandler maoDeOnzeHandler;
     @Mock CardPlayingHandler cardPlayingHandler;
@@ -83,7 +85,7 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should not accept null repo")
     void shouldNotAcceptNullRepo() {
-        assertThatNullPointerException().isThrownBy(() -> new BotUseCase(null));
+        assertThatNullPointerException().isThrownBy(() -> new BotUseCase(null, saveGameResultUseCase));
     }
 
     @Test
@@ -155,7 +157,7 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should create default handlers if they are not injected in constructor")
     void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
-        sut = new BotUseCase(findGameUseCase, null, null, null, null);
+        sut = new BotUseCase(findGameUseCase, saveGameResultUseCase,null,null,null,null);
         assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
 

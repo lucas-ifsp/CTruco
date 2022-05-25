@@ -25,6 +25,7 @@ import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.persistence.mysql.dao.UserDao;
 import com.bueno.persistence.mysql.dto.UserDto;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 import java.util.UUID;
 

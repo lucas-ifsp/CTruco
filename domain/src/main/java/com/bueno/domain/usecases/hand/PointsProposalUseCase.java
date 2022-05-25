@@ -26,12 +26,14 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.SaveGameResultUseCase;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.validation.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -41,11 +43,18 @@ import java.util.UUID;
 public class PointsProposalUseCase {
 
     private final FindGameUseCase findGameUseCase;
+    private final SaveGameResultUseCase saveGameResultUseCase;
     private final BotUseCase botUseCase;
 
     public PointsProposalUseCase(FindGameUseCase findGameUseCase) {
+        this(findGameUseCase, null);
+    }
+
+    @Autowired
+    public PointsProposalUseCase(FindGameUseCase findGameUseCase, SaveGameResultUseCase saveGameResultUseCase) {
         this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
-        this.botUseCase = new BotUseCase(findGameUseCase);
+        this.saveGameResultUseCase = saveGameResultUseCase;
+        this.botUseCase = new BotUseCase(findGameUseCase, saveGameResultUseCase);
     }
 
     public IntelDto raise(UUID usedUuid){
@@ -82,9 +91,11 @@ public class PointsProposalUseCase {
         final Player player = hand.getCurrentPlayer();
 
         hand.quit(player);
-        hand.getResult().ifPresent(unused -> updateGameStatus(game));
 
-        if(game.isDone()) return IntelConverter.of(game.getIntel());
+        final ResultHandler resultHandler = new ResultHandler(saveGameResultUseCase);
+        final IntelDto gameResult = resultHandler.handle(game);
+        if(gameResult != null) return gameResult;
+
         botUseCase.playWhenNecessary(game);
 
         return IntelConverter.of(game.getIntel());
@@ -94,10 +105,5 @@ public class PointsProposalUseCase {
         final Validator<UUID> validator = new ActionValidator(findGameUseCase, raise);
         final Notification notification = validator.validate(usedUuid);
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
-    }
-
-    private void updateGameStatus(Game game) {
-        game.updateScores();
-        if(!game.isDone()) game.prepareNewHand();
     }
 }
