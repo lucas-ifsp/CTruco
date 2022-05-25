@@ -72,6 +72,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/**").authenticated()
                 .anyRequest()
                 .authenticated();
+
+        // add this line to use H2 web console
+        http.headers().frameOptions().disable();
     }
 
     @Override
