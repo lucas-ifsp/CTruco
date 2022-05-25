@@ -35,6 +35,7 @@ import java.util.UUID;
 @Table(name = "USER")
 public class UserDto {
     @Id
+    @Column(name = "ID")
     private UUID uuid;
     private String username;
     private String email;

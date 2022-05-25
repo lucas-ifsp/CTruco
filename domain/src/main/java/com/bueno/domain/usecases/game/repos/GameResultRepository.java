@@ -18,15 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.dao;
+package com.bueno.domain.usecases.game.repos;
 
-import com.bueno.persistence.mysql.dto.GameDto;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
 
-import java.util.UUID;
-
-public interface GameDao extends JpaRepository<GameDto, Long> {
-    GameDto getByUuid(UUID gameUuid);
-    GameDto getByPlayer1UuidOrPlayer2Uuid(UUID player1Uuid, UUID player2Uuid);
-    GameDto getByPlayer1UsernameOrPlayer2Username(String player1Username, String player2Username);
+public interface GameResultRepository {
+    void save(GameResultDto gameResultDto);
 }

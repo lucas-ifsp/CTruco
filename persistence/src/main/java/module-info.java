@@ -4,5 +4,7 @@ module application.persistence {
     requires java.persistence;
     requires spring.data.jpa;
     requires spring.context;
+    requires spring.beans;
     exports com.bueno.persistence.inmemory;
+    exports com.bueno.persistence.mysql.repositories;
 }

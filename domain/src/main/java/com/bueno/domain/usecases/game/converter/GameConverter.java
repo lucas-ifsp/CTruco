@@ -18,36 +18,25 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.repositories;
+package com.bueno.domain.usecases.game.converter;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
-import com.bueno.persistence.mysql.dao.GameDao;
-import com.bueno.persistence.mysql.dto.GameDto;
+import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
-public class ActiveGameRepositoryImpl implements ActiveGameRepository {
-
-    private final GameDao dao;
-
-    public ActiveGameRepositoryImpl(GameDao dao) {
-        this.dao = dao;
-    }
-
-    @Override
-    public void create(Game game) {
-        dao.save(GameDto.of(game));
-    }
-
-    @Override
-    public Optional<Game> findByUuid(UUID uuid) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Game> findByUserUuid(UUID uuid) {
-        return Optional.empty();
+public final class GameConverter {
+    public static GameResultDto of(Game game){
+        return new GameResultDto(
+                game.getUuid(),
+                game.getTimestamp(),
+                LocalDateTime.now(),
+                game.getWinner().map(Player::getUuid).orElseThrow(),
+                game.getPlayer1().getUuid(),
+                game.getPlayer1().getScore(),
+                game.getPlayer2().getUuid(),
+                game.getPlayer2().getScore()
+        );
     }
 }
