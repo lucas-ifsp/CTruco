@@ -3,6 +3,7 @@ module domain {
     requires bot.spi;
     requires bot.impl;
     requires spring.context;
+    requires spring.beans;
 
     exports com.bueno.domain.entities.game to application.persistence;
     exports com.bueno.domain.entities.deck to application.persistence;
