@@ -24,6 +24,8 @@ import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
+import com.bueno.domain.usecases.user.dtos.RegisterUserResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<?> create(@RequestBody RegisterUserRequestDto request){
+    public ResponseEntity<RegisterUserResponseDto> create(@RequestBody RegisterUserRequestDto request){
         final String encodedPassword = encoder.encode(request.password());
         final RegisterUserRequestDto encodedPasswordRequest = new RegisterUserRequestDto(
                 request.username(),
@@ -54,7 +56,7 @@ public class UserController {
                 request.email());
 
         final var response = registerUserUseCase.create(encodedPasswordRequest);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/api/v1/user/by_uuid/{playerUuid}")

@@ -27,7 +27,7 @@ import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.game.SaveGameResultUseCase;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
@@ -43,18 +43,22 @@ import java.util.Objects;
 public class PlayCardUseCase {
 
     private final FindGameUseCase findGameUseCase;
-    private final SaveGameResultUseCase saveGameResultUseCase;
+    private final GameResultRepository gameResultRepository;
+    private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
 
     public PlayCardUseCase(FindGameUseCase findGameUseCase) {
-        this(findGameUseCase, null);
+        this(findGameUseCase, null, null);
     }
 
     @Autowired
-    public PlayCardUseCase(FindGameUseCase findGameUseCase, SaveGameResultUseCase saveGameResultUseCase) {
+    public PlayCardUseCase(FindGameUseCase findGameUseCase,
+                           GameResultRepository gameResultRepository,
+                           HandResultRepository handResultRepository) {
         this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
-        this.saveGameResultUseCase = saveGameResultUseCase;
-        this.botUseCase = new BotUseCase(findGameUseCase, saveGameResultUseCase);
+        this.gameResultRepository = gameResultRepository;
+        this.handResultRepository = handResultRepository;
+        this.botUseCase = new BotUseCase(findGameUseCase, gameResultRepository, handResultRepository);
     }
 
     public IntelDto playCard(PlayCardDto request) {
@@ -80,7 +84,7 @@ public class PlayCardUseCase {
         if (hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playedCard);
         else hand.playSecondCard(player, playedCard);
 
-        final ResultHandler resultHandler = new ResultHandler(saveGameResultUseCase);
+        final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
         if(gameResult != null) return gameResult;
 

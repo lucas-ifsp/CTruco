@@ -7,4 +7,5 @@ module application.persistence {
     requires spring.beans;
     exports com.bueno.persistence.inmemory;
     exports com.bueno.persistence.mysql.repositories;
+    exports com.bueno.persistence.mysql.dao;
 }

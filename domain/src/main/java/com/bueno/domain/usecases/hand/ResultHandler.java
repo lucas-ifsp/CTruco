@@ -21,26 +21,31 @@
 package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
-import com.bueno.domain.usecases.game.SaveGameResultUseCase;
-import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.converter.GameResultConverter;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.hand.converter.HandResultConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
 class ResultHandler {
 
-    private final SaveGameResultUseCase saveGameResultUseCase;
+    private final GameResultRepository gameResultRepository;
+    private final HandResultRepository handResultRepository;
 
-    ResultHandler(SaveGameResultUseCase saveGameResultUseCase) {
-        this.saveGameResultUseCase = saveGameResultUseCase;
+    ResultHandler(GameResultRepository gameResultRepository, HandResultRepository handResultRepository) {
+        this.gameResultRepository = gameResultRepository;
+        this.handResultRepository = handResultRepository;
     }
 
-    IntelDto handle(Game game){
-        final Hand currentHand = game.currentHand();
-        currentHand.getResult().ifPresent(unused -> updateGameStatus(game));
+    IntelDto handle(Game game) {
+        game.currentHand().getResult().ifPresent(unused -> {
+            if (handResultRepository != null) handResultRepository.save(HandResultConverter.of(game));
+            updateGameStatus(game);
+        });
 
-        if (game.isDone()){
-            if(saveGameResultUseCase != null) saveGameResultUseCase.save(GameConverter.of(game));
+        if (game.isDone()) {
+            if (gameResultRepository != null)
+                gameResultRepository.save(GameResultConverter.of(game));
             return IntelConverter.of(game.getIntel());
         }
         return null;
@@ -48,7 +53,6 @@ class ResultHandler {
 
     private void updateGameStatus(Game game) {
         game.updateScores();
-        if(!game.isDone()) game.prepareNewHand();
+        if (!game.isDone()) game.prepareNewHand();
     }
-
 }
