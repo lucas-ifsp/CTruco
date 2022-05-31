@@ -467,14 +467,14 @@ class HandTest {
             sut.quit(player2);
             assertThat(getPossibleWinner()).isEqualTo(player1);
         }
-
+/*
         @Test
         @DisplayName("Should have not points proposal after quitting")
         void shouldHaveNotPointsProposalAfterQuitting() {
             sut.raise(player1);
             sut.quit(player2);
             assertThat(sut.getPointsProposal()).isNull();
-        }
+        }*/
 
         @Test
         @DisplayName("Should current player be able to quit or accept or raise after a player requested to raise a bet")

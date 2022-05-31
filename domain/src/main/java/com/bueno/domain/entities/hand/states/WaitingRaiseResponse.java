@@ -70,8 +70,8 @@ class WaitingRaiseResponse implements HandState {
 
     @Override
     public void quit(Player responder) {
-        context.setLastBetRaiser(null);
-        context.removePointsProposal();
+        //context.setLastBetRaiser(null);
+        //context.removePointsProposal();
         context.setResult(HandResult.of(context.getOpponentOf(responder), context.getPoints()));
         context.setState(new Done(context));
         context.updateHistory(Event.QUIT);

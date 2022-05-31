@@ -31,6 +31,3 @@ public class WebApp {
         SpringApplication.run(WebApp.class, args);
     }
 }
-
-//TESTAR EM VARIOS JOGOS SE HA PROBLEMNA DE REMOVER A POINT PROPOSAL DO METODO QUIT
-//TESTAR SE ELE ESTÁ PERSISTINGO PROPOSAL QUANDO DÁ QUIT
