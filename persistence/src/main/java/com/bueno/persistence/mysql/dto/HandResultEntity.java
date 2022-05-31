@@ -41,9 +41,12 @@ public class HandResultEntity {
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "TYPE", length = 9)
     private String handType;
     private UUID gameUuid;
     private UUID handWinner;
+    private int points;
+    private int pointsProposal;
 
     @Column(name = "R1_WINNER")
     private UUID round1Winner;
@@ -75,6 +78,8 @@ public class HandResultEntity {
                 .gameUuid(dto.gameUuid())
                 .handType(dto.handType())
                 .handWinner(dto.handWinner())
+                .points(dto.points())
+                .pointsProposal(dto.pointsProposal())
                 .vira(getIfAvailable(openCards, 0))
                 .card1Round1(getIfAvailable(openCards, 1))
                 .card2Round1(getIfAvailable(openCards, 2))

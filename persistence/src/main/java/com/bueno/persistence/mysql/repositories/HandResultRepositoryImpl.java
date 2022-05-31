@@ -18,19 +18,25 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno;
+package com.bueno.persistence.mysql.repositories;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RestController;
+import com.bueno.domain.usecases.hand.HandResultRepository;
+import com.bueno.domain.usecases.hand.dtos.HandResultDto;
+import com.bueno.persistence.mysql.dao.HandResultDao;
+import com.bueno.persistence.mysql.dto.HandResultEntity;
+import org.springframework.stereotype.Repository;
 
-@SpringBootApplication
-@RestController
-public class WebApp {
-    public static void main(String[] args) {
-        SpringApplication.run(WebApp.class, args);
+@Repository
+public class HandResultRepositoryImpl implements HandResultRepository {
+
+    private final HandResultDao dao;
+
+    public HandResultRepositoryImpl(HandResultDao dao) {
+        this.dao = dao;
+    }
+
+    @Override
+    public void save(HandResultDto handResultDto) {
+        dao.save(HandResultEntity.from(handResultDto));
     }
 }
-
-//TESTAR EM VARIOS JOGOS SE HA PROBLEMNA DE REMOVER A POINT PROPOSAL DO METODO QUIT
-//TESTAR SE ELE ESTÁ PERSISTINGO PROPOSAL QUANDO DÁ QUIT

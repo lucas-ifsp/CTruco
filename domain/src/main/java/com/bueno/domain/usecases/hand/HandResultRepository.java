@@ -18,19 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno;
+package com.bueno.domain.usecases.hand;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RestController;
+import com.bueno.domain.usecases.hand.dtos.HandResultDto;
 
-@SpringBootApplication
-@RestController
-public class WebApp {
-    public static void main(String[] args) {
-        SpringApplication.run(WebApp.class, args);
-    }
+public interface HandResultRepository {
+    void save(HandResultDto handResultDto);
 }
-
-//TESTAR EM VARIOS JOGOS SE HA PROBLEMNA DE REMOVER A POINT PROPOSAL DO METODO QUIT
-//TESTAR SE ELE ESTÁ PERSISTINGO PROPOSAL QUANDO DÁ QUIT

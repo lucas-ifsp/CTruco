@@ -28,7 +28,8 @@ import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
 import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.game.SaveGameResultUseCase;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.hand.HandResultRepository;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.spi.service.BotServiceManager;
@@ -38,24 +39,27 @@ import java.util.Objects;
 
 public class BotUseCase {
     private final FindGameUseCase findGameUseCase;
-    private final SaveGameResultUseCase saveGameResultUseCase;
+    private final GameResultRepository gameResultRepo;
+    private final HandResultRepository handResultRepo;
     private MaoDeOnzeHandler maoDeOnzeHandler;
     private RaiseHandler raiseHandler;
     private CardPlayingHandler cardHandler;
     private RaiseRequestHandler requestHandler;
 
     public BotUseCase(FindGameUseCase findGameUseCase) {
-        this(findGameUseCase, null, null, null, null, null);
+        this(findGameUseCase, null, null, null, null, null, null);
     }
 
-    public BotUseCase(FindGameUseCase findGameUseCase, SaveGameResultUseCase saveGameResultUseCase) {
-        this(findGameUseCase, saveGameResultUseCase, null, null, null, null);
+    public BotUseCase(FindGameUseCase findGameUseCase, GameResultRepository gameResultRepo, HandResultRepository handResultRepo) {
+        this(findGameUseCase, gameResultRepo, handResultRepo, null, null, null, null);
     }
 
-    BotUseCase(FindGameUseCase findGameUseCase, SaveGameResultUseCase saveGameResultUseCase, MaoDeOnzeHandler maoDeOnze,
+    BotUseCase(FindGameUseCase findGameUseCase, GameResultRepository gameResultRepo,
+               HandResultRepository handResultRepo, MaoDeOnzeHandler maoDeOnze,
                RaiseHandler raise, CardPlayingHandler card, RaiseRequestHandler request){
         this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
-        this.saveGameResultUseCase = saveGameResultUseCase;
+        this.gameResultRepo = gameResultRepo;
+        this.handResultRepo = handResultRepo;
         this.maoDeOnzeHandler = maoDeOnze;
         this.raiseHandler = raise;
         this.cardHandler = card;
@@ -85,12 +89,12 @@ public class BotUseCase {
 
     private void initializeNullHandlers(BotServiceProvider botService) {
         if (maoDeOnzeHandler == null)
-            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(findGameUseCase, saveGameResultUseCase), botService);
+            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
         if (raiseHandler == null)
-            raiseHandler = new RaiseHandler(new PointsProposalUseCase(findGameUseCase, saveGameResultUseCase), botService);
+            raiseHandler = new RaiseHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
         if (cardHandler == null)
-            cardHandler = new CardPlayingHandler(new PlayCardUseCase(findGameUseCase, saveGameResultUseCase), botService);
+            cardHandler = new CardPlayingHandler(new PlayCardUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
         if (requestHandler == null)
-            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(findGameUseCase, saveGameResultUseCase), botService);
+            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
     }
 }

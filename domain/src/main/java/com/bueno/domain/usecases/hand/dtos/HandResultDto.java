@@ -23,6 +23,10 @@ package com.bueno.domain.usecases.hand.dtos;
 import java.util.List;
 import java.util.UUID;
 
-public record HandResultDto(long id, String handType, UUID gameUuid, UUID handWinner,
+public record HandResultDto(long id, String handType, UUID gameUuid, UUID handWinner, int points, int pointsProposal,
                             List<UUID> roundWinners, List<String> openCards){
+
+    public HandResultDto(String handType, UUID gameUuid, UUID handWinner, int points, int pointsProposal, List<UUID> roundWinners, List<String> openCards) {
+        this(0, handType, gameUuid, handWinner, points, pointsProposal, roundWinners, openCards);
+    }
 }
