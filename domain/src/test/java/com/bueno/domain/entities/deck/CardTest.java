@@ -79,7 +79,6 @@ class CardTest {
             assertThatNullPointerException().isThrownBy(() -> Card.of(Rank.ACE, null));
         }
 
-        //TODO name all soft using as according to https://joel-costigliola.github.io/assertj/core/api/org/assertj/core/api/SoftAssertions.html
         @Test
         @DisplayName("creating card with only rank or suit hidden")
         void creatingCardWithOnlyRankOrSuitHidden() {
