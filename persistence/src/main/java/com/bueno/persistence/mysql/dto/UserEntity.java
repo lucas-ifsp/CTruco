@@ -33,7 +33,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "USER")
-public class UserDto {
+public class UserEntity {
     @Id
     @Column(name = "ID")
     private UUID uuid;
@@ -41,18 +41,18 @@ public class UserDto {
     private String email;
     private String password;
 
-    private UserDto(UUID uuid, String username, String password, String email) {
+    private UserEntity(UUID uuid, String username, String password, String email) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public static UserDto from(ApplicationUserDto user) {
-        return new UserDto(user.uuid(), user.username(), user.password(), user.email());
+    public static UserEntity from(ApplicationUserDto user) {
+        return new UserEntity(user.uuid(), user.username(), user.password(), user.email());
     }
 
-    public static ApplicationUserDto toApplicationUser(UserDto dto){
+    public static ApplicationUserDto toApplicationUser(UserEntity dto){
         if(dto == null) return null;
         return new ApplicationUserDto(dto.uuid, dto.username, dto.password, dto.email);
     }

@@ -20,15 +20,15 @@
 
 package com.bueno.persistence.mysql.dao;
 
-import com.bueno.persistence.mysql.dto.UserDto;
+import com.bueno.persistence.mysql.dto.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface UserDao extends JpaRepository<UserDto, Long> {
-    UserDto getByUuid(UUID uuid);
-    UserDto getByEmail(String email);
-    UserDto getByUsername(String username);
+public interface UserDao extends JpaRepository<UserEntity, Long> {
+    UserEntity getByUuid(UUID uuid);
+    UserEntity getByEmail(String email);
+    UserEntity getByUsername(String username);
 }
