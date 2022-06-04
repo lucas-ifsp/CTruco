@@ -8,4 +8,5 @@ module application.persistence {
     exports com.bueno.persistence.inmemory;
     exports com.bueno.persistence.mysql.repositories;
     exports com.bueno.persistence.mysql.dao;
+    exports com.bueno.persistence.mysql.dto;
 }
