@@ -18,37 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.inmemory;
+package com.bueno.domain.usecases.game.repos;
 
-import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+import com.bueno.domain.entities.game.Game;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class InMemoryUserRepository implements UserRepository {
+public class DisposableActiveGameRepositoryImpl implements ActiveGameRepository {
 
-    private final Map<String, ApplicationUserDto> db = new HashMap<>();
+    private Game game;
 
     @Override
-    public void save(ApplicationUserDto user) {
-        db.put(user.username(), user);
+    public void create(Game game) {
+        this.game = game;
     }
 
     @Override
-    public Optional<ApplicationUserDto> findByUsername(String username) {
-        return Optional.ofNullable(db.get(username));
+    public Optional<Game> findByUuid(UUID key) {
+        return Optional.ofNullable(game);
     }
 
     @Override
-    public Optional<ApplicationUserDto> findByEmail(String email) {
-        return db.values().stream().filter(user -> user.email().equals(email)).findAny();
-    }
-
-    @Override
-    public Optional<ApplicationUserDto> findByUuid(UUID uuid) {
-        return db.values().stream().filter(user -> user.uuid().equals(uuid)).findAny();
+    public Optional<Game> findByUserUuid(UUID uuid) {
+        return Optional.ofNullable(game);
     }
 }
