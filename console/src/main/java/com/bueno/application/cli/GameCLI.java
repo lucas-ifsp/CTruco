@@ -31,7 +31,7 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -59,8 +59,8 @@ public class GameCLI {
     }
 
     public GameCLI() {
-        final ActiveGameRepository activeGameRepo = new InMemoryActiveGameRepository();
-        gameUseCase = new CreateGameUseCase(activeGameRepo, null);
+        final ActiveGameRepository activeGameRepo = new ActiveGameRepositoryImpl();
+        gameUseCase = new CreateGameUseCase(activeGameRepo);
         final var findGameUseCase = new FindGameUseCase(activeGameRepo);
         playCardUseCase = new PlayCardUseCase(findGameUseCase);
         pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);

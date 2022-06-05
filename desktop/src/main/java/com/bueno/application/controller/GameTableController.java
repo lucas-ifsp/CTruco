@@ -32,7 +32,7 @@ import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto.PlayerInfo;
-import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -98,8 +98,8 @@ public class GameTableController {
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
-        final var gameRepo = new InMemoryActiveGameRepository();
-        gameUseCase = new CreateGameUseCase(gameRepo, null);
+        final var gameRepo = new ActiveGameRepositoryImpl();
+        gameUseCase = new CreateGameUseCase(gameRepo);
         findGameUseCase = new FindGameUseCase(gameRepo);
         playCardUseCase = new PlayCardUseCase(findGameUseCase);
         pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);

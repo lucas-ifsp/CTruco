@@ -26,13 +26,14 @@ import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
-import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import com.bueno.spi.service.BotServiceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -44,9 +45,14 @@ public class CreateGameUseCase {
     private final ActiveGameRepository gameRepo;
     private final UserRepository userRepo;
 
+    @Autowired
     public CreateGameUseCase(ActiveGameRepository gameRepo, UserRepository userRepo) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
         this.userRepo = userRepo;
+    }
+
+    public CreateGameUseCase(ActiveGameRepository gameRepo) {
+        this(gameRepo, null);
     }
 
     public IntelDto createForUserAndBot(CreateForUserAndBotDto request){

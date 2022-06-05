@@ -18,11 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.inmemory;
+package com.bueno.domain.usecases.game.repos;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -32,9 +31,9 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 @Repository
-public class InMemoryActiveGameRepository implements ActiveGameRepository {
+public class ActiveGameRepositoryImpl implements ActiveGameRepository {
 
-    private final Map<UUID, Game> games = new HashMap<>();
+    private static final Map<UUID, Game> games = new HashMap<>();
 
     @Override
     public void create(Game game) {
@@ -54,9 +53,5 @@ public class InMemoryActiveGameRepository implements ActiveGameRepository {
 
     private static boolean hasUuid(Player player, UUID uuid) {
         return player.getUuid().equals(uuid);
-    }
-
-    private static boolean hasUsername(Player player, String username) {
-        return player.getUsername().equals(username);
     }
 }

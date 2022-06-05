@@ -26,7 +26,7 @@ import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.persistence.inmemory.InMemoryActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.DisposableActiveGameRepositoryImpl;
 import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Function;
-import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -45,8 +44,6 @@ public class PlayWithBots {
     private final UUID uuidBot2;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        LogManager.getLogManager().reset();
-
         final var main = new PlayWithBots();
 
         final var botNames = BotProviders.availableBots();
@@ -116,8 +113,8 @@ public class PlayWithBots {
     }
 
     private PlayWithBotsUseCase createNewGameSettings() {
-        final var repo = new InMemoryActiveGameRepository();
-        final var createGameUseCase = new CreateGameUseCase(repo, null);
+        final var repo = new DisposableActiveGameRepositoryImpl();
+        final var createGameUseCase = new CreateGameUseCase(repo);
         final var findGameUseCase = new FindGameUseCase(repo);
         return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase);
     }
