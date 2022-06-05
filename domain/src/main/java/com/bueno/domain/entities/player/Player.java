@@ -49,12 +49,6 @@ public class Player {
         return player;
     }
 
-    public static Player of(User user){
-        final Player player = new Player(user.getUuid(), user.getUsername());
-        player.isBot = false;
-        return player;
-    }
-
     public static Player ofBot(String botName){
         return ofBot(UUID.randomUUID(), botName);
     }
