@@ -32,7 +32,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +48,7 @@ class FindGameUseCaseTest {
     void shouldLoadGameByUuid() {
         final UUID uuid = UUID.randomUUID();
         when(repo.findByUuid(uuid)).thenReturn(Optional.of(game));
-        assertEquals(Optional.of(game), sut.load(uuid));
+        assertThat(sut.load(uuid)).isEqualTo(Optional.of(game));
         verify(repo, times(1)).findByUuid(uuid);
     }
 
@@ -56,19 +57,20 @@ class FindGameUseCaseTest {
     void shouldLoadGameByUserUuid() {
         final UUID uuid = UUID.randomUUID();
         when(repo.findByUserUuid(uuid)).thenReturn(Optional.of(game));
-        assertEquals(Optional.of(game), sut.findByUserUuid(uuid));
+        assertThat(sut.findByUserUuid(uuid)).isEqualTo(Optional.of(game));
+
         verify(repo, times(1)).findByUserUuid(uuid);
     }
 
     @Test
     @DisplayName("Should throw if game uuid is null")
     void shouldThrowIfGameUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.load(null));
+        assertThatNullPointerException().isThrownBy(() -> sut.load(null));
     }
 
     @Test
     @DisplayName("Should throw if player uuid is null")
     void shouldThrowIfPlayerUuidIsNull() {
-        assertThrows(NullPointerException.class, () -> sut.findByUserUuid(null));
+        assertThatNullPointerException().isThrownBy(() -> sut.findByUserUuid(null));
     }
 }

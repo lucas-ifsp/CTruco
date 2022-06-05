@@ -21,9 +21,9 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,35 +41,36 @@ class PlayWithBotsUseCaseTest {
 
     @Mock CreateGameUseCase createGameUseCase;
     @Mock FindGameUseCase findGameUseCase;
-    @Mock ActiveGameRepository gameRepo;
-    @Mock Intel intel;
-    @Mock Game game;
     @InjectMocks PlayWithBotsUseCase sut;
 
     @Test
     @DisplayName("Should throw if any injected parameter is null")
     void shouldThrowIfAnyInjectedParameterIsNull() {
-        assertAll(
-                () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(null, findGameUseCase)),
-                () -> assertThrows(NullPointerException.class,
-                        () -> new PlayWithBotsUseCase(createGameUseCase, null))
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() -> new PlayWithBotsUseCase(null, findGameUseCase))
+                .isInstanceOf(NullPointerException.class);
+        softly.assertThatThrownBy(() -> new PlayWithBotsUseCase(createGameUseCase, null))
+                .isInstanceOf(NullPointerException.class);
+        softly.assertAll();
     }
 
     @Test
     @DisplayName("Should throw if play with bots receive any null parameters")
     void shouldThrowIfPlayWithBotsReceiveAnyNullParameters() {
-        assertAll(
-                () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsDto(null, "BotA", UUID.randomUUID(), "BotB"))),
-                () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), null, UUID.randomUUID(), "BotB"))),
-                () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", null, "BotB"))),
-                () -> assertThrows(NullPointerException.class,
-                        () -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
-        );
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThatThrownBy(() -> sut.playWithBots(new CreateForBotsDto(null, "BotA", UUID.randomUUID(), "BotB")))
+                .isInstanceOf(NullPointerException.class);
+
+        softly.assertThatThrownBy(() -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), null, UUID.randomUUID(), "BotB")))
+                .isInstanceOf(NullPointerException.class);
+
+        softly.assertThatThrownBy(() -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", null, "BotB")))
+                .isInstanceOf(NullPointerException.class);
+
+        softly.assertThatThrownBy(() -> sut.playWithBots(new CreateForBotsDto(UUID.randomUUID(), "BotA", UUID.randomUUID(), null)))
+                .isInstanceOf(NullPointerException.class);
+
+        softly.assertAll();
     }
 
     @Test
@@ -85,10 +86,11 @@ class PlayWithBotsUseCaseTest {
 
         final var sut = new PlayWithBotsUseCase(createGameUseCase, findGameUseCase);
         final var response = sut.playWithBots(requestModel);
-        assertAll(
-                () -> assertNotNull(response.uuid()),
-                () -> assertNotNull(response.name())
-        );
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(response.uuid()).isNotNull();
+        softly.assertThat(response.name()).isNotNull();
+        softly.assertAll();
     }
 
     static class MockRepo implements ActiveGameRepository {

@@ -39,6 +39,7 @@ class UserTest {
         softly.assertThat(sut.getUuid()).as("UUID").isNotNull();
         softly.assertThat(sut.getUsername()).isEqualTo("test");
         softly.assertThat(sut.getEmail()).isEqualTo("test@test.com");
+        softly.assertThat(sut.getPassword()).isEqualTo("password");
         softly.assertAll();
     }
 
