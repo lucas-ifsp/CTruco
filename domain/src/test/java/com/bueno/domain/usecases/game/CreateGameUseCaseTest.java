@@ -28,7 +28,7 @@ import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
-import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.IllegalGameEnrolmentException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,7 +84,7 @@ class CreateGameUseCaseTest {
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         when(gameRepo.findByUserUuid(user.uuid())).thenReturn(Optional.of(game));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
-        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+        assertThatExceptionOfType(IllegalGameEnrolmentException.class)
                 .isThrownBy(() -> sut.createForUserAndBot(requestModel));
         verify(gameRepo, times(1)).findByUserUuid(user.uuid());
     }

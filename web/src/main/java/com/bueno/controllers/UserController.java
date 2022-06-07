@@ -20,8 +20,8 @@
 
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.FindUserUseCase;
+import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import com.bueno.domain.usecases.user.dtos.RegisterUserResponseDto;
@@ -39,7 +39,6 @@ public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
     private final FindUserUseCase findUserUseCase;
     private final PasswordEncoder encoder;
-
 
     public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, PasswordEncoder encoder) {
         this.registerUserUseCase = registerUserUseCase;
@@ -59,13 +58,13 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/api/v1/user/by_uuid/{playerUuid}")
-    public ResponseEntity<?> find(@PathVariable UUID playerUuid){
-        final var response = findUserUseCase.findByUUID(playerUuid);
+    @GetMapping(path = "/api/v1/users/{uuid}")
+    public ResponseEntity<?> find(@PathVariable UUID uuid){
+        final var response = findUserUseCase.findByUUID(uuid);
         final ApplicationUserDto responseWithoutPassword = new ApplicationUserDto(
                 response.uuid(),
                 response.username(),
-                null,
+                "",
                 response.email());
 
         return ResponseEntity.ok(responseWithoutPassword);

@@ -18,41 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.utils.validation;
+package com.bueno.domain.usecases.utils.exceptions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class Notification {
-    private final List<Error> errors = new ArrayList<>();
-
-    public Notification(){
-    }
-
-    public Notification(String message) {
-        addError(message);
-    }
-
-    public void addError(String message){
-        addError(message, null);
-    }
-
-    private void addError(String message, Exception e){
-        errors.add(new Error(message, e));
-    }
-
-    public boolean isCorrect(){
-        return errors.isEmpty();
-    }
-
-    public boolean hasErrors(){
-        return !isCorrect();
-    }
-
-    private record Error(String message, Exception cause) {}
-
-    public String errorMessage(){
-        return errors.stream().map(e -> e.message).collect(Collectors.joining("\n"));
+public class IllegalGameEnrolmentException extends RuntimeException{
+    public IllegalGameEnrolmentException(String message) {
+        super(message);
     }
 }
