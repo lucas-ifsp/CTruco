@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/api/v1/game/player/{playerUuid}/points")
+@RequestMapping(path = "/api/v1/games/players/{uuid}")
 public class PointsController {
 
     private final PointsProposalUseCase pointsUseCase;
@@ -39,21 +39,21 @@ public class PointsController {
         this.pointsUseCase = pointsUseCase;
     }
 
-    @PostMapping("/raise")
-    private ResponseEntity<?> raise(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.raise(playerUuid);
+    @PostMapping("/raised-points")
+    private ResponseEntity<?> raise(@PathVariable UUID uuid){
+        final var intel = pointsUseCase.raise(uuid);
         return ResponseEntity.ok(intel);
     }
 
-    @PostMapping("/accept")
-    private ResponseEntity<?> accept(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.accept(playerUuid);
+    @PostMapping("/accepted-bet")
+    private ResponseEntity<?> accept(@PathVariable UUID uuid){
+        final var intel = pointsUseCase.accept(uuid);
         return ResponseEntity.ok(intel);
     }
 
-    @PostMapping("/quit")
-    private ResponseEntity<?> quit(@PathVariable UUID playerUuid){
-        final var intel = pointsUseCase.quit(playerUuid);
+    @PostMapping("/quit-hand")
+    private ResponseEntity<?> quit(@PathVariable UUID uuid){
+        final var intel = pointsUseCase.quit(uuid);
         return ResponseEntity.ok(intel);
     }
 }

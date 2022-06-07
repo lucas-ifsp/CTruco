@@ -35,7 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.logging.LogManager;
 
 import static com.bueno.domain.entities.hand.HandPoints.*;
 import static com.bueno.domain.entities.intel.PossibleAction.*;
@@ -48,11 +47,6 @@ class HandTest {
     private Hand sut;
     @Mock private Player player1;
     @Mock private Player player2;
-
-    @BeforeAll
-    static void init() {
-        LogManager.getLogManager().reset();
-    }
 
     @BeforeEach
     void setUp() {

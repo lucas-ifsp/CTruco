@@ -24,6 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.validation.Validator;
 
@@ -42,19 +43,18 @@ public class ActionValidator extends Validator<UUID> {
 
     @Override
     public Notification validate(UUID uuid) {
-        if(uuid == null) return new Notification("UUID is null.");
+        if(uuid == null) throw new IllegalArgumentException("UUID is null.");
         final var game = findGameUseCase.findByUserUuid(uuid).orElse(null);
-        if(game == null) return new Notification("User with UUID " + uuid + " is not in an active game.");
-        if(game.isDone()) return new Notification("Game is over. Start a new game.");
+        if(game == null) throw new GameNotFoundException("User with UUID " + uuid + " is not in an active game.");
+        if(game.isDone()) throw  new GameNotFoundException("Game is over. Start a new game.");
 
         final var requester = getRequester(uuid, Objects.requireNonNull(game));
         final var currentHand = game.currentHand();
         final var possibleActions = currentHand.getPossibleActions();
-
         final var notification = new Notification();
 
         if(!currentHand.getCurrentPlayer().equals(requester))
-            notification.addError("User with UUID " + uuid + " is not in not the current player.");
+            notification.addError("User with UUID " + uuid + " in not the current player.");
 
         if(!possibleActions.contains(action))
             notification.addError("Invalid action for hand state. Valid actions: " + possibleActions);

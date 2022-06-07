@@ -31,7 +31,7 @@ import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
-import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.IllegalGameEnrolmentException;
 import com.bueno.spi.service.BotServiceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class CreateGameUseCase {
         final Player botPlayer = Player.ofBot(request.botName());
 
         gameRepo.findByUserUuid(userPlayer.getUuid()).ifPresent(unused -> {
-            throw new UnsupportedGameRequestException(userPlayer.getUuid() + " is already playing a game.");});
+            throw new IllegalGameEnrolmentException(userPlayer.getUuid() + " is already playing a game.");});
 
         return create(userPlayer, botPlayer);
     }

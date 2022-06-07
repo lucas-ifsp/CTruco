@@ -20,11 +20,14 @@
 
 package com.bueno.domain.usecases.intel.dtos;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
-public record IntelSinceDto(List<IntelDto> intelSince) {
-    public IntelSinceDto(List<IntelDto> intelSince) {
-        this.intelSince = Objects.requireNonNull(intelSince);
+public record IntelSinceDto(Instant baseTimestamp, List<IntelDto> intelSinceBaseTimestamp) {
+
+    public IntelSinceDto(Instant baseTimestamp, List<IntelDto> intelSinceBaseTimestamp) {
+        this.baseTimestamp = baseTimestamp;
+        this.intelSinceBaseTimestamp = Objects.requireNonNull(intelSinceBaseTimestamp);
     }
 }

@@ -22,6 +22,7 @@ package com.bueno.controllers;
 
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
+import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,26 +30,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/api/v1/game/player/{playerUuid}/card")
+@RequestMapping(path = "/api/v1/games/players/{uuid}/cards")
 public class CardController {
 
     private final PlayCardUseCase playCardUseCase;
+    private final HandleIntelUseCase intelUseCase;
 
-    public CardController(PlayCardUseCase playCardUseCase) {
+    public CardController(PlayCardUseCase playCardUseCase, HandleIntelUseCase intelUseCase) {
         this.playCardUseCase = playCardUseCase;
+        this.intelUseCase = intelUseCase;
     }
 
-    @PostMapping("/play")
-    private ResponseEntity<?> play(@PathVariable UUID playerUuid, @RequestBody CardDto card){
-        final var requestModel = new PlayCardDto(playerUuid, card);
+    @PostMapping("/played")
+    private ResponseEntity<?> play(@PathVariable UUID uuid, @RequestBody CardDto card){
+        final var requestModel = new PlayCardDto(uuid, card);
         final var intel = playCardUseCase.playCard(requestModel);
         return ResponseEntity.ok(intel);
     }
 
-    @PostMapping("/discard")
-    private ResponseEntity<?>  discard(@PathVariable UUID playerUuid, @RequestBody CardDto card){
-        final var requestModel = new PlayCardDto(playerUuid, card);
+    @PostMapping("/discarded")
+    private ResponseEntity<?>  discard(@PathVariable UUID uuid, @RequestBody CardDto card){
+        final var requestModel = new PlayCardDto(uuid, card);
         final var intel = playCardUseCase.discard(requestModel);
         return ResponseEntity.ok(intel);
+    }
+
+    @GetMapping
+    private ResponseEntity<?> getCards(@PathVariable UUID uuid){
+        final var responseModel = intelUseCase.ownedCards(uuid);
+        return ResponseEntity.ok(responseModel);
     }
 }

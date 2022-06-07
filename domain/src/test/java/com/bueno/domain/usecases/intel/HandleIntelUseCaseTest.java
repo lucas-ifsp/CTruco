@@ -30,7 +30,7 @@ import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
+import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,7 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if player requesting owned cards is not playing a game")
     void shouldThrowIfPlayerRequestingOwnedCardsIsNotPlayingAGame() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+        assertThatExceptionOfType(GameNotFoundException.class)
                 .isThrownBy(() -> sut.ownedCards(UUID.randomUUID()));
     }
 
@@ -91,7 +91,7 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should throw if player requesting intel history is not playing a game")
     void shouldThrowIfPlayerRequestingIntelHistoryIsNotPlayingAGame() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+        assertThatExceptionOfType(GameNotFoundException.class)
                 .isThrownBy(() -> sut.findIntelSince(UUID.randomUUID(), null));
     }
 
@@ -132,6 +132,6 @@ class HandleIntelUseCaseTest {
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
 
-        assertThat(obtained.intelSince()).isEqualTo(expected);
+        assertThat(obtained.intelSinceBaseTimestamp()).isEqualTo(expected);
     }
 }

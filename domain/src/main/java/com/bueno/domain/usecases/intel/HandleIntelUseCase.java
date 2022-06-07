@@ -22,12 +22,12 @@ package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.intel.converters.CardConverter;
+import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelSinceDto;
 import com.bueno.domain.usecases.intel.dtos.OwnedCardsDto;
 import com.bueno.domain.usecases.intel.dtos.PlayerTurnDto;
-import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
-import com.bueno.domain.usecases.intel.converters.CardConverter;
-import com.bueno.domain.usecases.intel.converters.IntelConverter;
+import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -49,7 +49,7 @@ public class HandleIntelUseCase {
         final var intelSince = game.getIntelSince(lastIntelTimestamp).stream()
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
-        return new IntelSinceDto(intelSince);
+        return new IntelSinceDto(lastIntelTimestamp, intelSince);
     }
 
     public OwnedCardsDto ownedCards(UUID uuid){
@@ -67,6 +67,6 @@ public class HandleIntelUseCase {
     private Game getGameOrThrow(UUID uuid) {
         Objects.requireNonNull(uuid, "UUID must not be null.");
         return repo.findByUserUuid(uuid).orElseThrow(
-                () -> new UnsupportedGameRequestException("User with UUID " + uuid + " is not in an active game."));
+                () -> new GameNotFoundException("User with UUID " + uuid + " is not in an active game."));
     }
 }

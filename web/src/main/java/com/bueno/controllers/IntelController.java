@@ -31,7 +31,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/api/v1/game/player/{playerId}")
+@RequestMapping(path = "/api/v1/games/players/{uuid}")
 public class IntelController {
 
     private final HandleIntelUseCase intelUseCase;
@@ -40,21 +40,15 @@ public class IntelController {
         this.intelUseCase = intelUseCase;
     }
 
-    @GetMapping(path = "/cards")
-    private ResponseEntity<?> getCards(@PathVariable UUID playerId){
-        final var responseModel = intelUseCase.ownedCards(playerId);
+    @GetMapping(path = "/in-turn")
+    private ResponseEntity<?> isPlayerTurn(@PathVariable UUID uuid){
+        final var responseModel = intelUseCase.isPlayerTurn(uuid);
         return ResponseEntity.ok(responseModel);
     }
 
-    @GetMapping(path = "/in_turn")
-    private ResponseEntity<?> isPlayerTurn(@PathVariable UUID playerId){
-        final var responseModel = intelUseCase.isPlayerTurn(playerId);
-        return ResponseEntity.ok(responseModel);
-    }
-
-    @GetMapping(path = "/intel_since/{lastIntelTimestamp}")
-    private ResponseEntity<?> getIntelSince(@PathVariable UUID playerId, @PathVariable Instant lastIntelTimestamp){
-        final var intelSince = intelUseCase.findIntelSince(playerId, lastIntelTimestamp);
+    @GetMapping(path = "/intel-since/{timestamp}")
+    private ResponseEntity<?> getIntelSince(@PathVariable UUID uuid, @PathVariable Instant timestamp){
+        final var intelSince = intelUseCase.findIntelSince(uuid, timestamp);
         return ResponseEntity.ok(intelSince);
     }
 }
