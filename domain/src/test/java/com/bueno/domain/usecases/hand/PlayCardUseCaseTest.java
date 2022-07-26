@@ -32,6 +32,7 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
@@ -113,7 +114,7 @@ class PlayCardUseCaseTest {
     @DisplayName("Should throw if requests action when game is done")
     void shouldThrowIfRequestsActionWhenGameIsDone() {
         when(player1.getScore()).thenReturn(12);
-        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+        assertThatExceptionOfType(GameNotFoundException.class)
                 .isThrownBy(() -> sut.playCard(new PlayCardDto(p1Uuid, new CardDto("X", "X"))));
     }
 

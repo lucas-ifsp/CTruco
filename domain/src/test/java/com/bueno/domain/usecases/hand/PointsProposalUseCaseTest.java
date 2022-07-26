@@ -26,6 +26,7 @@ import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
@@ -37,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.LogManager;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -92,19 +92,19 @@ class PointsProposalUseCaseTest {
     @Test
     @DisplayName("Should throw if accept method parameter is null")
     void shouldThrowIfAcceptMethodParameterIsNull() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.accept(null));
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> sut.accept(null));
     }
 
     @Test
     @DisplayName("Should throw if quit method parameter is null")
     void shouldThrowIfQuitMethodParameterIsNull() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.quit(null));
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> sut.quit(null));
     }
 
     @Test
     @DisplayName("Should throw if raiseBet method parameter is null")
     void shouldThrowIfRaiseBetMethodParameterIsNull() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(null));
+        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> sut.raise(null));
     }
 
     @Test
@@ -132,7 +132,7 @@ class PointsProposalUseCaseTest {
     @DisplayName("Should throw if requests action and the game is done")
     void shouldThrowIfRequestsActionAndTheGameIsDone() {
         when(player1.getScore()).thenReturn(12);
-        assertThatExceptionOfType(UnsupportedGameRequestException.class).isThrownBy(() -> sut.raise(p1Uuid));
+        assertThatExceptionOfType(GameNotFoundException.class).isThrownBy(() -> sut.raise(p1Uuid));
     }
 
     @Test
@@ -158,7 +158,7 @@ class PointsProposalUseCaseTest {
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.findByUserUuid(p1Uuid).orElseThrow();
 
-        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).collect(Collectors.toList());
+        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).toList();
         final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);
 
         SoftAssertions softly = new SoftAssertions();
