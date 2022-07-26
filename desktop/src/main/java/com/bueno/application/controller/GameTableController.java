@@ -221,7 +221,7 @@ public class GameTableController {
 
     private void updateIntel() {
         final var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
-        missingIntel.addAll(responseModel.intelSince());
+        missingIntel.addAll(responseModel.intelSinceBaseTimestamp());
         if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
