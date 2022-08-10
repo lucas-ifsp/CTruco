@@ -58,7 +58,7 @@ the community without changing a single line of code. Implementing and integrati
    <dependency>
         <groupId>com.bueno</groupId>
         <artifactId>bot-spi</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.2.0-SNAPSHOT</version>
     </dependency>
    ```
 
@@ -93,9 +93,10 @@ name of your service implementation. For example:
 
    ```
    <dependency>
-      <groupId>com.bueno</groupId>
-      <artifactId>bot-impl</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <!-- use the groupId and artifactId that you have defined in the POM of your bot-->
+      <groupId>com.your.group.id</groupId>
+      <artifactId>your-artifact-name</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
       <scope>compile</scope>
    </dependency>
    ```
