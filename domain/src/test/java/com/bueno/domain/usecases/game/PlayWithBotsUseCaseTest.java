@@ -34,8 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class PlayWithBotsUseCaseTest {
 
@@ -96,6 +94,10 @@ class PlayWithBotsUseCaseTest {
     static class MockRepo implements ActiveGameRepository {
         private Game game;
         @Override public void create(Game game) {this.game = game;}
+        @Override
+        public boolean delete(UUID uuid) {
+            return true;
+        }
         @Override public Optional<Game> findByUuid(UUID uuid) {return Optional.ofNullable(game);}
         @Override public Optional<Game> findByUserUuid(UUID uuid) {return Optional.ofNullable(game);}
     }

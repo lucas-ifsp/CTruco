@@ -35,6 +35,12 @@ public class DisposableActiveGameRepositoryImpl implements ActiveGameRepository 
     }
 
     @Override
+    public boolean delete(UUID uuid) {
+        game = null;
+        return true;
+    }
+
+    @Override
     public Optional<Game> findByUuid(UUID key) {
         return Optional.ofNullable(game);
     }
