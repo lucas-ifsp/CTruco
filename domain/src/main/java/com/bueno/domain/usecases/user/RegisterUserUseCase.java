@@ -27,7 +27,6 @@ import com.bueno.domain.usecases.utils.exceptions.EntityAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,11 +41,16 @@ public class RegisterUserUseCase {
     public RegisterUserResponseDto create(RegisterUserRequestDto request){
         Objects.requireNonNull(request,"Request model must not be null.");
 
-        repo.findByUsername(request.username()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This username is already in use: " + request.username());});
+        var inputError = "";
 
-        repo.findByEmail(request.email()).ifPresent(unused -> {
-            throw new EntityAlreadyExistsException("This email is already in use: " + request.email());});
+        if(repo.findByUsername(request.username()).isPresent())
+            inputError += "This username is already in use: " + request.username() + "\n";
+
+        if(repo.findByEmail(request.email()).isPresent())
+            inputError += "This email is already in use: " + request.email();
+
+        if(!inputError.isEmpty())
+            throw new EntityAlreadyExistsException(inputError);
 
         final ApplicationUserDto user = new ApplicationUserDto(
                 UUID.randomUUID(),
@@ -55,7 +59,6 @@ public class RegisterUserUseCase {
                 request.email());
 
         repo.save(user);
-        final Optional<ApplicationUserDto> byUuid = repo.findByUuid(user.uuid());
         return new RegisterUserResponseDto(user.uuid(), user.username(), user.email());
     }
 }
