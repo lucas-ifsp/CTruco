@@ -31,7 +31,8 @@ public class JwtProperties {
 
     private String secretKey;
     private String tokenPrefix;
-    private Integer tokenExpirationAfterDays;
+    private Integer tokenExpirationAfterMinutes;
+    private Integer refreshTokenExpirationAfterDays;
 
     public JwtProperties() {
     }
@@ -52,16 +53,29 @@ public class JwtProperties {
         this.tokenPrefix = tokenPrefix;
     }
 
-    public Integer getTokenExpirationAfterDays() {
-        return tokenExpirationAfterDays;
+    public Integer getTokenExpirationAfterMinutes() {
+        return tokenExpirationAfterMinutes;
     }
 
-    public void setTokenExpirationAfterDays(Integer tokenExpirationAfterDays) {
-        this.tokenExpirationAfterDays = tokenExpirationAfterDays;
+    public void setTokenExpirationAfterMinutes(Integer tokenExpirationAfterMinutes) {
+        this.tokenExpirationAfterMinutes = tokenExpirationAfterMinutes;
+    }
+
+    public Integer getRefreshTokenExpirationAfterDays() {
+        return refreshTokenExpirationAfterDays;
+    }
+
+    public void setRefreshTokenExpirationAfterDays(Integer refreshTokenExpirationAfterDays) {
+        this.refreshTokenExpirationAfterDays = refreshTokenExpirationAfterDays;
     }
 
     @Bean
     public String getAuthorizationHeader() {
         return HttpHeaders.AUTHORIZATION;
+    }
+
+    @Bean
+    public String getRefreshTokenHeader() {
+        return "Refresh-Token";
     }
 }

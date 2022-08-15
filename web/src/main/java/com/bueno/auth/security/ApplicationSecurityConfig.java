@@ -20,11 +20,12 @@
 
 package com.bueno.auth.security;
 
+import com.bueno.auth.jwt.JwtProperties;
 import com.bueno.auth.jwt.JwtTokenVerifier;
 import com.bueno.auth.jwt.JwtUsernameAndPasswordAuthenticationFilter;
-import com.bueno.auth.jwt.JwtProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +33,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 import javax.crypto.SecretKey;
 
@@ -68,12 +70,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/refresh-token").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/api/v1/**").authenticated()
                 .anyRequest()
                 .authenticated();
 
+        http.exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         // add this line to use H2 web console
         http.headers().frameOptions().disable();
     }

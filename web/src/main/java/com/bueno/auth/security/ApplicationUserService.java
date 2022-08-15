@@ -27,6 +27,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
@@ -39,6 +41,11 @@ public class ApplicationUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final ApplicationUserDto dto = findUserUseCase.findByUsername(username);
+        return ApplicationUser.ofUserDTO(dto);
+    }
+
+    public UserDetails loadUserById(UUID uuid) throws UsernameNotFoundException {
+        final ApplicationUserDto dto = findUserUseCase.findByUUID(uuid);
         return ApplicationUser.ofUserDTO(dto);
     }
 }

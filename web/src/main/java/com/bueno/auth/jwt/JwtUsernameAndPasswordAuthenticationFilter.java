@@ -23,6 +23,8 @@ package com.bueno.auth.jwt;
 import com.bueno.auth.security.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,12 +35,15 @@ import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 
+import static java.lang.System.currentTimeMillis;
+
+@Slf4j
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    public static final int MILLIS_OF_MINUTES = 60000;
     private final AuthenticationManager authenticationManager;
     private final SecretKey secretKey;
     private final JwtProperties jwtProperties;
@@ -63,8 +68,11 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                     authenticationRequest.getPassword()
             );
             return authenticationManager.authenticate(authentication);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("Authentication error: " + e.getMessage());
+            response.addHeader(jwtProperties.getAuthorizationHeader(), "Invalid username or password");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return null;
         }
     }
 
@@ -80,9 +88,21 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .claim("userId", user.getUuid())
                 .claim("username", user.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtProperties.getTokenExpirationAfterDays())))
+                .setIssuer(request.getRequestURL().toString())
+                .setExpiration(new Date(currentTimeMillis() + jwtProperties.getTokenExpirationAfterMinutes() * MILLIS_OF_MINUTES))
                 .signWith(secretKey)
                 .compact();
+
+        final String refreshToken = Jwts.builder()
+                .setSubject(user.getUuid().toString())
+                .setIssuedAt(new Date())
+                .setIssuer(request.getRequestURL().toString())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtProperties.getRefreshTokenExpirationAfterDays())))
+                .signWith(secretKey)
+                .compact();
+
         response.addHeader(jwtProperties.getAuthorizationHeader(), jwtProperties.getTokenPrefix() + token);
+        response.addHeader(jwtProperties.getRefreshTokenHeader(), jwtProperties.getTokenPrefix() + refreshToken);
+        log.info("Granted access and refresh tokens for: {}", user.getUsername());
     }
 }
