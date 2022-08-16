@@ -22,7 +22,6 @@ package com.bueno.auth.jwt;
 
 import com.bueno.auth.security.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,29 +30,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.util.Date;
-
-import static java.lang.System.currentTimeMillis;
 
 @Slf4j
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public static final int MILLIS_OF_MINUTES = 60000;
     private final AuthenticationManager authenticationManager;
-    private final SecretKey secretKey;
     private final JwtProperties jwtProperties;
+    private final JwtTokenHelper jwtTokenHelper;
 
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager,
-                                                      SecretKey secretKey,
-                                                      JwtProperties jwtProperties) {
+                                                      JwtProperties jwtProperties, JwtTokenHelper jwtTokenHelper) {
         this.authenticationManager = authenticationManager;
-        this.secretKey = secretKey;
         this.jwtProperties = jwtProperties;
+        this.jwtTokenHelper = jwtTokenHelper;
     }
 
     @Override
@@ -83,24 +75,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                                             Authentication authResult) {
 
         var user = (ApplicationUser) authResult.getPrincipal();
-        final String token = Jwts.builder()
-                .setSubject(user.getUuid().toString())
-                .claim("userId", user.getUuid())
-                .claim("username", user.getUsername())
-                .setIssuedAt(new Date())
-                .setIssuer(request.getRequestURL().toString())
-                .setExpiration(new Date(currentTimeMillis() + jwtProperties.getTokenExpirationAfterMinutes() * MILLIS_OF_MINUTES))
-                .signWith(secretKey)
-                .compact();
-
-        final String refreshToken = Jwts.builder()
-                .setSubject(user.getUuid().toString())
-                .setIssuedAt(new Date())
-                .setIssuer(request.getRequestURL().toString())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtProperties.getRefreshTokenExpirationAfterDays())))
-                .signWith(secretKey)
-                .compact();
-
+        final String issuer = request.getRequestURL().toString();
+        final String token = jwtTokenHelper.createAccessToken(user, issuer);
+        final String refreshToken = jwtTokenHelper.createRefreshToken(user, issuer);
         response.addHeader(jwtProperties.getAuthorizationHeader(), jwtProperties.getTokenPrefix() + token);
         response.addHeader(jwtProperties.getRefreshTokenHeader(), jwtProperties.getTokenPrefix() + refreshToken);
         log.info("Granted access and refresh tokens for: {}", user.getUsername());

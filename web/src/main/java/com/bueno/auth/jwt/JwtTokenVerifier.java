@@ -20,38 +20,27 @@
 
 package com.bueno.auth.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
-    private final SecretKey secretKey;
     private final JwtProperties jwtProperties;
+    private final JwtTokenHelper jwtTokenHelper;
 
-    public JwtTokenVerifier(SecretKey secretKey, JwtProperties jwtProperties) {
-        this.secretKey = secretKey;
+    public JwtTokenVerifier(JwtProperties jwtProperties, JwtTokenHelper jwtTokenHelper) {
         this.jwtProperties = jwtProperties;
+        this.jwtTokenHelper = jwtTokenHelper;
     }
 
     @Override
@@ -63,7 +52,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         }
 
         final String authorizationHeader = request.getHeader(jwtProperties.getAuthorizationHeader());
-        if (hasInvalidAuthorizationHeader(authorizationHeader)) {
+        if (jwtTokenHelper.hasInvalidAuthorizationHeader(authorizationHeader)) {
             final String error = "Authorization header is missing or invalid.";
             log.error("Token verification error: {}", error);
             response.addHeader(jwtProperties.getAuthorizationHeader(), error);
@@ -73,27 +62,14 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
         final String token = authorizationHeader.replace(jwtProperties.getTokenPrefix(), "");
         try {
-            final Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token);
-
-            final Claims body = claimsJws.getBody();
-            final String principal = body.getSubject();
+            final String principal = jwtTokenHelper.extractClaims(token).getSubject();
             final UUID userId = UUID.fromString(principal);
-
             final var authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             log.error("Token verification error: {}", e.getMessage());
-            final String headerError = jwtProperties.getTokenPrefix() + " error=" + e.getMessage();
-            response.addHeader(jwtProperties.getAuthorizationHeader(), headerError);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            Map<String, String> error = new HashMap<>();
-            error.put("ErrorDescription", e.getMessage());
-            response.setContentType(APPLICATION_JSON_VALUE);
-            new ObjectMapper().writeValue(response.getOutputStream(), error);
+            jwtTokenHelper.configureTokenErrorResponse(response, e.getMessage());
         }
     }
 
@@ -101,9 +77,5 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         return request.getServletPath().equals("/register")
                 || request.getServletPath().equals("/login")
                 || request.getServletPath().equals("/refresh-token");
-    }
-
-    private boolean hasInvalidAuthorizationHeader(String authorizationHeader) {
-        return Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith("Bearer ");
     }
 }

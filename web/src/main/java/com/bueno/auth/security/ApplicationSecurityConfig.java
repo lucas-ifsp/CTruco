@@ -21,6 +21,7 @@
 package com.bueno.auth.security;
 
 import com.bueno.auth.jwt.JwtProperties;
+import com.bueno.auth.jwt.JwtTokenHelper;
 import com.bueno.auth.jwt.JwtTokenVerifier;
 import com.bueno.auth.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -46,15 +47,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ApplicationUserService applicationUserService;
     private final SecretKey secretKey;
     private final JwtProperties jwtProperties;
+    private final JwtTokenHelper jwtTokenHelper;
 
     public ApplicationSecurityConfig(PasswordEncoder encoder,
                                      ApplicationUserService applicationUserService,
                                      SecretKey secretKey,
-                                     JwtProperties jwtProperties) {
+                                     JwtProperties jwtProperties, JwtTokenHelper jwtTokenHelper) {
         this.encoder = encoder;
         this.applicationUserService = applicationUserService;
         this.secretKey = secretKey;
         this.jwtProperties = jwtProperties;
+        this.jwtTokenHelper = jwtTokenHelper;
     }
 
     @Override
@@ -65,8 +68,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), secretKey, jwtProperties))
-                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtProperties), JwtUsernameAndPasswordAuthenticationFilter.class)
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProperties, jwtTokenHelper))
+                .addFilterAfter(new JwtTokenVerifier(jwtProperties, jwtTokenHelper), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
