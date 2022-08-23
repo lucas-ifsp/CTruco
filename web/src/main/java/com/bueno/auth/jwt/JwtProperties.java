@@ -75,7 +75,7 @@ public class JwtProperties {
     }
 
     @Bean
-    public String getRefreshTokenHeader() {
-        return "Refresh-Token";
+    public String getRefreshTokenProperty() {
+        return "refresh-token";
     }
 }

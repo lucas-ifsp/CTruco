@@ -25,8 +25,11 @@ import com.bueno.auth.jwt.JwtProperties;
 import com.bueno.auth.jwt.JwtTokenHelper;
 import com.bueno.auth.security.ApplicationUser;
 import com.bueno.auth.security.ApplicationUserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +37,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RestController
@@ -53,20 +60,22 @@ public class RefreshTokenController {
     }
 
     @GetMapping
-    public void getNewAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final String authorizationHeader = request.getHeader(jwtProperties.getAuthorizationHeader());
+    public void getNewAccessToken(
+            @CookieValue(value = "refresh-token", defaultValue = "") String refreshToken,
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
-        if (jwtTokenHelper.hasInvalidAuthorizationHeader(authorizationHeader)) {
-            final String error = "Authorization header is missing or invalid.";
+        if (Strings.isNullOrEmpty(refreshToken)) {
+            final String error = "Refresh token is missing or invalid.";
             log.error("Refresh token verification error: {}", error);
             response.addHeader(jwtProperties.getAuthorizationHeader(), error);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
 
-        final String refresh_token = authorizationHeader.replace(jwtProperties.getTokenPrefix(), "");
+        final String jwtToken = refreshToken.replace(jwtProperties.getTokenPrefix(), "");
         try {
-            final var principal = jwtTokenHelper.extractClaims(refresh_token).getSubject();
+            final var principal = jwtTokenHelper.extractClaims(jwtToken).getSubject();
             final var userId = UUID.fromString(principal);
 
             final var user = (ApplicationUser) applicationUserService.loadUserById(userId);
@@ -74,8 +83,14 @@ public class RefreshTokenController {
             final var token = jwtTokenHelper.createAccessToken(user, issuer);
 
             response.addHeader(jwtProperties.getAuthorizationHeader(), jwtProperties.getTokenPrefix() + token);
-            log.info("Refreshed access token for: {}", user.getUsername());
 
+            final Map<String, String> body = new HashMap<>();
+            body.put("uuid", user.getUuid().toString());
+            body.put("username", user.getUsername());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), body);
+
+            log.info("Refreshed access token for: {}", user.getUsername());
         } catch (Exception e) {
             log.error("Refresh token verification error: {}", e.getMessage());
             jwtTokenHelper.configureTokenErrorResponse(response, e.getMessage());

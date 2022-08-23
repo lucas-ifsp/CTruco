@@ -31,8 +31,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -72,14 +78,20 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) {
+                                            Authentication authResult) throws IOException {
 
         var user = (ApplicationUser) authResult.getPrincipal();
         final String issuer = request.getRequestURL().toString();
         final String token = jwtTokenHelper.createAccessToken(user, issuer);
-        final String refreshToken = jwtTokenHelper.createRefreshToken(user, issuer);
         response.addHeader(jwtProperties.getAuthorizationHeader(), jwtProperties.getTokenPrefix() + token);
-        response.addHeader(jwtProperties.getRefreshTokenHeader(), jwtProperties.getTokenPrefix() + refreshToken);
+
+        final Cookie refreshToken = jwtTokenHelper.createRefreshTokenCookie(user, issuer);
+        response.addCookie(refreshToken);
+
+        final Map<String, String> body = new HashMap<>();
+        body.put("uuid", user.getUuid().toString());
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), body);
         log.info("Granted access and refresh tokens for: {}", user.getUsername());
     }
 }

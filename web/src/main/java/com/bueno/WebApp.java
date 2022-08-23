@@ -20,8 +20,13 @@
 
 package com.bueno;
 
+import com.bueno.domain.usecases.user.RegisterUserUseCase;
+import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -29,5 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebApp {
     public static void main(String[] args) {
         SpringApplication.run(WebApp.class, args);
+    }
+
+    @Bean
+    CommandLineRunner run(RegisterUserUseCase registerUserUseCase, PasswordEncoder encoder){
+        return args -> {
+            final String encodedPassword = encoder.encode("123123");
+            final RegisterUserRequestDto defaultUser = new RegisterUserRequestDto("Lucas", encodedPassword, "lucas.ruas@gmail.com");
+            registerUserUseCase.create(defaultUser);
+        };
     }
 }

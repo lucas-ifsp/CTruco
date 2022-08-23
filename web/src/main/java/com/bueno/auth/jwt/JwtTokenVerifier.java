@@ -52,7 +52,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         }
 
         final String authorizationHeader = request.getHeader(jwtProperties.getAuthorizationHeader());
-        if (jwtTokenHelper.hasInvalidAuthorizationHeader(authorizationHeader)) {
+        if (jwtTokenHelper.hasInvalidAuthorization(authorizationHeader)) {
             final String error = "Authorization header is missing or invalid.";
             log.error("Token verification error: {}", error);
             response.addHeader(jwtProperties.getAuthorizationHeader(), error);

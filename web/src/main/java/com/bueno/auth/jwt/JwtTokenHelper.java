@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -44,6 +45,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class JwtTokenHelper {
 
     public static final int MILLIS_OF_MINUTES = 60000;
+    public static final int SECONDS_OF_DAY = 86400;
     private final SecretKey secretKey;
     private final JwtProperties jwtProperties;
 
@@ -68,18 +70,27 @@ public class JwtTokenHelper {
         return new Date(currentTimeMillis() + jwtProperties.getTokenExpirationAfterMinutes() * MILLIS_OF_MINUTES);
     }
 
-    public String createRefreshToken(ApplicationUser user, String issuer){
-        return Jwts.builder()
+    public Cookie createRefreshTokenCookie(ApplicationUser user, String issuer){
+        final String token = Jwts.builder()
                 .setSubject(user.getUuid().toString())
                 .setIssuedAt(new Date())
                 .setIssuer(issuer)
                 .setExpiration(getRefreshTokenExpiration())
                 .signWith(secretKey)
                 .compact();
+        Cookie cookie = new Cookie(jwtProperties.getRefreshTokenProperty(), token);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(getCookieExpiration());
+        cookie.setPath("/");
+        return cookie;
     }
 
     private java.sql.Date getRefreshTokenExpiration() {
         return java.sql.Date.valueOf(LocalDate.now().plusDays(jwtProperties.getRefreshTokenExpirationAfterDays()));
+    }
+
+    private int getCookieExpiration() {
+        return SECONDS_OF_DAY * jwtProperties.getRefreshTokenExpirationAfterDays();
     }
 
     public void configureTokenErrorResponse(HttpServletResponse response, String message) throws IOException {
@@ -92,7 +103,7 @@ public class JwtTokenHelper {
         new ObjectMapper().writeValue(response.getOutputStream(), error);
     }
 
-    public boolean hasInvalidAuthorizationHeader(String authorizationHeader) {
+    public boolean hasInvalidAuthorization(String authorizationHeader) {
         return Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith("Bearer ");
     }
 
