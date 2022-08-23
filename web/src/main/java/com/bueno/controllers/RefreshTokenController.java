@@ -29,11 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -93,6 +91,38 @@ public class RefreshTokenController {
             log.info("Refreshed access token for: {}", user.getUsername());
         } catch (Exception e) {
             log.error("Refresh token verification error: {}", e.getMessage());
+            jwtTokenHelper.configureTokenErrorResponse(response, e.getMessage());
+        }
+    }
+
+    @DeleteMapping
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String authorizationHeader = request.getHeader(jwtProperties.getAuthorizationHeader());
+        if (jwtTokenHelper.hasInvalidAuthorization(authorizationHeader)) {
+            final String error = "Authorization header is missing or invalid.";
+            log.error("Token verification error: {}", error);
+            response.addHeader(jwtProperties.getAuthorizationHeader(), error);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
+
+        final String jwt = authorizationHeader.replace(jwtProperties.getTokenPrefix(), "");
+        try {
+            final var principal = jwtTokenHelper.extractClaims(jwt).getSubject();
+            final var userId = UUID.fromString(principal);
+            final var user = (ApplicationUser) applicationUserService.loadUserById(userId);
+
+            Cookie expiredToken = new Cookie(jwtProperties.getRefreshTokenProperty(), "");
+            expiredToken.setHttpOnly(true);
+            expiredToken.setMaxAge(0);
+            expiredToken.setPath("/");
+
+            response.addCookie(expiredToken);
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+
+            log.info("User {} has been logged out.", user.getUsername());
+        } catch (Exception e) {
+            log.error("Token verification error: {}", e.getMessage());
             jwtTokenHelper.configureTokenErrorResponse(response, e.getMessage());
         }
     }

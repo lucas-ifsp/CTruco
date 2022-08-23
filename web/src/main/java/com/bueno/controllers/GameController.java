@@ -49,7 +49,7 @@ public class GameController {
     }
 
     @DeleteMapping(path = "/players/{uuid}")
-    public ResponseEntity<IntelDto> createForUserAndBot(@PathVariable UUID uuid){
+    public ResponseEntity<IntelDto> removeGame(@PathVariable UUID uuid){
         removeGameUseCase.byUserUuid(uuid);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
