@@ -84,7 +84,6 @@ public class GameTableController {
     private List<ImageView> opponentCardImages;
 
     private final CreateGameUseCase gameUseCase;
-    private final FindGameUseCase findGameUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
@@ -100,7 +99,7 @@ public class GameTableController {
     public GameTableController() {
         final var gameRepo = new ActiveGameRepositoryImpl();
         gameUseCase = new CreateGameUseCase(gameRepo);
-        findGameUseCase = new FindGameUseCase(gameRepo);
+        FindGameUseCase findGameUseCase = new FindGameUseCase(gameRepo);
         playCardUseCase = new PlayCardUseCase(findGameUseCase);
         pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
