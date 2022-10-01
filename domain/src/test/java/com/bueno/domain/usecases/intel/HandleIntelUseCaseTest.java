@@ -115,7 +115,7 @@ class HandleIntelUseCaseTest {
         final List<Card> ownedCards = sut.ownedCards(p1Uuid)
                 .cards()
                 .stream()
-                .map(CardConverter::toDto)
+                .map(CardConverter::fromDto)
                 .collect(Collectors.toList());
         assertThat(ownedCards).isEqualTo(cards);
     }

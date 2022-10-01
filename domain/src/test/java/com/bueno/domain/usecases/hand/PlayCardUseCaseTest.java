@@ -122,7 +122,7 @@ class PlayCardUseCaseTest {
     @DisplayName("Should correctly play first card if invariants are met")
     void shouldCorrectlyPlayFirstCardIfInvariantsAreMet() {
         final Card card = Card.of(Rank.THREE, Suit.CLUBS);
-        final CardDto cardDto = CardConverter.toEntity(card);
+        final CardDto cardDto = CardConverter.toDto(card);
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
         final IntelDto intel = sut.playCard(new PlayCardDto(p1Uuid, cardDto));
         assertThat(intel.cardToPlayAgainst()).isEqualTo(cardDto);
@@ -139,8 +139,8 @@ class PlayCardUseCaseTest {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1P1), CardConverter.toDto(card2P1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1P2), CardConverter.toDto(card2P2))));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P1), CardConverter.fromDto(card2P1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P2), CardConverter.fromDto(card2P2))));
 
         sut.discard(new PlayCardDto(p1Uuid, card1P1));
         sut.playCard(new PlayCardDto(p2Uuid, card1P2));
@@ -155,8 +155,8 @@ class PlayCardUseCaseTest {
         final CardDto card1 = new CardDto("3", "C");
         final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
 
         sut.discard(new PlayCardDto(p1Uuid, card1));
         final IntelDto intel = sut.playCard(new PlayCardDto(p2Uuid, card2));
@@ -173,8 +173,8 @@ class PlayCardUseCaseTest {
         final CardDto card1 = new CardDto("3", "C");
         final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
         sut.discard(new PlayCardDto(p2Uuid, card2));
@@ -188,8 +188,8 @@ class PlayCardUseCaseTest {
         final CardDto card1 = new CardDto("3", "C");
         final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.toDto(card2))));
+        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
+        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
         sut.discard(new PlayCardDto(p2Uuid, card2));

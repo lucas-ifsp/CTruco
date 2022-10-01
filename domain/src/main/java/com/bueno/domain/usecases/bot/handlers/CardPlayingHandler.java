@@ -48,7 +48,7 @@ public class CardPlayingHandler implements Handler{
             final var botUuid = bot.getUuid();
             final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
             final var card = toCard(chosenCard.content());
-            final var requestModel = new PlayCardDto(botUuid, CardConverter.toEntity(card));
+            final var requestModel = new PlayCardDto(botUuid, CardConverter.toDto(card));
 
             if (chosenCard.isDiscard()) cardUseCase.discard(requestModel);
             else cardUseCase.playCard(requestModel);

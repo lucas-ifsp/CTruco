@@ -78,7 +78,7 @@ public class PlayCardUseCase {
         final Game game = findGameUseCase.findByUserUuid(request.uuid()).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
-        final Card cardToPlay = CardConverter.toDto(request.card());
+        final Card cardToPlay = CardConverter.fromDto(request.card());
         final Card playedCard = discard ? player.discard(cardToPlay) : player.play(cardToPlay);
 
         if (hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playedCard);

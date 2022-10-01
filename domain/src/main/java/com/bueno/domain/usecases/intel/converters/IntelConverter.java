@@ -43,15 +43,15 @@ public class IntelConverter {
                 intel.roundWinnersUsernames(),
                 intel.roundWinnersUuid(),
                 intel.roundsPlayed(),
-                CardConverter.toEntity(intel.vira()),
-                intel.openCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()),
+                CardConverter.toDto(intel.vira()),
+                intel.openCards().stream().map(CardConverter::toDto).collect(Collectors.toList()),
                 intel.handWinner().orElse(null),
                 intel.currentPlayerUuid().orElse(null),
                 intel.currentPlayerScore(),
                 intel.currentPlayerUsername(),
                 intel.currentOpponentScore(),
                 intel.currentOpponentUsername(),
-                intel.cardToPlayAgainst().map(CardConverter::toEntity).orElse(null),
+                intel.cardToPlayAgainst().map(CardConverter::toDto).orElse(null),
                 playersDto,
                 intel.event().orElse(null),
                 intel.eventPlayerUuid().orElse(null),
@@ -62,7 +62,7 @@ public class IntelConverter {
 
     private static PlayerDto ofPlayerIntel(Intel.PlayerIntel playerIntel){
         final var playerCards = playerIntel.getCards().stream()
-                .map(CardConverter::toEntity)
+                .map(CardConverter::toDto)
                 .collect(Collectors.toList());
 
         return new PlayerDto(

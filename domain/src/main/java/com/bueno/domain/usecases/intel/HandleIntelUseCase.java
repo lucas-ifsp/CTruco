@@ -61,7 +61,7 @@ public class HandleIntelUseCase {
     public OwnedCardsDto ownedCards(UUID uuid){
         final var game = getGameOrThrow(uuid);
         final var player = game.getPlayer1().getUuid().equals(uuid) ? game.getPlayer1() : game.getPlayer2();
-        return new OwnedCardsDto(player.getCards().stream().map(CardConverter::toEntity).collect(Collectors.toList()));
+        return new OwnedCardsDto(player.getCards().stream().map(CardConverter::toDto).collect(Collectors.toList()));
     }
 
     public PlayerTurnDto isPlayerTurn(UUID uuid) {
