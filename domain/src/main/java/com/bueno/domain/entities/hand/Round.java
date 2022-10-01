@@ -68,6 +68,26 @@ public class Round {
         return Optional.ofNullable(winner);
     }
 
+    public Player getFirstToPlay() {
+        return firstToPlay;
+    }
+
+    public Player getLastToPlay() {
+        return lastToPlay;
+    }
+
+    public Card getVira() {
+        return vira;
+    }
+
+    public Card getFirstCard() {
+        return firstCard;
+    }
+
+    public Card getLastCard() {
+        return lastCard;
+    }
+
     @Override
     public String toString() {
         String result = winner == null ? "Draw" : winner.getUsername() + " wins";
