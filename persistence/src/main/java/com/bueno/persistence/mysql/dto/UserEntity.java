@@ -32,7 +32,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "USER")
+@Table(name = "APP_USER")
 public class UserEntity {
     @Id
     @Column(name = "ID")

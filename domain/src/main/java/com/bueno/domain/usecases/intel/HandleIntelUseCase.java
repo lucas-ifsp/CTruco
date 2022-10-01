@@ -24,6 +24,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.intel.dtos.IntelSinceDto;
 import com.bueno.domain.usecases.intel.dtos.OwnedCardsDto;
 import com.bueno.domain.usecases.intel.dtos.PlayerTurnDto;
@@ -50,6 +51,11 @@ public class HandleIntelUseCase {
                 .map(IntelConverter::of)
                 .collect(Collectors.toList());
         return new IntelSinceDto(lastIntelTimestamp, intelSince);
+    }
+
+    public IntelDto findLastIntel(UUID uuid){
+        final var game = getGameOrThrow(uuid);
+        return IntelConverter.of(game.getIntel());
     }
 
     public OwnedCardsDto ownedCards(UUID uuid){

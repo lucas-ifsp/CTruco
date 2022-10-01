@@ -46,6 +46,12 @@ public class IntelController {
         return ResponseEntity.ok(responseModel);
     }
 
+    @GetMapping(path = "/last-intel")
+    private ResponseEntity<?> getLastIntel(@PathVariable UUID uuid){
+        final var responseModel = intelUseCase.findLastIntel(uuid);
+        return ResponseEntity.ok(responseModel);
+    }
+
     @GetMapping(path = "/intel-since/{timestamp}")
     private ResponseEntity<?> getIntelSince(@PathVariable UUID uuid, @PathVariable Instant timestamp){
         final var intelSince = intelUseCase.findIntelSince(uuid, timestamp);

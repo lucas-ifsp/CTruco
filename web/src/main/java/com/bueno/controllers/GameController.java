@@ -20,14 +20,19 @@
 
 package com.bueno.controllers;
 
+import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.RemoveGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.responses.ResponseBuilder;
+import com.bueno.responses.ResponseEntry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -36,16 +41,41 @@ public class GameController {
 
     private final CreateGameUseCase createGameUseCase;
     private final RemoveGameUseCase removeGameUseCase;
+    private final FindGameUseCase findGameUseCase;
 
-    public GameController(CreateGameUseCase createGameUseCase, RemoveGameUseCase removeGameUseCase) {
+    public GameController(CreateGameUseCase createGameUseCase,
+                          RemoveGameUseCase removeGameUseCase,
+                          FindGameUseCase findGameUseCase) {
         this.createGameUseCase = createGameUseCase;
         this.removeGameUseCase = removeGameUseCase;
+        this.findGameUseCase = findGameUseCase;
     }
 
     @PostMapping(path = "/user-bot")
     public ResponseEntity<IntelDto> createForUserAndBot(@RequestBody CreateForUserAndBotDto request){
         final var intel = createGameUseCase.createForUserAndBot(request);
         return new ResponseEntity<>(intel, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/players/{uuid}")
+    private ResponseEntity<?> getGame(@PathVariable UUID uuid){
+        final Optional<Game> possibleGame = findGameUseCase.findByUserUuid(uuid);
+
+        if(possibleGame.isPresent()){
+            final Game game = possibleGame.get();
+            final String opponentName = game.getPlayer1().getUuid().equals(uuid)
+                    ? game.getPlayer2().getUsername()
+                    : game.getPlayer1().getUsername();
+
+            return new ResponseBuilder(HttpStatus.OK)
+                    .addEntry(new ResponseEntry("gameUuid", game.getUuid()))
+                    .addEntry(new ResponseEntry("opponentName", opponentName))
+                    .build();
+        }
+        return new ResponseBuilder(HttpStatus.NOT_FOUND)
+                .addEntry(new ResponseEntry("error", "User with UUID " + uuid + " is not in an active game."))
+                .addTimestamp()
+                .build();
     }
 
     @DeleteMapping(path = "/players/{uuid}")

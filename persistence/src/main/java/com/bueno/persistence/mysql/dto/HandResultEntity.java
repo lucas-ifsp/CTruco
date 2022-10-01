@@ -41,7 +41,7 @@ public class HandResultEntity {
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "TYPE", length = 9)
+    @Column(name = "HAND_TYPE", length = 9)
     private String handType;
     private UUID gameUuid;
     private UUID handWinner;

@@ -5,6 +5,7 @@ module domain {
     requires spring.context;
     requires spring.beans;
 
+    exports com.bueno.domain.entities.game;
     exports com.bueno.domain.usecases.game;
     exports com.bueno.domain.usecases.game.dtos;
     exports com.bueno.domain.usecases.user;
