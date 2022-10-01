@@ -20,6 +20,8 @@
 
 package com.bueno.domain.usecases.intel.dtos;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
+
 import java.time.Instant;
 import java.util.*;
 
@@ -33,7 +35,7 @@ public record IntelDto(Instant timestamp, boolean isGameDone, UUID gameWinner, b
                        String currentPlayerUsername, int currentOpponentScore,
                        String currentOpponentUsername,
                        CardDto cardToPlayAgainst,
-                       List<PlayerInfo> players,
+                       List<PlayerDto> players,
                        String event, UUID eventPlayerUUID, String eventPlayerUsername,
                        Set<String> possibleActions) {
 
@@ -50,18 +52,4 @@ public record IntelDto(Instant timestamp, boolean isGameDone, UUID gameWinner, b
         return Objects.hash(timestamp);
     }
 
-    public record PlayerInfo(UUID uuid, String username, int score, List<CardDto> cards) {
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PlayerInfo that = (PlayerInfo) o;
-            return uuid.equals(that.uuid);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(uuid);
-        }
-    }
 }

@@ -31,7 +31,6 @@ import java.util.UUID;
 public class Player {
 
     public static final int MAX_SCORE = 12;
-
     private List<Card> cards;
     private final String username;
     private final UUID uuid;

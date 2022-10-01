@@ -25,14 +25,14 @@ import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
 import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
-import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
+import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.domain.usecases.intel.dtos.IntelDto.PlayerInfo;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -168,7 +168,7 @@ public class GameTableController {
     private List<CardDto> getPlayerCards(IntelDto intel, UUID playerUUID) {
         return intel.players().stream()
                 .filter(p -> p.uuid().equals(playerUUID))
-                .map(PlayerInfo::cards)
+                .map(PlayerDto::cards)
                 .findAny().orElse(null);
     }
 
@@ -205,7 +205,7 @@ public class GameTableController {
         missingIntel.add(lastIntel);
 
         this.botUUID = lastIntel.players().stream()
-                .map(PlayerInfo::uuid)
+                .map(PlayerDto::uuid)
                 .filter(uuid -> !uuid.equals(userUUID))
                 .findAny().orElseThrow();
 
@@ -417,7 +417,7 @@ public class GameTableController {
     private int getPlayerScore(IntelDto intel, UUID playerUUID) {
         return intel.players().stream()
                 .filter(p -> p.uuid().equals(playerUUID))
-                .mapToInt(PlayerInfo::score)
+                .mapToInt(PlayerDto::score)
                 .findAny().orElse(0);
     }
 

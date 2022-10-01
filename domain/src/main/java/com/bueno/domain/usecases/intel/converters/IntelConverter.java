@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.intel.converters;
 
 import com.bueno.domain.entities.intel.Intel;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class IntelConverter {
     public static IntelDto of(Intel intel){
-        final List<IntelDto.PlayerInfo> playersIntel = intel.players().stream()
+        final List<PlayerDto> playersDto = intel.players().stream()
                 .map(IntelConverter::ofPlayerIntel)
                 .collect(Collectors.toList());
 
@@ -51,7 +52,7 @@ public class IntelConverter {
                 intel.currentOpponentScore(),
                 intel.currentOpponentUsername(),
                 intel.cardToPlayAgainst().map(CardConverter::toEntity).orElse(null),
-                playersIntel,
+                playersDto,
                 intel.event().orElse(null),
                 intel.eventPlayerUuid().orElse(null),
                 intel.eventPlayerUsername().orElse(null),
@@ -59,15 +60,16 @@ public class IntelConverter {
         );
     }
 
-    private static IntelDto.PlayerInfo ofPlayerIntel(Intel.PlayerIntel playerIntel){
+    private static PlayerDto ofPlayerIntel(Intel.PlayerIntel playerIntel){
         final var playerCards = playerIntel.getCards().stream()
                 .map(CardConverter::toEntity)
                 .collect(Collectors.toList());
 
-        return new IntelDto.PlayerInfo(
-                playerIntel.getUuid(),
+        return new PlayerDto(
                 playerIntel.getUsername(),
+                playerIntel.getUuid(),
                 playerIntel.getScore(),
+                playerIntel.isBot(),
                 playerCards);
     }
 }

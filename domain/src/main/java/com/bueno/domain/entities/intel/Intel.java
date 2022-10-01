@@ -120,12 +120,14 @@ public class Intel{
         private final String username;
         private final int score;
         private final List<Card> cards;
+        private final boolean isBot;
 
         public PlayerIntel(Player player) {
             this.uuid = player.getUuid();
             this.username = player.getUsername();
             this.score = player.getScore();
             this.cards = List.copyOf(player.getCards());
+            this.isBot = player.isBot();
         }
 
         public UUID getUuid() {
@@ -142,6 +144,10 @@ public class Intel{
 
         public List<Card> getCards() {
             return cards;
+        }
+
+        public boolean isBot() {
+            return isBot;
         }
 
         @Override
