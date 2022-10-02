@@ -124,12 +124,12 @@ class HandleIntelUseCaseTest {
     @DisplayName("Should correctly get intel history if invariants are met")
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
         final Hand hand = game.currentHand();
-        final IntelDto initialIntel = IntelConverter.of(game.getIntel());
+        final IntelDto initialIntel = IntelConverter.toDto(game.getIntel());
         hand.playFirstCard(player1, Card.closed());
 
         final var obtained = sut.findIntelSince(p1Uuid, initialIntel.timestamp());
         final var expected = game.getIntelSince(initialIntel.timestamp()).stream()
-                .map(IntelConverter::of)
+                .map(IntelConverter::toDto)
                 .collect(Collectors.toList());
 
         assertThat(obtained.intelSinceBaseTimestamp()).isEqualTo(expected);

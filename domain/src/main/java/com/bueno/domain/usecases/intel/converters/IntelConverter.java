@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class IntelConverter {
-    public static IntelDto of(Intel intel){
+    public static IntelDto toDto(Intel intel){
         final List<PlayerDto> playersDto = intel.players().stream()
                 .map(IntelConverter::ofPlayerIntel)
                 .collect(Collectors.toList());

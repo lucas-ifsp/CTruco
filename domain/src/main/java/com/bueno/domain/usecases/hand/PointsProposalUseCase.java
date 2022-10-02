@@ -69,7 +69,7 @@ public class PointsProposalUseCase {
         hand.raise(player);
         botUseCase.playWhenNecessary(game);
 
-        return IntelConverter.of(game.getIntel());
+        return IntelConverter.toDto(game.getIntel());
     }
 
     public IntelDto accept(UUID usedUuid){
@@ -82,7 +82,7 @@ public class PointsProposalUseCase {
         hand.accept(player);
         botUseCase.playWhenNecessary(game);
 
-        return IntelConverter.of(game.getIntel());
+        return IntelConverter.toDto(game.getIntel());
     }
 
     public IntelDto quit(UUID usedUuid){
@@ -100,7 +100,7 @@ public class PointsProposalUseCase {
 
         botUseCase.playWhenNecessary(game);
 
-        return IntelConverter.of(game.getIntel());
+        return IntelConverter.toDto(game.getIntel());
     }
 
     private void validateInput(UUID usedUuid, PossibleAction raise) {

@@ -90,6 +90,6 @@ public class PlayCardUseCase {
 
         botUseCase.playWhenNecessary(game);
 
-        return IntelConverter.of(game.getIntel());
+        return IntelConverter.toDto(game.getIntel());
     }
 }

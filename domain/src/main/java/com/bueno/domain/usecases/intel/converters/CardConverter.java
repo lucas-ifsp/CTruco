@@ -26,13 +26,18 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 
 public class CardConverter {
+
+    private CardConverter(){}
+
     public static Card fromDto(CardDto cardDto) {
+        if(cardDto == null) return null;
         final Rank rank = Rank.ofSymbol(cardDto.rank());
         final Suit suit = Suit.ofSymbol(cardDto.suit());
         return Card.of(rank, suit);
     }
 
     public static CardDto toDto(Card card) {
+        if(card == null) return null;
         final String rank = card.getRank().toString();
         final String suit = card.getSuit().toString();
         return new CardDto(rank, suit);

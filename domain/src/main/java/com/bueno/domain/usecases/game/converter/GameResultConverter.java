@@ -27,7 +27,7 @@ import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import java.time.LocalDateTime;
 
 public final class GameResultConverter {
-    public static GameResultDto of(Game game){
+    public static GameResultDto toDto(Game game){
         return new GameResultDto(
                 game.getUuid(),
                 game.getTimestamp(),

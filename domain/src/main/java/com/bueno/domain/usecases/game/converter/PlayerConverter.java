@@ -23,20 +23,18 @@ package com.bueno.domain.usecases.game.converter;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
-import com.bueno.domain.usecases.intel.dtos.CardDto;
-
-import java.util.List;
 
 public class PlayerConverter {
+
+    private PlayerConverter(){}
+
     public static PlayerDto toDto(Player player){
-        final List<CardDto> cardDtos = player.getCards().stream()
-                .map(CardConverter::toDto)
-                .toList();
+        if(player == null) return null;
         return  new PlayerDto(
                 player.getUsername(),
                 player.getUuid(),
                 player.getScore(),
                 player.isBot(),
-                cardDtos);
+                player.getCards().stream().map(CardConverter::toDto).toList());
     }
 }

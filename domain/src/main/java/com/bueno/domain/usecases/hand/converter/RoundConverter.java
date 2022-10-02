@@ -30,6 +30,7 @@ public class RoundConverter {
     private RoundConverter(){}
 
     public static RoundDto toDto(Round round){
+        if(round == null) return null;
         return new RoundDto(
                 round.getFirstToPlay().getUuid(),
                 round.getLastToPlay().getUuid(),

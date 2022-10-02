@@ -45,8 +45,8 @@ class ResultHandler {
 
         if (game.isDone()) {
             if (gameResultRepository != null)
-                gameResultRepository.save(GameResultConverter.of(game));
-            return IntelConverter.of(game.getIntel());
+                gameResultRepository.save(GameResultConverter.toDto(game));
+            return IntelConverter.toDto(game.getIntel());
         }
         return null;
     }

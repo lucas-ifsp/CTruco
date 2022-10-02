@@ -48,14 +48,14 @@ public class HandleIntelUseCase {
     public IntelSinceDto findIntelSince(UUID uuid, Instant lastIntelTimestamp){
         final var game = getGameOrThrow(uuid);
         final var intelSince = game.getIntelSince(lastIntelTimestamp).stream()
-                .map(IntelConverter::of)
+                .map(IntelConverter::toDto)
                 .collect(Collectors.toList());
         return new IntelSinceDto(lastIntelTimestamp, intelSince);
     }
 
     public IntelDto findLastIntel(UUID uuid){
         final var game = getGameOrThrow(uuid);
-        return IntelConverter.of(game.getIntel());
+        return IntelConverter.toDto(game.getIntel());
     }
 
     public OwnedCardsDto ownedCards(UUID uuid){

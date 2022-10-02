@@ -20,7 +20,6 @@
 
 package com.bueno.domain.usecases.hand.dtos;
 
-import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
@@ -29,7 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public record HandDto(CardDto vira, List<CardDto> dealtCard, List<CardDto> openCards,
-                      List<Round> roundsPlayed, List<IntelDto> history, Set<String> possibleActions,
+                      List<RoundDto> roundsPlayed, List<IntelDto> history, Set<String> possibleActions,
                       UUID firstToPlay, UUID lastToPlay, UUID currentPlayer, UUID lastBetRaiser, UUID eventPlayer,
                       CardDto cartToPlayAgainst, int points, int pointsProposal, UUID winner, String state) {
 }

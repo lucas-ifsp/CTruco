@@ -158,7 +158,7 @@ class PointsProposalUseCaseTest {
         final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
         final Game game = findGameUseCase.findByUserUuid(p1Uuid).orElseThrow();
 
-        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::of).toList();
+        final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::toDto).toList();
         final IntelDto quitIntel = intelSince.get(intelSince.size() - 2);
 
         SoftAssertions softly = new SoftAssertions();

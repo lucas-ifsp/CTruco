@@ -273,6 +273,22 @@ public class Hand {
         return openCards;
     }
 
+    public List<Card> getDealtCards() {
+        return new ArrayList<>(dealtCards);
+    }
+
+    public List<Intel> getHistory() {
+        return new ArrayList<>(history);
+    }
+
+    public Player getLastBetRaiser() {
+        return lastBetRaiser;
+    }
+
+    public HandState getState() {
+        return state;
+    }
+
     public void setState(HandState state) {
         this.state = state;
     }
