@@ -21,22 +21,22 @@
 package com.bueno.domain.usecases.game.converter;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.hand.converter.HandConverter;
 
-import java.time.LocalDateTime;
+public class GameConverter {
 
-public final class GameResultConverter {
-    public static GameResultDto toDto(Game game){
-        return new GameResultDto(
-                game.getUuid(),
+    private GameConverter(){}
+
+    public static GameDto toDto(Game game){
+        if(game == null) return null;
+        return new GameDto(
                 game.getTimestamp(),
-                LocalDateTime.now(),
-                game.getWinner().map(Player::getUuid).orElse(null),
                 game.getPlayer1().getUuid(),
-                game.getPlayer1().getScore(),
                 game.getPlayer2().getUuid(),
-                game.getPlayer2().getScore()
+                game.getFirstToPlay().getUuid(),
+                game.getLastToPlay().getUuid(),
+                game.getHands().stream().map(HandConverter::toDto).toList()
         );
     }
 }
