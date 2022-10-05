@@ -1,12 +1,22 @@
 version: "3.8"
 services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
   mongodb:
     image: mongo
     container_name: mongodb
     ports:
-      - 27017:27017
+      - '27017:27017'
     volumes:
-      - data:/data
+      - mongo-data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=rootuser
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
@@ -15,14 +25,20 @@ services:
     container_name: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - '8081:8081'
+    depends_on:
+      - mongodb
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
       - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
       - ME_CONFIG_MONGODB_SERVER=mongodb
+
 volumes:
-  data: {}
+  mongo-data:
+    driver: local
+  postgres-data:
+    driver: local
 
 networks:
   default:
-    name: mongodb_network
+    name: ctruco-network
