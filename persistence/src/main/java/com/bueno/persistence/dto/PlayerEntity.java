@@ -20,11 +20,15 @@
 
 package com.bueno.persistence.dto;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Id;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,10 +36,22 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Document
 public class PlayerEntity {
+    @Id
     private UUID uuid;
     private String username;
     private int score;
     private boolean isBot;
     private List<String> cards;
+
+    public static PlayerEntity from(PlayerDto dto){
+        return PlayerEntity.builder()
+                .uuid(dto.uuid())
+                .username(dto.username())
+                .score(dto.score())
+                .isBot(dto.isBot())
+                .cards(dto.cards().stream().map(CardDto::toString).toList())
+                .build();
+    }
 }

@@ -20,6 +20,9 @@
 
 package com.bueno.persistence.dto;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,4 +61,37 @@ public class IntelEntity {
     private UUID eventPlayerUUID;
     private String eventPlayerUsername;
     private Set<String> possibleActions;
+
+    public static IntelEntity from(IntelDto dto){
+        final List<String> winnerNames = dto.roundWinnersUsernames().stream()
+                .map(optional -> optional.orElse(null)).toList();
+        final List<UUID> winnerUuids = dto.roundWinnersUuid().stream()
+                .map(optional -> optional.orElse(null)).toList();
+
+        return IntelEntity.builder()
+                .timestamp(dto.timestamp())
+                .isGameDone(dto.isGameDone())
+                .gameWinner(dto.gameWinner())
+                .isMaoDeOnze(dto.isMaoDeOnze())
+                .handPoints(dto.handPoints())
+                .handPointsProposal(dto.handPointsProposal())
+                .roundWinnersUsernames(winnerNames)
+                .roundWinnersUuid(winnerUuids)
+                .roundsPlayed(dto.roundsPlayed())
+                .vira(dto.vira().toString())
+                .openCards(dto.openCards().stream().map(CardDto::toString).toList())
+                .handWinner(dto.handWinner())
+                .currentPlayerUuid(dto.currentPlayerUuid())
+                .currentPlayerScore(dto.currentPlayerScore())
+                .currentPlayerUsername(dto.currentPlayerUsername())
+                .currentOpponentScore(dto.currentOpponentScore())
+                .currentOpponentUsername(dto.currentOpponentUsername())
+                .cardToPlayAgainst(dto.cardToPlayAgainst().toString())
+                .players(dto.players().stream().map(PlayerDto::uuid).toList())
+                .event(dto.event())
+                .eventPlayerUUID(dto.eventPlayerUUID())
+                .eventPlayerUsername(dto.eventPlayerUsername())
+                .possibleActions(dto.possibleActions())
+                .build();
+    }
 }

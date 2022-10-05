@@ -18,36 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.dto;
+package com.bueno.persistence.dao;
 
-import com.bueno.domain.usecases.hand.dtos.RoundDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.bueno.persistence.dto.PlayerEntity;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class RoundEntity {
-    private UUID firstToPlay;
-    private UUID lastToPlay;
-    private UUID winner;
-    private String vira;
-    private String firstCard;
-    private String lastCard;
-
-    public static RoundEntity from(RoundDto dto){
-        return RoundEntity.builder()
-                .firstToPlay(dto.firstToPlay())
-                .lastToPlay(dto.lastToPlay())
-                .winner(dto.winner())
-                .vira(dto.vira().toString())
-                .firstCard(dto.firstCard().toString())
-                .lastCard(dto.lastCard().toString())
-                .build();
-    }
+public interface PlayerDao extends MongoRepository<PlayerEntity, UUID> {
 }

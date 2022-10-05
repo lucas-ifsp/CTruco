@@ -38,4 +38,9 @@ public record CardDto(String rank, String suit) {
     public static CardDto closed() {
         return new CardDto("X", "X");
     }
+
+    @Override
+    public String toString() {
+        return rank+""+suit;
+    }
 }
