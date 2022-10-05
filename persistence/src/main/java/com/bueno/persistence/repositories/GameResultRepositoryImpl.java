@@ -18,11 +18,25 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.dtos;
+package com.bueno.persistence.repositories;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.persistence.dao.GameResultDao;
+import com.bueno.persistence.dto.GameResultEntity;
+import org.springframework.stereotype.Repository;
 
-public record GameResultDto (UUID gameUuid, LocalDateTime gameStart, LocalDateTime gameEnd,
-                             UUID winnerUuid, UUID player1Uuid, int player1Score,
-                             UUID player2Uuid, int player2Score) {}
+@Repository
+public class GameResultRepositoryImpl implements GameResultRepository {
+
+    private final GameResultDao repo;
+
+    public GameResultRepositoryImpl(GameResultDao repo) {
+        this.repo = repo;
+    }
+
+    @Override
+    public void save(GameResultDto gameResult) {
+        repo.save(GameResultEntity.from(gameResult));
+    }
+}

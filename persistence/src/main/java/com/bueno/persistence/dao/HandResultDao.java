@@ -18,17 +18,13 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.dao;
+package com.bueno.persistence.dao;
 
-import com.bueno.persistence.mysql.dto.UserEntity;
+import com.bueno.persistence.dto.HandResultEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface UserDao extends JpaRepository<UserEntity, Long> {
-    UserEntity getByUuid(UUID uuid);
-    UserEntity getByEmail(String email);
-    UserEntity getByUsername(String username);
+public interface HandResultDao extends JpaRepository<HandResultEntity, Long> {
+
 }

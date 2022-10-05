@@ -31,6 +31,7 @@ public class GameConverter {
     public static GameDto toDto(Game game){
         if(game == null) return null;
         return new GameDto(
+                game.getUuid(),
                 game.getTimestamp(),
                 game.getPlayer1().getUuid(),
                 game.getPlayer2().getUuid(),

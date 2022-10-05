@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.dto;
+package com.bueno.persistence.dto;
 
 import com.bueno.domain.usecases.hand.dtos.HandResultDto;
 import lombok.AllArgsConstructor;

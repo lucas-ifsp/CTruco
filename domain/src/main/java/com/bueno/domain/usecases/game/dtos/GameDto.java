@@ -26,6 +26,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record GameDto(LocalDateTime timestamp, UUID player1, UUID player2,
+public record GameDto(UUID gameUuid, LocalDateTime timestamp, UUID player1, UUID player2,
                       UUID firstToPlay, UUID lastToPlay, List<HandDto> hands) {
 }

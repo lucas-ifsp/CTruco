@@ -18,25 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.repositories;
+package com.bueno.persistence.dao;
 
-import com.bueno.domain.usecases.hand.HandResultRepository;
-import com.bueno.domain.usecases.hand.dtos.HandResultDto;
-import com.bueno.persistence.mysql.dao.HandResultDao;
-import com.bueno.persistence.mysql.dto.HandResultEntity;
+import com.bueno.persistence.dto.GameResultEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public class HandResultRepositoryImpl implements HandResultRepository {
+public interface GameResultDao extends JpaRepository<GameResultEntity, UUID> {
 
-    private final HandResultDao dao;
-
-    public HandResultRepositoryImpl(HandResultDao dao) {
-        this.dao = dao;
-    }
-
-    @Override
-    public void save(HandResultDto handResultDto) {
-        dao.save(HandResultEntity.from(handResultDto));
-    }
 }

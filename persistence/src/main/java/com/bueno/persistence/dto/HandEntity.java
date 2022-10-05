@@ -18,42 +18,36 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.dto;
+package com.bueno.persistence.dto;
 
-import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Entity
-@Table(name = "APP_USER")
-public class UserEntity {
-    @Id
-    @Column(name = "ID")
-    private UUID uuid;
-    private String username;
-    private String email;
-    private String password;
-
-    private UserEntity(UUID uuid, String username, String password, String email) {
-        this.uuid = uuid;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
-
-    public static UserEntity from(ApplicationUserDto user) {
-        return new UserEntity(user.uuid(), user.username(), user.password(), user.email());
-    }
-
-    public static ApplicationUserDto toApplicationUser(UserEntity dto){
-        if(dto == null) return null;
-        return new ApplicationUserDto(dto.uuid, dto.username, dto.password, dto.email);
-    }
+@Builder
+public class HandEntity {
+    private String vira;
+    private List<String> dealtCard;
+    private List<String> openCards;
+    private List<RoundEntity> roundsPlayed;
+    private List<IntelEntity> history;
+    private Set<String> possibleActions;
+    private UUID firstToPlay;
+    private UUID lastToPlay;
+    private UUID currentPlayer;
+    private UUID lastBetRaiser;
+    private UUID eventPlayer;
+    private String cartToPlayAgainst;
+    private int points;
+    private int pointsProposal;
+    private UUID winner;
+    private String state;
 }

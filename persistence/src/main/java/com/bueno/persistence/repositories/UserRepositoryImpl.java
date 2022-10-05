@@ -18,12 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.repositories;
+package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
-import com.bueno.persistence.mysql.dao.UserDao;
-import com.bueno.persistence.mysql.dto.UserEntity;
+import com.bueno.persistence.dao.UserDao;
+import com.bueno.persistence.dto.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

@@ -18,13 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.persistence.mysql.dao;
+package com.bueno.persistence.dto;
 
-import com.bueno.persistence.mysql.dto.HandResultEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Repository
-public interface HandResultDao extends JpaRepository<HandResultEntity, Long> {
+import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class RoundEntity {
+    private UUID firstToPlay;
+    private UUID lastToPlay;
+    private UUID winner;
+    private String vira;
+    private String firstCard;
+    private String lastCard;
 }

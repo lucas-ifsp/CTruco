@@ -18,11 +18,24 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.dtos;
+package com.bueno.persistence.dto;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 import java.util.UUID;
 
-public record GameResultDto (UUID gameUuid, LocalDateTime gameStart, LocalDateTime gameEnd,
-                             UUID winnerUuid, UUID player1Uuid, int player1Score,
-                             UUID player2Uuid, int player2Score) {}
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class PlayerEntity {
+    private UUID uuid;
+    private String username;
+    private int score;
+    private boolean isBot;
+    private List<String> cards;
+}
