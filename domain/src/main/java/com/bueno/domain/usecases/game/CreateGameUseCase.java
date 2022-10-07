@@ -22,10 +22,12 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.user.UserRepository;
@@ -43,16 +45,18 @@ import java.util.Objects;
 public class CreateGameUseCase {
 
     private final ActiveGameRepository gameRepo;
+    private final GameRepository newGameRepo;
     private final UserRepository userRepo;
 
     @Autowired
-    public CreateGameUseCase(ActiveGameRepository gameRepo, UserRepository userRepo) {
+    public CreateGameUseCase(ActiveGameRepository gameRepo, GameRepository newGameRepo, UserRepository userRepo) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
+        this.newGameRepo = newGameRepo;
         this.userRepo = userRepo;
     }
 
-    public CreateGameUseCase(ActiveGameRepository gameRepo) {
-        this(gameRepo, null);
+    public CreateGameUseCase(ActiveGameRepository gameRepo, GameRepository newGameRepo) {
+        this(gameRepo, newGameRepo, null);
     }
 
     public IntelDto createForUserAndBot(CreateForUserAndBotDto request){
@@ -107,6 +111,9 @@ public class CreateGameUseCase {
     private IntelDto create(Player p1, Player p2) {
         final Game game = new Game(p1, p2);
         gameRepo.create(game);
+        if(newGameRepo != null){
+            newGameRepo.save(GameConverter.toDto(game));
+        }
         return IntelConverter.toDto(game.getIntel());
     }
 }

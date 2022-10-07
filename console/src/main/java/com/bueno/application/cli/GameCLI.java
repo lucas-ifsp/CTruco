@@ -60,8 +60,8 @@ public class GameCLI {
 
     public GameCLI() {
         final ActiveGameRepository activeGameRepo = new ActiveGameRepositoryImpl();
-        gameUseCase = new CreateGameUseCase(activeGameRepo);
-        final var findGameUseCase = new FindGameUseCase(activeGameRepo);
+        gameUseCase = new CreateGameUseCase(activeGameRepo, null);
+        final var findGameUseCase = new FindGameUseCase(activeGameRepo, null);
         playCardUseCase = new PlayCardUseCase(findGameUseCase);
         pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
         handleIntelUseCase = new HandleIntelUseCase(activeGameRepo);

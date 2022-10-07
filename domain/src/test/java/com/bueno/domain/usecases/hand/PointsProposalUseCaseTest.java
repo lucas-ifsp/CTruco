@@ -77,7 +77,7 @@ class PointsProposalUseCaseTest {
         game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
 
-        final var findGameUseCase = new FindGameUseCase(repo);
+        final var findGameUseCase = new FindGameUseCase(repo, null);
         sut = new PointsProposalUseCase(findGameUseCase);
     }
 
@@ -155,7 +155,7 @@ class PointsProposalUseCaseTest {
     void shouldBeAbleToQuitBetIfInvariantsAreMet() {
         final IntelDto firstIntel = sut.raise(p1Uuid);
         sut.quit(p2Uuid);//last intel is already pointing to a new hand.
-        final FindGameUseCase findGameUseCase = new FindGameUseCase(repo);
+        final FindGameUseCase findGameUseCase = new FindGameUseCase(repo, null);
         final Game game = findGameUseCase.findByUserUuid(p1Uuid).orElseThrow();
 
         final List<IntelDto> intelSince = game.getIntelSince(firstIntel.timestamp()).stream().map(IntelConverter::toDto).toList();

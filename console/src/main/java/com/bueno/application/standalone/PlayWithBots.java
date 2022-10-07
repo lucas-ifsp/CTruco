@@ -114,8 +114,8 @@ public class PlayWithBots {
 
     private PlayWithBotsUseCase createNewGameSettings() {
         final var repo = new DisposableActiveGameRepositoryImpl();
-        final var createGameUseCase = new CreateGameUseCase(repo);
-        final var findGameUseCase = new FindGameUseCase(repo);
+        final var createGameUseCase = new CreateGameUseCase(repo, null);
+        final var findGameUseCase = new FindGameUseCase(repo, newRepo);
         return new PlayWithBotsUseCase(createGameUseCase, findGameUseCase);
     }
 

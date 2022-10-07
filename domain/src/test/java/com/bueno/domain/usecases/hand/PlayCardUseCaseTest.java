@@ -85,7 +85,7 @@ class PlayCardUseCaseTest {
         Game game = new Game(player1, player2);
         lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
 
-        final var findGameUseCase = new FindGameUseCase(repo);
+        final var findGameUseCase = new FindGameUseCase(repo, null);
         sut = new PlayCardUseCase(findGameUseCase);
     }
 

@@ -20,32 +20,13 @@
 
 package com.bueno.domain.usecases.game.repos;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.usecases.game.dtos.GameDto;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class DisposableActiveGameRepositoryImpl implements ActiveGameRepository {
+public interface GameRepository {
+    void save(GameDto gameDto);
 
-    private Game game;
-
-    @Override
-    public void create(Game game) {
-        this.game = game;
-    }
-
-    @Override
-    public void delete(UUID uuid) {
-        game = null;
-    }
-
-    @Override
-    public Optional<Game> findByUuid(UUID key) {
-        return Optional.ofNullable(game);
-    }
-
-    @Override
-    public Optional<Game> findByUserUuid(UUID uuid) {
-        return Optional.ofNullable(game);
-    }
+    Optional<GameDto> findByUuid(UUID gameUuid);
 }

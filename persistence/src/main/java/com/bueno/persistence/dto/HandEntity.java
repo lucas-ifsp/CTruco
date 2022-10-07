@@ -70,7 +70,7 @@ public class HandEntity {
                 .currentPlayer(dto.currentPlayer())
                 .lastBetRaiser(dto.lastBetRaiser())
                 .eventPlayer(dto.lastBetRaiser())
-                .cartToPlayAgainst(dto.cartToPlayAgainst().toString())
+                .cartToPlayAgainst(dto.cartToPlayAgainst() != null ? dto.cartToPlayAgainst().toString() : null)
                 .points(dto.points())
                 .pointsProposal(dto.pointsProposal())
                 .winner(dto.winner())

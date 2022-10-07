@@ -18,34 +18,12 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.persistence.dao;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.persistence.dto.GameEntity;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
-public class DisposableActiveGameRepositoryImpl implements ActiveGameRepository {
-
-    private Game game;
-
-    @Override
-    public void create(Game game) {
-        this.game = game;
-    }
-
-    @Override
-    public void delete(UUID uuid) {
-        game = null;
-    }
-
-    @Override
-    public Optional<Game> findByUuid(UUID key) {
-        return Optional.ofNullable(game);
-    }
-
-    @Override
-    public Optional<Game> findByUserUuid(UUID uuid) {
-        return Optional.ofNullable(game);
-    }
+public interface GameDao extends MongoRepository<GameEntity, UUID> {
 }

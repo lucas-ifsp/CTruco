@@ -77,8 +77,8 @@ class PlayWithBotsUseCaseTest {
         final var uuidA = UUID.randomUUID();
         final var uuidB = UUID.randomUUID();
         final var repo = new MockRepo();
-        final var createGameUseCase = new CreateGameUseCase(repo, null);
-        final var findGameUseCase = new FindGameUseCase(repo);
+        final var createGameUseCase = new CreateGameUseCase(repo, null, null);
+        final var findGameUseCase = new FindGameUseCase(repo, null);
         final var requestModel = new CreateForBotsDto(uuidA, "DummyBot", uuidB, "DummyBot");
         createGameUseCase.createForBots(requestModel);
 
@@ -95,8 +95,7 @@ class PlayWithBotsUseCaseTest {
         private Game game;
         @Override public void create(Game game) {this.game = game;}
         @Override
-        public boolean delete(UUID uuid) {
-            return true;
+        public void delete(UUID uuid) {
         }
         @Override public Optional<Game> findByUuid(UUID uuid) {return Optional.ofNullable(game);}
         @Override public Optional<Game> findByUserUuid(UUID uuid) {return Optional.ofNullable(game);}

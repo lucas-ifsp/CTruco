@@ -46,11 +46,11 @@ public class HandConverter {
                 hand.getFirstToPlay().getUuid(),
                 hand.getLastToPlay().getUuid(),
                 hand.getCurrentPlayer().getUuid(),
-                hand.getLastBetRaiser().getUuid(),
-                hand.getEventPlayer().getUuid(),
+                hand.getLastBetRaiser() != null ? hand.getLastBetRaiser().getUuid() : null,
+                hand.getEventPlayer() != null ? hand.getEventPlayer().getUuid() : null,
                 hand.getCardToPlayAgainst().map(CardConverter::toDto).orElse(null),
                 hand.getPoints().get(),
-                hand.getPointsProposal().get(),
+                hand.getPointsProposal() != null ? hand.getPointsProposal().get() : 0,
                 hand.getResult().flatMap(HandResult::getWinner).map(Player::getUuid).orElse(null),
                 hand.getState().toString()
         );

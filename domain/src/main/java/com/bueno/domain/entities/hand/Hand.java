@@ -225,10 +225,6 @@ public class Hand {
         return history.get(history.size() - 1);
     }
 
-    public List<Intel> getIntelHistory(){
-        return List.copyOf(history);
-    }
-
     public Player getOpponentOf(Player player){
         return player.equals(firstToPlay)? lastToPlay : firstToPlay;
     }
@@ -277,8 +273,8 @@ public class Hand {
         return new ArrayList<>(dealtCards);
     }
 
-    public List<Intel> getHistory() {
-        return new ArrayList<>(history);
+    public List<Intel> getIntelHistory(){
+        return List.copyOf(history);
     }
 
     public Player getLastBetRaiser() {

@@ -41,8 +41,8 @@ public class ActiveGameRepositoryImpl implements ActiveGameRepository {
     }
 
     @Override
-    public boolean delete(UUID uuid) {
-        return games.remove(uuid) != null;
+    public void delete(UUID uuid) {
+        games.remove(uuid);
     }
 
     @Override

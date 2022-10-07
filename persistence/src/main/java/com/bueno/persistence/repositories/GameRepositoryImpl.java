@@ -18,34 +18,33 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.persistence.repositories;
 
-import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.persistence.dao.GameDao;
+import com.bueno.persistence.dto.GameEntity;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class DisposableActiveGameRepositoryImpl implements ActiveGameRepository {
+@Repository
+public class GameRepositoryImpl implements GameRepository {
 
-    private Game game;
+    private final GameDao dao;
 
-    @Override
-    public void create(Game game) {
-        this.game = game;
+    public GameRepositoryImpl(GameDao dao) {
+        this.dao = dao;
     }
 
     @Override
-    public void delete(UUID uuid) {
-        game = null;
+    public void save(GameDto dto) {
+        dao.save(GameEntity.from(dto));
     }
 
     @Override
-    public Optional<Game> findByUuid(UUID key) {
-        return Optional.ofNullable(game);
-    }
-
-    @Override
-    public Optional<Game> findByUserUuid(UUID uuid) {
-        return Optional.ofNullable(game);
+    public Optional<GameDto> findByUuid(UUID gameUuid) {
+        return dao.findById(gameUuid);
     }
 }

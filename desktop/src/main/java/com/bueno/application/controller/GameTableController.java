@@ -98,8 +98,8 @@ public class GameTableController {
 
     public GameTableController() {
         final var gameRepo = new ActiveGameRepositoryImpl();
-        gameUseCase = new CreateGameUseCase(gameRepo);
-        FindGameUseCase findGameUseCase = new FindGameUseCase(gameRepo);
+        gameUseCase = new CreateGameUseCase(gameRepo, null);
+        FindGameUseCase findGameUseCase = new FindGameUseCase(gameRepo, null);
         playCardUseCase = new PlayCardUseCase(findGameUseCase);
         pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);

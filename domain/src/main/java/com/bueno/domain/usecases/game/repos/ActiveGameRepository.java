@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public interface ActiveGameRepository {
     void create(Game game);
-    boolean delete(UUID uuid);
+    void delete(UUID uuid);
     Optional<Game> findByUuid(UUID uuid);
     Optional<Game> findByUserUuid(UUID uuid);
 }

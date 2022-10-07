@@ -39,7 +39,7 @@ import java.util.UUID;
 @Document
 public class PlayerEntity {
     @Id
-    private UUID uuid;
+    private UUID id;
     private String username;
     private int score;
     private boolean isBot;
@@ -47,7 +47,7 @@ public class PlayerEntity {
 
     public static PlayerEntity from(PlayerDto dto){
         return PlayerEntity.builder()
-                .uuid(dto.uuid())
+                .id(dto.uuid())
                 .username(dto.username())
                 .score(dto.score())
                 .isBot(dto.isBot())

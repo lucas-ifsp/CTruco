@@ -86,7 +86,7 @@ public class IntelEntity {
                 .currentPlayerUsername(dto.currentPlayerUsername())
                 .currentOpponentScore(dto.currentOpponentScore())
                 .currentOpponentUsername(dto.currentOpponentUsername())
-                .cardToPlayAgainst(dto.cardToPlayAgainst().toString())
+                .cardToPlayAgainst(dto.cardToPlayAgainst() != null ? dto.cardToPlayAgainst().toString() : null)
                 .players(dto.players().stream().map(PlayerDto::uuid).toList())
                 .event(dto.event())
                 .eventPlayerUUID(dto.eventPlayerUUID())

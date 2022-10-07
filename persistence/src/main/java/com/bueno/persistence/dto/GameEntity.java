@@ -39,7 +39,7 @@ import java.util.UUID;
 @Document
 public class GameEntity {
     @Id
-    private UUID gameUuid;
+    private UUID id;
     private LocalDateTime timestamp;
     private UUID player1;
     private UUID player2;
@@ -49,7 +49,7 @@ public class GameEntity {
 
     public static GameEntity from(GameDto dto){
         return GameEntity.builder()
-                .gameUuid(dto.gameUuid())
+                .id(dto.gameUuid())
                 .timestamp(dto.timestamp())
                 .player1(dto.player1())
                 .player2(dto.player2())
