@@ -42,9 +42,9 @@ public class RoundEntity {
 
     public static RoundEntity from(RoundDto dto){
         return RoundEntity.builder()
-                .firstToPlay(dto.firstToPlay())
-                .lastToPlay(dto.lastToPlay())
-                .winner(dto.winner())
+                .firstToPlay(dto.firstToPlay().uuid())
+                .lastToPlay(dto.lastToPlay().uuid())
+                .winner(dto.winner() != null ? dto.winner().uuid() : null)
                 .vira(dto.vira().toString())
                 .firstCard(dto.firstCard().toString())
                 .lastCard(dto.lastCard().toString())

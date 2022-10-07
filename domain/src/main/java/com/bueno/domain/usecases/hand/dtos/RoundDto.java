@@ -20,10 +20,9 @@
 
 package com.bueno.domain.usecases.hand.dtos;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 
-import java.util.UUID;
-
-public record RoundDto(UUID firstToPlay, UUID lastToPlay, UUID winner,
+public record RoundDto(PlayerDto firstToPlay, PlayerDto lastToPlay, PlayerDto winner,
                        CardDto vira, CardDto firstCard, CardDto lastCard) {
 }

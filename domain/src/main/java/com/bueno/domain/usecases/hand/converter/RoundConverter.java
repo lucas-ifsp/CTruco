@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.hand.converter;
 
 import com.bueno.domain.entities.hand.Round;
-import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.game.converter.PlayerConverter;
 import com.bueno.domain.usecases.hand.dtos.RoundDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 
@@ -32,9 +32,9 @@ public class RoundConverter {
     public static RoundDto toDto(Round round){
         if(round == null) return null;
         return new RoundDto(
-                round.getFirstToPlay().getUuid(),
-                round.getLastToPlay().getUuid(),
-                round.getWinner().map(Player::getUuid).orElse(null),
+                PlayerConverter.toDto(round.getFirstToPlay()),
+                PlayerConverter.toDto(round.getLastToPlay()),
+                PlayerConverter.toDto(round.getWinner().orElse(null)),
                 CardConverter.toDto(round.getVira()),
                 CardConverter.toDto(round.getFirstCard()),
                 CardConverter.toDto(round.getLastCard())

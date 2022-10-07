@@ -23,7 +23,7 @@ package com.bueno.domain.usecases.hand.converter;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.intel.PossibleAction;
-import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.game.converter.PlayerConverter;
 import com.bueno.domain.usecases.hand.dtos.HandDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
@@ -43,15 +43,15 @@ public class HandConverter {
                 hand.getRoundsPlayed().stream().map(RoundConverter::toDto).toList(),
                 hand.getIntelHistory().stream().map(IntelConverter::toDto).toList(),
                 hand.getPossibleActions().stream().map(PossibleAction::toString).collect(Collectors.toSet()),
-                hand.getFirstToPlay().getUuid(),
-                hand.getLastToPlay().getUuid(),
-                hand.getCurrentPlayer().getUuid(),
-                hand.getLastBetRaiser() != null ? hand.getLastBetRaiser().getUuid() : null,
-                hand.getEventPlayer() != null ? hand.getEventPlayer().getUuid() : null,
+                PlayerConverter.toDto(hand.getFirstToPlay()),
+                PlayerConverter.toDto(hand.getLastToPlay()),
+                PlayerConverter.toDto(hand.getCurrentPlayer()),
+                PlayerConverter.toDto(hand.getLastBetRaiser()),
+                PlayerConverter.toDto(hand.getEventPlayer()),
                 hand.getCardToPlayAgainst().map(CardConverter::toDto).orElse(null),
                 hand.getPoints().get(),
                 hand.getPointsProposal() != null ? hand.getPointsProposal().get() : 0,
-                hand.getResult().flatMap(HandResult::getWinner).map(Player::getUuid).orElse(null),
+                PlayerConverter.toDto(hand.getResult().flatMap(HandResult::getWinner).orElse(null)),
                 hand.getState().toString()
         );
     }

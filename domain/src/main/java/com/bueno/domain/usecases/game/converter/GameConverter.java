@@ -33,10 +33,10 @@ public class GameConverter {
         return new GameDto(
                 game.getUuid(),
                 game.getTimestamp(),
-                game.getPlayer1().getUuid(),
-                game.getPlayer2().getUuid(),
-                game.getFirstToPlay().getUuid(),
-                game.getLastToPlay().getUuid(),
+                PlayerConverter.toDto(game.getPlayer1()),
+                PlayerConverter.toDto(game.getPlayer2()),
+                PlayerConverter.toDto(game.getFirstToPlay()),
+                PlayerConverter.toDto(game.getLastToPlay()),
                 game.getHands().stream().map(HandConverter::toDto).toList()
         );
     }

@@ -20,7 +20,6 @@
 
 package com.bueno.persistence.dto;
 
-import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import lombok.AllArgsConstructor;
@@ -56,7 +55,7 @@ public class IntelEntity {
     private int currentOpponentScore;
     private String currentOpponentUsername;
     private String cardToPlayAgainst;
-    private List<UUID> players;
+    private List<PlayerEntity> players;
     private String event;
     private UUID eventPlayerUUID;
     private String eventPlayerUsername;
@@ -87,7 +86,7 @@ public class IntelEntity {
                 .currentOpponentScore(dto.currentOpponentScore())
                 .currentOpponentUsername(dto.currentOpponentUsername())
                 .cardToPlayAgainst(dto.cardToPlayAgainst() != null ? dto.cardToPlayAgainst().toString() : null)
-                .players(dto.players().stream().map(PlayerDto::uuid).toList())
+                .players(dto.players().stream().map(PlayerEntity::from).toList())
                 .event(dto.event())
                 .eventPlayerUUID(dto.eventPlayerUUID())
                 .eventPlayerUsername(dto.eventPlayerUsername())

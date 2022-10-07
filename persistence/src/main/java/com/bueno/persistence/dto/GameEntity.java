@@ -51,10 +51,10 @@ public class GameEntity {
         return GameEntity.builder()
                 .id(dto.gameUuid())
                 .timestamp(dto.timestamp())
-                .player1(dto.player1())
-                .player2(dto.player2())
-                .firstToPlay(dto.firstToPlay())
-                .lastToPlay(dto.lastToPlay())
+                .player1(dto.player1().uuid())
+                .player2(dto.player2().uuid())
+                .firstToPlay(dto.firstToPlay().uuid())
+                .lastToPlay(dto.lastToPlay().uuid())
                 .hands(dto.hands().stream().map(HandEntity::from).toList())
                 .build();
     }

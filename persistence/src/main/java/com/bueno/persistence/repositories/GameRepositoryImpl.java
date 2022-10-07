@@ -45,6 +45,6 @@ public class GameRepositoryImpl implements GameRepository {
 
     @Override
     public Optional<GameDto> findByUuid(UUID gameUuid) {
-        return dao.findById(gameUuid);
+        return null;//dao.findById(gameUuid);
     }
 }
