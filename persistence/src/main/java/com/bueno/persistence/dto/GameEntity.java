@@ -21,6 +21,7 @@
 package com.bueno.persistence.dto;
 
 import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -57,5 +59,17 @@ public class GameEntity {
                 .lastToPlay(dto.lastToPlay().uuid())
                 .hands(dto.hands().stream().map(HandEntity::from).toList())
                 .build();
+    }
+
+    public GameDto toDto(Map<UUID, PlayerDto> players){
+        return new GameDto(
+                id,
+                timestamp,
+                players.get(player1),
+                players.get(player2),
+                players.get(firstToPlay),
+                players.get(lastToPlay),
+                hands.stream().map(hand -> hand.toDto(players)).toList()
+        );
     }
 }

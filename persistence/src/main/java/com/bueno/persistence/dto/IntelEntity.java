@@ -29,8 +29,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Data
 @AllArgsConstructor
@@ -92,5 +94,35 @@ public class IntelEntity {
                 .eventPlayerUsername(dto.eventPlayerUsername())
                 .possibleActions(dto.possibleActions())
                 .build();
+    }
+
+    public IntelDto toDto(){
+        final Function<String, CardDto> toCardDto = card -> card != null?
+                new CardDto(card.substring(0, 1), card.substring(1, 2)) : null;
+        return new IntelDto(
+                timestamp,
+                isGameDone,
+                gameWinner,
+                isMaoDeOnze,
+                handPoints,
+                handPointsProposal,
+                roundWinnersUsernames.stream().map(Optional::ofNullable).toList(),
+                roundWinnersUuid.stream().map(Optional::ofNullable).toList(),
+                roundsPlayed,
+                toCardDto.apply(vira),
+                openCards.stream().map(toCardDto).toList(),
+                handWinner,
+                currentPlayerUuid,
+                currentPlayerScore,
+                currentPlayerUsername,
+                currentOpponentScore,
+                currentOpponentUsername,
+                toCardDto.apply(cardToPlayAgainst),
+                players.stream().map(PlayerEntity::toDto).toList(),
+                event,
+                eventPlayerUUID,
+                eventPlayerUsername,
+                possibleActions
+        );
     }
 }

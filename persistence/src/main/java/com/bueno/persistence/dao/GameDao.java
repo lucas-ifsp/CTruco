@@ -23,7 +23,9 @@ package com.bueno.persistence.dao;
 import com.bueno.persistence.dto.GameEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface GameDao extends MongoRepository<GameEntity, UUID> {
+    Optional<GameEntity> findByPlayer1OrPlayer2(UUID player1, UUID player2);
 }

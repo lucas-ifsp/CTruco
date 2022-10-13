@@ -20,13 +20,17 @@
 
 package com.bueno.persistence.dto;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.hand.dtos.RoundDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Data
 @AllArgsConstructor
@@ -49,5 +53,19 @@ public class RoundEntity {
                 .firstCard(dto.firstCard().toString())
                 .lastCard(dto.lastCard().toString())
                 .build();
+    }
+
+    public RoundDto toDto(Map<UUID, PlayerDto> players){
+         final Function<String, CardDto> toCardDto = card -> card != null?
+                new CardDto(card.substring(0, 1), card.substring(1, 2)) : null;
+        final Function<UUID, PlayerDto> toPlayerDtoOrNull = uuid -> uuid != null ? players.get(uuid) : null;
+
+        return new RoundDto(
+                players.get(firstToPlay),
+                players.get(lastToPlay),
+                toPlayerDtoOrNull.apply(winner),
+                toCardDto.apply(vira),
+                toCardDto.apply(firstCard),
+                toCardDto.apply(lastCard));
     }
 }

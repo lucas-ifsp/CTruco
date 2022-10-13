@@ -54,4 +54,11 @@ public class PlayerEntity {
                 .cards(dto.cards().stream().map(CardDto::toString).toList())
                 .build();
     }
+
+    public PlayerDto toDto(){
+        final List<CardDto> cardDtos = cards.stream()
+                .map(card -> new CardDto(card.substring(0, 1), card.substring(1, 2)))
+                .toList();
+        return new PlayerDto(username, id, score, isBot, cardDtos);
+    }
 }

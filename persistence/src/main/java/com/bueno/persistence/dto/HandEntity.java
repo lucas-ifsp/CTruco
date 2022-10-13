@@ -20,6 +20,7 @@
 
 package com.bueno.persistence.dto;
 
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.hand.dtos.HandDto;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -76,5 +78,28 @@ public class HandEntity {
                 .winner(dto.winner() != null ? dto.winner().uuid() : null)
                 .state(dto.state())
                 .build();
+    }
+
+    public HandDto toDto(Map<UUID, PlayerDto> players){
+        final Function<String, CardDto> toCardDto = card -> card != null?
+                new CardDto(card.substring(0, 1), card.substring(1, 2)) : null;
+        final Function<UUID, PlayerDto> toPlayerDtoOrNull = uuid -> uuid != null ? players.get(uuid) : null;
+        return new HandDto(
+                toCardDto.apply(vira),
+                dealtCard.stream().map(toCardDto).toList(),
+                openCards.stream().map(toCardDto).toList(),
+                roundsPlayed.stream().map(round -> round.toDto(players)).toList(),
+                history.stream().map(IntelEntity::toDto).toList(),
+                possibleActions,
+                players.get(firstToPlay),
+                players.get(lastToPlay),
+                toPlayerDtoOrNull.apply(currentPlayer),
+                toPlayerDtoOrNull.apply(lastBetRaiser),
+                toPlayerDtoOrNull.apply(eventPlayer),
+                toCardDto.apply(cartToPlayAgainst),
+                points,
+                pointsProposal,
+                toPlayerDtoOrNull.apply(winner),
+                state);
     }
 }

@@ -21,30 +21,53 @@
 package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.persistence.dao.GameDao;
+import com.bueno.persistence.dao.PlayerDao;
 import com.bueno.persistence.dto.GameEntity;
+import com.bueno.persistence.dto.PlayerEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class GameRepositoryImpl implements GameRepository {
 
-    private final GameDao dao;
+    private final GameDao gameDao;
+    private final PlayerDao playerDao;
 
-    public GameRepositoryImpl(GameDao dao) {
-        this.dao = dao;
+    public GameRepositoryImpl(GameDao dao, PlayerDao playerDao) {
+        this.gameDao = dao;
+        this.playerDao = playerDao;
     }
 
     @Override
     public void save(GameDto dto) {
-        dao.save(GameEntity.from(dto));
+        playerDao.save(PlayerEntity.from(dto.player1()));
+        playerDao.save(PlayerEntity.from(dto.player2()));
+        gameDao.save(GameEntity.from(dto));
     }
 
     @Override
     public Optional<GameDto> findByUuid(UUID gameUuid) {
-        return null;//dao.findById(gameUuid);
+        final Optional<GameEntity> possibleGame = gameDao.findById(gameUuid);
+        return getGameDto(possibleGame);
+    }
+
+    @Override
+    public Optional<GameDto> findByPlayerUuid(UUID playerUuid) {
+        final Optional<GameEntity> possibleGame = gameDao.findByPlayer1OrPlayer2(playerUuid, playerUuid);
+        return getGameDto(possibleGame);
+    }
+
+    private Optional<GameDto> getGameDto(Optional<GameEntity> possibleGame) {
+        if(possibleGame.isEmpty()) return Optional.empty();
+        final GameEntity game = possibleGame.get();
+        final PlayerDto player1 = playerDao.findById(game.getPlayer1()).orElseThrow().toDto();
+        final PlayerDto player2 = playerDao.findById(game.getPlayer2()).orElseThrow().toDto();
+        return Optional.of(game.toDto(Map.of(player1.uuid(), player1, player2.uuid(), player2)));
     }
 }
