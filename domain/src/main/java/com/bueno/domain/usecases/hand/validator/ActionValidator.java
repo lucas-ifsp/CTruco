@@ -44,8 +44,8 @@ public class ActionValidator extends Validator<UUID> {
     @Override
     public Notification validate(UUID uuid) {
         if(uuid == null) throw new NullPointerException("UUID is null.");
-        final var game = findGameUseCase.findByUserUuid(uuid).orElse(null);
-        if(game == null) throw new GameNotFoundException("User with UUID " + uuid + " is not in an active game.");
+        final var game = findGameUseCase.findByUserUuid(uuid)
+                .orElseThrow(() -> new GameNotFoundException("User with UUID " + uuid + " is not in an active game."));
         if(game.isDone()) throw  new GameNotFoundException("Game is over. Start a new game.");
 
         final var requester = getRequester(uuid, Objects.requireNonNull(game));

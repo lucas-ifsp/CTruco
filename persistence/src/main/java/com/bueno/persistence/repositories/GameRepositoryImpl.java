@@ -23,6 +23,7 @@ package com.bueno.persistence.repositories;
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.GameDao;
 import com.bueno.persistence.dao.PlayerDao;
 import com.bueno.persistence.dto.GameEntity;
@@ -46,15 +47,20 @@ public class GameRepositoryImpl implements GameRepository {
 
     @Override
     public void save(GameDto dto) {
+        gameDao.findById(dto.gameUuid())
+                .ifPresent(game -> {throw new EntityNotFoundException("Game already exists: " + game.getId());});
         playerDao.save(PlayerEntity.from(dto.player1()));
         playerDao.save(PlayerEntity.from(dto.player2()));
         gameDao.save(GameEntity.from(dto));
     }
 
     @Override
-    public Optional<GameDto> findByUuid(UUID gameUuid) {
-        final Optional<GameEntity> possibleGame = gameDao.findById(gameUuid);
-        return getGameDto(possibleGame);
+    public void update(GameDto dto) {
+        gameDao.findById(dto.gameUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Can not update non-existing game: " + dto.gameUuid()));
+        playerDao.save(PlayerEntity.from(dto.player1()));
+        playerDao.save(PlayerEntity.from(dto.player2()));
+        gameDao.save(GameEntity.from(dto));
     }
 
     @Override

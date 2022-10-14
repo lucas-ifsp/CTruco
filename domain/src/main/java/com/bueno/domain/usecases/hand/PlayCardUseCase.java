@@ -88,6 +88,7 @@ public class PlayCardUseCase {
         final IntelDto gameResult = resultHandler.handle(game);
         if(gameResult != null) return gameResult;
 
+
         botUseCase.playWhenNecessary(game);
 
         return IntelConverter.toDto(game.getIntel());

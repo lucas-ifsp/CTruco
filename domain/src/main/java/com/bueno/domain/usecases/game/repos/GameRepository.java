@@ -27,8 +27,7 @@ import java.util.UUID;
 
 public interface GameRepository {
     void save(GameDto gameDto);
-
-    Optional<GameDto> findByUuid(UUID uuid);
+    void update(GameDto gameDto);
 
     Optional<GameDto> findByPlayerUuid(UUID playerUuid);
 

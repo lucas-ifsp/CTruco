@@ -43,14 +43,6 @@ class FindGameUseCaseTest {
     @Mock private Game game;
     @InjectMocks private FindGameUseCase sut;
 
-    @Test
-    @DisplayName("Should load game by UUID")
-    void shouldLoadGameByUuid() {
-        final UUID uuid = UUID.randomUUID();
-        when(repo.findByUuid(uuid)).thenReturn(Optional.of(game));
-        assertThat(sut.load(uuid)).isEqualTo(Optional.of(game));
-        verify(repo, times(1)).findByUuid(uuid);
-    }
 
     @Test
     @DisplayName("Should load game by user UUID")
@@ -60,12 +52,6 @@ class FindGameUseCaseTest {
         assertThat(sut.findByUserUuid(uuid)).isEqualTo(Optional.of(game));
 
         verify(repo, times(1)).findByUserUuid(uuid);
-    }
-
-    @Test
-    @DisplayName("Should throw if game uuid is null")
-    void shouldThrowIfGameUuidIsNull() {
-        assertThatNullPointerException().isThrownBy(() -> sut.load(null));
     }
 
     @Test

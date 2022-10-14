@@ -41,14 +41,9 @@ public class FindGameUseCase {
         this.newRepo = newRepo;
     }
 
-    public Optional<Game> load(UUID uuid) {
-        final UUID gameUuid = Objects.requireNonNull(uuid, "Game UUID must not be null.");
-        return repo.findByUuid(gameUuid);
-    }
-
     public Optional<Game> findByUserUuid(UUID userUuid) {
         final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
-        newRepo.findByPlayerUuid(uuid).map(GameConverter::fromDto).ifPresent(System.out::println);
+        if(newRepo!= null) newRepo.findByPlayerUuid(uuid).map(GameConverter::fromDto).ifPresent(System.out::println);
         return repo.findByUserUuid(Objects.requireNonNull(uuid));
     }
 }
