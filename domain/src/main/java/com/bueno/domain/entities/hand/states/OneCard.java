@@ -28,7 +28,7 @@ import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class OneCard implements HandState {
+public class OneCard implements HandState {
 
     private final Hand context;
 

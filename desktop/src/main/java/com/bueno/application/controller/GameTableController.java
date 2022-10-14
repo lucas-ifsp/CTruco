@@ -311,7 +311,7 @@ public class GameTableController {
     }
 
     private boolean isBotEvent(IntelDto intel) {
-        return botUUID.equals(intel.eventPlayerUUID());
+        return botUUID.equals(intel.eventPlayerUuid());
     }
 
     private void addBotAnimation(TimelineBuilder builder, IntelDto intel, String event) {

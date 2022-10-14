@@ -36,7 +36,7 @@ public record IntelDto(Instant timestamp, boolean isGameDone, UUID gameWinner, b
                        String currentOpponentUsername,
                        CardDto cardToPlayAgainst,
                        List<PlayerDto> players,
-                       String event, UUID eventPlayerUUID, String eventPlayerUsername,
+                       String event, UUID eventPlayerUuid, String eventPlayerUsername,
                        Set<String> possibleActions) {
 
     @Override

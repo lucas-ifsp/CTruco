@@ -62,7 +62,7 @@ public class HandEntity {
         final List<IntelEntity> history = dto.history().stream().map(IntelEntity::from).toList();
         return HandEntity.builder()
                 .vira(dto.vira().toString())
-                .dealtCard(mapToString.apply(dto.dealtCard()))
+                .dealtCard(mapToString.apply(dto.dealtCards()))
                 .openCards(mapToString.apply(dto.openCards()))
                 .roundsPlayed(roundEntities)
                 .history(history)

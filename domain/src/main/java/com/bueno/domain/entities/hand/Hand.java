@@ -21,12 +21,9 @@
 package com.bueno.domain.entities.hand;
 
 import com.bueno.domain.entities.deck.Card;
-import com.bueno.domain.entities.hand.states.Done;
-import com.bueno.domain.entities.hand.states.HandState;
-import com.bueno.domain.entities.hand.states.NoCard;
-import com.bueno.domain.entities.hand.states.WaitingMaoDeOnze;
-import com.bueno.domain.entities.intel.Event;
 import com.bueno.domain.entities.game.GameRuleViolationException;
+import com.bueno.domain.entities.hand.states.*;
+import com.bueno.domain.entities.intel.Event;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
@@ -54,6 +51,41 @@ public class Hand {
 
     private HandResult result;
     private HandState state;
+
+    //This method must only be used to recovery the object state from database. Do not use for creating a new hand.
+    //To create a hand, use the Game class, since it is its bounded context border.
+    public Hand(Card vira, List<Card> dealtCards, List<Card> openCards, List<Round> roundsPlayed, List<Intel> history,
+                EnumSet<PossibleAction> possibleActions, Player firstToPlay, Player lastToPlay, Player currentPlayer,
+                Player lastBetRaiser, Player eventPlayer, Card cardToPlayAgainst, HandPoints points,
+                HandPoints pointsProposal, HandResult result, String stateName){
+        this.vira = vira;
+        this.dealtCards = new ArrayList<>(dealtCards);
+        this.openCards = new ArrayList<>(openCards);
+        this.roundsPlayed = new ArrayList<>(roundsPlayed);
+        this.history = new ArrayList<>(history);
+        this.possibleActions = EnumSet.copyOf(possibleActions);
+        this.firstToPlay = firstToPlay;
+        this.lastToPlay = lastToPlay;
+        this.currentPlayer = currentPlayer;
+        this.lastBetRaiser = lastBetRaiser;
+        this.eventPlayer = eventPlayer;
+        this.cardToPlayAgainst = cardToPlayAgainst;
+        this.points = points;
+        this.pointsProposal = pointsProposal;
+        this.result = result;
+        this.state = stateFromString(stateName);
+    }
+
+    private HandState stateFromString(String stateName) {
+        return switch (stateName){
+            case "DONE" -> new Done(this);
+            case "NOCARD" -> new NoCard(this);
+            case "ONECARD" -> new OneCard(this);
+            case "WAITINGMAODEONZE" -> new WaitingMaoDeOnze(this);
+            case "WAITINGRAISERESPONSE" -> new WaitingMaoDeOnze(this);
+            default -> throw new IllegalArgumentException("No state for name: " + stateName);
+        };
+    }
 
     public Hand(Player firstToPlay, Player lastToPlay, Card vira){
         this.firstToPlay = Objects.requireNonNull(firstToPlay);

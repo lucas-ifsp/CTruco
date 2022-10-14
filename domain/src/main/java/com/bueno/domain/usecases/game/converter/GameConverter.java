@@ -40,4 +40,17 @@ public class GameConverter {
                 game.getHands().stream().map(HandConverter::toDto).toList()
         );
     }
+
+    public static Game fromDto(GameDto dto){
+        if(dto == null) return null;
+        return new Game(
+                dto.gameUuid(),
+                dto.timestamp(),
+                PlayerConverter.fromDto(dto.player1()),
+                PlayerConverter.fromDto(dto.player2()),
+                PlayerConverter.fromDto(dto.firstToPlay()),
+                PlayerConverter.fromDto(dto.lastToPlay()),
+                dto.hands().stream().map(HandConverter::fromDto).toList()
+        );
+    }
 }

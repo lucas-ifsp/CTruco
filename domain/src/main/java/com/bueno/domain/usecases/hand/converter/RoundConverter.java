@@ -40,4 +40,16 @@ public class RoundConverter {
                 CardConverter.toDto(round.getLastCard())
         );
     }
+
+    public static Round fromDto(RoundDto dto){
+        if(dto == null) return null;
+        return new Round(
+                PlayerConverter.fromDto(dto.firstToPlay()),
+                CardConverter.fromDto(dto.firstCard()),
+                PlayerConverter.fromDto(dto.lastToPlay()),
+                CardConverter.fromDto(dto.lastCard()),
+                CardConverter.fromDto(dto.vira()),
+                PlayerConverter.fromDto(dto.winner())
+        );
+    }
 }

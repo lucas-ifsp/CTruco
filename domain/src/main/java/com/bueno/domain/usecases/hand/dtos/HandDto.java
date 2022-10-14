@@ -27,7 +27,7 @@ import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import java.util.List;
 import java.util.Set;
 
-public record HandDto(CardDto vira, List<CardDto> dealtCard, List<CardDto> openCards,
+public record HandDto(CardDto vira, List<CardDto> dealtCards, List<CardDto> openCards,
                       List<RoundDto> roundsPlayed, List<IntelDto> history, Set<String> possibleActions,
                       PlayerDto firstToPlay, PlayerDto lastToPlay, PlayerDto currentPlayer, PlayerDto lastBetRaiser, PlayerDto eventPlayer,
                       CardDto cartToPlayAgainst, int points, int pointsProposal, PlayerDto winner, String state) {

@@ -37,4 +37,14 @@ public class PlayerConverter {
                 player.isBot(),
                 player.getCards().stream().map(CardConverter::toDto).toList());
     }
+
+    public static Player fromDto(PlayerDto dto){
+        if(dto == null) return null;
+        return new Player(
+                dto.cards().stream().map(CardConverter::fromDto).toList(),
+                dto.username(),
+                dto.uuid(),
+                dto.score(),
+                dto.isBot());
+    }
 }

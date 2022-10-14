@@ -37,9 +37,16 @@ public class Player {
     private int score;
     private boolean isBot;
 
-    private Player(UUID uuid, String username) {
+    public Player(List<Card> cards, String username, UUID uuid, int score, boolean isBot) {
+        this.cards = cards;
         this.username = username;
         this.uuid = uuid;
+        this.score = score;
+        this.isBot = isBot;
+    }
+
+    private Player(UUID uuid, String username) {
+        this(null, username, uuid, 0, false);
     }
 
     public static Player of(UUID uuid, String username){

@@ -58,6 +58,16 @@ public class Game {
         prepareNewHand();
     }
 
+    public Game(UUID uuid, LocalDateTime timestamp, Player player1, Player player2, Player firstToPlay, Player lastToPlay, List<Hand> hands) {
+        this.uuid = uuid;
+        this.timestamp = timestamp;
+        this.player1 = player1;
+        this.player2 = player2;
+        this.firstToPlay = firstToPlay;
+        this.lastToPlay = lastToPlay;
+        this.hands = new ArrayList<>(hands);
+    }
+
     public void prepareNewHand() {
         defineHandPlayingOrder();
 

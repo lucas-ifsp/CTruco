@@ -90,7 +90,7 @@ public class IntelEntity {
                 .cardToPlayAgainst(dto.cardToPlayAgainst() != null ? dto.cardToPlayAgainst().toString() : null)
                 .players(dto.players().stream().map(PlayerEntity::from).toList())
                 .event(dto.event())
-                .eventPlayerUUID(dto.eventPlayerUUID())
+                .eventPlayerUUID(dto.eventPlayerUuid())
                 .eventPlayerUsername(dto.eventPlayerUsername())
                 .possibleActions(dto.possibleActions())
                 .build();

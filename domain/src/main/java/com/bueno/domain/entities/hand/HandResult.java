@@ -60,7 +60,6 @@ public class HandResult {
     @Override
     public String toString() {
         String result = winner == null ? "draw" : (winner.getUsername() + " (" + winner.getUuid() + ") won");
-        final int pointsValue = points.get();
         return "HandResult = " + result + " " + points.get() + " point(s)";
     }
 

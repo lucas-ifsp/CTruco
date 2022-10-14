@@ -21,13 +21,16 @@
 package com.bueno.domain.usecases.hand.converter;
 
 import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.hand.HandResult;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.usecases.game.converter.PlayerConverter;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.hand.dtos.HandDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 
+import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 public class HandConverter {
@@ -52,7 +55,36 @@ public class HandConverter {
                 hand.getPoints().get(),
                 hand.getPointsProposal() != null ? hand.getPointsProposal().get() : 0,
                 PlayerConverter.toDto(hand.getResult().flatMap(HandResult::getWinner).orElse(null)),
-                hand.getState().toString()
+                hand.getState().className()
         );
+    }
+
+    public static Hand fromDto(HandDto dto){
+        if(dto == null) return  null;
+        return new Hand(
+                CardConverter.fromDto(dto.vira()),
+                dto.dealtCards().stream().map(CardConverter::fromDto).toList(),
+                dto.openCards().stream().map(CardConverter::fromDto).toList(),
+                dto.roundsPlayed().stream().map(RoundConverter::fromDto).toList(),
+                dto.history().stream().map(IntelConverter::fromDto).toList(),
+                EnumSet.copyOf(dto.possibleActions().stream().map(PossibleAction::valueOf).collect(Collectors.toSet())),
+                PlayerConverter.fromDto(dto.firstToPlay()),
+                PlayerConverter.fromDto(dto.lastToPlay()),
+                PlayerConverter.fromDto(dto.currentPlayer()),
+                PlayerConverter.fromDto(dto.lastBetRaiser()),
+                PlayerConverter.fromDto(dto.eventPlayer()),
+                CardConverter.fromDto(dto.cartToPlayAgainst()),
+                HandPoints.fromIntValue(dto.points()),
+                dto.pointsProposal() != 0 ? HandPoints.fromIntValue(dto.pointsProposal()) : null,
+                handResultFromDto(dto),
+                dto.state());
+    }
+
+    private static HandResult handResultFromDto(HandDto dto) {
+        final PlayerDto winner = dto.winner();
+        final HandPoints handPoints = HandPoints.fromIntValue(dto.points());
+        if(winner != null) return HandResult.of(PlayerConverter.fromDto(winner), handPoints);
+        if(handPoints == HandPoints.ZERO) return HandResult.ofDraw();
+        return null;
     }
 }

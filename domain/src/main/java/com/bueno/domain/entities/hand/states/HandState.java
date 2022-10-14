@@ -29,4 +29,7 @@ public interface HandState {
     void accept(Player responder);
     void quit(Player responder);
     void raise(Player requester);
+    default String className(){
+        return getClass().getSimpleName().toUpperCase();
+    }
 }

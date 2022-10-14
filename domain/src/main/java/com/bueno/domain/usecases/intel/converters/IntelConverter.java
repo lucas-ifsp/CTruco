@@ -60,6 +60,39 @@ public class IntelConverter {
         );
     }
 
+    public static Intel fromDto(IntelDto dto){
+        final List<Intel.PlayerIntel> playersDto = dto.players().stream()
+                .map(IntelConverter::ofPlayerDto)
+                .collect(Collectors.toList());
+
+        return new Intel(
+                dto.timestamp(),
+                dto.isGameDone(),
+                dto.gameWinner(),
+                dto.isMaoDeOnze(),
+                dto.handPoints(),
+                dto.handPointsProposal(),
+                dto.roundWinnersUsernames(),
+                dto.roundWinnersUuid(),
+                dto.roundsPlayed(),
+                CardConverter.fromDto(dto.vira()),
+                dto.openCards().stream().map(CardConverter::fromDto).collect(Collectors.toList()),
+                dto.handWinner(),
+                dto.currentPlayerUuid(),
+                dto.currentPlayerScore(),
+                dto.currentPlayerUsername(),
+                dto.currentOpponentScore(),
+                dto.currentOpponentUsername(),
+                CardConverter.fromDto(dto.cardToPlayAgainst()),
+                playersDto,
+                dto.event(),
+                dto.eventPlayerUuid(),
+                dto.eventPlayerUsername(),
+                dto.possibleActions()
+        );
+    }
+
+
     private static PlayerDto ofPlayerIntel(Intel.PlayerIntel playerIntel){
         final var playerCards = playerIntel.getCards().stream()
                 .map(CardConverter::toDto)
@@ -70,6 +103,19 @@ public class IntelConverter {
                 playerIntel.getUuid(),
                 playerIntel.getScore(),
                 playerIntel.isBot(),
+                playerCards);
+    }
+
+    private static Intel.PlayerIntel ofPlayerDto(PlayerDto dto){
+        final var playerCards = dto.cards().stream()
+                .map(CardConverter::fromDto)
+                .collect(Collectors.toList());
+
+        return new Intel.PlayerIntel(
+                dto.username(),
+                dto.uuid(),
+                dto.score(),
+                dto.isBot(),
                 playerCards);
     }
 }

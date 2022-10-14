@@ -47,8 +47,7 @@ public class Intel{
     private Card vira;
     private List<Card> openCards;
     private String handWinner;
-
-    private Player currentPlayer;
+    private UUID currentPlayerUuid;
     private int currentPlayerScore;
     private String currentPlayerUsername;
     private int currentOpponentScore;
@@ -57,9 +56,42 @@ public class Intel{
     private List<PlayerIntel> players;
 
     private String eventPlayerUsername;
-    private UUID eventPlayerUUID;
+    private UUID eventPlayerUuid;
     private String event;
     private Set<String> possibleActions;
+
+    private Intel() {
+        timestamp = Instant.now();
+    }
+
+    public Intel(Instant timestamp, boolean gameIsDone, UUID gameWinner, boolean maoDeOnze, Integer handPoints, Integer pointsProposal, List<Optional<String>> roundWinnersUsernames,
+                 List<Optional<UUID>> roundWinnersUuid, int roundsPlayed, Card vira, List<Card> openCards, String handWinner, UUID currentPlayerUuid, Integer currentPlayerScore,
+                 String currentPlayerUsername, Integer currentOpponentScore, String currentOpponentUsername, Card cardToPlayAgainst,
+                 List<PlayerIntel> playersIntel, String event, UUID eventPlayerUuid, String eventPlayerUsername, Set<String> possibleActions){
+        this.timestamp = timestamp;
+        this.gameIsDone = gameIsDone;
+        this.gameWinner = gameWinner;
+        this.maoDeOnze = maoDeOnze;
+        this.handPoints = handPoints;
+        this.handPointsProposal = pointsProposal;
+        this.roundWinnersUsernames = new ArrayList<>(roundWinnersUsernames);
+        this.roundWinnersUuid = new ArrayList<>(roundWinnersUuid);
+        this.roundsPlayed = roundsPlayed;
+        this.vira = vira;
+        this.openCards = new ArrayList<>(openCards);
+        this.handWinner = handWinner;
+        this.currentPlayerUuid = currentPlayerUuid;
+        this.currentPlayerScore = currentPlayerScore;
+        this.currentPlayerUsername = currentPlayerUsername;
+        this.currentOpponentScore = currentOpponentScore;
+        this.currentOpponentUsername = currentOpponentUsername;
+        this.cardToPlayAgainst = cardToPlayAgainst;
+        this.players = playersIntel;
+        this.event = event;
+        this.eventPlayerUuid = eventPlayerUuid;
+        this.eventPlayerUsername = eventPlayerUsername;
+        this.possibleActions = Set.copyOf(possibleActions);
+    }
 
     static public Intel ofHand(Hand currentHand, Event event){
         final Hand hand = Objects.requireNonNull(currentHand);
@@ -96,11 +128,12 @@ public class Intel{
 
         final Player eventPlayer = hand.getEventPlayer();
         eventPlayerUsername = eventPlayer != null ? eventPlayer.getUsername() : null;
-        eventPlayerUUID = eventPlayer != null ? eventPlayer.getUuid() : null;
+        eventPlayerUuid = eventPlayer != null ? eventPlayer.getUuid() : null;
 
-        currentPlayer = hand.getCurrentPlayer();
+        final Player currentPlayer = hand.getCurrentPlayer();
         currentPlayerScore = currentPlayer != null ?  currentPlayer.getScore() : 0;
         currentPlayerUsername = currentPlayer != null ?  currentPlayer.getUsername() : null;
+        currentPlayerUuid = currentPlayer != null ? currentPlayer.getUuid() : null;
 
         currentOpponentScore = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getScore() : 0;
         currentOpponentUsername = currentPlayer != null ?  hand.getOpponentOf(currentPlayer).getUsername() : null;
@@ -111,10 +144,6 @@ public class Intel{
         gameWinner = game.getWinner().map(Player::getUuid).orElse(null);
     }
 
-    private Intel() {
-        timestamp = Instant.now();
-    }
-
     public static class PlayerIntel{
         private final UUID uuid;
         private final String username;
@@ -123,11 +152,15 @@ public class Intel{
         private final boolean isBot;
 
         public PlayerIntel(Player player) {
-            this.uuid = player.getUuid();
-            this.username = player.getUsername();
-            this.score = player.getScore();
-            this.cards = List.copyOf(player.getCards());
-            this.isBot = player.isBot();
+            this(player.getUsername(), player.getUuid(), player.getScore(), player.isBot(), player.getCards());
+        }
+
+        public PlayerIntel(String username, UUID uuid, int score, boolean isBot, List<Card> playerCards) {
+            this.uuid = uuid;
+            this.username = username;
+            this.score = score;
+            this.cards = List.copyOf(playerCards);
+            this.isBot = isBot;
         }
 
         public UUID getUuid() {
@@ -238,7 +271,7 @@ public class Intel{
     }
 
     public Optional<UUID> currentPlayerUuid() {
-        return currentPlayer != null ? Optional.of(currentPlayer.getUuid()) : Optional.empty();
+        return Optional.ofNullable(currentPlayerUuid);
     }
     
     public int currentPlayerScore() {
@@ -262,7 +295,7 @@ public class Intel{
     }
 
     public Optional<UUID> eventPlayerUuid() {
-        return Optional.ofNullable(eventPlayerUUID);
+        return Optional.ofNullable(eventPlayerUuid);
     }
 
     public Optional<String> eventPlayerUsername() {

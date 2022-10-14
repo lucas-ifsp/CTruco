@@ -37,12 +37,17 @@ public class Round {
     private final Card lastCard;
 
     public Round(Player firstToPlay, Card firstCard, Player lastToPlay, Card lastCard, Card vira) {
+        this(firstToPlay, firstCard, lastToPlay, lastCard, vira, null);
+        validateCards();
+    }
+
+    public Round(Player firstToPlay, Card firstCard, Player lastToPlay, Card lastCard, Card vira, Player winner) {
         this.firstToPlay = Objects.requireNonNull(firstToPlay, "First to play must not be null!");
         this.lastToPlay = Objects.requireNonNull(lastToPlay, "Second to play must not be null!");
         this.firstCard = Objects.requireNonNull(firstCard, "First card played must not be null!");
         this.lastCard = Objects.requireNonNull(lastCard, "Last card played must not be null!");
         this.vira = Objects.requireNonNull(vira, "Vira must not be null!");
-        validateCards();
+        this.winner = winner;
     }
 
     private void validateCards() {
