@@ -23,7 +23,8 @@ package com.bueno.domain.usecases.hand.validator;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import com.bueno.domain.usecases.utils.validation.Notification;
 import com.bueno.domain.usecases.utils.validation.Validator;
@@ -32,21 +33,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ActionValidator extends Validator<UUID> {
-
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepository;
     private final PossibleAction action;
 
-    public ActionValidator(FindGameUseCase findGameUseCase, PossibleAction action) {
-        this.findGameUseCase = findGameUseCase;
+    public ActionValidator(GameRepository gameRepository, PossibleAction action) {
+        this.gameRepository = gameRepository;
         this.action = action;
     }
 
     @Override
     public Notification validate(UUID uuid) {
         if(uuid == null) throw new NullPointerException("UUID is null.");
-        final var game = findGameUseCase.findByUserUuid(uuid)
+        final var game = gameRepository.findByPlayerUuid(uuid).map(GameConverter::fromDto)
                 .orElseThrow(() -> new GameNotFoundException("User with UUID " + uuid + " is not in an active game."));
-        if(game.isDone()) throw  new GameNotFoundException("Game is over. Start a new game.");
+        if(game.isDone()) throw new GameNotFoundException("Game is over. Start a new game.");
 
         final var requester = getRequester(uuid, Objects.requireNonNull(game));
         final var currentHand = game.currentHand();

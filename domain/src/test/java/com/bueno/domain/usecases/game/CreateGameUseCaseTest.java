@@ -22,9 +22,10 @@ package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
@@ -49,7 +50,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CreateGameUseCaseTest {
 
-    @Mock private ActiveGameRepository gameRepo;
+    @Mock private GameRepository gameRepo;
     @Mock private UserRepository userRepo;
 
     @InjectMocks
@@ -64,7 +65,7 @@ class CreateGameUseCaseTest {
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertThat(sut.createForUserAndBot(requestModel)).isNotNull();
-        verify(gameRepo, times(1)).create(any());
+        verify(gameRepo, times(1)).save(any());
     }
 
     @Test
@@ -82,11 +83,11 @@ class CreateGameUseCaseTest {
         final var user = new ApplicationUserDto(userUUID, "User", null, "email@email.com");
         final Game game = new Game(Player.of(user.uuid(), user.username()), Player.ofBot("DummyBot"));
         when(userRepo.findByUuid(user.uuid())).thenReturn(Optional.of(user));
-        when(gameRepo.findByUserUuid(user.uuid())).thenReturn(Optional.of(game));
+        when(gameRepo.findByPlayerUuid(user.uuid())).thenReturn(Optional.of(GameConverter.toDto(game)));
         final var requestModel = new CreateForUserAndBotDto(user.uuid(), "DummyBot");
         assertThatExceptionOfType(IllegalGameEnrolmentException.class)
                 .isThrownBy(() -> sut.createForUserAndBot(requestModel));
-        verify(gameRepo, times(1)).findByUserUuid(user.uuid());
+        verify(gameRepo, times(1)).findByPlayerUuid(user.uuid());
     }
 
     @Test
@@ -106,7 +107,7 @@ class CreateGameUseCaseTest {
                 UUID.randomUUID(),
                 "DummyBot");
         assertThat(sut.createForBots(requestModel)).isNotNull();
-        verify(gameRepo, times(1)).create(any());
+        verify(gameRepo, times(1)).save(any());
     }
 
     @Test

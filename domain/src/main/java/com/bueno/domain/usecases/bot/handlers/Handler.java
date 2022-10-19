@@ -22,8 +22,9 @@ package com.bueno.domain.usecases.bot.handlers;
 
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
 interface Handler {
-    boolean handle(Intel intel, Player bot);
+    IntelDto handle(Intel intel, Player bot);
     boolean shouldHandle(Intel intel);
 }

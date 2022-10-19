@@ -26,6 +26,7 @@ import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.entities.intel.PossibleAction.PLAY;
@@ -43,18 +44,14 @@ public class CardPlayingHandler implements Handler{
     }
 
     @Override
-    public boolean handle(Intel intel, Player bot) {
-        if(shouldHandle(intel)) {
-            final var botUuid = bot.getUuid();
-            final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
-            final var card = toCard(chosenCard.content());
-            final var requestModel = new PlayCardDto(botUuid, CardConverter.toDto(card));
+    public IntelDto handle(Intel intel, Player bot) {
+        final var botUuid = bot.getUuid();
+        final var chosenCard = botService.chooseCard(toGameIntel(bot, intel));
+        final var card = toCard(chosenCard.content());
+        final var requestModel = new PlayCardDto(botUuid, CardConverter.toDto(card));
 
-            if (chosenCard.isDiscard()) cardUseCase.discard(requestModel);
-            else cardUseCase.playCard(requestModel);
-            return true;
-        }
-        return false;
+        if (chosenCard.isDiscard()) return cardUseCase.discard(requestModel);
+        return cardUseCase.playCard(requestModel);
     }
 
     @Override

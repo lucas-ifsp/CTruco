@@ -61,6 +61,8 @@ public class IntelConverter {
     }
 
     public static Intel fromDto(IntelDto dto){
+        if(dto == null) return null;
+
         final List<Intel.PlayerIntel> playersDto = dto.players().stream()
                 .map(IntelConverter::ofPlayerDto)
                 .collect(Collectors.toList());

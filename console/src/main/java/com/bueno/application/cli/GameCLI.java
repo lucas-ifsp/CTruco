@@ -22,16 +22,14 @@ package com.bueno.application.cli;
 
 import com.bueno.application.cli.commands.*;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
 
 import java.util.*;
 import java.util.logging.LogManager;
@@ -46,7 +44,6 @@ public class GameCLI {
     private final PlayCardUseCase playCardUseCase;
     private final PointsProposalUseCase pointsProposalUseCase;
     private final HandleIntelUseCase handleIntelUseCase;
-
     private final List<IntelDto> missingIntel;
     private IntelDto lastIntel;
     private UUID userUUID;
@@ -59,12 +56,11 @@ public class GameCLI {
     }
 
     public GameCLI() {
-        final ActiveGameRepository activeGameRepo = new ActiveGameRepositoryImpl();
-        gameUseCase = new CreateGameUseCase(activeGameRepo, null);
-        final var findGameUseCase = new FindGameUseCase(activeGameRepo, null);
-        playCardUseCase = new PlayCardUseCase(findGameUseCase);
-        pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
-        handleIntelUseCase = new HandleIntelUseCase(activeGameRepo);
+        final var gameRepo = new GameRepositoryInMemoryImpl();
+        gameUseCase = new CreateGameUseCase(gameRepo);
+        playCardUseCase = new PlayCardUseCase(gameRepo);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
+        handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }
 

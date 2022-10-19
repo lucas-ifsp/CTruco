@@ -29,7 +29,7 @@ import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
-import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.HandResultRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -54,10 +54,9 @@ class BotUseCaseTest {
     @Mock Intel intel;
     @Mock Hand hand;
     @Mock Player player;
-    @Mock FindGameUseCase findGameUseCase;
+    @Mock GameRepository gameRepository;
     @Mock GameResultRepository gameResultRepository;
     @Mock HandResultRepository handResultRepository;
-
     @Mock MaoDeOnzeHandler maoDeOnzeHandler;
     @Mock CardPlayingHandler cardPlayingHandler;
     @Mock RaiseHandler raiseHandler;
@@ -117,14 +116,14 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should not throw if preconditions are met")
     void shouldNotThrowIfPreconditionsAreMet() {
-        assertThat(sut.playWhenNecessary(game)).isEqualTo(game.getIntel());
+        assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
 
     @Test
     @DisplayName("Should first handle mao de onze")
     void shouldFirstHandleMaoDeOnze() {
-        when(maoDeOnzeHandler.handle(intel, player)).thenReturn(true);
-        assertThat(sut.playWhenNecessary(game)).isEqualTo(game.getIntel());
+        when(maoDeOnzeHandler.shouldHandle(intel)).thenReturn(true);
+        sut.playWhenNecessary(game);
         verify(maoDeOnzeHandler, times(1)).handle(intel, player);
         verify(raiseHandler, times(0)).handle(intel, player);
     }
@@ -132,34 +131,35 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should handle raise decision before choosing card")
     void shouldHandleRaiseDecisionBeforeChoosingCard() {
-        when(maoDeOnzeHandler.handle(intel, player)).thenReturn(false);
-        when(raiseHandler.handle(intel, player)).thenReturn(true);
-        assertThat(sut.playWhenNecessary(game)).isEqualTo(game.getIntel());
+        when(maoDeOnzeHandler.shouldHandle(intel)).thenReturn(false);
+        when(raiseHandler.shouldHandle(intel)).thenReturn(true);
+        sut.playWhenNecessary(game);
         verify(raiseHandler, times(1)).handle(intel, player);
         verify(cardPlayingHandler, times(0)).handle(intel, player);
     }
 
     @Test
-    @DisplayName("Should handle card playing if already decided to raise of not")
-    void shouldHandleCardPlayingIfAlreadyDecidedToRaiseOfNot() {
-        when(raiseHandler.handle(intel, player)).thenReturn(false);
-        when(cardPlayingHandler.handle(intel, player)).thenReturn(true);
-        assertThat(sut.playWhenNecessary(game)).isEqualTo(game.getIntel());
+    @DisplayName("Should handle card playing if already decided to raise or not")
+    void shouldHandleCardPlayingIfAlreadyDecidedToRaiseOrNot() {
+        when(raiseHandler.shouldHandle(intel)).thenReturn(false);
+        when(cardPlayingHandler.shouldHandle(intel)).thenReturn(true);
+        sut.playWhenNecessary(game);
         verify(cardPlayingHandler, times(1)).handle(intel, player);
         verify(raiseRequestHandler, times(0)).handle(intel, player);
     }
 
     @Test
-    @DisplayName("Should handle if is bot turn just because it must decide about raise request")
-    void shouldHandleIfIsBotTurnJustBecauseItMustDecideAboutRaiseRequest() {
-        assertThat(sut.playWhenNecessary(game)).isEqualTo(game.getIntel());
+    @DisplayName("Should handle if it is bot turn just because it must decide about raise request")
+    void shouldHandleIfItIsBotTurnJustBecauseItMustDecideAboutRaiseRequest() {
+        when(raiseRequestHandler.shouldHandle(any())).thenReturn(true);
+        sut.playWhenNecessary(game);
         verify(raiseRequestHandler, times(1)).handle(intel, player);
     }
 
     @Test
     @DisplayName("Should create default handlers if they are not injected in constructor")
     void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
-        sut = new BotUseCase(findGameUseCase, gameResultRepository, handResultRepository, null, null, null, null);
+        sut = new BotUseCase(gameRepository, gameResultRepository, handResultRepository, null, null, null, null);
         assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
 

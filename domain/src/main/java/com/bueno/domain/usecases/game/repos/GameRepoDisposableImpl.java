@@ -18,27 +18,34 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.repos;
 
-import com.bueno.domain.usecases.game.repos.GameRepository;
-import org.springframework.stereotype.Service;
+import com.bueno.domain.usecases.game.dtos.GameDto;
 
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
-@Service
-public class RemoveGameUseCase {
-    private final GameRepository repo;
+public class GameRepoDisposableImpl implements GameRepository {
 
-    public RemoveGameUseCase(GameRepository repo) {
-        this.repo = repo;
+    private GameDto game;
+
+    @Override
+    public void save(GameDto dto) {
+        game = dto;
     }
 
-    public void byUserUuid(UUID userUuid) {
-        final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
-        repo.findByPlayerUuid(Objects.requireNonNull(uuid)).ifPresentOrElse(
-                        game -> repo.delete(game.gameUuid()),
-                        () -> {throw new NoSuchElementException("The is no active game for user UUID: " + userUuid);});
+    @Override
+    public void update(GameDto dto) {
+        game = dto;
+    }
+
+    @Override
+    public void delete(UUID uuid) {
+        game = null;
+    }
+
+    @Override
+    public Optional<GameDto> findByPlayerUuid(UUID playerUuid) {
+        return Optional.ofNullable(game);
     }
 }

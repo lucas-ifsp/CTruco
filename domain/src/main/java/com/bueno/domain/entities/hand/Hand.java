@@ -82,7 +82,7 @@ public class Hand {
             case "NOCARD" -> new NoCard(this);
             case "ONECARD" -> new OneCard(this);
             case "WAITINGMAODEONZE" -> new WaitingMaoDeOnze(this);
-            case "WAITINGRAISERESPONSE" -> new WaitingMaoDeOnze(this);
+            case "WAITINGRAISERESPONSE" -> new WaitingRaiseResponse(this);
             default -> throw new IllegalArgumentException("No state for name: " + stateName);
         };
     }

@@ -52,7 +52,6 @@ class RaiseHandlerTest {
     @BeforeEach
     void setUp() {
         lenient().when(bot.getUuid()).thenReturn(UUID.randomUUID());
-        when(intel.possibleActions()).thenReturn(Set.of("RAISE"));
         sut = new RaiseHandler(scoreUseCase, botService);
     }
 
@@ -65,21 +64,21 @@ class RaiseHandlerTest {
     @DisplayName("Should not handle if can not raise")
     void shouldNotHandleIfCanNotRaise() {
         when(intel.possibleActions()).thenReturn(Set.of("PLAY"));
-        assertThat(sut.handle(intel, bot)).isFalse();
+        assertThat(sut.shouldHandle(intel)).isFalse();
     }
 
     @Test
     @DisplayName("Should not handle if is answering a raise request")
     void shouldNotHandleIfIsAnsweringARaiseRequest() {
         when(intel.possibleActions()).thenReturn(Set.of("PLAY", "ACCEPT", "QUIT"));
-        assertThat(sut.handle(intel, bot)).isFalse();
+        assertThat(sut.shouldHandle(intel)).isFalse();
     }
 
     @Test
     @DisplayName("Should raise if bot service implementation decides to raise")
     void shouldRaiseIfBotServiceImplementationDecidesToRaise() {
         when(botService.decideIfRaises(any())).thenReturn(true);
-        assertThat(sut.handle(intel, bot)).isTrue();
+        sut.handle(intel,bot);
         verify(scoreUseCase, times(1)).raise(bot.getUuid());
     }
 
@@ -87,7 +86,7 @@ class RaiseHandlerTest {
     @DisplayName("Should not handle if bot service implementation decides to not raise")
     void shouldNotHandleIfBotServiceImplementationDecidesToNotRaise() {
         when(botService.decideIfRaises(any())).thenReturn(false);
-        assertThat(sut.handle(intel, bot)).isFalse();
+        sut.handle(intel, bot);
         verify(scoreUseCase, times(0)).raise(bot.getUuid());
     }
 }

@@ -26,10 +26,11 @@ import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
-import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,8 +39,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,10 +52,10 @@ import static org.mockito.Mockito.when;
 class HandleIntelUseCaseTest {
 
     private HandleIntelUseCase sut;
+    private GameRepository repo;
 
     @Mock private Player player1;
     @Mock private Player player2;
-    @Mock private ActiveGameRepository repo;
 
     private UUID p1Uuid;
     private Game game;
@@ -70,8 +71,8 @@ class HandleIntelUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
+        repo = new GameRepositoryInMemoryImpl();
         game = new Game(player1, player2);
-        lenient().when(repo.findByUserUuid(p1Uuid)).thenReturn(Optional.of(game));
         sut = new HandleIntelUseCase(repo);
     }
 
@@ -104,6 +105,7 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should not throw if requests intel history with null base intel")
     void shouldNotThrowIfRequestsIntelHistoryWithNullBaseIntel() {
+        repo.save(GameConverter.toDto(game));
         assertThatNoException().isThrownBy(() -> sut.findIntelSince(p1Uuid, null));
     }
 
@@ -112,6 +114,7 @@ class HandleIntelUseCaseTest {
     void shouldCorrectlyGetOwnedCardsIfInvariantsAreMet() {
         final List<Card> cards = List.of(Card.of(Rank.THREE, Suit.CLUBS), Card.of(Rank.TWO, Suit.CLUBS), Card.of(Rank.ACE, Suit.CLUBS));
         when(player1.getCards()).thenReturn(cards);
+        repo.save(GameConverter.toDto(game));
         final List<Card> ownedCards = sut.ownedCards(p1Uuid)
                 .cards()
                 .stream()
@@ -123,12 +126,14 @@ class HandleIntelUseCaseTest {
     @Test
     @DisplayName("Should correctly get intel history if invariants are met")
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
+        repo.save(GameConverter.toDto(game));
+        final Instant initialTimestamp = IntelConverter.toDto(game.getIntel()).timestamp();
         final Hand hand = game.currentHand();
-        final IntelDto initialIntel = IntelConverter.toDto(game.getIntel());
         hand.playFirstCard(player1, Card.closed());
+        repo.update(GameConverter.toDto(game));
 
-        final var obtained = sut.findIntelSince(p1Uuid, initialIntel.timestamp());
-        final var expected = game.getIntelSince(initialIntel.timestamp()).stream()
+        final var obtained = sut.findIntelSince(p1Uuid, initialTimestamp);
+        final var expected = game.getIntelSince(initialTimestamp).stream()
                 .map(IntelConverter::toDto)
                 .collect(Collectors.toList());
 

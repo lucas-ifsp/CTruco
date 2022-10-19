@@ -23,10 +23,9 @@ package com.bueno.application.controller;
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepositoryImpl;
+import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
@@ -97,11 +96,10 @@ public class GameTableController {
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
-        final var gameRepo = new ActiveGameRepositoryImpl();
-        gameUseCase = new CreateGameUseCase(gameRepo, null);
-        FindGameUseCase findGameUseCase = new FindGameUseCase(gameRepo, null);
-        playCardUseCase = new PlayCardUseCase(findGameUseCase);
-        pointsProposalUseCase = new PointsProposalUseCase(findGameUseCase);
+        final var gameRepo = new GameRepositoryInMemoryImpl();
+        gameUseCase = new CreateGameUseCase(gameRepo);
+        playCardUseCase = new PlayCardUseCase(gameRepo);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
@@ -282,7 +280,7 @@ public class GameTableController {
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
             final var event = intel.event() != null? intel.event() : "";
-            System.out.println(intel);
+            //System.out.println(intel);
 
             if (hasHandScoreChange(intel)) builder.append(0.5, () -> updateHandScore(intel));
             if (isBotEvent(intel)) addBotAnimation(builder, intel, event);

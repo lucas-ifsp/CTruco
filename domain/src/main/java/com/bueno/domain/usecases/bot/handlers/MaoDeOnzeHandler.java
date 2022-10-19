@@ -24,6 +24,7 @@ import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceProvider;
 
 import static com.bueno.domain.usecases.bot.converter.SpiModelAdapter.toGameIntel;
@@ -39,15 +40,11 @@ public class MaoDeOnzeHandler implements Handler {
     }
 
     @Override
-    public boolean handle(Intel intel, Player bot) {
-        if(shouldHandle(intel)) {
-            final var botUuid = bot.getUuid();
-            final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
-            if (hasAccepted) scoreUseCase.accept(botUuid);
-            else scoreUseCase.quit(botUuid);
-            return true;
-        }
-        return false;
+    public IntelDto handle(Intel intel, Player bot) {
+        final var botUuid = bot.getUuid();
+        final var hasAccepted = botService.getMaoDeOnzeResponse(toGameIntel(bot, intel));
+        if (hasAccepted) return scoreUseCase.accept(botUuid);
+        return scoreUseCase.quit(botUuid);
     }
 
     @Override

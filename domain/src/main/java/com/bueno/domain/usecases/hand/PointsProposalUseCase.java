@@ -25,7 +25,8 @@ import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
@@ -42,53 +43,59 @@ import java.util.UUID;
 @Service
 public class PointsProposalUseCase {
 
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepository;
     private final GameResultRepository gameResultRepository;
     private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
 
-    public PointsProposalUseCase(FindGameUseCase findGameUseCase) {
-        this(findGameUseCase, null, null);
+    public PointsProposalUseCase(GameRepository gameRepository) {
+        this(gameRepository, null, null);
     }
 
     @Autowired
-    public PointsProposalUseCase(FindGameUseCase findGameUseCase, GameResultRepository gameResultRepository, HandResultRepository handResultRepository) {
-        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+    public PointsProposalUseCase(GameRepository gameRepository,
+                                 GameResultRepository gameResultRepository,
+                                 HandResultRepository handResultRepository) {
+        this.gameRepository = Objects.requireNonNull( gameRepository);
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
-        this.botUseCase = new BotUseCase(findGameUseCase, gameResultRepository, handResultRepository);
+        this.botUseCase = new BotUseCase(gameRepository, gameResultRepository, handResultRepository);
     }
 
-    public IntelDto raise(UUID usedUuid){
-        validateInput(usedUuid, PossibleAction.RAISE);
+    public IntelDto raise(UUID playerUuid){
+        validateInput(playerUuid, PossibleAction.RAISE);
 
-        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
+        Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
         hand.raise(player);
+        gameRepository.update(GameConverter.toDto(game));
         botUseCase.playWhenNecessary(game);
 
+        game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 
-    public IntelDto accept(UUID usedUuid){
-        validateInput(usedUuid, PossibleAction.ACCEPT);
+    public IntelDto accept(UUID playerUuid){
+        validateInput(playerUuid, PossibleAction.ACCEPT);
 
-        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
+        Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
         hand.accept(player);
+        gameRepository.update(GameConverter.toDto(game));
         botUseCase.playWhenNecessary(game);
 
+        game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 
-    public IntelDto quit(UUID usedUuid){
-        validateInput(usedUuid, PossibleAction.QUIT);
+    public IntelDto quit(UUID playerUuid){
+        validateInput(playerUuid, PossibleAction.QUIT);
 
-        final Game game = findGameUseCase.findByUserUuid(usedUuid).orElseThrow();
+        Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
 
@@ -96,15 +103,18 @@ public class PointsProposalUseCase {
 
         final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
+
+        gameRepository.update(GameConverter.toDto(game));
         if(gameResult != null) return gameResult;
 
         botUseCase.playWhenNecessary(game);
 
+        game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 
     private void validateInput(UUID usedUuid, PossibleAction raise) {
-        final Validator<UUID> validator = new ActionValidator(findGameUseCase, raise);
+        final Validator<UUID> validator = new ActionValidator(gameRepository, raise);
         final Notification notification = validator.validate(usedUuid);
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
     }

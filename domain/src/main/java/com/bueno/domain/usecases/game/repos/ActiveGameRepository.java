@@ -25,7 +25,7 @@ import com.bueno.domain.entities.game.Game;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ActiveGameRepository {
+ interface ActiveGameRepository {
     void create(Game game);
     void delete(UUID uuid);
     Optional<Game> findByUuid(UUID uuid);

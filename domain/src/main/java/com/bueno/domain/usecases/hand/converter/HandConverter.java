@@ -23,7 +23,9 @@ package com.bueno.domain.usecases.hand.converter;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.hand.HandPoints;
 import com.bueno.domain.entities.hand.HandResult;
+import com.bueno.domain.entities.hand.Round;
 import com.bueno.domain.entities.intel.PossibleAction;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.converter.PlayerConverter;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.hand.dtos.HandDto;
@@ -31,6 +33,9 @@ import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class HandConverter {
@@ -59,20 +64,34 @@ public class HandConverter {
         );
     }
 
-    public static Hand fromDto(HandDto dto){
+    public static Hand fromDto(HandDto dto, Player player1, Player player2){
         if(dto == null) return  null;
+
+        final Map<UUID, Player> players = Map.of(player1.getUuid(), player1, player2.getUuid(), player2);
+
+        final var actions = dto.possibleActions().stream()
+                .map(PossibleAction::valueOf).collect(Collectors.toSet());
+
+        final var possibleActions = actions.isEmpty()
+                ? EnumSet.noneOf(PossibleAction.class)
+                : EnumSet.copyOf(actions);
+
+        final List<Round> rounds = dto.roundsPlayed().stream()
+                .map(roundDto -> RoundConverter.fromDto(roundDto, player1, player2))
+                .toList();
+
         return new Hand(
                 CardConverter.fromDto(dto.vira()),
                 dto.dealtCards().stream().map(CardConverter::fromDto).toList(),
                 dto.openCards().stream().map(CardConverter::fromDto).toList(),
-                dto.roundsPlayed().stream().map(RoundConverter::fromDto).toList(),
+                rounds,
                 dto.history().stream().map(IntelConverter::fromDto).toList(),
-                EnumSet.copyOf(dto.possibleActions().stream().map(PossibleAction::valueOf).collect(Collectors.toSet())),
-                PlayerConverter.fromDto(dto.firstToPlay()),
-                PlayerConverter.fromDto(dto.lastToPlay()),
-                PlayerConverter.fromDto(dto.currentPlayer()),
-                PlayerConverter.fromDto(dto.lastBetRaiser()),
-                PlayerConverter.fromDto(dto.eventPlayer()),
+                possibleActions,
+                players.get(dto.firstToPlay().uuid()),
+                players.get(dto.lastToPlay().uuid()),
+                dto.currentPlayer() != null ? players.get(dto.currentPlayer().uuid()) : null,
+                dto.lastBetRaiser() != null ? players.get(dto.lastBetRaiser().uuid()) : null,
+                dto.eventPlayer() != null ? players.get(dto.eventPlayer().uuid()) : null,
                 CardConverter.fromDto(dto.cartToPlayAgainst()),
                 HandPoints.fromIntValue(dto.points()),
                 dto.pointsProposal() != 0 ? HandPoints.fromIntValue(dto.pointsProposal()) : null,

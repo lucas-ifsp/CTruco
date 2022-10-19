@@ -54,7 +54,6 @@ public class Intel{
     private String currentOpponentUsername;
     private Card cardToPlayAgainst;
     private List<PlayerIntel> players;
-
     private String eventPlayerUsername;
     private UUID eventPlayerUuid;
     private String event;

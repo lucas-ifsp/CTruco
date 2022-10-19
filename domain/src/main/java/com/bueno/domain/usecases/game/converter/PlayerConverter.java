@@ -24,6 +24,8 @@ import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 
+import java.util.ArrayList;
+
 public class PlayerConverter {
 
     private PlayerConverter(){}
@@ -41,7 +43,7 @@ public class PlayerConverter {
     public static Player fromDto(PlayerDto dto){
         if(dto == null) return null;
         return new Player(
-                dto.cards().stream().map(CardConverter::fromDto).toList(),
+                new ArrayList<>(dto.cards().stream().map(CardConverter::fromDto).toList()),
                 dto.username(),
                 dto.uuid(),
                 dto.score(),

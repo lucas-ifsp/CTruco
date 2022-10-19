@@ -51,8 +51,6 @@ class MaoDeOnzeHandlerTest {
     @BeforeEach
     void setUp() {
         lenient().when(bot.getUuid()).thenReturn(UUID.randomUUID());
-        when(intel.isMaoDeOnze()).thenReturn(true);
-        when(intel.handPoints()).thenReturn(1);
         sut = new MaoDeOnzeHandler(scoreUseCase, botService);
     }
 
@@ -65,21 +63,21 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should not handle if is not mao de onze")
     void shouldNotHandleIfIsNotMaoDeOnze() {
         when(intel.isMaoDeOnze()).thenReturn(false);
-        assertThat(sut.handle(intel, bot)).isFalse();
+        assertThat(sut.shouldHandle(intel)).isFalse();
     }
 
     @Test
     @DisplayName("Should not handle if has already handled")
     void shouldNotHandleIfHasAlreadyHandled() {
         when(intel.handPoints()).thenReturn(3);
-        assertThat(sut.handle(intel, bot)).isFalse();
+        assertThat(sut.shouldHandle(intel)).isFalse();
     }
 
     @Test
     @DisplayName("Should accept if bot service implementation decides to accept")
     void shouldAcceptIfBotServiceImplementationDecidesToAccept() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(true);
-        assertThat(sut.handle(intel, bot)).isTrue();
+        sut.handle(intel, bot);
         verify(scoreUseCase, times(1)).accept(any());
         verify(scoreUseCase, times(0)).quit(any());
     }
@@ -88,7 +86,7 @@ class MaoDeOnzeHandlerTest {
     @DisplayName("Should quit if bot service implementation decides to quit")
     void shouldQuitIfBotServiceImplementationDecidesToQuit() {
         when(botService.getMaoDeOnzeResponse(any())).thenReturn(false);
-        assertThat(sut.handle(intel, bot)).isTrue();
+        sut.handle(intel, bot);
         verify(scoreUseCase, times(0)).accept(any());
         verify(scoreUseCase, times(1)).quit(any());
     }

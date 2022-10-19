@@ -21,26 +21,26 @@
 package com.bueno.domain.usecases.game;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 
 import java.util.Objects;
 
 public class PlayWithBotsUseCase {
 
-    private final CreateGameUseCase createGameUseCase;
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepository;
 
-    public PlayWithBotsUseCase(CreateGameUseCase createGameUse, FindGameUseCase findGameUseCase) {
-        this.createGameUseCase = Objects.requireNonNull(createGameUse);
-        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+    public PlayWithBotsUseCase( GameRepository gameRepository) {
+        this.gameRepository = Objects.requireNonNull(gameRepository);
     }
 
     public PlayWithBotsDto playWithBots(CreateForBotsDto requestModel){
+        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository);
         createGameUseCase.createForBots(requestModel);
-
-        final var botUseCase = new BotUseCase(findGameUseCase);
-        final var game = findGameUseCase.findByUserUuid(requestModel.bot1Uuid()).orElseThrow();
+        final var game = gameRepository.findByPlayerUuid(requestModel.bot1Uuid()).map(GameConverter::fromDto).orElseThrow();
+        final var botUseCase = new BotUseCase(gameRepository);
         final var intel = botUseCase.playWhenNecessary(game);
         final var winnerUUID = intel.gameWinner().orElseThrow();
         final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?

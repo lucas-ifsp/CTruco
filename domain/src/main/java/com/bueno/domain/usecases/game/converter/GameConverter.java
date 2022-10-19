@@ -21,8 +21,12 @@
 package com.bueno.domain.usecases.game.converter;
 
 import com.bueno.domain.entities.game.Game;
+import com.bueno.domain.entities.hand.Hand;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.hand.converter.HandConverter;
+
+import java.util.List;
 
 public class GameConverter {
 
@@ -30,6 +34,7 @@ public class GameConverter {
 
     public static GameDto toDto(Game game){
         if(game == null) return null;
+
         return new GameDto(
                 game.getUuid(),
                 game.getTimestamp(),
@@ -43,14 +48,13 @@ public class GameConverter {
 
     public static Game fromDto(GameDto dto){
         if(dto == null) return null;
-        return new Game(
-                dto.gameUuid(),
-                dto.timestamp(),
-                PlayerConverter.fromDto(dto.player1()),
-                PlayerConverter.fromDto(dto.player2()),
-                PlayerConverter.fromDto(dto.firstToPlay()),
-                PlayerConverter.fromDto(dto.lastToPlay()),
-                dto.hands().stream().map(HandConverter::fromDto).toList()
-        );
+        final Player player1 = PlayerConverter.fromDto(dto.player1());
+        final Player player2 = PlayerConverter.fromDto(dto.player2());
+        final Player firstToPlay = dto.firstToPlay().uuid().equals(player1.getUuid()) ? player1 : player2;
+        final Player lastToPlay = dto.lastToPlay().uuid().equals(player1.getUuid()) ? player1 : player2;
+        final List<Hand> hands = dto.hands().stream()
+                .map(handDto -> HandConverter.fromDto(handDto, player1, player2))
+                .toList();
+        return new Game(dto.gameUuid(), dto.timestamp(), player1, player2, firstToPlay, lastToPlay, hands);
     }
 }

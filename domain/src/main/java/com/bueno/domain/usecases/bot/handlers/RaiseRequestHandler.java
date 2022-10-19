@@ -24,6 +24,7 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.EnumSet;
@@ -43,21 +44,18 @@ public class RaiseRequestHandler implements Handler{
     }
 
     @Override
-    public boolean handle(Intel intel, Player bot) {
-        if(shouldHandle(intel)) {
-            final var botUuid = bot.getUuid();
-            final var actions = intel.possibleActions().stream()
-                    .map(PossibleAction::valueOf)
-                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
+    public IntelDto handle(Intel intel, Player bot) {
+        final var botUuid = bot.getUuid();
+        final var actions = intel.possibleActions().stream()
+                .map(PossibleAction::valueOf)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-            switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
-                case -1 -> { if (actions.contains(QUIT)) scoreUseCase.quit(botUuid); }
-                case 0 -> { if (actions.contains(ACCEPT)) scoreUseCase.accept(botUuid); }
-                case 1 -> { if (actions.contains(RAISE)) scoreUseCase.raise(botUuid); }
-            }
-            return true;
-        }
-        return false;
+        return switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
+            case -1 -> actions.contains(QUIT) ? scoreUseCase.quit(botUuid) : null;
+            case 0 -> actions.contains(ACCEPT) ? scoreUseCase.accept(botUuid) : null;
+            case 1 -> actions.contains(RAISE) ? scoreUseCase.raise(botUuid) : null;
+            default -> null;
+        };
     }
 
     public boolean shouldHandle(Intel intel){

@@ -21,9 +21,13 @@
 package com.bueno.domain.usecases.hand.converter;
 
 import com.bueno.domain.entities.hand.Round;
+import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.converter.PlayerConverter;
 import com.bueno.domain.usecases.hand.dtos.RoundDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class RoundConverter {
 
@@ -41,15 +45,18 @@ public class RoundConverter {
         );
     }
 
-    public static Round fromDto(RoundDto dto){
+    public static Round fromDto(RoundDto dto, Player player1, Player player2){
         if(dto == null) return null;
+
+        final Map<UUID, Player> players = Map.of(player1.getUuid(), player1, player2.getUuid(), player2);
+
         return new Round(
-                PlayerConverter.fromDto(dto.firstToPlay()),
+                players.get(dto.firstToPlay().uuid()),
                 CardConverter.fromDto(dto.firstCard()),
-                PlayerConverter.fromDto(dto.lastToPlay()),
+                players.get(dto.lastToPlay().uuid()),
                 CardConverter.fromDto(dto.lastCard()),
                 CardConverter.fromDto(dto.vira()),
-                PlayerConverter.fromDto(dto.winner())
+                dto.winner() != null ? players.get(dto.winner().uuid()) : null
         );
     }
 }

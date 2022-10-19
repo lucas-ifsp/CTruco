@@ -56,7 +56,6 @@ class CardPlayingHandlerTest {
     @BeforeEach
     void setUp() {
         lenient().when(bot.getUuid()).thenReturn(UUID.randomUUID());
-        when(intel.possibleActions()).thenReturn(Set.of("PLAY"));
         sut = new CardPlayingHandler(cardUseCase, botService);
     }
 
@@ -69,23 +68,23 @@ class CardPlayingHandlerTest {
     @DisplayName("Should not handle if can not play")
     void shouldNotHandleIfCanNotPlay() {
         when(intel.possibleActions()).thenReturn(Set.of("RAISE"));
-        assertThat(sut.handle(intel, bot)).isFalse();
+        assertThat(sut.shouldHandle(intel)).isFalse();
     }
 
     @Test
     @DisplayName("Should handle playing card and return true")
     void shouldHandlePlayingCardAndReturnTrue() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertThat(sut.handle(intel, bot)).isTrue();
+        sut.handle(intel, bot);
         verify(cardUseCase, times(1)).playCard(any());
         verify(cardUseCase, times(0)).discard(any());
     }
 
     @Test
-    @DisplayName("Should handle discard and return true")
-    void shouldHandleDiscardAndReturnTrue() {
+    @DisplayName("Should handle discard")
+    void shouldHandleDiscard() {
         when(botService.chooseCard(any())).thenReturn(CardToPlay.discard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
-        assertThat(sut.handle(intel, bot)).isTrue();
+        sut.handle(intel, bot);
         verify(cardUseCase, times(0)).playCard(any());
         verify(cardUseCase, times(1)).discard(any());
     }

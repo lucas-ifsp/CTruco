@@ -30,7 +30,7 @@ import com.bueno.domain.entities.player.Player;
 
 import java.util.EnumSet;
 
-class WaitingRaiseResponse implements HandState {
+public class WaitingRaiseResponse implements HandState {
 
     private final Hand context;
 

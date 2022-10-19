@@ -26,7 +26,8 @@ import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.bot.BotUseCase;
-import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.hand.validator.ActionValidator;
@@ -37,28 +38,26 @@ import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestExceptio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 public class PlayCardUseCase {
-
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepository;
     private final GameResultRepository gameResultRepository;
     private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
 
-    public PlayCardUseCase(FindGameUseCase findGameUseCase) {
-        this(findGameUseCase, null, null);
+    public PlayCardUseCase(GameRepository gameRepository) {
+        this(gameRepository, null, null);
     }
 
     @Autowired
-    public PlayCardUseCase(FindGameUseCase findGameUseCase,
+    public PlayCardUseCase(GameRepository gameRepository,
                            GameResultRepository gameResultRepository,
                            HandResultRepository handResultRepository) {
-        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+
+        this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
-        this.botUseCase = new BotUseCase(findGameUseCase, gameResultRepository, handResultRepository);
+        this.botUseCase = new BotUseCase(gameRepository, gameResultRepository, handResultRepository);
     }
 
     public IntelDto playCard(PlayCardDto request) {
@@ -70,12 +69,12 @@ public class PlayCardUseCase {
     }
 
     private IntelDto playCard(PlayCardDto request, boolean discard) {
-        final var validator = new ActionValidator(findGameUseCase, PossibleAction.PLAY);
+        final var validator = new ActionValidator(gameRepository, PossibleAction.PLAY);
         final var notification = validator.validate(request.uuid());
 
         if (notification.hasErrors()) throw new UnsupportedGameRequestException(notification.errorMessage());
 
-        final Game game = findGameUseCase.findByUserUuid(request.uuid()).orElseThrow();
+        Game game = gameRepository.findByPlayerUuid(request.uuid()).map(GameConverter::fromDto).orElseThrow();
         final Hand hand = game.currentHand();
         final Player player = hand.getCurrentPlayer();
         final Card cardToPlay = CardConverter.fromDto(request.card());
@@ -86,11 +85,13 @@ public class PlayCardUseCase {
 
         final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
-        if(gameResult != null) return gameResult;
 
+        gameRepository.update(GameConverter.toDto(game));
+        if(gameResult != null) return gameResult;
 
         botUseCase.playWhenNecessary(game);
 
+        game = gameRepository.findByPlayerUuid(request.uuid()).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 }

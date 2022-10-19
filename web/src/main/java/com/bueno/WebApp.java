@@ -35,7 +35,6 @@ public class WebApp {
     public static void main(String[] args) {
         SpringApplication.run(WebApp.class, args);
     }
-
     @Bean
     CommandLineRunner run(RegisterUserUseCase registerUserUseCase, PasswordEncoder encoder){
         return args -> {

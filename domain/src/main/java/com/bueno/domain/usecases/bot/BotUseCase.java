@@ -27,18 +27,21 @@ import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
 import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
-import com.bueno.domain.usecases.game.FindGameUseCase;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.HandResultRepository;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Objects;
 
+import static com.bueno.domain.usecases.intel.converters.IntelConverter.fromDto;
+
 public class BotUseCase {
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepo;
     private final GameResultRepository gameResultRepo;
     private final HandResultRepository handResultRepo;
     private MaoDeOnzeHandler maoDeOnzeHandler;
@@ -46,18 +49,18 @@ public class BotUseCase {
     private CardPlayingHandler cardHandler;
     private RaiseRequestHandler requestHandler;
 
-    public BotUseCase(FindGameUseCase findGameUseCase) {
-        this(findGameUseCase, null, null, null, null, null, null);
+    public BotUseCase(GameRepository gameRepo) {
+        this(gameRepo, null, null, null, null, null, null);
     }
 
-    public BotUseCase(FindGameUseCase findGameUseCase, GameResultRepository gameResultRepo, HandResultRepository handResultRepo) {
-        this(findGameUseCase, gameResultRepo, handResultRepo, null, null, null, null);
+    public BotUseCase(GameRepository gameRepo, GameResultRepository gameResultRepo, HandResultRepository handResultRepo) {
+        this(gameRepo, gameResultRepo, handResultRepo, null, null, null, null);
     }
 
-    BotUseCase(FindGameUseCase findGameUseCase, GameResultRepository gameResultRepo,
+    BotUseCase(GameRepository gameRepo, GameResultRepository gameResultRepo,
                HandResultRepository handResultRepo, MaoDeOnzeHandler maoDeOnze,
                RaiseHandler raise, CardPlayingHandler card, RaiseRequestHandler request){
-        this.findGameUseCase = Objects.requireNonNull(findGameUseCase);
+        this.gameRepo = Objects.requireNonNull(gameRepo);
         this.gameResultRepo = gameResultRepo;
         this.handResultRepo = handResultRepo;
         this.maoDeOnzeHandler = maoDeOnze;
@@ -74,11 +77,21 @@ public class BotUseCase {
 
         initializeNullHandlers(BotServiceManager.load(currentPlayer.getUsername()));
 
-        if (maoDeOnzeHandler.handle(intel, currentPlayer)) return game.getIntel();
-        if (raiseHandler.handle(intel, currentPlayer)) return game.getIntel();
-        if (cardHandler.handle(intel, currentPlayer)) return game.getIntel();
-        requestHandler.handle(intel, currentPlayer);
-        return game.getIntel();
+        if (maoDeOnzeHandler.shouldHandle(intel))
+            return fromDto(maoDeOnzeHandler.handle(intel, currentPlayer));
+
+        if (raiseHandler.shouldHandle(intel)) {
+            final IntelDto dto = raiseHandler.handle(intel, currentPlayer);
+            if(dto != null ) return fromDto(dto);
+        }
+
+        if (cardHandler.shouldHandle(intel))
+            return fromDto(cardHandler.handle(intel, currentPlayer));
+
+        if (requestHandler.shouldHandle(intel))
+            return fromDto(requestHandler.handle(intel, currentPlayer));
+
+        return null;
     }
 
     private boolean isBotTurn(Player handPlayer, Intel intel) {
@@ -89,12 +102,20 @@ public class BotUseCase {
 
     private void initializeNullHandlers(BotServiceProvider botService) {
         if (maoDeOnzeHandler == null)
-            maoDeOnzeHandler = new MaoDeOnzeHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
+            maoDeOnzeHandler = new MaoDeOnzeHandler(
+                    new PointsProposalUseCase(gameRepo, gameResultRepo, handResultRepo),
+                    botService);
         if (raiseHandler == null)
-            raiseHandler = new RaiseHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
+            raiseHandler = new RaiseHandler(
+                    new PointsProposalUseCase(gameRepo, gameResultRepo, handResultRepo),
+                    botService);
         if (cardHandler == null)
-            cardHandler = new CardPlayingHandler(new PlayCardUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
+            cardHandler = new CardPlayingHandler(
+                    new PlayCardUseCase(gameRepo, gameResultRepo, handResultRepo),
+                    botService);
         if (requestHandler == null)
-            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(findGameUseCase, gameResultRepo, handResultRepo), botService);
+            requestHandler = new RaiseRequestHandler(new PointsProposalUseCase(
+                    gameRepo, gameResultRepo, handResultRepo),
+                    botService);
     }
 }

@@ -58,6 +58,7 @@ public class HandEntity {
 
     public static HandEntity from(HandDto dto){
         final Function<List<CardDto>, List<String>> mapToString = dtos -> dtos.stream().map(CardDto::toString).toList();
+        final Function<PlayerDto, UUID> playerUuidOrNull = playerDto -> playerDto != null ? playerDto.uuid() : null;
         final List<RoundEntity> roundEntities = dto.roundsPlayed().stream().map(RoundEntity::from).toList();
         final List<IntelEntity> history = dto.history().stream().map(IntelEntity::from).toList();
         return HandEntity.builder()
@@ -69,9 +70,9 @@ public class HandEntity {
                 .possibleActions(dto.possibleActions())
                 .firstToPlay(dto.firstToPlay().uuid())
                 .lastToPlay(dto.lastToPlay().uuid())
-                .currentPlayer(dto.currentPlayer().uuid())
-                .lastBetRaiser(dto.lastBetRaiser() != null ? dto.lastBetRaiser().uuid() : null)
-                .eventPlayer(dto.eventPlayer() != null ? dto.eventPlayer().uuid() : null)
+                .currentPlayer(playerUuidOrNull.apply(dto.currentPlayer()))
+                .lastBetRaiser(playerUuidOrNull.apply(dto.lastBetRaiser()))
+                .eventPlayer(playerUuidOrNull.apply(dto.eventPlayer()))
                 .cartToPlayAgainst(dto.cartToPlayAgainst() != null ? dto.cartToPlayAgainst().toString() : null)
                 .points(dto.points())
                 .pointsProposal(dto.pointsProposal())

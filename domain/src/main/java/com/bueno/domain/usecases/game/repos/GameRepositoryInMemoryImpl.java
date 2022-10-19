@@ -20,9 +20,9 @@
 
 package com.bueno.domain.usecases.game.repos;
 
-import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.player.Player;
-import org.springframework.stereotype.Repository;
+
+import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.dtos.PlayerDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,14 +30,18 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-@Repository
-public class ActiveGameRepositoryImpl implements ActiveGameRepository {
+public class GameRepositoryInMemoryImpl implements GameRepository {
 
-    private static final Map<UUID, Game> games = new HashMap<>();
+    private static final Map<UUID, GameDto> games = new HashMap<>();
 
     @Override
-    public void create(Game game) {
-        games.put(game.getUuid(), game);
+    public void save(GameDto game) {
+        games.put(game.gameUuid(), game);
+    }
+
+    @Override
+    public void update(GameDto gameDto) {
+        games.replace(gameDto.gameUuid(), gameDto);
     }
 
     @Override
@@ -46,17 +50,12 @@ public class ActiveGameRepositoryImpl implements ActiveGameRepository {
     }
 
     @Override
-    public Optional<Game> findByUuid(UUID key) {
-        return Optional.ofNullable(games.get(key));
-    }
-
-    @Override
-    public Optional<Game> findByUserUuid(UUID uuid) {
-        Predicate<Game> hasPlayer = game -> hasUuid(game.getPlayer1(), uuid) || hasUuid(game.getPlayer2(), uuid);
+    public Optional<GameDto> findByPlayerUuid(UUID uuid) {
+        Predicate<GameDto> hasPlayer = game -> hasUuid(game.player1(), uuid) || hasUuid(game.player2(), uuid);
         return games.values().stream().filter(hasPlayer).findAny();
     }
 
-    private static boolean hasUuid(Player player, UUID uuid) {
-        return player.getUuid().equals(uuid);
+    private static boolean hasUuid(PlayerDto player, UUID uuid) {
+        return player.uuid().equals(uuid);
     }
 }

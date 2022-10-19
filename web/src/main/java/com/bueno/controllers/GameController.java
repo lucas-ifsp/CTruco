@@ -22,9 +22,10 @@ package com.bueno.controllers;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.FindGameUseCase;
 import com.bueno.domain.usecases.game.RemoveGameUseCase;
+import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.responses.ResponseBuilder;
 import com.bueno.responses.ResponseEntry;
@@ -41,14 +42,14 @@ public class GameController {
 
     private final CreateGameUseCase createGameUseCase;
     private final RemoveGameUseCase removeGameUseCase;
-    private final FindGameUseCase findGameUseCase;
+    private final GameRepository gameRepository;
 
     public GameController(CreateGameUseCase createGameUseCase,
                           RemoveGameUseCase removeGameUseCase,
-                          FindGameUseCase findGameUseCase) {
+                          GameRepository gameRepository) {
         this.createGameUseCase = createGameUseCase;
         this.removeGameUseCase = removeGameUseCase;
-        this.findGameUseCase = findGameUseCase;
+        this.gameRepository = gameRepository;
     }
 
     @PostMapping(path = "/user-bot")
@@ -59,7 +60,7 @@ public class GameController {
 
     @GetMapping(path = "/players/{uuid}")
     private ResponseEntity<?> getGame(@PathVariable UUID uuid){
-        final Optional<Game> possibleGame = findGameUseCase.findByUserUuid(uuid);
+        final Optional<Game> possibleGame = gameRepository.findByPlayerUuid(uuid).map(GameConverter::fromDto);
 
         if(possibleGame.isPresent()){
             final Game game = possibleGame.get();

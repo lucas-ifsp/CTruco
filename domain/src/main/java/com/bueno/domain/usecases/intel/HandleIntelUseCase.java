@@ -21,7 +21,8 @@
 package com.bueno.domain.usecases.intel;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
@@ -39,9 +40,9 @@ import java.util.stream.Collectors;
 @Service
 public class HandleIntelUseCase {
 
-    private final ActiveGameRepository repo;
+    private final GameRepository repo;
 
-    public HandleIntelUseCase(ActiveGameRepository repo) {
+    public HandleIntelUseCase(GameRepository repo) {
         this.repo = Objects.requireNonNull(repo);
     }
 
@@ -72,7 +73,7 @@ public class HandleIntelUseCase {
 
     private Game getGameOrThrow(UUID uuid) {
         Objects.requireNonNull(uuid, "UUID must not be null.");
-        return repo.findByUserUuid(uuid).orElseThrow(
+        return repo.findByPlayerUuid(uuid).map(GameConverter::fromDto).orElseThrow(
                 () -> new GameNotFoundException("User with UUID " + uuid + " is not in an active game."));
     }
 }

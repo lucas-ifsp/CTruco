@@ -24,6 +24,7 @@ import com.bueno.domain.entities.intel.Intel;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.EnumSet;
@@ -43,16 +44,10 @@ public class RaiseHandler implements Handler {
         this.botService = botService;
     }
 
-    public boolean handle(Intel intel, Player bot){
-        if(shouldHandle(intel)) {
-            final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
-            if(wantToRaise){
-                scoreUseCase.raise(bot.getUuid());
-                return true;
-            }
-            return false;
-        }
-        return false;
+    public IntelDto handle(Intel intel, Player bot){
+        final boolean wantToRaise = botService.decideIfRaises(toGameIntel(bot, intel));
+        if (wantToRaise) return scoreUseCase.raise(bot.getUuid());
+        return null;
     }
 
     @Override

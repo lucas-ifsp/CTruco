@@ -31,6 +31,7 @@ import com.bueno.persistence.dto.PlayerEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,8 +65,18 @@ public class GameRepositoryImpl implements GameRepository {
     }
 
     @Override
+    public void delete(UUID uuid) {
+        final GameEntity game = gameDao.findById(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Can not update non-existing game: " + uuid));
+        playerDao.deleteById(game.getPlayer1());
+        playerDao.deleteById(game.getPlayer2());
+        gameDao.delete(game);
+    }
+
+    @Override
     public Optional<GameDto> findByPlayerUuid(UUID playerUuid) {
-        final Optional<GameEntity> possibleGame = gameDao.findByPlayer1OrPlayer2(playerUuid, playerUuid);
+        final UUID uuid = Objects.requireNonNull(playerUuid, "User UUID must not be null.");
+        final Optional<GameEntity> possibleGame = gameDao.findByPlayer1OrPlayer2(uuid, uuid);
         return getGameDto(possibleGame);
     }
 

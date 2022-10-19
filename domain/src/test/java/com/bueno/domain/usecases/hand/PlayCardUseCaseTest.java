@@ -26,8 +26,9 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.game.FindGameUseCase;
-import com.bueno.domain.usecases.game.repos.ActiveGameRepository;
+import com.bueno.domain.usecases.game.converter.GameConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
 import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.converters.CardConverter;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
@@ -35,19 +36,19 @@ import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.GameNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UnsupportedGameRequestException;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.LogManager;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -58,15 +59,11 @@ class PlayCardUseCaseTest {
 
     @Mock private Player player1;
     @Mock private Player player2;
-    @Mock private ActiveGameRepository repo;
+    private Game game;
+    private GameRepository repo;
 
     private UUID p1Uuid;
     private UUID p2Uuid;
-
-    @BeforeAll
-    static void init() {
-        LogManager.getLogManager().reset();
-    }
 
     @BeforeEach
     void setUp() {
@@ -82,11 +79,9 @@ class PlayCardUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
-        Game game = new Game(player1, player2);
-        lenient().when(repo.findByUserUuid(any())).thenReturn(Optional.of(game));
-
-        final var findGameUseCase = new FindGameUseCase(repo, null);
-        sut = new PlayCardUseCase(findGameUseCase);
+        repo = new GameRepositoryInMemoryImpl();
+        game = new Game(player1, player2);
+        sut = new PlayCardUseCase(repo);
     }
 
     @AfterEach
@@ -99,13 +94,15 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should throw if there is no active game for player UUID")
     void shouldThrowIfThereIsNoActiveGameForPlayerUuid() {
-        assertThatExceptionOfType(UnsupportedGameRequestException.class)
+        repo.save(GameConverter.toDto(game));
+        assertThatExceptionOfType(GameNotFoundException.class)
                 .isThrownBy(() -> sut.playCard(new PlayCardDto(UUID.randomUUID(), new CardDto("X", "X"))));
     }
 
     @Test
     @DisplayName("Should throw if opponent is playing in player turn")
     void shouldThrowIfOpponentIsPlayingInPlayerTurn() {
+        repo.save(GameConverter.toDto(game));
         assertThatExceptionOfType(UnsupportedGameRequestException.class)
                 .isThrownBy(() -> sut.playCard(new PlayCardDto(p2Uuid, new CardDto("X", "X"))));
     }
@@ -114,6 +111,7 @@ class PlayCardUseCaseTest {
     @DisplayName("Should throw if requests action when game is done")
     void shouldThrowIfRequestsActionWhenGameIsDone() {
         when(player1.getScore()).thenReturn(12);
+        repo.save(GameConverter.toDto(game));
         assertThatExceptionOfType(GameNotFoundException.class)
                 .isThrownBy(() -> sut.playCard(new PlayCardDto(p1Uuid, new CardDto("X", "X"))));
     }
@@ -124,6 +122,7 @@ class PlayCardUseCaseTest {
         final Card card = Card.of(Rank.THREE, Suit.CLUBS);
         final CardDto cardDto = CardConverter.toDto(card);
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(card)));
+        repo.save(GameConverter.toDto(game));
         final IntelDto intel = sut.playCard(new PlayCardDto(p1Uuid, cardDto));
         assertThat(intel.cardToPlayAgainst()).isEqualTo(cardDto);
     }
@@ -141,6 +140,7 @@ class PlayCardUseCaseTest {
 
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P1), CardConverter.fromDto(card2P1))));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P2), CardConverter.fromDto(card2P2))));
+        repo.save(GameConverter.toDto(game));
 
         sut.discard(new PlayCardDto(p1Uuid, card1P1));
         sut.playCard(new PlayCardDto(p2Uuid, card1P2));
@@ -157,6 +157,7 @@ class PlayCardUseCaseTest {
 
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
+        repo.save(GameConverter.toDto(game));
 
         sut.discard(new PlayCardDto(p1Uuid, card1));
         final IntelDto intel = sut.playCard(new PlayCardDto(p2Uuid, card2));
@@ -175,6 +176,7 @@ class PlayCardUseCaseTest {
 
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
+        repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
         sut.discard(new PlayCardDto(p2Uuid, card2));
@@ -190,6 +192,7 @@ class PlayCardUseCaseTest {
 
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
+        repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
         sut.discard(new PlayCardDto(p2Uuid, card2));
