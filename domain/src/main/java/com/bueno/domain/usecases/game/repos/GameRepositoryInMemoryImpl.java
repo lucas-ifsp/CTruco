@@ -24,10 +24,7 @@ package com.bueno.domain.usecases.game.repos;
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class GameRepositoryInMemoryImpl implements GameRepository {
@@ -53,6 +50,11 @@ public class GameRepositoryInMemoryImpl implements GameRepository {
     public Optional<GameDto> findByPlayerUuid(UUID uuid) {
         Predicate<GameDto> hasPlayer = game -> hasUuid(game.player1(), uuid) || hasUuid(game.player2(), uuid);
         return games.values().stream().filter(hasPlayer).findAny();
+    }
+
+    @Override
+    public Collection<GameDto> findAllInactiveAfter(int minutes) {
+        return null;
     }
 
     private static boolean hasUuid(PlayerDto player, UUID uuid) {

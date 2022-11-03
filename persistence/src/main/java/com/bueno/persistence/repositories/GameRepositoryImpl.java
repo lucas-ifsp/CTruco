@@ -27,13 +27,14 @@ import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.GameDao;
 import com.bueno.persistence.dao.PlayerDao;
 import com.bueno.persistence.dto.GameEntity;
+import com.bueno.persistence.dto.HandEntity;
+import com.bueno.persistence.dto.IntelEntity;
 import com.bueno.persistence.dto.PlayerEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 
 @Repository
 public class GameRepositoryImpl implements GameRepository {
@@ -77,12 +78,33 @@ public class GameRepositoryImpl implements GameRepository {
     public Optional<GameDto> findByPlayerUuid(UUID playerUuid) {
         final UUID uuid = Objects.requireNonNull(playerUuid, "User UUID must not be null.");
         final Optional<GameEntity> possibleGame = gameDao.findByPlayer1OrPlayer2(uuid, uuid);
-        return getGameDto(possibleGame);
+        return getGameDto(possibleGame.orElse(null));
     }
 
-    private Optional<GameDto> getGameDto(Optional<GameEntity> possibleGame) {
-        if(possibleGame.isEmpty()) return Optional.empty();
-        final GameEntity game = possibleGame.get();
+    @Override
+    public Collection<GameDto> findAllInactiveAfter(int minutes) {
+        return gameDao.findAll().stream()
+                .filter(game -> isInactive(game, minutes))
+                .map(this::getGameDto)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    public boolean isInactive(GameEntity game, int minutes){
+        if(game.getHands().isEmpty()) return false;
+        final int index = game.getHands().size() - 1;
+        final HandEntity hand = game.getHands().get(index);
+        final IntelEntity intel = hand.getHistory().get(hand.getHistory().size() - 1);
+        final Instant lastInteraction = intel.getTimestamp();
+        final Instant now = Instant.now();
+        final long inactivityInMinutes = Duration.between(lastInteraction, now).toMinutes();
+        System.out.println("Inactive during (minutes): " + inactivityInMinutes);
+        return inactivityInMinutes >= minutes;
+    }
+
+    private Optional<GameDto> getGameDto(GameEntity game) {
+        if(game == null) return Optional.empty();
         final PlayerDto player1 = playerDao.findById(game.getPlayer1()).orElseThrow().toDto();
         final PlayerDto player2 = playerDao.findById(game.getPlayer2()).orElseThrow().toDto();
         return Optional.of(game.toDto(Map.of(player1.uuid(), player1, player2.uuid(), player2)));

@@ -18,20 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.tasks;
 
-import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.RemoveGameUseCase;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+@Component
+public class RemoveInactiveTask {
 
-public interface GameRepository {
-    void save(GameDto gameDto);
-    void update(GameDto gameDto);
-    void delete(UUID uuid);
-    Optional<GameDto> findByPlayerUuid(UUID playerUuid);
+    private final RemoveGameUseCase removeGameUseCase;
 
-    Collection<GameDto> findAllInactiveAfter(int minutes);
+    public RemoveInactiveTask(RemoveGameUseCase removeGameUseCase) {
+        this.removeGameUseCase = removeGameUseCase;
+    }
 
+    @Scheduled(fixedRate = 30_000)
+    public void reportCurrentTime() {
+        removeGameUseCase.byInactivityAfter(5);
+    }
 }

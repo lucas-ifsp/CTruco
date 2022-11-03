@@ -24,6 +24,7 @@ import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.hand.dtos.HandDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,18 @@ public class RemoveGameUseCase {
     public RemoveGameUseCase(GameRepository gameRepo, GameResultRepository gameResultRepo) {
         this.gameRepo = gameRepo;
         this.gameResultRepo = gameResultRepo;
+    }
+
+    public void byInactivityAfter(int minutes){
+        gameRepo.findAllInactiveAfter(minutes)
+                .stream()
+                .map(this::inactivePlayerUuid)
+                .forEach(this::byUserUuid);
+    }
+
+    public UUID inactivePlayerUuid(GameDto game){
+        final HandDto currentHand = game.hands().get(game.hands().size() - 1);
+        return currentHand.currentPlayer().uuid();
     }
 
     public void byUserUuid(UUID userUuid) {

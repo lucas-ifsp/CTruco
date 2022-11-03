@@ -22,6 +22,7 @@ package com.bueno.domain.usecases.game.repos;
 
 import com.bueno.domain.usecases.game.dtos.GameDto;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,5 +48,10 @@ public class GameRepoDisposableImpl implements GameRepository {
     @Override
     public Optional<GameDto> findByPlayerUuid(UUID playerUuid) {
         return Optional.ofNullable(game);
+    }
+
+    @Override
+    public Collection<GameDto> findAllInactiveAfter(int minutes) {
+        return null;
     }
 }
