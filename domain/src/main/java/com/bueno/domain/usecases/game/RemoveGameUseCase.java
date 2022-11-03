@@ -20,25 +20,52 @@
 
 package com.bueno.domain.usecases.game;
 
+import com.bueno.domain.usecases.game.dtos.GameDto;
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class RemoveGameUseCase {
-    private final GameRepository repo;
+    private final GameRepository gameRepo;
+    private final GameResultRepository gameResultRepo;
 
-    public RemoveGameUseCase(GameRepository repo) {
-        this.repo = repo;
+    public RemoveGameUseCase(GameRepository gameRepo, GameResultRepository gameResultRepo) {
+        this.gameRepo = gameRepo;
+        this.gameResultRepo = gameResultRepo;
     }
 
     public void byUserUuid(UUID userUuid) {
         final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
-        repo.findByPlayerUuid(Objects.requireNonNull(uuid)).ifPresentOrElse(
-                        game -> repo.delete(game.gameUuid()),
-                        () -> {throw new NoSuchElementException("The is no active game for user UUID: " + userUuid);});
+        final GameDto game = gameRepo.findByPlayerUuid(Objects.requireNonNull(uuid))
+                .orElseThrow(() -> new NoSuchElementException("The is no active game for user UUID: " + userUuid));
+        gameRepo.delete(game.gameUuid());
+        gameResultRepo.save(createGameResultFrom(game, userUuid));
+    }
+
+    private GameResultDto createGameResultFrom(GameDto game, UUID quitterUuid){
+        final UUID player1uuid = game.player1().uuid().equals(quitterUuid)
+                ? game.player1().uuid() : game.player2().uuid();
+        final UUID player2uuid = game.player1().uuid().equals(quitterUuid)
+                ? game.player2().uuid() : game.player1().uuid();
+        final UUID winnerUuid = player1uuid.equals(quitterUuid) ? player2uuid : player1uuid;
+        final int player1Score = player1uuid.equals(winnerUuid) ? 12 : 0;
+        final int player2Score = player2uuid.equals(winnerUuid) ? 12 : 0;
+
+        return new GameResultDto(
+                game.gameUuid(),
+                game.timestamp(),
+                LocalDateTime.now(),
+                winnerUuid,
+                player1uuid,
+                player1Score,
+                player2uuid,
+                player2Score);
     }
 }
