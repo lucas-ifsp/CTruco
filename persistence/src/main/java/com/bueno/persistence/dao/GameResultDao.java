@@ -20,13 +20,26 @@
 
 package com.bueno.persistence.dao;
 
+import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
 import com.bueno.persistence.dto.GameResultEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface GameResultDao extends JpaRepository<GameResultEntity, UUID> {
 
+    @Query("""
+            SELECT new com.bueno.domain.usecases.game.dtos.PlayerWinsDto(a.username, count(a.username))
+            FROM UserEntity a
+            RIGHT JOIN GameResultEntity b ON a.uuid = b.winnerUuid
+            GROUP BY username
+            ORDER BY username
+            """
+    )
+    List<PlayerWinsDto> findTopWinners(Pageable pageable);
 }

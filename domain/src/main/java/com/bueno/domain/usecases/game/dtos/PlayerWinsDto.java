@@ -18,15 +18,35 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.domain.usecases.game.dtos;
 
-import com.bueno.domain.usecases.game.dtos.GameResultDto;
-import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
+public class PlayerWinsDto {
+    private String username;
+    private Long wins;
 
-import java.util.List;
+    public PlayerWinsDto(String username, Long wins) {
+        this.username = username;
+        this.wins = wins;
+    }
 
-public interface GameResultRepository {
-    void save(GameResultDto gameResultDto);
+    public String getUsername() {
+        return username;
+    }
 
-    List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers);
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Long getWins() {
+        return wins;
+    }
+
+    public void setWins(Long wins) {
+        this.wins = wins;
+    }
+
+    @Override
+    public String toString() {
+        return username + " | " + wins;
+    }
 }

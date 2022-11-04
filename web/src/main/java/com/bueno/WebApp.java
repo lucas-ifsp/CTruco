@@ -20,6 +20,8 @@
 
 package com.bueno;
 
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import org.springframework.boot.CommandLineRunner;
@@ -29,6 +31,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @SpringBootApplication
 @EnableScheduling
 public class WebApp {
@@ -36,11 +41,30 @@ public class WebApp {
         SpringApplication.run(WebApp.class, args);
     }
     @Bean
-    CommandLineRunner run(RegisterUserUseCase registerUserUseCase, PasswordEncoder encoder){
+    CommandLineRunner run(RegisterUserUseCase registerUserUseCase,
+                          GameResultRepository gameResultRepository,
+                          PasswordEncoder encoder){
         return args -> {
             final String encodedPassword = encoder.encode("123123");
             final RegisterUserRequestDto defaultUser = new RegisterUserRequestDto("Lucas", encodedPassword, "lucas.ruas@gmail.com");
-            registerUserUseCase.create(defaultUser);
+            final RegisterUserRequestDto user1 = new RegisterUserRequestDto("User 1", encodedPassword, "user1@gmail.com");
+            final RegisterUserRequestDto user2 = new RegisterUserRequestDto("User 2", encodedPassword, "user2@gmail.com");
+            final UUID defaultUuid = registerUserUseCase.create(defaultUser).uuid();
+            final UUID user1Uuid = registerUserUseCase.create(user1).uuid();
+            final UUID user2Uuid = registerUserUseCase.create(user2).uuid();
+
+            for (int i = 0; i < 30; i++) {
+                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+                        LocalDateTime.now(), defaultUuid, defaultUuid, 12, user1Uuid, 3));
+                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+                        LocalDateTime.now(), user1Uuid, user2Uuid, 7, user1Uuid, 12));
+                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+                        LocalDateTime.now(), defaultUuid, user2Uuid, 5, defaultUuid, 12));
+            }
+            gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+                    LocalDateTime.now(), user2Uuid, user2Uuid, 7, user1Uuid, 12));
+
+            gameResultRepository.findTopWinners(3).forEach(System.out::println);
         };
     }
 }
