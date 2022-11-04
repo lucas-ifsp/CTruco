@@ -28,12 +28,15 @@ import com.bueno.domain.usecases.hand.dtos.HandDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @Service
 public class RemoveGameUseCase {
+
     private final GameRepository gameRepo;
     private final GameResultRepository gameResultRepo;
 
@@ -42,11 +45,13 @@ public class RemoveGameUseCase {
         this.gameResultRepo = gameResultRepo;
     }
 
-    public void byInactivityAfter(int minutes){
-        gameRepo.findAllInactiveAfter(minutes)
+    public List<UUID> byInactivityAfter(int minutes){
+        final List<UUID> gamesToRemove = gameRepo.findAllInactiveAfter(minutes)
                 .stream()
                 .map(this::inactivePlayerUuid)
-                .forEach(this::byUserUuid);
+                .toList();
+        gamesToRemove.forEach(this::byUserUuid);
+        return gamesToRemove;
     }
 
     public UUID inactivePlayerUuid(GameDto game){

@@ -21,11 +21,18 @@
 package com.bueno.tasks;
 
 import com.bueno.domain.usecases.game.RemoveGameUseCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.UUID;
+
 @Component
 public class RemoveInactiveTask {
+
+    private static final Logger log = LoggerFactory.getLogger(RemoveInactiveTask.class);
 
     private final RemoveGameUseCase removeGameUseCase;
 
@@ -35,6 +42,7 @@ public class RemoveInactiveTask {
 
     @Scheduled(fixedRate = 30_000)
     public void reportCurrentTime() {
-        removeGameUseCase.byInactivityAfter(5);
+        final List<UUID> removedGames = removeGameUseCase.byInactivityAfter(5);
+        removedGames.forEach(gameUuid -> log.info("Removed game {} due to inactivity.", gameUuid));
     }
 }
