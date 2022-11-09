@@ -18,14 +18,28 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.controllers;
 
-import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.ReportTopWinnersUseCase;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-public interface GameResultRepository {
-    void save(GameResultDto gameResultDto);
+@RestController
+@RequestMapping(path = "/api/v1/games")
+public class ReportController {
 
-    Map<String, Integer> findTopWinners(Integer maxNumberOfUsers);
+    private final ReportTopWinnersUseCase reportTopWinnersUseCase;
+
+    public ReportController(ReportTopWinnersUseCase reportTopWinnersUseCase) {
+        this.reportTopWinnersUseCase = reportTopWinnersUseCase;
+    }
+
+    @GetMapping(path = "/top-winners/{numberOfTopWinners}")
+    public Map<String, Integer> topWinners(@PathVariable int numberOfTopWinners){
+        return reportTopWinnersUseCase.create(numberOfTopWinners);
+    }
 }

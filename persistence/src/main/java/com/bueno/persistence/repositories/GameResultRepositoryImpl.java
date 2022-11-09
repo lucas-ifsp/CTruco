@@ -21,14 +21,16 @@
 package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
-import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
+import com.bueno.persistence.dto.PlayerWinsEntity;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.persistence.dao.GameResultDao;
 import com.bueno.persistence.dto.GameResultEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class GameResultRepositoryImpl implements GameResultRepository {
@@ -44,7 +46,11 @@ public class GameResultRepositoryImpl implements GameResultRepository {
         repo.save(GameResultEntity.from(gameResult));
     }
 
-    public List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers){
-        return repo.findTopWinners(Pageable.ofSize(maxNumberOfUsers));
+    @Override
+    public Map<String, Integer> findTopWinners(Integer maxNumberOfUsers){
+        final List<PlayerWinsEntity> topWinnersDto = repo.findTopWinners(Pageable.ofSize(maxNumberOfUsers));
+        final Map<String, Integer> result = new LinkedHashMap<>();
+        topWinnersDto.forEach(dto -> result.put(dto.username(), dto.wins().intValue()));
+        return result;
     }
 }

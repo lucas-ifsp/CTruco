@@ -64,7 +64,7 @@ public class WebApp {
             gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
                     LocalDateTime.now(), user2Uuid, user2Uuid, 7, user1Uuid, 12));
 
-            gameResultRepository.findTopWinners(3).forEach(System.out::println);
+            gameResultRepository.findTopWinners(3).forEach((key, value) -> System.out.println(key + " - " + value));
         };
     }
 }

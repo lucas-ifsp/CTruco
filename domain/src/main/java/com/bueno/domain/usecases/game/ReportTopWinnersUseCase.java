@@ -18,35 +18,23 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.dtos;
+package com.bueno.domain.usecases.game;
 
-public class PlayerWinsDto {
-    private String username;
-    private Long wins;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import org.springframework.stereotype.Service;
 
-    public PlayerWinsDto(String username, Long wins) {
-        this.username = username;
-        this.wins = wins;
+import java.util.Map;
+
+@Service
+public class ReportTopWinnersUseCase {
+
+    private final GameResultRepository resultRepository;
+
+    public ReportTopWinnersUseCase(GameResultRepository resultRepository) {
+        this.resultRepository = resultRepository;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Long getWins() {
-        return wins;
-    }
-
-    public void setWins(Long wins) {
-        this.wins = wins;
-    }
-
-    @Override
-    public String toString() {
-        return username + " | " + wins;
+    public Map<String, Integer> create(int numberOfTopPlayers){
+        return resultRepository.findTopWinners(numberOfTopPlayers);
     }
 }

@@ -18,14 +18,6 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game.repos;
+package com.bueno.persistence.dto;
 
-import com.bueno.domain.usecases.game.dtos.GameResultDto;
-
-import java.util.Map;
-
-public interface GameResultRepository {
-    void save(GameResultDto gameResultDto);
-
-    Map<String, Integer> findTopWinners(Integer maxNumberOfUsers);
-}
+public record PlayerWinsEntity(String username, Long wins) {}
