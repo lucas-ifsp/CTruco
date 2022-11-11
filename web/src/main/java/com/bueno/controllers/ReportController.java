@@ -21,12 +21,14 @@
 package com.bueno.controllers;
 
 import com.bueno.domain.usecases.game.ReportTopWinnersUseCase;
+import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/games")
@@ -40,6 +42,8 @@ public class ReportController {
 
     @GetMapping(path = "/top-winners/{numberOfTopWinners}")
     public Map<String, Integer> topWinners(@PathVariable int numberOfTopWinners){
-        return reportTopWinnersUseCase.create(numberOfTopWinners);
+        return reportTopWinnersUseCase.create(numberOfTopWinners)
+                .stream()
+                .collect(Collectors.toMap(PlayerWinsDto::username, PlayerWinsDto::wins));
     }
 }

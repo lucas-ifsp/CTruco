@@ -21,11 +21,17 @@
 package com.bueno.domain.usecases.game.repos;
 
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.dtos.GameResultUsernamesDto;
+import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
 
-import java.util.Map;
+import java.util.List;
+import java.util.UUID;
 
 public interface GameResultRepository {
     void save(GameResultDto gameResultDto);
 
-    Map<String, Integer> findTopWinners(Integer maxNumberOfUsers);
+    List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers);
+
+    List<GameResultUsernamesDto> findAllByPlayerUuid(UUID uuid);
+
 }

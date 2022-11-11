@@ -64,7 +64,10 @@ public class WebApp {
             gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
                     LocalDateTime.now(), user2Uuid, user2Uuid, 7, user1Uuid, 12));
 
-            gameResultRepository.findTopWinners(3).forEach((key, value) -> System.out.println(key + " - " + value));
+            gameResultRepository.findTopWinners(3).forEach((entry -> System.out.println(entry.username() + " - " + entry.wins())));
+
+            //gameResultRepository.findAllByPlayerUuid(defaultUuid).forEach(System.out::println);
+
         };
     }
 }

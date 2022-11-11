@@ -20,4 +20,11 @@
 
 package com.bueno.persistence.dto;
 
-public record PlayerWinsEntity(String username, Long wins) {}
+import java.time.LocalDateTime;
+
+public interface GameResultQR {
+    LocalDateTime getEnding();
+    String getPlayer1();
+    String getPlayer2();
+    String getWinner();
+}
