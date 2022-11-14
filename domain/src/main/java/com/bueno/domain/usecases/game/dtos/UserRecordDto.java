@@ -20,5 +20,7 @@
 
 package com.bueno.domain.usecases.game.dtos;
 
-public record
-PlayerWinsDto(String username, Integer wins) {}
+import java.util.List;
+import java.util.UUID;
+
+public record UserRecordDto(UUID userUuid, String username, List<GameResultUsernamesDto> record) {}

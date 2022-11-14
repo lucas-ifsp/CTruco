@@ -55,7 +55,7 @@ public class GameResultRepositoryImpl implements GameResultRepository {
     }
 
     @Override
-    public List<GameResultUsernamesDto> findAllByPlayerUuid(UUID uuid) {
+    public List<GameResultUsernamesDto> findAllByUserUuid(UUID uuid) {
         final List<GameResultQR> result = repo.findAllByPlayerUuid(uuid);
         return result.stream()
                 .map(r -> new GameResultUsernamesDto(r.getEnding(), r.getPlayer1(), r.getPlayer2(), r.getWinner()))

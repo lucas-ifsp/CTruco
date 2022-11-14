@@ -20,6 +20,8 @@
 
 package com.bueno.controllers;
 
+import com.bueno.domain.usecases.game.UserRecordUseCase;
+import com.bueno.domain.usecases.game.dtos.UserRecordDto;
 import com.bueno.domain.usecases.user.FindUserUseCase;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
@@ -38,11 +40,13 @@ public class UserController {
 
     private final RegisterUserUseCase registerUserUseCase;
     private final FindUserUseCase findUserUseCase;
+    private final UserRecordUseCase userRecordUseCase;
     private final PasswordEncoder encoder;
 
-    public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, PasswordEncoder encoder) {
+    public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, UserRecordUseCase userRecordUseCase, PasswordEncoder encoder) {
         this.registerUserUseCase = registerUserUseCase;
         this.findUserUseCase = findUserUseCase;
+        this.userRecordUseCase = userRecordUseCase;
         this.encoder = encoder;
     }
 
@@ -68,5 +72,10 @@ public class UserController {
                 response.email());
 
         return ResponseEntity.ok(responseWithoutPassword);
+    }
+
+    @GetMapping(path = "/api/v1/users/{uuid}/matches")
+    public UserRecordDto removeGame(@PathVariable UUID uuid){
+        return userRecordUseCase.listByUuid(uuid);
     }
 }

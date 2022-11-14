@@ -32,6 +32,6 @@ public interface GameResultRepository {
 
     List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers);
 
-    List<GameResultUsernamesDto> findAllByPlayerUuid(UUID uuid);
+    List<GameResultUsernamesDto> findAllByUserUuid(UUID uuid);
 
 }
