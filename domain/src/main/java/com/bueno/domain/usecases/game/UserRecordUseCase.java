@@ -23,9 +23,9 @@ package com.bueno.domain.usecases.game;
 import com.bueno.domain.usecases.game.dtos.UserRecordDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -40,7 +40,7 @@ public class UserRecordUseCase {
 
     public UserRecordDto listByUuid(UUID userUuid){
         var user = userRepository.findByUuid(userUuid)
-                .orElseThrow(() -> new NoSuchElementException("User not found: " + userUuid));
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + userUuid));
         var userRecord = gameResultRepository.findAllByUserUuid(userUuid);
         return new UserRecordDto(user.uuid(), user.username(), userRecord);
     }

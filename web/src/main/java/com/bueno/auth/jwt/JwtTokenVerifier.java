@@ -20,6 +20,7 @@
 
 package com.bueno.auth.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,7 +68,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             final var authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e) {
             log.error("Token verification error: {}", e.getMessage());
             jwtTokenHelper.configureTokenErrorResponse(response, e.getMessage());
         }
