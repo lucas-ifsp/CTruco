@@ -51,10 +51,10 @@ public class PlayWithBots {
         final var bot2 = scanBotOption(botNames);
         final var times = scanNumberOfSimulations();
 
-        final var results = main
-                .playInParallel(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        //final var results = main
+                //.playInParallel(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
 
-        //final List<ResponseModel> results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        final var results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));

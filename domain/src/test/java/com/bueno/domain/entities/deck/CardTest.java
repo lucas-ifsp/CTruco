@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
@@ -34,7 +35,7 @@ class CardTest {
 
     @Nested
     @DisplayName("Should allow")
-    class ShouldAllow{
+    class ShouldAllow {
         @Test
         @DisplayName("Creating a card with valid rank and suit")
         void creatingCardWithValidRankAndSuit() {
@@ -47,7 +48,7 @@ class CardTest {
 
         @Test
         @DisplayName("creating closed card")
-        void creatingClosedCard(){
+        void creatingClosedCard() {
             Card card = Card.closed();
             SoftAssertions softly = new SoftAssertions();
             softly.assertThat(card.getRank()).as("Card Rank").isEqualTo(Rank.HIDDEN);
@@ -66,16 +67,16 @@ class CardTest {
 
     @Nested
     @DisplayName("Should not allow")
-    class ShouldNotAllow{
+    class ShouldNotAllow {
         @Test
         @DisplayName("creating a card with null rank")
-        void creatingCardWithNullRank(){
+        void creatingCardWithNullRank() {
             assertThatNullPointerException().isThrownBy(() -> Card.of(null, Suit.CLUBS));
         }
 
         @Test
         @DisplayName("creating a card with null suit")
-        void creatingCardWithNullSuit(){
+        void creatingCardWithNullSuit() {
             assertThatNullPointerException().isThrownBy(() -> Card.of(Rank.ACE, null));
         }
 
@@ -96,7 +97,7 @@ class CardTest {
     @ParameterizedTest(name = "[{index}]: rank {0} and suit {1} = {2}")
     @DisplayName("Should correctly toString() open cards")
     @CsvSource({"SEVEN,DIAMONDS,[7D]", "ACE,HEARTS,[AH]", "QUEEN,CLUBS,[QC]", "JACK,SPADES,[JS]", "KING,SPADES,[KS]"})
-    void shouldCorrectlyToStringOpenCard(Rank rank, Suit suit, String output){
+    void shouldCorrectlyToStringOpenCard(Rank rank, Suit suit, String output) {
         assertThat(Card.of(rank, suit).toString()).isEqualTo(output);
     }
 
@@ -134,7 +135,7 @@ class CardTest {
 
     @Test
     @DisplayName("Should same cards be equals")
-    void shouldSameCardsBeEquals(){
+    void shouldSameCardsBeEquals() {
         assertThat(Card.of(Rank.TWO, Suit.DIAMONDS)).isEqualTo(Card.of(Rank.TWO, Suit.DIAMONDS));
     }
 
@@ -142,6 +143,13 @@ class CardTest {
     @DisplayName("Should cards of different suit not be equals")
     void shouldCardsOfDifferentSuitNotBeEquals() {
         assertThat(Card.of(Rank.TWO, Suit.CLUBS)).isNotEqualTo(Card.of(Rank.TWO, Suit.DIAMONDS));
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
+    @DisplayName("Should correctly get the next rank value")
+    void shouldCorrectlyGetTheNextRankValue(Rank current, Rank next) {
+        assertThat(current.next()).isEqualTo(next);
     }
 
     @Test
