@@ -49,9 +49,12 @@ public class PlayWithBots {
         final var bot2 = prompt.scanBotOption(botNames);
         final var times = prompt.scanNumberOfSimulations();
 
+        final long start = System.currentTimeMillis();
         final var results = main.playManyInParallel(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
-
         //final var results = main.playMany(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
+        final long end = System.currentTimeMillis();
+        System.out.println("Time to compute " + times + " games: " + (end - start) + "ms.");
+
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
@@ -61,7 +64,6 @@ public class PlayWithBots {
         this.uuidBot1 = UUID.randomUUID();
         this.uuidBot2 = UUID.randomUUID();
     }
-
 
     public List<PlayWithBotsDto> playMany(int times, String bot1Name, String bot2Name) {
         final List<PlayWithBotsDto> result = new ArrayList<>();
@@ -83,8 +85,9 @@ public class PlayWithBots {
     }
 
     public List<PlayWithBotsDto> playManyInParallel(int times, String bot1Name, String bot2Name) throws InterruptedException, ExecutionException {
-        final int numberOfThreads = Math.max(1, times / 10000);
-        final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        final int availableProcessors = Runtime.getRuntime().availableProcessors();
+        System.out.println(availableProcessors);
+        final ExecutorService executor = Executors.newFixedThreadPool(availableProcessors);
         final List<Callable<PlayWithBotsDto>> games = new ArrayList<>();
 
         for (int i = 0; i < times; i++) {
