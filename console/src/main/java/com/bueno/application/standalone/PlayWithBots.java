@@ -25,17 +25,14 @@ import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.repos.GameRepoDisposableImpl;
-import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("UnstableApiUsage")
 public class PlayWithBots {
 
     private final UUID uuidBot1;
@@ -43,18 +40,18 @@ public class PlayWithBots {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         final var main = new PlayWithBots();
+        final var prompt = new UserPrompt();
 
         final var botNames = BotProviders.availableBots();
-        printAvailableBots(botNames);
+        prompt.printAvailableBots(botNames);
 
-        final var bot1 = scanBotOption(botNames);
-        final var bot2 = scanBotOption(botNames);
-        final var times = scanNumberOfSimulations();
+        final var bot1 = prompt.scanBotOption(botNames);
+        final var bot2 = prompt.scanBotOption(botNames);
+        final var times = prompt.scanNumberOfSimulations();
 
-        //final var results = main
-                //.playInParallel(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        final var results = main.playManyInParallel(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
 
-        final var results = main.play(botNames.get(bot1 - 1), botNames.get(bot2 - 1), times);
+        //final var results = main.playMany(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
 
         results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
@@ -65,69 +62,33 @@ public class PlayWithBots {
         this.uuidBot2 = UUID.randomUUID();
     }
 
-    private static void printAvailableBots(List<String> botNames) {
-        for (int i = 0; i < botNames.size(); i++){
-            System.out.print("[" + (i + 1) + "] " + botNames.get(i) + "\t");
-        }
-        System.out.print("\n");
-    }
 
-    private static Integer scanBotOption(List<String> botNames) {
-        var scanner = new Scanner(System.in);
-        Integer botNumber;
-        while (true){
-            System.out.print("Select a bot by number: ");
-            botNumber = Ints.tryParse(scanner.nextLine());
-            if(botNumber == null || botNumber < 1 || botNumber > botNames.size()){
-                System.out.println("Invalid input!");
-                continue;
-            }
-            break;
-        }
-        return botNumber;
-    }
-
-    private static int scanNumberOfSimulations() {
-        final var scanner = new Scanner(System.in);
-        System.out.print("Number of simulations: ");
-        final int times = scanner.nextInt();
-        System.out.println("Starting simulation... it may take a while: ");
-        return times;
-    }
-
-    public List<PlayWithBotsDto> play(String bot1Name, String bot2Name, int times) throws InterruptedException {
+    public List<PlayWithBotsDto> playMany(int times, String bot1Name, String bot2Name) {
         final List<PlayWithBotsDto> result = new ArrayList<>();
         for (int i = 0; i < times; i++) {
-            final var useCase = createNewGameSettings();
-            final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
-            final var responseModel = useCase.playWithBots(requestModel);
+            final var responseModel = playGame(bot1Name, bot2Name);
             result.add(responseModel);
             final var winnerUuid = responseModel.uuid();
             final var winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
             System.err.printf("Winner: %s (%s).\n", winnerName, winnerUuid);
-            TimeUnit.SECONDS.sleep(1);
         }
         return result;
     }
 
-    private PlayWithBotsUseCase createNewGameSettings() {
+    private PlayWithBotsDto playGame(String bot1Name, String bot2Name) {
         final var repo = new GameRepoDisposableImpl();
-        return new PlayWithBotsUseCase(repo);
+        final var useCase = new PlayWithBotsUseCase(repo);
+        final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
+        return useCase.playWithBots(requestModel);
     }
 
-    public List<PlayWithBotsDto> playInParallel(String bot1Name, String bot2Name, int times) throws InterruptedException, ExecutionException {
+    public List<PlayWithBotsDto> playManyInParallel(int times, String bot1Name, String bot2Name) throws InterruptedException, ExecutionException {
         final int numberOfThreads = Math.max(1, times / 10000);
         final ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         final List<Callable<PlayWithBotsDto>> games = new ArrayList<>();
 
-        final Callable<PlayWithBotsDto> game = () -> {
-            final var useCase = createNewGameSettings();
-            final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
-            return useCase.playWithBots(requestModel);
-        };
-
         for (int i = 0; i < times; i++) {
-            games.add(game);
+            games.add(() -> playGame(bot1Name, bot2Name));
         }
 
         final List<PlayWithBotsDto> result = new ArrayList<>();
