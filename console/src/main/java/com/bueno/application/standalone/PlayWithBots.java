@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PlayWithBots {
@@ -40,11 +38,11 @@ public class PlayWithBots {
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) {
         final var main = new PlayWithBots();
         final var prompt = new UserPrompt();
-
         final var botNames = BotProviders.availableBots();
+
         prompt.printAvailableBots(botNames);
 
         final var bot1 = prompt.scanBotOption(botNames);
@@ -52,39 +50,34 @@ public class PlayWithBots {
         final var times = prompt.scanNumberOfSimulations();
 
         final long start = System.currentTimeMillis();
-        final var results = main.playManyInParallel2(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
+        final var results = main.playManyInParallel(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
         final long end = System.currentTimeMillis();
-        System.out.println("Time to compute " + times + " games: " + (end - start) + "ms.");
-
-        results.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .forEach((bot, wins) -> System.out.println(bot.name() + " (" + bot.uuid() + "): " + wins));
+        prompt.printResult(times, (end - start), results);
     }
 
-    public List<PlayWithBotsDto> playManyInParallel2(int times, String bot1Name, String bot2Name) throws InterruptedException, ExecutionException {
-        Callable<PlayWithBotsDto> gameCall = () -> playGame(bot1Name, bot2Name);
-        return Stream.generate(() -> gameCall)
+    private List<PlayWithBotsDto> playManyInParallel(int times, String bot1Name, String bot2Name) {
+        final Callable<PlayWithBotsDto> playGame = () -> play(bot1Name, bot2Name);
+        return Stream.generate(() -> playGame)
                 .limit(times)
                 .parallel()
-                .map(tryToPlay(bot1Name, bot2Name))
+                .map(executeGameCall())
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private static PlayWithBotsDto playGame(String bot1Name, String bot2Name) {
+    private PlayWithBotsDto play(String bot1Name, String bot2Name){
         final var repo = new GameRepoDisposableImpl();
         final var useCase = new PlayWithBotsUseCase(repo);
         final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
-        return useCase.playWithBots(requestModel);
+        final var result = useCase.playWithBots(requestModel);
+        System.out.println("Winner: " + (result.uuid().equals(uuidBot1) ? bot1Name : bot2Name));
+        return result;
     }
 
-    private static Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> tryToPlay(String bot1Name, String bot2Name) {
-        return callable -> {
+    private static Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> executeGameCall() {
+        return gameCall -> {
             try {
-                final var result = playGame(bot1Name, bot2Name);
-                final var winnerUuid = result.uuid();
-                final var winnerName = winnerUuid.equals(uuidBot1) ? bot1Name : bot2Name;
-                System.err.printf("Winner: %s (%s).\n", winnerName, winnerUuid);
-                return result;
+                return gameCall.call();
             }
             catch (Exception e) {
                 e.printStackTrace();

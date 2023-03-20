@@ -45,7 +45,6 @@ public class PlayWithBotsUseCase {
         final var winnerUUID = intel.gameWinner().orElseThrow();
         final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
                 requestModel.bot1Name() : requestModel.bot2Name();
-
         return new PlayWithBotsDto(winnerUUID, winnerName);
     }
 }

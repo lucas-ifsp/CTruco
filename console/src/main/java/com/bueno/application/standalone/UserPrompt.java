@@ -20,10 +20,13 @@
 
 package com.bueno.application.standalone;
 
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.google.common.primitives.Ints;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("UnstableApiUsage")
 public class UserPrompt {
@@ -59,7 +62,16 @@ public class UserPrompt {
         final var scanner = new Scanner(System.in);
         System.out.print("Number of simulations: ");
         final int times = scanner.nextInt();
-        System.out.println("Starting simulation... it may take a while: ");
+        System.out.println("\nStarting simulation... it may take a while: ");
         return times;
+    }
+
+    void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
+        System.out.println("\n================================================================");
+        System.out.println("Time to compute " + numberOfGames + " games: " +  computingTime + "ms.\n");
+        results.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .forEach((bot, wins) -> System.out.println(bot.name() + ": " + wins));
+        System.out.println("================================================================");
     }
 }
