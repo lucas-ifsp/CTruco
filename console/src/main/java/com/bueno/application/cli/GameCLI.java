@@ -102,7 +102,7 @@ public class GameCLI {
         final var cardReader = new CardReader(this, ownedCards);
         final var cardModeReader = new CardModeReader();
         final var card = cardReader.execute();
-        final var mode = cardModeReader.execute();
+        final var mode = lastIntel.roundsPlayed() == 0 ? OPEN : cardModeReader.execute();
 
         final var requestModel = new PlayCardDto(userUUID, card);
         if(mode == OPEN) playCardUseCase.playCard(requestModel);
