@@ -75,6 +75,9 @@ public final class Card {
     public boolean isManilha(Card vira){
         return getRank() == vira.getRank().next();
     }
+    public boolean isClosed() {
+        return rank.equals(Rank.HIDDEN) && suit.equals(Suit.HIDDEN);
+    }
 
     public Rank getRank() {
         return rank;
