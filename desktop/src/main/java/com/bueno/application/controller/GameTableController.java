@@ -265,6 +265,7 @@ public class GameTableController {
     }
 
     private void flipCardImage(CardDto card, ImageView currentCard) {
+        if (lastIntel.roundsPlayed() == 0) return;
         if (!isClosed(currentCard)) currentCard.setImage(CardImage.ofClosedCard().getImage());
         else currentCard.setImage(CardImage.of(card).getImage());
     }
