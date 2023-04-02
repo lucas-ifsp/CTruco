@@ -37,10 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
@@ -148,9 +145,11 @@ class IntelTest {
         when(p2.getUuid()).thenReturn(UUID.randomUUID());
         when(p1.getUsername()).thenReturn("name1");
         when(p2.getUsername()).thenReturn("name2");
+        when(p1.getCards()).thenReturn(new ArrayList<>(List.of(Card.of(Rank.TWO, Suit.CLUBS))));
 
         final Hand hand = new Hand(p1, p2, Card.of(Rank.THREE, Suit.CLUBS));
-        hand.playFirstCard(p1, Card.closed());
+
+        hand.playFirstCard(p1, Card.of(Rank.TWO, Suit.CLUBS));
         final Intel sut = hand.getLastIntel();
 
         SoftAssertions softly = new SoftAssertions();

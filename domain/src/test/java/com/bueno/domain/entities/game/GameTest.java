@@ -133,12 +133,13 @@ class GameTest {
     @DisplayName("Should correctly get intel in the same hand")
     void shouldCorrectlyGetIntelInTheSameHand() {
         when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.KING, Suit.SPADES)));
+        when(player2.getCards()).thenReturn(List.of(Card.of(Rank.JACK, Suit.CLUBS)));
         sut = new Game(player1, player2);
         final Intel firstHandIntel = sut.getIntel();
         final Hand hand = sut.currentHand();
 
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.CLUBS));
-        hand.playSecondCard(player2, Card.closed());
+        hand.playSecondCard(player2, Card.of(Rank.JACK, Suit.CLUBS));
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
 
         assertThat(sut.getIntelSince(firstHandIntel.timestamp()).size()).isEqualTo(3);
@@ -148,17 +149,19 @@ class GameTest {
     @DisplayName("Should correctly get intel between hands")
     void shouldCorrectlyGetIntelBetweenHands() {
         when(player1.getCards()).thenReturn(List.of(Card.of(Rank.KING, Suit.CLUBS), Card.of(Rank.KING, Suit.SPADES)));
+        when(player2.getCards()).thenReturn(List.of(Card.of(Rank.JACK, Suit.CLUBS)));
+
         sut = new Game(player1, player2);
         final Intel firstHandIntel = sut.getIntel();
         final Hand hand = sut.currentHand();
 
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.CLUBS));
-        hand.playSecondCard(player2, Card.closed());
+        hand.playSecondCard(player2, Card.of(Rank.JACK, Suit.CLUBS));
         hand.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
         hand.playSecondCard(player2, Card.closed());
         sut.prepareNewHand();
         final Hand newHand = sut.currentHand();
-        newHand.playFirstCard(player2, Card.closed());
+        newHand.playFirstCard(player2, Card.of(Rank.KING, Suit.CLUBS));
 
         assertThat(sut.getIntelSince(firstHandIntel.timestamp()).size()).isEqualTo(6);
     }

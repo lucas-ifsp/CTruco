@@ -148,7 +148,7 @@ class HandTest {
         @DisplayName("Should not accept repeated cards")
         void shouldNotAcceptRepeatedCards() {
             sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
-            sut.playSecondCard(player2, Card.closed());
+            sut.playSecondCard(player2, Card.of(Rank.FOUR, Suit.CLUBS));
             assertThatExceptionOfType(GameRuleViolationException.class)
                     .isThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES)));
 
@@ -288,7 +288,7 @@ class HandTest {
         @DisplayName("Should current player be able to play card or raise bet after first round card is played")
         void shouldCurrentPlayerBeAbleToPlayCardOrRaiseBetAfterFirstRoundCardIsPlayed() {
             EnumSet<PossibleAction> possibleActions = EnumSet.of(RAISE, PLAY);
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
         }
     }
@@ -339,8 +339,8 @@ class HandTest {
         void shouldBeAbleToPlayFirstCardAfterRaisingBet() {
             sut.raise(player1);
             sut.accept(player2);
-            sut.playFirstCard(player1, Card.closed());
-            assertThat(sut.getCardToPlayAgainst().orElse(null)).isEqualTo(Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
+            assertThat(sut.getCardToPlayAgainst().orElse(null)).isEqualTo(Card.of(Rank.THREE, Suit.CLUBS));
         }
 
         @Test
@@ -354,10 +354,10 @@ class HandTest {
         @Test
         @DisplayName("Should be able to play second card after raising bet")
         void shouldBeAbleToPlaySecondCardAfterRaisingBet() {
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             sut.raise(player2);
             sut.accept(player1);
-            sut.playSecondCard(player2, Card.closed());
+            sut.playSecondCard(player2, Card.of(Rank.TWO, Suit.CLUBS));
             assertThat(sut.numberOfRoundsPlayed()).isOne();
         }
 
@@ -371,7 +371,7 @@ class HandTest {
                     .isInstanceOf(IllegalStateException.class);
 
             softly.assertThatThrownBy(() -> {
-                        sut.playFirstCard(player1, Card.closed());
+                        sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
                         sut.accept(player2);
                     })
                     .as("There is no request to accept after playing first card")
@@ -389,7 +389,7 @@ class HandTest {
                     .isInstanceOf(IllegalStateException.class);
 
             softly.assertThatThrownBy(() -> {
-                        sut.playFirstCard(player1, Card.closed());
+                        sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
                         sut.quit(player2);
                     })
                     .as("There is no request to quit before playing first card")
@@ -506,7 +506,7 @@ class HandTest {
         @DisplayName("Should current player only be able to play after opponent accepted the bet raise with one card already played")
         void shouldCurrentPlayerOnlyBeAbleToPlayAfterOpponentAcceptedTheBetRaiseWithOneCardAlreadyPlayed() {
             EnumSet<PossibleAction> possibleActions = EnumSet.of(PLAY);
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             sut.raise(player2);
             sut.accept(player1);
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
@@ -519,7 +519,7 @@ class HandTest {
             when(player2.getScore()).thenReturn(10);
             sut.raise(player1);
             sut.accept(player2);
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             EnumSet<PossibleAction> possibleActions = EnumSet.of(PLAY);
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
         }
@@ -540,7 +540,7 @@ class HandTest {
         @DisplayName("Should current player only be able to play if any user has 11 points and a round card was already played")
         void shouldCurrentPlayerOnlyBeAbleToPlayIfAnyUserHas11PointsAndARoundCardWasAlreadyPlayed() {
             when(player2.getScore()).thenReturn(11);
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             EnumSet<PossibleAction> possibleActions = EnumSet.of(PLAY);
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
         }
@@ -571,7 +571,7 @@ class HandTest {
             when(player2.getScore()).thenReturn(11);
             sut = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
             sut.accept(player2);
-            assertThatNoException().isThrownBy(() -> sut.playFirstCard(player1, Card.closed()));
+            assertThatNoException().isThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS)));
         }
 
         @Test
@@ -604,7 +604,7 @@ class HandTest {
             when(player1.getScore()).thenReturn(11);
             sut = new Hand(player1, player2, Card.of(Rank.SEVEN, Suit.CLUBS));
             sut.accept(player1);
-            assertThatNoException().isThrownBy(() -> sut.playFirstCard(player1, Card.closed()));
+            assertThatNoException().isThrownBy(() -> sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS)));
         }
 
         @Test
@@ -649,7 +649,7 @@ class HandTest {
         void shouldNotBeAbleToRaiseBetWhenAnyUserHas11PointsAfterARoundCardWasPlayed() {
             when(player1.getScore()).thenReturn(11);
             when(player2.getScore()).thenReturn(11);
-            sut.playFirstCard(player1, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
             EnumSet<PossibleAction> possibleActions = EnumSet.of(PLAY);
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
         }
@@ -658,8 +658,8 @@ class HandTest {
         @DisplayName("Should current player only be able to play if any user has 11 points")
         void shouldCurrentPlayerOnlyBeAbleToPlayIfAnyUserHas11Points() {
             when(player2.getScore()).thenReturn(11);
-            sut.playFirstCard(player1, Card.closed());
-            sut.playSecondCard(player2, Card.closed());
+            sut.playFirstCard(player1, Card.of(Rank.THREE, Suit.CLUBS));
+            sut.playSecondCard(player2, Card.of(Rank.TWO, Suit.CLUBS));
             EnumSet<PossibleAction> possibleActions = EnumSet.of(PLAY);
             assertThat(sut.getPossibleActions()).isEqualTo(possibleActions);
         }

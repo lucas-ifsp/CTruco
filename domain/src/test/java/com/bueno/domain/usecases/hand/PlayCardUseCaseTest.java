@@ -130,7 +130,7 @@ class PlayCardUseCaseTest {
     @Test
     @DisplayName("Should correctly play hand if invariants are met")
     void shouldCorrectlyPlayHandIfInvariantsAreMet() {
-        final CardDto card1P1 = new CardDto("3", "C");
+        final CardDto card1P1 = new CardDto("4", "C");
         final CardDto card2P1 = new CardDto("2", "C");
         final CardDto card1P2 = new CardDto("A", "C");
         final CardDto card2P2 = new CardDto("K", "C");
@@ -140,9 +140,10 @@ class PlayCardUseCaseTest {
 
         when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P1), CardConverter.fromDto(card2P1))));
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P2), CardConverter.fromDto(card2P2))));
+
         repo.save(GameConverter.toDto(game));
 
-        sut.discard(new PlayCardDto(p1Uuid, card1P1));
+        sut.playCard(new PlayCardDto(p1Uuid, card1P1));
         sut.playCard(new PlayCardDto(p2Uuid, card1P2));
         sut.playCard(new PlayCardDto(p2Uuid, card2P2));
 
@@ -159,7 +160,7 @@ class PlayCardUseCaseTest {
         when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
         repo.save(GameConverter.toDto(game));
 
-        sut.discard(new PlayCardDto(p1Uuid, card1));
+        sut.playCard(new PlayCardDto(p1Uuid, card1));
         final IntelDto intel = sut.playCard(new PlayCardDto(p2Uuid, card2));
 
         SoftAssertions softly = new SoftAssertions();
@@ -179,7 +180,7 @@ class PlayCardUseCaseTest {
         repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
-        sut.discard(new PlayCardDto(p2Uuid, card2));
+        sut.playCard(new PlayCardDto(p2Uuid, card2));
 
         assertThatIllegalArgumentException().isThrownBy(() -> sut.playCard(new PlayCardDto(p1Uuid, card1)));
     }
@@ -195,7 +196,7 @@ class PlayCardUseCaseTest {
         repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));
-        sut.discard(new PlayCardDto(p2Uuid, card2));
+        sut.playCard(new PlayCardDto(p2Uuid, card2));
 
         assertThatIllegalArgumentException().isThrownBy(() -> sut.discard(new PlayCardDto(p1Uuid, card1)));
     }
