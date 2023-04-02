@@ -59,6 +59,7 @@ class PlayCardUseCaseTest {
 
     @Mock private Player player1;
     @Mock private Player player2;
+    @Mock private Deck deck;
     private Game game;
     private GameRepository repo;
 
@@ -67,8 +68,9 @@ class PlayCardUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        Deck deck = new Deck();
-        when(player1.getCards()).thenReturn(deck.take(40));
+        when(deck.takeOne()).thenReturn(Card.of(Rank.FOUR, Suit.DIAMONDS));
+        when(player1.getCards()).thenReturn(new Deck().take(40));
+        when(player2.getCards()).thenReturn(new Deck().take(40));
 
         p1Uuid = UUID.randomUUID();
         p2Uuid = UUID.randomUUID();
@@ -80,7 +82,7 @@ class PlayCardUseCaseTest {
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
         repo = new GameRepositoryInMemoryImpl();
-        game = new Game(player1, player2);
+        game = new Game(player1, player2, deck);
         sut = new PlayCardUseCase(repo);
     }
 
@@ -138,9 +140,6 @@ class PlayCardUseCaseTest {
         when(player1.getScore()).thenReturn(11);
         when(player2.getScore()).thenReturn(11);
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P1), CardConverter.fromDto(card2P1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1P2), CardConverter.fromDto(card2P2))));
-
         repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1P1));
@@ -175,8 +174,6 @@ class PlayCardUseCaseTest {
         final CardDto card1 = new CardDto("3", "C");
         final CardDto card2 = new CardDto("2", "C");
 
-        when(player1.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card1))));
-        when(player2.getCards()).thenReturn(new ArrayList<>(List.of(CardConverter.fromDto(card2))));
         repo.save(GameConverter.toDto(game));
 
         sut.playCard(new PlayCardDto(p1Uuid, card1));

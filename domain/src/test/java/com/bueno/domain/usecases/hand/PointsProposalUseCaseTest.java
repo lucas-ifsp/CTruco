@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.hand;
 
+import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.converter.GameConverter;
@@ -72,7 +73,7 @@ class PointsProposalUseCaseTest {
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
         repo = new GameRepositoryInMemoryImpl();
-        game = new Game(player1, player2);
+        game = new Game(player1, player2, new Deck());
         sut = new PointsProposalUseCase(repo);
     }
 

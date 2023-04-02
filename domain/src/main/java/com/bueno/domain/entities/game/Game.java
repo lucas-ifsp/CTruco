@@ -36,20 +36,25 @@ import java.util.stream.Collectors;
 public class Game {
 
     private final UUID uuid;
+    private Deck deck;
     private final LocalDateTime timestamp;
     private final Player player1;
     private final Player player2;
-
     private final List<Hand> hands;
 
     private Player firstToPlay;
     private Player lastToPlay;
 
     public Game(Player player1, Player player2) {
-        this(player1, player2, UUID.randomUUID());
+        this(player1, player2, UUID.randomUUID(), new Deck());
     }
 
-    public Game(Player player1, Player player2, UUID uuid) {
+    public Game(Player player1, Player player2, Deck deck) {
+        this(player1, player2, UUID.randomUUID(), deck);
+    }
+
+    public Game(Player player1, Player player2, UUID uuid, Deck deck) {
+        this.deck = deck;
         this.player1 = Objects.requireNonNull(player1);
         this.player2 = Objects.requireNonNull(player2);
         this.uuid = uuid;
@@ -72,7 +77,7 @@ public class Game {
     public void prepareNewHand() {
         defineHandPlayingOrder();
 
-        final Deck deck = new Deck();
+        if(deck == null) deck = new Deck();
         deck.shuffle();
 
         final Card vira = deck.takeOne();

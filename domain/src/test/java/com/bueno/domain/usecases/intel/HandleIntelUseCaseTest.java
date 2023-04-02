@@ -24,7 +24,6 @@ import com.bueno.domain.entities.deck.Card;
 import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.player.Player;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.repos.GameRepository;
@@ -128,8 +127,6 @@ class HandleIntelUseCaseTest {
     void shouldCorrectlyGetIntelHistoryIfInvariantsAreMet() {
         repo.save(GameConverter.toDto(game));
         final Instant initialTimestamp = IntelConverter.toDto(game.getIntel()).timestamp();
-        final Hand hand = game.currentHand();
-        hand.playFirstCard(player1, Card.closed());
         repo.update(GameConverter.toDto(game));
 
         final var obtained = sut.findIntelSince(p1Uuid, initialTimestamp);
