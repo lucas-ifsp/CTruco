@@ -21,6 +21,7 @@
 package com.bueno.domain.entities.hand.states;
 
 import com.bueno.domain.entities.deck.Card;
+import com.bueno.domain.entities.game.GameRuleViolationException;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.Event;
 import com.bueno.domain.entities.intel.PossibleAction;
@@ -50,6 +51,8 @@ public class OneCard implements HandState {
 
     @Override
     public void playSecondCard(Player player, Card card) {
+        if(isThrowingClosedCardInFirstRound(card))
+            throw new GameRuleViolationException("Can not throw a closed card in first round");
         context.addOpenCard(card);
         context.playRound(card);
         switch (context.numberOfRoundsPlayed()) {
@@ -59,6 +62,10 @@ public class OneCard implements HandState {
         }
         context.setCardToPlayAgainst(null);
         context.updateHistory(Event.PLAY);
+    }
+
+    private boolean isThrowingClosedCardInFirstRound(Card card) {
+        return context.numberOfRoundsPlayed() == 0 && card.isClosed();
     }
 
     private void handleFirstRoundPostConditions() {

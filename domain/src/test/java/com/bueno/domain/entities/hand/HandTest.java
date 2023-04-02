@@ -161,6 +161,13 @@ class HandTest {
                     .isThrownBy(() -> sut.playFirstCard(player1, Card.closed()));
         }
 
+        @Test
+        @DisplayName("Should not accept second player throw closed card in first round")
+        void shouldNotAcceptSecondPlayerThrowClosedCardInFirstRound() {
+            sut.playFirstCard(player1, Card.of(Rank.KING, Suit.SPADES));
+            assertThatExceptionOfType(GameRuleViolationException.class)
+                    .isThrownBy(() -> sut.playSecondCard(player2, Card.closed()));
+        }
 
         @Test
         @DisplayName("Should not accept card that has not been dealt")
