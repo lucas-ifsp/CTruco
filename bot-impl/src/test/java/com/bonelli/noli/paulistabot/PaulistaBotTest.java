@@ -23,8 +23,8 @@ class PaulistaBotTest {
     private TrucoCard vira;
 
     @Test
-    @DisplayName("Test name")
-    void testName () {
+    @DisplayName("Creating a GameIntel object")
+    void creatingAGameIntelObject () {
         roundResults = List.of(GameIntel.RoundResult.DREW);
         openCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
         botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
