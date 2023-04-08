@@ -109,8 +109,9 @@ public final class TrucoCard {
      *
      * @param otherCard TrucoCard to be compared to the reference, must be non-null
      * @param vira TrucoCard representing the current vira, must be non-null
-     * @return returns 1 if the TrucoCard represented by the object is greater than the {@code otherCard},
-     * -1 if the object card is lower, and 0 if both cards have the same relative value
+     * @return returns a positive number if the TrucoCard represented by the object is greater than the {@code otherCard},
+     * a negative number if the object card is lower, and 0 if both cards have the same relative value. The returned value is the
+     * difference between the values of the compared cards.
      * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null
      */
     public int compareValueTo(TrucoCard otherCard, TrucoCard vira) {
