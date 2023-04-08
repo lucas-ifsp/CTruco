@@ -25,8 +25,8 @@ import java.util.Objects;
 /**
  * <p>Represents a valid truco card described in terms of a {@link CardRank} and a {@link CardSuit}. It also
  * encompasses a method to compare its value based on a vira card, as well as methods to check if the card is
- * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final, cached,
- * and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
+ * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final,
+ * cached, and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
  * {@link #closed()}.
  * */
 public final class TrucoCard {
@@ -90,7 +90,7 @@ public final class TrucoCard {
      * <pre>{@code
      *    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
      *       .compareValueTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-     *           TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)) returns 1;
+     *           TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)) returns positive;
      *
      *    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
      *       .compareValueTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -98,7 +98,7 @@ public final class TrucoCard {
      *
      *    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
      *       .compareValueTo(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
-     *          TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)) returns -1,
+     *          TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)) returns negative,
      *          because TrucoCard.of(CardRank.SIX, CardSuit.CLUBS) is the zap.
      *    }
      * </pre>
@@ -109,10 +109,10 @@ public final class TrucoCard {
      *
      * @param otherCard TrucoCard to be compared to the reference, must be non-null
      * @param vira TrucoCard representing the current vira, must be non-null
-     * @return returns a positive number if the TrucoCard represented by the object is greater than the {@code otherCard},
-     * a negative number if the object card is lower, and 0 if both cards have the same relative value. The returned value is the
-     * difference between the values of the compared cards.
-     * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null
+     * @return returns a positive number if the TrucoCard represented by the object is greater than the
+     * {@code otherCard}, a negative number if the object card is lower, and 0 if both cards have the same
+     * relative value. The returned value is the difference between the values of the compared cards.
+     * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null.
      */
     public int compareValueTo(TrucoCard otherCard, TrucoCard vira) {
         Objects.requireNonNull(otherCard, "TrucoCard to be compared must not be null.");
