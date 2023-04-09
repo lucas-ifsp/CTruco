@@ -79,6 +79,39 @@ class TrucoCardTest {
     }
 
     @Test
+    @DisplayName("Should card with rank greater than vira rank worth rank minus one")
+    void shouldCardWithRankGreaterThanViraRankWorthRankMinusOne() {
+        final TrucoCard card = TrucoCard.of(TWO, SPADES);
+        final TrucoCard vira = TrucoCard.of(FOUR, HEARTS);
+        assertEquals(8, card.relativeValue(vira));
+    }
+
+    @Test
+    @DisplayName("Should card with rank not greater than vira rank worth card rank")
+    void shouldCardWithRankNotGreaterThanViraRankWorthCardRank() {
+        final TrucoCard card = TrucoCard.of(FOUR, SPADES);
+        final TrucoCard vira = TrucoCard.of(FIVE, HEARTS);
+        assertEquals(1, card.relativeValue(vira));
+    }
+
+
+    @Test
+    @DisplayName("Should card with rank equal to vira worth rank value")
+    void shouldCardWithRankEqualToViraWorthRankValue() {
+        final TrucoCard card = TrucoCard.of(TWO, SPADES);
+        final TrucoCard vira = TrucoCard.of(TWO, HEARTS);
+        assertEquals(9, card.relativeValue(vira));
+    }
+
+    @Test
+    @DisplayName("Should card with manilha rank worth manilha value")
+    void shouldCardWithManilhaRankWorthManilhaValue() {
+        final TrucoCard card = TrucoCard.of(TWO, SPADES);
+        final TrucoCard vira = TrucoCard.of(ACE, HEARTS);
+        assertEquals(11, card.relativeValue(vira));
+    }
+
+    @Test
     @DisplayName("Should regular cards of same rank have same the value")
     void shouldRegularCardsOfSameRankHaveSameTheValue() {
         final TrucoCard card = TrucoCard.of(TWO, SPADES);

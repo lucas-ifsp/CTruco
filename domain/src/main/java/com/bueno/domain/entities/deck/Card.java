@@ -55,21 +55,21 @@ public final class Card {
         return cache[cachePosition];
     }
 
-    public int compareValueTo(Card card, Card vira){
-        return computeCardValue(this, vira) - computeCardValue(card, vira);
+    public int compareValueTo(Card otherCard, Card vira){
+        return this.computeCardValue(vira) - otherCard.computeCardValue(vira);
     }
 
-    private int computeCardValue(Card card, Card vira) {
-        if (!card.isManilha(vira))
-            return card.getRank().value();
-        else
-            return switch (card.getSuit()) {
-                case DIAMONDS -> 11;
-                case SPADES -> 12;
-                case HEARTS -> 13;
-                case CLUBS -> 14;
-                default -> throw new IllegalStateException("Closed card can not be manilha!");
+    private int computeCardValue(Card vira) {
+        if (isManilha(vira))
+            return switch (suit) {
+                case DIAMONDS -> 10;
+                case SPADES -> 11;
+                case HEARTS -> 12;
+                case CLUBS -> 13;
+                case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
             };
+        if(rank.value() > vira.rank.value()) return rank.value() - 1;
+        return rank.value();
     }
 
     public boolean isManilha(Card vira){

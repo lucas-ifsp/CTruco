@@ -117,18 +117,32 @@ public final class TrucoCard {
     public int compareValueTo(TrucoCard otherCard, TrucoCard vira) {
         Objects.requireNonNull(otherCard, "TrucoCard to be compared must not be null.");
         Objects.requireNonNull(vira, "TrucoCard representing the vira must not be null.");
-        return computeCardValue(this, vira) - computeCardValue(otherCard, vira);
+        return this.relativeValue(vira) - otherCard.relativeValue(vira);
     }
 
-    private int computeCardValue(TrucoCard card, TrucoCard vira) {
-        if (!card.isManilha(vira)) return card.getRank().value();
-        return switch (card.getSuit()) {
-            case DIAMONDS -> 11;
-            case SPADES -> 12;
-            case HEARTS -> 13;
-            case CLUBS -> 14;
-            case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
-        };
+    /**
+     * <p>Get the relative card value based on the current {@code vira} card parameter.</p>
+     *
+     * @param vira TrucoCard representing the current vira, must be non-null.
+     * @return It returns 0 if the card is hidden. Returns 13 for zap, 12 for copas, 11 for espadilha, and 10 for ouros.
+     * If the card is not hidden nor manilha, returns a value based on the card rank value and the {@code vira} rank
+     * value. For instance, if the card rank is 4 and the vira rank is 7, then the relative card value is 1 (the lowest
+     * card value for an open card). If the card rank is 7 and the vira rank is 4, then the relative card value is 3 —
+     * because the absolute value for rank 7 is 4, but the rank 5 is for manilhas and does not count in the sequence.
+     * @throws NullPointerException if {@code vira} is null.
+     */
+    public int relativeValue(TrucoCard vira) {
+        Objects.requireNonNull(vira, "Vira card must not be null.");
+        if (isManilha(vira))
+            return switch (suit) {
+                case DIAMONDS -> 10;
+                case SPADES -> 11;
+                case HEARTS -> 12;
+                case CLUBS -> 13;
+                case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
+            };
+        if(rank.value() > vira.rank.value()) return rank.value() - 1;
+        return rank.value();
     }
 
     /**
