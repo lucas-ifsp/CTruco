@@ -25,8 +25,8 @@ import java.util.Objects;
 /**
  * <p>Represents a valid truco card described in terms of a {@link CardRank} and a {@link CardSuit}. It also
  * encompasses a method to compare its value based on a vira card, as well as methods to check if the card is
- * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final, cached,
- * and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
+ * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final,
+ * cached, and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
  * {@link #closed()}.
  * */
 public final class TrucoCard {
@@ -90,7 +90,7 @@ public final class TrucoCard {
      * <pre>{@code
      *    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
      *       .compareValueTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-     *           TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)) returns 1;
+     *           TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)) returns positive;
      *
      *    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
      *       .compareValueTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -98,7 +98,7 @@ public final class TrucoCard {
      *
      *    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
      *       .compareValueTo(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
-     *          TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)) returns -1,
+     *          TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)) returns negative,
      *          because TrucoCard.of(CardRank.SIX, CardSuit.CLUBS) is the zap.
      *    }
      * </pre>
@@ -109,25 +109,40 @@ public final class TrucoCard {
      *
      * @param otherCard TrucoCard to be compared to the reference, must be non-null
      * @param vira TrucoCard representing the current vira, must be non-null
-     * @return returns 1 if the TrucoCard represented by the object is greater than the {@code otherCard},
-     * -1 if the object card is lower, and 0 if both cards have the same relative value
-     * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null
+     * @return returns a positive number if the TrucoCard represented by the object is greater than the
+     * {@code otherCard}, a negative number if the object card is lower, and 0 if both cards have the same
+     * relative value. The returned value is the difference between the values of the compared cards.
+     * @throws NullPointerException if {@code otherCard} or/and {@code vira} is/are null.
      */
     public int compareValueTo(TrucoCard otherCard, TrucoCard vira) {
         Objects.requireNonNull(otherCard, "TrucoCard to be compared must not be null.");
         Objects.requireNonNull(vira, "TrucoCard representing the vira must not be null.");
-        return computeCardValue(this, vira) - computeCardValue(otherCard, vira);
+        return this.relativeValue(vira) - otherCard.relativeValue(vira);
     }
 
-    private int computeCardValue(TrucoCard card, TrucoCard vira) {
-        if (!card.isManilha(vira)) return card.getRank().value();
-        return switch (card.getSuit()) {
-            case DIAMONDS -> 11;
-            case SPADES -> 12;
-            case HEARTS -> 13;
-            case CLUBS -> 14;
-            case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
-        };
+    /**
+     * <p>Get the relative card value based on the current {@code vira} card parameter.</p>
+     *
+     * @param vira TrucoCard representing the current vira, must be non-null.
+     * @return It returns 0 if the card is hidden. Returns 13 for zap, 12 for copas, 11 for espadilha, and 10 for ouros.
+     * If the card is not hidden nor manilha, returns a value based on the card rank value and the {@code vira} rank
+     * value. For instance, if the card rank is 4 and the vira rank is 7, then the relative card value is 1 (the lowest
+     * card value for an open card). If the card rank is 7 and the vira rank is 4, then the relative card value is 3 —
+     * because the absolute value for rank 7 is 4, but the rank 5 is for manilhas and does not count in the sequence.
+     * @throws NullPointerException if {@code vira} is null.
+     */
+    public int relativeValue(TrucoCard vira) {
+        Objects.requireNonNull(vira, "Vira card must not be null.");
+        if (isManilha(vira))
+            return switch (suit) {
+                case DIAMONDS -> 10;
+                case SPADES -> 11;
+                case HEARTS -> 12;
+                case CLUBS -> 13;
+                case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
+            };
+        if(rank.value() > vira.rank.value()) return rank.value() - 1;
+        return rank.value();
     }
 
     /**
