@@ -33,7 +33,23 @@ class PaulistaBotTest {
     @Nested
     @DisplayName("Testing first round")
     class FirstRoundTest {
+        @Nested
+        @DisplayName("Playing cards")
+        class PlayingCards {
+            @Test
+            @DisplayName("Make sure the bot is the first to play")
+            void makeSureTheBotIsTheFirstToPlay () {
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                assertThat(firstRound.getWhichBotShouldPlayFirst()).isEmpty();
+            }
 
+            @Test
+            @DisplayName("Make sure the bot is not the first to play")
+            void makeSureTheBotIsNotTheFirstToPlay () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
+                assertThat(firstRound.getWhichBotShouldPlayFirst()).isPresent();
+            }
+        }
     }
 
     @Nested
