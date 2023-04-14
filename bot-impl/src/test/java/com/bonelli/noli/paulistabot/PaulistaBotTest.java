@@ -6,15 +6,49 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.GameIntel.StepBuilder;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PaulistaBotTest {
 
-    private StepBuilder stepBuilder;
+    @Mock
+    GameIntel intel;
+    @InjectMocks
+    FirstRound firstRound;
+    
+    @Nested
+    @DisplayName("Testing first round")
+    class FirstRoundTest {
+
+    }
+
+    @Nested
+    @DisplayName("Testing second round")
+    class SecondRoundTest {
+
+    }
+
+    @Nested
+    @DisplayName("Testing third round")
+    class ThirdRoundTest {
+
+    }
+
+    /*private StepBuilder stepBuilder;
 
     private List<GameIntel.RoundResult> roundResults;
     private List<TrucoCard> openCards;
@@ -43,5 +77,5 @@ class PaulistaBotTest {
         System.out.println("Carta do oponente -> " + intel.getOpponentCard());
         System.out.println("Cartas abertas -> " + intel.getOpenCards());
         System.out.println("Vira -> " + intel.getVira());
-    }
+    }*/
 }
