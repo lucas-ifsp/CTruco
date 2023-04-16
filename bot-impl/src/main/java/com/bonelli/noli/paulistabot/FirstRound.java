@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.bonelli.noli.paulistabot;
 
 import com.bueno.spi.model.CardToPlay;
@@ -47,19 +67,43 @@ public class FirstRound implements Strategy {
         if (opponentCard.isPresent()) {
             TrucoCard opponentCardBot = opponentCard.get();
             int countCardsHigherOfOpponent = getCountCardsAreHigherOfOpponent(this.cardList, opponentCardBot, this.vira);
+            TrucoCard card;
             switch (countCardsHigherOfOpponent) {
                 case 1 -> {
-                    CardToPlay.of(checkWhichCardHasHigherValue(this.cardList, this.vira));
+                    card = checkWhichCardHasHigherValue(this.cardList, this.vira);
+                    if (!opponentCardBot.isManilha(this.vira)) {
+                        if (card.isCopas(this.vira) || card.isZap(this.vira))
+                            return CardToPlay.of(playCardWithSameValueOfOpponent(this.cardList, this.vira));
+                    }
+                    return CardToPlay.of(card);
                 }
                 case 2, 3 -> {
-                    CardToPlay.of(chooseCardThatBeatsTheOpponent(this.cardList, this.vira, opponentCardBot));
+                    return CardToPlay.of(chooseCardThatBeatsTheOpponent(this.cardList, this.vira, opponentCardBot));
                 }
                 default -> {
-                    CardToPlay.of(checkWhichCardHasLowerValue(this.cardList, this.vira));
+                    if (cardsHaveSameValue(this.cardList))
+                        return CardToPlay.of(intel.getCards().get(0));
+                    return CardToPlay.of(checkWhichCardHasLowerValue(this.cardList, this.vira));
                 }
             }
         }
         return null;
+    }
+
+    private boolean cardsHaveSameValue(List<TrucoCard> cardList) {
+        for (int i = 0; i < 1; i++) {
+             if (cardList.get(i).getRank().value() == cardList.get(i + 1).getRank().value() &&
+                cardList.get(i).getRank().value() == cardList.get(i + 2).getRank().value())
+                 return true;
+        }
+        return false;
+    }
+
+    private TrucoCard playCardWithSameValueOfOpponent(List<TrucoCard> cardList, TrucoCard opponentCardBot) {
+        return cardList.stream()
+                .filter(card -> card.getRank().value() == opponentCardBot.getRank().value())
+                .findFirst()
+                .orElse(null);
     }
 
     private TrucoCard chooseCardThatBeatsTheOpponent(List<TrucoCard> cardList, TrucoCard vira, TrucoCard opponentCard) {
@@ -87,7 +131,7 @@ public class FirstRound implements Strategy {
     private TrucoCard checkWhichCardHasHigherValue (List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream()
                 .max(Comparator.comparingInt(carta -> carta.relativeValue(vira)))
-                .orElse(null);
+                .orElse(cards.get(0));
     }
 
     public Optional<TrucoCard> getWhichBotShouldPlayFirst () {
