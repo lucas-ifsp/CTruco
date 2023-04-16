@@ -49,6 +49,52 @@ class PaulistaBotTest {
                 when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
                 assertThat(firstRound.getWhichBotShouldPlayFirst()).isPresent();
             }
+
+            @Test
+            @DisplayName("Make sure the bot have One or more Cards Higher Of Opponent")
+            void makeSureTheBotHaveOneOrMoreCardsHigherOfOpponent () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
+                assertThat(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(),
+                        intel.getVira())).isPositive();
+            }
+            
+            @Test
+            @DisplayName("Sure to play the lowest card in the hand higher than the opponent")
+            void sureToPlayTheLowestCardInTheHandHigherThanTheOpponentS () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
+                assertThat(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(),
+                        intel.getVira())).isPositive().isLessThan(intel.getCards().get(2).compareValueTo
+                        (intel.getOpponentCard().get(), intel.getVira()));
+            }
+
+            @Test
+            @DisplayName("Be sure to play the only card that beats the opponent")
+            void beSureToPlayTheOnlyCardThatBeatsTheOpponent () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
+                assertThat(intel.getCards().get(2).compareValueTo(intel.getOpponentCard().get(),
+                        intel.getVira())).isPositive();
+            }
+
+            @Test
+            @DisplayName("Be sure to play the lowest card in the hand smaller than the opponent")
+            void beSureToPlayTheLowestCardInTheHandSmallerThanTheOpponent () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
+                assertThat(intel.getCards().get(2).compareValueTo(intel.getOpponentCard().get(),
+                        intel.getVira())).isNegative().isLessThan(intel.getCards().get(0).compareValueTo
+                        (intel.getOpponentCard().get(), intel.getVira()));
+            }
         }
     }
 
