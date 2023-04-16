@@ -95,6 +95,21 @@ class PaulistaBotTest {
                         intel.getVira())).isNegative().isLessThan(intel.getCards().get(0).compareValueTo
                         (intel.getOpponentCard().get(), intel.getVira()));
             }
+            
+            @Test
+            @DisplayName("Make sure not to play first round clubs or hearts")
+            void makeSureNotToPlayFirstClubsOrHearts () {
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
+                assertThat(intel.getCards().get(0).getSuit()).isNotIn(CardSuit.CLUBS, CardSuit.HEARTS);
+            }
+            
+            @Test
+            @DisplayName("Make sure you have cards to play")
+            void makeSureYouHaveCardsToPlay () {
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+                assertThat(intel.getCards().size()).isGreaterThan(0);
+            }
         }
     }
 
