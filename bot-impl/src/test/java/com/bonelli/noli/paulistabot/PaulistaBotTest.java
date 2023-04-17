@@ -3,7 +3,6 @@ package com.bonelli.noli.paulistabot;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.GameIntel.StepBuilder;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,10 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -106,6 +103,42 @@ class PaulistaBotTest {
             void makeSureYouHaveCardsToPlay () {
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
                 assertThat(intel.getCards().size()).isGreaterThan(0);
+            }
+            
+            @Test
+            @DisplayName("Ensure the total hand value is greater than or equal to 23")
+            void ensureTheTotalHandValueIsGreaterThanOrEqualTo23 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                assertThat(firstRound.calculateCurrentHandValue(intel)).isGreaterThanOrEqualTo(23);
+            }
+            
+            @Test
+            @DisplayName("Sure to play the card with medium strength")
+            void sureToPlayTheCardWithMediumStrength () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(2));
+            }
+            
+            @Test
+            @DisplayName("Check if you have a manilha in your hand")
+            void checkIfYouHaveAShackleInYourHand () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                assertTrue(firstRound.hasManilha(intel));
+            }
+            
+            @Test
+            @DisplayName("Check if you have Diamonds or Spades in your hand")
+            void checkIfYouHaveDiamondsOrSpadesInYourHand () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.hasOurosOrEspadilha(intel));
             }
         }
     }
