@@ -26,9 +26,9 @@ public class PaulistaBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         return switch (intel.getRoundResults().size()) {
-            case 0 -> new FirstRound(intel).chooseCard();
-            case 1 -> new SecondRound(intel).chooseCard();
-            case 2 -> new ThirdRound(intel).chooseCard();
+            case 0 -> new FirstRound().chooseCard(intel);
+            case 1 -> new SecondRound().chooseCard(intel);
+            case 2 -> new ThirdRound().chooseCard(intel);
             default -> throw new IllegalStateException("Unexpected value: " + intel.getCards().size());
         };
     }

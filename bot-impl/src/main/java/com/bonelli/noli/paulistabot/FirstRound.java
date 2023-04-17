@@ -31,59 +31,47 @@ import java.util.Optional;
 
 public class FirstRound implements Strategy {
 
-    private final TrucoCard vira;
-
-    private final List<TrucoCard> cardList;
-
-    private final List<TrucoCard> openCards;
-
-    private final GameIntel intel;
-
-    public FirstRound(GameIntel intel) {
-        this.vira = intel.getVira();
-        this.cardList = new ArrayList<>(intel.getCards());
-        this.openCards = new ArrayList<>(intel.getOpenCards());
-        this.intel = intel;
+    public FirstRound() {
     }
 
     @Override
-    public int getRaiseResponse() {
+    public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse() {
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
     }
 
     @Override
-    public boolean decideIfRaises() {
+    public boolean decideIfRaises(GameIntel intel) {
         return false;
     }
 
     @Override
-    public CardToPlay chooseCard() {
-        Optional<TrucoCard> opponentCard = getWhichBotShouldPlayFirst();
+    public CardToPlay chooseCard(GameIntel intel) {
+        Optional<TrucoCard> opponentCard = getWhichBotShouldPlayFirst(intel);
         if (opponentCard.isPresent()) {
             TrucoCard opponentCardBot = opponentCard.get();
-            int countCardsHigherOfOpponent = getCountCardsAreHigherOfOpponent(this.cardList, opponentCardBot, this.vira);
+            int countCardsHigherOfOpponent = getCountCardsAreHigherOfOpponent(intel.getCards(), opponentCardBot, intel.getVira());
             TrucoCard card;
             switch (countCardsHigherOfOpponent) {
                 case 1 -> {
-                    card = checkWhichCardHasHigherValue(this.cardList, this.vira);
-                    if (!opponentCardBot.isManilha(this.vira)) {
-                        if (card.isCopas(this.vira) || card.isZap(this.vira))
-                            return CardToPlay.of(playCardWithSameValueOfOpponent(this.cardList, this.vira));
+                    card = checkWhichCardHasHigherValue(intel.getCards(), intel.getVira());
+                    if (!opponentCardBot.isManilha(intel.getVira())) {
+                        if (card.isCopas(intel.getVira()) || card.isZap(intel.getVira()))
+                            return CardToPlay.of(playCardWithSameValueOfOpponent(intel.getCards(), intel.getVira()));
                     }
                     return CardToPlay.of(card);
                 }
                 case 2, 3 -> {
-                    return CardToPlay.of(chooseCardThatBeatsTheOpponent(this.cardList, this.vira, opponentCardBot));
+                    return CardToPlay.of(chooseCardThatBeatsTheOpponent(intel.getCards(), intel.getVira(), opponentCardBot));
                 }
                 default -> {
-                    if (cardsHaveSameValue(this.cardList))
+                    if (cardsHaveSameValue(intel.getCards()))
                         return CardToPlay.of(intel.getCards().get(0));
-                    return CardToPlay.of(checkWhichCardHasLowerValue(this.cardList, this.vira));
+                    return CardToPlay.of(checkWhichCardHasLowerValue(intel.getCards(), intel.getVira()));
                 }
             }
         }
@@ -134,9 +122,9 @@ public class FirstRound implements Strategy {
                 .orElse(cards.get(0));
     }
 
-    public Optional<TrucoCard> getWhichBotShouldPlayFirst () {
-        if (this.intel.getOpponentCard().isEmpty())
+    public Optional<TrucoCard> getWhichBotShouldPlayFirst (GameIntel intel) {
+        if (intel.getOpponentCard().isEmpty())
             return Optional.empty();
-        return Optional.of(this.intel.getOpponentCard().get());
+        return Optional.of(intel.getOpponentCard().get());
     }
 }

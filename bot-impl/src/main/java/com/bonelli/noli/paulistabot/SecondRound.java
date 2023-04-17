@@ -9,38 +9,26 @@ import java.util.List;
 
 public class SecondRound implements Strategy {
 
-    private final TrucoCard vira;
-
-    private final List<TrucoCard> cardList;
-
-    private final List<TrucoCard> openCards;
-
-    private final GameIntel intel;
-
-    public SecondRound(GameIntel intel) {
-        this.vira = intel.getVira();
-        this.cardList = new ArrayList<>(intel.getCards());
-        this.openCards = new ArrayList<>(intel.getOpenCards());
-        this.intel = intel;
+    public SecondRound() {
     }
 
     @Override
-    public int getRaiseResponse() {
+    public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse() {
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
     }
 
     @Override
-    public boolean decideIfRaises() {
+    public boolean decideIfRaises(GameIntel intel) {
         return false;
     }
 
     @Override
-    public CardToPlay chooseCard() {
+    public CardToPlay chooseCard(GameIntel intel) {
         return null;
     }
 }

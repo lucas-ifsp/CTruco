@@ -5,11 +5,11 @@ import com.bueno.spi.model.GameIntel;
 
 public interface Strategy {
 
-    int getRaiseResponse ();
+    int getRaiseResponse (GameIntel intel);
 
-    boolean getMaoDeOnzeResponse ();
+    boolean getMaoDeOnzeResponse (GameIntel intel);
 
-    boolean decideIfRaises ();
+    boolean decideIfRaises (GameIntel intel);
 
-    CardToPlay chooseCard ();
+    CardToPlay chooseCard (GameIntel intel);
 }

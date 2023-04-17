@@ -40,14 +40,14 @@ class PaulistaBotTest {
             @DisplayName("Make sure the bot is the first to play")
             void makeSureTheBotIsTheFirstToPlay () {
                 when(intel.getOpponentCard()).thenReturn(Optional.empty());
-                assertThat(firstRound.getWhichBotShouldPlayFirst()).isEmpty();
+                assertThat(firstRound.getWhichBotShouldPlayFirst(intel)).isEmpty();
             }
 
             @Test
             @DisplayName("Make sure the bot is not the first to play")
             void makeSureTheBotIsNotTheFirstToPlay () {
                 when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
-                assertThat(firstRound.getWhichBotShouldPlayFirst()).isPresent();
+                assertThat(firstRound.getWhichBotShouldPlayFirst(intel)).isPresent();
             }
 
             @Test
@@ -68,9 +68,7 @@ class PaulistaBotTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
-                assertThat(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(),
-                        intel.getVira())).isPositive().isLessThan(intel.getCards().get(2).compareValueTo
-                        (intel.getOpponentCard().get(), intel.getVira()));
+                assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
             }
 
             @Test
@@ -80,8 +78,7 @@ class PaulistaBotTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
-                assertThat(intel.getCards().get(2).compareValueTo(intel.getOpponentCard().get(),
-                        intel.getVira())).isPositive();
+                assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(2));
             }
 
             @Test
@@ -91,17 +88,17 @@ class PaulistaBotTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
-                assertThat(intel.getCards().get(2).compareValueTo(intel.getOpponentCard().get(),
-                        intel.getVira())).isNegative().isLessThan(intel.getCards().get(0).compareValueTo
-                        (intel.getOpponentCard().get(), intel.getVira()));
+                assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(2));
             }
             
             @Test
             @DisplayName("Make sure not to play first round clubs or hearts")
             void makeSureNotToPlayFirstClubsOrHearts () {
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
-                assertThat(intel.getCards().get(0).getSuit()).isNotIn(CardSuit.CLUBS, CardSuit.HEARTS);
+                assertThat(firstRound.chooseCard(intel).value().getSuit()).isNotIn(CardSuit.CLUBS, CardSuit.HEARTS);
             }
             
             @Test
