@@ -78,8 +78,13 @@ public class FirstRound implements Strategy {
                             trucoCard.isEspadilha(intel.getVira())).findFirst().orElseThrow());
             }
             return CardToPlay.of(getCardWithMediumStrength(intel.getCards(), intel.getVira()));
+        } else {
+            if (hasManilha(intel))
+                return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
+                        .findFirst().orElseThrow());
+            return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> !trucoCard.isManilha(intel.getVira()))
+                    .findFirst().orElseThrow());
         }
-        return null;
     }
 
     public boolean hasOurosOrEspadilha(GameIntel intel) {
