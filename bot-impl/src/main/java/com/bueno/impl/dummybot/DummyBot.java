@@ -52,13 +52,16 @@ public class DummyBot implements BotServiceProvider {
     private static void printValues(GameIntel intel) {
         System.out.println("Carta que vamos jogar " + CardToPlay.of(intel.getCards().get(0)).content());
         for (int i = 0; i < intel.getCards().size(); i++) {
-            System.out.printf("Valor carta %d é : %d\n", (i + 1), intel.getCards().get(i).getRank().value());
+            System.out.printf("Valor carta %d em relaçao a vira é : " +
+                    "%d\n", (i + 1), intel.getCards().get(i).relativeValue(intel.getVira()));
             if (intel.getOpponentCard().isPresent()) {
                 System.out.println("Valor carta se for manilha: " + intel.getCards().get(i).compareValueTo(
                         intel.getOpponentCard().get(), intel.getVira()
                 ));
             }
         }
+        System.out.println(intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).
+                reduce(Integer::sum).orElseThrow());
         System.out.println("Vira da mesa: " + intel.getVira());
         System.out.println("Cartas abertas " + intel.getOpenCards());
         System.out.println("Carta que o oponente vai jogar " + intel.getOpponentCard());
