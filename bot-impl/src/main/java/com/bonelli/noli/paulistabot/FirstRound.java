@@ -47,22 +47,22 @@ public class FirstRound implements Strategy {
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
+    public int getRaiseResponse() {
         return 0;
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+    public boolean getMaoDeOnzeResponse() {
         return false;
     }
 
     @Override
-    public boolean decideIfRaises(GameIntel intel) {
+    public boolean decideIfRaises() {
         return false;
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
+    public CardToPlay chooseCard() {
         Optional<TrucoCard> opponentCard = getWhichBotShouldPlayFirst();
         if (opponentCard.isPresent()) {
             TrucoCard opponentCardBot = opponentCard.get();

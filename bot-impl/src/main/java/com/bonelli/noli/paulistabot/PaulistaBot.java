@@ -6,6 +6,8 @@ import com.bueno.spi.service.BotServiceProvider;
 
 public class PaulistaBot implements BotServiceProvider {
 
+    private Object instanceRound;
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 1;
@@ -23,6 +25,11 @@ public class PaulistaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        return switch (intel.getCards().size()) {
+            case 0 -> new FirstRound(intel).chooseCard();
+            case 1 -> new SecondRound(intel).chooseCard();
+            case 2 -> new ThirdRound(intel).chooseCard();
+            default -> throw new IllegalStateException("Unexpected value: " + intel.getCards().size());
+        };
     }
 }

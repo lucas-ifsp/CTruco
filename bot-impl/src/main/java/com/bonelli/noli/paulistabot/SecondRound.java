@@ -2,26 +2,45 @@ package com.bonelli.noli.paulistabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 
-public class SecondRound implements Strategy{
+import java.util.ArrayList;
+import java.util.List;
+
+public class SecondRound implements Strategy {
+
+    private final TrucoCard vira;
+
+    private final List<TrucoCard> cardList;
+
+    private final List<TrucoCard> openCards;
+
+    private final GameIntel intel;
+
+    public SecondRound(GameIntel intel) {
+        this.vira = intel.getVira();
+        this.cardList = new ArrayList<>(intel.getCards());
+        this.openCards = new ArrayList<>(intel.getOpenCards());
+        this.intel = intel;
+    }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
+    public int getRaiseResponse() {
         return 0;
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+    public boolean getMaoDeOnzeResponse() {
         return false;
     }
 
     @Override
-    public boolean decideIfRaises(GameIntel intel) {
+    public boolean decideIfRaises() {
         return false;
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
+    public CardToPlay chooseCard() {
         return null;
     }
 }
