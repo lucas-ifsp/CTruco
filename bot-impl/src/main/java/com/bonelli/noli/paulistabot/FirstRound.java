@@ -63,7 +63,7 @@ public class FirstRound implements Strategy {
                     card = checkWhichCardHasHigherValue(intel.getCards(), intel.getVira());
                     if (!opponentCardBot.isManilha(intel.getVira())) {
                         if (card.isCopas(intel.getVira()) || card.isZap(intel.getVira()))
-                            return CardToPlay.of(playCardWithSameValueOfOpponent(intel.getCards(), intel.getVira()));
+                            return CardToPlay.of(playCardWithSameOrLessValueOfOpponent(intel.getCards(), intel.getVira()));
                     }
                     return CardToPlay.of(card);
                 }
@@ -119,9 +119,9 @@ public class FirstRound implements Strategy {
         return false;
     }
 
-    public TrucoCard playCardWithSameValueOfOpponent(List<TrucoCard> cardList, TrucoCard opponentCardBot) {
+    public TrucoCard playCardWithSameOrLessValueOfOpponent(List<TrucoCard> cardList, TrucoCard opponentCardBot) {
         return cardList.stream()
-                .filter(card -> card.getRank().value() == opponentCardBot.getRank().value())
+                .filter(card -> card.getRank().value() == opponentCardBot.getRank().value() || card.getRank().value() <= opponentCardBot.getRank().value())
                 .findFirst()
                 .orElseThrow();
     }
