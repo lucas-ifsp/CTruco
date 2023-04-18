@@ -65,9 +65,9 @@ class PaulistaBotTest {
             @DisplayName("Sure to play the lowest card in the hand higher than the opponent")
             void sureToPlayTheLowestCardInTheHandHigherThanTheOpponentS () {
                 when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
                 assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
             }
 
@@ -157,7 +157,8 @@ class PaulistaBotTest {
             @DisplayName("Certainty to play any card with a value greater than or equal to 1")
             void certaintyToPlayAnyCardWithAValueGreaterThanOrEqualTo1 () {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)));
                 assertThat(firstRound.chooseCard(intel).value().getRank().value()).isGreaterThanOrEqualTo(1);
             }
         }
@@ -187,35 +188,4 @@ class PaulistaBotTest {
     class ThirdRoundTest {
 
     }
-
-    /*private StepBuild;
-
-    private List<GameIntel.RoundResult> roundResults;
-    private List<TrucoCard> openCards;
-    private List<TrucoCard> botCards;
-
-    private TrucoCard vira;
-
-    @Test
-    @DisplayName("Creating a GameIntel object")
-    void creatingAGameIntelObject () {
-        roundResults = List.of(GameIntel.RoundResult.DREW);
-        openCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
-        botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
-        vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
-        stepBuilder = StepBuilder.with()
-                .gameInfo(roundResults, openCards, vira, 1)
-                .botInfo(botCards, 0)
-                .opponentScore(3);
-        GameIntel intel = stepBuilder.opponentCard(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)).build();
-        System.out.println("Cartas do meu bot");
-        for (int i = 0; i < intel.getCards().size(); i++) {
-            System.out.printf("Carta %d com valor %d \n", (i + 1), intel.getCards().get(i).getRank().value());
-            System.out.printf("Carta %d com rank %s \n", (i + 1), intel.getCards().get(i));
-        }
-        System.out.println("Carta do oponente -> " + intel.getOpponentCard());
-        System.out.println("Cartas abertas -> " + intel.getOpenCards());
-        System.out.println("Vira -> " + intel.getVira());
-    }*/
 }
