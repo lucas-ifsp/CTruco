@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -158,6 +159,19 @@ class PaulistaBotTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)));
                 assertThat(firstRound.chooseCard(intel).value().getRank().value()).isGreaterThanOrEqualTo(1);
+            }
+        }
+
+        @Nested
+        @DisplayName("Decide if raises")
+        class DecideRaises {
+            @Test
+            @DisplayName("Make sure you only accept and the hand value is greater than or equal to 20")
+            void makeSureYouOnlyAcceptAndTheHandValueIsGreaterThanOrEqualTo20 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(0);
             }
         }
     }
