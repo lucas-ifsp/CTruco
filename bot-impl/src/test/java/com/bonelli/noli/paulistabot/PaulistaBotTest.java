@@ -4,6 +4,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,7 +56,7 @@ class PaulistaBotTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                         TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
-                assertThat(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(),
+                assertThat(firstRound.getCountCardsAreHigherOfOpponent(intel.getCards(), intel.getOpponentCard().get(),
                         intel.getVira())).isPositive();
             }
             
@@ -140,6 +142,23 @@ class PaulistaBotTest {
                         TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
                 assertTrue(firstRound.hasOurosOrEspadilha(intel));
             }
+            
+            @Test
+            @DisplayName("Sure to play manilha if you have it if the hand value is less than 23")
+            void sureToPlayShackleIfYouHaveItIfTheHandValueIsLessThan23 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)));
+                assertThat(firstRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("Certainty to play any card with a value greater than or equal to 1")
+            void certaintyToPlayAnyCardWithAValueGreaterThanOrEqualTo1 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)));
+                assertThat(firstRound.chooseCard(intel).value().getRank().value()).isGreaterThanOrEqualTo(1);
+            }
         }
     }
 
@@ -155,7 +174,7 @@ class PaulistaBotTest {
 
     }
 
-    /*private StepBuilder stepBuilder;
+    /*private StepBuild;
 
     private List<GameIntel.RoundResult> roundResults;
     private List<TrucoCard> openCards;
