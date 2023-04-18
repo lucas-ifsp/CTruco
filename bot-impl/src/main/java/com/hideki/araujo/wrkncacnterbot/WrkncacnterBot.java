@@ -45,4 +45,8 @@ public class WrkncacnterBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         return CardToPlay.of(intel.getCards().get(0));
     }
+
+    public int calculateDeckValue(GameIntel intel) {
+        return 0;
+    }
 }
