@@ -24,4 +24,9 @@ public class Carlsen implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         return CardToPlay.of(intel.getCards().get(0));
     }
+
+    @Override
+    public String getName() {
+        return "Trucus Carlsen";
+    }
 }
