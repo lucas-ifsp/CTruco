@@ -33,7 +33,12 @@ public class FirstRound implements Strategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+
+        if (calculateCurrentHandValue(intel) >= 20) return 0;
+
+        if (hasManilha(intel)) return 1;
+
+        return -1;
     }
 
     @Override
