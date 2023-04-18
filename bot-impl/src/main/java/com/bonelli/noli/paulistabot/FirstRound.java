@@ -82,7 +82,7 @@ public class FirstRound implements Strategy {
             if (hasManilha(intel))
                 return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
                         .findFirst().orElseThrow());
-            return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> !trucoCard.isManilha(intel.getVira()))
+            return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.relativeValue(intel.getVira()) >= 1)
                     .findFirst().orElseThrow());
         }
     }
