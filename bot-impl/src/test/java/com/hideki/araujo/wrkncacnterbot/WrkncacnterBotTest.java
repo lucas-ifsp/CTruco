@@ -75,6 +75,37 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.calculateDeckValue(intel)).isEqualTo(expectedDeckValue);
     }
 
+    @DisplayName("Testa se o bot corre do truco do oponente desde esteja empatado ou vencendo e que tenhas as cartas(3, 2, A (às), ou K (reis))")
+    @Test
+    void testOpponentTrucoAccept() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+
+        assertThat(wrkncacnterBot.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
+
+    @DisplayName("Testa se o bot aceita truco do oponente desde esteja empatado ou vencendo e que não tenhas as cartas(3, 2, A (às), ou K (reis))")
+    @Test
+    void testOpponentTrucoReject() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+        ));
+
+        assertThat(wrkncacnterBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
     static Stream<Arguments> provideDataToCalculateDeckValues() {
         return Stream.of(
                 Arguments.of(
