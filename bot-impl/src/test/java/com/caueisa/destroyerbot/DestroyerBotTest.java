@@ -72,6 +72,23 @@ class DestroyerBotTest {
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
             }
+
+            @Test
+            @DisplayName("Should play the lowest card between all cards available to be played if the bot doesn't have "
+                       + "a card that beats the opponent card")
+            void shouldPlayTheLowestCardBetweenAllCardsAvailableToBePlayed() {
+                vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+                opponentCard = Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getOpponentCard()).thenReturn(opponentCard);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+            }
         }
     }
 
