@@ -124,4 +124,57 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[XX]");
     }
+
+    @Test
+    @DisplayName("Should not accept raise if dont have manilha")
+    public void ShoulNotAcceptIfNoManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should accept raise have manilha")
+    public void ShoulAcceptIfManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
 }
