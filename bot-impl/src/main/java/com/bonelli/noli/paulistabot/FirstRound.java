@@ -37,17 +37,15 @@ public class FirstRound implements Strategy {
         TrucoCard vira = intel.getVira();
 
         if (intel.getCards().size() == 2) { // Nosso bot jogou a primeira carta e o bot inimigo chama Truco
-            TrucoCard cardPlayed = intel.getOpenCards().get(1);
-            if (cardPlayed.relativeValue(vira) + calculateCurrentHandValue(intel) >= 25) return 0;
+            TrucoCard cardPlayed = intel.getOpenCards().get(intel.getOpenCards().size() - 1);
+            if (cardPlayed.relativeValue(vira) + calculateCurrentHandValue(intel) >= 28) return 0;
             if (hasTwoOrThree(intel)) {
                 if (hasCopasOrZap(intel)) return 1;
                 if (hasManilha(intel)) return 0;
             } else if (hasTwoManilhas(intel) == 2) return 0;
-        } else {
-            if (hasCoupleBigger(intel)) return 1;
-            if (hasCouplaBlack(intel)) return 1;
         }
-        return -1;
+        if (hasCoupleBigger(intel) == 1 || hasCouplaBlack(intel) == 1) return 1;
+        else return -1;
     }
 
     @Override
@@ -100,12 +98,16 @@ public class FirstRound implements Strategy {
         }
     }
 
-    public boolean hasCouplaBlack(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isEspadilha(intel.getVira()) && card.isZap(intel.getVira()));
+    public int hasCouplaBlack(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(card -> card.isEspadilha(intel.getVira()) || card.isZap(intel.getVira()))
+                .count() >= 2 ? 1 : 0;
     }
 
-    public boolean hasCoupleBigger(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()) && card.isZap(intel.getVira()));
+    public int hasCoupleBigger(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(card -> card.isCopas(intel.getVira()) || card.isZap(intel.getVira()))
+                .count() >= 2 ? 1 : 0;
     }
 
     public int hasTwoManilhas(GameIntel intel) {
