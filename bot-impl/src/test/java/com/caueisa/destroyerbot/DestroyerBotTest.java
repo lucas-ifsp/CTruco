@@ -167,6 +167,27 @@ class DestroyerBotTest {
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
         }
+
+        @Nested
+        @DisplayName("When playing a card")
+        class ChooseCardTest {
+            @Test
+            @DisplayName("Should play the lowest card between all cards available to be played if the opponent card " +
+                         "is hidden")
+            void shouldPlayTheLowestCardBetweenAllCardsAvailableToBePlayedIfOpponentCardIsHidden() {
+                vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+                opponentCard = Optional.of(TrucoCard.closed());
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getOpponentCard()).thenReturn(opponentCard);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+            }
+        }
     }
 
 }
