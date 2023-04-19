@@ -21,7 +21,21 @@ public class AddTheNewSoul implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        if(intel.getOpponentCard().isPresent()){
+            if(relativeValueBiggerCard(intel) < intel.getOpponentCard().get().relativeValue(intel.getVira()))
+                return false;
+        }
+        if(intel.getOpponentScore() == 0)
+            return true;
+        if(intel.getScore() >= intel.getOpponentScore()+3){
+            return true;
+        }
+        if(intel.getOpponentScore() >= 9){
+            return false;
+        }
+        if(handAboveAverage(intel))
+            return true;
+        return handIsStrong(intel);
     }
 
     @Override
@@ -83,5 +97,39 @@ public class AddTheNewSoul implements BotServiceProvider {
             }
         }
         return smallestCard;
+    }
+    private Boolean handIsStrong(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        boolean isManilha = cards.stream()
+                .anyMatch(card -> card.isManilha(vira));
+        boolean hasHighRank = cards.stream()
+                .filter(card -> !card.isManilha(vira))
+                .anyMatch(card -> card.getRank().value() > 4);
+
+        return isManilha && hasHighRank;
+    }
+    private Boolean handAboveAverage(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int valueHand = 0;
+
+        for (TrucoCard card : cards) {
+            valueHand += card.relativeValue(vira);
+        }
+        return valueHand >= 18;
+
+    }
+    private int relativeValueBiggerCard(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int biggerCard = 0;
+        for (TrucoCard card : cards) {
+            if(card.relativeValue(vira) > biggerCard)
+                biggerCard = card.relativeValue(vira);
+        }
+        return biggerCard;
+
     }
 }
