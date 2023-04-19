@@ -23,7 +23,11 @@ import java.util.Optional;
 public class Carlsen implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (manilhas(intel.getCards(), intel.getVira()).size() > 0) {
+            return 0;
+        }
+
+        return -1;
     }
 
     @Override
@@ -94,5 +98,9 @@ public class Carlsen implements BotServiceProvider {
         }
 
         return higher;
+    }
+
+    private List<TrucoCard> manilhas(List<TrucoCard> botCards, TrucoCard vira) {
+        return botCards.stream().filter(trucoCard -> trucoCard.isManilha(vira)).toList();
     }
 }
