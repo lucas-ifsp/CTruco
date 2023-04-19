@@ -75,7 +75,8 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.calculateDeckValue(intel)).isEqualTo(expectedDeckValue);
     }
 
-    @DisplayName("Testa se o bot corre do truco do oponente desde esteja empatado ou vencendo e que tenhas as cartas(3, 2, A (às), ou K (reis))")
+    // Falta parametrizar
+    @DisplayName("Testa se o bot aceita do truco do oponente desde esteja empatado ou vencendo e que tenhas as cartas(3, 2, A (às), ou K (reis))")
     @Test
     void testOpponentTrucoAccept() {
         GameIntel intel = mock(GameIntel.class);
@@ -91,7 +92,8 @@ class WrkncacnterBotTest {
     }
 
 
-    @DisplayName("Testa se o bot aceita truco do oponente desde esteja empatado ou vencendo e que não tenhas as cartas(3, 2, A (às), ou K (reis))")
+    // Falta parametrizar
+    @DisplayName("Testa se o bot foge do truco do oponente desde esteja empatado ou vencendo e que não tenhas as cartas(3, 2, A (às), ou K (reis))")
     @Test
     void testOpponentTrucoReject() {
         GameIntel intel = mock(GameIntel.class);
