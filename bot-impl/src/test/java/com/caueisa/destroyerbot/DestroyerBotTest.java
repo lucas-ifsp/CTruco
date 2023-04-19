@@ -160,6 +160,25 @@ class DestroyerBotTest {
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
             }
+
+            @Test
+            @DisplayName("Should play the card that is equal to the opponent card if the bot doesn't have a card " +
+                         "stronger than the opponent card")
+            void shouldPlayTheCardThatIsEqualToTheOpponentCard() {
+                results = List.of(GameIntel.RoundResult.DREW, GameIntel.RoundResult.DREW);
+                vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                opponentCard = Optional.of(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getOpponentCard()).thenReturn(opponentCard);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+            }
         }
     }
 
