@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2023 Ingrid C. Nery and Diego A. Pagotto
+ *  Contact: ingrid <dot> nery <at> ifsp <dot> edu <dot> br
+ *  Contact: diego <dot> pagotto <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
 package com.indi.impl.addthenewsoul;
 
 import com.bueno.spi.model.*;
@@ -16,11 +36,27 @@ public class AddTheNewSoul implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        for (TrucoCard card : intel.getCards()) {
+            if(card.isZap(intel.getVira()))
+                return true;
+        }
+        if(intel.getOpponentScore() == 11)
+            return true;
+        if(intel.getOpponentScore() >=9){
+            return handIsStrong(intel);
+        }
+
+
+        if(intel.getOpponentScore() <= 6)
+            return true;
+        if(handIsStrong(intel))
+            return true;
+        return handAboveAverage(intel);
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
         if(intel.getOpponentCard().isPresent()){
             if(relativeValueBiggerCard(intel) < intel.getOpponentCard().get().relativeValue(intel.getVira()))
                 return false;
