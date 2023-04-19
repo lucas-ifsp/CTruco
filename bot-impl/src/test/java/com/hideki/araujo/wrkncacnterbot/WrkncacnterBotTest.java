@@ -225,6 +225,24 @@ class WrkncacnterBotTest {
         assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
     }
 
+    @DisplayName("Testa de amarrar jogo")
+    @Test
+    void testForceTieGame(){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+        ));
+
+        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
     static Stream<Arguments> provideDataToCalculateDeckValues() {
         return Stream.of(
                 Arguments.of(
