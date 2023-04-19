@@ -20,18 +20,22 @@
 
 package com.caueisa.destroyerbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (getScoreDifference(intel) == 3 && getCardsAboveRankSeven(intel).size() == intel.getCards().size())
+            return 0;
+        return -1;
     }
 
     @Override
@@ -68,6 +72,10 @@ public class DestroyerBot implements BotServiceProvider {
         return intel.getRoundResults().size() + 1;
     }
 
+    private int getScoreDifference(GameIntel intel) {
+        return intel.getScore() - intel.getOpponentScore();
+    }
+
     private Optional<TrucoCard> getLowestCardStrongerThanTheOpponentCard(GameIntel intel) {
         TrucoCard opponentCard = intel.getOpponentCard().get();
         TrucoCard vira = intel.getVira();
@@ -81,5 +89,12 @@ public class DestroyerBot implements BotServiceProvider {
         return intel.getCards().stream()
                 .min( (card1, card2) -> card1.compareValueTo(card2, vira))
                 .get();
+    }
+
+    private List<TrucoCard> getCardsAboveRankSeven(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.getRank().compareTo(CardRank.SEVEN) > 0 || card.isManilha(vira))
+                .toList();
     }
 }
