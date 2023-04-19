@@ -47,7 +47,7 @@ public class Carlsen implements BotServiceProvider {
 
         TrucoCard opponentCard = intel.getOpponentCard().get();
         if (opponentCard.isZap(intel.getVira())) {
-            return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+            return CardToPlay.discard(lowerInHand(intel.getCards(), intel.getVira()));
         }
 
         return CardToPlay.of(intel.getCards().get(0));
