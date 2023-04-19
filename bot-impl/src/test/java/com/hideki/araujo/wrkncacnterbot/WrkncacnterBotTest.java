@@ -108,6 +108,38 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
+    // Falta parametrizar
+    @DisplayName("Testa se o bot aceita a mao de onze de acordo com as cartas na sua mao")
+    @Test
+    void testAcceptMaoDeOnze() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        ));
+
+        assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa se o bot rejeita a mao de onze de acordo com as cartas na sua mao")
+    @Test
+    void testRejectMaoDeOnze() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+        ));
+
+        assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
+    }
+
     static Stream<Arguments> provideDataToCalculateDeckValues() {
         return Stream.of(
                 Arguments.of(
