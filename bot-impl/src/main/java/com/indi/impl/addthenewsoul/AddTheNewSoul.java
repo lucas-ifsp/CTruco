@@ -56,6 +56,12 @@ public class AddTheNewSoul implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+            if(handIsStrong(intel) || handAboveAverage(intel))
+                return true;
+        }
+
+
 
         if(intel.getOpponentCard().isPresent()){
             if(relativeValueBiggerCard(intel) < intel.getOpponentCard().get().relativeValue(intel.getVira()))
