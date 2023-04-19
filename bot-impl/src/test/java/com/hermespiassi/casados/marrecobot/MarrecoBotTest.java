@@ -195,4 +195,26 @@ class MarrecoBotTest {
 
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, CLUBS));
     }
+
+    @Test
+    @DisplayName("Should return less manilha if opponent card is spades and bot have two greater manilha")
+    void shouldReturnLessManilhaIfOpponentCardIsSpadesAndBotHaveTwoGreaterManilha() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(TWO, CLUBS),
+                TrucoCard.of(FIVE, DIAMONDS),
+                TrucoCard.of(TWO, HEARTS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(TWO, SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(TWO, SPADES));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, HEARTS));
+    }
 }
