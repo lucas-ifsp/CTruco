@@ -53,6 +53,20 @@ public class AddTheNewSoul implements BotServiceProvider {
                 return CardToPlay.of(smallestAttackCard);
         }
 
+        // Se amarrar, deve jogar a mais forte
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW)
+            return CardToPlay.of(getBiggestCardOnHand(intel));
+
+
+        // Se for possivel amarrar
+        if(intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
+            for (TrucoCard card : intel.getCards()) {
+                if(card.getRank() == intel.getOpponentCard().get().getRank() && !card.isManilha(intel.getVira()))
+                    return CardToPlay.of(card);
+            }
+        }
+
+
         TrucoCard smallestCardCapableOfWinning = chooseSmallestCardCapableOfWinning(intel);
         if(smallestCardCapableOfWinning == null)
             if(intel.getOpponentCard().isPresent())
@@ -61,6 +75,10 @@ public class AddTheNewSoul implements BotServiceProvider {
                 return CardToPlay.of(getSmallestCardOnHand(intel));
 
         return CardToPlay.of(smallestCardCapableOfWinning);
+    }
+
+    private TrucoCard getBiggestCardOnHand(GameIntel intel) {
+        return intel.getCards().stream().max(TrucoCard::relativeValue).get();
     }
 
     private TrucoCard getSmallestAttackCard(GameIntel intel){
