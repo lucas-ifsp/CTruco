@@ -45,4 +45,29 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should choose lowest card in hand")
+    public void ShouldChooseLowestInHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES); // Vira is QD | Manilha is J
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList(); // Game just started
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().getRank()).isEqualTo(CardRank.SEVEN);
+    }
 }
