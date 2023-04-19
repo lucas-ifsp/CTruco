@@ -41,6 +41,10 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        if (intel.getRoundResults().size() > 0 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
+            return CardToPlay.of(higherInHand(intel.getCards(), intel.getVira()));
+        }
+
         if (intel.getOpponentCard().isEmpty()) {
             return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
         }
@@ -78,5 +82,17 @@ public class Carlsen implements BotServiceProvider {
         }
 
         return lower;
+    }
+
+    private TrucoCard higherInHand(List<TrucoCard> botCards, TrucoCard vira) {
+        TrucoCard higher = botCards.get(0);
+
+        for (TrucoCard trucoCard : botCards) {
+            if (trucoCard.relativeValue(vira) > higher.relativeValue(vira)) {
+                higher = trucoCard;
+            }
+        }
+
+        return higher;
     }
 }
