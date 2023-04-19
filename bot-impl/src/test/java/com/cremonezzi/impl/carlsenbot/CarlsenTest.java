@@ -48,7 +48,7 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should choose lowest card in hand is first playing")
+    @DisplayName("Should choose lowest card in hand if is first playing")
     public void ShouldChooseLowestInHandIfFirstPlaying() {
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
 
@@ -78,13 +78,14 @@ public class CarlsenTest {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
 
         // Game info
-        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
         List<TrucoCard> openCards = List.of(vira);
 
         // Bot info
         List<TrucoCard> botCards = List.of(
                 TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
         );
 
