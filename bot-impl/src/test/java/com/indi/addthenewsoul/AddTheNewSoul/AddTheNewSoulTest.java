@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2023 Ingrid C. Nery and Diego A. Pagotto
+ *  Contact: ingrid <dot> nery <at> ifsp <dot> edu <dot> br
+ *  Contact: diego <dot> pagotto <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
 package com.indi.addthenewsoul.AddTheNewSoul;
 
 import com.bueno.spi.model.CardRank;
@@ -466,6 +486,192 @@ public class AddTheNewSoulTest {
     }
 
     // FIM DOS CASOS DE TESTE DO METODO DECIDEIFRAISES
+    // INICIO DOS CASOS DE TESTE DO METODO GETMAODEONZERESPONSE
+    @Test
+    @DisplayName("Should accept mao de onze if the cards are strong")
+    public void shouldAcceptMaoDeOnzeIfTheCarsAreStrongTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should decline mao de onze if the cards are weak")
+    public void ShouldDeclineMaoDeOnzeIfTheCardsAreWeakTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertFalse(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+
+    @Test
+    @DisplayName("Should accept mao de onze if opponent score is less than seven")
+    public void shouldAcceptMaoDeOnzeIfOpponentScoreIsLessThanSevenTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(5);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should accept mao de onze if opponent score is six")
+    public void shouldAcceptMaoDeOnzeIfOpponentScoreIsSixTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(6);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should decline mao de onze if  sum of card values is below average")
+    public void shouldDeclineMaoDeOnzeIfSumOfCardValuesIsAboveAverageTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(7);
+        assertFalse(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should decline mao de onze if sum of card values is above average but opponent score is greater than eight")
+    public void shouldDeclineMaoDeOnzeIfSumOfCardValueIsAboveAverageButOpponentScoreIsGreaterThanEightTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertFalse(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should accept mao de onze if sum of card values is above average but opponent score is less than nine")
+    public void shouldAcceptMaoDeOnzeIfSumOfCardValuesIsAboveAverageButOpponentScoreIsLessThanNineTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(8);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should decline mao de onze if opponent score is nine and weak hand")
+    public void shouldDeclineMaoDeOnzeIfOpponentScoreIsNineAndWeakHandTest() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertFalse(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should accept if hand is strong and opponent score is nine")
+    public void shouldAcceptIfHandIsStrongAndOpponentScoreIsNine() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9) ;
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should accept mao de onze if has zap")
+    public void shouldAcceptMaoDeOnzeIfHasZap() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should accept if score is equal to opponent")
+    public void shouldAcceptIfScoreIsEqualToOpponent(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+        assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+
 
 
 }
