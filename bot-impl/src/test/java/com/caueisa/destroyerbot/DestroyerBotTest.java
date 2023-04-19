@@ -56,7 +56,6 @@ class DestroyerBotTest {
         @Nested
         @DisplayName("When playing a card")
         class ChooseCardTest {
-
             @Test
             @DisplayName("Should play the lowest card that is stronger than the opponent card")
             void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
@@ -88,6 +87,31 @@ class DestroyerBotTest {
                 when(intel.getOpponentCard()).thenReturn(opponentCard);
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("When in any round")
+    class AnyRoundTest {
+        @Nested
+        @DisplayName("When get a point raise request")
+        class GetRaiseResponseTest {
+            @Test
+            @DisplayName("Should accept a point raise request if it has only cards above rank seven and is winning " +
+                         "the hand by three points of difference")
+            void shouldAcceptPointRaiseRequestIfHasOnlyCardsAboveRankSevenAndIsWinningByThreePoints() {
+                vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+                when(intel.getScore()).thenReturn(6);
+                when(intel.getOpponentScore()).thenReturn(3);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
         }
     }
