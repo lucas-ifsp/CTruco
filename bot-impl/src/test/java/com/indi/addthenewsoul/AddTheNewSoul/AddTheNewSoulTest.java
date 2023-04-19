@@ -484,8 +484,56 @@ public class AddTheNewSoulTest {
                 .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         assertFalse(addTheNewSoul.decideIfRaises(stepBuilder.build()));
     }
+    @Test
+    @DisplayName("Should raise if round result drew and strong hand")
+    public void shouldRaiseIfRoundResultDrewAndStrongHand(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                opponentCard);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 3)
+                .opponentScore(2)
+                .opponentCard(opponentCard);
+        assertTrue(addTheNewSoul.decideIfRaises(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should raise if round result drew and sum of card values is below average")
+    public void shouldRaiseIfRoundResultDrewAndSumOfCardValuesIsBelowAverage(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                opponentCard);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 3)
+                .opponentScore(2)
+                .opponentCard(opponentCard);
+        assertTrue(addTheNewSoul.decideIfRaises(stepBuilder.build()));
+    }
+    @Test
+    @DisplayName("Should not raise if round result drew and weak hand")
+    public void shouldNotRaiseIfRoundResultDrewAndWeakHand(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                opponentCard);
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 3)
+                .opponentScore(2)
+                .opponentCard(opponentCard);
+        assertFalse(addTheNewSoul.decideIfRaises(stepBuilder.build()));
+    }
 
     // FIM DOS CASOS DE TESTE DO METODO DECIDEIFRAISES
+
     // INICIO DOS CASOS DE TESTE DO METODO GETMAODEONZERESPONSE
     @Test
     @DisplayName("Should accept mao de onze if the cards are strong")
