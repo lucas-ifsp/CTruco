@@ -1,6 +1,9 @@
 package com.hideki.araujo.wrkncacnterbot;
 
-import com.bueno.spi.model.*;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +18,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.in;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
