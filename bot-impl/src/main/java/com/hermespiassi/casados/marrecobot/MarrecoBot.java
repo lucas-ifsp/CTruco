@@ -39,6 +39,9 @@ public class MarrecoBot implements BotServiceProvider {
             Optional<TrucoCard> picaFumo = manilhas.stream().filter(_card -> _card.isOuros(vira)).findFirst();
 
             if (opponentCard.isPresent()) {
+                if (opponentCard.get().isOuros(vira)) {
+                    if (manilhas.size() == 1) return CardToPlay.of(manilhas.get(0));
+                }
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
                 if (picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
