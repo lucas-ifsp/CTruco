@@ -22,9 +22,13 @@ package com.caueisa.destroyerbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Optional;
+
 public class DestroyerBot implements BotServiceProvider {
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
@@ -42,6 +46,33 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        int roundNumber = getRoundNumber(intel);
+        if (!isTheFirstToPlay(intel)) {
+            switch(roundNumber) {
+                case 1 -> {
+                    Optional<TrucoCard> lowestCardStrongerThanOpponentCard =
+                            getLowestCardStrongerThanTheOpponentCard(intel);
+                    if (lowestCardStrongerThanOpponentCard.isPresent())
+                        return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
+                }
+            }
+        }
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private boolean isTheFirstToPlay(GameIntel intel) {
+        return intel.getOpponentCard().isEmpty();
+    }
+
+    private int getRoundNumber(GameIntel intel) {
+        return intel.getRoundResults().size() + 1;
+    }
+
+    private Optional<TrucoCard> getLowestCardStrongerThanTheOpponentCard(GameIntel intel) {
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                .min( (card1, card2) -> card1.compareValueTo(card2, vira));
     }
 }
