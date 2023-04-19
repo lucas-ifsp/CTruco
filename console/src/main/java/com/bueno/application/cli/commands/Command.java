@@ -21,6 +21,7 @@
 package com.bueno.application.cli.commands;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public interface Command <T>{
@@ -40,7 +41,11 @@ public interface Command <T>{
     }
 
     default boolean isValidChoice(String choice, String... options) {
-        return Arrays.stream(options).noneMatch(choice::equalsIgnoreCase);
+        return isValidChoice(choice, Arrays.stream(options).toList());
+    }
+
+    default boolean isValidChoice(String choice, List<String> options) {
+        return options.stream().noneMatch(choice::equalsIgnoreCase);
     }
 
     default String toRequestString(int nextScore) {
