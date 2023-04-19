@@ -53,11 +53,16 @@ public class DestroyerBot implements BotServiceProvider {
             if (opponentCardIsHidden(intel))
                 return CardToPlay.of(lowestCard);
             Optional<TrucoCard> lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
+            Optional<TrucoCard> cardEqualsToOpponentCard = getCardEqualsToTheOpponentCard(intel);
             if (lowestCardStrongerThanOpponentCard.isPresent())
                 return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
             switch(roundNumber) {
                 case 1 -> {
                     return CardToPlay.of(lowestCard);
+                }
+                case 2 -> {
+                    if (cardEqualsToOpponentCard.isPresent())
+                        return CardToPlay.of(cardEqualsToOpponentCard.get());
                 }
             }
         }
@@ -101,4 +106,13 @@ public class DestroyerBot implements BotServiceProvider {
                 .filter(card -> card.getRank().compareTo(CardRank.SEVEN) > 0 || card.isManilha(vira))
                 .toList();
     }
+
+    private Optional<TrucoCard> getCardEqualsToTheOpponentCard(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        return intel.getCards().stream()
+                .filter(card -> card.compareValueTo(opponentCard, vira) == 0)
+                .findAny();
+    }
+
 }
