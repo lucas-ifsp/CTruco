@@ -15,10 +15,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -171,14 +167,86 @@ class PaulistaBotTest {
         @DisplayName("Get raises response")
         class GetRaisesResponse {
             @Test
-            @DisplayName("Must accept truco if the initial total value of the hand is greater than or equal to 25")
-            void mustAcceptTrucoIfTheInitialTotalValueOfTheHandIsGreaterThanOrEqualTo25 () {
+            @DisplayName("Must accept truco if the initial total value of the hand is greater than or equal to 28")
+            void mustAcceptTrucoIfTheInitialTotalValueOfTheHandIsGreaterThanOrEqualTo28 () {
                 when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
                 when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+
                 assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+            
+            @Test
+            @DisplayName("Must raise truco if you have 2 or 3 and Hearts or Clubs")
+            void mustRaiseTrucoIfYouHave2Or3AndHeartsOrClubs () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(1);
+            }
+            
+            @Test
+            @DisplayName("You must accept truco if you have 2 or 3 and any Manilha")
+            void mustAcceptTrucoIfYouHave2Or3AndAnyManilha () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+            
+            @Test
+            @DisplayName("Must refuse truco if you have only 2 or 3 and any other card in your hand")
+            void mustRefuseTrucoIfYouHaveOnly2Or3AndAnyOtherCardInYourHand () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(-1);
+            }
+            
+            @Test
+            @DisplayName("Must accept truco if it has two manilhas")
+            void mustAcceptTrucoIfItHasTwoShackles () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+            
+            @Test
+            @DisplayName("Should increase the truco if you have a bigger couple")
+            void shouldIncreaseTheTrucoIfYouHaveABiggerCouple () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(1);
+            }
+
+            @Test
+            @DisplayName("Should increase the truco if you have a black couple")
+            void shouldIncreaseTheTrucoIfYouHaveABlackCouple () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(1);
+            }
+            
+            @Test
+            @DisplayName("Must refuse truco if you don't have a bigger couple or a black couple")
+            void mustRefuseTrucoIfYouDonTHaveABiggerCoupleOrABlackCouple () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+                assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(-1);
             }
         }
     }
