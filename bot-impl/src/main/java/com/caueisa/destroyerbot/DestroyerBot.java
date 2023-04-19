@@ -55,9 +55,11 @@ public class DestroyerBot implements BotServiceProvider {
             Optional<TrucoCard> lowestCardStrongerThanOpponentCard =
                     getLowestCardStrongerThanTheOpponentCard(intel);
             TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
+            if (lowestCardStrongerThanOpponentCard.isPresent())
+                return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
             switch(roundNumber) {
                 case 1 -> {
-                    return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
+                    return CardToPlay.of(lowestCard);
                 }
             }
         }
