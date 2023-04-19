@@ -1,9 +1,6 @@
 package com.bonelli.noli.paulistabot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +15,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
@@ -166,12 +165,19 @@ class PaulistaBotTest {
         @Nested
         @DisplayName("Decide if raises")
         class DecideRaises {
+        }
+
+        @Nested
+        @DisplayName("Get raises response")
+        class GetRaisesResponse {
             @Test
-            @DisplayName("Make sure you only accept and the hand value is greater than or equal to 20")
-            void makeSureYouOnlyAcceptAndTheHandValueIsGreaterThanOrEqualTo20 () {
-                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
+            @DisplayName("Must accept truco if the initial total value of the hand is greater than or equal to 25")
+            void mustAcceptTrucoIfTheInitialTotalValueOfTheHandIsGreaterThanOrEqualTo25 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
                 assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(0);
             }
         }
