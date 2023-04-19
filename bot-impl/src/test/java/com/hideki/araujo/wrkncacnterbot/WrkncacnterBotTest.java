@@ -171,6 +171,38 @@ class WrkncacnterBotTest {
 
     }
 
+    @DisplayName("Testa reponde truco se tiver cartas fracas")
+    @Test
+    void testifRaiseResponseWithWeakerCards(){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpponentScore())
+                .thenReturn(20)
+                .thenReturn(10)
+                .thenReturn(0);
+
+        when(intel.getOpponentScore())
+                .thenReturn(0)
+                .thenReturn(10)
+                .thenReturn(20);
+
+
+        when(intel.getVira())
+                .thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+
+        when(intel.getCards())
+                .thenReturn(List.of(
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
+
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), -1);
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 0);
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 1);
+
+
+    }
     static Stream<Arguments> provideDataToCalculateDeckValues() {
         return Stream.of(
                 Arguments.of(
