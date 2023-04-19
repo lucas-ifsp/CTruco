@@ -70,4 +70,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.chooseCard(intel).value().getRank()).isEqualTo(CardRank.SEVEN);
     }
+
+    @Test
+    @DisplayName("Should choose lowest card in hand when opponent zap")
+    public void ShouldChooseLowestWhenOpponentZap() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS); // Vira is 6H | Manilha is 7
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList(); // Game just started
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().getRank()).isEqualTo(CardRank.FOUR);
+    }
 }
