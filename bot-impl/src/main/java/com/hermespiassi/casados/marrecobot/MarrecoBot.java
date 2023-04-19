@@ -53,6 +53,12 @@ public class MarrecoBot implements BotServiceProvider {
                         if (zap.isPresent()) return CardToPlay.of(zap.get());
                     }
                 }
+                if (opponentCard.get().isEspadilha(vira)) {
+                    if (manilhas.size() == 1) {
+                        CardSuit suitManilha = manilhas.get(0).getSuit();
+                        if (suitManilha.compareTo(SPADES) > 0) return CardToPlay.of(manilhas.get(0));
+                    }
+                }
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
                 if (picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
