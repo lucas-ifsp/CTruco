@@ -20,10 +20,7 @@
 
 package com.caueisa.destroyerbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
@@ -52,9 +49,10 @@ public class DestroyerBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         int roundNumber = getRoundNumber(intel);
         if (!isTheFirstToPlay(intel)) {
-            Optional<TrucoCard> lowestCardStrongerThanOpponentCard =
-                    getLowestCardStrongerThanTheOpponentCard(intel);
             TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
+            if (opponentCardIsHidden(intel))
+                return CardToPlay.of(lowestCard);
+            Optional<TrucoCard> lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
             if (lowestCardStrongerThanOpponentCard.isPresent())
                 return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
             switch(roundNumber) {
@@ -68,6 +66,10 @@ public class DestroyerBot implements BotServiceProvider {
 
     private boolean isTheFirstToPlay(GameIntel intel) {
         return intel.getOpponentCard().isEmpty();
+    }
+
+    private boolean opponentCardIsHidden(GameIntel intel) {
+        return intel.getOpponentCard().get().getSuit().equals(CardSuit.HIDDEN);
     }
 
     private int getRoundNumber(GameIntel intel) {
