@@ -37,10 +37,11 @@ public class FirstRound implements Strategy {
         TrucoCard vira = intel.getVira();
 
         if (intel.getCards().size() == 2) { // Nosso bot jogou a primeira carta e o bot inimigo chama Truco
+            TrucoCard cardPlayed = intel.getOpenCards().get(1);
+            if (cardPlayed.relativeValue(vira) + calculateCurrentHandValue(intel) >= 25) return 0;
             if (hasTwoOrThree(intel)) {
                 if (hasCopasOrZap(intel)) return 1;
                 if (hasManilha(intel)) return 0;
-                return -1;
             } else if (hasTwoManilhas(intel) == 2) return 0;
         } else {
             if (hasCoupleBigger(intel)) return 1;
@@ -95,8 +96,7 @@ public class FirstRound implements Strategy {
             if (hasManilha(intel))
                 return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
                         .findFirst().orElseThrow());
-            return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.relativeValue(intel.getVira()) >= 1)
-                    .findFirst().orElseThrow());
+            return CardToPlay.of(intel.getCards().get(2));
         }
     }
 
