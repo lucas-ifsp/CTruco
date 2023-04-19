@@ -45,6 +45,11 @@ public class Carlsen implements BotServiceProvider {
             return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
         }
 
+        boolean opponentChooseZap = intel.getOpponentCard().isPresent() && intel.getOpponentCard().get().isZap(intel.getVira());
+        if (opponentChooseZap) {
+            return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+        }
+
         return CardToPlay.of(intel.getCards().get(0));
     }
 
