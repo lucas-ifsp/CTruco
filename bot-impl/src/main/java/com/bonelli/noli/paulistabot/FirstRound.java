@@ -20,6 +20,7 @@
 
 package com.bonelli.noli.paulistabot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -32,12 +33,19 @@ public class FirstRound implements Strategy {
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
+    public int getRaiseResponse (GameIntel intel) {
+        TrucoCard vira = intel.getVira();
 
-        if (calculateCurrentHandValue(intel) >= 20) return 0;
-
-        if (hasManilha(intel)) return 1;
-
+        if (intel.getCards().size() == 2) { // Nosso bot jogou a primeira carta e o bot inimigo chama Truco
+            if (hasTwoOrThree(intel)) {
+                if (hasCopasOrZap(intel)) return 1;
+                if (hasManilha(intel)) return 0;
+                return -1;
+            } else if (hasTwoManilhas(intel) == 2) return 0;
+        } else {
+            if (hasCoupleBigger(intel)) return 1;
+            if (hasCouplaBlack(intel)) return 1;
+        }
         return -1;
     }
 
@@ -90,6 +98,27 @@ public class FirstRound implements Strategy {
             return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.relativeValue(intel.getVira()) >= 1)
                     .findFirst().orElseThrow());
         }
+    }
+
+    public boolean hasCouplaBlack(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isEspadilha(intel.getVira()) && card.isZap(intel.getVira()));
+    }
+
+    public boolean hasCoupleBigger(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()) && card.isZap(intel.getVira()));
+    }
+
+    public int hasTwoManilhas(GameIntel intel) {
+        return (int) intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
+    }
+
+    public boolean hasCopasOrZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()) || card.isZap(intel.getVira()));
+    }
+
+    public boolean hasTwoOrThree(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.TWO
+            || card.getRank() == CardRank.THREE);
     }
 
     public boolean hasOurosOrEspadilha(GameIntel intel) {
