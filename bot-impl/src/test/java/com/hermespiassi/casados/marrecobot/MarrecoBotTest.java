@@ -79,4 +79,32 @@ class MarrecoBotTest {
 
         assertThat(cardToPlay.value().getSuit()).isEqualTo(DIAMONDS);
     }
+
+    @Test
+    @DisplayName("Should return manilha if bot have manilha and opponent card is pica-fumo")
+    void shouldReturnManilhaIfBotHaveManilhaAndOpponentCardIsPicaFumo() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(FIVE, HEARTS),
+                TrucoCard.of(TWO, HEARTS),
+                TrucoCard.of(FOUR, DIAMONDS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(TWO, DIAMONDS));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+
+        assertThat(cardToPlay.value()).isIn(
+                List.of(
+                        TrucoCard.of(TWO, SPADES),
+                        TrucoCard.of(TWO, HEARTS),
+                        TrucoCard.of(TWO, CLUBS)
+                )
+        );
+    }
 }
