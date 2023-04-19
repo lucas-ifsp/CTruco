@@ -49,6 +49,7 @@ class DestroyerBotTest {
     private TrucoCard vira;
     private List<TrucoCard> cards;
     private Optional<TrucoCard> opponentCard;
+    private List<GameIntel.RoundResult> results;
 
     @Nested
     @DisplayName("When in first round")
@@ -87,6 +88,32 @@ class DestroyerBotTest {
                 when(intel.getOpponentCard()).thenReturn(opponentCard);
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("When in second round")
+    class SecondRoundTest {
+        @Nested
+        @DisplayName("When playing a card")
+        class ChooseCardTest {
+            @Test
+            @DisplayName("Should play the lowest card that is stronger than the opponent card")
+            void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
+                results = List.of(GameIntel.RoundResult.LOST);
+                vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+                opponentCard = Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getOpponentCard()).thenReturn(opponentCard);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
             }
         }
     }
