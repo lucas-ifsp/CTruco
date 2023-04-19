@@ -22,18 +22,19 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should raise")
-    public void ShouldRaise() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS); // Vira is AD | Manilha is 2
+    @DisplayName("Should raise if have zap and and winning")
+    public void ShouldRaiseIfZapAndWinning() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         // Game info
-        List<GameIntel.RoundResult> roundResults = Collections.emptyList(); // Game just started
+        List<GameIntel.RoundResult> roundResults = List.of(
+               GameIntel.RoundResult.WON
+        );
         List<TrucoCard> openCards = List.of(vira);
 
         // Bot info
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
         );
 
@@ -47,12 +48,12 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should choose lowest card in hand")
-    public void ShouldChooseLowestInHand() {
-        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES); // Vira is QD | Manilha is J
+    @DisplayName("Should choose lowest card in hand is first playing")
+    public void ShouldChooseLowestInHandIfFirstPlaying() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
 
         // Game info
-        List<GameIntel.RoundResult> roundResults = Collections.emptyList(); // Game just started
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
         List<TrucoCard> openCards = List.of(vira);
 
         // Bot info
@@ -68,16 +69,16 @@ public class CarlsenTest {
                 .opponentScore(0)
                 .build();
 
-        assertThat(carlsenBot.chooseCard(intel).value().getRank()).isEqualTo(CardRank.SEVEN);
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[7D]");
     }
 
     @Test
-    @DisplayName("Should choose lowest card in hand when opponent zap")
-    public void ShouldChooseLowestWhenOpponentZap() {
-        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS); // Vira is 6H | Manilha is 7
+    @DisplayName("Should discard when opponent zap")
+    public void ShouldDiscardWhenOpponentZap() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
 
         // Game info
-        List<GameIntel.RoundResult> roundResults = Collections.emptyList(); // Game just started
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
         List<TrucoCard> openCards = List.of(vira);
 
         // Bot info
@@ -94,6 +95,6 @@ public class CarlsenTest {
                 .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
                 .build();
 
-        assertThat(carlsenBot.chooseCard(intel).value().getRank()).isEqualTo(CardRank.FOUR);
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[XX]");
     }
 }
