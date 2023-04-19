@@ -12,15 +12,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.AssertionsForClassTypes.in;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class WrkncacnterBotTest {
     @InjectMocks
@@ -138,6 +138,37 @@ class WrkncacnterBotTest {
         ));
 
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
+    }
+
+    @DisplayName("Testa reponde truco se tiver cartas fortes")
+    @Test
+    void testIfRaiseReponseWithStrongCards() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira())
+                .thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES))
+                .thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES))
+                .thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+        when(intel.getCards())
+                .thenReturn(List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)))
+                .thenReturn(List.of(
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)))
+                .thenReturn(List.of(
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), -1);
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 1);
+        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 0);
+
     }
 
     static Stream<Arguments> provideDataToCalculateDeckValues() {
