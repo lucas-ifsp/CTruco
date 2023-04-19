@@ -65,7 +65,7 @@ public class AddTheNewSoulTest {
 
     @Test
     @DisplayName("Should play the lowest card according to the suit")
-    public void shouldPlayTheLowestCardAccordingToTheSuit(){
+    public void shouldPlayTheLowestCardAccordingToTheSuitTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
@@ -81,7 +81,7 @@ public class AddTheNewSoulTest {
 
     @Test
     @DisplayName("Should play a manilha stronger than the player's")
-    public void shouldPlayManilhaStrongerThanThePlayers(){
+    public void shouldPlayManilhaStrongerThanThePlayersTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
@@ -98,7 +98,7 @@ public class AddTheNewSoulTest {
     }
     @Test
     @DisplayName("Should play the smallest manilha that beats the opponent")
-    public void shouldPlayTheSmallestManilhaThatBeatsTheOpponent(){
+    public void shouldPlayTheSmallestManilhaThatBeatsTheOpponentTest(){
 
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> opensCards = Arrays.asList(
@@ -120,7 +120,7 @@ public class AddTheNewSoulTest {
 
     @Test
     @DisplayName("Should play the smallest card even if has manilha that is not diamond when no cards have been played")
-    void shouldPlayTheSmallestCardEvenIfHasManilhaThatIsNotDiamondWhenNoCardsHaveBeenPlayed(){
+    void shouldPlayTheSmallestCardEvenIfHasManilhaThatIsNotDiamondWhenNoCardsHaveBeenPlayedTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
@@ -131,7 +131,7 @@ public class AddTheNewSoulTest {
 
     @Test
     @DisplayName("Should always play the Diamonds manilha when in hand")
-    void shouldAlwaysPlayTheDiamondsManilhaWhenInHand(){
+    void shouldAlwaysPlayTheDiamondsManilhaWhenInHandTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> botCards = Arrays.asList(
                 TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
@@ -148,7 +148,7 @@ public class AddTheNewSoulTest {
     
     @Test
     @DisplayName("Should discard when the opponent plays a card that Adenilso cant beat ")
-    void shouldDiscardWhenTheOpponentPlaysACardThatAdenilsoCantBeat(){
+    void shouldDiscardWhenTheOpponentPlaysACardThatAdenilsoCantBeatTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
@@ -166,10 +166,31 @@ public class AddTheNewSoulTest {
                 .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
         assertTrue(addTheNewSoul.chooseCard(stepBuilder.build()).isDiscard());
     }
+
+    @Test
+    @DisplayName("Should play the lowest card on hand opened in the first round if cannot beat the opponent ")
+    void shouldPlayTheLowestCardOnHandOpenedInTheFirstRoundIfCannotBeatTheOpponentTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        assertEquals(CardRank.FOUR, addTheNewSoul.chooseCard(stepBuilder.build()).content().getRank());
+    }
     
     @Test
     @DisplayName("Should play attack card if has two at least two attack cards in hand")
-    void shouldPlayAttackCardIfHasTwoAtLeastTwoAttackCardsInHand(){
+    void shouldPlayAttackCardIfHasTwoAtLeastTwoAttackCardsInHandTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> botCards = Arrays.asList(
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -183,6 +204,62 @@ public class AddTheNewSoulTest {
                 .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
         assertEquals(CardSuit.DIAMONDS, addTheNewSoul.chooseCard(stepBuilder.build()).content().getSuit());
     }
+
+    @Test
+    @DisplayName("Should play the highest card when game is amarrado")
+    void shouldPlayTheHighestCardWhenGameIsAmarradoTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+        assertEquals(CardRank.THREE, addTheNewSoul.chooseCard(stepBuilder.build()).content().getRank());
+    }
+
+    @Test
+    @DisplayName("Should always amarrar when its possible")
+    void shouldAlwaysAmarrarWhenItsPossibleTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+        assertEquals(CardRank.SEVEN, addTheNewSoul.chooseCard(stepBuilder.build()).content().getRank());
+
+    }
+
+
+    // FIM DOS CASOS DE TESTE DO METODO CHOOSECARD
+
+
+
+
+
+
+
+
+
+    // INICIO DOS CASOS DE TESTE DO METODO DECIDEIFRAISES
     @Test
     @DisplayName("Should not rise if the opponent has more than 8 points")
     public void shouldNotRiseIfTheOpponentHasMoreThan8pointsTest(){
@@ -387,6 +464,8 @@ public class AddTheNewSoulTest {
                 .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         assertFalse(addTheNewSoul.decideIfRaises(stepBuilder.build()));
     }
+
+    // FIM DOS CASOS DE TESTE DO METODO DECIDEIFRAISES
 
 
 }
