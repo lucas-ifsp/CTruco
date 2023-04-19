@@ -73,6 +73,32 @@ public class CarlsenTest {
     }
 
     @Test
+    @DisplayName("Should choose higher card in hand if is losing")
+    public void ShouldChooseHigherInHandIfLosing() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[AS]");
+    }
+
+    @Test
     @DisplayName("Should discard when opponent zap")
     public void ShouldDiscardWhenOpponentZap() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
