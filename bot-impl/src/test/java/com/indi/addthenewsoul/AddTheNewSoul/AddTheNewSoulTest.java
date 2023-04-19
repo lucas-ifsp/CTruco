@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AddTheNewSoulTest {
     private AddTheNewSoul addTheNewSoul;
@@ -117,13 +117,68 @@ public class AddTheNewSoulTest {
     }
 
     @Test
-    @DisplayName("Should play the smallest card even if has manilha when no cards have been played")
-    void shouldPlayTheSmallestCardEvenIfHasManilhaWhenNoCardsHaveBeenPlayed(){
+    @DisplayName("Should play the smallest card even if has manilha that is not diamond when no cards have been played")
+    void shouldPlayTheSmallestCardEvenIfHasManilhaThatIsNotDiamondWhenNoCardsHaveBeenPlayed(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
                 .botInfo(botCards, 9)
                 .opponentScore(4);
         assertEquals(CardRank.FIVE, addTheNewSoul.chooseCard(stepBuilder.build()).content().getRank());
+    }
+
+    @Test
+    @DisplayName("Should always play the Diamonds manilha when in hand")
+    void shouldAlwaysPlayTheDiamondsManilhaWhenInHand(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+        assertEquals(CardSuit.DIAMONDS, addTheNewSoul.chooseCard(stepBuilder.build()).content().getSuit());
+    }
+    
+    @Test
+    @DisplayName("Should discard when the opponent plays a card that Adenilso cant beat ")
+    void shouldDiscardWhenTheOpponentPlaysACardThatAdenilsoCantBeat(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        assertTrue(addTheNewSoul.chooseCard(stepBuilder.build()).isDiscard());
+    }
+    
+    @Test
+    @DisplayName("Should play attack card if has two at least two attack cards in hand")
+    void shouldPlayAttackCardIfHasTwoAtLeastTwoAttackCardsInHand(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+        assertEquals(CardSuit.DIAMONDS, addTheNewSoul.chooseCard(stepBuilder.build()).content().getSuit());
     }
 }
