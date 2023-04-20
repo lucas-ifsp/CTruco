@@ -70,6 +70,10 @@ public class MarrecoBot implements BotServiceProvider {
                         else return CardToPlay.of(manilhas.get(1));
                     }
                 }
+                if (opponentCard.get().isCopas(vira)) {
+                    Optional<TrucoCard> zap = manilhas.stream().filter(card -> card.isZap(vira)).findFirst();
+                    if (zap.isPresent()) return CardToPlay.of(zap.get());
+                }
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
                 if (picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
