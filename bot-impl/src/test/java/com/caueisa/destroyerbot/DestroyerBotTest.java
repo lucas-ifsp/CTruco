@@ -148,8 +148,7 @@ class DestroyerBotTest {
                 results = List.of(GameIntel.RoundResult.WON);
                 vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
 
                 when(intel.getRoundResults()).thenReturn(results);
                 when(intel.getVira()).thenReturn(vira);
@@ -167,9 +166,8 @@ class DestroyerBotTest {
             void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
                 results = List.of(GameIntel.RoundResult.LOST);
                 vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+                cards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
                 opponentCard = Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
 
                 when(intel.getRoundResults()).thenReturn(results);
@@ -187,7 +185,6 @@ class DestroyerBotTest {
                 results = List.of(GameIntel.RoundResult.DREW);
                 vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                                 TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
                 opponentCard = Optional.of(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
 
@@ -230,9 +227,7 @@ class DestroyerBotTest {
             void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
                 results = List.of(GameIntel.RoundResult.LOST);
                 vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
                 opponentCard = Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
 
                 when(intel.getRoundResults()).thenReturn(results);
@@ -240,7 +235,7 @@ class DestroyerBotTest {
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getOpponentCard()).thenReturn(opponentCard);
 
-                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
             }
 
             @Test
@@ -249,9 +244,7 @@ class DestroyerBotTest {
             void shouldPlayTheCardThatIsEqualToTheOpponentCard() {
                 results = List.of(GameIntel.RoundResult.DREW, GameIntel.RoundResult.DREW);
                 vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-                cards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                cards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
                 opponentCard = Optional.of(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
                 when(intel.getRoundResults()).thenReturn(results);
