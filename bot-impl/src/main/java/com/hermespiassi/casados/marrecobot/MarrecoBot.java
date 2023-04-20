@@ -23,6 +23,24 @@ public class MarrecoBot implements BotServiceProvider {
 
   @Override
   public boolean decideIfRaises(GameIntel intel) {
+    TrucoCard vira = intel.getVira();
+    List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
+    List<TrucoCard> cards = intel.getCards();
+
+    if (roundResult.size() == 1) {
+      if (roundResult.get(0).equals(GameIntel.RoundResult.WON)) {
+        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+        if (!manilhas.isEmpty()) {
+          if (manilhas.size() == 1) {
+            if (manilhas.get(0).isZap(vira)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
     return false;
   }
 
