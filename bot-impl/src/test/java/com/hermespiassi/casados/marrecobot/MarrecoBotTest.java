@@ -493,8 +493,8 @@ class MarrecoBotTest {
         }
 
         @Test
-        @DisplayName("Should return false when bot win first round and has only one manilha that is of diamond")
-        void shouldReturnFalseWhenBotWinFirstRoundAndHasOnlyOneManilhaThatIsOfDiamond() {
+        @DisplayName("Should return true when bot win first round and has only one manilha that is of diamond")
+        void shouldReturnTrueWhenBotWinFirstRoundAndHasOnlyOneManilhaThatIsOfDiamond() {
             results = List.of(WON);
             botCards = List.of(
                 TrucoCard.of(FIVE, HEARTS),
@@ -509,8 +509,8 @@ class MarrecoBotTest {
 
             Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
             assertThat(responseRaise)
-                .as("Return false when bot win first round and has manilha of diamond")
-                .isEqualTo(false);
+                .as("Return true when bot win first round and has manilha of diamond")
+                .isEqualTo(true);
         }
     }
 }
