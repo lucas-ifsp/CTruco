@@ -3,6 +3,7 @@ package com.hermespiassi.casados.marrecobot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +26,13 @@ public class MarrecoBot implements BotServiceProvider {
     return false;
   }
 
-  @Override
-  public CardToPlay chooseCard(GameIntel intel) {
-    List<TrucoCard> cards = intel.getCards();
-    TrucoCard vira = intel.getVira();
-    Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+    @Override
+    public CardToPlay chooseCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> openCards = intel.getOpenCards();
+
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
     List<TrucoCard> manilhas = cards.stream().filter(_card -> _card.isManilha(vira)).toList();
     if (!manilhas.isEmpty()) {
@@ -117,7 +120,33 @@ public class MarrecoBot implements BotServiceProvider {
             if (firstCard.getRank().compareTo(card.getRank()) > 0) lowCard = card;
           }
           return CardToPlay.of(lowCard);
+        }else {
+            List<TrucoCard> cardsGreaterOpponentCard = cards.stream().filter(
+                    card -> card.getRank().compareTo(opponentCard.get().getRank()) > 0
+            ).toList();
+
+            if (!cardsGreaterOpponentCard.isEmpty()) {
+                if (cardsGreaterOpponentCard.size() == 1) {
+                    return CardToPlay.of(cardsGreaterOpponentCard.get(0));
+                }
+                TrucoCard lowCard = cardsGreaterOpponentCard.get(0);
+                for (TrucoCard card : cardsGreaterOpponentCard) {
+                    if (lowCard.getRank().compareTo(card.getRank()) >= 0) lowCard = card;
+                }
+                return CardToPlay.of(lowCard);
+            } else {
+                return CardToPlay.of(cards.get(0));
+            }
         }
+      } else {
+          if (openCards.size() == 1) {
+              TrucoCard firstCard = cards.get(0);
+              TrucoCard greaterCard = firstCard;
+              for (TrucoCard card : cards) {
+                  if (firstCard.getRank().compareTo(card.getRank()) <= 0) greaterCard = card;
+              }
+              return CardToPlay.of(greaterCard);
+          }
       }
     }
 

@@ -340,4 +340,67 @@ class MarrecoBotTest {
 
             assertThat(cardToPlay.value().getSuit()).isNotEqualTo(DIAMONDS);
         }
+
+
+    @Test
+    @DisplayName("Should return the biggest card if has is no manilha, in the first round")
+    void ShouldReturnTheBiggestCardIfHasIsNoManilhaInYheFirstRound() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(FIVE, HEARTS),
+                TrucoCard.of(FOUR, DIAMONDS),
+                TrucoCard.of(FIVE, CLUBS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira);
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, CLUBS));
+    }
+
+    @Test
+    @DisplayName("Should return the less card")
+    void ShouldReturnTheLessCard() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(TWO, CLUBS),
+                TrucoCard.of(FIVE, DIAMONDS),
+                TrucoCard.of(SEVEN, HEARTS)
+        );
+        vira = TrucoCard.of(TWO, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(FOUR, SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(FOUR, SPADES));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, DIAMONDS));
+    }
+
+    @Test
+    @DisplayName("Should return three if has two three")
+    void ShouldReturnThreeIfHasTwoThree() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(THREE, CLUBS),
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(FOUR, HEARTS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(ACE, SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(FOUR, SPADES));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, DIAMONDS));
+    }
 }
