@@ -66,6 +66,7 @@ public class DestroyerBot implements BotServiceProvider {
                     if (hasAtLeastTwoManilhas(intel)) {
                         return CardToPlay.of(getLowestRankManilha(intel).get());
                     }
+                    return CardToPlay.of(getHighestCardBetweenAllCardsAvailableToBePlayed(intel));
                 }
                 if (!isTheFirstToPlay(intel)) {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
@@ -144,6 +145,13 @@ public class DestroyerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
                 .min( (card1, card2) -> card1.compareValueTo(card2, vira))
+                .get();
+    }
+
+    private TrucoCard getHighestCardBetweenAllCardsAvailableToBePlayed(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .max( (card1, card2) -> card1.compareValueTo(card2, vira))
                 .get();
     }
 
