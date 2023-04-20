@@ -15,13 +15,6 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -249,19 +242,24 @@ class MarrecoBotTest {
                 results = List.of();
                 vira = TrucoCard.of(ACE, DIAMONDS);
             }
-            @Test
-            @DisplayName("Should return diamond manilha when opponent card is not manilha but is greater other bot cards")
-            void shouldReturnDiamondManilhaWhenOpponentCardIsNotManilhaButIsGreaterOtherBotCards() {
-                botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, DIAMONDS));
-                openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(results, openCards, vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(0)
-                        .opponentCard(TrucoCard.of(ACE, HEARTS));
 
-                CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-                assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
+            @Nested
+            @DisplayName("Bot has only manilha of diamond")
+            class BotManilhaOfDiamond {
+                @Test
+                @DisplayName("Should return manilha of diamond when opponent card is not manilha but is greater other bot cards")
+                void shouldReturnManilhaOfDiamondWhenOpponentCardIsNotManilhaButIsGreaterOtherBotCards() {
+                    botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(KING, DIAMONDS));
+                    openCards = List.of(vira, TrucoCard.of(THREE, CLUBS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(results, openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(TrucoCard.of(THREE, CLUBS));
+
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
+                }
             }
         }
 
