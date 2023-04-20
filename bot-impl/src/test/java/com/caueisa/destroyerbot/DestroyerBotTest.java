@@ -139,6 +139,27 @@ class DestroyerBotTest {
     @DisplayName("When in second round")
     class SecondRoundTest {
         @Nested
+        @DisplayName("When get a point raise request")
+        class DecidesIfRaisesTest {
+            @Test
+            @DisplayName("Should ask for a point raise request if it has only cards above rank ace and won " +
+                         "the first round")
+            void shouldAskForAPointRaiseRequestIfHasOnlyCardsAboveRankAceAndWonTheFirstRound() {
+                results = List.of(GameIntel.RoundResult.WON);
+                vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
+        }
+
+        @Nested
         @DisplayName("When playing a card")
         class ChooseCardTest {
             @Test
