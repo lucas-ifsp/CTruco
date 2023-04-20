@@ -244,7 +244,7 @@ class WrkncacnterBotTest {
     }
 
     // Falta parametrizar
-    @DisplayName("Testa o bot a tentar a ganhar a segunda rodada")
+    @DisplayName("Testa o bot tenta ganhar a segunda rodada")
     @Test
     void testAttemptToWinSecondRound() {
         GameIntel intel = mock(GameIntel.class);
