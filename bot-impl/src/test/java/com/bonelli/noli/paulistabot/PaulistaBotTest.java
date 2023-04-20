@@ -249,6 +249,58 @@ class PaulistaBotTest {
                 assertThat(firstRound.getRaiseResponse(intel)).isEqualTo(-1);
             }
         }
+        
+        @Nested
+        @DisplayName("Get mao de onze")
+        class GetMaoDeOnze {
+            @Test
+            @DisplayName("Accept truco hand if hand value is greater than or equal to 25 and has manilha")
+            void acceptTrucoHandIfHandValueIsGreaterThanOrEqualTo25AndHasManilha () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES), TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.getMaoDeOnzeResponse(intel));
+            }
+            
+            @Test
+            @DisplayName("Accept hand of eleven if opponent's score is less than 9 and has a 2 or 3 in hand")
+            void acceptHandOfElevenIfOpponentSScoreIsLessThan9AndHasA2Or3InHand () {
+                when(intel.getOpponentScore()).thenReturn(8);
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES), TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.getMaoDeOnzeResponse(intel));
+            }
+            
+            @Test
+            @DisplayName("Accept hand where opponent's score is greater than or equal to 9 and card with average strength greater than or equal to 9")
+            void acceptHandWhereOpponentSScoreIsGreaterThanOrEqualTo9AndCardWithAverageStrengthGreaterThanOrEqualTo9 () {
+                when(intel.getOpponentScore()).thenReturn(9);
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES), TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.getMaoDeOnzeResponse(intel));
+            }
+            
+            @Test
+            @DisplayName("Accept hand where opponent's score is less than or equal to 9 and card with average strength less than or equal to 9")
+            void acceptHandWhereOpponentSScoreIsLessThanOrEqualTo9AndCardWithAverageStrengthLessThanOrEqualTo9 () {
+                when(intel.getOpponentScore()).thenReturn(8);
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.getMaoDeOnzeResponse(intel));
+            }
+            
+            @Test
+            @DisplayName("Must decline hand of eleven if hand value is less than 25")
+            void mustDeclineHandOfElevenIfHandValueIsLessThan25 () {
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)));
+                assertFalse(firstRound.getMaoDeOnzeResponse(intel));
+            }
+        }
     }
 
     @Nested
