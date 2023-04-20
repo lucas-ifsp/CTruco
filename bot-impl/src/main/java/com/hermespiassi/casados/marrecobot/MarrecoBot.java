@@ -3,7 +3,6 @@ package com.hermespiassi.casados.marrecobot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +32,10 @@ public class MarrecoBot implements BotServiceProvider {
 
         if (!manilhas.isEmpty()) {
           if (manilhas.size() == 1) {
-            if (manilhas.get(0).isZap(vira)) {
-              return true;
-            } else if (manilhas.get(0).isCopas(vira)) {
-              return true;
-            } else if (manilhas.get(0).isEspadilha(vira)) {
-              return true;
-            }
+            if (manilhas.get(0).isZap(vira)) return true;
+            else if (manilhas.get(0).isCopas(vira)) return true;
+            else if (manilhas.get(0).isEspadilha(vira)) return true;
+            else if (manilhas.get(0).isOuros(vira)) return false;
           }
         }
       }
