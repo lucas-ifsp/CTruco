@@ -58,8 +58,11 @@ public class MarrecoBot implements BotServiceProvider {
     if (manilhas.isEmpty())
       return false;
     else {
+      Optional<TrucoCard> card3 = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+
       return switch (manilhas.size()) {
         case 3 , 2 -> true;
+        case 1 -> card3.isPresent();
         default -> false;
       };
     }
