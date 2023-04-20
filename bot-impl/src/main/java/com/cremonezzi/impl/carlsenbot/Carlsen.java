@@ -23,11 +23,16 @@ import java.util.Optional;
 public class Carlsen implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (manilhas(intel.getCards(), intel.getVira()).size() > 0) {
+        int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
+        if (qntManilhas == 0) {
+            return -1;
+        }
+
+        if (qntManilhas == 1) {
             return 0;
         }
 
-        return -1;
+        return 1;
     }
 
     @Override
