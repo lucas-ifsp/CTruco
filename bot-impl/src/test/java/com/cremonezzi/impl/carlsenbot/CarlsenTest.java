@@ -177,4 +177,54 @@ public class CarlsenTest {
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should raise if have more than one manilha")
+    public void ShoulRaiseIfManyManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should quit if dont have manilha")
+    public void ShoulQuitIfNoManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
 }
