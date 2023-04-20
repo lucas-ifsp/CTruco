@@ -428,7 +428,7 @@ class MarrecoBotTest {
     }
 
     @Nested
-    @DisplayName("Test logic to bot return true when it has manilhas")
+    @DisplayName("Test logic to bot return true when it has manilhas or card of rank three")
     class TrueToRaise {
 
         @Test
