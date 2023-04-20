@@ -12,7 +12,9 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -402,5 +404,28 @@ class MarrecoBotTest {
 
         CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, DIAMONDS));
+    }
+
+    @Nested
+    @DisplayName("Test logic to bot return true when it has manilhas")
+    class TrueToRaise {
+        @Test
+        @DisplayName("Should return true when bot win first round and has manilha of clubs")
+        void shouldReturnTrueWhenBotWinFirstRoundAndHasManilhaOfClubs() {
+            results = List.of(WON);
+            botCards = List.of(
+                TrucoCard.of(THREE, HEARTS),
+                TrucoCard.of(TWO, CLUBS)
+            );
+            vira = TrucoCard.of(ACE, HEARTS);
+            openCards = List.of(vira, TrucoCard.of(QUEEN, SPADES), TrucoCard.of(KING, HEARTS));
+            stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+            Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
+            assertThat(responseRaise).as("Return true when bot win first round and has manilha of clubs").isEqualTo(true);
+        }
     }
 }
