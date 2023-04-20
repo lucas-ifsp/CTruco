@@ -227,4 +227,31 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should choose lower card in hand if opponent discarded")
+    public void ShoulChooseLowerIfDiscarded() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.closed())
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[2S]");
+    }
 }
