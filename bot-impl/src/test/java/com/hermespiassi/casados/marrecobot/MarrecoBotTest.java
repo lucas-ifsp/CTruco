@@ -16,6 +16,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -182,6 +183,21 @@ class MarrecoBotTest {
                 CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
 
                 assertThat(cardToPlay.value().getSuit()).isEqualTo(CLUBS);
+            }
+
+            @Test
+            @DisplayName("Should return weak card that bot has when opponent card is manilha and bot dont have manilha")
+            void shouldReturnWeakCardThatBotHasWhenOpponentCardIsManilhaAndBotDontHaveManilha() {
+                botCards = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(FOUR, SPADES));
+                openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(results, openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(TWO, DIAMONDS));
+
+                CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                assertThat(cardToPlay.value().getRank()).isEqualTo(FOUR);
             }
         }
 
