@@ -450,6 +450,23 @@ class MarrecoBotTest {
             assertThat(responseRaise).as("Return true when bot win first round and has manilha of clubs").isEqualTo(true);
         }
 
+        @Test
+        @DisplayName("Should return true when bot win first round and has only one manilha that is of hearts")
+        void shouldReturnTrueWhenBotWinFirstRoundAndHasOnlyOneManilhaThatIsOfHearts() {
+            results = List.of(WON);
+            botCards = List.of(
+                TrucoCard.of(FIVE, HEARTS),
+                TrucoCard.of(TWO, HEARTS)
+            );
+            vira = TrucoCard.of(ACE, HEARTS);
+            openCards = List.of(vira, TrucoCard.of(QUEEN, SPADES), TrucoCard.of(KING, HEARTS));
+            stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
 
+            Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
+            assertThat(responseRaise).as("Return true when bot win first round and has manilha of hearts").isEqualTo(true);
+        }
     }
 }
