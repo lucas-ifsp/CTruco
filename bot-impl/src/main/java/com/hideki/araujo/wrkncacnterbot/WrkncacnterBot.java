@@ -41,7 +41,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
     }
 
     @Override
