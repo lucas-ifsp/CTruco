@@ -52,7 +52,10 @@ public class DestroyerBot implements BotServiceProvider {
             if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
                 return true;
         }
-
+        if (roundNumber == 3) {
+            if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
+                return true;
+        }
         if (getScoreDifference(intel) == 3)
             return true;
         if (getScoreDifference(intel) >= -3 && hasAtLeastTwoManilhas(intel))
