@@ -14,7 +14,6 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -290,21 +289,6 @@ class MarrecoBotTest {
             }
         }
 
-//        @Test
-//        @DisplayName("Should return weak card that bot has when opponent card is manilha and bot dont have manilha")
-//        void shouldReturnWeakCardThatBotHasWhenOpponentCardIsManilhaAndBotDontHaveManilha() {
-//            botCards = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(FOUR, SPADES));
-//            openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
-//            stepBuilder = GameIntel.StepBuilder.with()
-//                    .gameInfo(results, openCards, vira, 1)
-//                    .botInfo(botCards, 0)
-//                    .opponentScore(0)
-//                    .opponentCard(TrucoCard.of(TWO, DIAMONDS));
-//
-//            CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-//            assertThat(cardToPlay.value().getRank()).isEqualTo(FOUR);
-//        }
-
         @Test
         @DisplayName("Should return pica-fumo in first raise if bot has a pica-fumo")
         void shouldReturnPicaFumoInFirstRaiseIfBotHasAPicaFumo() {
@@ -512,6 +496,27 @@ class MarrecoBotTest {
                 .as("Return true when bot win first round and has manilha of diamond")
                 .isEqualTo(true);
         }
+
+      @Test
+      @DisplayName("Should return true when bot win first round and has two manilhas")
+      void shouldReturnTrueWhenBotWinFirstRoundAndHasTwoManilhas() {
+        results = List.of(WON);
+        botCards = List.of(
+            TrucoCard.of(TWO, CLUBS),
+            TrucoCard.of(TWO, DIAMONDS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(QUEEN, SPADES), TrucoCard.of(KING, HEARTS));
+        stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0);
+
+        Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
+        assertThat(responseRaise)
+            .as("Return true when bot win first round and has two manilhas")
+            .isEqualTo(true);
+      }
 
       @Test
       @DisplayName("Should return true when bot win first round and has card of rank three")
