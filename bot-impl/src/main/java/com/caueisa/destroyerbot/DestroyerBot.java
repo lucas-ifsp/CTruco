@@ -30,11 +30,11 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (getScoreDifference(intel) <= 3 && getCardsAboveRankSeven(intel).size() == intel.getCards().size())
+        if (getScoreDifference(intel) <= 3 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
             return 0;
         if (getScoreDifference(intel) <= 6 && getManilhas(intel).size() == intel.getCards().size())
             return 0;
-        if (getScoreDifference(intel) >= 6 && getCardsAboveRankSeven(intel).size() == intel.getCards().size())
+        if (getScoreDifference(intel) >= 6 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
             return 1;
         return -1;
     }
@@ -171,10 +171,10 @@ public class DestroyerBot implements BotServiceProvider {
                 .get();
     }
 
-    private List<TrucoCard> getCardsAboveRankSeven(GameIntel intel) {
+    private List<TrucoCard> getCardsAboveRank(GameIntel intel, CardRank rank) {
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
-                .filter(card -> card.getRank().compareTo(CardRank.SEVEN) > 0 || card.isManilha(vira))
+                .filter(card -> card.getRank().compareTo(rank) > 0 || card.isManilha(vira))
                 .toList();
     }
 
