@@ -280,4 +280,28 @@ public class CarlsenTest {
         assertThat(carlsenBot.getMaoDeOnzeResponse(intel)).isFalse();
     }
 
+    @Test
+    @DisplayName("Should accept mao de onze if high hand")
+    public void ShoulAcceptIfHighHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(8)
+                .build();
+
+        assertThat(carlsenBot.getMaoDeOnzeResponse(intel)).isTrue();
+    }
 }
