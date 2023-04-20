@@ -44,6 +44,8 @@ public class DestroyerBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if (getScoreDifference(intel) == 3)
             return true;
+        if (getScoreDifference(intel) >= -3 && hasAtLeastTwoManilhas(intel))
+            return true;
         return false;
     }
 
