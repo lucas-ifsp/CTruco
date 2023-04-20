@@ -38,7 +38,7 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return true;
     }
 
     @Override
