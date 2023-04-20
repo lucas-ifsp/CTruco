@@ -348,11 +348,12 @@ class DestroyerBotTest {
         @Nested
         @DisplayName("When requesting a point raise")
         class DecidesIfRaisesTest {
-            @Test
-            @DisplayName("Should ask for point raise if is winning the game by three points of difference")
-            void shouldAskForPointRaiseIfIsWinningTheGameByThreePoints(){
-                when(intel.getScore()).thenReturn(8);
-                when(intel.getOpponentScore()).thenReturn(5);
+            @ParameterizedTest
+            @CsvSource({"8, 5", "8, 6", "8,7"})
+            @DisplayName("Should ask for point raise if is winning the game by until three points of difference")
+            void shouldAskForPointRaiseIfIsWinningTheGameByUntilThreePoints(int botScore, int opponentScore){
+                when(intel.getScore()).thenReturn(botScore);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 assertThat(sut.decideIfRaises(intel)).isTrue();
             }
 
