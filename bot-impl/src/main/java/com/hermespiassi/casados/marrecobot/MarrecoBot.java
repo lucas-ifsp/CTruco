@@ -120,7 +120,7 @@ public class MarrecoBot implements BotServiceProvider {
             if (firstCard.getRank().compareTo(card.getRank()) > 0) lowCard = card;
           }
           return CardToPlay.of(lowCard);
-        }else {
+        } else {
             List<TrucoCard> cardsGreaterOpponentCard = cards.stream().filter(
                     card -> card.getRank().compareTo(opponentCard.get().getRank()) > 0
             ).toList();
@@ -129,13 +129,14 @@ public class MarrecoBot implements BotServiceProvider {
                 if (cardsGreaterOpponentCard.size() == 1) {
                     return CardToPlay.of(cardsGreaterOpponentCard.get(0));
                 }
+                if (cardsGreaterOpponentCard.size() == 2) {
+                    return CardToPlay.of(cardsGreaterOpponentCard.get(0));
+                }
                 TrucoCard lowCard = cardsGreaterOpponentCard.get(0);
                 for (TrucoCard card : cardsGreaterOpponentCard) {
                     if (lowCard.getRank().compareTo(card.getRank()) >= 0) lowCard = card;
                 }
                 return CardToPlay.of(lowCard);
-            } else {
-                return CardToPlay.of(cards.get(0));
             }
         }
       } else {
