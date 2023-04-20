@@ -116,6 +116,20 @@ class DestroyerBotTest {
                 when(intel.getCards()).thenReturn(cards);
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
             }
+
+            @Test
+            @DisplayName("Should play the lowest card between all cards available to be played in the first round if it is the first to play.")
+            void shouldPlayTheHighestRankCardBetweenAllCardsAvailableToBePlayed(){
+                vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                cards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+            }
         }
     }
 
