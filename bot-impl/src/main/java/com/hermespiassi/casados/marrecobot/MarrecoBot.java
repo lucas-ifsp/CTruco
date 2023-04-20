@@ -18,6 +18,20 @@ public class MarrecoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> manilhas = cards.stream().filter(_card -> _card.isManilha(vira)).toList();
+        if (!manilhas.isEmpty()) {
+            Optional<TrucoCard> zap = manilhas.stream().filter(_card -> _card.isZap(vira)).findFirst();
+            if (zap.isPresent()) {
+                return true;
+            }
+
+            if (manilhas.size() == 2) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -30,6 +44,8 @@ public class MarrecoBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
+        List<TrucoCard> openCards = intel.getOpenCards();
+
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         List<TrucoCard> manilhas = cards.stream().filter(_card -> _card.isManilha(vira)).toList();
@@ -85,6 +101,15 @@ public class MarrecoBot implements BotServiceProvider {
                         if (firstCard.getRank().compareTo(card.getRank()) > 0) lowCard = card;
                     }
                     return CardToPlay.of(lowCard);
+                }
+            } else {
+                if (openCards.size() == 1) {
+                    TrucoCard firstCard = cards.get(0);
+                    TrucoCard greaterCard = firstCard;
+                    for (TrucoCard card : cards) {
+                        if (firstCard.getRank().compareTo(card.getRank()) <= 0) greaterCard = card;
+                    }
+                    return CardToPlay.of(greaterCard);
                 }
             }
         }
