@@ -3,7 +3,10 @@ package com.hermespiassi.casados.marrecobot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,16 +31,16 @@ class MarrecoBotTest {
         @Nested
         @DisplayName("Tests bot logic when opponent cards are manilha")
         class OpponentCardIsManilha {
-            @Test
-            @DisplayName("Should return manilha if bot have manilha and opponent card is pica-fumo")
-            void shouldReturnManilhaIfBotHaveManilhaAndOpponentCardIsPicaFumo() {
+            @BeforeEach
+            void beforeEach() {
                 results = List.of();
-                botCards = List.of(
-                        TrucoCard.of(FIVE, HEARTS),
-                        TrucoCard.of(TWO, HEARTS),
-                        TrucoCard.of(FOUR, DIAMONDS)
-                );
-                vira = TrucoCard.of(ACE, HEARTS);
+                vira = TrucoCard.of(ACE, DIAMONDS);
+            }
+
+            @Test
+            @DisplayName("Should return single manilha that bot has when opponent card is of diamond")
+            void shouldReturnSingleManilhaThatBotHasWhenOpponentCardIsOfDiamond() {
+                botCards = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(TWO, SPADES), TrucoCard.of(THREE, CLUBS));
                 openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
                 stepBuilder = GameIntel.StepBuilder.with()
                         .gameInfo(results, openCards, vira, 1)
@@ -46,14 +49,7 @@ class MarrecoBotTest {
                         .opponentCard(TrucoCard.of(TWO, DIAMONDS));
 
                 CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-
-                assertThat(cardToPlay.value()).isIn(
-                        List.of(
-                                TrucoCard.of(TWO, SPADES),
-                                TrucoCard.of(TWO, HEARTS),
-                                TrucoCard.of(TWO, CLUBS)
-                        )
-                );
+                assertThat(cardToPlay.value().getSuit()).isEqualTo(SPADES);
             }
 
             @Test
