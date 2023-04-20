@@ -5,6 +5,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.CardRank.THREE;
 import static com.bueno.spi.model.CardSuit.SPADES;
@@ -35,7 +36,12 @@ public class MarrecoBot implements BotServiceProvider {
           Optional<TrucoCard> cardThree = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
           return cardThree.isPresent();
         }
+
         return true;
+      } else if (roundResult.get(0).equals(GameIntel.RoundResult.LOST)) {
+        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+        return manilhas.size() == 2;
       }
     }
 
