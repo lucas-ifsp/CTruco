@@ -50,7 +50,8 @@ public class WrkncacnterBot implements BotServiceProvider {
     }
 
     public int calculateDeckValue(GameIntel intel) {
-        return 0;
+        if (intel.getCards().isEmpty()) return 0;
+        return intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).reduce(Integer::sum).orElseThrow();
     }
 
     public Optional<TrucoCard> chooseWeakestCard(GameIntel intel) {
