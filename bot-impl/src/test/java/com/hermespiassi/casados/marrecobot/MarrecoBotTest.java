@@ -562,4 +562,10 @@ class MarrecoBotTest {
           .isEqualTo(true);
     }
   }
+
+  @Nested
+  @DisplayName("Test bot logic to accept truco")
+  class AcceptTruco {
+
+  }
 }
