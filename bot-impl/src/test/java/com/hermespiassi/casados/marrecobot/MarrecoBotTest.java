@@ -163,8 +163,8 @@ class MarrecoBotTest {
             }
 
             @Test
-            @DisplayName("Should return clubs if opponent card is of hearts")
-            void shouldReturnClubsIfOpponentCardIsOfHearts() {
+            @DisplayName("Should return card of clubs that bot has when opponent card is of hearts")
+            void ShouldReturnCardOfClubsThatBotHasWhenOpponentCardIsOfHearts() {
                 results = List.of();
                 botCards = List.of(
                         TrucoCard.of(THREE, HEARTS),
