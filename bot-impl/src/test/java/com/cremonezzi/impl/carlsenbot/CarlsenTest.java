@@ -254,4 +254,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[2S]");
     }
+
+    @Test
+    @DisplayName("Should decline mao de onze if hand too low")
+    public void ShoulDeclineIfLowHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        // Game info
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+        List<TrucoCard> openCards = List.of(vira);
+
+        // Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(8)
+                .build();
+
+        assertThat(carlsenBot.getMaoDeOnzeResponse(intel)).isFalse();
+    }
+
 }
