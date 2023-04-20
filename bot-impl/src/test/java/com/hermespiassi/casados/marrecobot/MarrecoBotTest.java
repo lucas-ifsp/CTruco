@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -188,19 +189,40 @@ class MarrecoBotTest {
                 assertThat(cardToPlay.value().getSuit()).isEqualTo(CLUBS);
             }
 
-            @Test
-            @DisplayName("Should return weak card when bot has one manilha and opponent card is manilha of clubs")
-            void shouldReturnWeakCardWhenBotHasOneManilhaAndOpponentCardIsManilhaOfClubs() {
-                botCards = List.of(TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, SPADES), TrucoCard.of(SEVEN, DIAMONDS));
-                openCards = List.of(vira, TrucoCard.of(TWO, CLUBS));
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(results, openCards, vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(0)
-                        .opponentCard(TrucoCard.of(TWO, CLUBS));
+            @Nested
+            @DisplayName("Opponent card is manilha of clubs")
+            class ManilhaOfClubs {
+                @BeforeEach
+                void beforeEach() {
+                    openCards = List.of(vira, TrucoCard.of(TWO, CLUBS));
+                }
+                @Test
+                @DisplayName("Should return weak card when bot has one manilha")
+                void shouldReturnWeakCardWhenBotHasOneManilha() {
+                    botCards = List.of(TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, SPADES), TrucoCard.of(SEVEN, DIAMONDS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(results, openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(TrucoCard.of(TWO, CLUBS));
 
-                CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-                assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+                }
+
+                @Test
+                @DisplayName("Should return single weak card when bot has two manilhas")
+                void shouldReturnSingleWeakCardWhenBotHasTwo() {
+                    botCards = List.of(TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(TWO, SPADES), TrucoCard.of(SEVEN, DIAMONDS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(results, openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(TrucoCard.of(TWO, CLUBS));
+
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+                }
             }
         }
 
