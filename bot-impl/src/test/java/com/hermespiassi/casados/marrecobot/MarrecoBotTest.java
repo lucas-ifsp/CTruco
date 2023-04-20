@@ -677,6 +677,24 @@ class MarrecoBotTest {
               .as("Return 0 when bot has 3 three.")
               .isZero();
     }
+
+    @Test
+    @DisplayName("Should accept truco when bot has 1 manilha and 1 two if score opponent has is smaller 8")
+    void ShouldAcceptTrucoWhenBotHas1ManilhaEnd1TwoIfScoreOpponentHasIsSmaller8() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(FIVE, SPADES), TrucoCard.of(TWO, CLUBS), TrucoCard.of(ACE, HEARTS));
+      vira = TrucoCard.of(FOUR, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 1)
+              .botInfo(botCards, 0)
+              .opponentScore(7);
+
+      int responseRaise = new MarrecoBot().getRaiseResponse(stepBuilder.build());
+      assertThat(responseRaise)
+              .as("Return 0 when bot has 3 three.")
+              .isZero();
+    }
   }
 
   @Nested
