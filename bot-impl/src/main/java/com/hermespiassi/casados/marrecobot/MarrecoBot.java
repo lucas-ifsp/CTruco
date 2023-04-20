@@ -6,6 +6,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.CardRank.THREE;
 import static com.bueno.spi.model.CardSuit.SPADES;
 
 public class MarrecoBot implements BotServiceProvider {
@@ -31,12 +32,7 @@ public class MarrecoBot implements BotServiceProvider {
         List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
 
         if (!manilhas.isEmpty()) {
-          if (manilhas.size() == 1) {
-            if (manilhas.get(0).isZap(vira)) return true;
-            else if (manilhas.get(0).isCopas(vira)) return true;
-            else if (manilhas.get(0).isEspadilha(vira)) return true;
-            else if (manilhas.get(0).isOuros(vira)) return false;
-          }
+          return manilhas.size() == 1;
         }
       }
     }
