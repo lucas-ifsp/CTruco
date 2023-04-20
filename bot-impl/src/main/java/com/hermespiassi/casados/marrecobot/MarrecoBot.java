@@ -1,11 +1,9 @@
 package com.hermespiassi.casados.marrecobot;
 
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +75,17 @@ public class MarrecoBot implements BotServiceProvider {
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
                 if (picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
+            }
+        } else {
+            if (opponentCard.isPresent()) {
+                if (opponentCard.get().isManilha(vira)){
+                    TrucoCard firstCard = cards.get(0);
+                    TrucoCard lowCard = firstCard;
+                    for (TrucoCard card : cards) {
+                        if (firstCard.getRank().compareTo(card.getRank()) > 0) lowCard = card;
+                    }
+                    return CardToPlay.of(lowCard);
+                }
             }
         }
 
