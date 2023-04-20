@@ -390,8 +390,8 @@ class MarrecoBotTest {
     void ShouldReturnThreeIfHasTwoThree() {
         results = List.of();
         botCards = List.of(
-                TrucoCard.of(THREE, CLUBS),
                 TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(THREE, CLUBS),
                 TrucoCard.of(FOUR, HEARTS)
         );
         vira = TrucoCard.of(ACE, HEARTS);
@@ -430,9 +430,10 @@ class MarrecoBotTest {
     @Nested
     @DisplayName("Test logic to bot return true when it has manilhas")
     class TrueToRaise {
+
         @Test
-        @DisplayName("Should return true when bot win first round and has manilha of clubs")
-        void shouldReturnTrueWhenBotWinFirstRoundAndHasManilhaOfClubs() {
+        @DisplayName("Should return true when bot win first round and has only one manilha that is of clubs")
+        void shouldReturnTrueWhenBotWinFirstRoundAndHasOnlyOneManilhaThatIsOfClubs() {
             results = List.of(WON);
             botCards = List.of(
                 TrucoCard.of(THREE, HEARTS),
@@ -448,5 +449,7 @@ class MarrecoBotTest {
             Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
             assertThat(responseRaise).as("Return true when bot win first round and has manilha of clubs").isEqualTo(true);
         }
+
+
     }
 }
