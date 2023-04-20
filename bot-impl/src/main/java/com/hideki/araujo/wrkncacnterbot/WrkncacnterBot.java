@@ -23,7 +23,10 @@ package com.hideki.araujo.wrkncacnterbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Optional;
 
 public class WrkncacnterBot implements BotServiceProvider {
     @Override
@@ -50,5 +53,7 @@ public class WrkncacnterBot implements BotServiceProvider {
         return 0;
     }
 
-    public 
+    public Optional<TrucoCard> chooseWeakestCard(GameIntel intel) {
+        return intel.getCards().stream().min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+    }
 }
