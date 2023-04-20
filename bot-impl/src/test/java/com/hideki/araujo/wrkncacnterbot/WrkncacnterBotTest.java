@@ -139,6 +139,7 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
     }
 
+    // Falta parametrizar
     @DisplayName("Testa reponde truco se tiver cartas fortes")
     @Test
     void testIfRaiseReponseWithStrongCards() {
@@ -170,6 +171,7 @@ class WrkncacnterBotTest {
 
     }
 
+    // Falta parametrizar
     @DisplayName("Testa reponde truco se tiver cartas fracas")
     @Test
     void testifRaiseResponseWithWeakerCards(){
@@ -203,6 +205,7 @@ class WrkncacnterBotTest {
 
     }
 
+    // Falta parametrizar
     @DisplayName("Testa escolher carta que mata a do oponente")
     @Test
     void testKillOpponentCard(){

@@ -49,4 +49,6 @@ public class WrkncacnterBot implements BotServiceProvider {
     public int calculateDeckValue(GameIntel intel) {
         return 0;
     }
+
+    public 
 }
