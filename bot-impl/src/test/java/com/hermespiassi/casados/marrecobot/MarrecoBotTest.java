@@ -583,6 +583,42 @@ class MarrecoBotTest {
           .as("Return 0 when bot has 2 manilhas.")
           .isZero();
     }
+
+    @Test
+    @DisplayName("Should accept truco when bot has 3 manilhas")
+    void shouldAcceptTrucoWhenBotHas3Manilhas() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(TWO, SPADES), TrucoCard.of(TWO, HEARTS));
+      vira = TrucoCard.of(ACE, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 1)
+              .botInfo(botCards, 0)
+              .opponentScore(0);
+
+      int responseRaise = new MarrecoBot().getRaiseResponse(stepBuilder.build());
+      assertThat(responseRaise)
+              .as("Return 0 when bot has 3 manilhas.")
+              .isZero();
+    }
+
+    @Test
+    @DisplayName("Should accept truco when bot has 1 manilha and three")
+    void ShouldAcceptTrucoWhenBotHas1ManilhaAndThree() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, HEARTS));
+      vira = TrucoCard.of(ACE, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 1)
+              .botInfo(botCards, 0)
+              .opponentScore(0);
+
+      int responseRaise = new MarrecoBot().getRaiseResponse(stepBuilder.build());
+      assertThat(responseRaise)
+              .as("Return 0 when bot has 1 manilha and three.")
+              .isZero();
+    }
   }
 
   @Nested
