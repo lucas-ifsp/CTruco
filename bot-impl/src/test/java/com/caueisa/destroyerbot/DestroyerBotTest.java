@@ -266,7 +266,7 @@ class DestroyerBotTest {
             @ParameterizedTest
             @CsvSource({"6, 3", "5, 3", "4, 3"})
             @DisplayName("Should accept a point raise request if it has only cards above rank seven and is winning " +
-                         "the hand by three points of difference")
+                         "the game by until three points of difference")
             void shouldAcceptPointRaiseRequestIfHasOnlyCardsAboveRankSevenAndIsWinningByUntilThreePoints
                  (int botScore, int opponentScore)
             {
@@ -284,10 +284,10 @@ class DestroyerBotTest {
             }
 
             @ParameterizedTest
-            @CsvSource({"3, 9", "2, 9"})
-            @DisplayName("Should accept a point raise request if it is losing the game by six or more" +
+            @CsvSource({"5, 9", "4, 9"})
+            @DisplayName("Should accept a point raise request if it is losing the game by four or more " +
                          "points of difference and has only manilhas")
-            void shouldAcceptPointRaiseRequestIfIsLosingBySixOrMorePointsAndHasOnlyManilhas
+            void shouldAcceptPointRaiseRequestIfIsLosingByFourOrMorePointsAndHasOnlyManilhas
                  (int botScore, int opponentScore)
             {
                 vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
@@ -304,10 +304,10 @@ class DestroyerBotTest {
             }
 
             @ParameterizedTest
-            @CsvSource({"10, 4", "11, 4"})
-            @DisplayName("Should re-raise a point raise request if it is winning the game by six or more " +
+            @CsvSource({"10, 4", "10, 5", "10, 6"})
+            @DisplayName("Should re-raise a point raise request if it is winning the game by until six " +
                          "points of difference and has only cards above rank seven")
-            void shouldReRaiseAPointRaiseRequestIfIsWinningBySixOrMorePointsAndHasOnlyCardsAboveRankSeven
+            void shouldReRaiseAPointRaiseRequestIfIsWinningByUntilSixPointsAndHasOnlyCardsAboveRankSeven
                  (int botScore, int opponentScore)
             {
                 vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
