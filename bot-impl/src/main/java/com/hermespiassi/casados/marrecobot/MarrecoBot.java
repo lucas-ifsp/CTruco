@@ -121,6 +121,15 @@ public class MarrecoBot implements BotServiceProvider {
           }
           return CardToPlay.of(lowCard);
         }
+      } else {
+          if (openCards.size() == 1) {
+              TrucoCard firstCard = cards.get(0);
+              TrucoCard greaterCard = firstCard;
+              for (TrucoCard card : cards) {
+                  if (firstCard.getRank().compareTo(card.getRank()) <= 0) greaterCard = card;
+              }
+              return CardToPlay.of(greaterCard);
+          }
       }
     }
 
