@@ -51,11 +51,8 @@ public class DestroyerBot implements BotServiceProvider {
         int roundNumber = getRoundNumber(intel);
         TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
 
-        if (opponentCardIsHidden(intel))
-            return CardToPlay.of(lowestCard);
-
-        Optional<TrucoCard> lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
-        Optional<TrucoCard> cardEqualsToOpponentCard = getCardEqualsToTheOpponentCard(intel);
+        Optional<TrucoCard> lowestCardStrongerThanOpponentCard;
+        Optional<TrucoCard> cardEqualsToOpponentCard;
 
         switch (roundNumber) {
             case 1 -> {
@@ -69,12 +66,19 @@ public class DestroyerBot implements BotServiceProvider {
                     return CardToPlay.of(getHighestCardBetweenAllCardsAvailableToBePlayed(intel));
                 }
                 if (!isTheFirstToPlay(intel)) {
+                    if (opponentCardIsHidden(intel))
+                        return CardToPlay.of(lowestCard);
+                    lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
                 }
             }
             case 2 -> {
                 if (!isTheFirstToPlay(intel)) {
+                    if (opponentCardIsHidden(intel))
+                        return CardToPlay.of(lowestCard);
+                    lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
+                    cardEqualsToOpponentCard = getCardEqualsToTheOpponentCard(intel);
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
                     if (cardEqualsToOpponentCard.isPresent())
@@ -83,6 +87,10 @@ public class DestroyerBot implements BotServiceProvider {
             }
             case 3 -> {
                 if (!isTheFirstToPlay(intel)) {
+                    if (opponentCardIsHidden(intel))
+                        return CardToPlay.of(lowestCard);
+                    lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
+                    cardEqualsToOpponentCard = getCardEqualsToTheOpponentCard(intel);
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
                     if (cardEqualsToOpponentCard.isPresent())
