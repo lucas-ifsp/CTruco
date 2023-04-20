@@ -32,6 +32,8 @@ public class DestroyerBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         if (getScoreDifference(intel) == 3 && getCardsAboveRankSeven(intel).size() == intel.getCards().size())
             return 0;
+        if (getScoreDifference(intel) <= 6 && getManilhas(intel).size() == intel.getCards().size())
+            return 0;
         return -1;
     }
 
@@ -180,6 +182,13 @@ public class DestroyerBot implements BotServiceProvider {
         return intel.getCards().stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) == 0)
                 .findAny();
+    }
+
+    private List<TrucoCard> getManilhas(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.isManilha(vira))
+                .toList();
     }
 
 }
