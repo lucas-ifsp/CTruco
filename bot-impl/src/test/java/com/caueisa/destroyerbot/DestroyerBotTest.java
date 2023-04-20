@@ -373,6 +373,14 @@ class DestroyerBotTest {
 
                 assertThat(sut.decideIfRaises(intel)).isTrue();
             }
+
+            @Test
+            @DisplayName("Should ask for point raise if opponent has eleven points")
+            void shouldAskForPointRaiseIfOpponentHasElevenPoints() {
+                when(intel.getOpponentScore()).thenReturn(11);
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
+
         }
     }
 
