@@ -641,5 +641,23 @@ class MarrecoBotTest {
           .as("Return TRUE when bot has 3 manilhas.")
           .isTrue();
     }
+
+    @Test
+    @DisplayName("Should accept mao de onze when bot has 2 manilhas")
+    void shouldAcceptMaoDeOnzeWhenBotHas2Manilhas() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(FIVE, SPADES), TrucoCard.of(TWO, HEARTS));
+      vira = TrucoCard.of(ACE, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+          .gameInfo(results, openCards, vira, 1)
+          .botInfo(botCards, 11)
+          .opponentScore(0);
+
+      Boolean acceptMaoDeOnze = new MarrecoBot().getMaoDeOnzeResponse(stepBuilder.build());
+      assertThat(acceptMaoDeOnze)
+          .as("Return TRUE when bot has 2 manilhas.")
+          .isTrue();
+    }
   }
 }
