@@ -52,22 +52,24 @@ public class DestroyerBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if (intel.getOpponentScore() == 11)
             return true;
-        int roundNumber = getRoundNumber(intel);
-        int scoreDifference = getScoreDifference(intel);
-        if (roundNumber == 2) {
-            if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
+        if (intel.getScore() != 11) {
+            int roundNumber = getRoundNumber(intel);
+            int scoreDifference = getScoreDifference(intel);
+            if (roundNumber == 2) {
+                if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
+                    return true;
+            }
+            if (roundNumber == 3) {
+                if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
+                    return true;
+            }
+            if (scoreDifference > 0) {
+                if (scoreDifference <= 3)
+                    return true;
+            }
+            if (scoreDifference >= -3 && hasAtLeastTwoManilhas(intel))
                 return true;
         }
-        if (roundNumber == 3) {
-            if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
-                return true;
-        }
-        if (scoreDifference > 0) {
-            if (scoreDifference <= 3)
-                return true;
-        }
-        if (scoreDifference >= -3 && hasAtLeastTwoManilhas(intel))
-            return true;
         return false;
     }
 
