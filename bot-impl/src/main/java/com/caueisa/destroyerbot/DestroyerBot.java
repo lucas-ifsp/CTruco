@@ -47,14 +47,23 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+
         int roundNumber = getRoundNumber(intel);
         TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
+
         if (opponentCardIsHidden(intel))
             return CardToPlay.of(lowestCard);
+
         Optional<TrucoCard> lowestCardStrongerThanOpponentCard = getLowestCardStrongerThanTheOpponentCard(intel);
         Optional<TrucoCard> cardEqualsToOpponentCard = getCardEqualsToTheOpponentCard(intel);
+
         switch (roundNumber) {
             case 1 -> {
+                if(isTheFirstToPlay(intel)) {
+                    if (hasCardWithRank(intel, CardRank.THREE)) {
+                        return CardToPlay.of(getStrongerCardWithRank(intel, CardRank.THREE).get());
+                    }
+                }
                 if (!isTheFirstToPlay(intel)) {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
@@ -78,6 +87,17 @@ public class DestroyerBot implements BotServiceProvider {
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private boolean hasCardWithRank(GameIntel intel, CardRank rank){
+        return intel.getCards().stream().anyMatch(card -> card.getRank().equals(rank));
+    }
+
+    private Optional<TrucoCard> getStrongerCardWithRank(GameIntel intel, CardRank rank) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.getRank().equals(rank))
+                .max((card1, card2) -> card1.compareValueTo(card2, vira));
     }
 
     private boolean isTheFirstToPlay(GameIntel intel) {
