@@ -79,6 +79,7 @@ public class MarrecoBot implements BotServiceProvider {
                         if (weakRank <= 0) return CardToPlay.of(noManilhas.get(0));
                         else return CardToPlay.of(noManilhas.get(1));
                     } else if (noManilhas.size() == 1) return CardToPlay.of(noManilhas.get(0));
+                    else if (noManilhas.size() == 0 && picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
                 }
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
