@@ -22,6 +22,10 @@ public class MarrecoBot implements BotServiceProvider {
       List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
 
       if (manilhas.isEmpty()) {
+        List<TrucoCard> wtdThree = cards.stream().filter(card -> card.getRank().equals(THREE)).toList();
+        if (wtdThree.size() == 3) {
+          return 0;
+        }
         return -1;
       } else {
         if (manilhas.size() == 1) {
