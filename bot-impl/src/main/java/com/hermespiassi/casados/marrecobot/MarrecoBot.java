@@ -13,8 +13,23 @@ import static com.bueno.spi.model.CardSuit.SPADES;
 public class MarrecoBot implements BotServiceProvider {
   @Override
   public int getRaiseResponse(GameIntel intel) {
-    System.out.println(intel.toString());
-    return 0;
+    TrucoCard vira  = intel.getVira();
+    List<TrucoCard> cards = intel.getCards();
+    List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+    if (roundResults.isEmpty()) {
+      List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+      if (manilhas.isEmpty()) {
+        return -1;
+      } else {
+        if (manilhas.size() == 2) {
+          return 0;
+        }
+      }
+    }
+
+    return -1;
   }
 
   @Override
