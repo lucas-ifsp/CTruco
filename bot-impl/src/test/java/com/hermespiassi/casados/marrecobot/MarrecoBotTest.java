@@ -3,9 +3,6 @@ package com.hermespiassi.casados.marrecobot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +12,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class MarrecoBotTest {
@@ -26,9 +22,6 @@ class MarrecoBotTest {
     private List<TrucoCard> botCards;
     private TrucoCard vira;
 
-    @Nested
-    @DisplayName("Test logic of first round")
-    class FirstRound {
         @Nested
         @DisplayName("Tests bot logic when bot have manilha and opponent cards are manilha")
         class OpponentCardIsManilha {
@@ -347,5 +340,4 @@ class MarrecoBotTest {
 
             assertThat(cardToPlay.value().getSuit()).isNotEqualTo(DIAMONDS);
         }
-    }
 }
