@@ -368,4 +368,25 @@ class MarrecoBotTest {
         CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, CLUBS));
     }
+
+    @Test
+    @DisplayName("Should return the less card")
+    void ShouldReturnTheLessCard() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(TWO, CLUBS),
+                TrucoCard.of(FIVE, DIAMONDS),
+                TrucoCard.of(SEVEN, HEARTS)
+        );
+        vira = TrucoCard.of(TWO, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(FOUR, SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(FOUR, SPADES));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, DIAMONDS));
+    }
 }
