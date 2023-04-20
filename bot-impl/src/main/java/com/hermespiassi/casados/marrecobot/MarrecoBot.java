@@ -31,12 +31,11 @@ public class MarrecoBot implements BotServiceProvider {
       if (roundResult.get(0).equals(GameIntel.RoundResult.WON)) {
         List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
 
-        if (!manilhas.isEmpty()) {
-          return manilhas.size() == 1;
-        } else {
+        if (manilhas.isEmpty()) {
           Optional<TrucoCard> cardThree = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
           return cardThree.isPresent();
         }
+        return true;
       }
     }
 
