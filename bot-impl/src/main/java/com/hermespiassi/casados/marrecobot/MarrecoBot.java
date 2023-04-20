@@ -34,7 +34,18 @@ public class MarrecoBot implements BotServiceProvider {
 
   @Override
   public boolean getMaoDeOnzeResponse(GameIntel intel) {
-    return false;
+    TrucoCard vira  = intel.getVira();
+    List<TrucoCard> cards = intel.getCards();
+    List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+    if (manilhas.isEmpty())
+      return false;
+    else {
+      return switch (manilhas.size()) {
+        case 3 -> true;
+        default -> false;
+      };
+    }
   }
 
   @Override
