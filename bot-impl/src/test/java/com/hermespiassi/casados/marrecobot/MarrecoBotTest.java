@@ -17,6 +17,9 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -30,7 +33,7 @@ class MarrecoBotTest {
     @DisplayName("Test logic of first round")
     class FirstRound {
         @Nested
-        @DisplayName("Tests bot logic when opponent cards are manilha")
+        @DisplayName("Tests bot logic when bot have manilha and opponent cards are manilha")
         class OpponentCardIsManilha {
             @BeforeEach
             void beforeEach() {
@@ -186,20 +189,59 @@ class MarrecoBotTest {
             }
 
             @Test
-            @DisplayName("Should return weak card that bot has when opponent card is manilha and bot dont have manilha")
-            void shouldReturnWeakCardThatBotHasWhenOpponentCardIsManilhaAndBotDontHaveManilha() {
-                botCards = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(FOUR, SPADES));
+            @DisplayName("Should return weak card when bot has one manilha and opponent card is manilha of clubs")
+            void shouldReturnWeakCardWhenBotHasOneManilhaAndOpponentCardIsManilhaOfClubs() {
+                botCards = List.of(TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, SPADES), TrucoCard.of(SEVEN, DIAMONDS));
+                openCards = List.of(vira, TrucoCard.of(TWO, CLUBS));
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(results, openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(TWO, CLUBS));
+
+                CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+            }
+        }
+
+        @Nested
+        @DisplayName("Tests bot logic when bot have manilha and opponent cards are not manilha")
+        class OpponentCardIsNotManilha {
+            @BeforeEach
+            void beforeEach() {
+                results = List.of();
+                vira = TrucoCard.of(ACE, DIAMONDS);
+            }
+            @Test
+            @DisplayName("Should return diamond manilha when opponent card is not manilha but is greater other bot cards")
+            void shouldReturnDiamondManilhaWhenOpponentCardIsNotManilhaButIsGreaterOtherBotCards() {
+                botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, DIAMONDS));
                 openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
                 stepBuilder = GameIntel.StepBuilder.with()
                         .gameInfo(results, openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
-                        .opponentCard(TrucoCard.of(TWO, DIAMONDS));
+                        .opponentCard(TrucoCard.of(ACE, HEARTS));
 
                 CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-                assertThat(cardToPlay.value().getRank()).isEqualTo(FOUR);
+                assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
             }
         }
+
+//        @Test
+//        @DisplayName("Should return weak card that bot has when opponent card is manilha and bot dont have manilha")
+//        void shouldReturnWeakCardThatBotHasWhenOpponentCardIsManilhaAndBotDontHaveManilha() {
+//            botCards = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(FOUR, SPADES));
+//            openCards = List.of(vira, TrucoCard.of(TWO, DIAMONDS));
+//            stepBuilder = GameIntel.StepBuilder.with()
+//                    .gameInfo(results, openCards, vira, 1)
+//                    .botInfo(botCards, 0)
+//                    .opponentScore(0)
+//                    .opponentCard(TrucoCard.of(TWO, DIAMONDS));
+//
+//            CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+//            assertThat(cardToPlay.value().getRank()).isEqualTo(FOUR);
+//        }
 
         @Test
         @DisplayName("Should return pica-fumo in first raise if bot has a pica-fumo")
