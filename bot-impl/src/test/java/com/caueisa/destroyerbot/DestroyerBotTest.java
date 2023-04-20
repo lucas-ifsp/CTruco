@@ -29,6 +29,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -229,51 +231,60 @@ class DestroyerBotTest {
         @Nested
         @DisplayName("When get a point raise request")
         class GetRaiseResponseTest {
-            @Test
+            @ParameterizedTest
+            @CsvSource({"6, 3", "5, 3", "4, 3"})
             @DisplayName("Should accept a point raise request if it has only cards above rank seven and is winning " +
                          "the hand by three points of difference")
-            void shouldAcceptPointRaiseRequestIfHasOnlyCardsAboveRankSevenAndIsWinningByThreePoints() {
+            void shouldAcceptPointRaiseRequestIfHasOnlyCardsAboveRankSevenAndIsWinningByUntilThreePoints
+                 (int botScore, int opponentScore)
+            {
                 vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
 
-                when(intel.getScore()).thenReturn(6);
-                when(intel.getOpponentScore()).thenReturn(3);
+                when(intel.getScore()).thenReturn(botScore);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"3, 9", "2, 9"})
             @DisplayName("Should accept a point raise request if it is losing the game by six or more" +
                          "points of difference and has only manilhas")
-            void shouldAcceptPointRaiseRequestIfIsLosingBySixOrMorePointsAndHasOnlyManilhas() {
+            void shouldAcceptPointRaiseRequestIfIsLosingBySixOrMorePointsAndHasOnlyManilhas
+                 (int botScore, int opponentScore)
+            {
                 vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                         TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
 
-                when(intel.getScore()).thenReturn(2);
-                when(intel.getOpponentScore()).thenReturn(9);
+                when(intel.getScore()).thenReturn(botScore);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"10, 4", "11, 4"})
             @DisplayName("Should re-raise a point raise request if it is winning the game by six or more " +
                          "points of difference and has only cards above rank seven")
-            void shouldReRaiseAPointRaiseRequestIfIsWinningBySixOrMorePointsAndHasOnlyCardsAboveRankSeven() {
+            void shouldReRaiseAPointRaiseRequestIfIsWinningBySixOrMorePointsAndHasOnlyCardsAboveRankSeven
+                 (int botScore, int opponentScore)
+            {
                 vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
                         TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
 
-                when(intel.getScore()).thenReturn(10);
-                when(intel.getOpponentScore()).thenReturn(4);
+                when(intel.getScore()).thenReturn(botScore);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
