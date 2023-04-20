@@ -36,7 +36,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return calculateDeckValue(intel) >= 24;
     }
 
     @Override
@@ -61,6 +61,19 @@ public class WrkncacnterBot implements BotServiceProvider {
     }
 
     public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
-        return Optional.empty();
+        if (intel.getOpponentCard().isEmpty()) return Optional.empty();
+        return intel
+                .getCards()
+                .stream()
+                .filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0)
+                .findFirst();
+    }
+
+    public boolean hasTwoManilhasNonZap(GameIntel intel) {
+        return false;
+    }
+
+    public boolean hasZapAndManilhaCopas(GameIntel intel) {
+        return false;
     }
 }
