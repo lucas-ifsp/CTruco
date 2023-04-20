@@ -30,12 +30,16 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (getScoreDifference(intel) <= 3 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
+        int scoreDifference = getScoreDifference(intel);
+        if (scoreDifference > 0) {
+            if (scoreDifference <= 3 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
+                return 0;
+            if (scoreDifference <= 6 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
+                return 1;
+        }
+        if (scoreDifference <= -6 && getManilhas(intel).size() == intel.getCards().size())
             return 0;
-        if (getScoreDifference(intel) <= 6 && getManilhas(intel).size() == intel.getCards().size())
-            return 0;
-        if (getScoreDifference(intel) >= 6 && getCardsAboveRank(intel, CardRank.SEVEN).size() == intel.getCards().size())
-            return 1;
+
         return -1;
     }
 
