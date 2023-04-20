@@ -50,7 +50,14 @@ public class FirstRound implements Strategy {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+
+        TrucoCard cardMedium = getCardWithMediumStrength(intel.getCards(), intel.getVira());
+
+        if (calculateCurrentHandValue(intel) >= 25) {
+            if (hasManilha(intel)) return true;
+            else if (intel.getOpponentScore() < 9 && hasTwoOrThree(intel)) return true;
+            else return intel.getOpponentScore() >= 9 && cardMedium.getRank().value() >= 9;
+        } else return false;
     }
 
     @Override
