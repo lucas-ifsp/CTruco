@@ -16,6 +16,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -236,7 +237,7 @@ class MarrecoBotTest {
         }
 
         @Nested
-        @DisplayName("Tests bot logic when bot have manilha and opponent cards are not manilha")
+        @DisplayName("Test bot logic when bot have manilha and opponent cards are not manilha")
         class OpponentCardIsNotManilha {
             @BeforeEach
             void beforeEach() {
@@ -265,7 +266,7 @@ class MarrecoBotTest {
                 @Test
                 @DisplayName("Should return greater card that bot has when opponent card is greater but not is manilha")
                 void shouldReturnGreaterCardThatBotHasWhenOpponentCardIsGreaterButNotIsManilha() {
-                    botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(FIVE, SPADES));
+                    botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(SIX, DIAMONDS));
                     openCards = List.of(vira, TrucoCard.of(FIVE, DIAMONDS));
                     stepBuilder = GameIntel.StepBuilder.with()
                         .gameInfo(results, openCards, vira, 1)
@@ -274,7 +275,22 @@ class MarrecoBotTest {
                         .opponentCard(TrucoCard.of(FIVE, DIAMONDS));
 
                     CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, SPADES));
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SIX, DIAMONDS));
+                }
+
+                @Test
+                @DisplayName("Should return weak card of greater cards, but not manilha ")
+                void shouldReturnWeakCardOfGreaterCardsButNotManilha() {
+                    botCards = List.of(TrucoCard.of(QUEEN, CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(SIX, SPADES));
+                    openCards = List.of(vira, TrucoCard.of(FIVE, DIAMONDS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(results, openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(FIVE, DIAMONDS));
+
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SIX, SPADES));
                 }
             }
         }
