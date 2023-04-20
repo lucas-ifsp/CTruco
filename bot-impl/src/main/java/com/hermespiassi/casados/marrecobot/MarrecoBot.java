@@ -85,9 +85,17 @@ public class MarrecoBot implements BotServiceProvider {
 
           if (noManilhas.size() == 2) {
             if (picaFumo.isPresent()) {
-              Optional<TrucoCard> greaterOpponentCard = noManilhas.stream()
-                  .filter(noManilha -> noManilha.getRank().compareTo(opponentCard.get().getRank()) > 0).findFirst();
-              if (greaterOpponentCard.isEmpty()) return CardToPlay.of(picaFumo.get());
+              Optional<TrucoCard> greaterThatOpponentCard = noManilhas.stream()
+                  .filter(noManilha -> noManilha.getRank().compareTo(opponentCard.get().getRank()) >= 0).findFirst();
+              if (greaterThatOpponentCard.isEmpty()) return CardToPlay.of(picaFumo.get());
+              else {
+                CardSuit suitOpponentCard = opponentCard.get().getSuit();
+                CardSuit suitGreaterCard = greaterThatOpponentCard.get().getSuit();
+                int greaterCard = suitGreaterCard.compareTo(suitOpponentCard);
+
+                if (greaterCard > 0) return CardToPlay.of(greaterThatOpponentCard.get());
+                else return CardToPlay.of(picaFumo.get());
+              }
             }
           }
         }
