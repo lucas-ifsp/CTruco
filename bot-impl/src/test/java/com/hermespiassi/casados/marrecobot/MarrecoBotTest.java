@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class MarrecoBotTest {
@@ -260,6 +261,21 @@ class MarrecoBotTest {
                     CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
                     assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
                 }
+
+                @Test
+                @DisplayName("Should return greater card that bot has when opponent card is greater but not is manilha")
+                void shouldReturnGreaterCardThatBotHasWhenOpponentCardIsGreaterButNotIsManilha() {
+                    botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(FIVE, SPADES));
+                    openCards = List.of(vira, TrucoCard.of(FIVE, DIAMONDS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(results, openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(FIVE, DIAMONDS));
+
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, SPADES));
+                }
             }
         }
 
@@ -314,28 +330,6 @@ class MarrecoBotTest {
             CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
 
             assertThat(cardToPlay.value().getSuit()).isNotEqualTo(DIAMONDS);
-        }
-
-        @Test
-        @DisplayName("Should return pica-fumo if opponent card is not manilha")
-        void shouldReturnPicaFumoIfOpponentCardIsNotManilha() {
-            results = List.of();
-            botCards = List.of(
-                    TrucoCard.of(TWO, HEARTS),
-                    TrucoCard.of(FIVE, CLUBS),
-                    TrucoCard.of(TWO, DIAMONDS)
-            );
-            vira = TrucoCard.of(ACE, HEARTS);
-            openCards = List.of(vira, TrucoCard.of(THREE, CLUBS));
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(results, openCards, vira, 1)
-                    .botInfo(botCards, 0)
-                    .opponentScore(0)
-                    .opponentCard(TrucoCard.of(THREE, CLUBS));
-
-            CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
-
-            assertThat(cardToPlay.value().getSuit()).isEqualTo(DIAMONDS);
         }
     }
 }
