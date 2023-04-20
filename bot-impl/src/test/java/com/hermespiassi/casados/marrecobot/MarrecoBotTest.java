@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class MarrecoBotTest {
@@ -222,6 +223,20 @@ class MarrecoBotTest {
 
                     CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
                     assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+                }
+
+                @Test
+                @DisplayName("Should return weak manilha when boy has three manilhas")
+                void shouldReturnWeakManilhaWhenBoyHasThreeManilhas() {
+                    botCards = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(TWO, HEARTS));
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(results, openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(TrucoCard.of(TWO, CLUBS));
+
+                    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+                    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
                 }
             }
         }
