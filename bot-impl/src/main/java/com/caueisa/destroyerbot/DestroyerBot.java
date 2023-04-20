@@ -42,6 +42,8 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (getScoreDifference(intel) == 3)
+            return true;
         return false;
     }
 
@@ -49,8 +51,8 @@ public class DestroyerBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
 
         int roundNumber = getRoundNumber(intel);
-        TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
 
+        TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
         Optional<TrucoCard> lowestCardStrongerThanOpponentCard;
         Optional<TrucoCard> cardEqualsToOpponentCard;
 
