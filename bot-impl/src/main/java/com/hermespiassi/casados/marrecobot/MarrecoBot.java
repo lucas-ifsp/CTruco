@@ -33,6 +33,13 @@ public class MarrecoBot implements BotServiceProvider {
           if (three.isPresent()) {
             return 0;
           } else {
+            Optional<TrucoCard> two = cards.stream().filter(card -> card.getRank().equals(TWO)).findFirst();
+            if (intel.getOpponentScore() <= 7) {
+              if (two.isPresent()) {
+                return 0;
+              }
+            }
+
             return  -1;
           }
         }
