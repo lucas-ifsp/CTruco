@@ -56,4 +56,8 @@ public class WrkncacnterBot implements BotServiceProvider {
     public Optional<TrucoCard> chooseWeakestCard(GameIntel intel) {
         return intel.getCards().stream().min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
+
+    public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
+        return Optional.empty();
+    }
 }

@@ -222,8 +222,8 @@ class WrkncacnterBotTest {
                 TrucoCard.of(CardRank.KING, CardSuit.SPADES)
         ));
 
-        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
+        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
     }
 
     // Falta parametrizar
@@ -240,9 +240,49 @@ class WrkncacnterBotTest {
                 TrucoCard.of(CardRank.KING, CardSuit.SPADES)
         ));
 
-        System.out.println(wrkncacnterBot.chooseWeakestCard(intel));
+        assertThat(wrkncacnterBot.chooseWeakestCard(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
 
-        assertThat(wrkncacnterBot.chooseWeakestCard(intel).get()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    // Falta parametrizar
+    @DisplayName("Testa o bot a tentar a ganhar a segunda rodada")
+    @Test
+    void testAttemptToWinSecondRound() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa a estratégia de ganhar 6 pontos(ter ganhado uma rodada, trucar na segunda, jogar uma carta fraca e depois jogar a mais forte)")
+    @Test
+    void testSixPointsStrategy() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+        assertTrue(wrkncacnterBot.decideIfRaises(intel));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
     }
 
     static Stream<Arguments> provideDataToCalculateDeckValues() {
