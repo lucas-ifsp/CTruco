@@ -53,7 +53,7 @@ public class MarrecoBot implements BotServiceProvider {
       return false;
     else {
       return switch (manilhas.size()) {
-        case 3 -> true;
+        case 3 , 2 -> true;
         default -> false;
       };
     }
