@@ -267,6 +267,18 @@ class DestroyerBotTest {
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
             }
         }
+
+        @Nested
+        @DisplayName("When requesting a point raise")
+        class DecidesIfRaisesTest {
+            @Test
+            @DisplayName("Should ask for point raise if is winning the game by three points of difference")
+            void shouldAskForPointRaiseIfIsWinningTheGameByThreePoints(){
+                when(intel.getScore()).thenReturn(8);
+                when(intel.getOpponentScore()).thenReturn(5);
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
+        }
     }
 
 }
