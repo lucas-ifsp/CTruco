@@ -102,6 +102,20 @@ class DestroyerBotTest {
                 when(intel.getCards()).thenReturn(cards);
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
             }
+
+            @Test
+            @DisplayName("Should play the lowest rank manilha if it has at least two of them in hand in the first round " +
+                    "and it is the first to play.")
+            void shouldPlayLowestRankManilhaIfItHasAtLeastTwoOfThemInHandInTheFirstRoundAndItIsTheFirstToPlay(){
+                vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+                cards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+            }
         }
     }
 
