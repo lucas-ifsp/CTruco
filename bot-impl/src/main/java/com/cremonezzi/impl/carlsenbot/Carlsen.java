@@ -1,5 +1,6 @@
 package com.cremonezzi.impl.carlsenbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -50,6 +51,10 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        if (intel.getOpponentCard().isPresent() && intel.getOpponentCard().get().getRank().equals(CardRank.HIDDEN)) {
+            return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+        }
+
         if (intel.getRoundResults().size() > 0 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
             return CardToPlay.of(higherInHand(intel.getCards(), intel.getVira()));
         }
