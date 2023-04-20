@@ -72,6 +72,8 @@ public class DestroyerBot implements BotServiceProvider {
                 if (!isTheFirstToPlay(intel)) {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
+                    if (cardEqualsToOpponentCard.isPresent())
+                        return CardToPlay.of(cardEqualsToOpponentCard.get());
                 }
             }
         }
