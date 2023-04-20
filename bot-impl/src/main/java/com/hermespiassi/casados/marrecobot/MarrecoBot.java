@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.CardRank.THREE;
+import static com.bueno.spi.model.CardRank.TWO;
 import static com.bueno.spi.model.CardSuit.SPADES;
 
 public class MarrecoBot implements BotServiceProvider {
@@ -31,11 +32,16 @@ public class MarrecoBot implements BotServiceProvider {
             return  -1;
           }
         }
-        if (manilhas.size() == 2) {
-          return 0;
-        }
-        if (manilhas.size() == 3) {
-          return 0;
+        if (manilhas.size() == 2) return 0;
+        if (manilhas.size() == 3) return 0;
+      }
+    } else if (roundResults.size() == 2) {
+      if (roundResults.get(0).equals(GameIntel.RoundResult.WON)) {
+        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+        if (manilhas.isEmpty()) {
+          Optional<TrucoCard> cardTwo = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+          if (cardTwo.isPresent()) return 0;
         }
       }
     }
