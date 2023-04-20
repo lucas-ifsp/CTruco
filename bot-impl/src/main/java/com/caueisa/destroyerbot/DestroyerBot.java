@@ -63,6 +63,9 @@ public class DestroyerBot implements BotServiceProvider {
                     if (hasCardWithRank(intel, CardRank.THREE)) {
                         return CardToPlay.of(getStrongerCardWithRank(intel, CardRank.THREE).get());
                     }
+                    if (hasAtLeastTwoManilhas(intel)) {
+                        return CardToPlay.of(getLowestRankManilha(intel).get());
+                    }
                 }
                 if (!isTheFirstToPlay(intel)) {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
@@ -87,6 +90,19 @@ public class DestroyerBot implements BotServiceProvider {
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private boolean hasAtLeastTwoManilhas(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream().filter(card -> card.isManilha(vira)).count() >= 2;
+    }
+
+    private Optional<TrucoCard> getLowestRankManilha(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        if(intel.getCards().stream().anyMatch(card-> card.isManilha(vira))){
+            return intel.getCards().stream().filter(card-> card.isManilha(vira)).min((card1, card2) -> card1.compareValueTo(card2, vira));
+        }
+        return Optional.empty();
     }
 
     private boolean hasCardWithRank(GameIntel intel, CardRank rank){
