@@ -245,6 +245,25 @@ class DestroyerBotTest {
 
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
+
+            @Test
+            @DisplayName("Should accept a point raise request if it is losing the game by six or more" +
+                         "points of difference and has only manilhas")
+            void shouldAcceptPointRaiseRequestIfIsLosingBySixOrMorePointsAndHasOnlyManilhas() {
+                vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+                when(intel.getScore()).thenReturn(2);
+                when(intel.getOpponentScore()).thenReturn(9);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+            }
+
+
         }
 
         @Nested
