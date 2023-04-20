@@ -17,7 +17,6 @@ import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-
 class MarrecoBotTest {
   private GameIntel.StepBuilder stepBuilder;
   private List<GameIntel.RoundResult> results;
@@ -692,7 +691,7 @@ class MarrecoBotTest {
 
       int responseRaise = new MarrecoBot().getRaiseResponse(stepBuilder.build());
       assertThat(responseRaise)
-              .as("Return 0 when bot has 3 three.")
+              .as("Return 0 when bot has 1 manilha, 1 two and if score opponent has is smaller 4.")
               .isZero();
     }
   }
@@ -752,6 +751,24 @@ class MarrecoBotTest {
       assertThat(acceptMaoDeOnze)
           .as("Return TRUE when bot has 1 manilha and 1 card 3")
           .isTrue();
+    }
+
+    @Test
+    @DisplayName("Should accept mao de onze when bot has 1 manilha, 1 two and if score opponent has is smaller 4")
+    void ShouldAcceptMaoDeOnzeWhenBotHas1Manilha1TwoAndIfScoreOpponentHasIsSmaller4() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FIVE, SPADES), TrucoCard.of(TWO, SPADES));
+      vira = TrucoCard.of(THREE, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 1)
+              .botInfo(botCards, 11)
+              .opponentScore(3);
+
+      Boolean acceptMaoDeOnze = new MarrecoBot().getMaoDeOnzeResponse(stepBuilder.build());
+      assertThat(acceptMaoDeOnze)
+              .as("Return TRUE when bot has 1 manilha , 1 two and if score opponent has is smaller 4.")
+              .isTrue();
     }
   }
 }
