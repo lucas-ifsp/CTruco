@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class MarrecoBotTest {
@@ -216,5 +217,27 @@ class MarrecoBotTest {
         CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
 
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, HEARTS));
+    }
+
+    @Test
+    @DisplayName("Should return clubs if opponent card is of hearts")
+    void shouldReturnClubsIfOpponentCardIsOfHearts() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(THREE, HEARTS),
+                TrucoCard.of(FIVE, DIAMONDS),
+                TrucoCard.of(TWO, CLUBS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(TWO, HEARTS));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(TWO, HEARTS));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+
+        assertThat(cardToPlay.value().getSuit()).isEqualTo(CLUBS);
     }
 }
