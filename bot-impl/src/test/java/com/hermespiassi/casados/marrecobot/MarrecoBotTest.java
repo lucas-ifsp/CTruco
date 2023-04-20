@@ -261,4 +261,24 @@ class MarrecoBotTest {
             assertThat(cardToPlay.value().getSuit()).isEqualTo(DIAMONDS);
         }
     }
+
+    @Test
+    @DisplayName("Should return the biggest card if has is no manilha, in the first round")
+    void ShouldReturnTheBiggestCardIfHasIsNoManilhaInYheFirstRound() {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(FIVE, HEARTS),
+                TrucoCard.of(FOUR, DIAMONDS),
+                TrucoCard.of(FIVE, CLUBS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira);
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, CLUBS));
+    }
 }
