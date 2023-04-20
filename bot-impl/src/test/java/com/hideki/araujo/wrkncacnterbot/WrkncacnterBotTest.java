@@ -226,6 +226,25 @@ class WrkncacnterBotTest {
         assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
     }
 
+    // Falta parametrizar
+    @DisplayName("Testa se o método retorna a carta mais fraca da mão")
+    @Test
+    void testChooseWeakestCard() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+        ));
+
+        System.out.println(wrkncacnterBot.chooseWeakestCard(intel));
+
+        assertThat(wrkncacnterBot.chooseWeakestCard(intel).get()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
     static Stream<Arguments> provideDataToCalculateDeckValues() {
         return Stream.of(
                 Arguments.of(
