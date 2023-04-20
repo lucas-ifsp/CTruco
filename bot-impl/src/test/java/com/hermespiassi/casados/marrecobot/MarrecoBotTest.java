@@ -406,6 +406,27 @@ class MarrecoBotTest {
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, DIAMONDS));
     }
 
+    @Test
+    @DisplayName("Should amarrar if not has card for win and has two three")
+    void ShouldAmarrarIfNotHasCardForWin () {
+        results = List.of();
+        botCards = List.of(
+                TrucoCard.of(THREE, CLUBS),
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(FOUR, HEARTS)
+        );
+        vira = TrucoCard.of(ACE, HEARTS);
+        openCards = List.of(vira, TrucoCard.of(THREE, SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(FOUR, SPADES));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
+    }
+
     @Nested
     @DisplayName("Test logic to bot return true when it has manilhas")
     class TrueToRaise {
