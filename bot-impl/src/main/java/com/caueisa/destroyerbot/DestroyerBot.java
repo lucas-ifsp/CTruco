@@ -50,6 +50,8 @@ public class DestroyerBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getOpponentScore() == 11)
+            return true;
         int roundNumber = getRoundNumber(intel);
         int scoreDifference = getScoreDifference(intel);
         if (roundNumber == 2) {
