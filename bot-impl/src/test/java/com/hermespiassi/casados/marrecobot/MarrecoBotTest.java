@@ -659,6 +659,24 @@ class MarrecoBotTest {
               .as("Return 0 when bot has lost first round and has two manilhas.")
               .isZero();
     }
+
+    @Test
+    @DisplayName("Should accept truco when bot has 3 three")
+    void shouldAcceptTrucoWhenBotHas3Three() {
+      results = List.of();
+      botCards = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(THREE, CLUBS), TrucoCard.of(THREE, HEARTS));
+      vira = TrucoCard.of(ACE, HEARTS);
+      openCards = List.of(vira);
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 1)
+              .botInfo(botCards, 0)
+              .opponentScore(0);
+
+      int responseRaise = new MarrecoBot().getRaiseResponse(stepBuilder.build());
+      assertThat(responseRaise)
+              .as("Return 0 when bot has 3 three.")
+              .isZero();
+    }
   }
 
   @Nested
