@@ -35,6 +35,8 @@ public class MarrecoBot implements BotServiceProvider {
           if (manilhas.size() == 1) {
             if (manilhas.get(0).isZap(vira)) {
               return true;
+            } else if (manilhas.get(0).isCopas(vira)) {
+              return true;
             }
           }
         }
