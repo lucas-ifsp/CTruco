@@ -34,6 +34,8 @@ public class DestroyerBot implements BotServiceProvider {
             return 0;
         if (getScoreDifference(intel) <= 6 && getManilhas(intel).size() == intel.getCards().size())
             return 0;
+        if (getScoreDifference(intel) >= 6 && getCardsAboveRankSeven(intel).size() == intel.getCards().size())
+            return 1;
         return -1;
     }
 
