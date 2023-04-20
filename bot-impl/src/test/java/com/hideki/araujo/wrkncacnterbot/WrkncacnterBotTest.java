@@ -312,7 +312,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                        21
+                        23
                 ),
                 Arguments.of(
                         List.of(
@@ -334,12 +334,12 @@ class WrkncacnterBotTest {
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                        30
+                        36
                 )
         );
     }
@@ -348,15 +348,15 @@ class WrkncacnterBotTest {
         return Stream.of(
                 Arguments.of(
                         List.of(
-                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
