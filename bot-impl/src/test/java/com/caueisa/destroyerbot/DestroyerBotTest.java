@@ -263,7 +263,22 @@ class DestroyerBotTest {
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
             }
 
+            @Test
+            @DisplayName("Should re-raise a point raise request if it is winning the game by six or more " +
+                         "points of difference and has only cards above rank seven")
+            void shouldReRaiseAPointRaiseRequestIfIsWinningBySixOrMorePointsAndHasOnlyCardsAboveRankSeven() {
+                vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
 
+                when(intel.getScore()).thenReturn(10);
+                when(intel.getOpponentScore()).thenReturn(4);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+            }
         }
 
         @Nested
