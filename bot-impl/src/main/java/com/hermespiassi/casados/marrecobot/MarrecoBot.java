@@ -3,7 +3,6 @@ package com.hermespiassi.casados.marrecobot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +49,7 @@ public class MarrecoBot implements BotServiceProvider {
                         Optional<TrucoCard> zap = manilhas.stream().filter(_card -> _card.isZap(vira)).findFirst();
                         if (zap.isPresent()) return CardToPlay.of(zap.get());
                     }
-                }
-                if (opponentCard.get().isEspadilha(vira)) {
+                } else if (opponentCard.get().isEspadilha(vira)) {
                     if (manilhas.size() == 1) {
                         CardSuit suitManilha = manilhas.get(0).getSuit();
                         if (suitManilha.compareTo(SPADES) > 0) return CardToPlay.of(manilhas.get(0));
@@ -67,10 +65,20 @@ public class MarrecoBot implements BotServiceProvider {
                         if (lessSuit < 0) return CardToPlay.of(manilhas.get(0));
                         else return CardToPlay.of(manilhas.get(1));
                     }
-                }
-                if (opponentCard.get().isCopas(vira)) {
+                } else if (opponentCard.get().isCopas(vira)) {
                     Optional<TrucoCard> zap = manilhas.stream().filter(card -> card.isZap(vira)).findFirst();
                     if (zap.isPresent()) return CardToPlay.of(zap.get());
+                } else if (opponentCard.get().isZap(vira)) {
+                    List<TrucoCard> noManilhas = cards.stream().filter(card -> !card.isManilha(vira)).toList();
+
+                    if (noManilhas.size() == 2) {
+                        CardRank rankFirstNoManilha = noManilhas.get(0).getRank();
+                        CardRank rankSecondNoManilha = noManilhas.get(1).getRank();
+                        int weakRank = rankFirstNoManilha.compareTo(rankSecondNoManilha);
+
+                        if (weakRank <= 0) return CardToPlay.of(noManilhas.get(0));
+                        else return CardToPlay.of(noManilhas.get(1));
+                    }
                 }
                 if (picaFumo.isPresent() && !opponentCard.get().isManilha(vira)) return CardToPlay.of(picaFumo.get());
             } else {
@@ -78,7 +86,7 @@ public class MarrecoBot implements BotServiceProvider {
             }
         } else {
             if (opponentCard.isPresent()) {
-                if (opponentCard.get().isManilha(vira)){
+                if (opponentCard.get().isManilha(vira)) {
                     TrucoCard firstCard = cards.get(0);
                     TrucoCard lowCard = firstCard;
                     for (TrucoCard card : cards) {
