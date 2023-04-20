@@ -51,7 +51,7 @@ public class DestroyerBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         int roundNumber = getRoundNumber(intel);
-
+        int scoreDifference = getScoreDifference(intel);
         if (roundNumber == 2) {
             if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
                 return true;
@@ -60,9 +60,11 @@ public class DestroyerBot implements BotServiceProvider {
             if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
                 return true;
         }
-        if (getScoreDifference(intel) == 3)
-            return true;
-        if (getScoreDifference(intel) >= -3 && hasAtLeastTwoManilhas(intel))
+        if (scoreDifference > 0) {
+            if (scoreDifference <= 3)
+                return true;
+        }
+        if (scoreDifference >= -3 && hasAtLeastTwoManilhas(intel))
             return true;
         return false;
     }
