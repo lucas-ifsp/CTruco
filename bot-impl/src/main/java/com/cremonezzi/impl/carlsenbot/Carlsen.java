@@ -25,11 +25,24 @@ public class Carlsen implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
+        List<TrucoCard> hand = intel.getCards();
+        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
+        int highCard = 0;
+
+        for (TrucoCard card : hand){
+            if(card.equals(CardRank.ACE) || card.equals((CardRank.TWO)) || card.equals(CardRank.THREE)) {
+                highCard++;
+            }
+        }
+
         if (qntManilhas == 0) {
             return -1;
         }
 
         if (qntManilhas == 1) {
+            if(highCard >= 1 || roundResult.contains(GameIntel.RoundResult.WON)) {
+                return 1;
+            }
             return 0;
         }
 
