@@ -20,10 +20,7 @@
 
 package com.caueisa.destroyerbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -208,6 +205,20 @@ class DestroyerBotTest {
                 when(intel.getOpponentCard()).thenReturn(opponentCard);
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+            }
+
+            @Test
+            @DisplayName("Should discard the lowest rank manilha in the second round if it has two of them and " +
+                    "it is the first to play.")
+            void shouldDiscardLowestRankManilhaInTheSecondRoundIfItHasTwoOfThemAndItIsTheFirstToPlay(){
+                vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+                cards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
             }
         }
     }
