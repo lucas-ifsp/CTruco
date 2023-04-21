@@ -265,6 +265,21 @@ class DestroyerBotTest {
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
             }
+
+            @Test
+            @DisplayName("Should play the highest rank card available in the second round if it is the first to play.")
+            void shouldPlayTheHighestRankCardAvailableInTheSecondRoundIfItIsTheFirstToPlay(){
+                results = List.of(GameIntel.RoundResult.WON);
+                vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+                cards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+            }
         }
     }
 
