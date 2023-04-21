@@ -115,6 +115,10 @@ public class DestroyerBot implements BotServiceProvider {
                     if (hasAtLeastTwoManilhas(intel)){
                         return CardToPlay.discard(getLowestRankManilha(intel).get());
                     }
+                    if (getManilhas(intel).size() == 1){
+                        return CardToPlay.of(getManilhas(intel).get(0));
+                    }
+
                 }
 
 
