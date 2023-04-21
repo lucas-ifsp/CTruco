@@ -261,7 +261,7 @@ class WrkncacnterBotTest {
 
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
 
-        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
     }
 
     // Falta parametrizar
