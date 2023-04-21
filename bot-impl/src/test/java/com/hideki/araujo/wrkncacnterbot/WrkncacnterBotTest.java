@@ -141,6 +141,7 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
     }
 
+    // Falta parametrizar
     @DisplayName("Testa reponde truco se tiver cartas fortes")
     @Test
     void testIfRaiseReponseWithStrongCards() {
@@ -172,6 +173,7 @@ class WrkncacnterBotTest {
 
     }
 
+    // Falta parametrizar
     @DisplayName("Testa reponde truco se tiver cartas fracas")
     @Test
     void testifRaiseResponseWithWeakerCards(){
@@ -205,6 +207,7 @@ class WrkncacnterBotTest {
 
     }
 
+    // Falta parametrizar
     @DisplayName("Testa escolher carta que mata a do oponente")
     @Test
     void testKillOpponentCard(){
@@ -221,8 +224,67 @@ class WrkncacnterBotTest {
                 TrucoCard.of(CardRank.KING, CardSuit.SPADES)
         ));
 
-        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
+        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa se o método retorna a carta mais fraca da mão")
+    @Test
+    void testChooseWeakestCard() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+        ));
+
+        assertThat(wrkncacnterBot.chooseWeakestCard(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa o bot tenta ganhar a segunda rodada")
+    @Test
+    void testAttemptToWinSecondRound() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa a estratégia de ganhar 6 pontos(ter ganhado uma rodada, trucar na segunda, jogar uma carta fraca e depois jogar a mais forte)")
+    @Test
+    void testSixPointsStrategy() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+        assertTrue(wrkncacnterBot.decideIfRaises(intel));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
     }
 
     @DisplayName("Testa de amarrar jogo")
@@ -270,7 +332,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                        21
+                        23
                 ),
                 Arguments.of(
                         List.of(
@@ -292,12 +354,12 @@ class WrkncacnterBotTest {
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                        30
+                        36
                 )
         );
     }
@@ -306,15 +368,15 @@ class WrkncacnterBotTest {
         return Stream.of(
                 Arguments.of(
                         List.of(
-                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),

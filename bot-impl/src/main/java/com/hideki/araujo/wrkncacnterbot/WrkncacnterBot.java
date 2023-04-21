@@ -23,7 +23,10 @@ package com.hideki.araujo.wrkncacnterbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Optional;
 
 public class WrkncacnterBot implements BotServiceProvider {
     @Override
@@ -33,11 +36,13 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return calculateDeckValue(intel) >= 24;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getRoundResults().isEmpty())
+            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
         return false;
     }
 
@@ -47,6 +52,28 @@ public class WrkncacnterBot implements BotServiceProvider {
     }
 
     public int calculateDeckValue(GameIntel intel) {
-        return 0;
+        if (intel.getCards().isEmpty()) return 0;
+        return intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).reduce(Integer::sum).orElseThrow();
+    }
+
+    public Optional<TrucoCard> chooseWeakestCard(GameIntel intel) {
+        return intel.getCards().stream().min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+    }
+
+    public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
+        if (intel.getOpponentCard().isEmpty()) return Optional.empty();
+        return intel
+                .getCards()
+                .stream()
+                .filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0)
+                .findFirst();
+    }
+
+    public boolean hasTwoManilhasNonZap(GameIntel intel) {
+        return false;
+    }
+
+    public boolean hasZapAndManilhaCopas(GameIntel intel) {
+        return false;
     }
 }
