@@ -12,4 +12,6 @@ public interface Strategy {
     boolean decideIfRaises (GameIntel intel);
 
     CardToPlay chooseCard (GameIntel intel);
+
+    boolean hasManilha (GameIntel intel);
 }

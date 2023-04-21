@@ -31,4 +31,9 @@ public class ThirdRound implements Strategy {
     public CardToPlay chooseCard(GameIntel intel) {
         return null;
     }
+
+    @Override
+    public boolean hasManilha(GameIntel intel) {
+        return false;
+    }
 }

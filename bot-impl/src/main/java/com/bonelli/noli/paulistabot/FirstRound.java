@@ -135,6 +135,7 @@ public class FirstRound implements Strategy {
                 trucoCard.isEspadilha(intel.getVira()));
     }
 
+    @Override
     public boolean hasManilha(GameIntel intel) {
         return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(intel.getVira()));
     }

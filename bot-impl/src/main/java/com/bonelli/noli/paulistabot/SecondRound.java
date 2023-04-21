@@ -29,6 +29,14 @@ public class SecondRound implements Strategy {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        GameIntel.RoundResult roundResult = intel.getRoundResults().get(0);
+
         return null;
+    }
+
+    @Override
+    public boolean hasManilha(GameIntel intel) {
+        return false;
     }
 }
