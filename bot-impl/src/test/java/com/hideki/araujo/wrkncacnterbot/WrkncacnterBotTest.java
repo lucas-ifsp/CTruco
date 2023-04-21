@@ -108,39 +108,27 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa responde truco se tiver cartas fortes")
     @ParameterizedTest
     @MethodSource(value = "provideDataToResponseStrongerCards")
-    void testIfRaiseReponseWithStrongCards(List<TrucoCard> cards, int myScore, int opponentScore, int expectedResponse) {
+    void testIfRaiseReponseWithStrongCards(List<TrucoCard> cards, TrucoCard vira, int myScore, int opponentScore, int expectedResponse) {
         GameIntel intel = mock(GameIntel.class);
 
+        when(intel.getScore())
+                .thenReturn(myScore);
+
+        when(intel.getOpponentScore())
+                .thenReturn(opponentScore);
+
         when(intel.getVira())
-                .thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
-                .thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES))
-                .thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+                .thenReturn(vira);
 
         when(intel.getCards())
-                .thenReturn(List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)))
-                .thenReturn(List.of(
-                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)))
-                .thenReturn(List.of(
-                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+                .thenReturn(cards);
 
-        assertEquals(wrkncacnterBot.getRaiseResponse(intel), -1);
-        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 1);
-        assertEquals(wrkncacnterBot.getRaiseResponse(intel), 0);
-
+        assertThat(wrkncacnterBot.getRaiseResponse(intel)).isEqualTo(expectedResponse);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa responde truco se tiver cartas fracas")
     @ParameterizedTest
     @MethodSource(value = "provideDataToResponseWeakerCards")
@@ -170,18 +158,16 @@ class WrkncacnterBotTest {
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
-        // when(intel.getOpponentCard()).thenReturn(Optional.empty()); // Force exception
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
 
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
                 TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
         ));
 
-        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-        // assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
+        assertThat(wrkncacnterBot.chooseKillCard(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
     }
 
     // Falta parametrizar
@@ -208,6 +194,8 @@ class WrkncacnterBotTest {
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
 
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
@@ -300,59 +288,32 @@ class WrkncacnterBotTest {
                 Arguments.of(
                         List.of(
                                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                         20,
                         0,
                         -1
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                         10,
                         10,
                         0
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
                         ),
-                        0,
-                        20,
-                        1
-                ),
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
-                        ),
-                        10,
-                        10,
-                        0
-                ),
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
-                        ),
-                        0,
-                        20,
-                        1
-                ),
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
-                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                         0,
                         20,
                         1
@@ -404,7 +365,7 @@ class WrkncacnterBotTest {
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
@@ -414,7 +375,7 @@ class WrkncacnterBotTest {
                 ),
                 Arguments.of(
                         List.of(
-                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
