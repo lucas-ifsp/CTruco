@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.in;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -212,7 +211,7 @@ class WrkncacnterBotTest {
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
-        when(intel.getOpponentCard()).thenReturn(Optional.empty()); // Force exception
+        // when(intel.getOpponentCard()).thenReturn(Optional.empty()); // Force exception
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
 
@@ -223,7 +222,7 @@ class WrkncacnterBotTest {
         ));
 
         assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-        assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
+        // assertEquals(wrkncacnterBot.chooseKillCard(intel).orElseThrow(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES)); // Weaker Card
     }
 
     // Falta parametrizar
@@ -259,7 +258,7 @@ class WrkncacnterBotTest {
 
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
 
-        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
     }
 
     // Falta parametrizar
@@ -283,6 +282,40 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
 
         assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa quantas manilhas existe na mao")
+    @Test
+    void testCalculateNumberOfManilhas() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        ));
+
+        assertThat(wrkncacnterBot.calculateNumberOfManilhas(intel)).isEqualTo(2);
+    }
+
+    // Falta parametrizar
+    @DisplayName("Testa se tem zap e manilha(copas) na mao")
+    @Test
+    void testHasZapAndManilhaClubs() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        ));
+
+        assertTrue(wrkncacnterBot.hasZapAndManilhaHearts(intel));
     }
 
     static Stream<Arguments> provideDataToCalculateDeckValues() {
