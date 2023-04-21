@@ -15,6 +15,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +27,9 @@ class PaulistaBotTest {
     GameIntel intel;
     @InjectMocks
     FirstRound firstRound;
+
+    @InjectMocks
+    SecondRound secondRound;
     
     @Nested
     @DisplayName("Testing first round")
@@ -306,7 +312,19 @@ class PaulistaBotTest {
     @Nested
     @DisplayName("Testing second round")
     class SecondRoundTest {
-
+        @Nested
+        @DisplayName("Playing cards")
+        class PlayingCards {
+            @Test
+            @DisplayName("If you won the first round and have zap cover the weakest card")
+            void ifYouWonTheFirstRoundAndHaveZapCoverTheWeakestCard () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(TrucoCard.closed());
+            }
+        }
     }
 
     @Nested

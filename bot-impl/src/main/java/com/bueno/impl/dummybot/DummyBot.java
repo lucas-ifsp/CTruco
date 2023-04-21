@@ -62,6 +62,7 @@ public class DummyBot implements BotServiceProvider {
         }
         System.out.println(intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).
                 reduce(Integer::sum).orElseThrow());
+        System.out.println("Cartas abertas -> " + intel.getOpenCards());
         System.out.println("Vira da mesa: " + intel.getVira());
         System.out.println("Cartas abertas " + intel.getOpenCards());
         System.out.println("Carta que o oponente vai jogar " + intel.getOpponentCard());
