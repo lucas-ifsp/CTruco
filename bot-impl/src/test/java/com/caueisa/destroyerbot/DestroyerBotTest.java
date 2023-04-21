@@ -433,6 +433,22 @@ class DestroyerBotTest {
                 when(intel.getOpponentScore()).thenReturn(11);
                 assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
             }
+
+            @Test
+            @DisplayName("Should accept mao de onze if opponent score is greater than 7 and bot has all cards " +
+                    "above king rank")
+            void shouldAcceptMaoDeOnzeIfOpponentScoreIsGreaterThanSevenAndBotHasAllCardsAboveKingRank(){
+                vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+                cards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+                when(intel.getOpponentScore()).thenReturn(10);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(vira);
+
+                assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+            }
         }
 
         @Nested
