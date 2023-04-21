@@ -234,6 +234,21 @@ class DestroyerBotTest {
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
             }
+
+            @Test
+            @DisplayName("Should discard the lowest rank card available if it has zap in the second round and it is the first to play.")
+            void shouldDiscardLowestRankCardAvailableIfItHasZapInTheSecondRoundAndIfItIsTheFirstToPlay(){
+                results = List.of(GameIntel.RoundResult.WON);
+                vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+                cards = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.chooseCard(intel).value()).isEqualTo(CardToPlay.discard(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)).value());
+            }
         }
     }
 
