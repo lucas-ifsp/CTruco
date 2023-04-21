@@ -430,6 +430,12 @@ class PaulistaBotTest {
                 assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
             }
         }
+
+        @Nested
+        @DisplayName("Decide if raises")
+        class DecideRaises {
+
+        }
     }
 
     @Nested
