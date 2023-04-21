@@ -124,6 +124,7 @@ public class DestroyerBot implements BotServiceProvider {
                     if (hasCardWithRank(intel, CardRank.THREE)) {
                         return CardToPlay.of(getStrongerCardWithRank(intel, CardRank.THREE).get());
                     }
+                    return CardToPlay.of(getHighestCardBetweenAllCardsAvailableToBePlayed(intel));
                 }
 
 
