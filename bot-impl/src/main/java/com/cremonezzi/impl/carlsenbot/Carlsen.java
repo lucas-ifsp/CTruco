@@ -31,7 +31,7 @@ public class Carlsen implements BotServiceProvider {
 
         for (TrucoCard card : hand){
             CardRank cardRank = card.getRank();
-            if(cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE)) {
+            if((cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE)) && !cardRank.equals(intel.getVira().getRank().next())) {
                 highCard++;
             }
         }
