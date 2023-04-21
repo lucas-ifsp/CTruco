@@ -31,7 +31,8 @@ public class Carlsen implements BotServiceProvider {
 
         for (TrucoCard card : hand){
             CardRank cardRank = card.getRank();
-            if((cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE)) && !cardRank.equals(intel.getVira().getRank().next())) {
+            if((cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE))
+                    && !cardRank.equals(intel.getVira().getRank().next())) {
                 highCard++;
             }
         }
@@ -59,8 +60,33 @@ public class Carlsen implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         int haveZap = haveZap(intel.getCards(), vira);
+        int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
+        List<TrucoCard> hand = intel.getCards();
+        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
+        int highCard = 0;
 
-        return haveZap > -1;
+        if(!roundResult.isEmpty() && roundResult.contains(GameIntel.RoundResult.WON)){
+            return haveZap > -1;
+        }
+
+        if(!roundResult.isEmpty() && roundResult.contains(GameIntel.RoundResult.LOST)){
+            if(haveZap > -1) {
+                for (TrucoCard card : hand) {
+                    CardRank cardRank = card.getRank();
+                    if ((cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE))
+                            && !cardRank.equals(intel.getVira().getRank().next())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        if(qntManilhas > 1){
+            return true;
+        }
+
+        return false;
     }
 
     @Override
