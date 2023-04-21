@@ -30,7 +30,8 @@ public class Carlsen implements BotServiceProvider {
         int highCard = 0;
 
         for (TrucoCard card : hand){
-            if(card.equals(CardRank.ACE) || card.equals((CardRank.TWO)) || card.equals(CardRank.THREE)) {
+            CardRank cardRank = card.getRank();
+            if(cardRank.equals(CardRank.ACE) || cardRank.equals((CardRank.TWO)) || cardRank.equals(CardRank.THREE)) {
                 highCard++;
             }
         }
