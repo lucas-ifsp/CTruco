@@ -67,27 +67,31 @@ public class FirstRound implements Strategy {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        cards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, intel.getVira());
+        });
         Optional<TrucoCard> opponentCard = getWhichBotShouldPlayFirst(intel);
         TrucoCard card;
         if (opponentCard.isPresent()) {
             TrucoCard opponentCardBot = opponentCard.get();
-            int countCardsHigherOfOpponent = getCountCardsAreHigherOfOpponent(intel.getCards(), opponentCardBot, intel.getVira());
+            int countCardsHigherOfOpponent = getCountCardsAreHigherOfOpponent(cards, opponentCardBot, intel.getVira());
             switch (countCardsHigherOfOpponent) {
                 case 1 -> {
-                    card = checkWhichCardHasHigherValue(intel.getCards(), intel.getVira());
+                    card = cards.get(2);
                     if (!opponentCardBot.isManilha(intel.getVira())) {
                         if (card.isCopas(intel.getVira()) || card.isZap(intel.getVira()))
-                            return CardToPlay.of(playCardWithSameOrLessValueOfOpponent(intel.getCards(), intel.getVira()));
+                            return CardToPlay.of(playCardWithSameOrLessValueOfOpponent(cards, intel.getVira()));
                     }
                     return CardToPlay.of(card);
                 }
                 case 2, 3 -> {
-                    return CardToPlay.of(chooseCardThatBeatsTheOpponent(intel.getCards(), intel.getVira(), opponentCardBot));
+                    return CardToPlay.of(chooseCardThatBeatsTheOpponent(cards, intel.getVira(), opponentCardBot));
                 }
                 default -> {
-                    if (cardsHaveSameValue(intel.getCards()))
-                        return CardToPlay.of(intel.getCards().get(0));
-                    return CardToPlay.of(checkWhichCardHasLowerValue(intel.getCards(), intel.getVira()));
+                    if (cardsHaveSameValue(cards))
+                        return CardToPlay.of(cards.get(0));
+                    return CardToPlay.of(cards.get(0));
                 }
             }
         } else if (calculateCurrentHandValue(intel) >= 23) {
@@ -96,12 +100,12 @@ public class FirstRound implements Strategy {
                     return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isOuros(intel.getVira()) ||
                             trucoCard.isEspadilha(intel.getVira())).findFirst().orElseThrow());
             }
-            return CardToPlay.of(getCardWithMediumStrength(intel.getCards(), intel.getVira()));
+            return CardToPlay.of(cards.get(1));
         } else {
             if (hasManilha(intel))
                 return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
                         .findFirst().orElseThrow());
-            return CardToPlay.of(intel.getCards().get(2));
+            return CardToPlay.of(cards.get(2));
         }
     }
 
@@ -150,26 +154,22 @@ public class FirstRound implements Strategy {
     }
 
     public boolean cardsHaveSameValue(List<TrucoCard> cardList) {
-        for (int i = 0; i < 1; i++) {
-             if (cardList.get(i).getRank().value() == cardList.get(i + 1).getRank().value() &&
-                cardList.get(i).getRank().value() == cardList.get(i + 2).getRank().value())
-                 return true;
-        }
-        return false;
+        return cardList.get(0).getRank().value() == cardList.get(1).getRank().value() &&
+                cardList.get(0).getRank().value() == cardList.get(2).getRank().value();
     }
 
     public TrucoCard playCardWithSameOrLessValueOfOpponent(List<TrucoCard> cardList, TrucoCard opponentCardBot) {
         return cardList.stream()
                 .filter(card -> card.getRank().value() == opponentCardBot.getRank().value() || card.getRank().value() <= opponentCardBot.getRank().value())
                 .findFirst()
-                .orElseThrow();
+                .orElse(cardList.get(0));
     }
 
     public TrucoCard chooseCardThatBeatsTheOpponent(List<TrucoCard> cardList, TrucoCard vira, TrucoCard opponentCard) {
         return cardList.stream()
                 .filter(carta -> carta.relativeValue(vira) > opponentCard.relativeValue(vira))
                 .min(Comparator.comparingInt(carta -> carta.relativeValue(vira)))
-                .orElseThrow();
+                .orElse(cardList.get(1));
     }
 
     public int getCountCardsAreHigherOfOpponent(List<TrucoCard> cards, TrucoCard card, TrucoCard vira) {
@@ -179,12 +179,6 @@ public class FirstRound implements Strategy {
                 count++;
         }
         return count;
-    }
-
-    public TrucoCard checkWhichCardHasLowerValue (List<TrucoCard> cards, TrucoCard vira) {
-        return cards.stream()
-                .min(Comparator.comparingInt(carta -> carta.relativeValue(vira)))
-                .orElseThrow();
     }
 
     public TrucoCard checkWhichCardHasHigherValue (List<TrucoCard> cards, TrucoCard vira) {
