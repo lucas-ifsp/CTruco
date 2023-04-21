@@ -111,6 +111,13 @@ public class DestroyerBot implements BotServiceProvider {
             }
             case 2 -> {
 
+                if(isTheFirstToPlay(intel)){
+                    if (hasAtLeastTwoManilhas(intel)){
+                        return CardToPlay.discard(getLowestRankManilha(intel).get());
+                    }
+                }
+
+
                 if (!isTheFirstToPlay(intel)) {
                     if (opponentCardIsHidden(intel))
                         return CardToPlay.of(lowestCard);
