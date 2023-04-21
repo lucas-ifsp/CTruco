@@ -121,8 +121,9 @@ public class DestroyerBot implements BotServiceProvider {
                         }
                         return CardToPlay.of(getManilhas(intel).get(0));
                     }
-
-
+                    if (hasCardWithRank(intel, CardRank.THREE)) {
+                        return CardToPlay.of(getStrongerCardWithRank(intel, CardRank.THREE).get());
+                    }
                 }
 
 
