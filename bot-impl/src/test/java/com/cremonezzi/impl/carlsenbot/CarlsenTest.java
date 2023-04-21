@@ -356,4 +356,31 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not use manilha if can win in other ways")
+    public void ShouldNotUseManilhaIfCanWinInOtherWays(){
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 5)
+                .opponentScore(7)
+                .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[7C]");
+    }
 }
