@@ -220,6 +220,20 @@ class DestroyerBotTest {
 
                 assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
             }
+
+            @Test
+            @DisplayName("Should play the manilha in second round if it only has one and it is the first to play.")
+            void shouldPlayTheManilhaInTheSecondRoundIfItIsTheOnlyOneAndIfItIsTheFirstToPlay(){
+                vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+                cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+
+                assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+            }
         }
     }
 
