@@ -52,8 +52,14 @@ public class Carlsen implements BotServiceProvider {
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return true;
+    public boolean getMaoDeOnzeResponse(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        
+        int lowCardsCount = (int) intel.getCards().stream().filter(trucoCard ->
+                trucoCard.relativeValue(vira) < vira.getRank().value())
+                .count();
+
+        return lowCardsCount <= 2;
     }
 
     @Override
