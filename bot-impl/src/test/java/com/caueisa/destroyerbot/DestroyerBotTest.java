@@ -462,14 +462,14 @@ class DestroyerBotTest {
 
             @Test
             @DisplayName("Should ask for point raise if is losing the game by until three points of difference " +
-                         "and has at least two manilhas")
-            void shouldAskForPointRaiseIfIsLosingTheGameByUntilThreePointsAndHasAtLeastTwoManilhas(){
+                         "and has cards above rank TWO")
+            void shouldAskForPointRaiseIfIsLosingTheGameByThreePointsAndHasCardsAboveRankTwo(){
                 vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-                cards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+                cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-                when(intel.getScore()).thenReturn(6);
+                when(intel.getScore()).thenReturn(5);
                 when(intel.getOpponentScore()).thenReturn(8);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
