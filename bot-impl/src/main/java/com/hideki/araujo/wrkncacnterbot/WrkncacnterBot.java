@@ -31,16 +31,16 @@ public class WrkncacnterBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         if (calculateDeckValue(intel) >= CardRank.KING.value() * intel.getCards().size()) {
             var numberOfManilhas = calculateNumberOfManilhas(intel);
-            if (intel.getScore() > intel.getOpponentScore()) {
-                if (numberOfManilhas >= 2) return 0;
+            if (intel.getScore() > intel.getOpponentScore() && numberOfManilhas >= 2) {
                 return -1;
             }
             else if (intel.getScore() == intel.getOpponentScore()) {
-                if (numberOfManilhas >= 2) return 0;
+                if (numberOfManilhas >= 1) return 0;
                 return -1;
             }
             else if (intel.getScore() < intel.getOpponentScore()) {
-                if (numberOfManilhas >= 2 && hasCardRankHigherThan(intel, CardRank.KING) && intel.getHandPoints() < 9) return 1;
+                if (numberOfManilhas >= 1 && intel.getHandPoints() < 9) return 1;
+                else if (hasCardRankHigherThan(intel, CardRank.JACK)) return 0;
                 return -1;
             }
         }
@@ -65,12 +65,11 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return true;
-//        if (intel.getRoundResults().isEmpty())
-//            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
-//        if (intel.getRoundResults().size() >= 2)
-//            return calculateDeckValue(intel) >= 7;
-//        return false;
+        if (intel.getRoundResults().isEmpty())
+            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
+        if (intel.getRoundResults().size() >= 2)
+            return calculateDeckValue(intel) >= 7;
+        return false;
     }
 
     @Override
@@ -89,14 +88,27 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
         if (intel.getOpponentCard().isEmpty()) {
-            return
-                    intel
-                    .getCards()
-                    .stream()
-                    .filter(card -> !card.isZap(intel.getVira()))
-                    .filter(card -> !card.isManilha(intel.getVira()))
-                    .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+            if (calculateNumberOfManilhas(intel) >= 2)
+                return
+                        intel
+                        .getCards()
+                        .stream()
+                        .filter(card -> !card.isZap(intel.getVira()))
+                        .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+            else
+                return
+                        intel
+                                .getCards()
+                                .stream()
+                                .filter(card -> !card.isZap(intel.getVira()))
+                                .filter(card -> !card.isManilha(intel.getVira()))
+                                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
         };
+
+        if (calculateNumberOfManilhas(intel) >= 1 && intel.getRoundResults().size() == 0) {
+            return intel.getCards().stream().filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0).findFirst();
+        }
+
         return intel
                 .getCards()
                 .stream()
