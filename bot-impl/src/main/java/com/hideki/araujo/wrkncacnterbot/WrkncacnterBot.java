@@ -21,6 +21,7 @@
 
 package com.hideki.araujo.wrkncacnterbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -36,7 +37,13 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return calculateNumberOfManilhas(intel) >= 2 || hasZapAndManilhaHearts(intel);
+        var hasThreeTwoAndManilha =
+                hasCardRank(intel, CardRank.THREE) &&
+                hasCardRank(intel, CardRank.TWO) &&
+                        calculateNumberOfManilhas(intel) == 1;
+        var hasTwoManilhas = calculateNumberOfManilhas(intel) >= 2;
+
+        return hasThreeTwoAndManilha || hasTwoManilhas || hasZapAndManilhaHearts(intel);
     }
 
     @Override
@@ -78,5 +85,9 @@ public class WrkncacnterBot implements BotServiceProvider {
         var hasManilhaHearts = intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()) && card.isManilha(intel.getVira()));
 
         return hasZap && hasManilhaHearts;
+    }
+
+    public boolean hasCardRank(GameIntel intel, CardRank cardRank) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank().equals(cardRank));
     }
 }
