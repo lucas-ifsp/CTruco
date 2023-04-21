@@ -162,9 +162,9 @@ public class CarlsenTest {
 
         // Bot info
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
         );
 
         GameIntel intel = GameIntel.StepBuilder.with()
