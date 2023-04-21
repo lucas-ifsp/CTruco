@@ -36,18 +36,21 @@ public class WrkncacnterBot implements BotServiceProvider {
             }
             else if (intel.getScore() == intel.getOpponentScore()) {
                 if (numberOfManilhas >= 1) return 0;
-                return -1;
+                 return -1;
             }
             else if (intel.getScore() < intel.getOpponentScore()) {
-                if (numberOfManilhas >= 1 && intel.getHandPoints() < 9) return 1;
+                if (numberOfManilhas >= 1 && intel.getHandPoints() < 9)
+                    return 1;
                 else if (hasCardRankHigherThan(intel, CardRank.JACK)) return 0;
                 return -1;
             }
         }
         if (calculateDeckValue(intel) <= CardRank.QUEEN.value() * intel.getCards().size()) {
-            if (intel.getScore() > intel.getOpponentScore()) return -1;
+            if (intel.getScore() > intel.getOpponentScore())
+                return -1;
             else if (intel.getScore() == intel.getOpponentScore()) return 0;
-            else if (intel.getScore() < intel.getOpponentScore() && intel.getHandPoints() < 9) return 1;
+            else if (intel.getScore() < intel.getOpponentScore() && intel.getHandPoints() < 9)
+                 return 1;
         }
         return 0;
     }
@@ -55,18 +58,18 @@ public class WrkncacnterBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         var hasThreeTwoAndManilha =
-                hasCardRank(intel, CardRank.THREE) &&
-                hasCardRank(intel, CardRank.TWO) &&
-                        calculateNumberOfManilhas(intel) == 1;
-        var hasTwoManilhas = calculateNumberOfManilhas(intel) >= 2;
+                hasCardRank(intel, CardRank.THREE) ||
+                hasCardRank(intel, CardRank.TWO);
+        var hasOneManilha = calculateNumberOfManilhas(intel) >= 1;
 
-        return hasThreeTwoAndManilha || hasTwoManilhas || hasZapAndManilhaHearts(intel);
+        return hasThreeTwoAndManilha || hasOneManilha || hasZapAndManilhaHearts(intel);
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getHandPoints() == 12) return false;
         if (intel.getRoundResults().isEmpty())
-            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
+            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 18;
         if (intel.getRoundResults().size() >= 2)
             return calculateDeckValue(intel) >= 7;
         return false;
