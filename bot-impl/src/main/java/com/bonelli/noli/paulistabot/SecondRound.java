@@ -20,31 +20,53 @@ public class SecondRound implements Strategy {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
-        cards.sort((c1, c2) -> {
-            return c1.compareValueTo(c2, intel.getVira());
-        });
-
-        TrucoCard cardMedium = cards.get(0);
-
-        if (calculateCurrentHandValue(intel) >= 25) {
-            if (hasManilha(intel)) return true;
-            else if (intel.getOpponentScore() < 9 && hasTwoOrThree(intel)) return true;
-            else return intel.getOpponentScore() >= 9 && cardMedium.getRank().value() >= 9;
-        } else return false;
+        return true;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> openCards = new ArrayList<>(intel.getCards().subList(1, 3));
+        openCards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, vira);
+        });
+
+        GameIntel.RoundResult roundResult = intel.getRoundResults().get(0);
+
+        switch (roundResult) {
+            case WON -> {
+                if (openCards.get(1).getRank().value() >= 8) {
+                    return calculateCurrentHandValue(intel) <= 8;
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        cards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, vira);
+        });
+
         GameIntel.RoundResult roundResult = intel.getRoundResults().get(0);
 
+        switch (roundResult) {
+            case WON -> {
+                if (hasZap(intel)) return CardToPlay.discard(cards.get(0));
+                else if (calculateCurrentHandValue(intel) >= 17) return CardToPlay.of(cards.get(0));
+            }
+        }
+
         return null;
+    }
+
+    private boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
 
     @Override
