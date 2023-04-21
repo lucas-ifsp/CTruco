@@ -23,6 +23,7 @@ package com.indi.impl.addthenewsoul;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,72 @@ public class AddTheNewSoul implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        // verificaçao para nao causar exception de pedir 15
+        if(intel.getHandPoints() == 12) return 0;
+
+        // Se perder significar fim de jogo
+        if(intel.getHandPoints() + intel.getOpponentScore() >= 12)
+            if(hasCasal(intel)) return 1;
+            else return 0;
+
+        // Se todas as manilhas ja foram jogadas e tem ataque, 6 marreco!
+        if(allManilhasPlayed(intel) && hasAttackCard(intel)) return 1;
+
+
+        if(handIsStrong(intel) && intel.getScore() - intel.getOpponentScore() > 3) return 1;
+
+
+        // se tiver casal, 6 marreco
+        if(hasCasal(intel)) return 1;
+
+
+        // Se ganhou a primeira ou a segunda rodada, e tiver manilha ou ataque, 6 marreco
+        if(!intel.getRoundResults().isEmpty() && (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON || (intel.getRoundResults().size() >= 2 && intel.getRoundResults().get(1) == GameIntel.RoundResult.WON))){
+            if(hasZap(intel) && hasAttackCard(intel)) return 1;
+            if(hasManilha(intel) || hasAttackCard(intel)) return 1;
+        }
+
+
+
+        if(intel.getScore() - intel.getOpponentScore() > 2 && !handAboveAverage(intel)) return 0;
+
+        if(!handIsStrong(intel)) return 0;
+
+        if(intel.getScore() == 1 || intel.getOpponentScore() == 11) return 0;
+
         return 0;
+    }
+
+    private boolean allManilhasPlayed(GameIntel intel) {
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas.add(card);
+            }
+        }
+        return manilhas.size() == 4;
+    }
+
+    private boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
+    private boolean hasManilha(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
+    }
+
+    private boolean hasAttackCard(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> attackCards.contains(card.getRank()));
+    }
+
+    private boolean hasCasal(GameIntel intel) {
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas.add(card);
+            }
+        }
+        return manilhas.size() == 2;
     }
 
     @Override
