@@ -18,6 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -323,6 +332,102 @@ class PaulistaBotTest {
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
                 assertThat(secondRound.chooseCard(intel).value()).isEqualTo(TrucoCard.closed());
+            }
+            
+            @Test
+            @DisplayName("Play the weakest card in your hand if you won the first round and have power 17 or greater")
+            void playTheWeakestCardInYourHandIfYouWonTheFirstRoundAndHavePower17OrGreater () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("Play the strongest card if hand value is between 5 and 13")
+            void playTheStrongestCardIfHandValueIsBetween8And16 () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("Sure to play weaker card if hand value is not good")
+            void sureToPlayWeakerCardIfHandValueIsNotGood () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("Discard any card if you lost the first round and don't have any cards that beat your opponent and not have same value of opponent")
+            void discardAnyCardIfYouLostTheFirstRoundAndDonTHaveAnyCardsThatBeatYourOpponentAndNotHaveSameValueOfOpponent () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(TrucoCard.closed());
+            }
+            
+            @Test
+            @DisplayName("Play the only card you win from your opponent if you lost the first round")
+            void playTheOnlyCardYouWinFromYourOpponentIfYouLostTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(1));
+            }
+            
+            @Test
+            @DisplayName("Playing the weakest card from the opponent's hand if they lost the first round")
+            void playingTheWeakestCardFromTheOpponentSHandIfTheyLostTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("If the opponent has covered the card, play a card with a lower value")
+            void ifTheOpponentHasCoveredTheCardPlayACardWithALowerValue () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.closed()));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(1));
+            }
+            
+            @Test
+            @DisplayName("Play card with the same value to drew if you don't have any that beat the opponent")
+            void playCardWithTheSameValueToDrewIfYouDonTHaveAnyThatBeatTheOpponent () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
+            }
+            
+            @Test
+            @DisplayName("If you drew the previous round, play the strongest card at the start")
+            void ifYouDrewThePreviousRoundPlayTheStrongestCardAtTheStart () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
+                assertThat(secondRound.chooseCard(intel).value()).isEqualTo(intel.getCards().get(0));
             }
         }
     }
