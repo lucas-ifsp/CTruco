@@ -304,4 +304,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getMaoDeOnzeResponse(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should raise if there is a zap and other high value in hand")
+    public void ShouldRaiseZapAndHigh(){
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 10)
+                .opponentScore(2)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
 }
