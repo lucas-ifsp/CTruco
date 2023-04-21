@@ -116,8 +116,12 @@ public class DestroyerBot implements BotServiceProvider {
                         return CardToPlay.discard(getLowestRankManilha(intel).get());
                     }
                     if (getManilhas(intel).size() == 1){
+                        if(getManilhas(intel).get(0).isZap(vira)){
+                            return CardToPlay.discard(getLowestCardBetweenAllCardsAvailableToBePlayed(intel));
+                        }
                         return CardToPlay.of(getManilhas(intel).get(0));
                     }
+
 
                 }
 
