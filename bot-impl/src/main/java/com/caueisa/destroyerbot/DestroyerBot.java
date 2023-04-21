@@ -70,9 +70,9 @@ public class DestroyerBot implements BotServiceProvider {
                 if (scoreDifference <= 3)
                     return true;
             }
-            if(scoreDifference <= -6  && hasStrongestManilhas(intel))
+            if (scoreDifference <= -6  && hasStrongestManilhas(intel))
                 return true;
-            if (scoreDifference >= -3 && hasAtLeastTwoManilhas(intel))
+            if (scoreDifference >= -3 && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
                 return true;
         }
         return false;
