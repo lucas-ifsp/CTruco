@@ -21,10 +21,7 @@
 
 package com.hideki.araujo.wrkncacnterbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Optional;
@@ -32,6 +29,26 @@ import java.util.Optional;
 public class WrkncacnterBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (calculateDeckValue(intel) >= CardRank.KING.value() * intel.getCards().size()) {
+            var numberOfManilhas = calculateNumberOfManilhas(intel);
+            if (intel.getScore() > intel.getOpponentScore()) {
+                if (numberOfManilhas >= 2) return 0;
+                return -1;
+            }
+            else if (intel.getScore() == intel.getOpponentScore()) {
+                if (numberOfManilhas >= 2) return 0;
+                return -1;
+            }
+            else if (intel.getScore() < intel.getOpponentScore()) {
+                if (numberOfManilhas >= 2 && hasCardRankHigherThan(intel, CardRank.KING)) return 1;
+                return -1;
+            }
+        }
+        if (calculateDeckValue(intel) <= CardRank.QUEEN.value() * intel.getCards().size()) {
+            if (intel.getScore() > intel.getOpponentScore()) return -1;
+            else if (intel.getScore() == intel.getOpponentScore()) return 0;
+            else if (intel.getScore() < intel.getOpponentScore()) return 1;
+        }
         return 0;
     }
 
@@ -55,7 +72,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        return CardToPlay.of(chooseKillCard(intel).orElse(chooseWeakestCard(intel).get()));
     }
 
     public int calculateDeckValue(GameIntel intel) {
@@ -73,7 +90,7 @@ public class WrkncacnterBot implements BotServiceProvider {
                 .getCards()
                 .stream()
                 .filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0)
-                .findFirst();
+                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
     public long calculateNumberOfManilhas(GameIntel intel) {
@@ -89,5 +106,9 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     public boolean hasCardRank(GameIntel intel, CardRank cardRank) {
         return intel.getCards().stream().anyMatch(card -> card.getRank().equals(cardRank));
+    }
+
+    public boolean hasCardRankHigherThan(GameIntel intel, CardRank cardRank) {
+        return intel.getCards().stream().allMatch(card -> card.getRank().value() >= cardRank.value());
     }
 }
