@@ -426,6 +426,13 @@ class DestroyerBotTest {
 
                 assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
             }
+
+            @Test
+            @DisplayName("Should accept mao de onze if opponent is also in mao de onze.")
+            void shouldAcceptMaoDeOnzeIfOpponentIsAlsoInMaoDeOnze(){
+                when(intel.getOpponentScore()).thenReturn(11);
+                assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+            }
         }
 
         @Nested
