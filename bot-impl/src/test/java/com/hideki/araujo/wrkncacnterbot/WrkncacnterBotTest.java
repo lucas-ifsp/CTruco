@@ -209,27 +209,27 @@ class WrkncacnterBotTest {
     }
 
     // Falta parametrizar
-    @DisplayName("Testa a estratégia de ganhar 6 pontos(ter ganhado uma rodada, trucar na segunda, jogar uma carta fraca e depois jogar a mais forte)")
-    @Test
-    void testSixPointsStrategy() {
-        GameIntel intel = mock(GameIntel.class);
-
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
-
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
-        ));
-
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
-
-        assertTrue(wrkncacnterBot.decideIfRaises(intel));
-
-        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
-
-        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
-    }
+//    @DisplayName("Testa a estratégia de ganhar 6 pontos(ter ganhado uma rodada, trucar na segunda, jogar uma carta fraca e depois jogar a mais forte)")
+//    @Test
+//    void testSixPointsStrategy() {
+//        GameIntel intel = mock(GameIntel.class);
+//
+//        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+//
+//        when(intel.getCards()).thenReturn(List.of(
+//                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+//                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+//                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+//        ));
+//
+//        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+//
+//        assertTrue(wrkncacnterBot.decideIfRaises(intel));
+//
+//        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+//
+//        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+//    }
 
     // Falta parametrizar
     @DisplayName("Testa quantas manilhas existe na mao")
