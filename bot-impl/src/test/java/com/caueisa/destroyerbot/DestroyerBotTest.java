@@ -410,6 +410,24 @@ class DestroyerBotTest {
         }
 
         @Nested
+        @DisplayName("When in mao de onze")
+        class GetMaoDeOnzeResponse {
+            @Test
+            @DisplayName("Should play mao de onze if has at least one manilha and two cards above ace rank.")
+            void shouldPlayMaoDeOnzeIfHasAtLeastOneManilhaAndTwoCardsAboveAceRank() {
+                vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+                cards = List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(vira);
+
+                assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+            }
+        }
+
+        @Nested
         @DisplayName("When playing a card")
         class ChooseCardTest {
             @Test
