@@ -47,9 +47,10 @@ public class DestroyerBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(intel.getOpponentScore() == 11)
             return true;
-        if(getCardsAboveRank(intel, CardRank.ACE).size() == 3 && getManilhas(intel).size() > 0 && intel.getOpponentScore() <= 8){
+        if(getCardsAboveRank(intel, CardRank.ACE).size() == 3 && getManilhas(intel).size() > 0 && intel.getOpponentScore() <= 8)
             return true;
-        }
+        if(intel.getOpponentScore() >= 8 && getCardsAboveRank(intel, CardRank.KING).size() == 3)
+            return true;
         return false;
     }
 
