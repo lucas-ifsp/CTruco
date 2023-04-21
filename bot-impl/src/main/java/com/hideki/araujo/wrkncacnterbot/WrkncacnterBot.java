@@ -40,14 +40,14 @@ public class WrkncacnterBot implements BotServiceProvider {
                 return -1;
             }
             else if (intel.getScore() < intel.getOpponentScore()) {
-                if (numberOfManilhas >= 2 && hasCardRankHigherThan(intel, CardRank.KING)) return 1;
+                if (numberOfManilhas >= 2 && hasCardRankHigherThan(intel, CardRank.KING) && intel.getHandPoints() < 9) return 1;
                 return -1;
             }
         }
         if (calculateDeckValue(intel) <= CardRank.QUEEN.value() * intel.getCards().size()) {
             if (intel.getScore() > intel.getOpponentScore()) return -1;
             else if (intel.getScore() == intel.getOpponentScore()) return 0;
-            else if (intel.getScore() < intel.getOpponentScore()) return 1;
+            else if (intel.getScore() < intel.getOpponentScore() && intel.getHandPoints() < 9) return 1;
         }
         return 0;
     }
@@ -65,9 +65,12 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty())
-            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
-        return false;
+        return true;
+//        if (intel.getRoundResults().isEmpty())
+//            return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 24;
+//        if (intel.getRoundResults().size() >= 2)
+//            return calculateDeckValue(intel) >= 7;
+//        return false;
     }
 
     @Override
@@ -85,7 +88,15 @@ public class WrkncacnterBot implements BotServiceProvider {
     }
 
     public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
-        if (intel.getOpponentCard().isEmpty()) return Optional.empty();
+        if (intel.getOpponentCard().isEmpty()) {
+            return
+                    intel
+                    .getCards()
+                    .stream()
+                    .filter(card -> !card.isZap(intel.getVira()))
+                    .filter(card -> !card.isManilha(intel.getVira()))
+                    .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+        };
         return intel
                 .getCards()
                 .stream()
