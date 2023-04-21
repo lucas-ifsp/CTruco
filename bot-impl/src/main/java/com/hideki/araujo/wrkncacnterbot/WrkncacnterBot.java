@@ -36,7 +36,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return calculateDeckValue(intel) >= 24;
+        return calculateNumberOfManilhas(intel) >= 2 || hasZapAndManilhaHearts(intel);
     }
 
     @Override
@@ -69,11 +69,14 @@ public class WrkncacnterBot implements BotServiceProvider {
                 .findFirst();
     }
 
-    public boolean hasTwoManilhasNonZap(GameIntel intel) {
-        return false;
+    public long calculateNumberOfManilhas(GameIntel intel) {
+        return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
     }
 
-    public boolean hasZapAndManilhaCopas(GameIntel intel) {
-        return false;
+    public boolean hasZapAndManilhaHearts(GameIntel intel) {
+        var hasZap = intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+        var hasManilhaHearts = intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()) && card.isManilha(intel.getVira()));
+
+        return hasZap && hasManilhaHearts;
     }
 }
