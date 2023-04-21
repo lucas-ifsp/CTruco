@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AddTheNewSoulTest {
@@ -719,7 +720,232 @@ public class AddTheNewSoulTest {
         assertTrue(addTheNewSoul.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
+    // FIM DOS CASOS DE TESTE DO METODO GETRAISERESPONSE
+
+    // INICIO DOS CASOS DE TESTE DO METODO GETRAISERESPONSE
+
+    @Test
+    @DisplayName("Should not raise if hand value is twelve")
+    void shouldNotRaiseIfHandValueIsTwelveTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 12)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+    }
+    @Test
+    @DisplayName("Should always accept if has a casal maior")
+    void shouldAlwaysAcceptIfHasACasalMaiorTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should decline if hand is not strong")
+    void shouldDeclineIfHandIsNotStrongTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+    }
+
+    @Test
+    @DisplayName("Should raise if won first round and has a manilha")
+    void shouldRaiseIfWonFirstRoundAndHasAManilhaTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should raise if won first round and has an attack card")
+    void shouldRaiseIfWonFirstRoundAndHasAnAttackCardTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should raise if has zap and at least one attack card")
+    void shouldRaiseIfHasZapAndAtLeastOneAttackCardTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should not raise if loss means game over")
+    void shouldNotRaiseIfLossMeansGameOverTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
 
 
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                .botInfo(botCards, 0)
+                .opponentScore(6);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+    }
+    
+    @Test
+    @DisplayName("Should raise if loss means game over but has casal")
+    void shouldRaiseIfLossMeansGameOverButHasCasalTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 6)
+                .botInfo(botCards, 0)
+                .opponentScore(6);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should raise if every manilha has been played and has attack card")
+    void shouldRaiseIfEveryManilhaHasBeenPlayedAndHasAttackCardTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        List<TrucoCard> botCards = Collections.singletonList(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 6)
+                .botInfo(botCards, 0)
+                .opponentScore(3);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should raise if hand is strong and points difference is higher than Three")
+    void shouldRaiseIfHandIsStrongAndPointsDifferenceIsHigherThanThreeTest(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 6)
+                .botInfo(botCards, 6)
+                .opponentScore(2);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should not raise if hand is weak and score difference is lower than two")
+    void shouldNotRaiseIfHandIsWeakAndScoreDifferenceIsLowerThanTwo(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 6)
+                .botInfo(botCards, 6)
+                .opponentScore(2);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+    }
+
+    @Test
+    @DisplayName("Should decline if is mao de onze")
+    void shouldDeclineIfIsMaoDeOnze(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 3)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+    }
 
 }
