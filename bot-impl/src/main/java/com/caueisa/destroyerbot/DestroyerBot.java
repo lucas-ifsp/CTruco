@@ -81,9 +81,11 @@ public class DestroyerBot implements BotServiceProvider {
         TrucoCard lowestCard = getLowestCardBetweenAllCardsAvailableToBePlayed(intel);
         Optional<TrucoCard> lowestCardStrongerThanOpponentCard;
         Optional<TrucoCard> cardEqualsToOpponentCard;
+        TrucoCard vira = intel.getVira();
 
         switch (roundNumber) {
             case 1 -> {
+
                 if(isTheFirstToPlay(intel)) {
                     if (hasCardWithRank(intel, CardRank.THREE)) {
                         return CardToPlay.of(getStrongerCardWithRank(intel, CardRank.THREE).get());
@@ -91,8 +93,13 @@ public class DestroyerBot implements BotServiceProvider {
                     if (hasAtLeastTwoManilhas(intel)) {
                         return CardToPlay.of(getLowestRankManilha(intel).get());
                     }
+                    if (getManilhas(intel).size() == 1){
+                        return CardToPlay.of(getManilhas(intel).get(0));
+                    }
                     return CardToPlay.of(getHighestCardBetweenAllCardsAvailableToBePlayed(intel));
                 }
+
+
                 if (!isTheFirstToPlay(intel)) {
                     if (opponentCardIsHidden(intel))
                         return CardToPlay.of(lowestCard);
@@ -100,8 +107,10 @@ public class DestroyerBot implements BotServiceProvider {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.orElse(lowestCard));
                 }
+
             }
             case 2 -> {
+
                 if (!isTheFirstToPlay(intel)) {
                     if (opponentCardIsHidden(intel))
                         return CardToPlay.of(lowestCard);
@@ -112,8 +121,10 @@ public class DestroyerBot implements BotServiceProvider {
                     if (cardEqualsToOpponentCard.isPresent())
                         return CardToPlay.of(cardEqualsToOpponentCard.get());
                 }
+
             }
             case 3 -> {
+
                 if (!isTheFirstToPlay(intel)) {
                     if (opponentCardIsHidden(intel))
                         return CardToPlay.of(lowestCard);
@@ -124,6 +135,7 @@ public class DestroyerBot implements BotServiceProvider {
                     if (cardEqualsToOpponentCard.isPresent())
                         return CardToPlay.of(cardEqualsToOpponentCard.get());
                 }
+
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
