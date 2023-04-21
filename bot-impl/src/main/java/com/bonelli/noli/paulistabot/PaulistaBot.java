@@ -6,30 +6,32 @@ import com.bueno.spi.service.BotServiceProvider;
 
 public class PaulistaBot implements BotServiceProvider {
 
-    private Object instanceRound;
-
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 1;
+        return getInstanceByRound(intel.getRoundResults().size()).getRaiseResponse(intel);
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return getInstanceByRound(intel.getRoundResults().size()).getMaoDeOnzeResponse(intel);
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return getInstanceByRound(intel.getRoundResults().size()).decideIfRaises(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return switch (intel.getRoundResults().size()) {
-            case 0 -> new FirstRound().chooseCard(intel);
-            case 1 -> new SecondRound().chooseCard(intel);
-            case 2 -> new ThirdRound().chooseCard(intel);
-            default -> throw new IllegalStateException("Unexpected value: " + intel.getCards().size());
+        return getInstanceByRound(intel.getRoundResults().size()).chooseCard(intel);
+    }
+
+    private Strategy getInstanceByRound(int roundNumber) {
+        return switch (roundNumber) {
+            case 0 -> new FirstRound();
+            case 1 -> new SecondRound();
+            case 2 -> new ThirdRound();
+            default -> throw new IllegalStateException("Unexpected value: " + roundNumber);
         };
     }
 }
