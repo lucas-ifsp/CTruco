@@ -330,4 +330,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should start raise if there is a zap and high card")
+    public void ShouldStartRaiseZapAndHigh(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 10)
+                .opponentScore(2)
+                .build();
+
+        assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
+    }
 }
