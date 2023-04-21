@@ -70,6 +70,8 @@ public class DestroyerBot implements BotServiceProvider {
                 if (scoreDifference <= 3)
                     return true;
             }
+            if(scoreDifference <= -6  && hasStrongestManilhas(intel))
+                return true;
             if (scoreDifference >= -3 && hasAtLeastTwoManilhas(intel))
                 return true;
         }
@@ -164,6 +166,16 @@ public class DestroyerBot implements BotServiceProvider {
     private boolean hasAtLeastTwoManilhas(GameIntel intel){
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream().filter(card -> card.isManilha(vira)).count() >= 2;
+    }
+
+    private boolean hasStrongestManilhas(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        TrucoCard zap = TrucoCard.of(vira.getRank().next(), CardSuit.CLUBS);
+        TrucoCard copas = TrucoCard.of(vira.getRank().next(), CardSuit.HEARTS);
+        if(intel.getCards().contains(zap) && intel.getCards().contains(copas)) {
+            return true;
+        }
+        return false;
     }
 
     private Optional<TrucoCard> getLowestRankManilha(GameIntel intel){
