@@ -1,6 +1,9 @@
 package com.hideki.araujo.wrkncacnterbot;
 
-import com.bueno.spi.model.*;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -316,6 +319,24 @@ class WrkncacnterBotTest {
         ));
 
         assertTrue(wrkncacnterBot.hasZapAndManilhaHearts(intel));
+    }
+
+    @DisplayName("Testa de amarrar jogo")
+    @Test
+    void testForceTieGame(){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
+
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+        ));
+
+        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
     }
 
     static Stream<Arguments> provideDataToCalculateDeckValues() {
