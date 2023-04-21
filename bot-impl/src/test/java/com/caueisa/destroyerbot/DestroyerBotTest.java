@@ -492,6 +492,22 @@ class DestroyerBotTest {
                 when(intel.getOpponentScore()).thenReturn(9);
                 assertThat(sut.decideIfRaises(intel)).isFalse();
             }
+
+            @Test
+            @DisplayName("Should ask for point raise if it has zap and copas and the opponent is winning by six points.")
+            void shouldAskForPointRaiseIfItContainsZapAndCopasAndTheOpponentIsWinningBySixPoints(){
+                vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+                cards = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getScore()).thenReturn(2);
+                when(intel.getOpponentScore()).thenReturn(9);
+
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
         }
     }
 
