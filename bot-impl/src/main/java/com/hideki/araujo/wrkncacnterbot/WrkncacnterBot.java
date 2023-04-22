@@ -24,7 +24,9 @@ package com.hideki.araujo.wrkncacnterbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class WrkncacnterBot implements BotServiceProvider {
     @Override
@@ -136,5 +138,14 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     public boolean hasCardRankHigherThan(GameIntel intel, CardRank cardRank) {
         return intel.getCards().stream().allMatch(card -> card.getRank().value() >= cardRank.value());
+    }
+
+    public Optional<TrucoCard> forceTieGame(GameIntel intel) {
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        if (opponentCard.isPresent()){
+            Optional<TrucoCard> card = intel.getCards().stream().filter(trucoCard -> trucoCard.compareValueTo(opponentCard.get(), intel.getVira()) == 0).findFirst();
+            return card.isPresent() ? card : chooseKillCard(intel);
+        }
+        return chooseKillCard(intel);
     }
 }
