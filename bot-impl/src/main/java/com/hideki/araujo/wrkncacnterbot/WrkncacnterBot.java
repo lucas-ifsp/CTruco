@@ -30,7 +30,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.Optional;
 
 public class WrkncacnterBot implements BotServiceProvider {
-    @Override
+    @Override // Here throw exception
     public int getRaiseResponse(GameIntel intel) {
         if (calculateDeckValue(intel) >= CardRank.KING.value() * intel.getCards().size()) {
             var numberOfManilhas = calculateNumberOfManilhas(intel);
@@ -68,7 +68,7 @@ public class WrkncacnterBot implements BotServiceProvider {
         return hasThreeTwoAndManilha || hasOneManilha || hasZapAndManilhaHearts(intel);
     }
 
-    @Override
+    @Override // Here throw exception
     public boolean decideIfRaises(GameIntel intel) {
         if (intel.getHandPoints() == 12) return false;
         if (intel.getRoundResults().isEmpty())
