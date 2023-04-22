@@ -28,19 +28,16 @@ public class Carlsen implements BotServiceProvider {
         List<TrucoCard> hand = intel.getCards();
 
         int highCard = 0;
+        int mediumCard = 0;
         for (TrucoCard card : hand) {
             if (isAceOrHigher(card) && !card.isManilha(intel.getVira())) {
                 highCard++;
             }
-        }
-
-        int mediumCard = 0;
-        for(TrucoCard card : hand){
             if(isQueenToKing(card) && !card.isManilha(intel.getVira())){
                 mediumCard++;
             }
         }
-
+        
         if(isAllFours(hand)){
             return 1;
         }
