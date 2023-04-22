@@ -34,6 +34,13 @@ public class Carlsen implements BotServiceProvider {
             }
         }
 
+        int mediumCard = 0;
+        for(TrucoCard card : hand){
+            if(isQueenToKing(card) && !card.isManilha(intel.getVira())){
+                mediumCard++;
+            }
+        }
+
         if (qntManilhas == 0) {
             return -1;
         }
@@ -43,7 +50,11 @@ public class Carlsen implements BotServiceProvider {
                 return 1;
             }
 
-            return 0;
+            if(mediumCard >= 1 || calcHandScore(intel.getRoundResults()) >= 0){
+                return 0;
+            }
+
+            return -1;
         }
 
         return 1;
@@ -199,5 +210,9 @@ public class Carlsen implements BotServiceProvider {
             if (roundResult.equals(GameIntel.RoundResult.LOST)) return -1;
             return 0;
         }).sum();
+    }
+
+    private boolean isQueenToKing(TrucoCard card) {
+        return card.getRank().equals(CardRank.QUEEN) || card.getRank().equals(CardRank.JACK) || card.getRank().equals(CardRank.KING);
     }
 }
