@@ -805,4 +805,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should play a card to draw the current round if have a high value card")
+    public void ShouldDrawIfHasHighCard(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+    }
 }
