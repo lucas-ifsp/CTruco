@@ -264,6 +264,13 @@ public class MarrecoBot implements BotServiceProvider {
                     if (lowCard.getRank().compareTo(card.getRank()) >= 0) lowCard = card;
                 }
                 return CardToPlay.of(lowCard);
+            } else {
+              TrucoCard firstCard = cards.get(0);
+              TrucoCard lowCard = firstCard;
+              for (TrucoCard card : cards) {
+                if (firstCard.getRank().compareTo(card.getRank()) > 0) lowCard = card;
+              }
+              return CardToPlay.of(lowCard);
             }
         }
       } else {
