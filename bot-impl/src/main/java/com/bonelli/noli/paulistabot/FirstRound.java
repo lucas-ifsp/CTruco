@@ -40,11 +40,11 @@ public class FirstRound implements Strategy {
             TrucoCard cardPlayed = intel.getOpenCards().get(intel.getOpenCards().size() - 1);
             if (cardPlayed.relativeValue(vira) + calculateCurrentHandValue(intel) >= 28) return 0;
             if (hasTwoOrThree(intel)) {
-                if (hasCopasOrZap(intel)) return 1;
+                if (hasCopasOrZap(intel) && intel.getHandPoints() != 12) return 1;
                 if (hasManilha(intel)) return 0;
             } else if (hasTwoManilhas(intel) == 2) return 0;
         }
-        if (hasCoupleBigger(intel) == 1 || hasCouplaBlack(intel) == 1) return 1;
+        if (hasCoupleBigger(intel) == 1 || hasCouplaBlack(intel) == 1 && intel.getHandPoints() != 12) return 1;
         else return -1;
     }
 
@@ -62,7 +62,8 @@ public class FirstRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return calculateCurrentHandValue(intel) >= 15;
+        if (intel.getScore() == 11) return false;
+        return calculateCurrentHandValue(intel) >= 16;
     }
 
     @Override
@@ -190,6 +191,11 @@ public class FirstRound implements Strategy {
     public Integer calculateCurrentHandValue(GameIntel intel) {
         if (intel.getCards().isEmpty()) return 0;
         return intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).reduce(Integer::sum).orElseThrow();
+    }
+
+    public Integer calculateCurrentHandValueBasedVira(List<TrucoCard> cards, TrucoCard vira) {
+        if (cards.isEmpty()) return 0;
+        return cards.stream().map(card -> card.compareValueTo(card, vira)).reduce(Integer::sum).orElseThrow();
     }
 
     public Optional<TrucoCard> getWhichBotShouldPlayFirst (GameIntel intel) {

@@ -26,7 +26,7 @@ public class SecondRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getHandPoints() == 3) return false;
+        if (intel.getScore() == 11) return false;
         TrucoCard vira = intel.getVira();
 
         List<TrucoCard> openCards = new ArrayList<>(intel.getCards().subList(0, 2));

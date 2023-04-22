@@ -14,7 +14,7 @@ public class ThirdRound implements Strategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        return -1;
     }
 
     @Override
