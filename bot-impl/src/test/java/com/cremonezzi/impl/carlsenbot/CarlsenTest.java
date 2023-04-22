@@ -600,4 +600,31 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isFalse();
     }
+
+    @Test
+    @DisplayName("Should quit if lost and have bad hand")
+    public void ShouldQuitBadHand(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 1)
+                .opponentScore(1)
+                .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
 }
