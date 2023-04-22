@@ -120,6 +120,9 @@ public class MarrecoBot implements BotServiceProvider {
         } else if (manilhas.size() == 1) {
           Optional<TrucoCard> zap = cards.stream().filter(card -> card.isZap(vira)).findFirst();
           if (zap.isPresent()) return true;
+
+          Optional<TrucoCard> copas = cards.stream().filter(card -> card.isCopas(vira)).findFirst();
+          if (copas.isPresent()) return true;
         }
 
 
