@@ -129,6 +129,7 @@ public class MarrecoBot implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
         List<TrucoCard> openCards = intel.getOpenCards();
+        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
 
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
@@ -183,6 +184,18 @@ public class MarrecoBot implements BotServiceProvider {
           else if (noManilhas.size() == 0 && picaFumo.isPresent()) return CardToPlay.of(picaFumo.get());
         } else if (!opponentCard.get().isManilha(vira)) {
           List<TrucoCard> noManilhas = cards.stream().filter(card -> !card.isManilha(vira)).toList();
+
+          if (roundResult.isEmpty()) {
+            if (manilhas.size() == 1) {
+              Optional<TrucoCard> cardZap = cards.stream().filter(card -> card.isZap(vira)).findFirst();
+              if (cardZap.isPresent()) {
+                Optional<TrucoCard> cardEqualsOpponent = cards.stream()
+                        .filter(card -> card.getRank().equals(opponentCard.get().getRank()))
+                        .findFirst();
+                if (cardEqualsOpponent.isPresent()) return CardToPlay.of(cardEqualsOpponent.get());
+              }
+            }
+          }
 
           if (noManilhas.size() == 2) {
             if (picaFumo.isPresent()) {
