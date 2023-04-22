@@ -244,10 +244,7 @@ public class Carlsen implements BotServiceProvider {
               qntFours++;
             }
         }
-        if(qntFours == botCards.size()){
-            return true;
-        }
-        return false;
+        return qntFours == botCards.size();
     }
 
     private Optional<TrucoCard> hasCardToDraw(List<TrucoCard> botCards, TrucoCard opponentCard){
