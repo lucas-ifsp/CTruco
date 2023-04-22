@@ -549,6 +549,32 @@ public class CarlsenTest {
     }
 
     @Test
+    @DisplayName("Should choose lower card in hand if that card can win")
+    public void ShouldLowerCardIfThatCardCanWin() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[KD]");
+    }
+
+    @Test
     @DisplayName("Should not raise if opponent already played and we can can't win the hand")
     public void ShouldNotRaiseIfOpponentPlayedAndCantWinHand() {
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
