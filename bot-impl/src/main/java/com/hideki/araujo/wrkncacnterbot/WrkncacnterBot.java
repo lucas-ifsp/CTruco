@@ -21,12 +21,13 @@
 
 package com.hideki.araujo.wrkncacnterbot;
 
-import com.bueno.spi.model.*;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class WrkncacnterBot implements BotServiceProvider {
     @Override
@@ -38,7 +39,7 @@ public class WrkncacnterBot implements BotServiceProvider {
             }
             else if (intel.getScore() == intel.getOpponentScore()) {
                 if (numberOfManilhas >= 1) return 0;
-                 return -1;
+                return -1;
             }
             else if (intel.getScore() < intel.getOpponentScore()) {
                 if (numberOfManilhas >= 1 && intel.getHandPoints() < 9)
@@ -79,7 +80,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(chooseKillCard(intel).orElse(chooseWeakestCard(intel).get()));
+        return CardToPlay.of(chooseKillCard(intel).orElse(chooseWeakestCard(intel).orElseThrow()));
     }
 
     public int calculateDeckValue(GameIntel intel) {
@@ -108,7 +109,7 @@ public class WrkncacnterBot implements BotServiceProvider {
                                 .filter(card -> !card.isZap(intel.getVira()))
                                 .filter(card -> !card.isManilha(intel.getVira()))
                                 .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
-        };
+        }
 
         if (calculateNumberOfManilhas(intel) >= 1 && intel.getRoundResults().size() == 0) {
             return intel.getCards().stream().filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0).findFirst();
