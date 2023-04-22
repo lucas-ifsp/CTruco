@@ -191,6 +191,10 @@ public class Carlsen implements BotServiceProvider {
         *  1  -> WINNING
         */
 
-        return -1;
+        return roundResults.stream().mapToInt(roundResult -> {
+            if (roundResult.equals(GameIntel.RoundResult.WON)) return 1;
+            if (roundResult.equals(GameIntel.RoundResult.LOST)) return -1;
+            return 0;
+        }).sum();
      }
 }
