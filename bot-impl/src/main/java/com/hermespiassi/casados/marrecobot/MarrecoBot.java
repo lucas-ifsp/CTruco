@@ -108,6 +108,8 @@ public class MarrecoBot implements BotServiceProvider {
     if (roundResult.isEmpty()) {
       if (manilhas.size() == 1) {
         if (intel.getOpponentScore() < 5) return true;
+      } else if (manilhas.size() == 2) {
+        if (intel.getOpponentScore() < 6) return true;
       }
     }
 
