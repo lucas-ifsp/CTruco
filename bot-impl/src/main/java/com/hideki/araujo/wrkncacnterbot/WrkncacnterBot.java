@@ -57,12 +57,10 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        var hasThreeTwoAndManilha =
-                hasCardRank(intel, CardRank.THREE) ||
-                hasCardRank(intel, CardRank.TWO);
-        var hasOneManilha = calculateNumberOfManilhas(intel) >= 1;
+        var hasRankHigherThanKing = hasCardRankHigherThan(intel, CardRank.KING);
+        var hasOneManilha = calculateNumberOfManilhas(intel) >= 2;
 
-        return hasThreeTwoAndManilha || hasOneManilha || hasZapAndManilhaHearts(intel);
+        return hasRankHigherThanKing || hasOneManilha || hasZapAndManilhaHearts(intel);
     }
 
     @Override
@@ -130,11 +128,7 @@ public class WrkncacnterBot implements BotServiceProvider {
         return hasZap && hasManilhaHearts;
     }
 
-    public boolean hasCardRank(GameIntel intel, CardRank cardRank) {
-        return intel.getCards().stream().anyMatch(card -> card.getRank().equals(cardRank));
-    }
-
     public boolean hasCardRankHigherThan(GameIntel intel, CardRank cardRank) {
-        return intel.getCards().stream().allMatch(card -> card.getRank().value() >= cardRank.value());
+        return intel.getCards().stream().anyMatch(card -> card.getRank().value() >= cardRank.value());
     }
 }
