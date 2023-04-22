@@ -41,7 +41,7 @@ public class Carlsen implements BotServiceProvider {
             }
         }
 
-        if(isAllFours(intel.getCards())){
+        if(isAllFours(hand)){
             return 1;
         }
 
