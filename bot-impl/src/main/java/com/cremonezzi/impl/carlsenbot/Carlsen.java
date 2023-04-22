@@ -42,6 +42,14 @@ public class Carlsen implements BotServiceProvider {
         }
 
         if (qntManilhas == 0) {
+            if(intel.getRoundResults().size() == 0) {
+                if (mediumCard >= 1 && highCard == 1) {
+                    return 0;
+                }
+                if (mediumCard == 1 && highCard == 2) {
+                    return 1;
+                }
+            }
             return -1;
         }
 
