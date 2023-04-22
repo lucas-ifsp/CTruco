@@ -93,8 +93,17 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getOpponentCard().isPresent() && intel.getOpponentCard().get().getRank().equals(CardRank.HIDDEN)) {
-            return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+        if (intel.getOpponentCard().isPresent()) {
+            TrucoCard opponentCard = intel.getOpponentCard().get();
+
+            if (opponentCard.getRank().equals(CardRank.HIDDEN)) {
+                return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+            }
+
+            Optional<TrucoCard> lowerToWin = lowerCardToWin(intel.getCards(), opponentCard);
+            if (lowerToWin.isPresent() && intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
+                return CardToPlay.of(lowerToWin.get());
+            }
         }
 
         if (intel.getRoundResults().size() > 0 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
@@ -158,5 +167,17 @@ public class Carlsen implements BotServiceProvider {
 
     private boolean isAceOrHigher(TrucoCard card) {
         return card.getRank().equals(CardRank.ACE) || card.getRank().equals(CardRank.TWO) || card.getRank().equals(CardRank.THREE);
+    }
+
+    private Optional<TrucoCard> lowerCardToWin(List<TrucoCard> botCards, TrucoCard opponentCard) {
+        TrucoCard cardToPlay = null;
+
+        for (TrucoCard cardInHand : botCards) {
+            if (cardInHand.relativeValue(opponentCard) > opponentCard.getRank().value()) {
+                cardToPlay = cardInHand;
+            }
+        }
+
+        return Optional.ofNullable(cardToPlay);
     }
 }

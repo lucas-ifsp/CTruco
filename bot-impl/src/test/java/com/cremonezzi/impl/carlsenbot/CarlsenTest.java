@@ -381,6 +381,6 @@ public class CarlsenTest {
                 .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                 .build();
 
-        assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[7C]");
+        assertThat(carlsenBot.chooseCard(intel).value().getRank()).isNotEqualTo(CardRank.SEVEN);
     }
 }
