@@ -28,7 +28,7 @@ public class CarlsenTest {
 
         // Game info
         List<GameIntel.RoundResult> roundResults = List.of(
-               GameIntel.RoundResult.WON
+                GameIntel.RoundResult.WON
         );
         List<TrucoCard> openCards = List.of(vira);
 
@@ -307,7 +307,7 @@ public class CarlsenTest {
 
     @Test
     @DisplayName("Should raise if there is a zap and other high value in hand")
-    public void ShouldRaiseZapAndHigh(){
+    public void ShouldRaiseZapAndHigh() {
         TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
 
         //Game info
@@ -333,7 +333,7 @@ public class CarlsenTest {
 
     @Test
     @DisplayName("Should start raise if there is a zap and high card")
-    public void ShouldStartRaiseZapAndHigh(){
+    public void ShouldStartRaiseZapAndHigh() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
         //Game info
@@ -359,7 +359,7 @@ public class CarlsenTest {
 
     @Test
     @DisplayName("Should not use manilha if can win in other ways")
-    public void ShouldNotUseManilhaIfCanWinInOtherWays(){
+    public void ShouldNotUseManilhaIfCanWinInOtherWays() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
         //Game info
@@ -382,5 +382,26 @@ public class CarlsenTest {
                 .build();
 
         assertThat(carlsenBot.chooseCard(intel).value().getRank()).isNotEqualTo(CardRank.SEVEN);
+    }
+
+    @Test
+    @DisplayName("Should calculate hand result as 0")
+    public void ShouldCalculateHandResultAsZero() {
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST,
+                GameIntel.RoundResult.WON
+        );
+
+        assertThat(carlsenBot.calcHandScore(roundResults)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should calculate hand result as 1")
+    public void ShouldCalculateHandResultAsOne() {
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        assertThat(carlsenBot.calcHandScore(roundResults)).isEqualTo(1);
     }
 }

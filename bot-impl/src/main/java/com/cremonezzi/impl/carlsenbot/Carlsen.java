@@ -8,6 +8,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /* Notes
 *
@@ -93,6 +94,9 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        //
+        int handScore = calcHandScore(intel.getRoundResults());
+
         if (intel.getOpponentCard().isPresent()) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
 
@@ -180,4 +184,13 @@ public class Carlsen implements BotServiceProvider {
 
         return Optional.ofNullable(cardToPlay);
     }
+
+    public int calcHandScore(List<GameIntel.RoundResult> roundResults) {
+        /* 0  -> TIED
+        * -1  -> LOSING
+        *  1  -> WINNING
+        */
+
+        return -1;
+     }
 }
