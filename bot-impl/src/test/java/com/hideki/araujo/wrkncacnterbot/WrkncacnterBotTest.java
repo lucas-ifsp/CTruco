@@ -270,17 +270,22 @@ class WrkncacnterBotTest {
     void testForceTieGame(){
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
+        when(intel.getOpponentCard())
+                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)))
+                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)))
+                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
 
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
         ));
 
-        assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
     }
 
     static Stream<Arguments> provideDataToResponseStrongerCards() {
