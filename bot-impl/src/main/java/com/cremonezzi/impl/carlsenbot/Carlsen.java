@@ -37,7 +37,7 @@ public class Carlsen implements BotServiceProvider {
                 mediumCard++;
             }
         }
-        
+
         if(isAllFours(hand)){
             return 1;
         }
@@ -248,5 +248,17 @@ public class Carlsen implements BotServiceProvider {
             return true;
         }
         return false;
+    }
+
+    private Optional<TrucoCard> hasCardToDraw(List<TrucoCard> botCards, TrucoCard opponentCard){
+        TrucoCard cardToPlay = null;
+
+        for(TrucoCard card : botCards){
+            if(card.relativeValue(opponentCard) == opponentCard.getRank().value()){
+                cardToPlay = card;
+            }
+        }
+
+        return Optional.ofNullable(cardToPlay);
     }
 }
