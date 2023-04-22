@@ -103,6 +103,8 @@ public class Carlsen implements BotServiceProvider {
             if (lowerToWin.isPresent() && intel.getRoundResults().size() == 1 && handScore < 0) {
                 return CardToPlay.of(lowerToWin.get());
             }
+
+            if (!intel.getRoundResults().isEmpty()) return CardToPlay.discard(lowerInHand(intel.getCards(), intel.getVira()));
         }
 
         if (handScore < 0) {
