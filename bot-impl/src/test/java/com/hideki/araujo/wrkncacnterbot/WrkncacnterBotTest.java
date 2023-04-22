@@ -146,21 +146,18 @@ class WrkncacnterBotTest {
 
     // Falta parametrizar
     @DisplayName("Testa escolher carta que mata a do oponente")
-    @Test
-    void testKillOpponentCard(){
+    @ParameterizedTest
+    @MethodSource(value = "provideDataToKillOpponentCard")
+    void testKillOpponentCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard, TrucoCard expected){
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(vira);
 
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
-        ));
+        when(intel.getCards()).thenReturn(cards);
 
-        assertThat(wrkncacnterBot.chooseKillCard(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.chooseKillCard(intel).orElseThrow()).isEqualTo(expected);
     }
 
     // Falta parametrizar
@@ -274,6 +271,51 @@ class WrkncacnterBotTest {
         ));
 
         assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
+    static Stream<Arguments> provideDataToKillOpponentCard() {
+        return Stream.of(
+                Arguments.of(
+                    List.of(
+                            TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                    ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), // vira
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), // Opponent
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES) // Expected
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), // vira
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS), // Opponent
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES) // Expected
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), // vira
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), // Opponent
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS) // Expected
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                        ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), // vira
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), // Opponent
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS) // Expected
+                )
+        );
     }
 
     static Stream<Arguments> provideDataToMaoDeOnzeAccept() {
