@@ -41,6 +41,10 @@ public class Carlsen implements BotServiceProvider {
             }
         }
 
+        if(isAllFours(intel.getCards())){
+            return 1;
+        }
+
         if (qntManilhas == 0) {
             if(intel.getRoundResults().size() == 0) {
                 if (mediumCard >= 1 && highCard == 1) {
@@ -230,5 +234,18 @@ public class Carlsen implements BotServiceProvider {
 
     private boolean isQueenToKing(TrucoCard card) {
         return card.getRank().equals(CardRank.QUEEN) || card.getRank().equals(CardRank.JACK) || card.getRank().equals(CardRank.KING);
+    }
+
+    private boolean isAllFours(List<TrucoCard> botCards){
+        int qntFours = 0;
+        for(TrucoCard card : botCards){
+            if(card.getRank().equals(CardRank.FOUR)){
+              qntFours++;
+            }
+        }
+        if(qntFours == botCards.size()){
+            return true;
+        }
+        return false;
     }
 }
