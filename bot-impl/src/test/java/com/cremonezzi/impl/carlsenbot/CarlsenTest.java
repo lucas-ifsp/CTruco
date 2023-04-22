@@ -754,4 +754,29 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should start raise if only have fours in hand")
+    public void ShouldStartRaiseOnlyFours(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
+    }
 }
