@@ -103,11 +103,16 @@ public class MarrecoBot implements BotServiceProvider {
     TrucoCard vira = intel.getVira();
     List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
     List<TrucoCard> cards = intel.getCards();
+    List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+    if (roundResult.isEmpty()) {
+      if (manilhas.size() == 1) {
+        if (intel.getOpponentScore() < 5) return true;
+      }
+    }
 
     if (roundResult.size() == 1) {
       if (roundResult.get(0).equals(GameIntel.RoundResult.WON)) {
-        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
-
         if (manilhas.isEmpty()) {
           Optional<TrucoCard> cardThree = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
           return cardThree.isPresent();
@@ -115,8 +120,6 @@ public class MarrecoBot implements BotServiceProvider {
 
         return true;
       } else if (roundResult.get(0).equals(GameIntel.RoundResult.LOST)) {
-        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
-
         return manilhas.size() == 2;
       }
     }
