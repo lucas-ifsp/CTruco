@@ -504,7 +504,7 @@ public class CarlsenTest {
         //Game info
         List<TrucoCard> openCards = List.of(vira);
         List<GameIntel.RoundResult> roundResults = Collections.emptyList();
-        
+
         //Bot info
         List<TrucoCard> botCards = List.of(
                 TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
