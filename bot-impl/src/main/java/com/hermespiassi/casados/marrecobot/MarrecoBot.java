@@ -50,10 +50,16 @@ public class MarrecoBot implements BotServiceProvider {
         List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
         if (manilhas.isEmpty()) {
           return -1;
-        } else {
-          if (manilhas.size() == 2) return 0;
-          else return -1;
         }
+        else if (manilhas.size() == 2) return 0;
+        else if (manilhas.size() == 1) {
+          Optional<TrucoCard> copas = cards.stream().filter(card -> card.isCopas(vira)).findFirst();
+          if (copas.isPresent()) {
+            Optional<TrucoCard> three = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+            if (three.isPresent()) return 0;
+          }
+        }
+        else return -1;
       }
     } else if (roundResults.size() == 2) {
       if (roundResults.get(0).equals(GameIntel.RoundResult.WON)) {
