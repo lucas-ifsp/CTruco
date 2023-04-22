@@ -129,9 +129,9 @@ public class MarrecoBot implements BotServiceProvider {
 
           Optional<TrucoCard> ouros = cards.stream().filter(card -> card.isOuros(vira)).findFirst();
           if (ouros.isPresent()) return true;
+        } else if (manilhas.size() == 2) {
+          return true;
         }
-
-
       } else if (roundResult.get(0).equals(GameIntel.RoundResult.LOST)) {
         return manilhas.size() == 2;
       }
