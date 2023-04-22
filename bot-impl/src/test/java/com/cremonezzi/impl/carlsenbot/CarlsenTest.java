@@ -414,4 +414,31 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.calcHandScore(roundResults)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should discard if can't win round and is winning")
+    public void ShouldDiscardIfCantWin() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 10)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[XX]");
+    }
 }
