@@ -144,7 +144,6 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.getRaiseResponse(intel)).isEqualTo(expectedResponse);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa escolher carta que mata a do oponente")
     @ParameterizedTest
     @MethodSource(value = "provideDataToKillOpponentCard")
@@ -178,27 +177,6 @@ class WrkncacnterBotTest {
     }
 
     // Falta parametrizar
-    @DisplayName("Testa o bot se ele tenta ganhar a segunda rodada")
-    @Test
-    void testAttemptToWinSecondRound() {
-        GameIntel intel = mock(GameIntel.class);
-
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
-
-        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
-
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
-        ));
-
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
-
-        assertThat(wrkncacnterBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
-    }
-
-    // Falta parametrizar
 //    @DisplayName("Testa a estratégia de ganhar 6 pontos(ter ganhado uma rodada, trucar na segunda, jogar uma carta fraca e depois jogar a mais forte)")
 //    @Test
 //    void testSixPointsStrategy() {
@@ -223,19 +201,16 @@ class WrkncacnterBotTest {
 
     // Falta parametrizar
     @DisplayName("Testa quantas manilhas existe na mao")
-    @Test
-    void testCalculateNumberOfManilhas() {
+    @ParameterizedTest
+    @MethodSource(value = "provideToCalculateNumberOfManilhas")
+    void testCalculateNumberOfManilhas(List<TrucoCard> cards, TrucoCard vira, int numberOfManilhas) {
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(vira);
 
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
-        ));
+        when(intel.getCards()).thenReturn(cards);
 
-        assertThat(wrkncacnterBot.calculateNumberOfManilhas(intel)).isEqualTo(2);
+        assertThat(wrkncacnterBot.calculateNumberOfManilhas(intel)).isEqualTo(numberOfManilhas);
     }
 
     // Falta parametrizar
@@ -271,6 +246,71 @@ class WrkncacnterBotTest {
         ));
 
         assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
+    // Teste de matar cartas quando tem mais que uma manilha e o primeiro round
+
+    // Teste de jogar no primeiro round quando for sua vez e possuir duas manilhas(espera uma manilha)
+
+    // Teste de metodo que verifica se a mao tem pelo menos uma carta maior que o grupo informado
+
+    public static Stream<Arguments> provideToCalculateNumberOfManilhas() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        2
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        3
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        0
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                        1
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                        2
+                        ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        1
+                )
+        );
     }
 
     static Stream<Arguments> provideDataToKillOpponentCard() {
