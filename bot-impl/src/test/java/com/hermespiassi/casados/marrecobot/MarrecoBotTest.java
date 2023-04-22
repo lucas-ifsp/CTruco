@@ -14,7 +14,6 @@ import static com.bueno.spi.model.CardSuit.HIDDEN;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class MarrecoBotTest {
   private GameIntel.StepBuilder stepBuilder;
