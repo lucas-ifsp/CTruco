@@ -26,9 +26,10 @@ public class SecondRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getHandPoints() == 3) return false;
         TrucoCard vira = intel.getVira();
 
-        List<TrucoCard> openCards = new ArrayList<>(intel.getCards().subList(1, 3));
+        List<TrucoCard> openCards = new ArrayList<>(intel.getCards().subList(0, 2));
         openCards.sort((c1, c2) -> {
             return c1.compareValueTo(c2, vira);
         });
@@ -86,7 +87,7 @@ public class SecondRound implements Strategy {
     }
 
     public TrucoCard getCardWithSameValueOfOpponent(List<TrucoCard> cards, TrucoCard opponentCard) {
-        return cards.stream().filter(card -> card.getRank().value() == opponentCard.getRank().value()).findFirst().orElseThrow();
+        return cards.stream().filter(card -> card.getRank().value() == opponentCard.getRank().value()).findFirst().orElse(cards.get(0));
     }
 
     @Override
@@ -120,6 +121,6 @@ public class SecondRound implements Strategy {
         return cardList.stream()
                 .filter(carta -> carta.relativeValue(vira) > opponentCard.relativeValue(vira))
                 .min(Comparator.comparingInt(carta -> carta.relativeValue(vira)))
-                .orElseThrow();
+                .orElse(cardList.get(1));
     }
 }

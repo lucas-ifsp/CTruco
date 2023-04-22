@@ -19,7 +19,7 @@ public class ThirdRound implements Strategy {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return true;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ThirdRound implements Strategy {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override

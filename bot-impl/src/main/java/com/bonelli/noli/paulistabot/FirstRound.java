@@ -62,7 +62,7 @@ public class FirstRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return calculateCurrentHandValue(intel) >= 15;
     }
 
     @Override
