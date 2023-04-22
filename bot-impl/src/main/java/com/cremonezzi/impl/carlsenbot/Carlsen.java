@@ -64,6 +64,12 @@ public class Carlsen implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
+        if (intel.getOpponentCard().isPresent() && calcHandScore(intel.getRoundResults()) > 0) {
+            TrucoCard opponentCard = intel.getOpponentCard().get();
+
+            return lowerCardToWin(intel.getCards(), opponentCard).isPresent();
+        }
+
         int haveZap = haveZap(intel.getCards(), vira);
         int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
 
