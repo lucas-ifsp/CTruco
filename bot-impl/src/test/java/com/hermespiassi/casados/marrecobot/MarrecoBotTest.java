@@ -350,6 +350,20 @@ class MarrecoBotTest {
         CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, DIAMONDS));
       }
+
+      @Test
+      @DisplayName("Shoul return of more weak card when bot has zap")
+      void ShoulReturnOfMoreWeakCardWhenBotHasZap() {
+        botCards = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(FOUR, DIAMONDS));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(TWO, CLUBS));
+
+        CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, DIAMONDS));
+      }
     }
   }
 
