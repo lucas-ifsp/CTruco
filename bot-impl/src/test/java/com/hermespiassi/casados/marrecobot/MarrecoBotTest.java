@@ -806,6 +806,24 @@ class MarrecoBotTest {
             .isTrue();
   }
 
+  @Test
+  @DisplayName("Should return TRUE to raise when bot has 1 manilha and opponent score are less than 5")
+  void ShouldReturnTRUEToRaiseWhenBotHas1ManilhaAndOpponentScoreAreLessThan6() {
+    results = List.of();
+    botCards = List.of(TrucoCard.of(FIVE, HEARTS), TrucoCard.of(THREE, SPADES), TrucoCard.of(ACE, HEARTS));
+    vira = TrucoCard.of(FOUR, HEARTS);
+    openCards = List.of(vira);
+    stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 3)
+            .botInfo(botCards, 0)
+            .opponentScore(4);
+
+    Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
+    assertThat(responseRaise)
+            .as("Return TRUE to raise when bot has 1 manilha and opponent score are less than 5.")
+            .isTrue();
+  }
+
 
   @Nested
   @DisplayName("Test bot logic to accept mao de onze")
