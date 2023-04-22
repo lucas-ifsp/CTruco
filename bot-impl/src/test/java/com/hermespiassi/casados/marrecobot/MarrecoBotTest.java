@@ -751,6 +751,25 @@ class MarrecoBotTest {
     }
   }
 
+  @Test
+  @DisplayName("Should return 1 to raise when bot win first round and has zap")
+    void ShouldReturn1ToRaiseWhenBotWinFirstRoundAndHasZap() {
+      results = List.of(WON);
+      botCards = List.of(TrucoCard.of(FIVE, CLUBS), TrucoCard.of(ACE, HEARTS));
+      vira = TrucoCard.of(FOUR, HEARTS);
+      openCards = List.of(vira, TrucoCard.of(TWO, CLUBS), TrucoCard.of(THREE, SPADES));
+      stepBuilder = GameIntel.StepBuilder.with()
+              .gameInfo(results, openCards, vira, 3)
+              .botInfo(botCards, 0)
+              .opponentScore(0);
+
+      Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
+      assertThat(responseRaise)
+              .as("Return TRUE to raise when bot win first round and has zap.")
+              .isTrue();
+    }
+
+
   @Nested
   @DisplayName("Test bot logic to accept mao de onze")
   class AcceptMaoDeOnze {
