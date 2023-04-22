@@ -165,6 +165,27 @@ class MarrecoBotTest {
     assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
   }
 
+  @Test
+  @DisplayName("Should amarrar if bot has zap and first round")
+  void ShouldAmarrarIfBotHasZapAndFirstRound() {
+    results = List.of();
+    botCards = List.of(
+            TrucoCard.of(THREE, CLUBS),
+            TrucoCard.of(SEVEN, DIAMONDS),
+            TrucoCard.of(TWO, CLUBS)
+    );
+    vira = TrucoCard.of(ACE, HEARTS);
+    openCards = List.of(vira, TrucoCard.of(SEVEN, SPADES));
+    stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0)
+            .opponentCard(TrucoCard.of(SEVEN, SPADES));
+
+    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+  }
+
   @Nested
   @DisplayName("Tests bot logic when bot have manilha and opponent cards are manilha")
   class OpponentCardIsManilha {
