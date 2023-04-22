@@ -441,4 +441,83 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.chooseCard(intel).value().toString()).isEqualTo("[XX]");
     }
+
+    @Test
+    @DisplayName("Should not discard if is losing")
+    public void ShouldNotDiscardIfLosing() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[XX]");
+    }
+
+    @Test
+    @DisplayName("Should not discard if is tied")
+    public void ShouldNotDiscardIfTied() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.DREW
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS))
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[XX]");
+    }
+
+    @Test
+    @DisplayName("Should not discard if in first round")
+    public void ShouldDiscardIfInFirstRound() {
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+        
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[XX]");
+    }
 }
