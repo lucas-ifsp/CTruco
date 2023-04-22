@@ -703,4 +703,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should raise if lost first round if have a good hand without manilha")
+    public void ShouldRaiseGoodHandLost(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(1)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
 }
