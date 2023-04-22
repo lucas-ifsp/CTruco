@@ -126,6 +126,9 @@ public class MarrecoBot implements BotServiceProvider {
 
           Optional<TrucoCard> espadilha = cards.stream().filter(card -> card.isEspadilha(vira)).findFirst();
           if (espadilha.isPresent()) return true;
+
+          Optional<TrucoCard> ouros = cards.stream().filter(card -> card.isOuros(vira)).findFirst();
+          if (ouros.isPresent()) return true;
         }
 
 
