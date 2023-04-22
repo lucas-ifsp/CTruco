@@ -133,7 +133,11 @@ public class MarrecoBot implements BotServiceProvider {
           return true;
         }
       } else if (roundResult.get(0).equals(GameIntel.RoundResult.LOST)) {
-        return manilhas.size() == 2;
+        if (manilhas.size() == 1) {
+          Optional<TrucoCard> cardThree = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+          return cardThree.isPresent();
+        }
+        if (manilhas.size() == 2) return true;
       }
     }
 
