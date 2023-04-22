@@ -404,4 +404,14 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.calcHandScore(roundResults)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should calculate hand result as -1")
+    public void ShouldCalculateHandResultAsMinusOne() {
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        assertThat(carlsenBot.calcHandScore(roundResults)).isEqualTo(-1);
+    }
 }
