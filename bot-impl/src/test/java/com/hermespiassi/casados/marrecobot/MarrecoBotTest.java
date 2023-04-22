@@ -23,6 +23,22 @@ class MarrecoBotTest {
   private TrucoCard vira;
 
   @Test
+  @DisplayName("Should not return card hidden in first and not manilha")
+  void ShouldNotReturnCardHiddenInFirstAndNotManilha() {
+    results = List.of();
+    botCards = List.of(TrucoCard.of(SIX, HEARTS), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(ACE, DIAMONDS));
+    vira = TrucoCard.of(ACE, HEARTS);
+    openCards = List.of(vira);
+    stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0);
+
+    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE, DIAMONDS));
+  }
+
+  @Test
   @DisplayName("Should return pica-fumo in first raise if bot has a pica-fumo")
   void shouldReturnPicaFumoInFirstRaiseIfBotHasAPicaFumo() {
     results = List.of();
