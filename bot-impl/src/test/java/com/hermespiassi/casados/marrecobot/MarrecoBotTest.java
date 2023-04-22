@@ -876,10 +876,10 @@ class MarrecoBotTest {
   }
 
   @Test
-  @DisplayName("Should return TRUE to raise when bot lost first round and has one manilha and 1 three")
-  void ShouldReturnTRUEToRaiseWhenBotLostFirstRoundAndHasOneManilhaAnd1Three() {
+  @DisplayName("Should return TRUE to raise when bot lost first round and has HEARTS and 1 three")
+  void ShouldReturnTRUEToRaiseWhenBotLostFirstRoundAndHasHEARTSAnd1Three() {
     results = List.of(LOST);
-    botCards = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(FIVE, DIAMONDS));
+    botCards = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(FIVE, HEARTS));
     vira = TrucoCard.of(FOUR, HEARTS);
     openCards = List.of(vira, TrucoCard.of(FIVE, CLUBS), TrucoCard.of(KING, CLUBS));
     stepBuilder = GameIntel.StepBuilder.with()
@@ -889,7 +889,7 @@ class MarrecoBotTest {
 
     Boolean responseRaise = new MarrecoBot().decideIfRaises(stepBuilder.build());
     assertThat(responseRaise)
-            .as("Return TRUE to raise when bot lost first round, has 1 manilha and 1 three.")
+            .as("Return TRUE to raise when bot lost first round, has HEARTS and 1 three.")
             .isTrue();
   }
 
