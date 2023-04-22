@@ -677,4 +677,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should accept raise if lost first round if have a medium hand without manilha")
+    public void ShouldAcceptRaiseMediumHandLost(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(1)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
+    }
 }
