@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 /* Notes
-*
-* CARDS RANK ORDER
-*  4 - 5 - 6 - 7 - Q - J - K - A - 2 - 3
-*
-*  40 Cards in the deck (each rank has all the 4 suits => 10 ranks x 4 suits)
-*
-*  CARDS SUIT ORDER
-*  Diamond - Spade - Heart - Club
-*
-* */
+ *
+ * CARDS RANK ORDER
+ *  4 - 5 - 6 - 7 - Q - J - K - A - 2 - 3
+ *
+ *  40 Cards in the deck (each rank has all the 4 suits => 10 ranks x 4 suits)
+ *
+ *  CARDS SUIT ORDER
+ *  Diamond - Spade - Heart - Club
+ *
+ * */
 
 public class Carlsen implements BotServiceProvider {
     @Override
@@ -50,11 +50,11 @@ public class Carlsen implements BotServiceProvider {
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel){
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
-        
+
         int lowCardsCount = (int) intel.getCards().stream().filter(trucoCard ->
-                trucoCard.relativeValue(vira) < vira.getRank().value())
+                        trucoCard.relativeValue(vira) < vira.getRank().value())
                 .count();
 
         return lowCardsCount <= 2;
@@ -67,7 +67,7 @@ public class Carlsen implements BotServiceProvider {
         if (intel.getOpponentCard().isPresent() && calcHandScore(intel.getRoundResults()) > 0) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
 
-            return lowerCardToWin(intel.getCards(), opponentCard).isPresent();
+            return lowestCardToWin(intel.getCards(), opponentCard).isPresent();
         }
 
         int haveZap = haveZap(intel.getCards(), vira);
@@ -102,15 +102,15 @@ public class Carlsen implements BotServiceProvider {
             TrucoCard opponentCard = intel.getOpponentCard().get();
 
             if (opponentCard.getRank().equals(CardRank.HIDDEN)) {
-                return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+                return CardToPlay.of(lowestInHand(intel.getCards(), intel.getVira()));
             }
 
-            Optional<TrucoCard> lowerToWin = lowerCardToWin(intel.getCards(), opponentCard);
-            if (lowerToWin.isPresent() && intel.getRoundResults().size() == 1 && handScore < 0) {
-                return CardToPlay.of(lowerToWin.get());
+            Optional<TrucoCard> lowestToWin = lowestCardToWin(intel.getCards(), opponentCard);
+            if (lowestToWin.isPresent() && intel.getRoundResults().size() == 1 && handScore < 0) {
+                return CardToPlay.of(lowestToWin.get());
             }
 
-            if (handScore > 0) return CardToPlay.discard(lowerInHand(intel.getCards(), intel.getVira()));
+            if (handScore > 0) return CardToPlay.discard(lowestInHand(intel.getCards(), intel.getVira()));
         }
 
         if (handScore < 0) {
@@ -118,16 +118,16 @@ public class Carlsen implements BotServiceProvider {
         }
 
         if (intel.getOpponentCard().isEmpty()) {
-            return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+            return CardToPlay.of(lowestInHand(intel.getCards(), intel.getVira()));
         }
 
         TrucoCard opponentCard = intel.getOpponentCard().get();
         if (opponentCard.isZap(intel.getVira())) {
             if (intel.getRoundResults().isEmpty()) {
-                return CardToPlay.of(lowerInHand(intel.getCards(), intel.getVira()));
+                return CardToPlay.of(lowestInHand(intel.getCards(), intel.getVira()));
             }
 
-            return CardToPlay.discard(lowerInHand(intel.getCards(), intel.getVira()));
+            return CardToPlay.discard(lowestInHand(intel.getCards(), intel.getVira()));
         }
 
         return CardToPlay.of(intel.getCards().get(0));
@@ -144,16 +144,16 @@ public class Carlsen implements BotServiceProvider {
         return haveZap.map(botCards::indexOf).orElse(-1);
     }
 
-    private TrucoCard lowerInHand(List<TrucoCard> botCards, TrucoCard vira) {
-        TrucoCard lower = botCards.get(0);
+    private TrucoCard lowestInHand(List<TrucoCard> botCards, TrucoCard vira) {
+        TrucoCard lowest = botCards.get(0);
 
         for (TrucoCard trucoCard : botCards) {
-            if (trucoCard.relativeValue(vira) < lower.relativeValue(vira)) {
-                lower = trucoCard;
+            if (trucoCard.relativeValue(vira) < lowest.relativeValue(vira)) {
+                lowest = trucoCard;
             }
         }
 
-        return lower;
+        return lowest;
     }
 
     private TrucoCard higherInHand(List<TrucoCard> botCards, TrucoCard vira) {
@@ -176,7 +176,7 @@ public class Carlsen implements BotServiceProvider {
         return card.getRank().equals(CardRank.ACE) || card.getRank().equals(CardRank.TWO) || card.getRank().equals(CardRank.THREE);
     }
 
-    private Optional<TrucoCard> lowerCardToWin(List<TrucoCard> botCards, TrucoCard opponentCard) {
+    private Optional<TrucoCard> lowestCardToWin(List<TrucoCard> botCards, TrucoCard opponentCard) {
         TrucoCard cardToPlay = null;
 
         for (TrucoCard cardInHand : botCards) {
@@ -189,15 +189,15 @@ public class Carlsen implements BotServiceProvider {
     }
 
     public int calcHandScore(List<GameIntel.RoundResult> roundResults) {
-        /* 0  -> TIED
-        * -1  -> LOSING
-        *  1  -> WINNING
-        */
+        /*  0  -> TIED
+         * -1  -> LOSING
+         *  1  -> WINNING
+         */
 
         return roundResults.stream().mapToInt(roundResult -> {
             if (roundResult.equals(GameIntel.RoundResult.WON)) return 1;
             if (roundResult.equals(GameIntel.RoundResult.LOST)) return -1;
             return 0;
         }).sum();
-     }
+    }
 }

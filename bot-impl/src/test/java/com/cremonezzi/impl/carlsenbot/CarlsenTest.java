@@ -229,8 +229,8 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should choose lower card in hand if opponent discarded")
-    public void ShoulChooseLowerIfDiscarded() {
+    @DisplayName("Should choose lowest card in hand if opponent discarded")
+    public void ShoulChooseLowestIfDiscarded() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
         // Game info
@@ -549,8 +549,8 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should choose lower card in hand if that card can win")
-    public void ShouldLowerCardIfThatCardCanWin() {
+    @DisplayName("Should choose lowest card in hand if that card can win")
+    public void ShouldLowestCardIfThatCardCanWin() {
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
         //Game info
