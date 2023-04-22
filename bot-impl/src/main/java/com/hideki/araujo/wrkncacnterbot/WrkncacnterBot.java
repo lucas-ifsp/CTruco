@@ -114,7 +114,7 @@ public class WrkncacnterBot implements BotServiceProvider {
                 .getCards()
                 .stream()
                 .filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0)
-                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+                .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
     public long calculateNumberOfManilhas(GameIntel intel) {
