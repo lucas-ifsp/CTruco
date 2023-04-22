@@ -5,7 +5,6 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.CardRank.THREE;
 import static com.bueno.spi.model.CardRank.TWO;
