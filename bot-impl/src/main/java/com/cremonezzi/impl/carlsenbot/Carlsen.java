@@ -50,6 +50,14 @@ public class Carlsen implements BotServiceProvider {
                     return 1;
                 }
             }
+            if(calcHandScore(intel.getRoundResults()) == -1){
+                if ((mediumCard == 1 && highCard == 1) || mediumCard == 2) {
+                    return 0;
+                }
+                if (highCard == 2) {
+                    return 1;
+                }
+            }
             return -1;
         }
 
