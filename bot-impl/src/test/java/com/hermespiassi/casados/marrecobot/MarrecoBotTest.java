@@ -1,8 +1,6 @@
 package com.hermespiassi.casados.marrecobot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,6 +10,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.CardSuit.HIDDEN;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,6 +100,27 @@ class MarrecoBotTest {
 
     CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
     assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, DIAMONDS));
+  }
+
+  @Test
+  @DisplayName("Should choose lowest card when opponent card has hidden")
+  void ShouldChooseLowestCardWhenOpponentCardHasHidden() {
+    results = List.of();
+    botCards = List.of(
+            TrucoCard.of(TWO, CLUBS),
+            TrucoCard.of(FIVE, DIAMONDS),
+            TrucoCard.of(FOUR, HEARTS)
+    );
+    vira = TrucoCard.of(TWO, HEARTS);
+    openCards = List.of(vira, TrucoCard.of(CardRank.HIDDEN, HIDDEN));
+    stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0)
+            .opponentCard(TrucoCard.of(CardRank.HIDDEN, HIDDEN));
+
+    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, HEARTS));
   }
 
   @Test
