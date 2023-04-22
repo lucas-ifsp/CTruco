@@ -76,34 +76,27 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.calculateDeckValue(intel)).isEqualTo(expectedDeckValue);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa se o bot aceita a mao de onze de acordo com as cartas na sua mao")
-    @Test
-    void testAcceptMaoDeOnze() {
+    @ParameterizedTest
+    @MethodSource(value = "provideDataToMaoDeOnzeAccept")
+    void testAcceptMaoDeOnze(List<TrucoCard> cards, TrucoCard vira) {
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
-        ));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(cards);
 
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
     }
 
     // Falta parametrizar
     @DisplayName("Testa se o bot rejeita a mao de onze de acordo com as cartas na sua mao")
-    @Test
-    void testRejectMaoDeOnze() {
+    @ParameterizedTest
+    @MethodSource(value = "provideDataToMaoDeOnzeReject")
+    void testRejectMaoDeOnze(List<TrucoCard> cards, TrucoCard vira) {
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
-        ));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(cards);
 
         assertThat(wrkncacnterBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
     }
@@ -281,6 +274,96 @@ class WrkncacnterBotTest {
         ));
 
         assertEquals(wrkncacnterBot.chooseCard(intel).content(), TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+    }
+
+    static Stream<Arguments> provideDataToMaoDeOnzeAccept() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                )
+        );
+    }
+
+    static Stream<Arguments> provideDataToMaoDeOnzeReject() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                )
+        );
     }
 
     static Stream<Arguments> provideDataToResponseStrongerCards() {
