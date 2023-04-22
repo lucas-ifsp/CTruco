@@ -781,8 +781,8 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should raise on first round if opponent already played and we can win the hand")
-    public void ShouldRaiseFirstRoundIfOpponentPlayedAndCanWinHand() {
+    @DisplayName("Should raise on first round if opponent already played and has manilha")
+    public void ShouldRaiseFirstRoundIfOpponentPlayedHasManilha() {
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
         //Game info
