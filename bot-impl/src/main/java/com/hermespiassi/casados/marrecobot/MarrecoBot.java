@@ -140,6 +140,11 @@ public class MarrecoBot implements BotServiceProvider {
             return cardThree.isPresent();
           }
 
+          Optional<TrucoCard> espadilha = cards.stream().filter(card -> card.isEspadilha(vira)).findFirst();
+          if (espadilha.isPresent()) {
+            Optional<TrucoCard> cardThree = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+            return cardThree.isPresent();
+          }
         }
         if (manilhas.size() == 2) return true;
       }
