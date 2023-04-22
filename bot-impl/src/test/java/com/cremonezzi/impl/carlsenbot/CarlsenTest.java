@@ -137,7 +137,7 @@ public class CarlsenTest {
         // Bot info
         List<TrucoCard> botCards = List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
         );
 
@@ -626,5 +626,30 @@ public class CarlsenTest {
                 .build();
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should accept raise on first round if have a medium hand")
+    public void ShouldAcceptMediumHandFirstRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
     }
 }
