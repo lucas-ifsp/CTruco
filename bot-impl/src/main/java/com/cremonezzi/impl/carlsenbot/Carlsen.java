@@ -8,7 +8,6 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /* Notes
 *
@@ -26,9 +25,7 @@ public class Carlsen implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
-
         List<TrucoCard> hand = intel.getCards();
-        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
 
         int highCard = 0;
         for (TrucoCard card : hand) {
@@ -42,7 +39,7 @@ public class Carlsen implements BotServiceProvider {
         }
 
         if (qntManilhas == 1) {
-            if (highCard >= 1 || roundResult.contains(GameIntel.RoundResult.WON)) {
+            if (highCard >= 1 || calcHandScore(intel.getRoundResults()) > 0) {
                 return 1;
             }
 
@@ -71,13 +68,12 @@ public class Carlsen implements BotServiceProvider {
         int qntManilhas = manilhas(intel.getCards(), intel.getVira()).size();
 
         List<TrucoCard> hand = intel.getCards();
-        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
 
-        if (!roundResult.isEmpty() && roundResult.contains(GameIntel.RoundResult.WON)) {
+        if (calcHandScore(intel.getRoundResults()) > 0) {
             return haveZap > -1;
         }
 
-        if (!roundResult.isEmpty() && roundResult.contains(GameIntel.RoundResult.LOST)) {
+        if (calcHandScore(intel.getRoundResults()) < 0) {
             if (haveZap > -1) {
                 for (TrucoCard card : hand) {
                     if (isAceOrHigher(card) && !card.isManilha(intel.getVira())) {
@@ -94,7 +90,6 @@ public class Carlsen implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        //
         int handScore = calcHandScore(intel.getRoundResults());
 
         if (intel.getOpponentCard().isPresent()) {
@@ -105,12 +100,12 @@ public class Carlsen implements BotServiceProvider {
             }
 
             Optional<TrucoCard> lowerToWin = lowerCardToWin(intel.getCards(), opponentCard);
-            if (lowerToWin.isPresent() && intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
+            if (lowerToWin.isPresent() && intel.getRoundResults().size() == 1 && handScore < 0) {
                 return CardToPlay.of(lowerToWin.get());
             }
         }
 
-        if (intel.getRoundResults().size() > 0 && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)) {
+        if (handScore < 0) {
             return CardToPlay.of(higherInHand(intel.getCards(), intel.getVira()));
         }
 
