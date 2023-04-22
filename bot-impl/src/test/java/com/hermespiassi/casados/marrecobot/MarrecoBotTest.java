@@ -408,6 +408,25 @@ class MarrecoBotTest {
     }
   }
 
+  @Test
+  @DisplayName("Should return highest card when tied")
+  void ShouldReturnHighestCardWhenTied() {
+    results = List.of(WON, LOST);
+    botCards = List.of(TrucoCard.of(THREE, SPADES));
+    vira = TrucoCard.of(ACE, HEARTS);
+    openCards = List.of(vira,
+            TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(TWO, SPADES),
+            TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FIVE, CLUBS)
+    );
+    stepBuilder = GameIntel.StepBuilder.with()
+            .gameInfo(results, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0);
+
+    CardToPlay cardToPlay = new MarrecoBot().chooseCard(stepBuilder.build());
+    assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, SPADES));
+  }
+
   @Nested
   @DisplayName("Test bot logic when bot have manilha and opponent cards are not manilha")
   class OpponentCardIsNotManilha {
