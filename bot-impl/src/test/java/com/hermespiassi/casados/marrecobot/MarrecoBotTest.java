@@ -808,7 +808,7 @@ class MarrecoBotTest {
 
   @Test
   @DisplayName("Should return TRUE to raise when bot has 1 manilha and opponent score are less than 5")
-  void ShouldReturnTRUEToRaiseWhenBotHas1ManilhaAndOpponentScoreAreLessThan6() {
+  void ShouldReturnTRUEToRaiseWhenBotHas1ManilhaAndOpponentScoreAreLessThan5() {
     results = List.of();
     botCards = List.of(TrucoCard.of(FIVE, HEARTS), TrucoCard.of(THREE, SPADES), TrucoCard.of(ACE, HEARTS));
     vira = TrucoCard.of(FOUR, HEARTS);
@@ -823,7 +823,6 @@ class MarrecoBotTest {
             .as("Return TRUE to raise when bot has 1 manilha and opponent score are less than 5.")
             .isTrue();
   }
-
 
   @Nested
   @DisplayName("Test bot logic to accept mao de onze")
