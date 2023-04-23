@@ -66,7 +66,7 @@ public class WrkncacnterBot implements BotServiceProvider {
         return hasRankHigherThanKing || hasOneManilha || hasZapAndManilhaHearts(intel);
     }
 
-    @Override // Here throw exception
+    @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (intel.getHandPoints() == 12 || intel.getScore() <= 11) return false;
         if (intel.getRoundResults().isEmpty())
