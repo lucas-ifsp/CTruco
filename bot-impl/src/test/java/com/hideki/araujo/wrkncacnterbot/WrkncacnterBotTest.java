@@ -208,7 +208,6 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.calculateNumberOfManilhas(intel)).isEqualTo(numberOfManilhas);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa se tem zap e manilha(copas) na mao")
     @Test
     void testHasZapAndManilhaClubs() {
@@ -226,14 +225,13 @@ class WrkncacnterBotTest {
     }
 
     @DisplayName("Testa de amarrar jogo")
-    @Test
-    void testForceTieGame(){
+    @ParameterizedTest
+    @MethodSource(value = "provideToForceTieGame")
+    void testForceTieGame(TrucoCard opponentCard, TrucoCard expectedCard){
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getOpponentCard())
-                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)))
-                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)))
-                .thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)));
+                .thenReturn(Optional.ofNullable(opponentCard));
 
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
 
@@ -243,12 +241,25 @@ class WrkncacnterBotTest {
                 TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
         ));
 
-        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
-        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+        assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(expectedCard);
     }
-
-    // Teste de metodo que verifica se a mao tem pelo menos uma carta maior que o grupo informado
+    
+    public static Stream<Arguments> provideToForceTieGame() {
+        return Stream.of(
+                Arguments.of(
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                )
+        );
+    }
 
     public static Stream<Arguments> provideWeakestCardsToChoose() {
         return Stream.of(
