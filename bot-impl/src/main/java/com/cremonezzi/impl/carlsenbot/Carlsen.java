@@ -45,10 +45,19 @@ public class Carlsen implements BotServiceProvider {
         if (qntManilhas == 0) {
             if(intel.getRoundResults().size() == 0) {
                 if (mediumCard >= 1 && highCard == 1) {
+                    if(intel.getHandPoints() > 6) {
+                        return -1;
+                    }
                     return 0;
                 }
                 if (mediumCard == 1 && highCard == 2) {
-                    return 1;
+                    if(intel.getHandPoints() == 12){
+                        return -1;
+                    }
+                    if(intel.getHandPoints() <= 6){
+                        return 1;
+                    }
+                    return 0;
                 }
             }
             if(calcHandScore(intel.getRoundResults()) == -1){
@@ -56,6 +65,9 @@ public class Carlsen implements BotServiceProvider {
                     return 0;
                 }
                 if (highCard == 2) {
+                    if(intel.getHandPoints() > 6){
+                        return 0;
+                    }
                     return 1;
                 }
             }
@@ -64,6 +76,9 @@ public class Carlsen implements BotServiceProvider {
 
         if (qntManilhas == 1) {
             if (highCard >= 1 || calcHandScore(intel.getRoundResults()) > 0) {
+                if(intel.getHandPoints() == 12){
+                    return 0;
+                }
                 return 1;
             }
 
