@@ -857,4 +857,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should quit if drew and don't have manilha")
+    public void ShouldQuitDrewAndNoManilha(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.DREW
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.decideIfRaises(intel)).isFalse();
+    }
 }
