@@ -829,7 +829,7 @@ public class CarlsenTest {
                 .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS))
                 .build();
 
-        assertThat(carlsenBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        assertThat(carlsenBot.chooseCard(intel).value()).isEqualTo(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
     }
 
     @Test
