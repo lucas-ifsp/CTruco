@@ -89,6 +89,10 @@ public class Carlsen implements BotServiceProvider {
             return -1;
         }
 
+        if(intel.getHandPoints() == 12){
+            return 0;
+        }
+        
         return 1;
     }
 
