@@ -33,17 +33,19 @@ public class AddTheNewSoul implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         // verificaçao para nao causar exception de pedir 15
-        if(intel.getHandPoints() == 12) return 0;
+        if(intel.getHandPoints() == 12) return -1;
 
         // Se perder significar fim de jogo
         if(intel.getHandPoints() + intel.getOpponentScore() >= 12)
             if(hasCasal(intel)) return 1;
-            else return 0;
+            else if (hasAttackCard(intel)) return 0;
+            else return -1;
 
         // Se todas as manilhas ja foram jogadas e tem ataque, 6 marreco!
-        if(allManilhasPlayed(intel) && hasAttackCard(intel)) return 1;
+        if(allManilhasPlayed(intel) && hasAttackCard(intel)) return 0;
 
 
+        // Se ta ganhando com folga, 6 marreco
         if(handIsStrong(intel) && intel.getScore() - intel.getOpponentScore() > 3) return 1;
 
 
@@ -54,18 +56,18 @@ public class AddTheNewSoul implements BotServiceProvider {
         // Se ganhou a primeira ou a segunda rodada, e tiver manilha ou ataque, 6 marreco
         if(!intel.getRoundResults().isEmpty() && (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON || (intel.getRoundResults().size() >= 2 && intel.getRoundResults().get(1) == GameIntel.RoundResult.WON))){
             if(hasZap(intel) && hasAttackCard(intel)) return 1;
-            if(hasManilha(intel) || hasAttackCard(intel)) return 1;
+            if(hasManilha(intel) || hasAttackCard(intel)) return 0;
         }
 
 
 
-        if(intel.getScore() - intel.getOpponentScore() > 2 && !handAboveAverage(intel)) return 0;
+        if(intel.getScore() - intel.getOpponentScore() > 2 && !handAboveAverage(intel)) return -1;
 
-        if(!handIsStrong(intel)) return 0;
+        if(!handIsStrong(intel)) return -1;
 
-        if(intel.getScore() == 1 || intel.getOpponentScore() == 11) return 0;
+        if(intel.getScore() == 1 || intel.getOpponentScore() == 11) return -1;
 
-        return 0;
+        return -1;
     }
 
     private boolean allManilhasPlayed(GameIntel intel) {
