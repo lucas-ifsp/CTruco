@@ -108,7 +108,7 @@ public class Carlsen implements BotServiceProvider {
         List<TrucoCard> hand = intel.getCards();
 
         if (calcHandScore(intel.getRoundResults()) > -1) {
-            return haveZap > -1;
+            return qntManilhas > 0;
         }
 
         if (calcHandScore(intel.getRoundResults()) < 0) {
