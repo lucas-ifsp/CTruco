@@ -154,6 +154,12 @@ public class Carlsen implements BotServiceProvider {
         }
 
         TrucoCard opponentCard = intel.getOpponentCard().get();
+        Optional<TrucoCard> cardToDraw = hasCardToDraw(intel.getCards(), opponentCard);
+
+        if (handScore == 0 && cardToDraw.isPresent()) {
+            return CardToPlay.of(cardToDraw.get());
+        }
+
         if (opponentCard.isZap(intel.getVira())) {
             if (intel.getRoundResults().isEmpty()) {
                 return CardToPlay.of(lowestInHand(intel.getCards(), intel.getVira()));
@@ -162,7 +168,13 @@ public class Carlsen implements BotServiceProvider {
             return CardToPlay.discard(lowestInHand(intel.getCards(), intel.getVira()));
         }
 
-        return CardToPlay.of(intel.getCards().get(0));
+        Optional<TrucoCard> lowestToWin = lowestCardToWin(intel.getCards(), opponentCard);
+        if (lowestToWin.isPresent()) {
+            return CardToPlay.of(lowestToWin.get());
+        }
+
+        TrucoCard lowestInHand = lowestInHand(intel.getCards(), intel.getVira());
+        return CardToPlay.of(lowestInHand);
     }
 
     @Override
