@@ -1131,4 +1131,29 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should accept raise if the hand points came to 12 and hand is all fours")
+    public void ShouldAcceptRaiseTwelvePointsAllFours(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 12)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
+    }
 }
