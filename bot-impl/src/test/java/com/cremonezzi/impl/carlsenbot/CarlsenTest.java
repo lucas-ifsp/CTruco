@@ -1055,4 +1055,28 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should raise again if have manilha and drew")
+    public void ShouldRaiseManilhaAndDrew(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
 }
