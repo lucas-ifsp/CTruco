@@ -40,7 +40,7 @@ public class DummyBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return !intel.getRoundResults().isEmpty();
     }
 
     @Override
@@ -62,6 +62,9 @@ public class DummyBot implements BotServiceProvider {
         }
         System.out.println(intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).
                 reduce(Integer::sum).orElseThrow());
+        System.out.println("Valor da mão" + intel.getHandPoints());
+        System.out.println("Pontuação do dummy" + intel.getScore());
+        System.out.println("Pontuação do mineiro" + intel.getOpponentScore());
         System.out.println("Cartas abertas -> " + intel.getOpenCards());
         System.out.println("Vira da mesa: " + intel.getVira());
         System.out.println("Cartas abertas " + intel.getOpenCards());

@@ -46,7 +46,13 @@ public class SecondRound implements Strategy {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return true;
+        TrucoCard cardMedium = getCardWithMediumStrength(intel.getCards(), intel.getVira());
+
+        if (calculateCurrentHandValue(intel) >= 25) {
+            if (hasManilha(intel)) return true;
+            else if (intel.getOpponentScore() < 9 && hasTwoOrThree(intel)) return true;
+            else return intel.getOpponentScore() >= 9 && cardMedium.getRank().value() >= 9;
+        } else return false;
     }
 
     @Override
@@ -119,6 +125,20 @@ public class SecondRound implements Strategy {
                 return CardToPlay.of(cards.get(0));
             }
         }
+    }
+
+    public boolean hasTwoOrThree(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.TWO
+                || card.getRank() == CardRank.THREE);
+    }
+
+    public TrucoCard getCardWithMediumStrength(List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream()
+                .sorted(Comparator.comparingInt(carta -> carta.relativeValue(vira)))
+                .skip(1)
+                .limit(1)
+                .findFirst()
+                .orElseThrow();
     }
 
     public TrucoCard getCardWithSameValueOfOpponent(List<TrucoCard> cards, TrucoCard opponentCard) {
