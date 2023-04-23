@@ -470,7 +470,7 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should not discard if is tied")
+    @DisplayName("Should not discard if is tied and can win")
     public void ShouldNotDiscardIfTied() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
 
@@ -483,14 +483,14 @@ public class CarlsenTest {
         //Bot info
         List<TrucoCard> botCards = List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
         );
 
         GameIntel intel = GameIntel.StepBuilder.with()
                 .gameInfo(roundResults, openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS))
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS))
                 .build();
 
         assertThat(carlsenBot.chooseCard(intel).value().toString()).isNotEqualTo("[XX]");
@@ -559,8 +559,8 @@ public class CarlsenTest {
 
         //Bot info
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
         );
 
@@ -817,8 +817,8 @@ public class CarlsenTest {
 
         //Bot info
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
         );
 
@@ -1078,5 +1078,31 @@ public class CarlsenTest {
                 .build();
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should use manilha in second round if winning and have more than one")
+    public void ShouldUseManilhaIfWinningAndMoreThanOne(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 6)
+                .botInfo(botCards, 10)
+                .opponentScore(11)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().isManilha(vira)).isTrue();
     }
 }
