@@ -883,4 +883,56 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.decideIfRaises(intel)).isFalse();
     }
+
+    @Test
+    @DisplayName("Should not use manilha in second round if winning and have only one")
+    public void ShouldNotUseManilhaIfWinningInSecondRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().isManilha(vira)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should use manilha in second round if winning and have more than one")
+    public void ShouldUseManilhaIfWinningAndMoreThanOne(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 6)
+                .botInfo(botCards, 10)
+                .opponentScore(11)
+                .build();
+
+        assertThat(carlsenBot.chooseCard(intel).value().isManilha(vira)).isTrue();
+    }
 }
