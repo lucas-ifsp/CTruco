@@ -159,21 +159,17 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.chooseKillCard(intel).orElseThrow()).isEqualTo(expected);
     }
 
-    // Falta parametrizar
     @DisplayName("Testa se o método retorna a carta mais fraca da mão")
-    @Test
-    void testChooseWeakestCard() {
+    @ParameterizedTest
+    @MethodSource(value = "provideWeakestCardsToChoose")
+    void testChooseWeakestCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard expectedWeakest) {
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(vira);
 
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
-        ));
+        when(intel.getCards()).thenReturn(cards);
 
-        assertThat(wrkncacnterBot.chooseWeakestCard(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+        assertThat(wrkncacnterBot.chooseWeakestCard(intel).orElseThrow()).isEqualTo(expectedWeakest);
     }
 
     // Falta parametrizar
@@ -199,7 +195,6 @@ class WrkncacnterBotTest {
 //        assertThat(wrkncacnterBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 //    }
 
-    // Falta parametrizar
     @DisplayName("Testa quantas manilhas existe na mao")
     @ParameterizedTest
     @MethodSource(value = "provideToCalculateNumberOfManilhas")
@@ -253,11 +248,48 @@ class WrkncacnterBotTest {
         assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
     }
 
-    // Teste de matar cartas quando tem mais que uma manilha e o primeiro round
-
-    // Teste de jogar no primeiro round quando for sua vez e possuir duas manilhas(espera uma manilha)
-
     // Teste de metodo que verifica se a mao tem pelo menos uma carta maior que o grupo informado
+
+    public static Stream<Arguments> provideWeakestCardsToChoose() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                )
+        );
+    }
 
     public static Stream<Arguments> provideToCalculateNumberOfManilhas() {
         return Stream.of(
