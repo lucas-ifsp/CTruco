@@ -358,6 +358,15 @@ class DestroyerBotTest {
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
             }
 
+            @Test
+            @DisplayName("Should ask for point raise if hand points equals to six and opponent has six or more points.")
+            void shouldAskForPointRaiseIfHandPointsEqualsToSixAndOpponentHasSixOrMorePoints(){
+                when(intel.getHandPoints()).thenReturn(6);
+                when(intel.getOpponentScore()).thenReturn(6);
+
+                assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+            }
+
             @ParameterizedTest
             @CsvSource({"6, 3", "5, 3", "4, 3"})
             @DisplayName("Should accept a point raise request if it has only cards above rank seven and is winning " +
