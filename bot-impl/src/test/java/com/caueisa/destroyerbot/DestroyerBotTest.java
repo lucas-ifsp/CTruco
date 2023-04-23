@@ -348,6 +348,16 @@ class DestroyerBotTest {
         @Nested
         @DisplayName("When get a point raise request")
         class GetRaiseResponseTest {
+
+            @Test
+            @DisplayName("Should ask for point raise if opponent asked for 'truco' and has nine or more points.")
+            void shouldAskForPointRaiseIfItIsATrucoAndOpponentHasNineOrMorePoints(){
+                when(intel.getHandPoints()).thenReturn(3);
+                when(intel.getOpponentScore()).thenReturn(10);
+
+                assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+            }
+
             @ParameterizedTest
             @CsvSource({"6, 3", "5, 3", "4, 3"})
             @DisplayName("Should accept a point raise request if it has only cards above rank seven and is winning " +
