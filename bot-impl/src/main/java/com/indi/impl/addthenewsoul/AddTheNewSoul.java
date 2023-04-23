@@ -70,38 +70,6 @@ public class AddTheNewSoul implements BotServiceProvider {
         return -1;
     }
 
-    private boolean allManilhasPlayed(GameIntel intel) {
-        List<TrucoCard> manilhas = new ArrayList<>();
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isManilha(intel.getVira())) {
-                manilhas.add(card);
-            }
-        }
-        return manilhas.size() == 4;
-    }
-
-    private boolean hasZap(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
-    }
-
-    private boolean hasManilha(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
-    }
-
-    private boolean hasAttackCard(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> attackCards.contains(card.getRank()));
-    }
-
-    private boolean hasCasal(GameIntel intel) {
-        List<TrucoCard> manilhas = new ArrayList<>();
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isManilha(intel.getVira())) {
-                manilhas.add(card);
-            }
-        }
-        return manilhas.size() == 2;
-    }
-
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         for (TrucoCard card : intel.getCards()) {
@@ -259,5 +227,37 @@ public class AddTheNewSoul implements BotServiceProvider {
         }
         return biggerCard;
 
+    }
+
+    private boolean allManilhasPlayed(GameIntel intel) {
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas.add(card);
+            }
+        }
+        return manilhas.size() == 4;
+    }
+
+    private boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
+    private boolean hasManilha(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
+    }
+
+    private boolean hasAttackCard(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> attackCards.contains(card.getRank()));
+    }
+
+    private boolean hasCasal(GameIntel intel) {
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas.add(card);
+            }
+        }
+        return manilhas.size() == 2;
     }
 }
