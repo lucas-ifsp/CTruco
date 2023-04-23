@@ -60,12 +60,10 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        var hasThreeTwoAndManilha =
-                hasCardRank(intel, CardRank.THREE) ||
-                hasCardRank(intel, CardRank.TWO);
-        var hasOneManilha = calculateNumberOfManilhas(intel) >= 1;
+        var hasRankHigherThanKing = hasCardRankHigherThan(intel, CardRank.KING);
+        var hasOneManilha = calculateNumberOfManilhas(intel) >= 2;
 
-        return hasThreeTwoAndManilha || hasOneManilha || hasZapAndManilhaHearts(intel);
+        return hasRankHigherThanKing || hasOneManilha || hasZapAndManilhaHearts(intel);
     }
 
     @Override // Here throw exception
@@ -119,7 +117,7 @@ public class WrkncacnterBot implements BotServiceProvider {
                 .getCards()
                 .stream()
                 .filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0)
-                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+                .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
     public long calculateNumberOfManilhas(GameIntel intel) {
@@ -133,12 +131,8 @@ public class WrkncacnterBot implements BotServiceProvider {
         return hasZap && hasManilhaHearts;
     }
 
-    public boolean hasCardRank(GameIntel intel, CardRank cardRank) {
-        return intel.getCards().stream().anyMatch(card -> card.getRank().equals(cardRank));
-    }
-
     public boolean hasCardRankHigherThan(GameIntel intel, CardRank cardRank) {
-        return intel.getCards().stream().allMatch(card -> card.getRank().value() >= cardRank.value());
+        return intel.getCards().stream().anyMatch(card -> card.getRank().value() >= cardRank.value());
     }
 
     public Optional<TrucoCard> forceTieGame(GameIntel intel) {
