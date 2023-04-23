@@ -1181,4 +1181,29 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should quit if the hand points is 12 with good hand and no manilha")
+    public void ShouldQuitTwelveGoodHandNoManilha(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 12)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
 }
