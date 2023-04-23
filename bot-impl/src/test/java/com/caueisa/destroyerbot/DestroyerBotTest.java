@@ -350,8 +350,8 @@ class DestroyerBotTest {
         class GetRaiseResponseTest {
 
             @Test
-            @DisplayName("Should ask for point raise if opponent asked for 'truco' and has nine or more points.")
-            void shouldAskForPointRaiseIfItIsATrucoAndOpponentHasNineOrMorePoints(){
+            @DisplayName("Should ask for point raise if hand points equals to three and opponent has nine or more points.")
+            void shouldAskForPointRaiseIfHandPointsEqualsToThreeAndOpponentHasNineOrMorePoints(){
                 when(intel.getHandPoints()).thenReturn(3);
                 when(intel.getOpponentScore()).thenReturn(10);
 
