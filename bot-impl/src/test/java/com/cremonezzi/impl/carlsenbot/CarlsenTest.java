@@ -1105,4 +1105,30 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.chooseCard(intel).value().isManilha(vira)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should accept raise if the hand points came to 12")
+    public void ShouldAcceptRaiseTwelvePoints(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 12)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
+    }
 }
