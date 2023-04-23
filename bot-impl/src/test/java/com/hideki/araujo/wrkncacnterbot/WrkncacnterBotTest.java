@@ -243,7 +243,7 @@ class WrkncacnterBotTest {
 
         assertThat(wrkncacnterBot.forceTieGame(intel).orElseThrow()).isEqualTo(expectedCard);
     }
-    
+
     public static Stream<Arguments> provideToForceTieGame() {
         return Stream.of(
                 Arguments.of(
