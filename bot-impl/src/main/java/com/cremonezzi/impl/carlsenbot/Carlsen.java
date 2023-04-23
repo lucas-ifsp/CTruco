@@ -39,6 +39,9 @@ public class Carlsen implements BotServiceProvider {
         }
 
         if(isAllFours(hand)){
+            if(intel.getHandPoints() == 12){
+                return 0;
+            }
             return 1;
         }
 
@@ -92,7 +95,7 @@ public class Carlsen implements BotServiceProvider {
         if(intel.getHandPoints() == 12){
             return 0;
         }
-        
+
         return 1;
     }
 
@@ -110,6 +113,10 @@ public class Carlsen implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         TrucoCard vira = intel.getVira();
+
+        if(intel.getHandPoints() == 12){
+            return false;
+        }
 
         if(isAllFours(intel.getCards()) && intel.getOpponentCard().isEmpty()){
             return true;
