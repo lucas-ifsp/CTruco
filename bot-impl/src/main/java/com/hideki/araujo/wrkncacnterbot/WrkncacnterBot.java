@@ -68,7 +68,7 @@ public class WrkncacnterBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getHandPoints() == 12 || intel.getScore() <= 11) return false;
+        if (intel.getHandPoints() == 12 && intel.getScore() <= 11) return false;
         if (intel.getRoundResults().isEmpty())
             return calculateDeckValue(intel) <= 6 || calculateDeckValue(intel) >= 18;
         if (intel.getRoundResults().size() >= 2)
