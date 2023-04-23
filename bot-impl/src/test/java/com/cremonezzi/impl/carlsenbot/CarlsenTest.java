@@ -958,4 +958,29 @@ public class CarlsenTest {
 
         assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should raise again if opponent called it before playing a card and have good hand with manilha")
+    public void ShouldRaiseBeforeOpponentPlayWithGoodHandWithManilha(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        //Game info
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        //Bot info
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+        );
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
 }
