@@ -16,7 +16,32 @@ public class SecondRound implements Strategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (intel.getHandPoints() == 12) return 0;
+        if (intel.getScore() + 3 >= 12) return 0;
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        cards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, intel.getVira());
+        });
+        GameIntel.RoundResult roundResult = intel.getRoundResults().get(0);
+        switch (roundResult) {
+            case WON -> {
+                if (hasManilha(intel)) return 1;
+                else if (calculateCurrentHandValue(intel) >= 17) return 0;
+                else return -1;
+            }
+            case LOST -> {
+                if (hasZap(intel) && calculateCurrentHandValue(intel) >= 21) return 0;
+                else return -1;
+            }
+            case DREW -> {
+                if (hasManilha(intel)) return 0;
+                else if (cards.get(0).getRank().value() == 10) return 0;
+                else return -1;
+            }
+            default -> {
+                return -1;
+            }
+        }
     }
 
     @Override
@@ -27,9 +52,12 @@ public class SecondRound implements Strategy {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (intel.getScore() == 11) return false;
+        if (intel.getHandPoints() == 12) return false;
+        if (intel.getScore() + 3 > 12) return false;
         TrucoCard vira = intel.getVira();
 
-        List<TrucoCard> openCards = new ArrayList<>(intel.getCards().subList(0, 2));
+        // Uma lista que contém as 2 cartas jogadas na primeira rodada em ordem crescente
+        List<TrucoCard> openCards = new ArrayList<>(intel.getOpenCards().subList(0, 2));
         openCards.sort((c1, c2) -> {
             return c1.compareValueTo(c2, vira);
         });
@@ -38,9 +66,16 @@ public class SecondRound implements Strategy {
 
         switch (roundResult) {
             case WON -> {
-                if (openCards.get(1).getRank().value() >= 8) {
+                if (openCards.get(1).relativeValue(intel.getVira()) >= 8) {
                     return calculateCurrentHandValue(intel) <= 8;
                 }
+                return calculateCurrentHandValue(intel) >= 15 || hasManilha(intel);
+            }
+            case LOST -> {
+                if (intel.getHandPoints() <= 3) return calculateCurrentHandValue(intel) >= 18;
+            }
+            case DREW -> {
+                if (hasManilha(intel) || hasZap(intel)) return true;
             }
         }
         return false;

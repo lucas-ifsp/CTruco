@@ -62,8 +62,10 @@ public class FirstRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getScore() == 11) return false;
-        return calculateCurrentHandValue(intel) >= 16;
+        /*if (intel.getScore() == 11) return false;
+        if (intel.getHandPoints() == 12) return false;
+        return calculateCurrentHandValue(intel) >= 19 || hasTwoManilhas(intel) == 2;*/
+        return false;
     }
 
     @Override
