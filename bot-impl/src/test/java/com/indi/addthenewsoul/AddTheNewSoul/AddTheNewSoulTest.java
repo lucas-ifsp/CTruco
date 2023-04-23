@@ -740,7 +740,7 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 12)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+        assertEquals(addTheNewSoul.getRaiseResponse(stepBuilder.build()), -1);
     }
     @Test
     @DisplayName("Should always accept if has a casal maior")
@@ -777,11 +777,11 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+        assertEquals(addTheNewSoul.getRaiseResponse(stepBuilder.build()), -1);
     }
 
     @Test
-    @DisplayName("Should raise if won first round and has a manilha")
+    @DisplayName("Should accept if won first round and has a manilha")
     void shouldRaiseIfWonFirstRoundAndHasAManilhaTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
@@ -797,11 +797,11 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
-    @DisplayName("Should raise if won first round and has an attack card")
+    @DisplayName("Should accept if won first round and has an attack card")
     void shouldRaiseIfWonFirstRoundAndHasAnAttackCardTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
@@ -817,7 +817,7 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
@@ -841,7 +841,7 @@ public class AddTheNewSoulTest {
     }
 
     @Test
-    @DisplayName("Should not raise if loss means game over")
+    @DisplayName("Should decline if loss means game over")
     void shouldNotRaiseIfLossMeansGameOverTest(){
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
@@ -852,7 +852,7 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
                 .botInfo(botCards, 0)
                 .opponentScore(6);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+        assertEquals(addTheNewSoul.getRaiseResponse(stepBuilder.build()), -1);
     }
     
     @Test
@@ -875,7 +875,7 @@ public class AddTheNewSoulTest {
     }
 
     @Test
-    @DisplayName("Should raise if every manilha has been played and has attack card")
+    @DisplayName("Should accept if every manilha has been played and has attack card")
     void shouldRaiseIfEveryManilhaHasBeenPlayedAndHasAttackCardTest(){
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
@@ -892,7 +892,7 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 6)
                 .botInfo(botCards, 0)
                 .opponentScore(3);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isOne();
+        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
@@ -945,7 +945,7 @@ public class AddTheNewSoulTest {
                 .gameInfo(List.of(), openCards, vira, 3)
                 .botInfo(botCards, 11)
                 .opponentScore(11);
-        assertThat(addTheNewSoul.getRaiseResponse(stepBuilder.build())).isZero();
+        assertEquals(addTheNewSoul.getRaiseResponse(stepBuilder.build()), -1);
     }
 
 }
