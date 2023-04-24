@@ -155,4 +155,9 @@ public class WrkncacnterBot implements BotServiceProvider {
         }
         return chooseKillCard(intel);
     }
+
+    @Override
+    public String getName() {
+        return "W'rkncacnter";
+    }
 }
