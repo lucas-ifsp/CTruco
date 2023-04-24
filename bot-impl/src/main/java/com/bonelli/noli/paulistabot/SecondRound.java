@@ -26,7 +26,7 @@ public class SecondRound implements Strategy {
         switch (roundResult) {
             case WON -> {
                 if (hasManilha(intel)) return 1;
-                else if (calculateCurrentHandValue(intel) >= 17) return 0;
+                else if (calculateCurrentHandValue(intel) >= 16) return 0;
                 else return -1;
             }
             case LOST -> {
@@ -35,6 +35,9 @@ public class SecondRound implements Strategy {
             }
             case DREW -> {
                 if (hasManilha(intel)) return 0;
+                if (intel.getCards().size() == 2) {
+                    return cards.get(1).getRank().value() == 10 ? 0: -1;
+                }
                 else if (cards.get(0).getRank().value() == 10) return 0;
                 else return -1;
             }
@@ -81,7 +84,7 @@ public class SecondRound implements Strategy {
                 if (intel.getHandPoints() <= 3) return calculateCurrentHandValue(intel) >= 18;
             }
             case DREW -> {
-                if (hasManilha(intel) || hasZap(intel)) return true;
+                if (hasManilha(intel)) return true;
             }
         }
         return false;
