@@ -37,6 +37,11 @@ public class ThirdRound implements Strategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (intel.getCards().size() == 1) {
+            if (intel.getCards().get(0).isZap(intel.getVira())) return 1;
+        }
+        TrucoCard cardPlayed = intel.getOpenCards().get(intel.getOpenCards().size() - 1);
+        if (cardPlayed.isZap(intel.getVira())) return 1;
         if (intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) return 0;
         return -1;
     }
@@ -73,8 +78,9 @@ public class ThirdRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getRoundResults().get(1) == GameIntel.RoundResult.WON) {
-            return intel.getCards().get(0).relativeValue(intel.getVira()) >= 10;
+        if (intel.getRoundResults().get(1) == GameIntel.RoundResult.WON) return intel.getCards().get(0).relativeValue(intel.getVira()) >= 10;
+        if (intel.getCards().size() == 1) {
+            return intel.getCards().get(0).isZap(intel.getVira());
         }
         return false;
     }
