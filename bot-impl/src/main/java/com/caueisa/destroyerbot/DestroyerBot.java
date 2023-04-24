@@ -70,6 +70,9 @@ public class DestroyerBot implements BotServiceProvider {
             if(intel.getOpponentScore() <= 7){
                 return true;
             }else {
+                if (roundNumber == 1)
+                    if (getCardsAboveRank(intel, CardRank.TWO).size() >= 2)
+                        return true;
                 if (roundNumber == 2) {
                     if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
                         return true;
