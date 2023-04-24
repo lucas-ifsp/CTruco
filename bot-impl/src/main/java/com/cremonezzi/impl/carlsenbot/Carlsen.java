@@ -38,12 +38,12 @@ public class Carlsen implements BotServiceProvider {
             }
         }
 
-        if(isAllFours(hand)){
-            if(intel.getHandPoints() == 12){
-                return 0;
-            }
-            return 1;
-        }
+//        if(isAllFours(hand)){
+//            if(intel.getHandPoints() == 12){
+//                return 0;
+//            }
+//            return 1;
+//        }
 
         if (qntManilhas == 0) {
             if(intel.getRoundResults().size() == 0) {
@@ -96,7 +96,7 @@ public class Carlsen implements BotServiceProvider {
             return 0;
         }
 
-        return 1;
+        return 0;
     }
 
     @Override
@@ -118,9 +118,9 @@ public class Carlsen implements BotServiceProvider {
             return false;
         }
 
-        if(isAllFours(intel.getCards()) && intel.getOpponentCard().isEmpty()){
-            return true;
-        }
+//        if(isAllFours(intel.getCards()) && intel.getOpponentCard().isEmpty()){
+//            return true;
+//        }
 
         if (intel.getOpponentCard().isPresent() && calcHandScore(intel.getRoundResults()) > 0) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
@@ -133,9 +133,9 @@ public class Carlsen implements BotServiceProvider {
 
         List<TrucoCard> hand = intel.getCards();
 
-        if (calcHandScore(intel.getRoundResults()) > -1) {
-            return qntManilhas > 0;
-        }
+//        if (calcHandScore(intel.getRoundResults()) > -1) {
+//            return qntManilhas > 0;
+//        }
 
         if (calcHandScore(intel.getRoundResults()) < 0) {
             if (haveZap > -1) {
@@ -149,7 +149,13 @@ public class Carlsen implements BotServiceProvider {
             return false;
         }
 
-        return qntManilhas > 1;
+        if(qntManilhas > 1){
+            if(intel.getHandPoints() > 6){
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
