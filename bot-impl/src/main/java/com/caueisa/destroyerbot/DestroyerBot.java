@@ -67,22 +67,26 @@ public class DestroyerBot implements BotServiceProvider {
         if (intel.getScore() != 11) {
             int roundNumber = getRoundNumber(intel);
             int scoreDifference = getScoreDifference(intel);
-            if (roundNumber == 2) {
-                if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
-                    return true;
-            }
-            if (roundNumber == 3) {
-                if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
-                    return true;
-            }
-            if (scoreDifference > 0) {
-                if (scoreDifference <= 3)
-                    return true;
-            }
-            if (scoreDifference <= -6  && hasStrongestManilhas(intel))
+            if(intel.getOpponentScore() <= 7){
                 return true;
-            if (scoreDifference >= -3 && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
-                return true;
+            }else {
+                if (roundNumber == 2) {
+                    if (isTheFirstToPlay(intel) && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
+                        return true;
+                }
+                if (roundNumber == 3) {
+                    if (!getCardsAboveRank(intel, CardRank.ACE).isEmpty())
+                        return true;
+                }
+                if (scoreDifference > 0) {
+                    if (scoreDifference <= 3)
+                        return true;
+                }
+                if (scoreDifference <= -6 && hasStrongestManilhas(intel))
+                    return true;
+                if (scoreDifference >= -3 && getCardsAboveRank(intel, CardRank.ACE).size() == intel.getCards().size())
+                    return true;
+            }
         }
         return false;
     }
