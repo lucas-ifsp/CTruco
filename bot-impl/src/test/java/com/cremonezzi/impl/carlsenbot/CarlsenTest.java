@@ -751,8 +751,8 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should raise if only have fours in hand")
-    public void ShouldRaiseOnlyFours(){
+    @DisplayName("Should not raise if only have fours in hand")
+    public void ShouldNotRaiseOnlyFours(){
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
         //Game info
@@ -772,7 +772,7 @@ public class CarlsenTest {
                 .opponentScore(1)
                 .build();
 
-        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(1);
+        assertThat(carlsenBot.getRaiseResponse(intel)).isNotEqualTo(1);
     }
 
     @Test
@@ -1153,8 +1153,8 @@ public class CarlsenTest {
     }
 
     @Test
-    @DisplayName("Should accept raise if the hand points came to 12 and hand is all fours")
-    public void ShouldAcceptRaiseTwelvePointsAllFours(){
+    @DisplayName("Should not accept raise if the hand points came to 12 and hand is all fours")
+    public void ShouldNotAcceptRaiseTwelvePointsAllFours(){
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
         //Game info
@@ -1174,7 +1174,7 @@ public class CarlsenTest {
                 .opponentScore(0)
                 .build();
 
-        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(0);
+        assertThat(carlsenBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
     @Test

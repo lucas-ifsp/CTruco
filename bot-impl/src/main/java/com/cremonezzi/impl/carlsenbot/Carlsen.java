@@ -46,12 +46,15 @@ public class Carlsen implements BotServiceProvider {
             }
         }
 
-//        if(isAllFours(hand)){
-//            if(intel.getHandPoints() == 12){
-//                return 0;
-//            }
-//            return 1;
-//        }
+        if (intel.getHandPoints() == 12) {
+            if (qntManilhas >= hand.size() - 1) return 0;
+
+            return -1;
+        }
+
+        if (qntManilhas > 1) {
+            return 1;
+        }
 
         if (qntManilhas == 0) {
             if(intel.getRoundResults().size() == 0) {
@@ -61,6 +64,7 @@ public class Carlsen implements BotServiceProvider {
                     }
                     return 0;
                 }
+
                 if (mediumCard == 1 && highCard == 2) {
                     if(intel.getHandPoints() == 12){
                         return -1;
@@ -75,6 +79,7 @@ public class Carlsen implements BotServiceProvider {
                 if ((mediumCard == 1 && highCard == 1) || mediumCard == 2) {
                     return 0;
                 }
+
                 if (highCard == 2) {
                     if(intel.getHandPoints() > 6){
                         return 0;
@@ -85,26 +90,15 @@ public class Carlsen implements BotServiceProvider {
             return -1;
         }
 
-        if (qntManilhas == 1) {
-            if (highCard >= 1 || calcHandScore(intel.getRoundResults()) > 0) {
-                if(intel.getHandPoints() == 12){
-                    return 0;
-                }
-                return 1;
-            }
-
-            if(mediumCard >= 1 || calcHandScore(intel.getRoundResults()) >= 0){
-                return 0;
-            }
-
-            return -1;
+        if (highCard != 0) {
+            return 1;
         }
 
-        if(intel.getHandPoints() == 12){
+        if(mediumCard >= 1 || calcHandScore(intel.getRoundResults()) >= 0){
             return 0;
         }
 
-        return 0;
+        return -1;
     }
 
     @Override
@@ -126,9 +120,9 @@ public class Carlsen implements BotServiceProvider {
             return false;
         }
 
-//        if(isAllFours(intel.getCards()) && intel.getOpponentCard().isEmpty()){
-//            return true;
-//        }
+        if(isAllFours(intel.getCards()) && intel.getOpponentCard().isEmpty()){
+            return true;
+        }
 
         if (intel.getOpponentCard().isPresent() && calcHandScore(intel.getRoundResults()) > 0) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
@@ -141,20 +135,20 @@ public class Carlsen implements BotServiceProvider {
 
         List<TrucoCard> hand = intel.getCards();
 
-//        if (calcHandScore(intel.getRoundResults()) > -1) {
-//            return qntManilhas > 0;
-//        }
-
-        if (calcHandScore(intel.getRoundResults()) < 0) {
+        if (calcHandScore(intel.getRoundResults()) == -1) {
             if (haveZap > -1) {
-                for (TrucoCard card : hand) {
-                    if (isAceOrHigher(card) && !card.isManilha(intel.getVira())) {
-                        return true;
-                    }
-                }
+                return true;
             }
 
-            return false;
+            for (TrucoCard card : hand) {
+                if (isAceOrHigher(card) && !card.isManilha(intel.getVira())) {
+                    return true;
+                }
+            }
+        }
+
+        if (calcHandScore(intel.getRoundResults()) != -1) {
+            return qntManilhas > 0;
         }
 
         if(qntManilhas > 1){
