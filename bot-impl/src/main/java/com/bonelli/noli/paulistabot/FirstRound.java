@@ -94,7 +94,7 @@ public class FirstRound implements Strategy {
         if (intel.getOpponentCard().isPresent()) {
             return cards.get(2).relativeValue(intel.getVira()) >= intel.getOpponentCard().get().relativeValue(intel.getVira());
         }
-        else return calculateCurrentHandValue(intel) >= 18 || hasTwoManilhas(intel) == 2;
+        else return calculateCurrentHandValue(intel) >= 22 || hasTwoManilhas(intel) == 2;
     }
 
     @Override
