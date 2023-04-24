@@ -85,7 +85,7 @@ public class SecondRound implements Strategy {
         }
 
         if (intel.getOpponentCard().isPresent()) {
-            if (cards.get(2).relativeValue(intel.getVira()) >= intel.getOpponentCard().get().relativeValue(intel.getVira()))
+            if (cards.get(1).relativeValue(intel.getVira()) >= intel.getOpponentCard().get().relativeValue(intel.getVira()))
                 return true;
         }
 
