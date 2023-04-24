@@ -90,7 +90,11 @@ public class FirstRound implements Strategy {
         if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
         if (intel.getHandPoints() == 12 || intel.getOpponentScore() + 3 > 12 || intel.getScore() + 3 > 12) return false;
         if (intel.getOpponentCard().isPresent()) return cards.get(1).compareValueTo(intel.getOpponentCard().get(), vira) >= 8;
-        else return calculateCurrentHandValue(intel) >= 22 || hasTwoManilhas(intel) == 2;
+        if (intel.getScore() >= intel.getOpponentScore() + 3) return true;
+        if (intel.getOpponentCard().isPresent()) {
+            return cards.get(2).relativeValue(intel.getVira()) >= intel.getOpponentCard().get().relativeValue(intel.getVira());
+        }
+        else return calculateCurrentHandValue(intel) >= 18 || hasTwoManilhas(intel) == 2;
     }
 
     @Override
