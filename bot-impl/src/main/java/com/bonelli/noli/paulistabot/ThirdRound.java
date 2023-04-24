@@ -5,9 +5,9 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class ThirdRound implements Strategy {
 
@@ -16,6 +16,7 @@ public class ThirdRound implements Strategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) return 0;
         return -1;
     }
 
@@ -32,6 +33,9 @@ public class ThirdRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getRoundResults().get(1) == GameIntel.RoundResult.WON) {
+            return intel.getCards().get(0).relativeValue(intel.getVira()) >= 10;
+        }
         return false;
     }
 
@@ -42,7 +46,7 @@ public class ThirdRound implements Strategy {
 
     @Override
     public boolean hasManilha(GameIntel intel) {
-        return false;
+        return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
     }
 
     public boolean hasTwoOrThree(GameIntel intel) {
