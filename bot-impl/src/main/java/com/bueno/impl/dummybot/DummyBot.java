@@ -40,37 +40,11 @@ public class DummyBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return !intel.getRoundResults().isEmpty();
+        return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        printValues(intel);
         return CardToPlay.of(intel.getCards().get(0));
-    }
-
-    private static void printValues(GameIntel intel) {
-        System.out.println("Carta que vamos jogar " + CardToPlay.of(intel.getCards().get(0)).content());
-        for (int i = 0; i < intel.getCards().size(); i++) {
-            System.out.printf("Valor carta %d em relaçao a vira é : " +
-                    "%d\n", (i + 1), intel.getCards().get(i).relativeValue(intel.getVira()));
-            if (intel.getOpponentCard().isPresent()) {
-                System.out.println("Valor carta se for manilha: " + intel.getCards().get(i).compareValueTo(
-                        intel.getOpponentCard().get(), intel.getVira()
-                ));
-            }
-        }
-        System.out.println(intel.getCards().stream().map(card -> card.relativeValue(intel.getVira())).
-                reduce(Integer::sum).orElseThrow());
-        System.out.println("Valor da mão" + intel.getHandPoints());
-        System.out.println("Pontuação do dummy" + intel.getScore());
-        System.out.println("Pontuação do mineiro" + intel.getOpponentScore());
-        System.out.println("Cartas abertas -> " + intel.getOpenCards());
-        System.out.println("Vira da mesa: " + intel.getVira());
-        System.out.println("Cartas abertas " + intel.getOpenCards());
-        System.out.println("Carta que o oponente vai jogar " + intel.getOpponentCard());
-        System.out.println("Quanto ta valendo mão: " + intel.getHandPoints());
-        System.out.println("Conclusão da mão: " + intel.getOpenCards());
-        System.out.println("Resultado dos rounds " + intel.getRoundResults() + "\n\n");
     }
 }
