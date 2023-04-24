@@ -125,14 +125,8 @@ class WrkncacnterBotTest {
     @DisplayName("Testa responde truco se tiver cartas fortes")
     @ParameterizedTest
     @MethodSource(value = "provideDataToResponseStrongerCards")
-    void testIfRaiseReponseWithStrongCards(List<TrucoCard> cards, TrucoCard vira, int myScore, int opponentScore, int expectedResponse) {
+    void testIfRaiseReponseWithStrongCards(List<TrucoCard> cards, TrucoCard vira, int expectedResponse) {
         GameIntel intel = mock(GameIntel.class);
-
-        when(intel.getScore())
-                .thenReturn(myScore);
-
-        when(intel.getOpponentScore())
-                .thenReturn(opponentScore);
 
         when(intel.getVira())
                 .thenReturn(vira);
@@ -146,14 +140,8 @@ class WrkncacnterBotTest {
     @DisplayName("Testa responde truco se tiver cartas fracas")
     @ParameterizedTest
     @MethodSource(value = "provideDataToResponseWeakerCards")
-    void testifRaiseResponseWithWeakerCards(List<TrucoCard> cards, int myScore, int opponentScore, int expectedResponse){
+    void testifRaiseResponseWithWeakerCards(List<TrucoCard> cards, int expectedResponse){
         GameIntel intel = mock(GameIntel.class);
-
-        when(intel.getScore())
-                .thenReturn(myScore);
-
-        when(intel.getOpponentScore())
-                .thenReturn(opponentScore);
 
         when(intel.getVira())
                 .thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
@@ -513,6 +501,14 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                 )
         );
     }
@@ -526,8 +522,6 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                        20,
-                        0,
                         -1
                 ),
                 Arguments.of(
@@ -537,9 +531,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                        10,
-                        10,
-                        0
+                        1
                 ),
                 Arguments.of(
                         List.of(
@@ -548,9 +540,25 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                        0,
-                        20,
                         1
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        1
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        0
                 )
         );
     }
@@ -563,8 +571,6 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
-                        20,
-                        0,
                         -1
                 ),
                 Arguments.of(
@@ -573,9 +579,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
-                        10,
-                        10,
-                        0
+                        -1
                 ),
                 Arguments.of(
                         List.of(
@@ -583,9 +587,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
-                        0,
-                        20,
-                        1
+                        -1
                 ),
                 Arguments.of(
                         List.of(
@@ -593,9 +595,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
-                        10,
-                        10,
-                        0
+                        -1
                 ),
                 Arguments.of(
                         List.of(
@@ -603,9 +603,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
-                        0,
-                        20,
-                        1
+                        -1
                 ),
                 Arguments.of(
                         List.of(
@@ -613,9 +611,7 @@ class WrkncacnterBotTest {
                                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
                         ),
-                        0,
-                        20,
-                        1
+                        -1
                 )
         );
     }
