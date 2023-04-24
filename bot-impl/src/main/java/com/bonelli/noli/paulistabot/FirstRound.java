@@ -109,11 +109,18 @@ public class FirstRound implements Strategy {
                     return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isOuros(intel.getVira()) ||
                             trucoCard.isEspadilha(intel.getVira())).findFirst().orElseThrow());
             }
+            if (hasCopasOrZap(intel)) {
+                return CardToPlay.of(intel.getCards().stream().filter(card1 -> !card1.isCopas(intel.getVira()) ||
+                        !card1.isZap(intel.getVira())).findFirst().orElseThrow());
+            }
             return CardToPlay.of(cards.get(1));
         } else {
-            if (hasManilha(intel))
-                return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
+            if (hasManilha(intel)) {
+                if (!hasCopasOrZap(intel))
+                    return CardToPlay.of(intel.getCards().stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira()))
                         .findFirst().orElseThrow());
+                return CardToPlay.of(cards.get(0));
+            }
             return CardToPlay.of(cards.get(2));
         }
     }
