@@ -91,9 +91,24 @@ public class WrkncacnterBot implements BotServiceProvider {
         return false;
     }
 
+    public Optional<TrucoCard> chooseStrongestCardExceptZap(GameIntel intel) {
+        return
+                intel
+                        .getCards()
+                        .stream()
+                        .filter(card -> !card.isZap(intel.getVira()))
+                        .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+    }
+
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(chooseKillCard(intel).orElse(chooseWeakestCard(intel).orElseThrow()));
+        var weakestCard = chooseWeakestCard(intel).orElseThrow();
+
+        if (intel.getOpponentCard().isEmpty()) {
+            return CardToPlay.of(chooseStrongestCardExceptZap(intel).orElse(weakestCard));
+        }
+
+        return CardToPlay.of(forceTieGame(intel).orElse(weakestCard));
     }
 
     public int calculateDeckValue(GameIntel intel) {
@@ -106,24 +121,6 @@ public class WrkncacnterBot implements BotServiceProvider {
     }
 
     public Optional<TrucoCard> chooseKillCard(GameIntel intel) {
-        if (intel.getOpponentCard().isEmpty()) {
-            if (calculateNumberOfManilhas(intel) >= 2)
-                return
-                        intel
-                        .getCards()
-                        .stream()
-                        .filter(card -> !card.isZap(intel.getVira()))
-                        .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
-            else
-                return
-                        intel
-                                .getCards()
-                                .stream()
-                                .filter(card -> !card.isZap(intel.getVira()))
-                                .filter(card -> !card.isManilha(intel.getVira()))
-                                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
-        }
-
         if (calculateNumberOfManilhas(intel) >= 1 && intel.getRoundResults().size() == 0) {
             return intel.getCards().stream().filter(card -> card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0).findFirst();
         }
