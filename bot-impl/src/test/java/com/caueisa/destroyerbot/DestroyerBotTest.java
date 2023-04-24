@@ -351,16 +351,18 @@ class DestroyerBotTest {
         @DisplayName("When get a point raise request")
         class GetRaiseResponseTest {
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"9", "10"})
             @DisplayName("Should ask for point raise if hand points equals to three and opponent has nine or more points.")
-            void shouldAskForPointRaiseIfHandPointsEqualsToThreeAndOpponentHasNineOrMorePoints(){
+            void shouldAskForPointRaiseIfHandPointsEqualsToThreeAndOpponentHasNineOrMorePoints(int opponentScore){
                 when(intel.getHandPoints()).thenReturn(3);
-                when(intel.getOpponentScore()).thenReturn(10);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
 
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"6", "11"})
             @DisplayName("Should ask for point raise if hand points equals to six and opponent has six or more points.")
             void shouldAskForPointRaiseIfHandPointsEqualsToSixAndOpponentHasSixOrMorePoints(){
                 when(intel.getHandPoints()).thenReturn(6);
@@ -369,7 +371,8 @@ class DestroyerBotTest {
                 assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"3", "4"})
             @DisplayName("Should accept point raise request if hand points equals to nine and opponent has three or more points.")
             void shouldAcceptPointRaiseRequestIfHandPointsEqualsToNineAndOpponentHasThreeOrMorePoints(){
                 when(intel.getHandPoints()).thenReturn(9);
