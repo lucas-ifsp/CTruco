@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023 Vinicius Noli and Vitor Bonelli
+ *  Copyright (C) 2023 Vinicius R. Noli and Vitor Bonelli
  *  Contact: vinicius <dot> noli <at> ifsp <dot> edu <dot> br
  *  Contact: vitor <dot> bonelli <at> ifsp <dot> edu <dot> br
  *
