@@ -560,6 +560,14 @@ class DestroyerBotTest {
 
                 assertThat(sut.decideIfRaises(intel)).isTrue();
             }
+
+            @ParameterizedTest
+            @CsvSource({"5", "7"})
+            @DisplayName("Should ask for a point raise if opponent score is equal or less than 7.")
+            void shouldAskForPointRaiseIfOpponentScoreIsEqualOrLessThanSeven(int opponentScore){
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
         }
     }
 
