@@ -43,13 +43,32 @@ public class ThirdRound implements Strategy {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        cards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, intel.getVira());
+        });
+
         TrucoCard cardMedium = getCardWithMediumStrength(intel.getCards(), intel.getVira());
 
         if (calculateCurrentHandValue(intel) >= 25) {
             if (hasManilha(intel)) return true;
             else if (intel.getOpponentScore() < 9 && hasTwoOrThree(intel)) return true;
-            else return intel.getOpponentScore() >= 9 && cardMedium.getRank().value() >= 9;
-        } else return false;
+            else if (intel.getOpponentScore() >= 9 && cardMedium.getRank().value() >= 9) return true;
+            return true;
+        }
+
+        if (intel.getOpponentCard().isPresent()) {
+            if (cards.get(0).relativeValue(intel.getVira()) >= intel.getOpponentCard().get().relativeValue(intel.getVira()))
+                return true;
+        }
+
+        if (intel.getOpponentScore() <= 6) return true;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira())) return true;
+        }
+
+        return intel.getScore() >= intel.getOpponentScore() + 3;
     }
 
     @Override
