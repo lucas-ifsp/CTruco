@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2022 Jean C. Cremonezzi - IFSP/SCL
+ *  Contact: j <dot> cremonezzi <at> aluno <dot> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.cremonezzi.impl.carlsenbot;
 
 import com.bueno.spi.model.CardRank;
@@ -8,18 +28,6 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
-
-/* Notes
- *
- * CARDS RANK ORDER
- *  4 - 5 - 6 - 7 - Q - J - K - A - 2 - 3
- *
- *  40 Cards in the deck (each rank has all the 4 suits => 10 ranks x 4 suits)
- *
- *  CARDS SUIT ORDER
- *  Diamond - Spade - Heart - Club
- *
- * */
 
 public class Carlsen implements BotServiceProvider {
     @Override
