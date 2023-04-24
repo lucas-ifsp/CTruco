@@ -467,16 +467,17 @@ class DestroyerBotTest {
                 assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"8", "10"})
             @DisplayName("Should accept mao de onze if opponent score is greater than 7 and bot has all cards " +
                     "above king rank")
-            void shouldAcceptMaoDeOnzeIfOpponentScoreIsGreaterThanSevenAndBotHasAllCardsAboveKingRank(){
+            void shouldAcceptMaoDeOnzeIfOpponentScoreIsGreaterThanSevenAndBotHasAllCardsAboveKingRank(int opponentScore){
                 vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
                 cards = List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
 
-                when(intel.getOpponentScore()).thenReturn(10);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getVira()).thenReturn(vira);
 
@@ -517,17 +518,18 @@ class DestroyerBotTest {
                 assertThat(sut.decideIfRaises(intel)).isTrue();
             }
 
-            @Test
+            @ParameterizedTest
+            @CsvSource({"5,8", "6,8", "7,8"})
             @DisplayName("Should ask for point raise if is losing the game by until three points of difference " +
-                         "and has cards above rank TWO")
-            void shouldAskForPointRaiseIfIsLosingTheGameByThreePointsAndHasCardsAboveRankTwo(){
+                         "and has cards above rank ACE")
+            void shouldAskForPointRaiseIfIsLosingTheGameByThreePointsAndHasCardsAboveRankTwo(int botScore, int opponentScore){
                 vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
                 cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                         TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-                when(intel.getScore()).thenReturn(5);
-                when(intel.getOpponentScore()).thenReturn(8);
+                when(intel.getScore()).thenReturn(botScore);
+                when(intel.getOpponentScore()).thenReturn(opponentScore);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
