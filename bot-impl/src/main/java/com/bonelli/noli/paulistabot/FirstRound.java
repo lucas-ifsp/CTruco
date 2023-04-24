@@ -62,10 +62,15 @@ public class FirstRound implements Strategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        /*if (intel.getScore() == 11) return false;
-        if (intel.getHandPoints() == 12) return false;
-        return calculateCurrentHandValue(intel) >= 19 || hasTwoManilhas(intel) == 2;*/
-        return false;
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+        cards.sort((c1, c2) -> {
+            return c1.compareValueTo(c2, vira);
+        });
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        if (intel.getHandPoints() == 12 || intel.getOpponentScore() + 3 > 12 || intel.getScore() + 3 > 12) return false;
+        if (intel.getOpponentCard().isPresent()) return cards.get(1).compareValueTo(intel.getOpponentCard().get(), vira) >= 8;
+        else return calculateCurrentHandValue(intel) >= 22 || hasTwoManilhas(intel) == 2;
     }
 
     @Override
