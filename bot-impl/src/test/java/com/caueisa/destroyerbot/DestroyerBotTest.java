@@ -162,6 +162,7 @@ class DestroyerBotTest {
                                 TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
 
                 when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getOpponentScore()).thenReturn(8);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
@@ -297,6 +298,7 @@ class DestroyerBotTest {
                 cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
 
                 when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getOpponentScore()).thenReturn(10);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(cards);
 
