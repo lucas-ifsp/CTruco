@@ -149,7 +149,7 @@ class DestroyerBotTest {
         @DisplayName("When requesting a point raise")
         class DecidesIfRaisesTest {
             @Test
-            @DisplayName("Should ask for a raise request if bot has two or three cards above rank two")
+            @DisplayName("Should ask for a raise request if bot has two above rank two")
             void shouldAskForARaiseRequestIfHasTwoCardsAboveRankTwo(){
                 vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
                 cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
@@ -163,7 +163,7 @@ class DestroyerBotTest {
             }
 
             @Test
-            @DisplayName("Should ask for a raise request if bot has two or three cards above rank two")
+            @DisplayName("Should ask for a raise request if bot has three cards above rank two")
             void shouldAskForARaiseRequestIfHasThreeCardsAboveRankTwo(){
                 vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
                 cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
