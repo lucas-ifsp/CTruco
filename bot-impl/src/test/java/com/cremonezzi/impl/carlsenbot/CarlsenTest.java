@@ -1,6 +1,7 @@
 /*
- *  Copyright (C) 2022 Jean C. Cremonezzi - IFSP/SCL
+ *  Copyright (C) 2023 Jean C. Cremonezzi - IFSP/SCL | Guilherme G. Mancuso - IFSP/SCL
  *  Contact: j <dot> cremonezzi <at> aluno <dot> ifsp <dot> edu <dot> br
+ *           guilherme <dot> mancuso <at> aluno <dot> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
  *
