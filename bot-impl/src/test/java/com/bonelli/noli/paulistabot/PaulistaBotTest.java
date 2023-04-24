@@ -15,6 +15,16 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,7 +34,6 @@ class PaulistaBotTest {
     GameIntel intel;
     @InjectMocks
     FirstRound firstRound;
-
     @InjectMocks
     SecondRound secondRound;
     
@@ -164,6 +173,74 @@ class PaulistaBotTest {
         @Nested
         @DisplayName("Decide if raises")
         class DecideRaises {
+            @Test
+            @DisplayName("Sure not to ask for truco if opponent is in hand of eleven")
+            void sureNotToAskForTrucoIfOpponentIsInHandOfEleven () {
+                when(intel.getOpponentScore()).thenReturn(11);
+                assertFalse(firstRound.decideIfRaises(intel));
+            }
+
+            @Test
+            @DisplayName("Sure not to ask fro truco if score is in hand of eleven")
+            void sureNotToAskFroTrucoIfScoreIsInHandOfEleven () {
+                when(intel.getScore()).thenReturn(11);
+                assertFalse(firstRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Make sure not to ask for truco if the hand is worth 12")
+            void makeSureNotToAskForTrucoIfTheHandIsWorth12 () {
+                when(intel.getHandPoints()).thenReturn(12);
+                assertFalse(firstRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Make sure the enemy's score doesn't go above 12 if they ask for truco")
+            void makeSureTheEnemySScoreDoesnTGoAbove12IfTheyAskForTruco () {
+                when(intel.getOpponentScore()).thenReturn(10);
+                assertFalse(firstRound.decideIfRaises(intel));
+            }
+
+            @Test
+            @DisplayName("Make sure the score doesn't go above 12 if they ask for truco")
+            void makeSureTheScoreDoesnTGoAbove12IfTheyAskForTruco () {
+                when(intel.getOpponentScore()).thenReturn(10);
+                assertFalse(firstRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if the average strength card compared to the enemy's is greater than or equal to 8")
+            void askForTrucoIfTheAverageStrengthCardComparedToTheEnemySIsGreaterThanOrEqualTo7 () {
+                when(intel.getScore()).thenReturn(0);
+                when(intel.getOpponentScore()).thenReturn(0);
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
+                assertTrue(firstRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if hand value is greater than or equal to 24")
+            void askForTrucoIfHandValueIsGreaterThanOrEqualTo24 () {
+                when(intel.getScore()).thenReturn(0);
+                when(intel.getOpponentScore()).thenReturn(0);
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.SPADES)));
+                assertTrue(firstRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if you have 2 manilhas")
+            void askForTrucoIfYouHave2Manilhas () {
+                when(intel.getScore()).thenReturn(0);
+                when(intel.getOpponentScore()).thenReturn(0);
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                assertTrue(firstRound.decideIfRaises(intel));
+            }
         }
 
         @Nested
@@ -422,7 +499,130 @@ class PaulistaBotTest {
         @Nested
         @DisplayName("Decide if raises")
         class DecideRaises {
+            @Test
+            @DisplayName("Should call truco if your hand is weak and you won the first round with a strong card")
+            void shouldCallTrucoIfYourHandIsWeakAndYouWonTheFirstRoundWithAStrongCard () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), 
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)));
+                assertTrue(secondRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if you have a total hand value greater than or equal to 15")
+            void askForTrucoIfYouHaveATotalHandValueGreaterThanOrEqualTo15 () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
+                assertTrue(secondRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if you have a shackle and have won the first round")
+            void askForTrucoIfYouHaveAShackleAndHaveWonTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
+                assertTrue(secondRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("Ask for truco if you lost the first round and have a hand with a value greater than or equal to 18")
+            void askForTrucoIfYouLostTheFirstRoundAndHaveAHandWithAValueGreaterThanOrEqualTo18 () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+                when(intel.getHandPoints()).thenReturn(1);
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO.next(), CardSuit.SPADES)));
+                assertTrue(secondRound.decideIfRaises(intel));
+            }
+            
+            @Test
+            @DisplayName("If you drew the first round, trucar if you have a manilha")
+            void ifYouDrewTheFirstRoundTrucarIfYouHaveAManilha () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
+                assertTrue(secondRound.decideIfRaises(intel));
+            }
+        }
 
+        @Nested
+        @DisplayName("Get raises response")
+        class GetRaisesResponse {
+            @Test
+            @DisplayName("Must raise truco if you have a shackle and have won the first round")
+            void mustRaiseTrucoIfYouHaveAShackleAndHaveWonTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(1);
+            }
+
+            @Test
+            @DisplayName("Must accept truco if hand value is greater than or equal to 17 and have won the first round")
+            void mustAcceptTrucoIfHandValueIsGreaterThanOrEqualTo17AndHaveWonTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+
+            @Test
+            @DisplayName("Must decline truco if you have a weak hand")
+            void mustDeclineTrucoIfYouHaveAWeakHand () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(-1);
+            }
+            
+            @Test
+            @DisplayName("You must accept truco if you have zap and a hand greater than or equal to 21")
+            void youMustAcceptTrucoIfYouHaveZapAndAHandGreaterThanOrEqualTo21 () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+            
+            @Test
+            @DisplayName("Must accept truco if you drew the first one and have a manilha")
+            void mustAcceptTrucoIfYouDrewTheFirstOneAndHaveAManilha () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
+            
+            @Test
+            @DisplayName("Must accept truco if you have a 3 in your hand if you drew the first round")
+            void mustAcceptTrucoIfYouHaveA3InYourHandIfYouDrewTheFirstRound () {
+                when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertThat(secondRound.getRaiseResponse(intel)).isEqualTo(0);
+            }
         }
     }
 
