@@ -201,6 +201,37 @@ class DestroyerBotTest {
 
                 assertThat(sut.decideIfRaises(intel)).isTrue();
             }
+
+            @Test
+            @DisplayName("Should ask for a raise request if bot has one card above rank two")
+            void shouldAskForARaiseRequestIfHasOneCardAboveRankTwo(){
+                results = List.of(GameIntel.RoundResult.LOST);
+                vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getOpponentScore()).thenReturn(8);
+
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
+
+            @Test
+            @DisplayName("Should ask for a raise request if bot has two cards above rank two")
+            void shouldAskForARaiseRequestIfHasTwoCardsAboveRankTwo(){
+                results = List.of(GameIntel.RoundResult.LOST);
+                vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                cards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getRoundResults()).thenReturn(results);
+                when(intel.getOpponentScore()).thenReturn(8);
+
+                assertThat(sut.decideIfRaises(intel)).isTrue();
+            }
         }
 
         @Nested
