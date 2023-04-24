@@ -32,31 +32,46 @@ import java.util.Optional;
 public class WrkncacnterBot implements BotServiceProvider {
     @Override // Here throw exception
     public int getRaiseResponse(GameIntel intel) {
-        if (calculateDeckValue(intel) >= CardRank.KING.value() * intel.getCards().size()) {
-            var numberOfManilhas = calculateNumberOfManilhas(intel);
-            if (intel.getScore() > intel.getOpponentScore() && numberOfManilhas >= 2) {
-                return -1;
-            }
-            else if (intel.getScore() == intel.getOpponentScore()) {
-                if (numberOfManilhas >= 1) return 0;
-                return -1;
-            }
-            else if (intel.getScore() < intel.getOpponentScore()) {
-                if (numberOfManilhas >= 1 && intel.getHandPoints() < 9)
-                    return 1;
-                else if (hasCardRankHigherThan(intel, CardRank.JACK)) return 0;
-                return -1;
-            }
-        }
-        if (calculateDeckValue(intel) <= CardRank.QUEEN.value() * intel.getCards().size()) {
-            if (intel.getScore() > intel.getOpponentScore())
-                return -1;
-            else if (intel.getScore() == intel.getOpponentScore()) return 0;
-            else if (intel.getScore() < intel.getOpponentScore() && intel.getHandPoints() < 9)
-                 return 1;
-        }
-        return 0;
+        var hasZapAndAtleastOneManilha = hasZap(intel) && calculateNumberOfManilhas(intel) >= 1;
+        var hasAtleastTwoManilhas =  calculateNumberOfManilhas(intel) >= 2;
+
+        if (hasZapAndAtleastOneManilha && hasAtleastTwoManilhas && intel.getHandPoints() < 9) return 1;
+        if (calculateNumberOfManilhas(intel) >= 1) return 0;
+
+        return -1;
     }
+
+    public boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
+//    @Override // Here throw exception
+//    public int getRaiseResponse(GameIntel intel) {
+//        if (calculateDeckValue(intel) >= CardRank.KING.value() * intel.getCards().size()) {
+//            var numberOfManilhas = calculateNumberOfManilhas(intel);
+//            if (intel.getScore() > intel.getOpponentScore() && numberOfManilhas >= 2) {
+//                return -1;
+//            }
+//            else if (intel.getScore() == intel.getOpponentScore()) {
+//                if (numberOfManilhas >= 1) return 0;
+//                return -1;
+//            }
+//            else if (intel.getScore() < intel.getOpponentScore()) {
+//                if (numberOfManilhas >= 1 && intel.getHandPoints() < 9)
+//                    return 1;
+//                else if (hasCardRankHigherThan(intel, CardRank.JACK)) return 0;
+//                return -1;
+//            }
+//        }
+//        if (calculateDeckValue(intel) <= CardRank.QUEEN.value() * intel.getCards().size()) {
+//            if (intel.getScore() > intel.getOpponentScore())
+//                return -1;
+//            else if (intel.getScore() == intel.getOpponentScore()) return 0;
+//            else if (intel.getScore() < intel.getOpponentScore() && intel.getHandPoints() < 9)
+//                 return 1;
+//        }
+//        return 0;
+//    }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
