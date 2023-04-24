@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023 Ingrid C. Nery and Diego A. Pagotto
+ *  Copyright (C) 2023 Ingrid Nery and Diego Pagotto
  *  Contact: ingrid <dot> nery <at> ifsp <dot> edu <dot> br
  *  Contact: diego <dot> pagotto <at> ifsp <dot> edu <dot> br
  *
