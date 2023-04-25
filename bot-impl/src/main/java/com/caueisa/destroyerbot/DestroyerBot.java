@@ -18,6 +18,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
+// Authors: Cauê Gastaldi and Isabela Forti
+
 package com.caueisa.destroyerbot;
 
 import com.bueno.spi.model.*;
