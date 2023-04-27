@@ -57,7 +57,7 @@ public final class CardToPlay {
      * @return a {@link CardToPlay} order describing a {@link TrucoCard} to be discarded in the round
      * @throws NullPointerException if {@code card} is null
      * */
-    public static CardToPlay discard(TrucoCard card){
+    public static CardToPlay discard(TrucoCard card) {
         Objects.requireNonNull(card, "The card to be discarded must not be null.");
         return new CardToPlay(card, true);
     }
