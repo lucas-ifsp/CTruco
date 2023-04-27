@@ -22,6 +22,7 @@ package com.bueno.application.cli.commands;
 
 import com.bueno.application.cli.GameCLI;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseResponseChoice> {
@@ -38,11 +39,18 @@ public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseRes
     public RaiseResponseChoice execute() {
         var scanner = new Scanner(System.in);
         while (true) {
+            String optionsAsString = "(T)opa, (C)orre" + (canRaise() ? ", (A)umenta" : "");
             System.out.print(mainCli.getOpponentUsername() + " está pedindo " + toRequestString(nextScore)
-                    + ". Escolha uma opção [(T)opa, (C)orre, (A)umenta]: ");
+                    + ". Escolha uma opção ["+ optionsAsString +"]: ");
 
-            final var choice = scanner.nextLine();
-            if (isValidChoice(choice, "t", "c", "a")) {
+            final ArrayList<String> options = new ArrayList<>();
+            options.add("t");
+            options.add("c");
+            if (canRaise()) options.add("a");
+
+            final var choice = scanner.nextLine().toLowerCase();
+
+            if (isValidChoice(choice, options)) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
@@ -54,5 +62,9 @@ public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseRes
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             };
         }
+    }
+
+    private boolean canRaise() {
+        return nextScore < 12;
     }
 }
