@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * <p>Represents the game intel from the current player point of view, including its card, the vira card, etc.
  * All information that a player can know about the game is available through getter methods.
- * Objects of this class are final and must be created using the {@link StepBuilder} supporting class.
+ * Objects of this class are immutable and must be created using the {@link StepBuilder} supporting class.
  * */
 public class GameIntel {
 
@@ -91,7 +91,7 @@ public class GameIntel {
     }
 
     /**
-     * <p>Returns an unmodifiable {@code List} that contains the round results of the current hand from the point of
+     * <p>Returns an {@code List} that contains the round results of the current hand from the point of
      * view of the current player. The results are represented by the values of {@link RoundResult} (WON, DREW, or LOST).
      * For example, if the current player lost the first round, won second and is playing the third, the list size is 2,
      * the first element is LOST, and the second is WON.</p>
