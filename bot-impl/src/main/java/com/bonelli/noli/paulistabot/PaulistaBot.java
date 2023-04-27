@@ -1,6 +1,7 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
- *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
+ *  Copyright (C) 2023 Vinicius R. Noli and Vitor Bonelli
+ *  Contact: vinicius <dot> noli <at> ifsp <dot> edu <dot> br
+ *  Contact: vitor <dot> bonelli <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
  *
@@ -18,33 +19,40 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.impl.dummybot;
+package com.bonelli.noli.paulistabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Optional;
-
-public class DummyBot implements BotServiceProvider {
+public class PaulistaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        return getInstanceByRound(intel.getRoundResults().size()).getRaiseResponse(intel);
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return getInstanceByRound(intel.getRoundResults().size()).getMaoDeOnzeResponse(intel);
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return getInstanceByRound(intel.getRoundResults().size()).decideIfRaises(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        return getInstanceByRound(intel.getRoundResults().size()).chooseCard(intel);
+    }
+
+    private Strategy getInstanceByRound(int roundNumber) {
+        return switch (roundNumber) {
+            case 0 -> new FirstRound();
+            case 1 -> new SecondRound();
+            case 2 -> new ThirdRound();
+            default -> throw new IllegalStateException("Unexpected value: " + roundNumber);
+        };
     }
 }
