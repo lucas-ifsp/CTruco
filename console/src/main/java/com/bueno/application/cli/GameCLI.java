@@ -141,7 +141,7 @@ public class GameCLI {
     }
 
     private void handleRaiseResponse(){
-        final Set<String> allowedActions = Set.of("RAISE", "ACCEPT", "QUIT");
+        final Set<String> allowedActions = Set.of("ACCEPT", "QUIT");
         final Set<String> notAllowedActions = Set.of();
 
         updateIntel();

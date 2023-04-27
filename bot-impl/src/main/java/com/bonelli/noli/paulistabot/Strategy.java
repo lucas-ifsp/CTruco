@@ -1,6 +1,7 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
- *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
+ *  Copyright (C) 2023 Vinicius R. Noli and Vitor Bonelli
+ *  Contact: vinicius <dot> noli <at> ifsp <dot> edu <dot> br
+ *  Contact: vitor <dot> bonelli <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
  *
@@ -18,33 +19,20 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.impl.dummybot;
+package com.bonelli.noli.paulistabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Optional;
+public interface Strategy {
 
-public class DummyBot implements BotServiceProvider {
+    int getRaiseResponse (GameIntel intel);
 
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return 0;
-    }
+    boolean getMaoDeOnzeResponse (GameIntel intel);
 
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
-    }
+    boolean decideIfRaises (GameIntel intel);
 
-    @Override
-    public boolean decideIfRaises(GameIntel intel) {
-        return false;
-    }
+    CardToPlay chooseCard (GameIntel intel);
 
-    @Override
-    public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
-    }
+    boolean hasManilha (GameIntel intel);
 }
