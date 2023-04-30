@@ -160,6 +160,7 @@ class BotUseCaseTest {
     @DisplayName("Should create default handlers if they are not injected in constructor")
     void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
         sut = new BotUseCase(gameRepository, gameResultRepository, handResultRepository, null, null, null, null);
+        when(game.getIntel().currentPlayerUuid()).thenReturn(Optional.empty());
         assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
 

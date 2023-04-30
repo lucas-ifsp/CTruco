@@ -94,22 +94,6 @@ class RaiseRequestHandlerTest {
     }
 
     @Test
-    @DisplayName("Should not quit if bot service implementation is answering to quit and quit is not allowed")
-    void shouldNotQuitIfBotServiceImplementationIsAnsweringToQuitAndQuitIsNotAllowed() {
-        when(botService.getRaiseResponse(any())).thenReturn(-1);
-        sut.handle(intel, bot);
-        verify(scoreUseCase, times(0)).quit(bot.getUuid());
-    }
-
-    @Test
-    @DisplayName("Should not accept if bot service implementation is answering to accept and accept is not allowed")
-    void shouldNotAcceptIfBotServiceImplementationIsAnsweringToAcceptAndAcceptIsNotAllowed() {
-        when(botService.getRaiseResponse(any())).thenReturn(0);
-        sut.handle(intel, bot);
-        verify(scoreUseCase, times(0)).accept(bot.getUuid());
-    }
-
-    @Test
     @DisplayName("Should not raise if bot service implementation is answering to raise and raise is not allowed")
     void shouldNotRaiseIfBotServiceImplementationIsAnsweringToRaiseAndRaiseIsNotAllowed() {
         when(botService.getRaiseResponse(any())).thenReturn(1);

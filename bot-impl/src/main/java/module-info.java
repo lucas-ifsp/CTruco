@@ -12,5 +12,9 @@ module bot.impl {
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
     exports com.cremonezzi.impl.carlsenbot;
-    provides com.bueno.spi.service.BotServiceProvider with DummyBot, Carlsen, DestroyerBot, WrkncacnterBot, PaulistaBot, MarrecoBot,AddTheNewSoul;
+    exports com.caueisa.destroyerbot;
+    exports com.bonelli.noli.paulistabot;
+    exports com.hideki.araujo.wrkncacnterbot;
+    provides com.bueno.spi.service.BotServiceProvider with
+            DummyBot, Carlsen, DestroyerBot, WrkncacnterBot, PaulistaBot, MarrecoBot, AddTheNewSoul;
 }

@@ -30,7 +30,6 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.EnumSet;
 import java.util.stream.Collectors;
 
-import static com.bueno.domain.entities.intel.PossibleAction.*;
 import static com.bueno.domain.usecases.bot.converter.SpiModelAdapter.toGameIntel;
 
 public class RaiseRequestHandler implements Handler{
@@ -50,12 +49,24 @@ public class RaiseRequestHandler implements Handler{
                 .map(PossibleAction::valueOf)
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(PossibleAction.class)));
 
-        return switch (botService.getRaiseResponse(toGameIntel(bot, intel))) {
-            case -1 -> actions.contains(QUIT) ? scoreUseCase.quit(botUuid) : null;
-            case 0 -> actions.contains(ACCEPT) ? scoreUseCase.accept(botUuid) : null;
-            case 1 -> actions.contains(RAISE) ? scoreUseCase.raise(botUuid) : null;
+        var response = botService.getRaiseResponse(toGameIntel(bot, intel));
+        if(isInvalid(response)) throw new IllegalStateException("response must be -1, 0, 1 but was: " + response);
+        if(hasAlreadyReachedHandPointsLimit(actions, response)) response = 0;
+
+        return switch (response) {
+            case -1 -> scoreUseCase.quit(botUuid);
+            case 0 -> scoreUseCase.accept(botUuid);
+            case 1 -> scoreUseCase.raise(botUuid);
             default -> null;
         };
+    }
+
+    private static boolean isInvalid(int response) {
+        return response < -1 || response > 1;
+    }
+
+    private static boolean hasAlreadyReachedHandPointsLimit(EnumSet<PossibleAction> actions, int response) {
+        return response == 1 && !actions.contains(PossibleAction.RAISE);
     }
 
     public boolean shouldHandle(Intel intel){
