@@ -12,7 +12,9 @@ of concepts such as:
 - Design Patterns (Singleton, State, Strategy, DAO, etc.);
 - Object Calisthenics;
 - Testing Driven Development (TDD) using JUnit 5 and Mockito;
-- Domain Driven Design (DDD).
+- Domain Driven Design (DDD);
+- Conventional Commits;
+- Semantic versioning - SemVer.
 
 ## Downloading and Running
 
@@ -25,7 +27,7 @@ different formats, for multiple platforms. The following playing modes are alrea
 - JavaFX game between a player and a bot (run `view/WindowGameTable` class in `desktop` module);
 - Spring Boot backend for games between a player and a bot (run `WebApp` class in `web` module);
 
-The project uses Java 16 language features. Therefore, JDK 16+ is required. Further requirements are declared as Maven
+The project uses Java 17 language features. Therefore, JDK 17+ is required. Further requirements are declared as Maven
 dependencies, so no additional config is needed.  
 
 ## Project Modules
@@ -51,59 +53,30 @@ please apply regression tests to assure proper code behaviour.
 One of the ideas behind **CTruco** is to design a software flexible enough to receive new implementations of bot services provided by
 the community without changing a single line of code. Implementing and integrating a bot into the game is straightforward:
 
-1. Create a module with Maven;
-2. Include a reference to the bot-spi module in the pom.xml file: 
-
-    ```
-   <dependency>
-        <groupId>com.bueno</groupId>
-        <artifactId>bot-spi</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
-    </dependency>
-   ```
-
-3. Create a `module-info.java` file under your `Java` folder and describe your module as follows: 
-   ```
-   module your.mod.name { // choose your module name
-      requires bot.spi;
-   }
-   ```
-   
-4. Create a class to implement the interface `com.bueno.spi.service.BotServiceProvider` available in the `bot-spi` module; 
-
-5. Update the `module-info.java` file to export and provide your implementation as service:
+1. Fork the project here in GitHub;
+2. Create your own subpackage inside `com` package of `bot-impl` module;
+3. Create a class to implement the interface `com.bueno.spi.service.BotServiceProvider` available in the `bot-spi` module;
+4. Update the `module-info.java` file to export and provide your implementation as a service:
    ```
    module your.mod.name {
-       requires bot.spi;
-       exports name.of.the.package.where.your.service.implementation.is;
-       provides com.bueno.spi.service.BotServiceProvider with YourServiceClass;
+       ...
+       exports name.of.the.package.where.your.bot.implementation.is; //package created in item 1
+       provides com.bueno.spi.service.BotServiceProvider with YourBotClass, <other bots already available>;
    }
    ```
-   
-6. In your `resources` folder, create a folder named `META-INF` and, inside the folder, create another folder named `services`. 
-In the `services` folder, create a file named `com.bueno.spi.service.BotServiceProvider`, open it, and put the fully qualified 
-name of your service implementation. For example: 
+5. In `resources` folder, access the file `META-INF/services/com.bueno.spi.service.BotServiceProvider` and append 
+the fully qualified name of your bot service implementation. For example: 
 
    ```
-   name.of.the.package.where.your.service.implementation.is.YourServiceClass
+   ...
+   name.of.the.package.where.your.bot.implementation.is.YourBotClass 
    ```
+6. Grab a coffee.
 
+Examples on how to implement a bot service can be found [here](https://github.com/lucas-ifsp/CTruco/tree/master/bot-impl). 
 
-7. Finally, add your module as a dependency in the `domain` module `pom.xml`, like this:
-
-   ```
-   <dependency>
-      <!-- use the groupId and artifactId that you have defined in the POM of your bot-->
-      <groupId>com.your.group.id</groupId>
-      <artifactId>your-artifact-name</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <scope>compile</scope>
-   </dependency>
-   ```
-
-An example on how to implement a bot service can be found [here](https://github.com/lucas-ifsp/CTruco/tree/master/bot-impl). 
-
-To check if you have configured it right, run the `standalone/PlayWithBots` class in `console` module. Your bot service implementation class should be available as a bot option.
+To check if you have configured it right, run the `standalone/PlayWithBots` class in `console` module. Your bot service 
+implementation class should be available as a bot option.
 
 Now that everything is set, you can develop the business logic of your bot service. The `BotServiceProvider` 
 has four abstract methods to be implemented: 
@@ -120,8 +93,9 @@ There are only three model classes related to the service implementation:
 - `CardToPlay`: wraps a TrucoCard as a card to be played in the round or discarded.
 
 
-***THE FUNNY PART:  you can develop a bot to challenge other bots proposed by the community. If your bot is good enough, please pull request it.***
-
+***THE FUNNY PART:  you can develop a bot to challenge other bots proposed by the community.
+If your bot is good enough, please pull request it. Do not forget to add your own 
+[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.pt-br.html) notice in the header of your class.***
 
 
 ## License
@@ -130,7 +104,8 @@ This software was developed for non-commercial, didactic purposes. It is provide
 
 ## Contributors
 
-**CTruco** is designed and developed with :heart: by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos.
+**CTruco** is designed and developed with :heart: by **Prof. Lucas Oliveira** @ Federal Institute of São Paulo (IFSP) at São Carlos. 
+The bots available in the project were proposed by different authors, which are described in the bot class headers.
 
 
 

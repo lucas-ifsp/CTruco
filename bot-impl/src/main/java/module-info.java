@@ -1,10 +1,10 @@
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.bueno.impl.dummybot.DummyBot;
-import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.caueisa.destroyerbot.DestroyerBot;
+import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
-import com.cremonezzi.impl.carlsenbot.Carlsen;
-import com.caueisa.destroyerbot.DestroyerBot;
+import com.indi.impl.addthenewsoul.AddTheNewSoul;
 
 module bot.impl {
     requires bot.spi;

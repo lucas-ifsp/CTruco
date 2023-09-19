@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2022 Cauê Gastaldi and Isabela Forti - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
