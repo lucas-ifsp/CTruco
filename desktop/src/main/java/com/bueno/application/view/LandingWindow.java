@@ -43,7 +43,7 @@ public class LandingWindow extends Application {
 
             Scene scene = new Scene(graph, 290, 220);
             stage.setScene(scene);
-            stage.setTitle("\u2663 \u2665   CTruco   \u2660 \u2666");
+            stage.setTitle("♣ ♥   CTruco   ♠ ♦");
             stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
