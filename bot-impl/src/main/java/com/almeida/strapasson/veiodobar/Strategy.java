@@ -1,10 +1,12 @@
 package com.almeida.strapasson.veiodobar;
 
-public interface Strategy {
-    boolean hasMajorityCouple();
-    boolean hasMinorCouple();
+import com.bueno.spi.model.GameIntel;
 
-    boolean hasGoodHand();
-    boolean hasMediumHand();
-    boolean hasBadHand();
+public interface Strategy {
+    boolean hasMajorityCouple(GameIntel intel);
+    boolean hasMinorCouple(GameIntel intel);
+
+    boolean hasGoodHand(GameIntel intel);
+    boolean hasMediumHand(GameIntel intel);
+    boolean hasBadHand(GameIntel intel);
 }
