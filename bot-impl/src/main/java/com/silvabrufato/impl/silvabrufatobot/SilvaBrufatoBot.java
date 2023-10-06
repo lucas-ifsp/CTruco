@@ -18,10 +18,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
+
 package com.silvabrufato.impl.silvabrufatobot;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class SilvaBrufatoBot implements BotServiceProvider {
@@ -40,8 +44,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'chooseCard'");
+        return CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
     }
 
     @Override
@@ -49,5 +52,5 @@ public class SilvaBrufatoBot implements BotServiceProvider {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
     }
-    
+
 }
