@@ -47,11 +47,11 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("First hand")
-    class FirstHandTests{
+    @DisplayName("First round")
+    class FirstRoundTests{
         @Test
-        @DisplayName("Should win the first hand if possible")
-        public void ShouldWinTheFirstHandIfPossible() {
+        @DisplayName("Should win the first round if possible")
+        public void ShouldWinTheFirstRoundIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
@@ -70,8 +70,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("shouldTryToWinTheFirstHandWithoutUsingManilha")
-        void shouldTryToWinTheFirstHandWithoutUsingManilha() {
+        @DisplayName("playTheHighestCardInTheFirstRoundIfAreTheFirstToPlayWithoutThrowingTheManilha")
+        void playTheHighestCardInTheFirstRoundIfAreTheFirstToPlayWithoutThrowingTheManilha() {
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
             when(gameIntel.getCards()).thenReturn(List.of(
@@ -83,8 +83,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha")
-        void mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha() {
+        @DisplayName("playTheHighestCardOnTheFirstTurnIfYouAreTheFirstToPlayAndHaveNoManilha")
+        void playTheHighestCardOnTheFirstTurnIfYouAreTheFirstToPlayAndHaveNoManilha() {
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
             when(gameIntel.getCards()).thenReturn(List.of(
@@ -99,9 +99,9 @@ public class SilvaBrufatoBotTest {
 
     @Nested
     @DisplayName("Second hand")
-    class SecondHandTests{
+    class SecondRoundTests{
         @Test
-        @DisplayName("ShouldWinTheSecondHandIfPossible")
+        @DisplayName("ShouldWinTheSecondRoundIfPossible")
         void shouldWinTheSecondHandIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -117,11 +117,11 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("Third hand")
-    class ThirdHandTests {
+    @DisplayName("Third round")
+    class ThirdRoundTests {
         @Test
-        @DisplayName("ShouldWinTheThreeHandIfPossible")
-        void shouldWinTheThreeHandIfPossible() {
+        @DisplayName("ShouldWinTheThreeRoundIfPossible")
+        void shouldWinTheThreeRoundIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES))
