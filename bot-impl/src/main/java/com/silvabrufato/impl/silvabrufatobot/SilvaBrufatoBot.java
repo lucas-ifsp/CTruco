@@ -32,8 +32,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaoDeOnzeResponse'");
+        return true;
     }
 
     @Override
