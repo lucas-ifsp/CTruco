@@ -24,18 +24,15 @@ package com.silvabrufato.impl.silvabrufatobot;
 import java.util.List;
 import java.util.Optional;
 
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
@@ -55,13 +52,19 @@ public class SilvaBrufatoBotTest {
         gameIntel = mock(GameIntel.class);
     }
 
+    //referente à primeira mão
     @Test
     @DisplayName("Should win the first hand if possible")
     public void ShouldWinTheFirstHandIfPossible() {
         when(gameIntel.getRoundResults()).thenReturn(List.of());
         when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
-            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS))
+            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
             );
+        when(gameIntel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        ));
         when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
         assertThat(sut.chooseCard(gameIntel).content().
             compareValueTo(
@@ -70,6 +73,7 @@ public class SilvaBrufatoBotTest {
             ).isGreaterThan(0);
     }
 
+    //referente à segunda mão
     @Test
     @DisplayName("ShouldWinTheSecondHandIfPossible")
     void shouldWinTheSecondHandIfPossible() {
@@ -85,6 +89,7 @@ public class SilvaBrufatoBotTest {
         ).isGreaterThan(0);
     }
 
+    //referente à terceira mão
     @Test
     @DisplayName("ShouldWinTheThreeHandIfPossible")
     void shouldWinTheThreeHandIfPossible() {
@@ -98,6 +103,20 @@ public class SilvaBrufatoBotTest {
                         gameIntel.getOpponentCard().get(),
                         gameIntel.getVira())
         ).isGreaterThan(0);
+    }
+
+    //referente à primeira mão
+    @Test
+    @DisplayName("shouldTryToWinTheFirstHandWithoutUsingManilha")
+    void shouldTryToWinTheFirstHandWithoutUsingManilha() {
+        when(gameIntel.getRoundResults()).thenReturn(List.of());
+        when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+        when(gameIntel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        ));
+        assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
     }
 
 }
