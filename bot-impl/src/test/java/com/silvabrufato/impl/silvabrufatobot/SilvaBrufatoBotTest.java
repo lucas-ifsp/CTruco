@@ -28,6 +28,8 @@ import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -134,5 +136,15 @@ public class SilvaBrufatoBotTest {
             ).isGreaterThan(0);
         }
 
+    }
+
+    @Nested
+    @DisplayName("Response to the hand of eleven")
+    class ResponseToTheHandOfEleven{
+        @Test
+        @DisplayName("TheReturnMustBeDifferentFromNull")
+        void theReturnMustBeDifferentFromNull() {
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isNotNull();
+        }
     }
 }
