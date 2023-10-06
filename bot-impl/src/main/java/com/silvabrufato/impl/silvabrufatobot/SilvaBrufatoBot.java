@@ -32,6 +32,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if (intel.getOpponentScore() >= 9) return false;
         return true;
     }
 
