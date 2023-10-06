@@ -36,6 +36,7 @@ import com.bueno.spi.model.TrucoCard;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -82,6 +83,21 @@ public class SilvaBrufatoBotTest {
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
         );
         when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+        assertThat(sut.chooseCard(gameIntel).content().
+                compareValueTo(
+                        gameIntel.getOpponentCard().get(),
+                        gameIntel.getVira())
+        ).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("ShouldWinTheThreeHandIfPossible")
+    void shouldWinTheThreeHandIfPossible() {
+        when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON,GameIntel.RoundResult.LOST));
+        when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES))
+        );
+        when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
         assertThat(sut.chooseCard(gameIntel).content().
                 compareValueTo(
                         gameIntel.getOpponentCard().get(),
