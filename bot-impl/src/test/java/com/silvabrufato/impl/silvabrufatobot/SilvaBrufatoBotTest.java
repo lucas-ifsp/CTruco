@@ -26,9 +26,12 @@ import java.util.Optional;
 
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
@@ -145,6 +148,14 @@ public class SilvaBrufatoBotTest {
         @DisplayName("TheReturnMustBeDifferentFromNull")
         void theReturnMustBeDifferentFromNull() {
             assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isNotNull();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {9,10})
+        @DisplayName("botMustTunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints")
+        void botMustTunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints(int points) {
+            when(gameIntel.getOpponentScore()).thenReturn(points);
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isFalse();
         }
     }
 }
