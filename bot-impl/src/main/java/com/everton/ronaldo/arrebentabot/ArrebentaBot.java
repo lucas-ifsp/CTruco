@@ -12,12 +12,12 @@ public class ArrebentaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return true;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
