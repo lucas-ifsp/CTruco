@@ -21,8 +21,7 @@ public enum BotStrategy {
     THIRD_HAND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'throwCard'");
+            return CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
         }
     };
     

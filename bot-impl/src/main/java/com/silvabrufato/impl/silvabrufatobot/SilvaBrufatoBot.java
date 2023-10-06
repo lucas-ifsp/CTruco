@@ -47,6 +47,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
         BotStrategy botStrategy = null;
         if(intel.getRoundResults().isEmpty()) botStrategy = BotStrategy.FIRST_HAND_STRATEGY;
         if(intel.getRoundResults().size() == 1) botStrategy = BotStrategy.SECOND_HAND_STRATEGY;
+        if(intel.getRoundResults().size() == 2) botStrategy = BotStrategy.THIRD_HAND_STRATEGY;
         return botStrategy.throwCard(intel);
     }
 
