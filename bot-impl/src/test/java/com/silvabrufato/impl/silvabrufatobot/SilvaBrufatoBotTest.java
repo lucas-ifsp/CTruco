@@ -31,6 +31,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -116,4 +117,17 @@ public class SilvaBrufatoBotTest {
         assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
     }
 
+    //referente à primeira mão
+    @Test
+    @DisplayName("mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha")
+    void mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha() {
+        when(gameIntel.getRoundResults()).thenReturn(List.of());
+        when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        when(gameIntel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        ));
+        assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+    }
 }
