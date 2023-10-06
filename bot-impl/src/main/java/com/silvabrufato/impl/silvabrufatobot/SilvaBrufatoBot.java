@@ -44,7 +44,10 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+        BotStrategy botStrategy = null;
+        if(intel.getRoundResults().isEmpty()) botStrategy = BotStrategy.FIRST_HAND_STRATEGY;
+        if(intel.getRoundResults().size() == 1) botStrategy = BotStrategy.SECOND_HAND_STRATEGY;
+        return botStrategy.throwCard(intel);
     }
 
     @Override

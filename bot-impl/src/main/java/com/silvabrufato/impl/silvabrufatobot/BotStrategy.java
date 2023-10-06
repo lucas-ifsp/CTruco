@@ -1,28 +1,26 @@
 package com.silvabrufato.impl.silvabrufatobot;
 
-import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.*;
 
 public enum BotStrategy {
 
     FIRST_HAND_STRATEGY {
         @Override
-        public CardToPlay throwCard() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'throwCard'");
+        public CardToPlay throwCard(GameIntel gameIntel) {
+            return CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
         }
     },
     
     SECOND_HAND_STRATEGY  {
         @Override
-        public CardToPlay throwCard() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'throwCard'");
+        public CardToPlay throwCard(GameIntel gameIntel) {
+            return CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         }
     },
 
     THIRD_HAND_STRATEGY {
         @Override
-        public CardToPlay throwCard() {
+        public CardToPlay throwCard(GameIntel gameIntel) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'throwCard'");
         }
