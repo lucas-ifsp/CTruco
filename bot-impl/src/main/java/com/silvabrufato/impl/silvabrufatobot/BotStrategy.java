@@ -30,7 +30,6 @@ public enum BotStrategy {
                     cardTwo = card;
                 }
             }
-
             return (cardOne.compareValueTo(cardTwo, vira) >= 0) ? CardToPlay.of(cardOne) : CardToPlay.of(cardTwo);
         }
     },
