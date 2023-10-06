@@ -63,11 +63,6 @@ public class SilvaBrufatoBotTest {
             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS))
             );
         when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
-        when(gameIntel.getCards()).
-                thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS), 
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
-                    ));
         assertThat(sut.chooseCard(gameIntel).content().
             compareValueTo(
                 gameIntel.getOpponentCard().get(), 
