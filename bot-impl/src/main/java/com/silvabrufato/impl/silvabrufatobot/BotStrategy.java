@@ -5,7 +5,7 @@ import com.bueno.spi.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum BotStrategyForCards {
+public enum BotStrategy {
 
     FIRST_ROUND_STRATEGY {
         @Override
@@ -19,6 +19,8 @@ public enum BotStrategyForCards {
     SECOND_ROUND_STRATEGY  {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
+            setUpStrategy(gameIntel);
+            if(!isOpponentThatStartTheRound()) return discardTheLowestCard();
             return CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         }
     },
@@ -39,18 +41,18 @@ public enum BotStrategyForCards {
     }
 
     private static void setTheGameIntel(GameIntel gameIntel) {
-        BotStrategyForCards.gameIntel = gameIntel;
+        BotStrategy.gameIntel = gameIntel;
     }
 
     private static void sortCards() {
         ArrayList<TrucoCard> arrayOfCards = new ArrayList<>();
         arrayOfCards.addAll(gameIntel.getCards());
         arrayOfCards.sort((card1, card2) -> card1.compareValueTo(card2, gameIntel.getVira()));
-        BotStrategyForCards.sortedCards = List.copyOf(arrayOfCards);
+        BotStrategy.sortedCards = List.copyOf(arrayOfCards);
     }
 
     private static boolean isOpponentThatStartTheRound() {
-        return BotStrategyForCards.gameIntel.getOpponentCard().isPresent();
+        return BotStrategy.gameIntel.getOpponentCard().isPresent();
     }
 
     private static CardToPlay chooseTheLowestCardToPlay() {
@@ -68,6 +70,24 @@ public enum BotStrategyForCards {
         for(TrucoCard card : sortedCards) 
             if(card.isManilha(gameIntel.getVira())) return CardToPlay.of(card);
             return chooseTheLowestCardToPlay();
+    }
+
+    private static CardToPlay discardTheLowestCard() {
+        return CardToPlay.discard(chooseTheLowestCardToPlay().content());
+    }
+
+     public static int countManilhas(GameIntel gameIntel) {
+        int count = 0;
+        for(TrucoCard card : gameIntel.getCards()) 
+            if(card.isManilha(gameIntel.getVira())) count++;
+        return count;
+    }
+
+    public static int countCardsEqualOrHigherThanAce(GameIntel gameIntel) {
+        int count = 0;
+        for(TrucoCard card : gameIntel.getCards()) 
+            if(card.getRank().value() >= CardRank.ACE.value()) count++;
+        return count;
     }
 
     public abstract CardToPlay throwCard(GameIntel gameIntel);

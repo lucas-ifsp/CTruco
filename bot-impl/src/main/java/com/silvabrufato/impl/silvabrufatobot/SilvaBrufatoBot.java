@@ -31,10 +31,10 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if(Utilities.countManilhas(intel) >= 2) return true;
-        if(Utilities.countManilhas(intel) == 1 && Utilities.countCardsEqualOrHigherThanAce(intel) >= 1) return true;
+        if(BotStrategy.countManilhas(intel) >= 2) return true;
+        if(BotStrategy.countManilhas(intel) == 1 && Utilities.countCardsEqualOrHigherThanAce(intel) >= 1) return true;
         if(intel.getOpponentScore() >= 9) return false;
-        return Utilities.countCardsEqualOrHigherThanAce(intel) >= 2;
+        return BotStrategy.countCardsEqualOrHigherThanAce(intel) >= 2;
     }
 
     @Override
@@ -46,9 +46,9 @@ public class SilvaBrufatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         return switch(intel.getRoundResults().size()) {
-            case 0 -> BotStrategyForCards.FIRST_ROUND_STRATEGY.throwCard(intel);
-            case 1 -> BotStrategyForCards.SECOND_ROUND_STRATEGY.throwCard(intel);
-            case 2 -> BotStrategyForCards.FIRST_ROUND_STRATEGY.throwCard(intel);
+            case 0 -> BotStrategy.FIRST_ROUND_STRATEGY.throwCard(intel);
+            case 1 -> BotStrategy.SECOND_ROUND_STRATEGY.throwCard(intel);
+            case 2 -> BotStrategy.FIRST_ROUND_STRATEGY.throwCard(intel);
             default -> throw new IllegalArgumentException("Unexpected value: " + intel.getRoundResults().size());
         };
     }
