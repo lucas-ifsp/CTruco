@@ -121,8 +121,7 @@ public class SilvaBrufatoBotTest {
             );
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
             ));
             assertThat(sut.chooseCard(gameIntel).content().
                     compareValueTo(
