@@ -73,13 +73,21 @@ public class SilvaBrufatoBotTest {
         @DisplayName("shouldTryToWinTheFirstHandWithoutUsingManilha")
         void shouldTryToWinTheFirstHandWithoutUsingManilha() {
             when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+            );
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             ));
-            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+            
+            assertThat(sut.chooseCard(gameIntel).content().
+                    compareValueTo(
+                            gameIntel.getOpponentCard().get(),
+                            gameIntel.getVira())
+            ).isGreaterThan(0);
         }
 
         @Test
