@@ -138,12 +138,13 @@ public class SilvaBrufatoBotTest {
             when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
             ));
             assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
-                CardToPlay.discard(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)).content()
+                CardToPlay.discard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)).content()
                 );
         }
+
     }
 
     @Nested
