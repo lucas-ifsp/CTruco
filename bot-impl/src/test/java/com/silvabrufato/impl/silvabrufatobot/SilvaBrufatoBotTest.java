@@ -71,8 +71,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should throw the lowest card when start the First hand")
-        public void ShouldThrowTheLowestCardWhenStartTheFirstHand() {
+        @DisplayName("Should throw the lowest card when start the First hand and not have a manilha")
+        public void ShouldThrowTheLowestCardWhenStartTheFirstHandAndNotHaveAManilnha() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
