@@ -59,6 +59,7 @@ public class SilvaBrufatoBotTest {
         @Test
         @DisplayName("Should win the first round if possible")
         public void ShouldWinTheFirstRoundIfPossible() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
@@ -68,7 +69,7 @@ public class SilvaBrufatoBotTest {
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             ));
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            
             assertThat(sut.chooseCard(gameIntel).content().
                     compareValueTo(
                             gameIntel.getOpponentCard().get(),
@@ -77,31 +78,20 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("playTheHighestCardInTheFirstRoundIfAreTheFirstToPlayWithoutThrowingTheManilha")
-        void playTheHighestCardInTheFirstRoundIfAreTheFirstToPlayWithoutThrowingTheManilha() {
+        @DisplayName("Should throw the lowest card when start the First hand")
+        public void ShouldThrowTheLowestCardWhenStartTheFirstHand() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             ));
-            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+            
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
         }
-
-        @Test
-        @DisplayName("playTheHighestCardOnTheFirstTurnIfYouAreTheFirstToPlayAndHaveNoManilha")
-        void playTheHighestCardOnTheFirstTurnIfYouAreTheFirstToPlayAndHaveNoManilha() {
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
-            ));
-            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        }
-
     }
 
     @Nested

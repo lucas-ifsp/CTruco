@@ -2,6 +2,7 @@ package com.silvabrufato.impl.silvabrufatobot;
 
 import com.bueno.spi.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public enum BotStrategy {
@@ -9,49 +10,10 @@ public enum BotStrategy {
     FIRST_HAND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
-            List<TrucoCard> cards = gameIntel.getCards();
-            TrucoCard vira = gameIntel.getVira();
-            TrucoCard manilha = null;
-            TrucoCard cardTwo = null;
-            TrucoCard cardThree = null;
-
-            //verified if exists manilha
-            for (TrucoCard card : cards) {
-                if (card.isManilha(vira)) manilha = card;
-            }
-
-            //if not exists manilha verified higest card
-            if (manilha == null) {
-                //compare 1° with 2°
-                if (cards.get(0).compareValueTo(cards.get(1), vira) >=0 ){
-                    //compare 1° with 3°
-                    if (cards.get(0).compareValueTo(cards.get(2), vira) >= 0){
-                        return CardToPlay.of(cards.get(0));
-                    }else{
-                        return CardToPlay.of(cards.get(2));
-                    }
-                }else {
-                    //compare 2° with 3°
-                    if (cards.get(1).compareValueTo(cards.get(2), vira) >= 0){
-                        return CardToPlay.of(cards.get(1));
-                    }else{
-                        return CardToPlay.of(cards.get(2));
-                    }
-                }
-            }
-
-            for (TrucoCard card : cards) {
-                if (!card.isManilha(vira)){
-                    cardTwo = card;
-                }
-            }
-
-            for (TrucoCard card : cards) {
-                if (!card.isManilha(vira) && card != cardTwo){
-                    cardThree = card;
-                }
-            }
-            return (cardTwo.compareValueTo(cardThree, vira) >= 0) ? CardToPlay.of(cardTwo) : CardToPlay.of(cardThree);
+            setTheGameIntel(gameIntel);
+            sortCards();
+            if(isOpponentThatStartTheHand()) return chooseCardThoWinTheHandIfPossible();
+            return chooseTheLowestCardToPlay();
         }
     },
     
@@ -69,5 +31,34 @@ public enum BotStrategy {
         }
     };
     
+    private static GameIntel gameIntel;
+    private static List<TrucoCard> sortedCards;
+
+    private static void setTheGameIntel(GameIntel gameIntel) {
+        BotStrategy.gameIntel = gameIntel;
+    }
+
+    private static void sortCards() {
+        ArrayList<TrucoCard> arrayOfCards = new ArrayList<>();
+        arrayOfCards.addAll(gameIntel.getCards());
+        arrayOfCards.sort((card1, card2) -> card1.compareValueTo(card2, gameIntel.getVira()));
+        BotStrategy.sortedCards = List.copyOf(arrayOfCards);
+    }
+
+    private static boolean isOpponentThatStartTheHand() {
+        return BotStrategy.gameIntel.getOpponentCard().isPresent();
+    }
+
+    private static CardToPlay chooseTheLowestCardToPlay() {
+        return CardToPlay.of(sortedCards.get(0));
+    }
+
+    private static CardToPlay chooseCardThoWinTheHandIfPossible() {
+        for(TrucoCard card : sortedCards)
+            if(card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) 
+                return CardToPlay.of(card);
+        return chooseTheLowestCardToPlay();
+    }
+
     public abstract CardToPlay throwCard(GameIntel gameIntel);
 }
