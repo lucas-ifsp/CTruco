@@ -145,6 +145,20 @@ public class SilvaBrufatoBotTest {
                 );
         }
 
+        @Test
+        @DisplayName("Should throw a manilha if have and start the second round")
+        public void shouldThrowAManilhaIfHaveAndStartTheSecondRound() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            ));
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                CardToPlay.discard(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)).content()
+                );
+        }
     }
 
     @Nested
