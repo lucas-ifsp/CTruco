@@ -40,13 +40,19 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
         if (intel.getOpponentScore() >= 9) return false;
 
-        if(!checkIfExistsManilhaInCards(cards, vira).isEmpty()){
+        if(!checkIfExistsManilhaInCards(cards, vira).isEmpty()){ //check if has manilha
             if (checkIfExistsManilhaInCards(cards,vira).size() == 1){  //just one manilha
-                if (checkIfOtherCardAreHigherOrEqualTOA(cards, vira)) return true; //check if other cards they are high or equal to ACE
+                if (checkIfOtherCardAreHigherOrEqualTOA(cards, vira)){ //check if other cards they are high or equal to ACE
+                    return true;
+                }else{
+                    return false;
+                }
             } else {
                 return true;
             }
         }
+
+        if (checksIfThereAreAtLeastTwoCardsHigherThanAce(cards, vira)) return true;
 
         return false;
     }
@@ -76,7 +82,6 @@ public class SilvaBrufatoBot implements BotServiceProvider {
         List<TrucoCard> manilhas = new ArrayList<>();
         for (TrucoCard card:cards) {
             if(card.isManilha(vira)) manilhas.add(card);
-            System.out.println(manilhas.size());
         }
         return manilhas;
     }
@@ -89,6 +94,19 @@ public class SilvaBrufatoBot implements BotServiceProvider {
                 }
             }
         }
+        return false;
+    }
+
+    private Boolean checksIfThereAreAtLeastTwoCardsHigherThanAce(List<TrucoCard> cards, TrucoCard vira){
+        Integer cont = 0;
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() >= CardRank.ACE.value()) {
+                cont ++;
+            }
+        }
+
+        if (cont > 1) return true;
+
         return false;
     }
 
