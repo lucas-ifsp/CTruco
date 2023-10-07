@@ -10,8 +10,7 @@ public enum BotStrategyForCards {
     FIRST_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
-            setTheGameIntel(gameIntel);
-            sortCards();
+            setUpStrategy(gameIntel);
             if(isOpponentThatStartTheHand()) return chooseCardThoWinTheHandIfPossible();
             return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne();
         }
@@ -33,6 +32,11 @@ public enum BotStrategyForCards {
     
     private static GameIntel gameIntel;
     private static List<TrucoCard> sortedCards;
+
+    private static void setUpStrategy(GameIntel gameIntel) {
+        setTheGameIntel(gameIntel);
+        sortCards();
+    }
 
     private static void setTheGameIntel(GameIntel gameIntel) {
         BotStrategyForCards.gameIntel = gameIntel;
