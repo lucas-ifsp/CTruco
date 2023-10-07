@@ -76,7 +76,7 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should throw the lowest card when start the First round and not have a manilha")
+        @DisplayName("Should throw the lowest card when start the first round and not have a manilha")
         public void ShouldThrowTheLowestCardWhenStartTheFirstRoundAndNotHaveAManilnha() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
@@ -133,14 +133,16 @@ public class SilvaBrufatoBotTest {
         @Test
         @DisplayName("Should throw a hidden card if start the round and will not raise")
         public void shouldThrowAHiddenCardIfStartTheRoundAndWillNotRaise() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
             ));
-            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.closed());
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                CardToPlay.discard(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)).content()
+                );
         }
     }
 
