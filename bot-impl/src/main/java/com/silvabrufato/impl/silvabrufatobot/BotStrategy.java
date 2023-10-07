@@ -13,7 +13,7 @@ public enum BotStrategy {
             setTheGameIntel(gameIntel);
             sortCards();
             if(isOpponentThatStartTheHand()) return chooseCardThoWinTheHandIfPossible();
-            return chooseTheLowestCardToPlay();
+            return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne();
         }
     },
     
@@ -58,6 +58,12 @@ public enum BotStrategy {
             if(card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) 
                 return CardToPlay.of(card);
         return chooseTheLowestCardToPlay();
+    }
+
+    private static CardToPlay chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne() {
+        for(TrucoCard card : sortedCards) 
+            if(card.isManilha(gameIntel.getVira())) return CardToPlay.of(card);
+            return chooseTheLowestCardToPlay();
     }
 
     public abstract CardToPlay throwCard(GameIntel gameIntel);
