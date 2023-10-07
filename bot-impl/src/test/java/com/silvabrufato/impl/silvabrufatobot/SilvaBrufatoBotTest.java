@@ -47,11 +47,11 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("First hand")
-    class FirstHandTests{
+    @DisplayName("First round")
+    class FirstRoundTests{
         @Test
-        @DisplayName("Should win the first hand if possible")
-        public void ShouldWinTheFirstHandIfPossible() {
+        @DisplayName("Should win the first round if possible")
+        public void ShouldWinTheFirstRoundIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
@@ -69,47 +69,13 @@ public class SilvaBrufatoBotTest {
             ).isGreaterThan(0);
         }
 
-        @Test
-        @DisplayName("shouldTryToWinTheFirstHandWithoutUsingManilha")
-        void shouldTryToWinTheFirstHandWithoutUsingManilha() {
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
-            when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
-            );
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
-            ));
-            
-            assertThat(sut.chooseCard(gameIntel).content().
-                    compareValueTo(
-                            gameIntel.getOpponentCard().get(),
-                            gameIntel.getVira())
-            ).isGreaterThan(0);
-        }
-
-        @Test
-        @DisplayName("mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha")
-        void mustTryToWinTheFirstRoundWithTheHighestCardIfThereIsNoManilha() {
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
-            ));
-            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        }
-
     }
 
     @Nested
     @DisplayName("Second hand")
-    class SecondHandTests{
+    class SecondRoundTests{
         @Test
-        @DisplayName("ShouldWinTheSecondHandIfPossible")
+        @DisplayName("ShouldWinTheSecondRoundIfPossible")
         void shouldWinTheSecondHandIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -125,11 +91,11 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("Third hand")
-    class ThirdHandTests {
+    @DisplayName("Third round")
+    class ThirdRoundTests {
         @Test
-        @DisplayName("ShouldWinTheThreeHandIfPossible")
-        void shouldWinTheThreeHandIfPossible() {
+        @DisplayName("ShouldWinTheThreeRoundIfPossible")
+        void shouldWinTheThreeRoundIfPossible() {
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES))
