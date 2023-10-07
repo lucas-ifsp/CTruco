@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -152,10 +153,26 @@ public class SilvaBrufatoBotTest {
 
         @ParameterizedTest
         @ValueSource(ints = {9,10})
-        @DisplayName("botMustTunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints")
-        void botMustTunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints(int points) {
+        @DisplayName("botMustRunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints")
+        void botMustRunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints(int points) {
             when(gameIntel.getOpponentScore()).thenReturn(points);
             assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isFalse();
         }
+
+        @ParameterizedTest
+        @ValueSource(ints = {0, 4 ,6 ,8})
+        @DisplayName("botMustAcceptHandOfElevenIfItHasManilhaAndAtLeastOneCardGreaterThanOrEqualToACEAndTheOpponentHasLessThanNinePoints")
+        void botMustAcceptHandOfElevenIfItHasManilhaAndAtLeastOneCardGreaterThanOrEqualToACEAndTheOpponentHasLessThanNinePoints(int points) {
+            when(gameIntel.getOpponentScore()).thenReturn(points);
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK,CardSuit.SPADES));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            ));
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isTrue();
+        }
+
+
     }
 }
