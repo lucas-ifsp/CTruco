@@ -5,7 +5,7 @@ import com.bueno.spi.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum CardsBotStrategy {
+public enum BotStrategyForCards {
 
     FIRST_HAND_STRATEGY {
         @Override
@@ -35,18 +35,18 @@ public enum CardsBotStrategy {
     private static List<TrucoCard> sortedCards;
 
     private static void setTheGameIntel(GameIntel gameIntel) {
-        CardsBotStrategy.gameIntel = gameIntel;
+        BotStrategyForCards.gameIntel = gameIntel;
     }
 
     private static void sortCards() {
         ArrayList<TrucoCard> arrayOfCards = new ArrayList<>();
         arrayOfCards.addAll(gameIntel.getCards());
         arrayOfCards.sort((card1, card2) -> card1.compareValueTo(card2, gameIntel.getVira()));
-        CardsBotStrategy.sortedCards = List.copyOf(arrayOfCards);
+        BotStrategyForCards.sortedCards = List.copyOf(arrayOfCards);
     }
 
     private static boolean isOpponentThatStartTheHand() {
-        return CardsBotStrategy.gameIntel.getOpponentCard().isPresent();
+        return BotStrategyForCards.gameIntel.getOpponentCard().isPresent();
     }
 
     private static CardToPlay chooseTheLowestCardToPlay() {
