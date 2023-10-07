@@ -74,8 +74,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should throw the lowest card when start the First hand and not have a manilha")
-        public void ShouldThrowTheLowestCardWhenStartTheFirstHandAndNotHaveAManilnha() {
+        @DisplayName("Should throw the lowest card when start the First round and not have a manilha")
+        public void ShouldThrowTheLowestCardWhenStartTheFirstRoundAndNotHaveAManilnha() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
@@ -90,8 +90,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should Start the first hand using the lowest manilha if have one or more")
-        public void shouldStartTheFirstHandUsingTheLowestManilhaIfHaveOneOrMore() {
+        @DisplayName("Should start the first round using the lowest manilha if have one or more")
+        public void shouldStartTheFirsRoundUsingTheLowestManilhaIfHaveOneOrMore() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
@@ -107,7 +107,7 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("Second hand")
+    @DisplayName("Second round")
     class SecondRoundTests{
         @Test
         @DisplayName("ShouldWinTheSecondRoundIfPossible")
