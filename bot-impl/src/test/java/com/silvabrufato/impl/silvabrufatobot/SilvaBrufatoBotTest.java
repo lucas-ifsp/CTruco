@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bueno.spi.model.*;
+import com.bueno.spi.model.GameIntel.RoundResult;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -110,13 +112,18 @@ public class SilvaBrufatoBotTest {
     @DisplayName("Second round")
     class SecondRoundTests{
         @Test
-        @DisplayName("ShouldWinTheSecondRoundIfPossible")
-        void shouldWinTheSecondHandIfPossible() {
+        @DisplayName("Should win the second round if possible")
+        public void shouldWinTheSecondHandIfPossible() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
             );
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            ));
             assertThat(sut.chooseCard(gameIntel).content().
                     compareValueTo(
                             gameIntel.getOpponentCard().get(),
