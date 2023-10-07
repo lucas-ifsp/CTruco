@@ -28,12 +28,27 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
         if (intel.getOpponentScore() >= 9) return false;
-        return true;
+
+        if(!checkIfExistsManilhaInCards(cards, vira).isEmpty()){
+            if (checkIfExistsManilhaInCards(cards,vira).size() == 1){  //just one manilha
+                if (checkIfOtherCardAreHigherOrEqualTOA(cards, vira)) return true; //check if other cards they are high or equal to ACE
+            } else {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -55,6 +70,26 @@ public class SilvaBrufatoBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
+    }
+
+    private List<TrucoCard> checkIfExistsManilhaInCards(List<TrucoCard> cards, TrucoCard vira){
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card:cards) {
+            if(card.isManilha(vira)) manilhas.add(card);
+            System.out.println(manilhas.size());
+        }
+        return manilhas;
+    }
+
+    private Boolean checkIfOtherCardAreHigherOrEqualTOA(List<TrucoCard> cards, TrucoCard vira) {
+        for (TrucoCard card : cards) {
+            if (!card.isManilha(vira)) {
+                if (card.getRank().value() >= CardRank.ACE.value()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
