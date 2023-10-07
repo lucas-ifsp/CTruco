@@ -11,7 +11,7 @@ public enum BotStrategyForCards {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             setUpStrategy(gameIntel);
-            if(isOpponentThatStartTheHand()) return chooseCardThoWinTheHandIfPossible();
+            if(isOpponentThatStartTheRound()) return chooseCardThoWinTheRoundIfPossible();
             return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne();
         }
     },
@@ -49,7 +49,7 @@ public enum BotStrategyForCards {
         BotStrategyForCards.sortedCards = List.copyOf(arrayOfCards);
     }
 
-    private static boolean isOpponentThatStartTheHand() {
+    private static boolean isOpponentThatStartTheRound() {
         return BotStrategyForCards.gameIntel.getOpponentCard().isPresent();
     }
 
@@ -57,7 +57,7 @@ public enum BotStrategyForCards {
         return CardToPlay.of(sortedCards.get(0));
     }
 
-    private static CardToPlay chooseCardThoWinTheHandIfPossible() {
+    private static CardToPlay chooseCardThoWinTheRoundIfPossible() {
         for(TrucoCard card : sortedCards)
             if(card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) 
                 return CardToPlay.of(card);
