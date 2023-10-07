@@ -26,8 +26,15 @@ import java.util.Optional;
 
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -138,6 +145,52 @@ public class SilvaBrufatoBotTest {
                             gameIntel.getOpponentCard().get(),
                             gameIntel.getVira())
             ).isGreaterThan(0);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Response to the hand of eleven")
+    class ResponseToTheHandOfEleven{
+        @Test
+        @DisplayName("TheReturnMustBeDifferentFromNull")
+        void theReturnMustBeDifferentFromNull() {
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isNotNull();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {9,10})
+        @DisplayName("botMustRunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints")
+        void botMustRunFromTheHandOfElevenIfTheOpponentHasNineOrMorePoints(int points) {
+            when(gameIntel.getOpponentScore()).thenReturn(points);
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {0, 4 ,6 ,8})
+        @DisplayName("botMustAcceptHandOfElevenIfItHasManilhaAndAtLeastOneCardGreaterThanOrEqualToACEAndTheOpponentHasLessThanNinePoints")
+        void botMustAcceptHandOfElevenIfItHasManilhaAndAtLeastOneCardGreaterThanOrEqualToACEAndTheOpponentHasLessThanNinePoints(int points) {
+            when(gameIntel.getOpponentScore()).thenReturn(points);
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK,CardSuit.SPADES));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            ));
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isTrue();
+        }
+
+        @Test
+        @DisplayName("shouldAcceptHandOfElevenIfHaveTwoCardsGreaterThanOrEqualToACEandDoNotHaveAShackle")
+        void shouldAcceptHandOfElevenIfHaveTwoCardsGreaterThanOrEqualToACEandDoNotHaveAShackle() {
+            when(gameIntel.getOpponentScore()).thenReturn(7);
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR,CardSuit.CLUBS));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            ));
+            assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isTrue();
         }
 
     }

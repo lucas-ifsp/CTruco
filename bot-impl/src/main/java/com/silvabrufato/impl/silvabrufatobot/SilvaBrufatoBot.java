@@ -28,12 +28,33 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaoDeOnzeResponse'");
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        if (intel.getOpponentScore() >= 9) return false;
+
+        if(!checkIfExistsManilhaInCards(cards, vira).isEmpty()){ //check if has manilha
+            if (checkIfExistsManilhaInCards(cards,vira).size() == 1){  //just one manilha
+                if (checkIfOtherCardAreHigherOrEqualTOA(cards, vira)){ //check if other cards they are high or equal to ACE
+                    return true;
+                }else{
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        if (checksIfThereAreAtLeastTwoCardsHigherThanAce(cards, vira)) return true;
+
+        return false;
     }
 
     @Override
@@ -55,6 +76,38 @@ public class SilvaBrufatoBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
+    }
+
+    private List<TrucoCard> checkIfExistsManilhaInCards(List<TrucoCard> cards, TrucoCard vira){
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card:cards) {
+            if(card.isManilha(vira)) manilhas.add(card);
+        }
+        return manilhas;
+    }
+
+    private Boolean checkIfOtherCardAreHigherOrEqualTOA(List<TrucoCard> cards, TrucoCard vira) {
+        for (TrucoCard card : cards) {
+            if (!card.isManilha(vira)) {
+                if (card.getRank().value() >= CardRank.ACE.value()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Boolean checksIfThereAreAtLeastTwoCardsHigherThanAce(List<TrucoCard> cards, TrucoCard vira){
+        Integer cont = 0;
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() >= CardRank.ACE.value()) {
+                cont ++;
+            }
+        }
+
+        if (cont > 1) return true;
+
+        return false;
     }
 
 }
