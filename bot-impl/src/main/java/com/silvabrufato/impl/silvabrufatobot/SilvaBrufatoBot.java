@@ -46,9 +46,9 @@ public class SilvaBrufatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         return switch(intel.getRoundResults().size()) {
-            case 0 -> BotStrategyForCards.FIRST_HAND_STRATEGY.throwCard(intel);
-            case 1 -> BotStrategyForCards.SECOND_HAND_STRATEGY.throwCard(intel);
-            case 2 -> BotStrategyForCards.FIRST_HAND_STRATEGY.throwCard(intel);
+            case 0 -> BotStrategyForCards.FIRST_ROUND_STRATEGY.throwCard(intel);
+            case 1 -> BotStrategyForCards.SECOND_ROUND_STRATEGY.throwCard(intel);
+            case 2 -> BotStrategyForCards.FIRST_ROUND_STRATEGY.throwCard(intel);
             default -> throw new IllegalArgumentException("Unexpected value: " + intel.getRoundResults().size());
         };
     }

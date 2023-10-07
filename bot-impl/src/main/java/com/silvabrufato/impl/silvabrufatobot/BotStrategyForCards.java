@@ -7,7 +7,7 @@ import java.util.List;
 
 public enum BotStrategyForCards {
 
-    FIRST_HAND_STRATEGY {
+    FIRST_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             setTheGameIntel(gameIntel);
@@ -17,14 +17,14 @@ public enum BotStrategyForCards {
         }
     },
     
-    SECOND_HAND_STRATEGY  {
+    SECOND_ROUND_STRATEGY  {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             return CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         }
     },
 
-    THIRD_HAND_STRATEGY {
+    THIRD_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             return CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
