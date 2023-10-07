@@ -85,6 +85,22 @@ public class SilvaBrufatoBotTest {
             assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
         }
+
+        @Test
+        @DisplayName("Should Start the first hand using the lowest manilha if have one or more")
+        public void shouldStartTheFirstHandUsingTheLowestManilhaIfHaveOneOrMore() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of());
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)      
+            ));
+            
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+        }
     }
 
     @Nested
