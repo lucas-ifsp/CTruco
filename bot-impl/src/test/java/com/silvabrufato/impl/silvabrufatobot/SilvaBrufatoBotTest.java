@@ -113,7 +113,7 @@ public class SilvaBrufatoBotTest {
     class SecondRoundTests{
         @Test
         @DisplayName("Should win the second round if possible")
-        public void shouldWinTheSecondHandIfPossible() {
+        public void shouldWinTheSecondRoundIfPossible() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -128,6 +128,19 @@ public class SilvaBrufatoBotTest {
                             gameIntel.getOpponentCard().get(),
                             gameIntel.getVira())
             ).isGreaterThan(0);
+        }
+
+        @Test
+        @DisplayName("Should throw a hidden card if start the round and will not raise")
+        public void shouldThrowAHiddenCardIfStartTheRoundAndWillNotRaise() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.empty());
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            ));
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(TrucoCard.closed());
         }
     }
 
