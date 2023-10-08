@@ -113,7 +113,7 @@ public class SilvaBrufatoBotTest {
 
         @Test
         @DisplayName("Should throw the lowest card if is not possible to win the first round")
-        public void shouldWinThrowTheLowetsCardIfisNotPossibleToWinTheFirstRound() {
+        public void shouldThrowTheLowetsCardIfisNotPossibleToWinTheFirstRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -127,6 +127,25 @@ public class SilvaBrufatoBotTest {
             
             assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+        }
+
+        @Test
+        @DisplayName("Should draw the first round")
+        public void ShouldDrawTheFisrtRound() {
+             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of());
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS))
+            );
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            ));
+            
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
             );
         }
 
@@ -161,6 +180,7 @@ public class SilvaBrufatoBotTest {
             assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
         }
+
     }
 
     @Nested
