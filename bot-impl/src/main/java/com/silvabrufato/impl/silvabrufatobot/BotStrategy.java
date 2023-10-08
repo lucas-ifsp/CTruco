@@ -20,8 +20,11 @@ public enum BotStrategy {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             setUpStrategy(gameIntel);
-            if(!isOpponentThatStartTheRound()) return discardTheLowestCard();
-            return CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+            if(!isOpponentThatStartTheRound() && countManilhas(gameIntel) > 0) 
+                return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne();
+            if(!isOpponentThatStartTheRound()) 
+                return discardTheLowestCard();
+            return chooseCardThoWinTheRoundIfPossible();
         }
     },
 
