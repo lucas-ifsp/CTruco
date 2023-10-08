@@ -76,6 +76,25 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
+        @DisplayName("Should win the first round if possible using the lowest card")
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheLowestCard() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of());
+            when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+            );
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            ));
+            
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+        }
+
+        @Test
         @DisplayName("Should throw the lowest card when start the first round and not have a manilha")
         public void ShouldThrowTheLowestCardWhenStartTheFirstRoundAndNotHaveAManilnha() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
