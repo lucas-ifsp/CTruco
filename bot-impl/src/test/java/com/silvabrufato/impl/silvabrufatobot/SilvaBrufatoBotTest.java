@@ -55,24 +55,22 @@ public class SilvaBrufatoBotTest {
     @DisplayName("First round")
     class FirstRoundTests{
         @Test
-        @DisplayName("Should win the first round if possible")
-        public void ShouldWinTheFirstRoundIfPossible() {
+        @DisplayName("Should win the first round if possible using the highest card")
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheHighestCard() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS))
             );
             when(gameIntel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             ));
-            
-            assertThat(sut.chooseCard(gameIntel).content().
-                    compareValueTo(
-                            gameIntel.getOpponentCard().get(),
-                            gameIntel.getVira())
-            ).isGreaterThan(0);
+
+            assertThat(sut.chooseCard(gameIntel).content()).isEqualTo(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
         }
 
         @Test
