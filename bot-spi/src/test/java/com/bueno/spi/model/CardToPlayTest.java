@@ -85,5 +85,4 @@ class CardToPlayTest {
         final TrucoCard card = TrucoCard.of(TWO, HEARTS);
         assertEquals(CardToPlay.of(card), CardToPlay.of(card));
     }
-
 }
