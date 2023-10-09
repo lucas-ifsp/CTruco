@@ -247,6 +247,9 @@ public class SilvaBrufatoBotTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES))
             );
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES))
+            );
             assertThat(sut.chooseCard(gameIntel).content().
                     compareValueTo(
                             gameIntel.getOpponentCard().get(),
