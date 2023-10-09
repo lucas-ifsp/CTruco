@@ -22,12 +22,6 @@ public enum BotStrategy {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
             setUpStrategy(gameIntel);
-            if (drewThePreviousRound()) {
-                if (isOpponentThatStartTheRound())
-                    return chooseCardToWinOrToDrawTheRoundIfPossible(true);
-                if (countManilhas(gameIntel) > 0)
-                    return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne(false);
-            }
             if (isOpponentThatStartTheRound()) return chooseCardToWinTheRoundIfPossible(true);
             return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne(false);
         }
