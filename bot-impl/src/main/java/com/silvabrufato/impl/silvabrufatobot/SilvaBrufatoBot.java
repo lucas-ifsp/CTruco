@@ -31,10 +31,11 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(intel.getOpponentScore() >= 9) return false;
         if(BotStrategy.countManilhas(intel) >= 2) return true;
         if(BotStrategy.countManilhas(intel) == 1 && BotStrategy.countCardsEqualOrHigherThanAce(intel) >= 1) return true;
-        if(intel.getOpponentScore() >= 9) return false;
-        return BotStrategy.countCardsEqualOrHigherThanAce(intel) >= 2;
+        if (BotStrategy.countCardsEqualOrHigherThanAce(intel) >= 2) return true;
+        return false;
     }
 
     @Override
