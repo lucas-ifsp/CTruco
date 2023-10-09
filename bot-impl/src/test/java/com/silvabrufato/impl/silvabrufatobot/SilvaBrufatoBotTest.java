@@ -33,6 +33,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -303,5 +304,15 @@ public class SilvaBrufatoBotTest {
             assertThat(sut.getMaoDeOnzeResponse(gameIntel)).isTrue();
         }
 
+    }
+
+    @Nested
+    @DisplayName("Response to getRaiseResponse")
+    class ResponseToGettRaiseResponse{
+        @Test
+        @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
+        void theReturnMustBeBetweenMinusOneAndOne() {
+            assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+        }
     }
 }
