@@ -79,4 +79,11 @@ class CardToPlayTest {
         assertThrows(NullPointerException.class, () -> CardToPlay.discard(null));
     }
 
+    @Test
+    @DisplayName("Should CardToPlay objects be equal if bot content and side are equals")
+    void shouldCardToPlayObjectsBeEqualIfBotContentAndSideAreEquals() {
+        final TrucoCard card = TrucoCard.of(TWO, HEARTS);
+        assertEquals(CardToPlay.of(card), CardToPlay.of(card));
+    }
+
 }
