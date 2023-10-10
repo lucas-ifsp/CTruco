@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -394,8 +395,7 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isOne();
                 }
 
@@ -406,8 +406,7 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
             }
@@ -419,6 +418,17 @@ public class SilvaBrufatoBotTest {
                 void theReturnMustBeBetweenMinusOneAndOneIfWonRoundOne() {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
                     assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+                }
+
+                @Test
+                @DisplayName("shouldReturnOneIfItHasHearts")
+                void shouldReturnOneIfItHasHearts() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isOne();
                 }
 
             }
