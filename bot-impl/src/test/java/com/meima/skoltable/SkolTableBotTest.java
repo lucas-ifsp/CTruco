@@ -1,7 +1,5 @@
-package com.meima.turcobot;
+package com.meima.skoltable;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class TurcoBotTest {
+class SkolTableBotTest {
 
 }
