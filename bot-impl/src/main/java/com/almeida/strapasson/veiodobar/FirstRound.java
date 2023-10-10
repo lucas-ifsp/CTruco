@@ -5,9 +5,7 @@ import com.bueno.spi.model.GameIntel;
 
 public class FirstRound implements Strategy {
     @Override
-    public boolean hasMajorityCouple(GameIntel intel) {
-        return false;
-    }
+    public boolean hasMajorityCouple(GameIntel intel) {return false;}
 
     @Override
     public boolean hasMinorCouple(GameIntel intel) {
