@@ -313,58 +313,75 @@ public class SilvaBrufatoBotTest {
     @Nested
     @DisplayName("Response to getRaiseResponse")
     class ResponseToGettRaiseResponse{
-        @Test
-        @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
-        void theReturnMustBeBetweenMinusOneAndOne() {
-            assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+        @Nested
+        @DisplayName("First round")
+        class FirstRound{
+            @Test
+            @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
+            void theReturnMustBeBetweenMinusOneAndOne() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+            }
+
+            @Test
+            @DisplayName("inTheFirstRoundShouldNotAskForAPointIncrease")
+            void inTheFirstRoundShouldNotAskForAPointIncrease() {
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
+                assertThat(sut.getRaiseResponse(gameIntel)).isNotPositive();
+            }
+
+            @Test
+            @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveZAPAndThree")
+            void inTheFirstRoundShouldReturnZeroIfHaveZAPAndThree() {
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
+                assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+            }
+
+            @Test
+            @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveCOPASAndThree")
+            void inTheFirstRoundShouldReturnZeroIfHaveCopasAndThree() {
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+            }
+
+            @Test
+            @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveManilhaAndManilha")
+            void inTheFirstRoundShouldReturnZeroIfHaveManilhaAndManilha() {
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+            }
         }
 
-        @Test
-        @DisplayName("inTheFirstRoundShouldNotAskForAPointIncrease")
-        void inTheFirstRoundShouldNotAskForAPointIncrease() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
-            assertThat(sut.getRaiseResponse(gameIntel)).isNotPositive();
-        }
-
-        @Test
-        @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveZAPAndThree")
-        void inTheFirstRoundShouldReturnZeroIfHaveZAPAndThree() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
-            assertThat(sut.getRaiseResponse(gameIntel)).isZero();
-        }
-
-        @Test
-        @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveCOPASAndThree")
-        void inTheFirstRoundShouldReturnZeroIfHaveCopasAndThree() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
-            assertThat(sut.getRaiseResponse(gameIntel)).isZero();
-        }
-
-        @Test
-        @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveManilhaAndManilha")
-        void inTheFirstRoundShouldReturnZeroIfHaveManilhaAndManilha() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
-            when(gameIntel.getRoundResults()).thenReturn(List.of());
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
-            assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+        @Nested
+        @DisplayName("Second round")
+        class SecondRound{
+            @Test
+            @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
+            void theReturnMustBeBetweenMinusOneAndOne() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+            }
         }
     }
+
 }
