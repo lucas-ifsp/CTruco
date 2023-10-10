@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -338,6 +339,18 @@ public class SilvaBrufatoBotTest {
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
+            assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+        }
+
+        @Test
+        @DisplayName("inTheFirstRoundShouldReturnZeroIfHaveCOPASAndThree")
+        void inTheFirstRoundShouldReturnZeroIfHaveCopasAndThree() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+            when(gameIntel.getRoundResults()).thenReturn(List.of());
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
             assertThat(sut.getRaiseResponse(gameIntel)).isZero();
         }
     }
