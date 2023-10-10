@@ -323,7 +323,7 @@ public class SilvaBrufatoBotTest {
 
     @Nested
     @DisplayName("Response to getRaiseResponse")
-    class ResponseToGettRaiseResponse{
+    class ResponseToGetRaiseResponse{
         @Nested
         @DisplayName("First round")
         class FirstRound{
@@ -483,7 +483,10 @@ public class SilvaBrufatoBotTest {
                 @Test
                 @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
                 void theReturnMustBeBetweenMinusOneAndOne() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
                 }
 
@@ -514,7 +517,10 @@ public class SilvaBrufatoBotTest {
                 @Test
                 @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
                 void theReturnMustBeBetweenMinusOneAndOne() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON,RoundResult.LOST));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
                 }
 
