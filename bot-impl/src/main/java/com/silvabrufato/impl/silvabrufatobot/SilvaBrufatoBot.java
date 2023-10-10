@@ -52,8 +52,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
+        return 0;
     }
 
 }
