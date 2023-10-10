@@ -43,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -451,6 +452,17 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+                }
+
+                @Test
+                @DisplayName("shouldReturnZeroIfItHasTwoThree")
+                void shouldReturnZeroIfItHasTwoThree() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
