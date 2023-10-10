@@ -36,7 +36,11 @@ public enum BotStrategy {
     }
 
     public static int firstRoundStrategy(GameIntel gameIntel){
-        return 0;
+        setUpStrategy(gameIntel);
+
+        TrucoCard vira = gameIntel.getVira();
+        if(checksIfThereIsZAPAndThree(vira)) return 0; //aceita
+        return -1;
     }
 
     private static boolean drewThePreviousRound() {
