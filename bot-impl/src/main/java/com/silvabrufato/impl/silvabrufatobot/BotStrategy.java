@@ -52,6 +52,7 @@ public enum BotStrategy {
         }
         if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
             if(checkIsCopas(gameIntel) || countManilhas(gameIntel) >= 2) return 1;
+            if(checksIfThereIsManilhaAndThree()) return 0;
         }
 
         return -1;
@@ -191,6 +192,23 @@ public enum BotStrategy {
         }
 
         if (flagOuros == true && flagCopas == true) return true;
+
+        return false;
+    }
+
+    private static boolean checksIfThereIsManilhaAndThree(){
+        boolean flagManilha = false;
+        boolean flagThree = false;
+
+        for (TrucoCard card:gameIntel.getCards()) {
+            if (card.isManilha(gameIntel.getVira())) flagManilha = true;
+        }
+
+        for (TrucoCard card:gameIntel.getCards()) {
+            if (card.getRank().value() == 10) flagThree = true;
+        }
+
+        if (flagManilha == true && flagThree == true) return true;
 
         return false;
     }
