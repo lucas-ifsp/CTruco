@@ -38,7 +38,7 @@ public enum BotStrategy {
     public static int firstRoundStrategy(GameIntel gameIntel){
         setUpStrategy(gameIntel);
         TrucoCard vira = gameIntel.getVira();
-        
+
         if(checksIfThereIsZAPAndThree(vira) || checksIfThereIsCOPASAndThree(vira) || countManilhas(gameIntel) >= 2) return 0; //aceita
         return -1;
     }
@@ -48,7 +48,8 @@ public enum BotStrategy {
         TrucoCard vira = gameIntel.getVira();
 
         if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
-            if (checksIfThereIsCopasAndSpades(vira)) return 1;
+            if(checksIfThereIsCopasAndSpades(vira)) return 1;
+            if(checksIfThereIsCopasAndOuros(vira)) return 0;
         }
         return -1;
     }
@@ -164,6 +165,23 @@ public enum BotStrategy {
         }
 
         if (flagSpades == true && flagCopas == true) return true;
+
+        return false;
+    }
+
+    private static boolean checksIfThereIsCopasAndOuros(TrucoCard vira){
+        boolean flagCopas = false;
+        boolean flagOuros = false;
+
+        for (TrucoCard card:sortedCards) {
+            if (card.isOuros(vira)) flagOuros = true;
+        }
+
+        for (TrucoCard card:sortedCards) {
+            if (card.isCopas(vira)) flagCopas = true;
+        }
+
+        if (flagOuros == true && flagCopas == true) return true;
 
         return false;
     }
