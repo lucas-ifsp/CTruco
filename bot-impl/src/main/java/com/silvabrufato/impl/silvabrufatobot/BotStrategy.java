@@ -66,7 +66,7 @@ public enum BotStrategy {
         }
 
         if (gameIntel.getRoundResults().get(0) == RoundResult.WON){
-            return -1;
+            if (gameIntel.getCards().get(0).isEspadilha(gameIntel.getVira())) return 0;
         }
         return -1;
     }
