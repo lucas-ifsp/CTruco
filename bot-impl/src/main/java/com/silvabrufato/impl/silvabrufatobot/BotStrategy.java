@@ -59,6 +59,10 @@ public enum BotStrategy {
 
     public static int thirdRoundStrategy(GameIntel gameIntel){
         setUpStrategy(gameIntel);
+
+        if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
+            if(gameIntel.getCards().get(0).isEspadilha(gameIntel.getVira())) return 0;
+        }
         return -1;
     }
 
