@@ -54,7 +54,11 @@ public enum BotStrategy {
             if(checkIsCopas(gameIntel) || countManilhas(gameIntel) >= 2) return 1;
             if(checksIfThereIsManilhaAndThree() || countThree(gameIntel) == 2) return 0;
         }
+        return -1;
+    }
 
+    public static int thirdRoundStrategy(GameIntel gameIntel){
+        setUpStrategy(gameIntel);
         return -1;
     }
 
