@@ -382,8 +382,8 @@ public class SilvaBrufatoBotTest {
             class IfLoseRoundOne{
                 @Test
                 @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
-                void theReturnMustBeBetweenMinusOneAndOne() {
-                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                void theReturnMustBeBetweenMinusOneAndOneIfLostRoundOne() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
                     assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
                 }
 
@@ -410,6 +410,17 @@ public class SilvaBrufatoBotTest {
                             TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
+            }
+            @Nested
+            @DisplayName("If won round one")
+            class IfWonRoundOne{
+                @Test
+                @DisplayName("theReturnMustBeBetweenMinusOneAndOneIfWonRoundOne")
+                void theReturnMustBeBetweenMinusOneAndOneIfWonRoundOne() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+                }
+
             }
         }
     }
