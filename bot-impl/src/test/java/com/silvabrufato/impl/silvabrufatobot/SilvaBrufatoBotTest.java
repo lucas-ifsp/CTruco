@@ -508,7 +508,12 @@ public class SilvaBrufatoBotTest {
             @Nested
             @DisplayName("If won round one")
             class IfWonRoundOne{
-
+                @Test
+                @DisplayName("theReturnMustBeBetweenMinusOneAndOne")
+                void theReturnMustBeBetweenMinusOneAndOne() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON,RoundResult.LOST));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+                }
             }
         }
     }
