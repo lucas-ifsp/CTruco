@@ -45,14 +45,13 @@ public enum BotStrategy {
 
     public static int secondRoundStrategy(GameIntel gameIntel){
         setUpStrategy(gameIntel);
-        TrucoCard vira = gameIntel.getVira();
 
         if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
             if(checksIfThereIsCopasAndSpades()) return 1;
             if(checksIfThereIsCopasAndOuros()) return 0;
         }
         if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
-            if(checkIsCopas(gameIntel)) return 1;
+            if(checkIsCopas(gameIntel) || countManilhas(gameIntel) >= 2) return 1;
         }
 
         return -1;
