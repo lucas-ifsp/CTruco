@@ -17,7 +17,7 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
