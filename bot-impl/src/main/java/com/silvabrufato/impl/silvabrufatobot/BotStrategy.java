@@ -43,6 +43,12 @@ public enum BotStrategy {
         return -1;
     }
 
+    public static int secondRoundStrategy(GameIntel gameIntel){
+        setUpStrategy(gameIntel);
+
+        return -1;
+    }
+
     private static boolean drewThePreviousRound() {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
     }
