@@ -35,6 +35,10 @@ public enum BotStrategy {
         sortCards();
     }
 
+    public static int firstRoundStrategy(GameIntel gameIntel){
+        return 0;
+    }
+
     private static boolean drewThePreviousRound() {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
     }
@@ -100,5 +104,39 @@ public enum BotStrategy {
         return count;
     }
 
+    private static boolean checksIfThereIsZAPAndThree(TrucoCard vira){
+        boolean flagZap = false;
+        boolean flagThree = false;
+
+        for (TrucoCard card:sortedCards) {
+            if (card.getRank().value() == 10) flagThree = true;
+        }
+
+        for (TrucoCard card:sortedCards) {
+            if (card.isZap(vira)) flagZap = true;
+        }
+
+        if (flagThree == true && flagZap == true) return true;
+
+        return false;
+    }
+
+    private static boolean checksIfThereIsCOPASAndThree(TrucoCard vira){
+        boolean flagCopas = false;
+        boolean flagThree = false;
+
+        for (TrucoCard card:sortedCards) {
+            if (card.getRank().value() == 10) flagThree = true;
+        }
+
+        for (TrucoCard card:sortedCards) {
+            if (card.isCopas(vira)) flagCopas = true;
+        }
+
+        if (flagThree == true && flagCopas == true) return true;
+        return false;
+    }
+
     public abstract CardToPlay throwCard(GameIntel gameIntel);
+
 }
