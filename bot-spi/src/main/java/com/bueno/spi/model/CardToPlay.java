@@ -87,4 +87,22 @@ public final class CardToPlay {
     public boolean isDiscard() {
         return discard;
     }
+
+    /**
+     * <p>Check object equality based on content and card type (discarded or not discarded).</p>
+     * @return {@code true} if both content and card type (discarded or not discarded) are equals in the current object
+     * and the {@code out} object. Otherwise, return {@code false}.
+     * */
+    @Override
+    public boolean equals(Object out) {
+        if (this == out) return true;
+        if (out == null || getClass() != out.getClass()) return false;
+        CardToPlay that = (CardToPlay) out;
+        return discard == that.discard && Objects.equals(content, that.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(content, discard);
+    }
 }
