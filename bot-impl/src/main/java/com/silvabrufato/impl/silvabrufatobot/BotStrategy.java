@@ -52,7 +52,7 @@ public enum BotStrategy {
         }
         if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
             if(checkIsCopas(gameIntel) || countManilhas(gameIntel) >= 2) return 1;
-            if(checksIfThereIsManilhaAndThree()) return 0;
+            if(checksIfThereIsManilhaAndThree() || countThree(gameIntel) == 2) return 0;
         }
 
         return -1;
@@ -119,6 +119,14 @@ public enum BotStrategy {
         for (TrucoCard card : gameIntel.getCards())
             if (card.isCopas(gameIntel.getVira())) return true;
         return false;
+    }
+
+    public static int countThree(GameIntel gameIntel) {
+        int count = 0;
+        for (TrucoCard card : gameIntel.getCards())
+            if (card.getRank().value() == 10)
+                count++;
+        return count;
     }
 
     public static int countCardsEqualOrHigherThanAce(GameIntel gameIntel) {
