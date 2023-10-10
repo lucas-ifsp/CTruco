@@ -46,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -513,6 +514,16 @@ public class SilvaBrufatoBotTest {
                 void theReturnMustBeBetweenMinusOneAndOne() {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON,RoundResult.LOST));
                     assertThat(sut.getRaiseResponse(gameIntel)).isIn(-1,0,1);
+                }
+
+                @Test
+                @DisplayName("theReturnMustBeZeroIfHaveSpades")
+                void theReturnMustBeZeroIfHaveSpades() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON,RoundResult.LOST));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
             }
         }
