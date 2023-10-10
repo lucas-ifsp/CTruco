@@ -51,6 +51,10 @@ public enum BotStrategy {
             if(checksIfThereIsCopasAndSpades(vira)) return 1;
             if(checksIfThereIsCopasAndOuros(vira)) return 0;
         }
+        if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
+            if(checkIsCopas(gameIntel)) return 1;
+        }
+
         return -1;
     }
 
@@ -109,6 +113,12 @@ public enum BotStrategy {
             if (card.isManilha(gameIntel.getVira()))
                 count++;
         return count;
+    }
+
+    public static boolean checkIsCopas(GameIntel gameIntel) {
+        for (TrucoCard card : gameIntel.getCards())
+            if (card.isCopas(gameIntel.getVira())) return true;
+        return false;
     }
 
     public static int countCardsEqualOrHigherThanAce(GameIntel gameIntel) {
