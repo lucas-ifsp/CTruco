@@ -39,7 +39,7 @@ public enum BotStrategy {
         setUpStrategy(gameIntel);
 
         TrucoCard vira = gameIntel.getVira();
-        if(checksIfThereIsZAPAndThree(vira)) return 0; //aceita
+        if(checksIfThereIsZAPAndThree(vira) || checksIfThereIsCOPASAndThree(vira)) return 0; //aceita
         return -1;
     }
 
