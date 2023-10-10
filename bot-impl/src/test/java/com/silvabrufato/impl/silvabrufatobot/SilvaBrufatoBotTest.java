@@ -45,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -490,6 +491,16 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+                    assertThat(sut.getRaiseResponse(gameIntel)).isZero();
+                }
+
+                @Test
+                @DisplayName("theReturnMustBeZeroIfHaveOuros")
+                void theReturnMustBeZeroIfHaveOuros() {
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
                     assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
             }
