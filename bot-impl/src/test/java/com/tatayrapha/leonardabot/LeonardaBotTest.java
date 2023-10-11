@@ -63,4 +63,12 @@ class LeonardaBotTest {
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
         assertThat(trucoCardList).contains(chosenCard.value());
     }
+
+    @Test
+    @DisplayName("Should ask for a raise when having a score of 10 points.")
+    void shouldAskForRaiseWithScoreOf10Points() {
+        when(intel.getScore()).thenReturn(10);
+        assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
+    }
+
 }
