@@ -5,14 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -30,98 +28,74 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should throw a random card.")
-    void shouldThrowRandomCard() {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+    @DisplayName("Play the highest card to win the first round.")
+    void playHighestCardToWinFirstRound() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
         when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        assertThat(trucoCardList).contains(chosenCard.value());
-    }
-
-    @Test
-    @DisplayName("Should ask for a raise when having a zap.")
-    void shouldAskForRaiseWithZap() {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
-        final TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(trucoCardList);
-        assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should return a valid card.")
-    void shouldReturnValidCard() {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
-        when(intel.getCards()).thenReturn(trucoCardList);
-        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        assertThat(trucoCardList).contains(chosenCard.content());
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {9, 10, 11})
-    @DisplayName("Should ask for a raise when having a score of at least 9 points.")
-    void shouldAskForRaiseWithScoreOfAtLeast10Points(int playerScore) {
-        when(intel.getScore()).thenReturn(playerScore);
-        assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8})
-    @DisplayName("Should ask for a raise with a strong hand and varying opponent scores.")
-    void shouldAskForRaiseWithStrongHandAndVaryingOpponentScores(int opponentScore) {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
-        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(trucoCardList);
-        when(intel.getScore()).thenReturn(opponentScore);
-        if (opponentScore >= 9 || trucoCardList.stream().anyMatch(card -> card.isZap(vira))) {
-            assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
-        } else {
-            assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
-        }
-    }
-
-    @Test
-    @DisplayName("Should recognize manilhas in hand.")
-    void shouldRecognizeManilhasInHand() {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getCards()).thenReturn(trucoCardList);
-        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        assertThat(trucoCardList).contains(chosenCard.content());
-    }
-
-    @Test
-    @DisplayName("Should play the lowest card if no zaps are available.")
-    void shouldPlayLowestCardWithoutZaps() {
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
-        when(intel.getCards()).thenReturn(trucoCardList);
-        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        TrucoCard lowestCard = trucoCardList.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(null);
+        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
         assertThat(chosenCard).isNotNull();
-        assertThat(chosenCard.value()).isEqualTo(lowestCard);
+        assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
     }
 
     @Test
-    @DisplayName("Should return a valid response for a raise.")
-    void shouldReturnRaiseResponse() {
-        when(intel.getScore()).thenReturn(9);
+    @DisplayName("Play the second-highest card to win the second round.")
+    void playSecondHighestCardToWinSecondRound() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+        assertThat(chosenCard).isNotNull();
+        assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
+    }
+
+    @Test
+    @DisplayName("Raise aggressively in the first round.")
+    void raiseAggressivelyInFirstRound() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         int botResponse = leonardaBot.getRaiseResponse(intel);
-        assertThat(botResponse).isIn(0, 1);
+        assertThat(botResponse).isEqualTo(1);
     }
 
     @Test
-    @DisplayName("Should return -1 to quit a raise request.")
-    void shouldReturnMinusOneToQuitRaiseRequest() {
-        when(intel.getScore()).thenReturn(0);
-        int botResponse = leonardaBot.getRaiseResponse(intel);
-        assertThat(botResponse).isEqualTo(-1);
-    }
-
-    @Test
-    @DisplayName("Should return 0 to accept a raise request.")
-    void shouldReturnZeroToAcceptRaiseRequest() {
-        when(intel.getScore()).thenReturn(9);
+    @DisplayName("Not raise in the second round.")
+    void notRaiseInSecondRound() {
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Be aggressive with a strong hand in the second round.")
+    void beAggressiveWithStrongHandInSecondRound() {
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        when(intel.getScore()).thenReturn(10);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Respond correctly in the Mão de Onze scenario.")
+    void respondInMaoDeOnzeScenario() {
+        when(intel.getScore()).thenReturn(11);
+        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(response).isTrue();
+    }
+
+    @Test
+    @DisplayName("Play the strongest card and win the round in the Mão de Ferro scenario.")
+    void winInTheMaoDeFerroScenario() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        final List<TrucoCard> opponentCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCards.get(0)));
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        assertThat(chosenCard).isNotNull();
+        assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
+    }
+
 }
