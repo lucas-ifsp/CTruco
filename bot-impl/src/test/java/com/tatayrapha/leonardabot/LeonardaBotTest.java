@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LeonardaBotTest {
-
     @Mock
     GameIntel intel;
 
@@ -103,14 +103,20 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should recognize manilhas in hand.")
     void shouldRecognizeManilhasInHand() {
-        final List<TrucoCard> trucoCardList = List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
-        );
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.KING, CardSuit.SPADES));
         when(intel.getCards()).thenReturn(trucoCardList);
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
         assertThat(trucoCardList).contains(chosenCard.content());
     }
 
+    @Test
+    @DisplayName("Should play the lowest card if no zaps are available.")
+    void shouldPlayLowestCardWithoutZaps() {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard lowestCard = trucoCardList.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(null);
+        assertThat(chosenCard).isNotNull();
+        assertThat(chosenCard.value()).isEqualTo(lowestCard);
+    }
 }
