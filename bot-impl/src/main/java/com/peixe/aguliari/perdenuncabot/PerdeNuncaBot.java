@@ -106,13 +106,11 @@ public class PerdeNuncaBot implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         // Obtém a vira.
         TrucoCard vira = intel.getVira();
-        // Inicializa o valor da mão.
-        int handValue = 0;
 
         // Calcula o valor da mão.
-        for (TrucoCard card : cards) {
-            handValue += card.relativeValue(vira);
-        }
+        int handValue = cards.stream()
+                .mapToInt(card -> card.relativeValue(vira))
+                .sum();
 
         // Retorna true se o valor da mão for maior ou igual a 18.
         return handValue >= 18;
