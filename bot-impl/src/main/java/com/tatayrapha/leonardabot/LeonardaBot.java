@@ -1,5 +1,6 @@
 package com.tatayrapha.leonardabot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -14,7 +15,9 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+        int playerScore = intel.getScore();
+        return playerScore >= 9 && cards.stream().anyMatch(card -> card.getRank() == CardRank.ACE);
     }
 
     @Override
@@ -26,8 +29,24 @@ public class LeonardaBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        TrucoCard chosenCard = cards.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
-        return CardToPlay.of(chosenCard);
+        TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+        if (opponentCard == null) {
+            TrucoCard chosenCard = cards.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
+            return CardToPlay.of(chosenCard);
+        }
+        TrucoCard highestWinningCard = null;
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() > opponentCard.getRank().value()) {
+                if (highestWinningCard == null || card.getRank().value() > highestWinningCard.getRank().value()) {
+                    highestWinningCard = card;
+                }
+            }
+        }
+        if (highestWinningCard != null) {
+            return CardToPlay.of(highestWinningCard);
+        }
+        TrucoCard lowestCard = cards.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
+        return CardToPlay.of(lowestCard);
     }
 
     @Override
@@ -40,10 +59,5 @@ public class LeonardaBot implements BotServiceProvider {
         } else {
             return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira())) ? 1 : 0;
         }
-    }
-
-    @Override
-    public String getName() {
-        return BotServiceProvider.super.getName();
     }
 }
