@@ -89,14 +89,16 @@ public class PerdeNuncaBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         // Verifica se o jogador tem uma manilha.
-        boolean isManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
+        boolean hasManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
+
         // Verifica se o jogador tem uma carta com valor alto.
-        boolean hasHighRank = cards.stream()
+        Optional<TrucoCard> highRankCard = cards.stream()
                 .filter(card -> !card.isManilha(vira))
-                .anyMatch(card -> card.getRank().value() > 4);
+                .filter(card -> card.getRank().value() > 4)
+                .findFirst();
 
         // Retorna true se o jogador tiver uma manilha e uma carta com valor alto.
-        return isManilha && hasHighRank;
+        return hasManilha && highRankCard.isPresent();
     }
 
     private boolean hasAboveAverageValue(GameIntel intel) {
