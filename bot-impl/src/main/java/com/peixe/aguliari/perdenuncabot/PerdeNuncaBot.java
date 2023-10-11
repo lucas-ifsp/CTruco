@@ -20,14 +20,18 @@
  */
 package com.peixe.aguliari.perdenuncabot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 public class PerdeNuncaBot implements BotServiceProvider {
+    private static final List<CardRank> offCards = List.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -40,6 +44,20 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isOuros(intel.getVira())) {
+                return CardToPlay.of(card);
+            }
+        }
+
+        if (intel.getRoundResults().isEmpty()) {
+            TrucoCard smallestAttackCard = getLowestAttackCard(intel);
+            if (smallestAttackCard != null) {
+                return CardToPlay.of(smallestAttackCard);
+            }
+        }
+
         // Choose the card with the lowest relative value to the opponent's card.
         TrucoCard smallestCardThatCanWin = chooseSmallestCardThatCanWin(intel);
 
@@ -50,6 +68,24 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
         // Return the chosen card.
         return CardToPlay.of(smallestCardThatCanWin);
+    }
+
+    // This method gets the lowest attack card in the player's hand.
+    private static TrucoCard getLowestAttackCard(GameIntel intel) {
+        // Get a list of all attack cards in the player's hand.
+        List<TrucoCard> attackCards = intel.getCards().stream()
+                .filter(card -> offCards.contains(card.getRank()))
+                .toList();
+
+        // If the player has at least two attack cards, return the lowest attack card.
+        if (attackCards.size() >= 2) {
+            return attackCards.stream()
+                    .min(TrucoCard::relativeValue)
+                    .get();
+        }
+
+        // If the player has no attack cards, return null.
+        return null;
     }
 
     private TrucoCard chooseSmallestCardThatCanWin(GameIntel intel) {
