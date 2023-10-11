@@ -2,7 +2,11 @@ package com.tatayrapha.leonardabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class LeonardaBot implements BotServiceProvider {
     @Override
@@ -17,8 +21,11 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard chosenCard = cards.stream().max(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
+        return CardToPlay.of(chosenCard);
     }
+
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
