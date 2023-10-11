@@ -12,7 +12,7 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return (intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira())));
     }
 
     @Override
