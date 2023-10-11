@@ -16,8 +16,12 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getScore() == 10) {
+            return true;
+        }
         return (intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira())));
     }
+
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
