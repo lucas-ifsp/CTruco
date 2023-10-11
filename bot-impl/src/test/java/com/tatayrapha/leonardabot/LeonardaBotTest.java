@@ -84,4 +84,20 @@ class LeonardaBotTest {
         assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8})
+    @DisplayName("Should ask for a raise with a strong hand and varying opponent scores.")
+    void shouldAskForRaiseWithStrongHandAndVaryingOpponentScores(int opponentScore) {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getScore()).thenReturn(opponentScore);
+        if (opponentScore >= 9 || trucoCardList.stream().anyMatch(card -> card.isZap(vira))) {
+            assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
+        } else {
+            assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
+        }
+    }
+
 }
