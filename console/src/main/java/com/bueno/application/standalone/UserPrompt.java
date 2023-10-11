@@ -23,6 +23,7 @@ package com.bueno.application.standalone;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.google.common.primitives.Ints;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -74,4 +75,25 @@ public class UserPrompt {
                 .forEach((bot, wins) -> System.out.println(bot.name() + ": " + wins));
         System.out.println("================================================================");
     }
+
+    void printResult(LinkedHashMap<PlayWithBotsDto, Long> resultMap) {
+        StringBuilder sb = new StringBuilder();
+        if (resultMap.keySet().size() == 1){
+            System.out.println(resultMap.keySet().iterator().next().name() + " is on fire!");
+            System.out.println("================================================================");
+            return;
+        }
+        boolean firstBot = true;
+            for (PlayWithBotsDto bot: resultMap.keySet()) {
+                sb.append(bot.name())
+                        .append(" ")
+                        .append(resultMap.get(bot));
+                if (firstBot) sb.append(" x ");
+                firstBot = false;
+            }
+        String result = sb.toString();
+        System.out.println(result);
+        System.out.println("================================================================");
+    }
+
 }
