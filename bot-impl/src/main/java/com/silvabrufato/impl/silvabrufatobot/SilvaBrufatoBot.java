@@ -40,8 +40,7 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'decideIfRaises'");
+        return false;
     }
 
     @Override
