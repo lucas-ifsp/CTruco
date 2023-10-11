@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -175,4 +176,26 @@ class LeonardaBotTest {
     }
     */
 
+    @Test
+    @DisplayName("Should play the highest available card to win against the opponent's card.")
+    void shouldPlayHighestCardToWin() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.CLUBS), TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+        final TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        assertThat(chosenCard).isNotNull();
+        assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
+    }
+
+    @Test
+    @DisplayName("Should decide to play a mão de onze hand when it can win.")
+    void shouldDecideToPlayMaoDeOnzeWhenAbleToWin() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getScore()).thenReturn(9);
+        boolean shouldPlay = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(shouldPlay).isTrue();
+    }
 }
