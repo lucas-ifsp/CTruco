@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class LeonardaBotTest {
 
     @Mock
-    GameIntel gameIntel;
+    GameIntel intel;
 
     LeonardaBot leonardaBot;
 
@@ -30,9 +30,18 @@ class LeonardaBotTest {
     @DisplayName("Should throw random card.")
     void shouldThrowRandomCard() {
         final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
-        when(gameIntel.getCards()).thenReturn(trucoCardList);
-
-        CardToPlay chosenCard = leonardaBot.chooseCard(gameIntel);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
         assertThat(trucoCardList).contains(chosenCard.value());
+    }
+
+    @Test
+    @DisplayName("Should ask for a raise when having a zap.")
+    void shouldAskForRaiseWithZap() {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+        final TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
     }
 }
