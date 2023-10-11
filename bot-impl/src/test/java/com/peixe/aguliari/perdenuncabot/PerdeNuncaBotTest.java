@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class PerdeNuncaBotTest {
@@ -164,5 +164,72 @@ public class PerdeNuncaBotTest {
                 .opponentCard(opponentCard);
 
         assertEquals(CardRank.FIVE, perdeNuncaBot.chooseCard(stepBuilder.build()).content().getRank());
+    }
+
+    @Test
+    @DisplayName("Chooses the Diamonds manilha when in hand")
+    void choosesTheDiamondsManilhaWhenInHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = perdeNuncaBot.chooseCard(gameIntel);
+
+        assertEquals(CardSuit.DIAMONDS, cardToPlay.content().getSuit());
+    }
+
+    @Test
+    @DisplayName("Discards when the opponent plays a unbeatable card ")
+    void discardsWhenTheOpponentPlaysAUnbeatableCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = perdeNuncaBot.chooseCard(gameIntel);
+
+        assertFalse(cardToPlay.isDiscard());
+    }
+
+    @Test
+    @DisplayName("Plays an attack card if has at least two attack cards in hand")
+    void playsAnAttackCardIfHasAtLeastTwoAttackCardsInHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = perdeNuncaBot.chooseCard(gameIntel);
+
+        assertEquals(CardSuit.DIAMONDS, cardToPlay.content().getSuit());
     }
 }
