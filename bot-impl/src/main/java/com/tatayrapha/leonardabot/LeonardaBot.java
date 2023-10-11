@@ -16,12 +16,12 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getScore() == 10) {
+        int playerScore = intel.getScore();
+        if (playerScore >= 9) {
             return true;
         }
-        return (intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira())));
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
-
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -29,7 +29,6 @@ public class LeonardaBot implements BotServiceProvider {
         TrucoCard chosenCard = cards.stream().max(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
         return CardToPlay.of(chosenCard);
     }
-
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
