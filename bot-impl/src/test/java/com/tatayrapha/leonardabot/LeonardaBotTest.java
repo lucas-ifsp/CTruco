@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -64,10 +66,11 @@ class LeonardaBotTest {
         assertThat(trucoCardList).contains(chosenCard.value());
     }
 
-    @Test
-    @DisplayName("Should ask for a raise when having a score of 10 points.")
-    void shouldAskForRaiseWithScoreOf10Points() {
-        when(intel.getScore()).thenReturn(10);
+    @ParameterizedTest
+    @ValueSource(ints = {9, 10, 11})
+    @DisplayName("Should ask for a raise when having a score of at least 9 points.")
+    void shouldAskForRaiseWithScoreOfAtLeast10Points(int playerScore) {
+        when(intel.getScore()).thenReturn(playerScore);
         assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
     }
 
