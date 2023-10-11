@@ -44,4 +44,14 @@ class LeonardaBotTest {
         when(intel.getCards()).thenReturn(trucoCardList);
         assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not ask for a raise when not having a zap.")
+    void shouldNotAskForRaiseWithoutZap() {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+        final TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
+    }
 }
