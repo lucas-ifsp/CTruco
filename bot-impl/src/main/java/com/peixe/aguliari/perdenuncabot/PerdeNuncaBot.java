@@ -39,7 +39,102 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        // If the opponent has a card, then:
+        if (intel.getOpponentCard().isPresent()) {
+            // If our card is higher than the opponent's card, then:
+            if (getBiggerCardValue(intel) < intel.getOpponentCard().get().relativeValue(intel.getVira())) {
+                // Don't raise.
+                return false;
+            }
+        }
+
+        // If the opponent has no points, then:
+        if (intel.getOpponentScore() == 0) {
+            // Raise.
+            return true;
+        }
+
+        // If our score is greater than or equal to the opponent's score plus 3, then:
+        if (intel.getScore() >= intel.getOpponentScore() + 3) {
+            // Raise.
+            return true;
+        }
+
+        // If the opponent's score is greater than or equal to 9, then:
+        if (intel.getOpponentScore() >= 9) {
+            // Don't raise.
+            return false;
+        }
+
+        // If our hand is above average, then:
+        if (hasAboveAverageValue(intel)) {
+            // Raise.
+            return true;
+        }
+
+        // If our hand is strong, then:
+        if (hasManilhaAndHighRank(intel)) {
+            // Raise.
+            return true;
+        }
+        // Otherwise, don't raise.
         return false;
+    }
+
+    private boolean hasManilhaAndHighRank(GameIntel intel) {
+        // Obtém as cartas do jogador.
+        List<TrucoCard> cards = intel.getCards();
+        // Obtém a vira.
+        TrucoCard vira = intel.getVira();
+
+        // Verifica se o jogador tem uma manilha.
+        boolean isManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
+        // Verifica se o jogador tem uma carta com valor alto.
+        boolean hasHighRank = cards.stream()
+                .filter(card -> !card.isManilha(vira))
+                .anyMatch(card -> card.getRank().value() > 4);
+
+        // Retorna true se o jogador tiver uma manilha e uma carta com valor alto.
+        return isManilha && hasHighRank;
+    }
+
+    private boolean hasAboveAverageValue(GameIntel intel) {
+        // Obtém as cartas do jogador.
+        List<TrucoCard> cards = intel.getCards();
+        // Obtém a vira.
+        TrucoCard vira = intel.getVira();
+        // Inicializa o valor da mão.
+        int handValue = 0;
+
+        // Calcula o valor da mão.
+        for (TrucoCard card : cards) {
+            handValue += card.relativeValue(vira);
+        }
+
+        // Retorna true se o valor da mão for maior ou igual a 18.
+        return handValue >= 18;
+    }
+
+    private int getBiggerCardValue(GameIntel intel) {
+        // Obtém as cartas do jogador.
+        List<TrucoCard> cards = intel.getCards();
+        // Obtém a vira.
+        TrucoCard vira = intel.getVira();
+        // Inicializa o valor da carta maior.
+        int biggerCardValue = 0;
+
+        // Percorre as cartas do jogador.
+        for (TrucoCard card : cards) {
+            // Se o valor da carta atual for maior que o valor da carta maior, então:
+            if (card.relativeValue(vira) > biggerCardValue) {
+                // Atualiza o valor da carta maior.
+                biggerCardValue = card.relativeValue(vira);
+            }
+        }
+
+        // Retorna o valor da carta maior.
+        return biggerCardValue;
     }
 
     @Override
