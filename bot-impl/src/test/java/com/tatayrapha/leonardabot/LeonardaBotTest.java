@@ -54,4 +54,13 @@ class LeonardaBotTest {
         when(intel.getCards()).thenReturn(trucoCardList);
         assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
     }
+
+    @Test
+    @DisplayName("Should return a valid card.")
+    void shouldReturnValidCard() {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        assertThat(trucoCardList).contains(chosenCard.value());
+    }
 }
