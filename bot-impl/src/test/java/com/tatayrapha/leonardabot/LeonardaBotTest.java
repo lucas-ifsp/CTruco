@@ -74,4 +74,14 @@ class LeonardaBotTest {
         assertThat(leonardaBot.decideIfRaises(intel)).isTrue();
     }
 
+    @Test
+    @DisplayName("Should not ask for a raise when having a weak hand and low opponent score.")
+    void shouldNotAskForRaiseWithWeakHandAndLowOpponentScore() {
+        final List<TrucoCard> trucoCardList = List.of(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+        final TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        assertThat(leonardaBot.decideIfRaises(intel)).isFalse();
+    }
+
 }
