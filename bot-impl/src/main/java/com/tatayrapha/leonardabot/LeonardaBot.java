@@ -26,7 +26,7 @@ public class LeonardaBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        TrucoCard chosenCard = cards.stream().max(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
+        TrucoCard chosenCard = cards.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0));
         return CardToPlay.of(chosenCard);
     }
 
