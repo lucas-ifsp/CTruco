@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PerdeNuncaBotTest {
     private PerdeNuncaBot perdeNuncaBot;
 
+    TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
     private final List<TrucoCard> botCards = Arrays.asList(
             TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
             TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
@@ -231,5 +232,59 @@ public class PerdeNuncaBotTest {
         CardToPlay cardToPlay = perdeNuncaBot.chooseCard(gameIntel);
 
         assertEquals(CardSuit.DIAMONDS, cardToPlay.content().getSuit());
+    }
+
+    @Test
+    @DisplayName("Should not rise if opponent has specific points")
+    public void shouldNotRiseIfOpponentHasSpecificPoints() {
+        TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(9)
+                .opponentCard(opponentCard);
+
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
+        assertFalse(shouldRaise);
+    }
+
+    @Test
+    @DisplayName("Should raise if has good hand and specific conditions")
+    public void shouldRaiseIfHasGoodHandAndSpecificPoints() {
+        // Arrange
+        TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(8)
+                .opponentCard(opponentCard);
+
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
+        assertTrue(shouldRaise);
+    }
+
+    @Test
+    @DisplayName("Bot does not raise if it has a weak hand")
+    public void botDoesNotRaiseIfItHasAWeakHand() {
+        // Arrange
+        TrucoCard trumpCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        List<TrucoCard> playedCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .botInfo(botCards, 3)
+                .opponentScore(3)
+                .opponentCard(opponentCard);
+
+        // Act
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
+        // Assert
+        assertFalse(shouldRaise);
     }
 }
