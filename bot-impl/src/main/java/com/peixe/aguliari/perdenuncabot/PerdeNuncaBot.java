@@ -83,46 +83,49 @@ public class PerdeNuncaBot implements BotServiceProvider {
     }
 
     private boolean hasManilhaAndHighRank(GameIntel intel) {
-        // Obtém as cartas do jogador.
+        // Gets the player's cards.
         List<TrucoCard> cards = intel.getCards();
-        // Obtém a vira.
+
+        // Gets the vira card.
         TrucoCard vira = intel.getVira();
 
-        // Verifica se o jogador tem uma manilha.
+        // Checks if the player has a manilha.
         boolean hasManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
 
-        // Verifica se o jogador tem uma carta com valor alto.
+        // Checks if the player has a card with a high value.
         Optional<TrucoCard> highRankCard = cards.stream()
                 .filter(card -> !card.isManilha(vira))
                 .filter(card -> card.getRank().value() > 4)
                 .findFirst();
 
-        // Retorna true se o jogador tiver uma manilha e uma carta com valor alto.
+        // Returns true if the player has a shackle and a card with a high value.
         return hasManilha && highRankCard.isPresent();
     }
 
     private boolean hasAboveAverageValue(GameIntel intel) {
-        // Obtém as cartas do jogador.
+        // Gets the player's cards.
         List<TrucoCard> cards = intel.getCards();
-        // Obtém a vira.
+
+        // Gets the vira card.
         TrucoCard vira = intel.getVira();
 
-        // Calcula o valor da mão.
+        // Calculates the value of the hand.
         int handValue = cards.stream()
                 .mapToInt(card -> card.relativeValue(vira))
                 .sum();
 
-        // Retorna true se o valor da mão for maior ou igual a 18.
+        // Returns true if the hand value is greater than or equal to 18.
         return handValue >= 18;
     }
 
     private int getBiggerCardValue(GameIntel intel) {
-        // Obtém as cartas do jogador.
+        // Gets the player's cards.
         List<TrucoCard> cards = intel.getCards();
-        // Obtém a vira.
+
+        // Gets the vira card.
         TrucoCard vira = intel.getVira();
 
-        // Retorna o valor da carta maior.
+        // Returns the value of the highest card.
         return cards.stream()
                 .mapToInt(card -> card.relativeValue(vira))
                 .max()
