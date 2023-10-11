@@ -60,20 +60,28 @@ public enum BotStrategy {
     public static int thirdRoundStrategy(GameIntel gameIntel){
         setUpStrategy(gameIntel);
 
-        if (gameIntel.getCards().size() != 0){
-            if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
+
+        if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
+            if (gameIntel.getCards().size() != 0){
                 if(gameIntel.getCards().get(0).isEspadilha(gameIntel.getVira()) ||
                         gameIntel.getCards().get(0).isOuros(gameIntel.getVira())) return 0;
-            }
-
-            if (gameIntel.getRoundResults().get(0) == RoundResult.WON){
-                if (gameIntel.getCards().get(0).isEspadilha(gameIntel.getVira()) ||
-                        gameIntel.getCards().get(0).isOuros(gameIntel.getVira()) ||
-                        gameIntel.getCards().get(0).getRank().value() == 10) return 0;
+            }else{
+                if(gameIntel.getOpenCards().get(5).isEspadilha(gameIntel.getVira()) ||
+                        gameIntel.getOpenCards().get(5).isOuros(gameIntel.getVira())) return 0;
             }
         }
 
-
+        if (gameIntel.getRoundResults().get(0) == RoundResult.WON){
+            if (gameIntel.getCards().size() != 0){
+                if (gameIntel.getCards().get(0).isEspadilha(gameIntel.getVira()) ||
+                        gameIntel.getCards().get(0).isOuros(gameIntel.getVira()) ||
+                        gameIntel.getCards().get(0).getRank().value() == 10) return 0;
+            }else{
+                if (gameIntel.getOpenCards().get(5).isEspadilha(gameIntel.getVira()) ||
+                        gameIntel.getOpenCards().get(5).isOuros(gameIntel.getVira()) ||
+                        gameIntel.getOpenCards().get(5).getRank().value() == 10) return 0;
+            }
+        }
         return -1;
     }
 
