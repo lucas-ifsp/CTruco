@@ -250,6 +250,18 @@ public class SilvaBrufatoBotTest {
             assertThat(sut.decideIfRaises(gameIntel)).isTrue();
         }
 
+        @Test
+        @DisplayName("Should raise points in fisrt round if has two Manilhas")
+        public void shouldRaisePointsInFirstRoundIfHasTwoManilha() {
+            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+            when(gameIntel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)      
+            ));        
+            assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+        }
+
     }
 
     @Nested
