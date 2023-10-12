@@ -6,10 +6,7 @@ import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.repos.GameRepoDisposableImpl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,13 +24,15 @@ public class Dojo{
         final var numBots = botNames.size();
         final var times = 100; //To improve accuracy, increase the value of 'times'
 
-        final var bot1 = botNames.indexOf("DummyBot"); //
+        final var botName = "DummyBot";
+        final var bot1 = botNames.indexOf(botName); //
         if (bot1 == -1) throw new Exception("Set a valid bot name");
 
         for (int bot2 = 0; bot2 < numBots; bot2++) {
             if (bot1 == bot2) continue;
-            final var results = main.playManyInParallel(times, botNames.get(bot1), botNames.get(bot2));
-            prompt.printResult(getResult(results));
+            final var results = main.playManyInParallel(times, botName, botNames.get(bot2));
+
+            System.out.println(getWinRate(results, botName, times));
         }
 
     }
@@ -68,13 +67,18 @@ public class Dojo{
         };
     }
 
-    private static LinkedHashMap<PlayWithBotsDto, Long> getResult(List<PlayWithBotsDto> result) {
-        LinkedHashMap<PlayWithBotsDto, Long> map = new LinkedHashMap<>();
+    private static LinkedHashMap<String, Long> getResult(List<PlayWithBotsDto> result) {
+        LinkedHashMap<String, Long> map = new LinkedHashMap<>();
         result.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .forEach((bot, wins) -> map.put(bot, wins));
+                .forEach((bot, wins) -> map.put(bot.name(), wins));
         return map;
     }
 
+    private static double getWinRate(List<PlayWithBotsDto> result, String botName, int times){
+        var wins = getResult(result).get(botName);
+        var winRate = (double) wins/times;
+        return winRate;
+    }
 
 }
