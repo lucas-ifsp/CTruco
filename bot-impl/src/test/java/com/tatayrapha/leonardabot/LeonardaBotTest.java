@@ -134,4 +134,12 @@ class LeonardaBotTest {
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should respond correctly in the opponent Mão de Onze scenario.")
+    void testShouldRespondProperlyMaoDeOnze(){
+        when(intel.getOpponentScore()).thenReturn(11);
+        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(response).isTrue();
+    }
 }
