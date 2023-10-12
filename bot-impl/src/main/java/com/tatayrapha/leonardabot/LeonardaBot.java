@@ -14,7 +14,15 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return intel.getScore() >= MAO_DE_ONZE_THRESHOLD;
+        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD){
+            return true;
+        }
+        if (intel.getOpponentScore() >= 9){
+            if (hasCasal(intel.getCards(), intel.getVira())){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
