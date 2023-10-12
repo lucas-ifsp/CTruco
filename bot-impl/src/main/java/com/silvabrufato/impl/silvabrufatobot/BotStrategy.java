@@ -39,7 +39,6 @@ public enum BotStrategy {
 
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
-            //setUpStrategy(gameIntel);
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
                 if (hasCopasAndEspadilha(gameIntel))
                     return 1;
