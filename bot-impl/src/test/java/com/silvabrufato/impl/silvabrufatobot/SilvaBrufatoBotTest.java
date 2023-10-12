@@ -55,8 +55,8 @@ public class SilvaBrufatoBotTest {
     @DisplayName("First round")
     class FirstRoundTests{
         @Test
-        @DisplayName("Should win the first round if possible using the highest card")
-        public void ShouldWinTheFirstRoundIfPossibleUsingTheHighestCard() {
+        @DisplayName("Should win the first round if possible using the highest card when opponent start the round")
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheHighestCardWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -74,8 +74,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should win the first round if possible using the lowest card")
-        public void ShouldWinTheFirstRoundIfPossibleUsingTheLowestCard() {
+        @DisplayName("Should win the first round if possible using the lowest card when opponent start the round")
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheLowestCardWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -94,7 +94,7 @@ public class SilvaBrufatoBotTest {
 
         @Test
         @DisplayName("Should win the first round if possible using the middle card")
-        public void ShouldWinTheFirstRoundIfPossibleUsingTheMiddleCard() {
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheMiddleCardWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -112,8 +112,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should win the first round if possible using a manilha")
-        public void ShouldWinTheFirstRoundIfPossibleUsingAManilha() {
+        @DisplayName("Should win the first round if possible using a manilha when opponent start the round")
+        public void ShouldWinTheFirstRoundIfPossibleUsingAManilhaWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -131,8 +131,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should win the first round if possible using the lowest manilha")
-        public void ShouldWinTheFirstRoundIfPossibleUsingTheLowestManilha() {
+        @DisplayName("Should win the first round if possible using the lowest manilha when opponent start the round")
+        public void ShouldWinTheFirstRoundIfPossibleUsingTheLowestManilhaWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -150,8 +150,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should loose the first round throwing the lowest card")
-        public void ShouldLooseTheFirstRoundThrowingThelowestCard() {
+        @DisplayName("Should loose the first round throwing the lowest card when opponent start the round")
+        public void ShouldLooseTheFirstRoundThrowingThelowestCardWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -169,8 +169,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should throw the lowest card if is not possible to win the first round")
-        public void shouldThrowTheLowetsCardIfisNotPossibleToWinTheFirstRound() {
+        @DisplayName("Should throw the lowest card if is not possible to win the first round when opponent start the round")
+        public void shouldThrowTheLowetsCardIfisNotPossibleToWinTheFirstRoundWhenTheOpponentStartTheRound() {
             when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
@@ -188,8 +188,8 @@ public class SilvaBrufatoBotTest {
         }
 
         @Test
-        @DisplayName("Should draw the first round")
-        public void ShouldDrawTheFisrtRound() {
+        @DisplayName("Should draw the first round when opponent start the round")
+        public void ShouldDrawTheFisrtRoundWhenTheOpponentStartTheRound() {
              when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             when(gameIntel.getRoundResults()).thenReturn(List.of());
             when(gameIntel.getOpponentCard()).thenReturn(Optional.of(
