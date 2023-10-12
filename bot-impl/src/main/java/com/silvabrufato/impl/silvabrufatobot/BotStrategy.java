@@ -11,16 +11,14 @@ public enum BotStrategy {
     FIRST_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
-            setUpStrategy(gameIntel);
-            if (isOpponentThatStartTheRound())
-                return chooseCardToWinOrToDrawTheRoundIfPossible(false);
-            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(false);
+            if (isOpponentThatStartTheRound(gameIntel))
+                return chooseCardToWinOrToDrawTheRoundIfPossible(gameIntel, false);
+            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(gameIntel, false);
         }
 
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
-            setUpStrategy(gameIntel);
-            if (hasZapAndThree() || hasCopasAndThree() || countManilhas(gameIntel) >= 2)
+            if (hasZapAndThree(gameIntel) || hasCopasAndThree(gameIntel) || countManilhas(gameIntel) >= 2)
                 return 0;
             return -1;
         }
@@ -29,30 +27,29 @@ public enum BotStrategy {
     SECOND_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
-            setUpStrategy(gameIntel);
-            if (drewThePreviousRound()) {
-                if (isOpponentThatStartTheRound())
-                    return chooseCardToWinTheRoundIfPossible(false);
-                return chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(true);
+            if (drewThePreviousRound(gameIntel)) {
+                if (isOpponentThatStartTheRound(gameIntel))
+                    return chooseCardToWinTheRoundIfPossible(gameIntel, false);
+                return chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(gameIntel, true);
             }
-            if (isOpponentThatStartTheRound())
-                return chooseCardToWinTheRoundIfPossible(true);
-            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(false);
+            if (isOpponentThatStartTheRound(gameIntel))
+                return chooseCardToWinTheRoundIfPossible(gameIntel, true);
+            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(gameIntel,false);
         }
 
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
-            setUpStrategy(gameIntel);
+            //setUpStrategy(gameIntel);
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
-                if (hasCopasAndEspadilha())
+                if (hasCopasAndEspadilha(gameIntel))
                     return 1;
-                if (hasCopasAndOuros())
+                if (hasCopasAndOuros(gameIntel))
                     return 0;
             }
             if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
                 if (hasCopas(gameIntel) || countManilhas(gameIntel) >= 2)
                     return 1;
-                if (hasManilhaAndThree() || countThree(gameIntel) == 2)
+                if (hasManilhaAndThree(gameIntel) || countThree(gameIntel) == 2)
                     return 0;
             }
             return -1;
@@ -67,80 +64,72 @@ public enum BotStrategy {
 
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
-            setUpStrategy(gameIntel);
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
-                if (hasEspadilha() || hasOuros())
+                if (hasEspadilha(gameIntel) || hasOuros(gameIntel))
                     return 0;
             }
             if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
-                if (hasEspadilha() || hasOuros() || countThree(gameIntel) > 0)
+                if (hasEspadilha(gameIntel) || hasOuros(gameIntel) || countThree(gameIntel) > 0)
                     return 0;
             }
             return -1;
         }
     };
 
-    private static GameIntel gameIntel;
-    private static List<TrucoCard> sortedCards;
-
-    private static void setUpStrategy(GameIntel gameIntel) {
-        setTheGameIntel(gameIntel);
-        sortCards();
-    }
-
-    private static boolean drewThePreviousRound() {
+    private static boolean drewThePreviousRound(GameIntel gameIntel) {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
     }
 
-    private static void setTheGameIntel(GameIntel gameIntel) {
-        BotStrategy.gameIntel = gameIntel;
-    }
-
-    private static void sortCards() {
+    private static List<TrucoCard> sortCards(GameIntel gameIntel) {
         ArrayList<TrucoCard> arrayOfCards = new ArrayList<>();
         arrayOfCards.addAll(gameIntel.getCards());
         arrayOfCards.sort((card1, card2) -> card1.compareValueTo(card2, gameIntel.getVira()));
-        BotStrategy.sortedCards = List.copyOf(arrayOfCards);
+        return List.copyOf(arrayOfCards);
     }
 
-    private static boolean isOpponentThatStartTheRound() {
-        return BotStrategy.gameIntel.getOpponentCard().isPresent();
+    private static boolean isOpponentThatStartTheRound(GameIntel gameIntel) {
+        return gameIntel.getOpponentCard().isPresent();
     }
 
-    private static CardToPlay chooseTheLowestCardToPlay(boolean discard) {
+    private static CardToPlay chooseTheLowestCardToPlay(GameIntel gameIntel, boolean discard) {
+        List<TrucoCard> cards = sortCards(gameIntel);
         if (discard)
-            return CardToPlay.discard(sortedCards.get(0));
-        return CardToPlay.of(sortedCards.get(0));
+            return CardToPlay.discard(cards.get(0));
+        return CardToPlay.of(cards.get(0));
     }
 
-    private static CardToPlay chooseCardToWinOrToDrawTheRoundIfPossible(boolean discard) {
-        for (TrucoCard card : sortedCards)
+    private static CardToPlay chooseCardToWinOrToDrawTheRoundIfPossible(GameIntel gameIntel, boolean discard) {
+        List<TrucoCard> cards = sortCards(gameIntel);
+        for (TrucoCard card : cards)
             if (card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0)
                 return CardToPlay.of(card);
-        for (TrucoCard card : sortedCards)
+        for (TrucoCard card : cards)
             if (card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) == 0)
                 return CardToPlay.of(card);
-        return chooseTheLowestCardToPlay(discard);
+        return chooseTheLowestCardToPlay(gameIntel, discard);
     }
 
-    private static CardToPlay chooseCardToWinTheRoundIfPossible(boolean discard) {
-        for (TrucoCard card : sortedCards)
+    private static CardToPlay chooseCardToWinTheRoundIfPossible(GameIntel gameIntel, boolean discard) {
+        for (TrucoCard card : gameIntel.getCards())
             if (card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0)
                 return CardToPlay.of(card);
-        return chooseTheLowestCardToPlay(discard);
+        return chooseTheLowestCardToPlay(gameIntel, discard);
     }
 
-    private static CardToPlay chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(boolean discard) {
-        if (countManilhas(gameIntel) > 0)
-            return CardToPlay.discard(sortedCards.get(sortedCards.size() - 1));
-        return chooseTheLowestCardToPlay(discard);
+    private static CardToPlay chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(GameIntel gameIntel, boolean discard) {
+        if (countManilhas(gameIntel) > 0) {
+            List<TrucoCard> cards = sortCards(gameIntel);
+            return CardToPlay.of(cards.get(cards.size() - 1));
+        }
+        return chooseTheLowestCardToPlay(gameIntel, discard);
     }
 
-    private static CardToPlay chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(boolean discard) {
-        for (TrucoCard card : sortedCards)
+    private static CardToPlay chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(GameIntel gameIntel, boolean discard) {
+        List<TrucoCard> cards = sortCards(gameIntel);
+        for (TrucoCard card : cards)
             if (card.isManilha(gameIntel.getVira()))
                 return CardToPlay.of(card);
-        return chooseTheLowestCardToPlay(discard);
+        return chooseTheLowestCardToPlay(gameIntel, discard);
     }
 
     public static int countManilhas(GameIntel gameIntel) {
@@ -151,17 +140,10 @@ public enum BotStrategy {
         return count;
     }
 
-    public static boolean hasCopas(GameIntel gameIntel) {
-        for (TrucoCard card : gameIntel.getCards())
-            if (card.isCopas(gameIntel.getVira()))
-                return true;
-        return false;
-    }
-
     public static int countThree(GameIntel gameIntel) {
         int count = 0;
         for (TrucoCard card : gameIntel.getCards())
-            if (card.getRank().value() == 10)
+            if (card.getRank().value() == CardRank.THREE.value())
                 count++;
         return count;
     }
@@ -174,7 +156,7 @@ public enum BotStrategy {
         return count;
     }
 
-    private static boolean hasZap() {
+    private static boolean hasZap(GameIntel gameIntel) {
         for (TrucoCard card : gameIntel.getCards()) {
             if (card.isZap(gameIntel.getVira()))
                 return true;
@@ -182,7 +164,7 @@ public enum BotStrategy {
         return false;
     }
 
-    private static boolean hasCopas() {
+    private static boolean hasCopas(GameIntel gameIntel) {
         for (TrucoCard card : gameIntel.getCards()) {
             if (card.isCopas(gameIntel.getVira()))
                 return true;
@@ -190,7 +172,7 @@ public enum BotStrategy {
         return false;
     }
 
-    private static boolean hasEspadilha() {
+    private static boolean hasEspadilha(GameIntel gameIntel) {
         for (TrucoCard card : gameIntel.getCards()) {
             if (card.isEspadilha(gameIntel.getVira()))
                 return true;
@@ -198,7 +180,7 @@ public enum BotStrategy {
         return false;
     }
 
-    private static boolean hasOuros() {
+    private static boolean hasOuros(GameIntel gameIntel) {
         for (TrucoCard card : gameIntel.getCards()) {
             if (card.isOuros(gameIntel.getVira()))
                 return true;
@@ -206,24 +188,23 @@ public enum BotStrategy {
         return false;
     }
 
-    private static boolean hasZapAndThree() {
-        return hasZap() && countThree(gameIntel) > 0;
+    private static boolean hasZapAndThree(GameIntel gameIntel) {
+        return hasZap(gameIntel) && countThree(gameIntel) > 0;
     }
 
-    private static boolean hasCopasAndThree() {
-        return hasCopas() && countThree(gameIntel) > 0;
+    private static boolean hasCopasAndThree(GameIntel gameIntel) {
+        return hasCopas(gameIntel) && countThree(gameIntel) > 0;
     }
 
-    private static boolean hasCopasAndEspadilha() {
-        return hasCopas() && hasEspadilha();
+    private static boolean hasCopasAndEspadilha(GameIntel gameIntel) {
+        return hasCopas(gameIntel) && hasEspadilha(gameIntel);
     }
 
-    private static boolean hasCopasAndOuros() {
-        return hasCopas() && hasOuros();
+    private static boolean hasCopasAndOuros(GameIntel gameIntel) {
+        return hasCopas(gameIntel) && hasOuros(gameIntel);
     }
 
-    private static boolean hasManilhaAndThree() {
-
+    private static boolean hasManilhaAndThree(GameIntel gameIntel) {
         return countManilhas(gameIntel) > 0 && countThree(gameIntel) > 0;
     }
 
