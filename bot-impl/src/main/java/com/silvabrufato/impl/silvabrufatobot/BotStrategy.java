@@ -2,6 +2,7 @@ package com.silvabrufato.impl.silvabrufatobot;
 
 import com.bueno.spi.model.*;
 import com.bueno.spi.model.GameIntel.RoundResult;
+import com.silvabrufato.impl.silvabrufatobot.BotBluff.Probability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,12 @@ public enum BotStrategy {
             if (hasZapAndThree(gameIntel) || hasCopasAndThree(gameIntel) || countManilhas(gameIntel) >= 2)
                 return 0;
             return -1;
+        }
+
+        @Override
+        public boolean raisePoints(GameIntel gameIntel) {
+            if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
+            return false;
         }
     },
 
@@ -53,6 +60,15 @@ public enum BotStrategy {
             }
             return -1;
         }
+
+        @Override
+        public boolean raisePoints(GameIntel gameIntel) {
+            if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
+                if(countManilhas(gameIntel) >= 1) return true;
+                return BotBluff.of(Probability.P40).bluff();
+            }
+            return BotBluff.of(Probability.P20).bluff();
+        }
     },
 
     THIRD_ROUND_STRATEGY {
@@ -72,6 +88,11 @@ public enum BotStrategy {
                     return 0;
             }
             return -1;
+        }
+
+        @Override
+        public boolean raisePoints(GameIntel gameIntel) {
+            return BotBluff.of(Probability.P20).bluff();
         }
     };
 
@@ -210,5 +231,7 @@ public enum BotStrategy {
     public abstract CardToPlay throwCard(GameIntel gameIntel);
 
     public abstract int responseToRaisePoints(GameIntel gameIntel);
+
+    public abstract boolean raisePoints(GameIntel gameIntel);
 
 }
