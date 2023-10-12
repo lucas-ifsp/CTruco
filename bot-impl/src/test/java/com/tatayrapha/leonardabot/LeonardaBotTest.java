@@ -164,10 +164,10 @@ class LeonardaBotTest {
     void testShouldRaiseWhenHavingHigherCasal(){
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
-        Mockito.lenient().when(intel.getVira()).thenReturn(vira);
-        Mockito.lenient().when(intel.getScore()).thenReturn(2);
-        Mockito.lenient().when(intel.getOpponentScore()).thenReturn(6);
+        when(intel.getScore()).thenReturn(2);
+        when(intel.getOpponentScore()).thenReturn(6);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getVira()).thenReturn(vira);
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isTrue();
     }
@@ -177,10 +177,8 @@ class LeonardaBotTest {
     void testShouldReRaiseWhenHavingHigherCasal(){
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
-        Mockito.lenient().when(intel.getVira()).thenReturn(vira);
-        Mockito.lenient().when(intel.getScore()).thenReturn(2);
-        Mockito.lenient().when(intel.getOpponentScore()).thenReturn(6);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getVira()).thenReturn(vira);
         int response = leonardaBot.getRaiseResponse(intel);
         assertThat(response).isEqualTo(1);
     }
@@ -190,9 +188,8 @@ class LeonardaBotTest {
     void testShouldPlayMaoDeOnzeWithCasalInHand(){
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
-        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
-        Mockito.lenient().when(intel.getVira()).thenReturn(vira);
-        Mockito.lenient().when(intel.getScore()).thenReturn(11);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getVira()).thenReturn(vira);
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
     }
