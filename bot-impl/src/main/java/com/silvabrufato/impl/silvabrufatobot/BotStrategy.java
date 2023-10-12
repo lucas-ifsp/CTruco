@@ -14,16 +14,21 @@ public enum BotStrategy {
             setUpStrategy(gameIntel);
             if (isOpponentThatStartTheRound())
                 return chooseCardToWinOrToDrawTheRoundIfPossible(false);
-            return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne(false);
+            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(false);
         }
     },
 
     OTHERS_ROUND_STRATEGY {
         @Override
         public CardToPlay throwCard(GameIntel gameIntel) {
+
             setUpStrategy(gameIntel);
+            if(drewThePreviousRound()) {
+                if (isOpponentThatStartTheRound()) return chooseCardToWinTheRoundIfPossible(false);
+                return chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(true);
+            }
             if (isOpponentThatStartTheRound()) return chooseCardToWinTheRoundIfPossible(true);
-            return chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne(false);
+            return chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(false);
         }
     };
 
@@ -116,7 +121,12 @@ public enum BotStrategy {
         return chooseTheLowestCardToPlay(discard);
     }
 
-    private static CardToPlay chooseTheLowestCardToPlayOrAManilhaIfYouHaveOne(boolean discard) {
+    private static CardToPlay chooseTheStrongestManilhaIfHaveOneOrTheLowesCardToPlay(boolean discard) {
+        if(countManilhas(gameIntel) > 0) return CardToPlay.discard(sortedCards.get(sortedCards.size()-1));
+        return chooseTheLowestCardToPlay(discard);
+    }
+
+    private static CardToPlay chooseTheLowestManilhaIfHaveOneOrTheLowestCardToPlay(boolean discard) {
         for (TrucoCard card : sortedCards)
             if (card.isManilha(gameIntel.getVira()))
                 return CardToPlay.of(card);
