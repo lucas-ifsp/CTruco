@@ -42,20 +42,23 @@ public class LeonardaBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int score = intel.getScore();
-        if (roundResults != null && roundResults.size() == 2) {
+        if (shouldQuit(roundResults)) {
+            return -1;
+        } else if (roundResults.size() == 2) {
             if (score >= 10) {
                 return 1;
             }
-        } else if (roundResults != null && roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
+        } else if (roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
             return 1;
-        } else if (shouldQuit(intel)) {
-            return -1;
         }
         return 0;
     }
 
-    private boolean shouldQuit(GameIntel intel) {
-        return false;
+    private boolean shouldQuit(List<GameIntel.RoundResult> roundResults) {
+        if (roundResults == null) {
+            return false;
+        }
+        return roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST && roundResults.get(1) == GameIntel.RoundResult.LOST; // Quit the hand
     }
 
     private CardToPlay playMaoDeOnze(List<TrucoCard> cards) {
@@ -93,7 +96,13 @@ public class LeonardaBot implements BotServiceProvider {
         if (cardToPlay != null) {
             return cardToPlay;
         }
-        return CardToPlay.of(cards.stream().min(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0)));
+        cards.sort(Comparator.comparing(TrucoCard::getRank));
+        for (int i = cards.size() - 1; i >= 0; i--) {
+            if (cards.get(i).getRank().value() < opponentCard.getRank().value()) {
+                return CardToPlay.of(cards.get(i));
+            }
+        }
+        return CardToPlay.of(cards.get(0));
     }
 
     private CardToPlay findWinningCard(List<TrucoCard> cards, TrucoCard opponentCard) {
