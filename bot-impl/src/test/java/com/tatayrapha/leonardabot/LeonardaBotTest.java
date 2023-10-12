@@ -109,4 +109,29 @@ class LeonardaBotTest {
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should quit hand when getRaiseResponse returns -1.")
+    void testQuitHandWithNegativeRaiseResponse() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.LOST));
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should accept point raise when getRaiseResponse returns 0.")
+    void testAcceptPointRaiseWithZeroRaiseResponse() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.WON));
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should re-raise when getRaiseResponse returns 1.")
+    void testReRaiseWithPositiveRaiseResponse() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.WON));
+        when(intel.getScore()).thenReturn(10);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(1);
+    }
 }
