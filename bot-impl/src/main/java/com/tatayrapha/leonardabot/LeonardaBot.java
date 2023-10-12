@@ -19,6 +19,12 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        if (intel.getHandPoints() + intel.getOpponentScore() >= 11){
+            if (hasManilha(cards, intel.getVira())){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -52,6 +58,15 @@ public class LeonardaBot implements BotServiceProvider {
             return 1;
         }
         return 0;
+    }
+
+    private boolean hasManilha(List<TrucoCard> cards, TrucoCard vira){
+        for (TrucoCard card : cards) {
+            if (card.isManilha(vira)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean shouldQuit(List<GameIntel.RoundResult> roundResults) {
