@@ -22,6 +22,7 @@ public class LeonardaBot implements BotServiceProvider {
         return false;
     }
 
+    @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = new ArrayList<>(intel.getCards());
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
@@ -41,12 +42,20 @@ public class LeonardaBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int score = intel.getScore();
-        if (roundResults != null && roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
+        if (roundResults != null && roundResults.size() == 2) {
+            if (score >= 10) {
+                return 1;
+            }
+        } else if (roundResults != null && roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
             return 1;
-        } else if (roundResults != null && roundResults.size() == 2 && score >= 10) {
-            return 1;
+        } else if (shouldQuit(intel)) {
+            return -1;
         }
         return 0;
+    }
+
+    private boolean shouldQuit(GameIntel intel) {
+        return false;
     }
 
     private CardToPlay playMaoDeOnze(List<TrucoCard> cards) {
