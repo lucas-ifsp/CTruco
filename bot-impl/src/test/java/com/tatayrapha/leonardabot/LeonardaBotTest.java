@@ -184,4 +184,16 @@ class LeonardaBotTest {
         int response = leonardaBot.getRaiseResponse(intel);
         assertThat(response).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should play Mão de Onze when having casal in hand.")
+    void testShouldPlayMaoDeOnzeWithCasalInHand(){
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
+        Mockito.lenient().when(intel.getVira()).thenReturn(vira);
+        Mockito.lenient().when(intel.getScore()).thenReturn(11);
+        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(response).isTrue();
+    }
 }
