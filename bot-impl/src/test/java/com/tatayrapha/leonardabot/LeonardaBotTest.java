@@ -158,4 +158,17 @@ class LeonardaBotTest {
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isFalse();
     }
+
+    @Test
+    @DisplayName("Should ask for raise when having Higher Casal ind hand.")
+    void testShouldRaiseWhenHavingHigherCasal(){
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
+        Mockito.lenient().when(intel.getVira()).thenReturn(vira);
+        Mockito.lenient().when(intel.getScore()).thenReturn(2);
+        Mockito.lenient().when(intel.getOpponentScore()).thenReturn(6);
+        boolean response = leonardaBot.decideIfRaises(intel);
+        assertThat(response).isTrue();
+    }
 }
