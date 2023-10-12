@@ -40,10 +40,10 @@ public class LeonardaBot implements BotServiceProvider {
             return false;
         }
         List<TrucoCard> cards = intel.getCards();
-        if (intel.getHandPoints() + intel.getOpponentScore() >= 11) {
-            if (hasHigherCasal(cards, intel.getVira())) {
-                return true;
-            }
+        if (hasHigherCasal(cards, intel.getVira())) {
+            return true;
+        }
+        if (intel.getHandPoints() + intel.getOpponentScore() >= 12) {
             if (hasManilha(cards, intel.getVira())) {
                 if (hasCasal(cards, intel.getVira())) {
                     return true;
