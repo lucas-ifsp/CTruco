@@ -3,6 +3,7 @@ package com.murilos.aline.teconomarrecobot;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,9 @@ class TecoNoMarrecoBotTest {
 
     private GameIntel.StepBuilder stepBuilder;
 
+    @BeforeEach
+    void setUp(){ tecoNoMarrecoBot = new TecoNoMarrecoBot();}
+
     @Test
     @DisplayName("Testa se aceita mão de onze com casal maior")
     void testsWhetherHeAcceptsAhandFromElevenWithABiggerCouple(){
@@ -40,7 +44,9 @@ class TecoNoMarrecoBotTest {
 
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 11).opponentScore(0);
 
-        Boolean acceptMaoDeOnze = new TecoNoMarrecoBot().getMaoDeOnzeResponse(stepBuilder.build());
+        Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
         assertTrue(acceptMaoDeOnze);
     }
+
+
 }
