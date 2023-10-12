@@ -1,5 +1,6 @@
 package com.tatayrapha.leonardabot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -14,11 +15,16 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD){
+        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD) {
             return true;
         }
-        if (intel.getOpponentScore() >= 9){
-            if (hasCasal(intel.getCards(), intel.getVira())){
+        List<TrucoCard> currentHandCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        if (intel.getOpponentScore() >= 9) {
+            if (hasCasal(currentHandCards, vira)) {
+                return true;
+            }
+            if (isHandStrong(currentHandCards, vira)) {
                 return true;
             }
         }
@@ -31,6 +37,9 @@ public class LeonardaBot implements BotServiceProvider {
         if (intel.getHandPoints() + intel.getOpponentScore() >= 11) {
             if (hasManilha(cards, intel.getVira())) {
                 if (hasCasal(cards, intel.getVira())){
+                    return true;
+                }
+                if (isHandStrong(cards, intel.getVira())){
                     return true;
                 }
             }
@@ -92,6 +101,19 @@ public class LeonardaBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    private boolean isHandStrong(List<TrucoCard> cards, TrucoCard vira){
+        if (hasCasal(cards, vira)){
+            return true;
+        }
+        int strongCards = 0;
+        for (TrucoCard card : cards) {
+            if (card.getRank() == CardRank.THREE || card.getRank() == CardRank.TWO || card.getRank() == CardRank.ACE || hasManilha(cards, vira)){
+                strongCards += 1;
+            }
+        }
+        return strongCards >= 2;
     }
 
     private boolean shouldQuit(List<GameIntel.RoundResult> roundResults) {
