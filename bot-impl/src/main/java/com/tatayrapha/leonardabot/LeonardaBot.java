@@ -92,6 +92,9 @@ public class LeonardaBot implements BotServiceProvider {
     }
 
     private CardToPlay playThirdRound(List<TrucoCard> cards, TrucoCard opponentCard) {
+        if (opponentCard == null) {
+            return CardToPlay.of(cards.stream().max(Comparator.comparing(TrucoCard::getRank)).orElse(cards.get(0)));
+        }
         CardToPlay cardToPlay = findWinningCard(cards, opponentCard);
         if (cardToPlay != null) {
             return cardToPlay;
