@@ -20,9 +20,11 @@ public class LeonardaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        if (intel.getHandPoints() + intel.getOpponentScore() >= 11){
-            if (hasManilha(cards, intel.getVira())){
-                return true;
+        if (intel.getHandPoints() + intel.getOpponentScore() >= 11) {
+            if (hasManilha(cards, intel.getVira())) {
+                if (hasCasal(cards, intel.getVira())){
+                    return true;
+                }
             }
         }
         return false;
@@ -60,10 +62,25 @@ public class LeonardaBot implements BotServiceProvider {
         return 0;
     }
 
-    private boolean hasManilha(List<TrucoCard> cards, TrucoCard vira){
+    private boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
         for (TrucoCard card : cards) {
             if (card.isManilha(vira)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasCasal(List<TrucoCard> cards, TrucoCard vira){
+        int manilhas = 0;
+        if (hasManilha(cards, vira)) {
+            for (TrucoCard card : cards) {
+                if (card.isManilha(vira)) {
+                    manilhas++;
+                    if (manilhas == 2) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -73,7 +90,8 @@ public class LeonardaBot implements BotServiceProvider {
         if (roundResults == null) {
             return false;
         }
-        return roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST && roundResults.get(1) == GameIntel.RoundResult.LOST; // Quit the hand
+        return roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST
+                && roundResults.get(1) == GameIntel.RoundResult.LOST; // Quit the hand
     }
 
     private CardToPlay playMaoDeOnze(List<TrucoCard> cards) {
