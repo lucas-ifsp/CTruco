@@ -193,4 +193,15 @@ class LeonardaBotTest {
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not play Mão de Onze if having a weak hand.")
+    void testShouldNotPlayMaoDeOnzeWithWeakHand(){
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getVira()).thenReturn(vira);
+        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(response).isFalse();
+    }
 }
