@@ -29,7 +29,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Play the highest card to win the first round.")
+    @DisplayName("Should play the highest card to win the first round.")
     void playHighestCardToWinFirstRound() {
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -41,7 +41,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Play the second-highest card to win the second round.")
+    @DisplayName("Should play the second-highest card to win the second round.")
     void playSecondHighestCardToWinSecondRound() {
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -53,7 +53,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Raise aggressively in the first round.")
+    @DisplayName("Should raise aggressively in the first round.")
     void raiseAggressivelyInFirstRound() {
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         int botResponse = leonardaBot.getRaiseResponse(intel);
@@ -61,7 +61,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Not raise in the second round.")
+    @DisplayName("Should not raise in the second round.")
     void notRaiseInSecondRound() {
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
         int botResponse = leonardaBot.getRaiseResponse(intel);
@@ -69,7 +69,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Be aggressive with a strong hand in the second round.")
+    @DisplayName("Should be aggressive with a strong hand in the second round.")
     void beAggressiveWithStrongHandInSecondRound() {
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
         when(intel.getScore()).thenReturn(10);
@@ -78,7 +78,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Respond correctly in the Mão de Onze scenario.")
+    @DisplayName("Should respond correctly in the Mão de Onze scenario.")
     void respondInMaoDeOnzeScenario() {
         when(intel.getScore()).thenReturn(11);
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
@@ -86,7 +86,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Play the strongest card and win the round in the Mão de Ferro scenario.")
+    @DisplayName("Should play the strongest card and win the round in the Mão de Ferro scenario.")
     void winInTheMaoDeFerroScenario() {
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
         final List<TrucoCard> opponentCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
