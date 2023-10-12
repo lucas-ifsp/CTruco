@@ -19,21 +19,20 @@ public class Dojo{
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         final var main = new Dojo();
         final var prompt = new UserPrompt();
 
         final var botNames = BotProviders.availableBots();
-        final var numBots = BotProviders.availableBots().size();
+        final var numBots = botNames.size();
         final var times = 100; //To improve accuracy, increase the value of 'times'
 
-        prompt.printAvailableBots(botNames);
-
-        final var bot1 = prompt.scanBotOption(botNames);
+        final var bot1 = botNames.indexOf("DummyBot"); //
+        if (bot1 == -1) throw new Exception("Set a valid bot name");
 
         for (int bot2 = 0; bot2 < numBots; bot2++) {
             if (bot1 == bot2) continue;
-            final var results = main.playManyInParallel(times, botNames.get(bot1 - 1), botNames.get(bot2));
+            final var results = main.playManyInParallel(times, botNames.get(bot1), botNames.get(bot2));
             prompt.printResult(getResult(results));
         }
 
