@@ -28,12 +28,15 @@ public class Dojo{
         final var bot1 = botNames.indexOf(botName); //
         if (bot1 == -1) throw new Exception("Set a valid bot name");
 
+        List<Double> winRates = new ArrayList<>();
+
         for (int bot2 = 0; bot2 < numBots; bot2++) {
             if (bot1 == bot2) continue;
             final var results = main.playManyInParallel(times, botName, botNames.get(bot2));
-
-            System.out.println(getWinRate(results, botName, times));
+            final var winRate = getWinRate(results, botName, times);
+            winRates.add(winRate);
         }
+        winRates.forEach(System.out::println);
 
     }
 
@@ -67,16 +70,12 @@ public class Dojo{
         };
     }
 
-    private static LinkedHashMap<String, Long> getResult(List<PlayWithBotsDto> result) {
+    private static double getWinRate(List<PlayWithBotsDto> result, String botName, int times){
         LinkedHashMap<String, Long> map = new LinkedHashMap<>();
         result.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> map.put(bot.name(), wins));
-        return map;
-    }
-
-    private static double getWinRate(List<PlayWithBotsDto> result, String botName, int times){
-        var wins = getResult(result).get(botName);
+        var wins = map.get(botName);
         var winRate = (double) wins/times;
         return winRate;
     }
