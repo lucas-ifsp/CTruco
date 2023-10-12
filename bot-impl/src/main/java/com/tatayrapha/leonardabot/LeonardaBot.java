@@ -36,7 +36,7 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD) {
+        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD || intel.getScore() == MAO_DE_ONZE_THRESHOLD) {
             return false;
         }
         List<TrucoCard> cards = intel.getCards();
