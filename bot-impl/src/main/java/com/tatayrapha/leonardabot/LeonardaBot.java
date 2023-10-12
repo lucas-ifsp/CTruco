@@ -21,6 +21,9 @@ public class LeonardaBot implements BotServiceProvider {
         List<TrucoCard> currentHandCards = intel.getCards();
         TrucoCard vira = intel.getVira();
         if (intel.getOpponentScore() >= 9) {
+            if (hasHigherCasal(currentHandCards, vira)){
+                return true;
+            }
             if (hasCasal(currentHandCards, vira)) {
                 return true;
             }
@@ -33,13 +36,19 @@ public class LeonardaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD) {
+            return false;
+        }
         List<TrucoCard> cards = intel.getCards();
         if (intel.getHandPoints() + intel.getOpponentScore() >= 11) {
+            if (hasHigherCasal(cards, intel.getVira())) {
+                return true;
+            }
             if (hasManilha(cards, intel.getVira())) {
-                if (hasCasal(cards, intel.getVira())){
+                if (hasCasal(cards, intel.getVira())) {
                     return true;
                 }
-                if (isHandStrong(cards, intel.getVira())){
+                if (isHandStrong(cards, intel.getVira())) {
                     return true;
                 }
             }
@@ -69,6 +78,8 @@ public class LeonardaBot implements BotServiceProvider {
         int score = intel.getScore();
         if (shouldQuit(roundResults)) {
             return -1;
+        } else if (hasHigherCasal(intel.getCards(), intel.getVira())) {
+            return 1;
         } else if (roundResults.size() == 2) {
             if (score >= 10) {
                 return 1;
@@ -83,6 +94,19 @@ public class LeonardaBot implements BotServiceProvider {
         for (TrucoCard card : cards) {
             if (card.isManilha(vira)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasHigherCasal(List<TrucoCard> cards, TrucoCard vira) {
+        int manilhas = 0;
+        for (TrucoCard card : cards) {
+            if (card.isZap(vira) || card.isCopas(vira)) {
+                manilhas += 1;
+                if (manilhas == 2){
+                    return true;
+                }
             }
         }
         return false;
