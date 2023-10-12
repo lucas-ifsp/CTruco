@@ -43,7 +43,10 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> card = intel.getCards();
+
+        return CardToPlay.of(card.get(0));
+
     }
 
     @Override
