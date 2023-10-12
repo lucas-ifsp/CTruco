@@ -142,4 +142,12 @@ class LeonardaBotTest {
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not ask for raise in opponent Mão de Onze scenario.")
+    void testShouldNotRaiseInOpponentMaoDeOnze(){
+        when(intel.getOpponentScore()).thenReturn(11);
+        boolean response = leonardaBot.decideIfRaises(intel);
+        assertThat(response).isFalse();
+    }
 }
