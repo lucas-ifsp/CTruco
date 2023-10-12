@@ -40,7 +40,9 @@ public class SilvaBrufatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        if(intel.getRoundResults().size() == 0) return BotStrategy.FIRST_ROUND_STRATEGY.raisePoints(intel);
+        if (intel.getRoundResults().size() == 1) return BotStrategy.SECOND_ROUND_STRATEGY.raisePoints(intel);
+        return BotStrategy.THIRD_ROUND_STRATEGY.raisePoints(intel);
     }
 
     @Override
