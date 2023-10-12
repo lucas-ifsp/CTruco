@@ -63,5 +63,17 @@ class TecoNoMarrecoBotTest {
 
     }
 
+    @Test
+    @DisplayName("Testa se aceita mão de onze com mão completa de três")
+    void shouldAcceptHandOfElevenWithThreeCardsThree(){
+        hand = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, SPADES));
+        cardVira = TrucoCard.of(ACE, DIAMONDS);
+        roundResult = List.of();
+        cards = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 11).opponentScore(0);
+        Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
+        assertTrue(acceptMaoDeOnze);
+    }
+
 
 }
