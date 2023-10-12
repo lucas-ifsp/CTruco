@@ -262,6 +262,16 @@ public class SilvaBrufatoBotTest {
             assertThat(sut.decideIfRaises(gameIntel)).isTrue();
         }
 
+        @Nested
+        @DisplayName("Raise points bluff in first round")
+        class RaisePointsBluffInFirstRound {
+            private static BotBluff botBluff;
+            @BeforeEach
+            public void setBotBluff() {
+                botBluff = mock(BotBluff.class);
+            }
+        }
+
     }
 
     @Nested
