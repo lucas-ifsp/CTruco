@@ -20,17 +20,16 @@ public class LeonardaBot implements BotServiceProvider {
         }
         List<TrucoCard> currentHandCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        if (intel.getOpponentScore() >= 9) {
-            if (hasHigherCasal(currentHandCards, vira)){
-                return true;
-            }
-            if (hasCasal(currentHandCards, vira)) {
-                return true;
-            }
-            if (isHandStrong(currentHandCards, vira)) {
-                return true;
-            }
+        if (hasHigherCasal(currentHandCards, vira)){
+            return true;
         }
+        if (hasCasal(currentHandCards, vira)) {
+            return true;
+        }
+        if (isHandStrong(currentHandCards, vira)) {
+            return true;
+        }
+
         return false;
     }
 
