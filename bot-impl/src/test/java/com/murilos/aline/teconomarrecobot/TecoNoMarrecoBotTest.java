@@ -1,6 +1,7 @@
 package com.murilos.aline.teconomarrecobot;
 
 import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +47,20 @@ class TecoNoMarrecoBotTest {
 
         Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
         assertTrue(acceptMaoDeOnze);
+    }
+
+    @Test
+    @DisplayName("Testa carta a ser jogada")
+    void testChooseCard(){
+        hand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, SPADES));
+        cardVira = TrucoCard.of(THREE, SPADES);
+        roundResult = List.of();
+        cards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
+
     }
 
 
