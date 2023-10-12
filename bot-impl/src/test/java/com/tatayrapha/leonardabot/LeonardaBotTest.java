@@ -31,7 +31,9 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should play the highest card to win the first round.")
     void playHighestCardToWinFirstRound() {
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+        when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
@@ -43,7 +45,9 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should play the second-highest card to win the second round.")
     void playSecondHighestCardToWinSecondRound() {
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+        when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
@@ -80,7 +84,10 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should respond correctly in the Mão de Onze scenario.")
     void respondInMaoDeOnzeScenario() {
-        when(intel.getScore()).thenReturn(11);
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
     }
@@ -88,13 +95,15 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should play the strongest card and win the round in the Mão de Ferro scenario.")
     void winInTheMaoDeFerroScenario() {
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
         final List<TrucoCard> opponentCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCards.get(0)));
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
         assertThat(chosenCard).isNotNull();
         assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
     }
@@ -102,10 +111,13 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should challenge the opponent with a 'Truco' request in the second round with a strong hand.")
     void challengeWithTrucoInSecondRoundWithStrongHand() {
+
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
-        Mockito.lenient().when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
-        Mockito.lenient().when(intel.getScore()).thenReturn(10);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        when(intel.getScore()).thenReturn(10);
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(1);
     }
@@ -160,20 +172,20 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should ask for raise when having Higher Casal ind hand.")
+    @DisplayName("Should ask for raise when having Higher Casal in hand.")
     void testShouldRaiseWhenHavingHigherCasal(){
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-        when(intel.getScore()).thenReturn(2);
-        when(intel.getOpponentScore()).thenReturn(6);
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getVira()).thenReturn(vira);
+        when(intel.getScore()).thenReturn(2);
+        when(intel.getOpponentScore()).thenReturn(6);
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isTrue();
     }
 
     @Test
-    @DisplayName("Should ask for re-raise when having Higher Casal ind hand.")
+    @DisplayName("Should ask for re-raise when having Higher Casal in hand.")
     void testShouldReRaiseWhenHavingHigherCasal(){
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
