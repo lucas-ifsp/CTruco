@@ -47,14 +47,15 @@ public class SilvaBrufatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getRoundResults().size() == 0) return BotStrategy.FIRST_ROUND_STRATEGY.throwCard(intel);
-        return BotStrategy.OTHERS_ROUND_STRATEGY.throwCard(intel);
+        if (intel.getRoundResults().size() == 1) return BotStrategy.SECOND_ROUND_STRATEGY.throwCard(intel);
+        return BotStrategy.THIRD_ROUND_STRATEGY.throwCard(intel);
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (intel.getRoundResults().size() == 0) return BotStrategy.firstRoundStrategy(intel);
-        if (intel.getRoundResults().size() == 1) return BotStrategy.secondRoundStrategy(intel);
-        return BotStrategy.thirdRoundStrategy(intel);
+        if(intel.getRoundResults().size() == 0) return BotStrategy.FIRST_ROUND_STRATEGY.responseToRaisePoints(intel);
+        if (intel.getRoundResults().size() == 1) return BotStrategy.SECOND_ROUND_STRATEGY.responseToRaisePoints(intel);
+        return BotStrategy.THIRD_ROUND_STRATEGY.responseToRaisePoints(intel);
     }
 
 }
