@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -98,4 +99,14 @@ class LeonardaBotTest {
         assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
     }
 
+    @Test
+    @DisplayName("Should challenge the opponent with a 'Truco' request in the second round with a strong hand.")
+    void challengeWithTrucoInSecondRoundWithStrongHand() {
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        Mockito.lenient().when(intel.getCards()).thenReturn(trucoCardList);
+        Mockito.lenient().when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        Mockito.lenient().when(intel.getScore()).thenReturn(10);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(1);
+    }
 }
