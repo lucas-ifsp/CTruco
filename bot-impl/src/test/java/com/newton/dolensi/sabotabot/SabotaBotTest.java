@@ -55,15 +55,28 @@ public class SabotaBotTest {
             }
 
             @Test
-            @DisplayName("Should play the weakest card if other player plays a 3")
-            void shouldPlayTheWeakestCardIfOtherPlayerPlaysA3(){
+            @DisplayName("Should play the weakest card if other player plays a strong card")
+            void shouldPlayTheWeakestCardIfOtherPlayerPlaysAStrongCard(){
                 var cards = IntelMock.cardList3Cards();
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
-                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
                 assertEquals(cards.get(1), sut.chooseCard(intel).content());
             }
+
+            @Test
+            @DisplayName("Should play diamonds if has it and good values")
+            void shouldPlayDiamondsIfHasItAndGoodValues(){
+                var cards = IntelMock.diamondsAndGoodValues();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+                assertTrue(sut.chooseCard(intel).content().isOuros(intel.getVira()));
+            }
+
+
+
         }
 
         @Nested

@@ -24,6 +24,11 @@ public class SabotaBot implements BotServiceProvider {
         CardToPlay cardToPlay = CardToPlay.of(hand.get(0));
 
         if (opponentCard.isEmpty()) {
+            for (TrucoCard card : hand) {
+                if (card.isOuros(intel.getVira())) {
+                    return CardToPlay.of(card);
+                }
+            }
             cardToPlay = CardToPlay.of(getGreatestCard(intel, hand));
         } else if (opponentHasStrongCard(opponentCard.get()))
             cardToPlay = CardToPlay.of(getWeakestCard(intel, hand));

@@ -15,6 +15,13 @@ public class IntelMock {
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
     }
 
+    public static List<TrucoCard> diamondsAndGoodValues() {
+        return List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+    }
+
     public static List<TrucoCard> cardList2Cards() {
         return List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -23,5 +30,9 @@ public class IntelMock {
 
     public static TrucoCard vira5C() {
         return TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+    }
+
+    public static TrucoCard viraKC() {
+        return TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
     }
 }
