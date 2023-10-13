@@ -12,7 +12,7 @@ public class CardsMock {
         return List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
     }
 
 }
