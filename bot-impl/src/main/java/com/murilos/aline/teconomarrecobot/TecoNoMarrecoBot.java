@@ -19,6 +19,9 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(possuiMaoTres(intel)){
             return true;
         }
+        if(manilhaCount(cards, cardVira) == 2){
+            return true;
+        }
         if(intel.getOpponentScore() < 4){
             return true;
         }
