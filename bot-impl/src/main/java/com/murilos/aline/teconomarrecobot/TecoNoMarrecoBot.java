@@ -16,10 +16,14 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(possuiCasalMaior(intel)){
             return true;
         }
-
+        if(possuiMaoTres(intel)){
+            return true;
+        }
         return false;
 
     }
+
+
     public boolean possuiCasalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
@@ -34,6 +38,19 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    public boolean possuiMaoTres(GameIntel intel){
+        Integer contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.getRank().value() == 10){
+                contador += 1;
+            }
+        }
+        if(contador == 3){
+            return true;
+        }
+        return  false;
     }
 
     @Override
