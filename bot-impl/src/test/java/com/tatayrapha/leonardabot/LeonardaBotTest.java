@@ -148,7 +148,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should respond correctly in the opponent Mão de Onze scenario.")
-    void testShouldRespondProperlyMaoDeOnze(){
+    void testShouldRespondProperlyMaoDeOnze() {
         when(intel.getOpponentScore()).thenReturn(11);
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
@@ -156,7 +156,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should not ask for raise in opponent Mão de Onze scenario.")
-    void testShouldNotRaiseInOpponentMaoDeOnze(){
+    void testShouldNotRaiseInOpponentMaoDeOnze() {
         when(intel.getOpponentScore()).thenReturn(11);
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isFalse();
@@ -164,7 +164,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should not ask for raise in Mão de Onze scenario.")
-    void testShouldNotRaiseInMaoDeOnze(){
+    void testShouldNotRaiseInMaoDeOnze() {
         when(intel.getScore()).thenReturn(11);
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isFalse();
@@ -172,7 +172,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should ask for raise when having Higher Casal in hand.")
-    void testShouldRaiseWhenHavingHigherCasal(){
+    void testShouldRaiseWhenHavingHigherCasal() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -185,7 +185,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should ask for re-raise when having Higher Casal in hand.")
-    void testShouldReRaiseWhenHavingHigherCasal(){
+    void testShouldReRaiseWhenHavingHigherCasal() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -196,7 +196,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should play Mão de Onze when having casal in hand.")
-    void testShouldPlayMaoDeOnzeWithCasalInHand(){
+    void testShouldPlayMaoDeOnzeWithCasalInHand() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -207,7 +207,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should not play Mão de Onze if having a weak hand.")
-    void testShouldNotPlayMaoDeOnzeWithWeakHand(){
+    void testShouldNotPlayMaoDeOnzeWithWeakHand() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -218,7 +218,7 @@ class LeonardaBotTest {
 
     @Test
     @DisplayName("Should play the strongest card in hand if the first round was tied.")
-    void testShouldPlayStrongestCardIfTied(){
+    void testShouldPlayStrongestCardIfTied() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(trucoCardList);
@@ -227,5 +227,14 @@ class LeonardaBotTest {
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.DREW));
         CardToPlay response = leonardaBot.chooseCard(intel);
         assertThat(response.content()).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+    }
+
+    @Test
+    @DisplayName("Should play in Mao de Ferro scenario.")
+    void testShouldPlayInMaoDeFerroScenario() {
+        Mockito.lenient().when(intel.getScore()).thenReturn(11);
+        Mockito.lenient().when(intel.getOpponentScore()).thenReturn(11);
+        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
+        assertThat(response).isTrue();
     }
 }
