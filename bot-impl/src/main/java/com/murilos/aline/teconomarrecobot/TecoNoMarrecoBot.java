@@ -22,6 +22,9 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(manilhaCount(cards, cardVira) == 2){
             return true;
         }
+        if(valueOfTheHand(intel) > 20){
+            return true;
+        }
         if(intel.getOpponentScore() < 4){
             return true;
         }
@@ -84,6 +87,18 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             }
         }
         return manilhaCount;
+    }
+
+    private int valueOfTheHand(GameIntel intel){
+        Integer hand = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isManilha(intel.getVira())){
+                hand += card.relativeValue(intel.getVira());
+            }else{
+                hand += card.getRank().value();
+            }
+        }
+        return hand;
     }
 
 
