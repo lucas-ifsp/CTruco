@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -276,5 +277,146 @@ public class PerdeNuncaBotTest {
         boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
 
         assertFalse(shouldRaise);
+    }
+
+    @Test
+    @DisplayName("Should raise if has manilha and higher-ranking card")
+    public void shouldRaiseIfHasManilhaAndHigherRankingCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                vira,
+                opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(5)
+                .opponentCard(opponentCard);
+
+        // Assert that the bot raises if it has a manilha and a higher-ranking card than the opponent's card.
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRaise).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should not raise if does not have manilha")
+    public void shouldNotRaiseIfDoesNotHaveManilha() {
+        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                leadCard,
+                opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(5)
+                .opponentCard(opponentCard);
+
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRaise).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should not raise if only have trump card")
+    public void shouldNotRaiseIfOnlyHaveTrumpCard() {
+        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .botInfo(cards, 7)
+                .opponentScore(8)
+                .opponentCard(opponentCard);
+        assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should return false if player has only one good card")
+    public void shouldReturnFalseIfPlayerHasOnlyOneGoodCard() {
+        TrucoCard goodCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, goodCard, 1)
+                .botInfo(cards, 4)
+                .opponentScore(6)
+                .opponentCard(opponentCard);
+
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
+        assertFalse(shouldRaise);
+    }
+
+    @Test
+    @DisplayName("Should raise if the sum of card values is above the average and the leading card is strong")
+    public void shouldRaiseIfSumOfCardValuesIsAboveAverageAndLeadingCardIsStrong() {
+        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+        List<TrucoCard> playerCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+        int sumOfPlayerCardValues = calculateSumOfCardValues(playerCards);
+
+        int averageCardValue = calculateAverageCardValue(openCards);
+
+        boolean shouldRaise = sumOfPlayerCardValues > averageCardValue && leadCard.getRank().value() >= 10;
+
+        assertFalse(shouldRaise);
+    }
+
+    private int calculateSumOfCardValues(List<TrucoCard> cards) {
+        return cards.stream()
+                .mapToInt(card -> card.getRank().value())
+                .sum();
+    }
+
+    private int calculateAverageCardValue(List<TrucoCard> cards) {
+        int sumOfCardValues = cards.stream()
+                .mapToInt(card -> card.getRank().value())
+                .sum();
+
+        return sumOfCardValues / cards.size();
+    }
+
+    @Test
+    @DisplayName("Should raise if only have manilhas")
+    public void shouldRaiseIfOnlyHaveManilhas() {
+        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                opponentCard);
+
+        List<TrucoCard> playerCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .botInfo(playerCards, 3)
+                .opponentScore(2)
+                .opponentCard(opponentCard);
+
+        boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
+        assertTrue(shouldRaise);
     }
 }
