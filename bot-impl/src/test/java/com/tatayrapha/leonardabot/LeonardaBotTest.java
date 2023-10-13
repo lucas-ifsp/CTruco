@@ -270,4 +270,16 @@ class LeonardaBotTest {
         TrucoCard playedCard = chosenCard.content();
         assertThat(playedCard.getRank()).isNotEqualTo(CardRank.FOUR);
     }
+
+    @Test
+    @DisplayName("Should not raise and accept the hand in a Mão de Onze scenario with a score of 11.")
+    void testShouldNotRaiseInMaoDeOnzeWithScore11() {
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getScore()).thenReturn(11);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(0);
+    }
 }
