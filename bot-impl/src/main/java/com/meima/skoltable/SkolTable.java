@@ -2,7 +2,11 @@ package com.meima.skoltable;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class SkolTable implements BotServiceProvider {
 
@@ -18,11 +22,37 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        boolean isFirstRound = intel.getRoundResults().isEmpty();
+        boolean existsOpponentCard = intel.getOpponentCard().isPresent();
+
+        TrucoCard vira = intel.getVira();
+        TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
+        TrucoCard opponentCard;
+
+        if(isFirstRound){
+            if(existsOpponentCard) {
+                opponentCard = intel.getOpponentCard().get();
+                if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
+                    return CardToPlay.of(strongestCardInHand);
+                }
+            }
+        }
+
+        List<TrucoCard> hand = intel.getCards();
+
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+    private TrucoCard getStrongestCardInHand(GameIntel intel, TrucoCard vira) {
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.stream()
+                .max(Comparator.comparingInt(card -> card.relativeValue(vira))).get();
+    }
+
 }
