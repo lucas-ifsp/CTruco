@@ -75,5 +75,17 @@ class TecoNoMarrecoBotTest {
         assertTrue(acceptMaoDeOnze);
     }
 
+    @Test
+    @DisplayName("Testa se aceita mao de onze com pontuacao do oponente menor que 4")
+    void shouldAcceptHandOfElevenWithOpponentScoreLessThanFour(){
+        hand = List.of(TrucoCard.of(TWO, CLUBS), TrucoCard.of(ACE, HEARTS), TrucoCard.of(FOUR, SPADES));
+        cardVira = TrucoCard.of(SIX, CLUBS);
+        roundResult = List.of();
+        cards = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 11).opponentScore(3);
+        Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
+        assertTrue(acceptMaoDeOnze);
+    }
+
 
 }
