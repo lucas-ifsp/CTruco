@@ -57,15 +57,23 @@ public class SabotaBot implements BotServiceProvider {
     }
 
     private TrucoCard getWeakestCard(GameIntel intel, List<TrucoCard> hand) {
-        if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) < 0) {
-            if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) < 0)
-                return hand.get(0);
+        if (hand.size() == 3) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) < 0) {
+                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) < 0)
+                    return hand.get(0);
+                else
+                    return hand.get(2);
+            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) < 0)
+                return hand.get(1);
             else
                 return hand.get(2);
-        } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) < 0)
-            return hand.get(1);
-        else
-            return hand.get(2);
+        } else if (hand.size() == 2) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) < 0)
+                return hand.get(0);
+            else
+                return hand.get(1);
+        }
+        return hand.get(0);
     }
 
     private boolean opponentHasStrongCard(TrucoCard opponentCard) {
