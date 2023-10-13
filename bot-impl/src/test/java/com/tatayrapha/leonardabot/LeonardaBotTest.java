@@ -246,4 +246,16 @@ class LeonardaBotTest {
         int response = leonardaBot.getRaiseResponse(intel);
         assertThat(response).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should raise winning first round and having a strong hand.")
+    void testShouldRaiseWinningFirstRoundWithStrongHand() {
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+        when(intel.getCards()).thenReturn(trucoCardList);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON));
+        boolean response = leonardaBot.decideIfRaises(intel);
+        assertThat(response).isTrue();
+    }
 }
