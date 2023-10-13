@@ -21,12 +21,12 @@ public class SabotaBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         var hand = intel.getCards();
         var opponentCard = intel.getOpponentCard();
-        CardToPlay cardToPlay = CardToPlay.of(hand.get(0));;
+        CardToPlay cardToPlay = CardToPlay.of(hand.get(0));
 
         if (opponentCard.isEmpty()) {
             cardToPlay = CardToPlay.of(getGreatestCard(intel, hand));
-        } else if (opponentCard.get().compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), intel.getVira()) == 0)
-            cardToPlay = CardToPlay.of(hand.get(1));
+        } else if (opponentHasStrongCard(opponentCard.get()))
+            cardToPlay = CardToPlay.of(getWeakestCard(intel, hand));
 
         return cardToPlay;
     }
@@ -46,5 +46,22 @@ public class SabotaBot implements BotServiceProvider {
             return hand.get(1);
         else
             return hand.get(2);
+    }
+
+    private TrucoCard getWeakestCard(GameIntel intel, List<TrucoCard> hand) {
+        if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) < 0) {
+            if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) < 0)
+                return hand.get(0);
+            else
+                return hand.get(2);
+        } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) < 0)
+            return hand.get(1);
+        else
+            return hand.get(2);
+    }
+
+    private boolean opponentHasStrongCard(TrucoCard opponetCard) {
+        int KING_VALUE = 7;
+        return opponetCard.getRank().value() > KING_VALUE;
     }
 }
