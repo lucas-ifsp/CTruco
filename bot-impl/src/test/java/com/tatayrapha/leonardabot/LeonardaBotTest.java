@@ -237,4 +237,13 @@ class LeonardaBotTest {
         boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
         assertThat(response).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not accept raise proposal if lost first round and opponent has score equal or higher than 9.")
+    void testShouldNotAcceptRaiseProposal() {
+        when(intel.getOpponentScore()).thenReturn(9);
+        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON));
+        int response = leonardaBot.getRaiseResponse(intel);
+        assertThat(response).isEqualTo(-1);
+    }
 }
