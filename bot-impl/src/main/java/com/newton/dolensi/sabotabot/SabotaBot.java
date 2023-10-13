@@ -37,15 +37,23 @@ public class SabotaBot implements BotServiceProvider {
     }
 
     private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
-        if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
-            if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
-                return hand.get(0);
+        if (hand.size() == 3) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
+                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                    return hand.get(0);
+                else
+                    return hand.get(2);
+            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                return hand.get(1);
             else
                 return hand.get(2);
-        } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
-            return hand.get(1);
-        else
-            return hand.get(2);
+        } else if (hand.size() == 2) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0)
+                return hand.get(0);
+            else
+                return hand.get(1);
+        }
+        return hand.get(0);
     }
 
     private TrucoCard getWeakestCard(GameIntel intel, List<TrucoCard> hand) {
@@ -60,8 +68,8 @@ public class SabotaBot implements BotServiceProvider {
             return hand.get(2);
     }
 
-    private boolean opponentHasStrongCard(TrucoCard opponetCard) {
+    private boolean opponentHasStrongCard(TrucoCard opponentCard) {
         int KING_VALUE = 7;
-        return opponetCard.getRank().value() > KING_VALUE;
+        return opponentCard.getRank().value() > KING_VALUE;
     }
 }

@@ -32,9 +32,9 @@ public class SabotaBotTest {
         @Test
         @DisplayName("Should play any card from hand")
         void shouldPlayAnyCardFromHand(){
-            var cards = CardsMock.cardList();
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+            var cards = IntelMock.cardList3Cards();
             when(intel.getCards()).thenReturn(cards);
+            when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
             assertNotNull(sut.chooseCard(intel).content());
         }
@@ -46,30 +46,38 @@ public class SabotaBotTest {
             @Test
             @DisplayName("Should play a strong card if is first to play")
             void shouldPlayAStrongCardIfIsFirstToPlay(){
-                var cards = CardsMock.cardList();
-                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+                var cards = IntelMock.cardList3Cards();
                 when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
                 when(intel.getOpponentCard()).thenReturn(Optional.empty());
-                assertEquals(sut.chooseCard(intel).content(), cards.get(2));
+                assertEquals(cards.get(2), sut.chooseCard(intel).content());
             }
 
             @Test
             @DisplayName("Should play the weakest card if other player plays a 3")
             void shouldPlayTheWeakestCardIfOtherPlayerPlaysA3(){
-                var cards = CardsMock.cardList();
-                when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+                var cards = IntelMock.cardList3Cards();
                 when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
                 when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
-                assertEquals(sut.chooseCard(intel).content(), cards.get(1));
+                assertEquals(cards.get(1), sut.chooseCard(intel).content());
             }
         }
 
         @Nested
         @DisplayName("Second Round Plays")
         class SecondRoundTests{
+            @Test
+            @DisplayName("Should play a card in second round")
+            void shouldPlayACardInSecondRound(){
+                var cards = IntelMock.cardList2Cards();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
+                assertNotNull(sut.chooseCard(intel).content());
+            }
         }
 
         @Nested
