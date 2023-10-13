@@ -224,7 +224,7 @@ class LeonardaBotTest {
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
-        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.DREW));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
         CardToPlay response = leonardaBot.chooseCard(intel);
         assertThat(response.content()).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
     }
@@ -254,8 +254,20 @@ class LeonardaBotTest {
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getVira()).thenReturn(vira);
-        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         boolean response = leonardaBot.decideIfRaises(intel);
         assertThat(response).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should not fall for opponent's bluff in Mão de Onze scenario.")
+    void notFallForOpponentBluffInMaoDeOnzeScenario() {
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard playedCard = chosenCard.content();
+        assertThat(playedCard.getRank()).isNotEqualTo(CardRank.FOUR);
     }
 }
