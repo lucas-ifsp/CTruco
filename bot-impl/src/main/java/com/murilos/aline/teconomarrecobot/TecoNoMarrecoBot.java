@@ -52,5 +52,16 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {return 0;}
 
+    public int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
+        int manilhaCount = 0;
+        for (TrucoCard card : cards) {
+            if (card.isManilha(vira)) {
+                manilhaCount++;
+            }
+        }
+        return manilhaCount;
+    }
+
+
 
 }
