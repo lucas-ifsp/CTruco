@@ -29,12 +29,16 @@ public class LeonardaBot implements BotServiceProvider {
         if (isHandStrong(currentHandCards, vira)) {
             return true;
         }
+        if (intel.getOpponentScore() >= 9){
+            return isHandStrong(currentHandCards, vira);
+        }
 
         return false;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD || intel.getScore() == MAO_DE_ONZE_THRESHOLD) {
             return false;
         }
@@ -42,16 +46,18 @@ public class LeonardaBot implements BotServiceProvider {
         if (hasHigherCasal(cards, intel.getVira())) {
             return true;
         }
+        if (hasCasal(cards, intel.getVira())) {
+            return true;
+        }
         if (intel.getHandPoints() + intel.getOpponentScore() >= 12) {
-            if (hasManilha(cards, intel.getVira())) {
-                if (hasCasal(cards, intel.getVira())) {
-                    return true;
-                }
-                if (isHandStrong(cards, intel.getVira())) {
-                    return true;
-                }
+            if (isHandStrong(cards, intel.getVira())) {
+                return true;
             }
         }
+        if (roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON || roundResults.get(0) == GameIntel.RoundResult.DREW){
+            return isHandStrong(cards, intel.getVira());
+        }
+
         return false;
     }
 
@@ -75,15 +81,23 @@ public class LeonardaBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int score = intel.getScore();
+        if (hasHigherCasal(intel.getCards(), intel.getVira())) {
+            return 1;
+        }
         if (shouldQuit(roundResults)) {
             return -1;
-        } else if (hasHigherCasal(intel.getCards(), intel.getVira())) {
-            return 1;
-        } else if (roundResults.size() == 2) {
+        }
+        if (roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST){
+            if (intel.getOpponentScore() >= 9){
+                return -1;
+            }
+        }
+        if (roundResults.size() == 2) {
             if (score >= 10) {
                 return 1;
             }
-        } else if (roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
+        }
+        if (roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
             return 1;
         }
         return 0;
