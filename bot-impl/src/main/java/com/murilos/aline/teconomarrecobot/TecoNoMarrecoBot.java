@@ -27,34 +27,6 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     }
 
 
-    public boolean possuiCasalMaior(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
-        TrucoCard cardVira = intel.getVira();
-
-        for(int i = 0; i < 3; i++){
-            if (cards.get(i).isZap(cardVira)) {
-                for (int k = 0; k < 3; k++) {
-                    if (cards.get(k).isCopas(cardVira)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean possuiMaoTres(GameIntel intel){
-        Integer contador = 0;
-        for(TrucoCard card : intel.getCards()){
-            if(card.getRank().value() == 10){
-                contador += 1;
-            }
-        }
-        if(contador == 3){
-            return true;
-        }
-        return  false;
-    }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
@@ -72,7 +44,36 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {return 0;}
 
-    public int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
+    private boolean possuiCasalMaior(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard cardVira = intel.getVira();
+
+        for(int i = 0; i < 3; i++){
+            if (cards.get(i).isZap(cardVira)) {
+                for (int k = 0; k < 3; k++) {
+                    if (cards.get(k).isCopas(cardVira)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean possuiMaoTres(GameIntel intel){
+        Integer contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.getRank().value() == 10){
+                contador += 1;
+            }
+        }
+        if(contador == 3){
+            return true;
+        }
+        return  false;
+    }
+
+    private int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
         int manilhaCount = 0;
         for (TrucoCard card : cards) {
             if (card.isManilha(vira)) {
