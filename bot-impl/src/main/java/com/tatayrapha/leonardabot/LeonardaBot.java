@@ -20,7 +20,7 @@ public class LeonardaBot implements BotServiceProvider {
         }
         List<TrucoCard> currentHandCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        if (hasHigherCasal(currentHandCards, vira)){
+        if (hasHigherCasal(currentHandCards, vira)) {
             return true;
         }
         if (hasCasal(currentHandCards, vira)) {
@@ -29,7 +29,7 @@ public class LeonardaBot implements BotServiceProvider {
         if (isHandStrong(currentHandCards, vira)) {
             return true;
         }
-        if (intel.getOpponentScore() >= 9){
+        if (intel.getOpponentScore() >= 9) {
             return isHandStrong(currentHandCards, vira);
         }
 
@@ -54,10 +54,9 @@ public class LeonardaBot implements BotServiceProvider {
                 return true;
             }
         }
-        if (roundResults.size() == 1 && roundResults.get(0) == GameIntel.RoundResult.WON || roundResults.get(0) == GameIntel.RoundResult.DREW){
+        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
             return isHandStrong(cards, intel.getVira());
         }
-
         return false;
     }
 
@@ -87,8 +86,8 @@ public class LeonardaBot implements BotServiceProvider {
         if (shouldQuit(roundResults)) {
             return -1;
         }
-        if (roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST){
-            if (intel.getOpponentScore() >= 9){
+        if (roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST) {
+            if (intel.getOpponentScore() >= 9) {
                 return -1;
             }
         }
@@ -117,7 +116,7 @@ public class LeonardaBot implements BotServiceProvider {
         for (TrucoCard card : cards) {
             if (card.isZap(vira) || card.isCopas(vira)) {
                 manilhas += 1;
-                if (manilhas == 2){
+                if (manilhas == 2) {
                     return true;
                 }
             }
@@ -125,7 +124,7 @@ public class LeonardaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean hasCasal(List<TrucoCard> cards, TrucoCard vira){
+    private boolean hasCasal(List<TrucoCard> cards, TrucoCard vira) {
         int manilhas = 0;
         if (hasManilha(cards, vira)) {
             for (TrucoCard card : cards) {
@@ -140,13 +139,13 @@ public class LeonardaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean isHandStrong(List<TrucoCard> cards, TrucoCard vira){
-        if (hasCasal(cards, vira)){
+    private boolean isHandStrong(List<TrucoCard> cards, TrucoCard vira) {
+        if (hasCasal(cards, vira)) {
             return true;
         }
         int strongCards = 0;
         for (TrucoCard card : cards) {
-            if (card.getRank() == CardRank.THREE || card.getRank() == CardRank.TWO || card.getRank() == CardRank.ACE || hasManilha(cards, vira)){
+            if (card.getRank() == CardRank.THREE || card.getRank() == CardRank.TWO || card.getRank() == CardRank.ACE || hasManilha(cards, vira)) {
                 strongCards += 1;
             }
         }
@@ -157,8 +156,7 @@ public class LeonardaBot implements BotServiceProvider {
         if (roundResults == null) {
             return false;
         }
-        return roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST
-                && roundResults.get(1) == GameIntel.RoundResult.LOST; // Quit the hand
+        return roundResults.size() == 2 && roundResults.get(0) == GameIntel.RoundResult.LOST && roundResults.get(1) == GameIntel.RoundResult.LOST;
     }
 
     private CardToPlay playMaoDeOnze(List<TrucoCard> cards) {
