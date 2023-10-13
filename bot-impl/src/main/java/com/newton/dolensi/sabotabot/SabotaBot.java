@@ -20,8 +20,15 @@ public class SabotaBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         var hand = intel.getCards();
+        var opponentCard = intel.getOpponentCard();
+        CardToPlay cardToPlay = CardToPlay.of(hand.get(0));;
 
-        return CardToPlay.of(getGreatestCard(intel, hand));
+        if (opponentCard.isEmpty()) {
+            cardToPlay = CardToPlay.of(getGreatestCard(intel, hand));
+        } else if (opponentCard.get().compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), intel.getVira()) == 0)
+            cardToPlay = CardToPlay.of(hand.get(1));
+
+        return cardToPlay;
     }
 
     @Override
@@ -30,17 +37,14 @@ public class SabotaBot implements BotServiceProvider {
     }
 
     private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
-        if (intel.getOpponentCard().isEmpty()) {
-            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
-                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
-                    return hand.get(0);
-                else
-                    return hand.get(2);
-            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
-                return hand.get(1);
+        if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
+            if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                return hand.get(0);
             else
                 return hand.get(2);
-        } else
-            return hand.get(0);
+        } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
+            return hand.get(1);
+        else
+            return hand.get(2);
     }
 }

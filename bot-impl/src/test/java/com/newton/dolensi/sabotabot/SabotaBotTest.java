@@ -5,6 +5,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,5 +48,16 @@ public class SabotaBotTest {
             when(intel.getCards()).thenReturn(cards);
             assertEquals(sut.chooseCard(intel).content(), cards.get(2));
         }
+
+        @Test
+        @DisplayName("Should play the weakest card if other player plays a 3")
+        void shouldPlayTheWeakestCardIfOtherPlayerPlaysA3(){
+            var cards = CardsMock.cardList();
+            when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+            when(intel.getCards()).thenReturn(cards);
+            assertEquals(sut.chooseCard(intel).content(), cards.get(1));
+        }
+
     }
 }
