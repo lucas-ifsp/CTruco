@@ -1,5 +1,6 @@
 package com.meima.skoltable;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.CardSuit.HIDDEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -308,6 +310,24 @@ class SkolTableBotTest {
                 .opponentScore(0);
 
         assertEquals(TrucoCard.of(FOUR, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
+    @Test
+    @DisplayName("Should play the weakest card if opponents card is hidden")
+    void shouldPlayTheWeakestCardIfOpponentsCardIsHidden() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(FIVE, DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
 }
