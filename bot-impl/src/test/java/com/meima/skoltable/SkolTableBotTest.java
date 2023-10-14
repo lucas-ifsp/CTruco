@@ -229,5 +229,21 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should raise in Eleven Score Hand if opponent have 10 points and have a good hand")
+    public void shouldRaiseInElevenScoreHandIfOpponentHave10PointsAndHavePower() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        List<TrucoCard> openCards = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(10);
+
+        assertTrue(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
 
 }
