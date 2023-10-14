@@ -49,13 +49,28 @@ public class SkolTable implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         boolean isFirstRound = intel.getRoundResults().isEmpty();
         List<GameIntel.RoundResult> rounds = intel.getRoundResults();
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        int handPowerRank = getPowerRankFirstRound(hand, vira);
 
         if(!isFirstRound){
             if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
-                return 0;
+                handPowerRank = getPowerRankSecondRound(hand, vira);
+                return switch (handPowerRank) {
+                    case 4 -> 1;
+                    case 3 -> 0;
+                    default -> -1;
+                };
             }
+            return -1;
         }
-        return -1;
+
+        return switch (handPowerRank) {
+            case 4 -> 1;
+            case 3 -> 0;
+            default -> -1;
+        };
     }
 
     private TrucoCard getStrongestCardInHand(GameIntel intel, TrucoCard vira) {
@@ -70,5 +85,44 @@ public class SkolTable implements BotServiceProvider {
 
         return cards.stream().min(Comparator.comparingInt(card -> card.relativeValue(vira))).get();
     }
+
+    private int getHandPower(List<TrucoCard> hand, TrucoCard vira){
+        int power = 0;
+        for (TrucoCard card: hand) {
+            power += card.relativeValue(vira);
+        }
+        return power;
+    }
+
+
+    public int getPowerRankFirstRound(List<TrucoCard> hand, TrucoCard vira) {
+        int power = getHandPower(hand, vira);
+
+        if (power >= 28 && power <= 36) {
+            return 4;
+        } else if (power >= 20 && power <= 27) {
+            return 3;
+        } else if (power >= 13 && power <= 19) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+    public int getPowerRankSecondRound(List<TrucoCard> hand, TrucoCard vira) {
+        int power = getHandPower(hand, vira);
+
+        if (power >= 21 && power <= 25) {
+            return 4;
+        } else if (power >= 16&& power <= 20) {
+            return 3;
+        } else if (power >= 11&& power <= 15) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+
 
 }
