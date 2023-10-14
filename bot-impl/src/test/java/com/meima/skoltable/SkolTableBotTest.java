@@ -12,6 +12,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SkolTableBotTest {
 
@@ -188,6 +189,23 @@ class SkolTableBotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
         assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
+    }
+
+    @Test
+    @DisplayName("Should ask for raise with a very strong hand")
+    void shouldAskForTrucoWithVeryStrongHand() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FOUR,CLUBS), TrucoCard.of(ACE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
 
