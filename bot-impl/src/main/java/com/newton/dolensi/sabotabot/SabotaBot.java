@@ -14,7 +14,13 @@ public class SabotaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+
+        // nunca pedir truco na primeira rodada
+        if (intel.getRoundResults().isEmpty()){
+            return false;
+        }
+
+        return true;
     }
 
     @Override
