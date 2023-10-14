@@ -5,8 +5,10 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class TecoNoMarrecoBot implements BotServiceProvider {
 
@@ -33,8 +35,6 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     }
 
-
-
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         return false;
@@ -52,10 +52,13 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             case 3:
                 return CardToPlay.of(cards.get(2));
             default:
-                //return CardToPlay.of(strongCard(intel));
-                return CardToPlay.of(weakestCard(intel));
+                if (intel.getOpponentCard().isPresent()) {
+                    return CardToPlay.of(killCard(intel));
+                }else{
+                    // força o pé
+                    return CardToPlay.of(strongCard(intel));
+                }
         }
-
     }
 
     @Override
@@ -132,13 +135,36 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards()) {
             if (card.getRank().value() < menor) {
                 menor = card.getRank().value();
-                System.out.println(menor);
                 indexMenor++;
             }
         }
         return cards.get(indexMenor);
 
     }
+
+    private TrucoCard killCard(GameIntel intel){
+        List<TrucoCard> strongerCards = new ArrayList<>();
+        TrucoCard cardPlay = null;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() > intel.getOpponentCard().get().getRank().value()) {
+                strongerCards.add(card);
+            }
+        }
+        if (!strongerCards.isEmpty()){
+            cardPlay = strongerCards.get(0);
+            for (TrucoCard card : strongerCards){
+                if (card.getRank().value() < cardPlay.getRank().value()){
+                    cardPlay=card;
+                }
+            }
+        }else{
+            cardPlay = weakestCard(intel);
+
+        }
+        return cardPlay;
+    }
+
 
 
 
