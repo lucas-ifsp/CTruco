@@ -115,5 +115,18 @@ public class SabotaBotTest {
             when(intel.getRoundResults()).thenReturn(List.of());
             assertThat(sut.decideIfRaises(intel)).isFalse();
         }
+
+        @Test
+        @DisplayName("should rise if won first round and have one manilha card")
+        void shouldRiseIfWonFirstRoundAndHaveAManilhaCard(){
+
+            var cards = IntelMock.cardList2Cards();
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
+
+        }
     }
 }
