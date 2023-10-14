@@ -94,5 +94,23 @@ class SkolTableBotTest {
         assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
     }
 
+    @Test
+    @DisplayName("Should not rise if don't have good cards")
+    void shouldNotRiseIfDontHaveGoodCards() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        TrucoCard opponentCard = TrucoCard.of(FOUR, CLUBS);
+
+        List<TrucoCard> botCards = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(SIX, SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(-1, skolTable.getRaiseResponse(stepBuilder.build()));
+    }
+
 
 }
