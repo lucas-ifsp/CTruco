@@ -114,11 +114,14 @@ public class SabotaBotTest {
         }
 
         @Test
-        @DisplayName("should rise if won first round and have one manilha card")
-        void shouldRiseIfWonFirstRoundAndHaveAManilhaCard(){
+        @DisplayName("should rise if won first round and have one strong manilha card")
+        void shouldRiseIfWonFirstRoundAndHaveAStrongManilhaCard(){
 
-            var cards = IntelMock.cardList2Cards();
-            when(intel.getCards()).thenReturn(cards);
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+
             when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
 

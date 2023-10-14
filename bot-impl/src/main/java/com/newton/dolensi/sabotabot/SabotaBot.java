@@ -21,9 +21,9 @@ public class SabotaBot implements BotServiceProvider {
             return false;
         }
 
-        // se ganhou a primeira rodada e tem manilha: truco
+        // se ganhou a primeira rodada e tem manilha forte: truco
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            if (!(getManilhasCard(intel).isEmpty())){
+            if ( (!(getManilhasCard(intel).isEmpty())) && hasStrongManilha(intel)){
                 return true;
             }
         }
@@ -41,6 +41,8 @@ public class SabotaBot implements BotServiceProvider {
 
         return false;
     }
+
+
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -138,6 +140,20 @@ public class SabotaBot implements BotServiceProvider {
             }
         }
 
-        return true;
+        return false;
+    }
+
+    private boolean hasStrongManilha(GameIntel intel) {
+
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        for (TrucoCard card : manilhas){
+            if (card.isCopas(vira) || card.isZap(vira)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
