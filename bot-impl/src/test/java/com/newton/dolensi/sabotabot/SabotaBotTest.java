@@ -13,9 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -99,5 +102,18 @@ public class SabotaBotTest {
 
         }
 
+    }
+
+    @Nested
+    @DisplayName("Decide If Raises decideIfRaises")
+    class DecideIfRaisesTests{
+
+
+        @Test
+        @DisplayName("should return false if is the first round")
+        void shouldReturnFalseIfIsTheFirstRound(){
+            when(intel.getRoundResults()).thenReturn(List.of());
+            assertThat(sut.decideIfRaises(intel)).isFalse();
+        }
     }
 }
