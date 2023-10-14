@@ -208,5 +208,26 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should raise for a hand with powerRank 3 in the first round")
+    void shouldRequestTrucoForPowerRank3HandInFirstRound() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+
+        List<TrucoCard> powerRank3Hand = List.of(
+                TrucoCard.of(KING, CLUBS),
+                TrucoCard.of(ACE, SPADES),
+                TrucoCard.of(ACE, DIAMONDS)
+        );
+
+        GameIntel.StepBuilder powerRank3HandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(powerRank3Hand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+    }
+
 
 }
