@@ -139,12 +139,26 @@ public class SabotaBot implements BotServiceProvider {
             if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
                 return true;
             }
+
+            if (opponentHasTheSameCard(intel, intel.getOpponentCard().get())){
+                return true;
+            }
         } else if (getManilhasCard(intel).size() > 0){
             if (hasStrongManilha(intel)){
                 return true;
             }
         }
 
+        return false;
+    }
+
+    private boolean opponentHasTheSameCard(GameIntel intel, TrucoCard opponentCard) {
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(opponentCard, intel.getVira()) == 0){
+                return true;
+            }
+        }
         return false;
     }
 
