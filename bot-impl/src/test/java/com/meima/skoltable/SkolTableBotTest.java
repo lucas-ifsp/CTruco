@@ -11,8 +11,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SkolTableBotTest {
 
@@ -244,6 +243,23 @@ class SkolTableBotTest {
                 .opponentScore(10);
 
         assertTrue(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should not raise in Eleven Score Hand if opponent have 10 points and haven't a good hand")
+    public void shouldNotRaiseInElevenScoreHandIfOpponentHave8PointsAndHavePower() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        List<TrucoCard> openCards = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> botCards = List.of(TrucoCard.of(SEVEN, DIAMONDS), TrucoCard.of(SIX, SPADES), TrucoCard.of(FIVE, CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(10);
+
+        assertFalse(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
 }
