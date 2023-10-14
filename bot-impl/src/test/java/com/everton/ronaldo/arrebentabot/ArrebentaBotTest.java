@@ -404,6 +404,20 @@ class ArrebentaBotTest {
                     .opponentScore(3);
             assertTrue(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should accept raise when tied and has strong cards")
+        void shouldAcceptRaiseWhenTiedAndHasStrongCards() {
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.TIED));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
+        }
 
         @Test
         @DisplayName("Shoul not accept raise whem the value of the cards is minor then 18 and have no manilhas")
@@ -422,5 +436,6 @@ class ArrebentaBotTest {
                     .opponentScore(11);
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
+
     }
 }
