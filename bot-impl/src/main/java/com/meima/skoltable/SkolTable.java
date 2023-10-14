@@ -47,7 +47,11 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        List<GameIntel.RoundResult> rounds = intel.getRoundResults();
+        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+            return 0;
+        }
+        return -1;
     }
 
     private TrucoCard getStrongestCardInHand(GameIntel intel, TrucoCard vira) {
