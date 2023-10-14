@@ -279,4 +279,20 @@ class SkolTableBotTest {
         assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should ask for raise if won first round and have a strong hand")
+    void shouldAskForRaiseIfWonFirstRoundAndHaveStrongHand() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(ACE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+    }
+
 }
