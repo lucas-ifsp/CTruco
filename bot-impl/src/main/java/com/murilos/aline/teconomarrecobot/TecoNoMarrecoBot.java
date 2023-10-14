@@ -38,6 +38,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
         if((intel.getRoundResults().size() >= 1) && valueOfTheHand(intel) >= 15){
             return true;
+        }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
+            return true;
         }
         return false;
     }
