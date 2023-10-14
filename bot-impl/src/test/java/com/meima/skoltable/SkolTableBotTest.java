@@ -112,5 +112,22 @@ class SkolTableBotTest {
         assertEquals(-1, skolTable.getRaiseResponse(stepBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should accept rise if won the first round and have strong card in hand")
+    void ShouldRiseIfWonFirstRoundAndHaveStrongCard(){
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        List<TrucoCard> openCards = List.of();
+
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(ACE, CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isZero();
+    }
+
+
 
 }
