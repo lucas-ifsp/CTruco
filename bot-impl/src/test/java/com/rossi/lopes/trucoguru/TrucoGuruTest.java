@@ -1,2 +1,3 @@
-package com.rossi.lopes.trucoguru;public class TrucoGuruTest {
+package com.rossi.lopes.trucoguru;
+public class TrucoGuruTest {
 }
