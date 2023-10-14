@@ -43,4 +43,20 @@ class SkolTableBotTest {
         assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
+    @Test
+    @DisplayName("Should play strongest card in first round without opponent's card")
+    void shouldPlayStrongestCardInFirstRoundWithoutOpponentsCard() {
+        List<TrucoCard> botCards = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, HEARTS));
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List<GameIntel.RoundResult> results = List.of();
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
 }
