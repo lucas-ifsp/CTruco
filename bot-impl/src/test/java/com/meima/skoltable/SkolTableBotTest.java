@@ -330,4 +330,22 @@ class SkolTableBotTest {
         assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
+    @Test
+    @DisplayName("Should play the weakest card if opponents card is Zap")
+    void shouldPlayTheWeakestCardIfOpponentsCardIsZap() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(FOUR, CLUBS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(FIVE, DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
 }
