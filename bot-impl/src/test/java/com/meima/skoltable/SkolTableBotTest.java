@@ -159,5 +159,22 @@ class SkolTableBotTest {
         assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isPositive();
     }
 
+    @Test
+    @DisplayName("Should accept if have strong card in hand")
+    void ShouldAcceptIfHaveStrongCardInHand() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> opponentCard = List.of(TrucoCard.of(FOUR, DIAMONDS));
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, SPADES), TrucoCard.of(QUEEN, SPADES));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, opponentCard, vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+        assertThat(skolTable.getRaiseResponse(strongHandBuilder.build())).isEqualTo(0);
+    }
+
+
 
 }
