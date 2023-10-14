@@ -262,4 +262,21 @@ class SkolTableBotTest {
         assertFalse(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should raise if have a pair")
+    public void shouldRaiseIfHaveAGoodPair(){
+        List<GameIntel.RoundResult> rounds = List.of();
+        List<TrucoCard> openCards = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FOUR, SPADES), TrucoCard.of(ACE, CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isEqualTo(0);
+    }
+
 }
