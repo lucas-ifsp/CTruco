@@ -47,9 +47,13 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        boolean isFirstRound = intel.getRoundResults().isEmpty();
         List<GameIntel.RoundResult> rounds = intel.getRoundResults();
-        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
-            return 0;
+
+        if(!isFirstRound){
+            if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+                return 0;
+            }
         }
         return -1;
     }
