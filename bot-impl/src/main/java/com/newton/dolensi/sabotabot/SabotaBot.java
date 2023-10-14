@@ -27,6 +27,19 @@ public class SabotaBot implements BotServiceProvider {
             }
         }
 
+        if (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)){
+            if (!(intel.getOpponentCard().isEmpty())){
+
+                var opponentCard = intel.getOpponentCard();
+
+                for (TrucoCard card : intel.getCards()) {
+                    if (card.compareValueTo(opponentCard.get(), intel.getVira()) > 0){
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
