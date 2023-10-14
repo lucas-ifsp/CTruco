@@ -29,6 +29,7 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         // se teve empate, o marreco jogou uma carta e temos uma mais forte: truco
+        // se ganhamos a primeira e podemos empatar: truco
         // se ganhou um dos dois primeiros rounds, o marreco jogou uma carta e temos uma mais forte: truco
         // se ganhou um dos dois primeiros rounds e temos uma manilha forte: truco
         if (
@@ -119,6 +120,16 @@ public class SabotaBot implements BotServiceProvider {
         return true;
     }
 
+    private boolean opponentHasTheSameCard(GameIntel intel, TrucoCard opponentCard) {
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(opponentCard, intel.getVira()) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private List<TrucoCard> getManilhasCard(GameIntel intel){
 
         List<TrucoCard> manilhas = new ArrayList<>();
@@ -130,6 +141,20 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         return manilhas;
+    }
+
+    private boolean hasStrongManilha(GameIntel intel) {
+
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        for (TrucoCard card : manilhas){
+            if (card.isCopas(vira) || card.isZap(vira)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean canRise(GameIntel intel){
@@ -145,30 +170,6 @@ public class SabotaBot implements BotServiceProvider {
             }
         } else if (getManilhasCard(intel).size() > 0){
             if (hasStrongManilha(intel)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean opponentHasTheSameCard(GameIntel intel, TrucoCard opponentCard) {
-
-        for (TrucoCard card : intel.getCards()) {
-            if (card.compareValueTo(opponentCard, intel.getVira()) == 0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean hasStrongManilha(GameIntel intel) {
-
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> manilhas = getManilhasCard(intel);
-
-        for (TrucoCard card : manilhas){
-            if (card.isCopas(vira) || card.isZap(vira)){
                 return true;
             }
         }
