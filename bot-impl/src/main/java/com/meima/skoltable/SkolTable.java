@@ -5,11 +5,11 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class SkolTable implements BotServiceProvider {
-
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
@@ -78,7 +78,7 @@ public class SkolTable implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         int handPowerRank = getPowerRankFirstRound(hand, vira);
-
+        
         if(!isFirstRound){
             if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
                 handPowerRank = getPowerRankSecondRound(hand, vira);
@@ -146,6 +146,14 @@ public class SkolTable implements BotServiceProvider {
         } else {
             return 1;
         }
+    }
+
+    private boolean isPair(GameIntel intel) {
+        long pairCount = intel.getCards().stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
+
+        return pairCount == 2;
     }
 
 
