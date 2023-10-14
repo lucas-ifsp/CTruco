@@ -157,6 +157,18 @@ class TecoNoMarrecoBotTest {
 
     }
 
+    @Test
+    @DisplayName("Testa se na segunda rodada possuir mão com valor maior que 15 pede truco")
+    void shouldRequestTrucoIfInTheSecondRoundHaveAHandWithAValueGreaterThan15(){
+        hand = List.of(TrucoCard.of(THREE, HEARTS), TrucoCard.of(SIX, DIAMONDS), TrucoCard.of(THREE, SPADES));
+        cardVira = TrucoCard.of(FOUR, CLUBS);
+        roundResult = List.of(GameIntel.RoundResult.LOST);
+        cards = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 6).opponentScore(4);
+        Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+        assertTrue(requestTruco);
+    }
+
 
 
 
