@@ -20,7 +20,16 @@ public class SabotaBot implements BotServiceProvider {
             return false;
         }
 
-        return true;
+        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+
+            for (TrucoCard card : intel.getCards()) {
+                if (card.isManilha(intel.getVira())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
