@@ -1,9 +1,6 @@
 package com.murilos.aline.teconomarrecobot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -159,6 +156,22 @@ class TecoNoMarrecoBotTest {
         CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
 
+    }
+
+    @Test
+    @DisplayName("Testa jogar a carta que mata a do oponente")
+    void playTheKillCard() {
+        hand = List.of(TrucoCard.of(FOUR,DIAMONDS), TrucoCard.of(KING, CLUBS), TrucoCard.of(THREE, CLUBS));
+        cardVira = TrucoCard.of(ACE, SPADES);
+        roundResult = List.of();
+        cards = List.of();
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+
+        // Neste teste, você pode verificar se o bot está escolhendo a carta que mata a do oponente
+        // O resultado esperado é a carta com valor 4 de ouros
+        assertEquals(TrucoCard.of(FOUR, CLUBS), cardToPlay.value());
     }
 
 
