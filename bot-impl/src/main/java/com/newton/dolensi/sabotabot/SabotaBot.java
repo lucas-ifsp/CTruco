@@ -3,6 +3,7 @@ package com.newton.dolensi.sabotabot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SabotaBot implements BotServiceProvider {
@@ -21,11 +22,8 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-
-            for (TrucoCard card : intel.getCards()) {
-                if (card.isManilha(intel.getVira())) {
-                    return true;
-                }
+            if (!(getManilhasCard(intel).isEmpty())){
+                return true;
             }
         }
 
@@ -99,5 +97,18 @@ public class SabotaBot implements BotServiceProvider {
     private boolean opponentHasStrongCard(TrucoCard opponentCard) {
         int KING_VALUE = 7;
         return opponentCard.getRank().value() > KING_VALUE;
+    }
+
+    private List<TrucoCard> getManilhasCard(GameIntel intel){
+
+        List<TrucoCard> manilhas = new ArrayList<>();
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas.add(card);
+            }
+        }
+
+        return manilhas;
     }
 }
