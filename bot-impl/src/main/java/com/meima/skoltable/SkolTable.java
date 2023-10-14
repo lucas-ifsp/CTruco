@@ -78,8 +78,8 @@ public class SkolTable implements BotServiceProvider {
 
         if (existsOpponentCard){
             opponentCard = intel.getOpponentCard().get();
-            if (opponentCard.getRank().equals(CardRank.HIDDEN)){
-            return CardToPlay.of(weakestCardInHand);
+            if (opponentCard.getRank().equals(CardRank.HIDDEN) || opponentCard.isZap(vira)){
+                return CardToPlay.of(weakestCardInHand);
             }
         }
 
