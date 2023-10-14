@@ -135,7 +135,7 @@ class SkolTableBotTest {
         List<TrucoCard> openCards = List.of();
 
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
-        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, CLUBS));
+        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, CLUBS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, openCards, vira, 3)
@@ -192,7 +192,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should ask for raise with a very strong hand")
-    void shouldAskForTrucoWithVeryStrongHand() {
+    void shouldAskForRaiseWithVeryStrongHand() {
         List<GameIntel.RoundResult> rounds = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         List<TrucoCard> openCards = List.of();
@@ -209,7 +209,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should raise for a hand with powerRank 3 in the first round")
-    void shouldRequestTrucoForPowerRank3HandInFirstRound() {
+    void shouldRaiseForPowerRank3HandInFirstRound() {
         List<GameIntel.RoundResult> rounds = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         List<TrucoCard> openCards = List.of();
