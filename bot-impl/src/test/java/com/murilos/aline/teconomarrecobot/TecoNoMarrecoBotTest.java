@@ -187,7 +187,7 @@ class TecoNoMarrecoBotTest {
     }
 
     @Test
-    @DisplayName("Testa se na ultima rodade possuir mão com valor maior que 10 pede truco")
+    @DisplayName("Testa se na ultima rodada possuir mão com valor maior que 10 pede truco")
     void shouldRequestTrucoIfInTheLastRoundHaveAHandWithAValueGreaterThan10(){
         hand = List.of(TrucoCard.of(THREE, HEARTS));
         cardVira = TrucoCard.of(FOUR, CLUBS);
@@ -198,6 +198,17 @@ class TecoNoMarrecoBotTest {
         assertTrue(requestTruco);
     }
 
+    @Test
+    @DisplayName("Testa se ganhou a primeira rodada e possui carta com valor maior que 10")
+    void shouldRequestTrucoIfYouWonTheFirstRoundAndHaveACardWithValueGreaterThan10(){
+        hand = List.of(TrucoCard.of(FIVE, HEARTS), TrucoCard.of(FOUR, HEARTS));
+        cardVira = TrucoCard.of(FOUR, CLUBS);
+        roundResult = List.of(GameIntel.RoundResult.WON);
+        cards = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 2).opponentScore(3);
+        Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+        assertTrue(requestTruco);
+    }
 
 
 }
