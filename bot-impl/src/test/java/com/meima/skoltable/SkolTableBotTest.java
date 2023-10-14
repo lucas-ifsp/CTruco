@@ -58,5 +58,24 @@ class SkolTableBotTest {
 
         assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
     }
+    @Test
+    @DisplayName("Should play weakest card in first round when opponent's card is stronger")
+    void shouldPlayWeakestCardInFirstRoundWhenOpponentsCardIsStronger() {
+        List<TrucoCard> botCards = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(TWO, CLUBS), TrucoCard.of(FOUR, HEARTS));
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(FOUR, CLUBS);
+
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+        List<GameIntel.RoundResult> results = List.of();
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(results, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(TrucoCard.of(TWO, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
 
 }
