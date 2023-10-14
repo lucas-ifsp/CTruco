@@ -128,5 +128,23 @@ public class SabotaBotTest {
             assertThat(sut.decideIfRaises(intel)).isTrue();
 
         }
+
+        @Test
+        @DisplayName("should rise if drew the first and have card to win the second round")
+        void shouldRiseIfDrewTheFirstAndHaveCardToWinTheSecondRound(){
+
+            var cards = IntelMock.cardList2Cards();
+            when(intel.getCards()).thenReturn(cards);
+
+            when(intel.getOpponentCard()).thenReturn(
+                    Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS))
+            );
+
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
+
+        }
     }
 }
