@@ -23,11 +23,10 @@ public class SkolTable implements BotServiceProvider {
 
         if (rounds.isEmpty()) {
             int handPowerRank = getPowerRankFirstRound(hand, vira);
-            return handPowerRank == 4;
+
+            return (handPowerRank == 4 || handPowerRank == 3);
         }
-
         return false;
-
     }
 
     @Override
