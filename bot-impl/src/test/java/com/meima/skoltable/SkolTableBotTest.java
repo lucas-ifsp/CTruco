@@ -100,7 +100,6 @@ class SkolTableBotTest {
         List<GameIntel.RoundResult> rounds = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         List<TrucoCard> openCards = List.of(vira);
-        TrucoCard opponentCard = TrucoCard.of(FOUR, CLUBS);
 
         List<TrucoCard> botCards = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(SIX, SPADES));
 
