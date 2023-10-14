@@ -186,5 +186,21 @@ public class SabotaBotTest {
             assertThat(sut.decideIfRaises(intel)).isTrue();
 
         }
+
+        @Test
+        @DisplayName("should rise if won the first lost the second and will empate the third")
+        void shouldRiseIfWonTheFirstLostTheSecondAndWillEmpateTheThird(){
+
+            when(intel.getOpponentCard()).thenReturn(
+                    Optional.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+            );
+
+            when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
+
+        }
     }
 }
