@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SkolTableBotTest {
@@ -75,6 +76,22 @@ class SkolTableBotTest {
                 .opponentCard(opponentCard);
 
         assertEquals(TrucoCard.of(TWO, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
+    @Test
+    @DisplayName("Should not rise if lost first round")
+    void ShouldNotRisIfLostFirstRound(){
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.LOST);
+        List<TrucoCard> openCards = List.of();
+
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> botCards = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
     }
 
 
