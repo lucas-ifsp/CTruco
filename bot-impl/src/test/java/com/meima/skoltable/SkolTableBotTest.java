@@ -172,7 +172,7 @@ class SkolTableBotTest {
                 .gameInfo(rounds, opponentCard, vira, 1)
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(strongHandBuilder.build())).isEqualTo(0);
+        assertThat(skolTable.getRaiseResponse(strongHandBuilder.build())).isZero();
     }
 
     @Test
@@ -230,7 +230,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should raise in Eleven Score Hand if opponent have 10 points and have a good hand")
-    public void shouldRaiseInElevenScoreHandIfOpponentHave10PointsAndHavePower() {
+    void shouldRaiseInElevenScoreHandIfOpponentHave10PointsAndHavePower() {
         List<GameIntel.RoundResult> rounds = List.of();
         List<TrucoCard> openCards = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -247,7 +247,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should not raise in Eleven Score Hand if opponent have 10 points and haven't a good hand")
-    public void shouldNotRaiseInElevenScoreHandIfOpponentHave8PointsAndHavePower() {
+    void shouldNotRaiseInElevenScoreHandIfOpponentHave8PointsAndHavePower() {
         List<GameIntel.RoundResult> rounds = List.of();
         List<TrucoCard> openCards = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -264,7 +264,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should raise if have a pair")
-    public void shouldRaiseIfHaveAGoodPair(){
+    void shouldRaiseIfHaveAGoodPair(){
         List<GameIntel.RoundResult> rounds = List.of();
         List<TrucoCard> openCards = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -276,7 +276,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
 
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isEqualTo(0);
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
