@@ -175,6 +175,20 @@ class SkolTableBotTest {
         assertThat(skolTable.getRaiseResponse(strongHandBuilder.build())).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should not accept rise again if have weak cards in hand")
+    void ShouldNotAcceptRiseIfHaveWeakCards(){
+        List<TrucoCard> openCards = List.of();
+
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> botCards = List.of(TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(SIX, HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
+    }
 
 
 }
