@@ -1,4 +1,4 @@
-package rossi.lopes.trucoguru;
+package com.rossi.lopes.trucoguru;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
