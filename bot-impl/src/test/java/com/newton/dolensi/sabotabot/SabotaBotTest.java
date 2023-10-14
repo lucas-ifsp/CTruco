@@ -126,7 +126,21 @@ public class SabotaBotTest {
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
 
             assertThat(sut.decideIfRaises(intel)).isTrue();
+        }
 
+        @Test
+        @DisplayName("should not rise if won first round and have no one strong manilha card")
+        void shouldNotRiseIfWonFirstRoundAndHaveNoAStrongManilhaCard(){
+
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+            assertThat(sut.decideIfRaises(intel)).isFalse();
         }
 
         @Test
