@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class TecoNoMarrecoBot implements BotServiceProvider {
@@ -51,7 +52,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             case 3:
                 return CardToPlay.of(cards.get(2));
             default:
-                return CardToPlay.of(strongCard(intel));
+                //return CardToPlay.of(strongCard(intel));
+                return CardToPlay.of(weakestCard(intel));
         }
 
     }
@@ -122,6 +124,25 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return cards.get(indexMaior);
     }
+
+    private TrucoCard weakestCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        Integer menor = Integer.MAX_VALUE;;
+        Integer indexMenor = -1;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() < menor) {
+                menor = card.getRank().value();
+                System.out.println(menor);
+                indexMenor++;
+            }
+        }
+        return cards.get(indexMenor);
+
+    }
+
+
+
+
 
 
 
