@@ -37,6 +37,10 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        if((intel.getRoundResults().size() >= 1) && valueOfTheHand(intel) >= 15){
+            return true;
+        }
         return false;
     }
 
@@ -164,7 +168,6 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return cardPlay;
     }
-
 
 
 
