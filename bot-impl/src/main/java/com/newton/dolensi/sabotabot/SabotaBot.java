@@ -30,6 +30,7 @@ public class SabotaBot implements BotServiceProvider {
 
         // se teve empate, o marreco jogou uma carta e temos uma mais forte: truco
         // se ganhou um dos dois primeiros rounds, o marreco jogou uma carta e temos uma mais forte: truco
+        // se ganhou um dos dois primeiros rounds e temos uma manilha forte: truco
         if (
                 (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)) ||
                 (intel.getRoundResults().contains(GameIntel.RoundResult.WON)))
@@ -136,6 +137,10 @@ public class SabotaBot implements BotServiceProvider {
         if (!(intel.getOpponentCard().isEmpty())){
 
             if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
+                return true;
+            }
+        } else if (getManilhasCard(intel).size() > 0){
+            if (hasStrongManilha(intel)){
                 return true;
             }
         }
