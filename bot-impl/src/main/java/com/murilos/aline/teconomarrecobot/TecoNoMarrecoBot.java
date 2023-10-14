@@ -41,9 +41,18 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        List<TrucoCard> card = intel.getCards();
-
-        return CardToPlay.of(card.get(0));
+        List<TrucoCard> cards = intel.getCards();
+        Integer manilhas = manilhaCount(cards,intel.getVira());
+        switch (manilhas) {
+            case 1:
+                return CardToPlay.of(cards.get(0));
+            case 2:
+                return CardToPlay.of(cards.get(1));
+            case 3:
+                return CardToPlay.of(cards.get(2));
+            default:
+                return CardToPlay.of(strongCard(intel));
+        }
 
     }
 
@@ -100,6 +109,20 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return hand;
     }
+
+    private TrucoCard strongCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        Integer maior = 0;
+        Integer indexMaior = -1;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() > maior) {
+                maior = card.getRank().value();
+                indexMaior++;
+            }
+        }
+        return cards.get(indexMaior);
+    }
+
 
 
 
