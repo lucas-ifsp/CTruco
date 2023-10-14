@@ -42,6 +42,12 @@ public class SkolTable implements BotServiceProvider {
 
             return (handPowerRank == 4 || handPowerRank == 3);
         }
+
+        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+            int handPowerRank = getPowerRankSecondRound(hand, vira);
+            return (handPowerRank > 2);
+        }
+
         return false;
     }
 
