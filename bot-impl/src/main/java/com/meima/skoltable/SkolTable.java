@@ -5,7 +5,6 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -56,6 +55,7 @@ public class SkolTable implements BotServiceProvider {
         boolean isFirstRound = intel.getRoundResults().isEmpty();
         boolean existsOpponentCard = intel.getOpponentCard().isPresent();
 
+        List<GameIntel.RoundResult> rounds = intel.getRoundResults();
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
         TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
@@ -72,6 +72,11 @@ public class SkolTable implements BotServiceProvider {
             }
             return CardToPlay.of(strongestCardInHand);
         }
+
+        if(rounds.get(0).equals(GameIntel.RoundResult.DREW)){
+            return CardToPlay.of(strongestCardInHand);
+        }
+
         List<TrucoCard> hand = intel.getCards();
         return CardToPlay.of(hand.get(0));
     }
