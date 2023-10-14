@@ -144,6 +144,20 @@ class SkolTableBotTest {
         assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isPositive();
     }
 
+    @Test
+    @DisplayName("Should rise again if have very strong cards in hand")
+    void ShouldRiseAgainIfHaveVeryStrongCards(){
+        List<TrucoCard> openCards = List.of();
+
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isPositive();
+    }
 
 
 }
