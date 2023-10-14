@@ -78,7 +78,9 @@ public class SkolTable implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         int handPowerRank = getPowerRankFirstRound(hand, vira);
-        
+
+        if (isPair(intel)) return 0;
+
         if(!isFirstRound){
             if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
                 handPowerRank = getPowerRankSecondRound(hand, vira);
