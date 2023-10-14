@@ -16,31 +16,41 @@ public class SabotaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
 
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
         // nunca pedir truco na primeira rodada
         if (intel.getRoundResults().isEmpty()){
             return false;
         }
 
+
         // se ganhou a primeira rodada e tem manilha forte: truco
-        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+        if (roundResults.get(0) == GameIntel.RoundResult.WON) {
             if ( (!(getManilhasCard(intel).isEmpty())) && hasStrongManilha(intel)){
                 return true;
             }
         }
 
         // se teve empate, o marreco jogou uma carta e temos uma mais forte: truco
-        // se ganhamos a primeira e podemos empatar: truco
         // se ganhou um dos dois primeiros rounds, o marreco jogou uma carta e temos uma mais forte: truco
         // se ganhou um dos dois primeiros rounds e temos uma manilha forte: truco
         if (
-                (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)) ||
-                (intel.getRoundResults().contains(GameIntel.RoundResult.WON)))
+                (roundResults.contains(GameIntel.RoundResult.DREW)) ||
+                (roundResults.contains(GameIntel.RoundResult.WON)))
         {
             if (canRise(intel)){
                 return true;
             }
         }
 
+        // se ganhamos a primeira e podemos empatar: truco
+        if( (roundResults.size() > 1) && (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) ){
+            if (opponentHasTheSameCard(intel, intel.getOpponentCard().get())){
+                return true;
+            }
+        }
+
+        
         return false;
     }
 
@@ -165,9 +175,6 @@ public class SabotaBot implements BotServiceProvider {
                 return true;
             }
 
-            if (opponentHasTheSameCard(intel, intel.getOpponentCard().get())){
-                return true;
-            }
         } else if (getManilhasCard(intel).size() > 0){
             if (hasStrongManilha(intel)){
                 return true;
