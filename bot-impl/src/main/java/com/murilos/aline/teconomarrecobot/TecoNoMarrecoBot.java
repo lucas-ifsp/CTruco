@@ -6,9 +6,7 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class TecoNoMarrecoBot implements BotServiceProvider {
 
@@ -143,14 +141,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     }
 
     private TrucoCard killCard(GameIntel intel){
-        List<TrucoCard> strongerCards = new ArrayList<>();
         TrucoCard cardPlay = null;
-
-        for (TrucoCard card : intel.getCards()) {
-            if (card.getRank().value() > intel.getOpponentCard().get().getRank().value()) {
-                strongerCards.add(card);
-            }
-        }
+        List<TrucoCard> strongerCards = strongestCardsInTheHand(intel);
         if (!strongerCards.isEmpty()){
             cardPlay = strongerCards.get(0);
             for (TrucoCard card : strongerCards){
@@ -160,9 +152,17 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             }
         }else{
             cardPlay = weakestCard(intel);
-
         }
         return cardPlay;
+    }
+    private List<TrucoCard> strongestCardsInTheHand(GameIntel intel){
+        List<TrucoCard> strongerCards = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() > intel.getOpponentCard().get().getRank().value()) {
+                strongerCards.add(card);
+            }
+        }
+        return strongerCards;
     }
 
 
