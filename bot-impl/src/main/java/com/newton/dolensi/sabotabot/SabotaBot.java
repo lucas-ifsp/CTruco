@@ -38,6 +38,15 @@ public class SabotaBot implements BotServiceProvider {
             }
         }
 
+        if (intel.getRoundResults().contains(GameIntel.RoundResult.WON)){
+            if (!(intel.getOpponentCard().isEmpty())){
+
+                if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
