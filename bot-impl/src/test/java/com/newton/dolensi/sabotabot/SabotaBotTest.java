@@ -141,7 +141,21 @@ public class SabotaBotTest {
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
 
             assertThat(sut.decideIfRaises(intel)).isTrue();
+        }
 
+        @Test
+        @DisplayName("should rise if is drew on third round and the opponent card is weak")
+        void shouldRiseIfIsDrewOnThirdRoundAndTheOpponentCardIsWeak(){
+
+            when(intel.getOpponentCard()).thenReturn(
+                    Optional.of(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS))
+            );
+
+            when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
         }
     }
 }
