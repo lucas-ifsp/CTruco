@@ -148,6 +148,19 @@ class TecoNoMarrecoBotTest {
 
     }
 
+    @Test
+    @DisplayName("Testa jogar a carta mais fraca")
+    void playTheWeakestCard(){
+        hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, CLUBS));
+        cardVira = TrucoCard.of(ACE, SPADES);
+        roundResult = List.of();
+        cards = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
+
+    }
+
 
 
 }
