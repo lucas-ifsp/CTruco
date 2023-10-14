@@ -12,7 +12,23 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int opponentScore = intel.getOpponentScore();
+
+        //Aqui talvez vá o lance do ZAP
+
+        if (opponentScore == 11) {
+            return true;
+        }
+
+        int handPowerRank = getPowerRankFirstRound(hand, vira);
+
+        if (opponentScore != 7) {
+            return handPowerRank >= 3;
+        }
+
+        return true;
     }
 
     @Override
