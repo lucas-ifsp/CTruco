@@ -174,5 +174,17 @@ public class SabotaBotTest {
 
             assertThat(sut.decideIfRaises(intel)).isTrue();
         }
+
+        @Test
+        @DisplayName("should rise if is drew on thir round and has strong manilha")
+        void shouldRiseIfIsDrewOnThirRoundAndHasStrongManilha(){
+
+            when(intel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON));
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
+
+        }
     }
 }
