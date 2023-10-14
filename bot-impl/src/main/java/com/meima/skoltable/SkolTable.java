@@ -1,5 +1,6 @@
 package com.meima.skoltable;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -61,6 +62,8 @@ public class SkolTable implements BotServiceProvider {
         TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
         TrucoCard opponentCard;
 
+
+
         if(isFirstRound){
             if(existsOpponentCard) {
                 opponentCard = intel.getOpponentCard().get();
@@ -72,6 +75,14 @@ public class SkolTable implements BotServiceProvider {
             }
             return CardToPlay.of(strongestCardInHand);
         }
+
+        if (existsOpponentCard){
+            opponentCard = intel.getOpponentCard().get();
+            if (opponentCard.getRank().equals(CardRank.HIDDEN)){
+            return CardToPlay.of(weakestCardInHand);
+            }
+        }
+
 
         if(rounds.get(0).equals(GameIntel.RoundResult.DREW)){
             return CardToPlay.of(strongestCardInHand);
