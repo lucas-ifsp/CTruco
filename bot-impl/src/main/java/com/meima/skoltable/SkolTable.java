@@ -34,12 +34,13 @@ public class SkolTable implements BotServiceProvider {
                 opponentCard = intel.getOpponentCard().get();
                 if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
                     return CardToPlay.of(strongestCardInHand);
+                } else {
+                    return CardToPlay.of(intel.getCards().get(0));
                 }
             }
+            return CardToPlay.of(strongestCardInHand);
         }
-
         List<TrucoCard> hand = intel.getCards();
-
         return CardToPlay.of(hand.get(0));
     }
 
