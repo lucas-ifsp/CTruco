@@ -29,21 +29,13 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         // se teve empate, o marreco jogou uma carta e temos uma mais forte: truco
-        if (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)){
-            if (!(intel.getOpponentCard().isEmpty())){
-
-                if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
-                    return true;
-                }
-            }
-        }
-
-        if (intel.getRoundResults().contains(GameIntel.RoundResult.WON)){
-            if (!(intel.getOpponentCard().isEmpty())){
-
-                if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
-                    return true;
-                }
+        // se ganhou um dos dois primeiros rounds, o marreco jogou uma carta e temos uma mais forte: truco
+        if (
+                (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)) ||
+                (intel.getRoundResults().contains(GameIntel.RoundResult.WON)))
+        {
+            if (canRise(intel)){
+                return true;
             }
         }
 
@@ -135,5 +127,17 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         return manilhas;
+    }
+
+    private boolean canRise(GameIntel intel){
+
+        if (!(intel.getOpponentCard().isEmpty())){
+
+            if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
+                return true;
+            }
+        }
+
+        return true;
     }
 }
