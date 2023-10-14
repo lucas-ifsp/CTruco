@@ -27,6 +27,7 @@ public class SkolTable implements BotServiceProvider {
 
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
+        TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
         TrucoCard opponentCard;
 
         if(isFirstRound){
@@ -35,7 +36,7 @@ public class SkolTable implements BotServiceProvider {
                 if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
                     return CardToPlay.of(strongestCardInHand);
                 } else {
-                    return CardToPlay.of(intel.getCards().get(0));
+                    return CardToPlay.of(weakestCardInHand);
                 }
             }
             return CardToPlay.of(strongestCardInHand);
@@ -54,6 +55,12 @@ public class SkolTable implements BotServiceProvider {
 
         return cards.stream()
                 .max(Comparator.comparingInt(card -> card.relativeValue(vira))).get();
+    }
+
+    private TrucoCard getWeakestCardInHand(GameIntel intel, TrucoCard vira) {
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.stream().min(Comparator.comparingInt(card -> card.relativeValue(vira))).get();
     }
 
 }
