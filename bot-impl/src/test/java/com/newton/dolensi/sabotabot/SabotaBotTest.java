@@ -64,7 +64,7 @@ public class SabotaBotTest {
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
-                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
                 assertEquals(cards.get(1), sut.chooseCard(intel).content());
             }
 
@@ -77,9 +77,6 @@ public class SabotaBotTest {
 
                 assertTrue(sut.chooseCard(intel).content().isOuros(intel.getVira()));
             }
-
-
-
         }
 
         @Nested

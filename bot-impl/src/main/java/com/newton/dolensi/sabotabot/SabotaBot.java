@@ -21,21 +21,19 @@ public class SabotaBot implements BotServiceProvider {
             return false;
         }
 
+        // se ganhou a primeira rodada e tem manilha: truco
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             if (!(getManilhasCard(intel).isEmpty())){
                 return true;
             }
         }
 
+        // se teve empate, o marreco jogou uma carta e temos uma mais forte: truco
         if (intel.getRoundResults().contains(GameIntel.RoundResult.DREW)){
             if (!(intel.getOpponentCard().isEmpty())){
 
-                var opponentCard = intel.getOpponentCard();
-
-                for (TrucoCard card : intel.getCards()) {
-                    if (card.compareValueTo(opponentCard.get(), intel.getVira()) > 0){
-                        return true;
-                    }
+                if (!opponentHasStrongCard(intel, intel.getOpponentCard().get())){
+                    return true;
                 }
             }
         }
@@ -56,7 +54,7 @@ public class SabotaBot implements BotServiceProvider {
                 }
             }
             cardToPlay = CardToPlay.of(getGreatestCard(intel, hand));
-        } else if (opponentHasStrongCard(opponentCard.get()))
+        } else if (opponentHasStrongCard(intel, opponentCard.get()))
             cardToPlay = CardToPlay.of(getWeakestCard(intel, hand));
 
         return cardToPlay;
@@ -107,9 +105,14 @@ public class SabotaBot implements BotServiceProvider {
         return hand.get(0);
     }
 
-    private boolean opponentHasStrongCard(TrucoCard opponentCard) {
-        int KING_VALUE = 7;
-        return opponentCard.getRank().value() > KING_VALUE;
+    private boolean opponentHasStrongCard(GameIntel intel, TrucoCard opponentCard) {
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(opponentCard, intel.getVira()) > 0){
+                return false;
+            }
+        }
+        return true;
     }
 
     private List<TrucoCard> getManilhasCard(GameIntel intel){
