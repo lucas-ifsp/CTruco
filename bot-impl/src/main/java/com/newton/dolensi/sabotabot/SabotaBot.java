@@ -45,12 +45,13 @@ public class SabotaBot implements BotServiceProvider {
 
         // se ganhamos a primeira e podemos empatar: truco
         if( (roundResults.size() > 1) && (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) ){
-            if (opponentHasTheSameCard(intel, intel.getOpponentCard().get())){
-                return true;
+            if (!(intel.getOpponentCard().isEmpty())) {
+                if (opponentHasTheSameCard(intel, intel.getOpponentCard().get())) {
+                    return true;
+                }
             }
         }
 
-        
         return false;
     }
 
