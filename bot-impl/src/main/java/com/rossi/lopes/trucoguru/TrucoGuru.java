@@ -59,6 +59,8 @@ public class TrucoGuru implements BotServiceProvider {
 
         Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(intel.getCards(), intel.getVira());
         if(hasCasalMaior) return 1;
+        Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(intel.getCards(), intel.getVira());
+        if(hasCasalMenor) return 1;
 
         return 0;
     }
