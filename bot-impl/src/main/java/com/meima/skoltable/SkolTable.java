@@ -91,6 +91,12 @@ public class SkolTable implements BotServiceProvider {
             return CardToPlay.of(strongestCardInHand);
         }
 
+        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+            if(strongestCardInHand.isZap(vira) && rounds.size() == 1){
+                return CardToPlay.of(weakestCardInHand);
+            }
+        }
+
         List<TrucoCard> hand = intel.getCards();
         return CardToPlay.of(hand.get(0));
     }
