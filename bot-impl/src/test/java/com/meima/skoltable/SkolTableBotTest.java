@@ -480,7 +480,21 @@ class SkolTableBotTest {
     }
 
 
+    @Test
+    @DisplayName("Should decide to raise in the second round if lost first round and bot has copas and zap")
+    void shouldRaiseInSecondRoundIfLostFirstRoundAndHasCopasAndZap() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.LOST);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FOUR, HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(stepBuilder.build()));
+    }
 
 
 
