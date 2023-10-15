@@ -137,7 +137,7 @@ class VapoBotTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
             );
 
-            List<TrucoCard> openCards = Arrays.asList();
+            List<TrucoCard> openCards = List.of();
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -151,17 +151,17 @@ class VapoBotTest {
         }
 
         @Test
-        @DisplayName("average of 2D, 3C and 7C with vira being 2C should be 7.66...")
+        @DisplayName("average of 2D, 3C and 7C with vira being 2C should be 8.666...")
         void shouldCalculateTheRightAverage2(){
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = Arrays.asList(
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
             );
 
-            List<TrucoCard> openCards = Arrays.asList();
+            List<TrucoCard> openCards = List.of();
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -169,7 +169,31 @@ class VapoBotTest {
                     .opponentScore(0);
 
             double average = vapoBot.getAverageCardValue(stepBuilder.build());
-            double result = (double) 23/3;
+            double result = (double) 26/3;
+
+            assertEquals(average, result);
+        }
+
+        @Test
+        @DisplayName("average of 3D, 3C and JC with vira being 2C should be 9.66...")
+        void shouldCalculateTheRightAverage3(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(0);
+
+            double average = vapoBot.getAverageCardValue(stepBuilder.build());
+            double result = (double) 29/3;
 
             assertEquals(average, result);
         }
