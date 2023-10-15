@@ -13,51 +13,27 @@ import java.util.List;
 public class LeonardaBot implements BotServiceProvider {
     private static final int MAO_DE_ONZE_THRESHOLD = 11;
     private static final int LOWER_RANK_THRESHOLD = 6;
+    private TrucoCard manilhaCard;
+    private List<TrucoCard> leonardaCards;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD) {
-            return true;
-        }
+        int opponentScore = intel.getOpponentScore();
         List<TrucoCard> currentHandCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        if (hasHigherCasal(currentHandCards, vira)) {
-            return true;
-        }
-        if (hasCasal(currentHandCards, vira)) {
-            return true;
-        }
-        if (isHandStrong(currentHandCards, vira)) {
-            return true;
-        }
-        if (intel.getOpponentScore() >= 9) {
-            return isHandStrong(currentHandCards, vira);
-        }
-        return false;
+
+        return opponentScore == MAO_DE_ONZE_THRESHOLD || hasHigherCasal(currentHandCards, vira) || hasCasal(currentHandCards, vira) || (isHandStrong(currentHandCards, vira) && (opponentScore >= 9 || intel.getScore() >= 10));
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        int opponentScore = intel.getOpponentScore();
+        int score = intel.getScore();
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-        if (intel.getOpponentScore() == MAO_DE_ONZE_THRESHOLD || intel.getScore() == MAO_DE_ONZE_THRESHOLD) {
-            return false;
-        }
         List<TrucoCard> cards = intel.getCards();
-        if (hasHigherCasal(cards, intel.getVira())) {
-            return true;
-        }
-        if (hasCasal(cards, intel.getVira())) {
-            return true;
-        }
-        if (intel.getHandPoints() + intel.getOpponentScore() >= 12) {
-            if (isHandStrong(cards, intel.getVira())) {
-                return true;
-            }
-        }
-        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
-            return isHandStrong(cards, intel.getVira());
-        }
-        return false;
+        TrucoCard vira = intel.getVira();
+
+        return !(opponentScore == MAO_DE_ONZE_THRESHOLD || score == MAO_DE_ONZE_THRESHOLD) && (hasHigherCasal(cards, vira) || hasCasal(cards, vira) || (intel.getHandPoints() + opponentScore >= 12 && isHandStrong(cards, vira)) || (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON && isHandStrong(cards, vira)));
     }
 
     @Override
@@ -66,6 +42,7 @@ public class LeonardaBot implements BotServiceProvider {
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         boolean shouldBluff = determineIfBluffingIsWarranted(roundResults, cards);
+
         if (shouldBluff) {
             return chooseLowerRankedCard(cards);
         } else if (getMaoDeOnzeResponse(intel)) {
@@ -108,7 +85,6 @@ public class LeonardaBot implements BotServiceProvider {
                 }
             }
         }
-
         return lowerRankedCard != null ? CardToPlay.of(lowerRankedCard) : null;
     }
 
@@ -255,4 +231,25 @@ public class LeonardaBot implements BotServiceProvider {
         }
         return winningCard;
     }
+
+    public void setManilhaCard(TrucoCard manilhaCard) {
+        this.manilhaCard = manilhaCard;
+    }
+
+    public void setPlayerCards(List<TrucoCard> leonardaCards) {
+        this.leonardaCards = leonardaCards;
+    }
+
+    public List<Integer> calculateCardRanks() {
+        List<Integer> cardRanks = new ArrayList<>();
+        for (TrucoCard card : leonardaCards) {
+            cardRanks.add(calculateRank(card));
+        }
+        return cardRanks;
+    }
+
+    private int calculateRank(TrucoCard card) {
+        return card.isManilha(manilhaCard) ? 1 : card.getRank().value();
+    }
 }
+
