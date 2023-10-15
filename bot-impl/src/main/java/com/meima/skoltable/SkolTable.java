@@ -65,10 +65,14 @@ public class SkolTable implements BotServiceProvider {
         TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
         TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
         TrucoCard opponentCard;
-
+        List<TrucoCard> hand = intel.getCards();
 
 
         if(isFirstRound){
+            if(hasCopasAndZap(hand, vira)){
+                return CardToPlay.of(weakestCardInHand);
+            }
+
             if(existsOpponentCard) {
                 opponentCard = intel.getOpponentCard().get();
                 if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
@@ -97,7 +101,7 @@ public class SkolTable implements BotServiceProvider {
             }
         }
 
-        List<TrucoCard> hand = intel.getCards();
+
         return CardToPlay.of(hand.get(0));
     }
 
@@ -189,6 +193,24 @@ public class SkolTable implements BotServiceProvider {
         return pairCount == 2;
     }
 
+    public boolean hasCopasAndZap(List<TrucoCard> hand ,TrucoCard vira) {
+        boolean hasCopas = false;
+        boolean hasZap = false;
+
+        for (TrucoCard card : hand) {
+            if (card.isCopas(vira)) {
+                hasCopas = true;
+            } else if (card.isZap(vira)) {
+                hasZap = true;
+            }
+
+            if (hasCopas && hasZap) {
+                break;
+            }
+        }
+
+        return hasCopas && hasZap;
+    }
 
 
 }
