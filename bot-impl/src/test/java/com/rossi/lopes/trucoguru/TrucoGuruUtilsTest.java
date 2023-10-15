@@ -59,4 +59,28 @@ public class TrucoGuruUtilsTest {
         );
         assertThat(TrucoGuruUtils.hasZap(cards, vira)).isFalse();
     }
+
+    @Test
+    @DisplayName("Should return true if hand has at least one strong card")
+    void shouldReturnTrueIfHandHasStrongCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+        assertThat(TrucoGuruUtils.hasStrongCard(cards, vira)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return false if hand has no strong card")
+    void shouldReturnTrueIfHandHasNoStrongCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        assertThat(TrucoGuruUtils.hasStrongCard(cards, vira)).isFalse();
+    }
 }
