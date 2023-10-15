@@ -36,7 +36,7 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        final Boolean isMaoDeOnze = intel.getScore() == 11;
+        final Boolean isMaoDeOnze = intel.getScore() == 11 || intel.getOpponentScore() == 11;
         if (isMaoDeOnze) return false;
 
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
