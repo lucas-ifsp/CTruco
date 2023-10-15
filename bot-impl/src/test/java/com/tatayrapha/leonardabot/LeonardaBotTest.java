@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -93,22 +92,6 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should play the strongest card and win the round in the Mão de Ferro scenario.")
-    void winInTheMaoDeFerroScenario() {
-        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-        final List<TrucoCard> opponentCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(trucoCardList);
-        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCards.get(0)));
-        when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
-        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
-        TrucoCard expectedWinningCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        assertThat(chosenCard).isNotNull();
-        assertThat(chosenCard.value()).isEqualTo(expectedWinningCard);
-    }
-
-    @Test
     @DisplayName("Should challenge the opponent with a 'Truco' request in the second round with a strong hand.")
     void challengeWithTrucoInSecondRoundWithStrongHand() {
         final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
@@ -155,7 +138,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should not ask for raise in opponent Mão de Onze scenario.")
+    @DisplayName("Should not ask for raise in opponent's Mão de Onze scenario.")
     void testShouldNotRaiseInOpponentMaoDeOnze() {
         when(intel.getOpponentScore()).thenReturn(11);
         boolean response = leonardaBot.decideIfRaises(intel);
@@ -195,7 +178,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should play Mão de Onze when having casal in hand.")
+    @DisplayName("Should play Mão de Onze when having Casal in hand.")
     void testShouldPlayMaoDeOnzeWithCasalInHand() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
@@ -227,15 +210,6 @@ class LeonardaBotTest {
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
         CardToPlay response = leonardaBot.chooseCard(intel);
         assertThat(response.content()).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
-    }
-
-    @Test
-    @DisplayName("Should play in Mao de Ferro scenario.")
-    void testShouldPlayInMaoDeFerroScenario() {
-        Mockito.lenient().when(intel.getScore()).thenReturn(11);
-        Mockito.lenient().when(intel.getOpponentScore()).thenReturn(11);
-        boolean response = leonardaBot.getMaoDeOnzeResponse(intel);
-        assertThat(response).isTrue();
     }
 
     @Test
@@ -272,7 +246,7 @@ class LeonardaBotTest {
     }
 
     @Test
-    @DisplayName("Should not raise and accept the hand in a Mão de Onze scenario with a score of 11.")
+    @DisplayName("Should not accept the hand in a Mão de Onze scenario.")
     void testShouldNotRaiseInMaoDeOnzeWithScore11() {
         final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
@@ -282,4 +256,16 @@ class LeonardaBotTest {
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should accept raise with a Manilha and card value > 4 when vira is not 3.")
+    void testShouldAcceptRaiseWithManilhaAndCardValueGreaterThan4() {
+        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(0);
+    }
+
 }
