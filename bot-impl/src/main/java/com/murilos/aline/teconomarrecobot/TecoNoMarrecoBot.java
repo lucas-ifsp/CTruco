@@ -87,8 +87,10 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
                 if (card.isOuros(intel.getVira()))
                     return CardToPlay.of(card);
             }
-
-
+            // se tiver amarrado joga maior manilha
+            if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+                return CardToPlay.of(strongManilha(intel));
+            }
         }
         // joga a carta mais forte da mão
         return CardToPlay.of(strongCard(intel));
