@@ -71,6 +71,27 @@ class VapoBotTest {
             assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), vapoBot.getHighestCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Manilha of Clubs is Higher than Manilha of Spades and Manilha of Diamonds")
+        void makeSureThatHighestIsJackOfClubs () {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS), vapoBot.getHighestCard(stepBuilder.build()));
+        }
+
     }
 
     @Nested
