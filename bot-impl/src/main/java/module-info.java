@@ -1,5 +1,6 @@
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.bueno.impl.dummybot.DummyBot;
+import com.casal.impl.vapobot.VapoBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
@@ -16,5 +17,5 @@ module bot.impl {
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     provides com.bueno.spi.service.BotServiceProvider with
-            DummyBot, Carlsen, DestroyerBot, WrkncacnterBot, PaulistaBot, MarrecoBot, AddTheNewSoul;
+            DummyBot, Carlsen, DestroyerBot, WrkncacnterBot, PaulistaBot, MarrecoBot, AddTheNewSoul, VapoBot;
 }
