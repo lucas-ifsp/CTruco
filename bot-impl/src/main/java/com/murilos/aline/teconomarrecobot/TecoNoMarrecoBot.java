@@ -8,6 +8,8 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+
 public class TecoNoMarrecoBot implements BotServiceProvider {
 
     @Override
@@ -41,6 +43,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
             return true;
         }if((intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && valueOfTheHand(intel) >= 10)){
+            return true;
+        }if(intel.getRoundResults().get(0).equals(DREW) && valueOfTheHand(intel) >= 10){
             return true;
         }
         return false;
