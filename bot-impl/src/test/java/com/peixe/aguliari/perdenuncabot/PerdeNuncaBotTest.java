@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -418,5 +419,75 @@ public class PerdeNuncaBotTest {
         boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
 
         assertTrue(shouldRaise);
+    }
+
+    @Test
+    @DisplayName("Should raise if winning by specific quantity of points")
+    public void shouldRaiseIfWinningBySpecificQuantityOfPoints() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(List.of(openCards.get(0)), 6)
+                .opponentScore(2);
+
+        assertTrue(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should not raise when has low rank cards")
+    public void shouldNotRaiseWhenHasLowRankCards() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.SPADES), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)), 3)
+                .opponentScore(2)
+                .opponentCard(opponentCard);
+
+        assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should not raise if opponent has a card that beats the best card")
+    public void shouldNotRaiseIfOpponentHasACardThatBeatsTheBestCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.SPADES), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)), 3)
+                .opponentScore(2)
+                .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+        assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should not raise if have 1 point left to win")
+    public void shouldNotRaiseIfHave1pointLeftToWin() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(10)
+                .opponentCard(opponentCard);
+
+        assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
     }
 }
