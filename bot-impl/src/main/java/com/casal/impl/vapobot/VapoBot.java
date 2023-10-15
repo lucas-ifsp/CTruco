@@ -2,6 +2,7 @@ package com.casal.impl.vapobot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class VapoBot implements BotServiceProvider {
@@ -31,5 +32,15 @@ public class VapoBot implements BotServiceProvider {
         return BotServiceProvider.super.getName();
     }
 
+    public TrucoCard getHighestCard(GameIntel intel){
+        TrucoCard highestCard = intel.getCards().get(0);
 
+        for (TrucoCard card : intel.getCards()) {
+            if (card.relativeValue(intel.getVira()) > highestCard.relativeValue(intel.getVira())) {
+                highestCard = card;
+            }
+        }
+
+        return highestCard;
+    }
 }
