@@ -6,6 +6,6 @@ import java.util.List;
 
 public class TrucoGuruUtils {
     Boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
-        return false;
+        return cards.stream().anyMatch(card -> card.isManilha(vira));
     }
 }
