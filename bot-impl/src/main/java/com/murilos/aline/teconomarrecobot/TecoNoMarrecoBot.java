@@ -137,14 +137,14 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     private TrucoCard weakestCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         Integer menor = Integer.MAX_VALUE;;
-        Integer indexMenor = -1;
+        TrucoCard cardPlay = null;
         for (TrucoCard card : intel.getCards()) {
             if (card.getRank().value() < menor) {
                 menor = card.getRank().value();
-                indexMenor++;
+                cardPlay = card;
             }
         }
-        return cards.get(indexMenor);
+        return cardPlay;
 
     }
 
