@@ -55,4 +55,13 @@ public class VapoBot implements BotServiceProvider {
 
         return lowestCard;
     }
+
+    double getAverageCardValue(GameIntel intel){
+        int values = 0;
+        for (TrucoCard card : intel.getCards()) {
+            values += card.relativeValue(intel.getVira());
+        }
+        double average = (double) values/intel.getCards().size();
+        return average;
+    }
 }
