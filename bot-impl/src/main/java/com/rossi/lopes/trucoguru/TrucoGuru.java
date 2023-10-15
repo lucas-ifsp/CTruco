@@ -37,10 +37,13 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        final List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        final Boolean isFirstRound = roundResults.size() == 0;
+        if (isFirstRound) return false;
+
         final Boolean isMaoDeOnze = intel.getScore() == 11 || intel.getOpponentScore() == 11;
         if (isMaoDeOnze) return false;
 
-        final List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         final TrucoCard vira = intel.getVira();
         final List<TrucoCard> cards = intel.getCards();
 
