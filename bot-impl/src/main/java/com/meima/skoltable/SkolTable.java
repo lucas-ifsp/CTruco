@@ -87,8 +87,7 @@ public class SkolTable implements BotServiceProvider {
             }
         }
 
-
-        if(rounds.get(0).equals(GameIntel.RoundResult.DREW)){
+        if(rounds.get(0).equals(GameIntel.RoundResult.DREW) || rounds.get(0).equals(GameIntel.RoundResult.LOST)){
             return CardToPlay.of(strongestCardInHand);
         }
 
