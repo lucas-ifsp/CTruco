@@ -46,7 +46,7 @@ class VapoBotTest {
                     .botInfo(myCards, 0)
                     .opponentScore(0);
 
-            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), vapoBot.getHighestCard(stepBuilder));
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), vapoBot.getHighestCard(stepBuilder.build()));
         }
 
     }
