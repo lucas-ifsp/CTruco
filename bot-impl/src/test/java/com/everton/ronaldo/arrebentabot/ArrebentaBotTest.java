@@ -360,6 +360,22 @@ class ArrebentaBotTest {
             assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
         }
         @Test
+        @DisplayName("Should accept raise when lost first hand but has King of Hearts")
+        void shouldAcceptRaiseWithKingOfHearts() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS), // Manilha específica
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); // Outra carta não relacionada à manilha
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
+        }
+        @Test
         @DisplayName("Should decline raise when lost first hand with good cards")
         void shouldDeclineRaiseWhenLostFirstHandWithGoodCards() {
             GameIntel intel = mock(GameIntel.class);
