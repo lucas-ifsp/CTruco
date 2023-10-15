@@ -348,4 +348,20 @@ class SkolTableBotTest {
         assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
+    @Test
+    @DisplayName("Should decide not to raise in the second round with low hand Power Rank")
+    void shouldNotRaiseInSecondRoundWithLowHandPowerRank() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(THREE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertFalse(skolTable.decideIfRaises(strongHandBuilder.build()));
+    }
+
 }
