@@ -463,6 +463,24 @@ class SkolTableBotTest {
         assertNotEquals(TrucoCard.of(FOUR, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
+    @Test
+    @DisplayName("Should play the weakest card on first round if it has copas and zap")
+    void shouldPlayTheWeakestCardOnFirstRoundIfHasCopasAndZap() {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(SIX, SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertEquals(TrucoCard.of(SIX, SPADES), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
+
+
 
 
 
