@@ -120,7 +120,7 @@ class TecoNoMarrecoBotTest {
     }
 
     @Test
-    @DisplayName("Testa jogar a carta mais forte quando não tem manilha")
+    @DisplayName("Testa jogar a carta mais forte quando não tem manilha") // VERIFICAR
     void tryPlayingTheStrongestCardWhenYouDontHavesManilha(){
         hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(KING, CLUBS));
         cardVira = TrucoCard.of(KING, SPADES);
@@ -131,8 +131,6 @@ class TecoNoMarrecoBotTest {
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,CLUBS));
 
     }
-
-
 
     @Test
     @DisplayName("Testa se na segunda rodada possuir mão com valor maior que 15 pede truco")
@@ -174,7 +172,7 @@ class TecoNoMarrecoBotTest {
     @DisplayName("chooseCard")
     class ChooseCardTests{
         @Test
-        @DisplayName("Testa jogar a carta que mata a do oponente")
+        @DisplayName("Testa jogar a carta que mata a do oponente quando não é manilha")
         void playTheKillCard() {
             hand = List.of(TrucoCard.of(TWO,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
             cardVira = TrucoCard.of(SEVEN, SPADES);
@@ -186,7 +184,7 @@ class TecoNoMarrecoBotTest {
             assertEquals(TrucoCard.of(KING, CLUBS), cardToPlay.value());
         }
         @Test
-        @DisplayName("Testa jogar a carta mais fraca")
+        @DisplayName("Testa jogar a carta mais fraca quando não tem manilha")
         void playTheWeakestCard(){
             hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, CLUBS));
             cardVira = TrucoCard.of(ACE, SPADES);
@@ -196,6 +194,19 @@ class TecoNoMarrecoBotTest {
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
+
+        }
+        @Test
+        @DisplayName("Testa jogar matar manilha do oponente")
+        void playKillManillha(){
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(TWO, HEARTS), TrucoCard.of(TWO,SPADES));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(TWO, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
 
         }
     }
