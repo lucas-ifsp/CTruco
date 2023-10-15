@@ -176,10 +176,6 @@ class TecoNoMarrecoBotTest {
         }
     }
 
-
-
-
-
     @Nested
     @DisplayName("chooseCard")
     class ChooseCardTests{
@@ -226,6 +222,18 @@ class TecoNoMarrecoBotTest {
         void tryPlayingTheStrongestCardWhenYouDontHavesManilha(){
             hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(KING, CLUBS));
             cardVira = TrucoCard.of(KING, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,CLUBS));
+
+        }
+        @Test
+        @DisplayName("Testa jogar descartar manilha ouro")
+        void playTheGoldIfYouHaveTheHand(){
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(KING, CLUBS), TrucoCard.of(KING, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
             roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
