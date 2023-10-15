@@ -10,6 +10,6 @@ public class TrucoGuruUtils {
     }
 
     static Boolean hasZap(List<TrucoCard> cards, TrucoCard vira) {
-        return false;
+        return cards.stream().anyMatch(card -> card.isZap(vira));
     }
 }
