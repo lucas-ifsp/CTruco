@@ -5,7 +5,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.List;
 
 public class TrucoGuruUtils {
-    Boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
+    static Boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream().anyMatch(card -> card.isManilha(vira));
     }
 }
