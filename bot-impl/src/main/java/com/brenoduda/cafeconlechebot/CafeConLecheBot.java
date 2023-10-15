@@ -20,6 +20,7 @@
 
 package com.brenoduda.cafeconlechebot;
 
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -37,7 +38,18 @@ public class CafeConLecheBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        return botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 3;
+
+        if(botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 3) {
+            return true;
+        }
+
+        if(botCards.stream().filter(card -> card.getSuit().equals(CardSuit.HEARTS)).toList().size() == 1
+        && botCards.stream().filter(card -> card.getSuit().equals(CardSuit.CLUBS)).toList().size() == 1) {
+            return true;
+        }
+
+        return false;
+
     }
 
     @Override
