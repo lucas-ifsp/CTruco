@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -289,5 +290,18 @@ class LeonardaBotTest {
         TrucoCard expectedLowerRankedCard = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
         assertThat(chosenCard).isNotNull();
         assertThat(chosenCard.value()).isEqualTo(expectedLowerRankedCard);
+    }
+
+    @Test
+    @DisplayName("Should rank the Manilha card correctly.")
+    void rankManilhaCard() {
+        LeonardaBot leonardaBot = new LeonardaBot();
+        TrucoCard manilhaCard = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        leonardaBot.setManilhaCard(manilhaCard);
+        List<TrucoCard> leonardaCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.SPADES), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), manilhaCard);
+        leonardaBot.setPlayerCards(leonardaCards);
+        List<Integer> cardRanks = leonardaBot.calculateCardRanks();
+        int manilhaRank = cardRanks.get(leonardaCards.indexOf(manilhaCard));
+        assertEquals(1, manilhaRank);
     }
 }
