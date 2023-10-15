@@ -95,4 +95,56 @@ public class TrucoGuruUtilsTest {
             assertThat(TrucoGuruUtils.hasStrongCard(cards, vira)).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("HasCasalTest")
+    class HasCasalTest {
+        @Test
+        @DisplayName("Should return true if has casal maior")
+        void shouldReturnTrueIfHasCasalMaior() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasCasalMaior(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false if not has casal maior")
+        void shouldReturnFalseIfNotHasCasalMaior() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasCasalMaior(cards, vira)).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return true if has casal menor")
+        void shouldReturnTrueIfHasCasalMenor() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasCasalMenor(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false if not has casal menor")
+        void shouldReturnTrueIfNotHasCasalMenor() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasCasalMenor(cards, vira)).isFalse();
+        }
+    }
 }
