@@ -55,6 +55,8 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(intel.getHandPoints() == 12) return -1;
+
         return 0;
     }
 }
