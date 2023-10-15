@@ -3,6 +3,7 @@ package com.murilos.aline.teconomarrecobot;
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 
@@ -44,20 +45,6 @@ class TecoNoMarrecoBotTest {
 
         Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
         assertTrue(acceptMaoDeOnze);
-    }
-
-    @Test
-    @DisplayName("Testa carta a ser jogada")
-    void testChooseCard(){
-        hand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, SPADES));
-        cardVira = TrucoCard.of(THREE, SPADES);
-        roundResult = List.of();
-        cards = List.of();
-
-        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
-        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
-        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
-
     }
 
     @Test
@@ -145,34 +132,7 @@ class TecoNoMarrecoBotTest {
 
     }
 
-    @Test
-    @DisplayName("Testa jogar a carta mais fraca")
-    void playTheWeakestCard(){
-        hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, CLUBS));
-        cardVira = TrucoCard.of(ACE, SPADES);
-        roundResult = List.of();
-        cards = List.of();
-        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
-        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
-        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
 
-    }
-
-    @Test
-    @DisplayName("Testa jogar a carta que mata a do oponente")
-    void playTheKillCard() {
-        hand = List.of(TrucoCard.of(FOUR,DIAMONDS), TrucoCard.of(KING, CLUBS), TrucoCard.of(THREE, CLUBS));
-        cardVira = TrucoCard.of(ACE, SPADES);
-        roundResult = List.of();
-        cards = List.of();
-        TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
-        CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
-
-        // Neste teste, você pode verificar se o bot está escolhendo a carta que mata a do oponente
-        // O resultado esperado é a carta com valor 4 de ouros
-        assertEquals(TrucoCard.of(FOUR, CLUBS), cardToPlay.value());
-    }
 
     @Test
     @DisplayName("Testa se na segunda rodada possuir mão com valor maior que 15 pede truco")
@@ -208,6 +168,36 @@ class TecoNoMarrecoBotTest {
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 2).opponentScore(3);
         Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
         assertTrue(requestTruco);
+    }
+
+    @Nested
+    @DisplayName("chooseCard")
+    class ChooseCardTests{
+        @Test
+        @DisplayName("Testa jogar a carta que mata a do oponente")
+        void playTheKillCard() {
+            hand = List.of(TrucoCard.of(TWO,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(SEVEN, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(JACK, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertEquals(TrucoCard.of(KING, CLUBS), cardToPlay.value());
+        }
+        @Test
+        @DisplayName("Testa jogar a carta mais fraca")
+        void playTheWeakestCard(){
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, CLUBS));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(TWO, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR,CLUBS));
+
+        }
     }
 
 
