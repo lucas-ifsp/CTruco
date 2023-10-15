@@ -123,6 +123,24 @@ public class TrucoGuruTest {
 
           assertThat(trucoGuru.decideIfRaises(intel)).isTrue();
         }
+
+      @Test
+      @DisplayName("Should not raise on first round")
+      void shouldNotRaiseOnFirstRound() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<GameIntel.RoundResult> roundResults = List.of();
+
+        List<TrucoCard> openCards = List.of(vira);
+        List<TrucoCard> botCards = List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+          .gameInfo(roundResults, openCards, vira, 1)
+          .botInfo(botCards, 0)
+          .opponentScore(0)
+          .build();
+
+        assertThat(trucoGuru.decideIfRaises(intel)).isFalse();
+      }
     }
 
     @Nested
