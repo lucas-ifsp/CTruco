@@ -41,8 +41,8 @@ public class TrucoGuruTest {
         TrucoGuru trucoGuru = new TrucoGuru();
 
         @Test
-        @DisplayName("Should raise if winned last round and has a strong card")
-        void shouldRaiseIfWinnedLastRoundAndHasStrongCard() {
+        @DisplayName("Should raise If won last round and has a strong card")
+        void shouldRaiseIfWonLastRoundAndHasStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
@@ -59,8 +59,8 @@ public class TrucoGuruTest {
         }
 
         @Test
-        @DisplayName("Should not raise if winned last round but does not have a strong card")
-        void shouldNotRaiseIfWinnedLastRoundAndDoesNotHaveStrongCard() {
+        @DisplayName("Should not raise If won last round but does not have a strong card")
+        void shouldNotRaiseIfWonLastRoundAndDoesNotHaveStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
