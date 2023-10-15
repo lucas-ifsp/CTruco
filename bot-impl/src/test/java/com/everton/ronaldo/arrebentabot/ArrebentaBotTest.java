@@ -342,6 +342,23 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
+        @Test
+        @DisplayName("Should accept raise when lost first hand but has Queen of Clubs")
+        void shouldAcceptRaiseWithQueenOfClubs() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
+        }
         @Test
         @DisplayName("Should decline raise when lost first hand with good cards")
         void shouldDeclineRaiseWhenLostFirstHandWithGoodCards() {
