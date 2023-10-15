@@ -26,13 +26,17 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TrucoGuruTest {
     @Nested
@@ -74,6 +78,33 @@ public class TrucoGuruTest {
                     .build();
 
             assertThat(trucoGuru.decideIfRaises(intel)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("GetRaiseResponseTests")
+    class GetRaiseResponseTests{
+        TrucoGuru trucoGuru = new TrucoGuru();
+        @Test
+        @DisplayName("Should not raise if hand points is twelve")
+        void shouldNotRaiseIfHandPointsIsTwelveTest(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 12)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertEquals(trucoGuru.getRaiseResponse(intel), -1);
         }
     }
 }
