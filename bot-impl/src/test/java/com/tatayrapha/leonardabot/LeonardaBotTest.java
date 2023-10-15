@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -277,5 +278,18 @@ class LeonardaBotTest {
         when(intel.getCards()).thenReturn(trucoCardList);
         int botResponse = leonardaBot.getRaiseResponse(intel);
         assertThat(botResponse).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should bluff by playing a lower-ranked card when having a strong hand.")
+    void testShouldBluffWithLowerRankedCard() {
+        final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+        lenient().when(intel.getVira()).thenReturn(vira);
+        lenient().when(intel.getCards()).thenReturn(trucoCardList);
+        CardToPlay chosenCard = leonardaBot.chooseCard(intel);
+        TrucoCard expectedLowerRankedCard = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        assertThat(chosenCard).isNotNull();
+        assertThat(chosenCard.value()).isEqualTo(expectedLowerRankedCard);
     }
 }
