@@ -44,7 +44,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             return true;
         }if((intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && valueOfTheHand(intel) >= 10)){
             return true;
-        }if(intel.getRoundResults().get(0).equals(DREW) && valueOfTheHand(intel) >= 10){
+        }if((intel.getRoundResults().size() > 0) && intel.getRoundResults().get(0).equals(DREW) && valueOfTheHand(intel) >= 10){
             return true;
         }
         return false;
