@@ -8,4 +8,8 @@ public class TrucoGuruUtils {
     static Boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream().anyMatch(card -> card.isManilha(vira));
     }
+
+    static Boolean hasZap(List<TrucoCard> cards, TrucoCard vira) {
+        return false;
+    }
 }
