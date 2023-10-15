@@ -127,7 +127,7 @@ class VapoBotTest {
     class getIntAverageCardValueTest {
 
         @Test
-        @DisplayName("2D,3D and 7C average should be 7")
+        @DisplayName("2D,3D and 7C average should be 7.66...")
         void shouldHaveAnAverageOf7(){
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
@@ -144,8 +144,9 @@ class VapoBotTest {
                     .botInfo(myCards, 0)
                     .opponentScore(0);
 
-            int average = vapoBot.getAverageCardValue();
+            double average = vapoBot.getAverageCardValue(stepBuilder.build());
             double result = 23/3;
+
             assertEquals(average, result);
         }
     }
