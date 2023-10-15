@@ -38,7 +38,7 @@ public class ArrebentaBot implements BotServiceProvider {
 
         if(intel.getCards().size() == 3){
 
-            if(hasThrees(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
+            if(hasCasal(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
 
             return false;
         }
