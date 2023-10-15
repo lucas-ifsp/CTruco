@@ -37,16 +37,19 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-
+        List<TrucoCard> cards = intel.getCards();
         if((intel.getRoundResults().size() >= 1) && valueOfTheHand(intel) >= 15){
             return true;
         }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
             return true;
         }if((intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && valueOfTheHand(intel) >= 10)){
             return true;
-        }if((intel.getRoundResults().size() > 0) && intel.getRoundResults().get(0).equals(DREW) && valueOfTheHand(intel) >= 10){
-            return true;
+        }if((manilhaCount(cards, intel.getVira()) > 0) && (intel.getRoundResults().size() > 0) && intel.getRoundResults().get(0).equals(DREW)){
+            if(strongManilha(intel).relativeValue(intel.getVira()) > 11){
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -172,26 +175,17 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     }
 
 
-    private TrucoCard cardStrong(GameIntel intel){
+    private TrucoCard strongManilha(GameIntel intel){
         List<TrucoCard> cards = intel.getCards();
-        TrucoCard cardVira = intel.getVira();
         Integer maior = 0;
         Integer indexMaior = -1;
-        for(int i = 0; i < 3; i++){
-            if(cards.get(i).isManilha(cardVira)){
-                if(cards.get(i).relativeValue(cardVira) > maior){
-                    maior = cards.get(i).relativeValue(cardVira);
-                    indexMaior = i;
-                }
-            }else{ //se nao for manilha
-                if(cards.get(i).getRank().value() > maior){
-                    maior = cards.get(i).getRank().value();
-                    indexMaior = i;
-                }
+        for (TrucoCard card : intel.getCards()) {
+            if (card.relativeValue(intel.getVira()) > maior) {
+                maior = card.getRank().value();
+                indexMaior++;
             }
         }
         return cards.get(indexMaior);
-
     }
         private TrucoCard killOpponentManilha(GameIntel intel) {
             List<TrucoCard> manilhas = manilhasInTheHandLargerThanTheOpponents(intel);
