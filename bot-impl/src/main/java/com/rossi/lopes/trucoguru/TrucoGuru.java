@@ -24,6 +24,7 @@ package com.rossi.lopes.trucoguru;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
@@ -39,10 +40,17 @@ public class TrucoGuru implements BotServiceProvider {
         final Boolean isMaoDeOnze = intel.getScore() == 11 || intel.getOpponentScore() == 11;
         if (isMaoDeOnze) return false;
 
-        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-        GameIntel.RoundResult lastRound = roundResults.get(roundResults.size() - 1);
-        Boolean hasWonLastRound = lastRound == GameIntel.RoundResult.WON;
-        Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(intel.getCards(), intel.getVira());
+        final List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        final TrucoCard vira = intel.getVira();
+        final List<TrucoCard> cards = intel.getCards();
+
+        final Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
+        final Boolean isSecondRound = roundResults.size() == 1;
+        if (hasCasalMaior && isSecondRound) return true;
+
+        final GameIntel.RoundResult lastRound = roundResults.get(roundResults.size() - 1);
+        final Boolean hasWonLastRound = lastRound == GameIntel.RoundResult.WON;
+        final Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(cards, vira);
         if (hasWonLastRound && hasStrongCard) return true;
 
         return false;
