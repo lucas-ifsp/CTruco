@@ -22,7 +22,10 @@ package com.brenoduda.cafeconlechebot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
 
 public class CafeConLecheBot implements BotServiceProvider {
     @Override
@@ -32,7 +35,9 @@ public class CafeConLecheBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        List<TrucoCard> botCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        return botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 3;
     }
 
     @Override
