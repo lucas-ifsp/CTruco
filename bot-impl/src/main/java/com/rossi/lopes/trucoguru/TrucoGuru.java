@@ -43,9 +43,7 @@ public class TrucoGuru implements BotServiceProvider {
         GameIntel.RoundResult lastRound = roundResults.get(roundResults.size() - 1);
         Boolean hasWonLastRound = lastRound == GameIntel.RoundResult.WON;
         Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(intel.getCards(), intel.getVira());
-
         if (hasWonLastRound && hasStrongCard) return true;
-
 
         return false;
     }
