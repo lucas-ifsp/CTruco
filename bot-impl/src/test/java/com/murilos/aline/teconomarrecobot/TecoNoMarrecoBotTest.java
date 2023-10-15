@@ -238,8 +238,20 @@ class TecoNoMarrecoBotTest {
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
-            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,CLUBS));
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,DIAMONDS));
 
+        }
+        @Test
+        @DisplayName("Testa amarrar se tiver zap seco")
+        void tryToTieItIfYouHaveADryZap() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertEquals(opponentCard.getRank(), cardToPlay.content().getRank());
         }
     }
 
