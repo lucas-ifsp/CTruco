@@ -268,4 +268,14 @@ class LeonardaBotTest {
         assertThat(botResponse).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should raise if has a Lower Casal in hand and vira is not 4 or 7.")
+    void testShouldRaiseWithLowerCasalAndNon4Non7Vira() {
+        final TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(trucoCardList);
+        int botResponse = leonardaBot.getRaiseResponse(intel);
+        assertThat(botResponse).isEqualTo(1);
+    }
 }
