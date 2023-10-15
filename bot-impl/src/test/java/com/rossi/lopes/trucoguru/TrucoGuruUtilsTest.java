@@ -85,7 +85,7 @@ public class TrucoGuruUtilsTest {
 
         @Test
         @DisplayName("Should return false if hand has no strong card")
-        void shouldReturnTrueIfHandHasNoStrongCard() {
+        void shouldReturnFalseIfHandHasNoStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
