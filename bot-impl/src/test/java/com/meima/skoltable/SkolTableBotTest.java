@@ -413,6 +413,24 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should play the strongest card if lost first round")
+    void shouldPlayTheStrongestCardIfLostFirstRound() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.LOST);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(ACE, CLUBS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
 
 
 }
