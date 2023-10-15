@@ -80,6 +80,9 @@ public class SkolTable implements BotServiceProvider {
             if(existsOpponentCard) {
                 opponentCard = intel.getOpponentCard().get();
                 if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
+                    if(opponentCard.relativeValue(vira) < 8){
+                        return CardToPlay.of(weakestCapableOfWin(opponentCard, vira, hand));
+                    }
                     return CardToPlay.of(strongestCardInHand);
                 } else {
                     return CardToPlay.of(weakestCardInHand);
@@ -216,5 +219,17 @@ public class SkolTable implements BotServiceProvider {
         return hasCopas && hasZap;
     }
 
+    public TrucoCard weakestCapableOfWin(TrucoCard opponentCard, TrucoCard vira, List<TrucoCard> hand) {
+        TrucoCard weakestCard = null;
+
+        for (TrucoCard card : hand) {
+            if (weakestCard == null || card.compareValueTo(opponentCard, vira) > 0) {
+                if (weakestCard == null || card.compareValueTo(weakestCard, vira) < 0) {
+                    weakestCard = card;
+                }
+            }
+        }
+        return weakestCard;
+    }
 
 }
