@@ -19,4 +19,14 @@ public class TrucoGuruUtils {
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
         return hasManilha || hasStrongCard;
     }
+
+    static Boolean hasCasalMaior(List<TrucoCard> cards, TrucoCard vira) {
+        Boolean hasCasalMaior = cards.stream().anyMatch(card -> card.isZap(vira)) && cards.stream().anyMatch(card -> card.isCopas(vira));
+        return hasCasalMaior;
+    }
+
+    static Boolean hasCasalMenor(List<TrucoCard> cards, TrucoCard vira) {
+        Boolean hasCasalMenor = cards.stream().anyMatch(card -> card.isOuros(vira)) && cards.stream().anyMatch(card -> card.isEspadilha(vira));
+        return hasCasalMenor;
+    }
 }
