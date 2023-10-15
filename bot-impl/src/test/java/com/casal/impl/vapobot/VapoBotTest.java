@@ -72,4 +72,31 @@ class VapoBotTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("Testing lowest card function")
+    class LowestCardTest {
+
+        @Test
+        @DisplayName("A of Clubs is lower than 2 of Hearts and Manilha")
+        void makeSureThatLowestIsAceOfClubs () {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(3);
+
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), vapoBot.getLowestCard(stepBuilder.build()));
+        }
+
+    }
 }
