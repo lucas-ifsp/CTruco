@@ -397,4 +397,22 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should decide to raise in the second round with strong hand Power Rank")
+    void shouldRaiseInSecondRoundWithStrongHandPowerRank() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FIVE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+    }
+
+
+
 }
