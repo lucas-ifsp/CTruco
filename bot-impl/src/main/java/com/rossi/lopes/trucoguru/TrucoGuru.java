@@ -57,6 +57,9 @@ public class TrucoGuru implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         if(intel.getHandPoints() == 12) return -1;
 
+        Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(intel.getCards(), intel.getVira());
+        if(hasCasalMaior) return 1;
+
         return 0;
     }
 }
