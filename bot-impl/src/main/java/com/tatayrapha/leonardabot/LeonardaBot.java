@@ -12,6 +12,7 @@ import java.util.List;
 
 public class LeonardaBot implements BotServiceProvider {
     private static final int MAO_DE_ONZE_THRESHOLD = 11;
+    private static final int LOWER_RANK_THRESHOLD = 6;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -32,7 +33,6 @@ public class LeonardaBot implements BotServiceProvider {
         if (intel.getOpponentScore() >= 9) {
             return isHandStrong(currentHandCards, vira);
         }
-
         return false;
     }
 
@@ -65,7 +65,10 @@ public class LeonardaBot implements BotServiceProvider {
         List<TrucoCard> cards = new ArrayList<>(intel.getCards());
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-        if (getMaoDeOnzeResponse(intel)) {
+        boolean shouldBluff = determineIfBluffingIsWarranted(roundResults, cards);
+        if (shouldBluff) {
+            return chooseLowerRankedCard(cards);
+        } else if (getMaoDeOnzeResponse(intel)) {
             return playMaoDeOnze(cards);
         } else if (roundResults.size() == 1) {
             return playFirstRound(cards);
@@ -74,6 +77,39 @@ public class LeonardaBot implements BotServiceProvider {
         } else {
             return playThirdRound(cards, opponentCard);
         }
+    }
+
+    private boolean determineIfBluffingIsWarranted(List<GameIntel.RoundResult> roundResults, List<TrucoCard> cards) {
+        if (roundResults == null || roundResults.isEmpty()) {
+            return hasLowRankedCard(cards);
+        } else if (roundResults.size() == 1) {
+            if (roundResults.get(0) == GameIntel.RoundResult.LOST) {
+                return hasLowRankedCard(cards);
+            }
+        }
+        return false;
+    }
+
+    private boolean hasLowRankedCard(List<TrucoCard> cards) {
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() < LOWER_RANK_THRESHOLD) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private CardToPlay chooseLowerRankedCard(List<TrucoCard> cards) {
+        TrucoCard lowerRankedCard = null;
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() < LOWER_RANK_THRESHOLD) {
+                if (lowerRankedCard == null || card.getRank().value() < lowerRankedCard.getRank().value()) {
+                    lowerRankedCard = card;
+                }
+            }
+        }
+
+        return lowerRankedCard != null ? CardToPlay.of(lowerRankedCard) : null;
     }
 
     @Override
