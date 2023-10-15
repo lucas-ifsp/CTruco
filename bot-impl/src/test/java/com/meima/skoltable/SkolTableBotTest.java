@@ -300,7 +300,7 @@ class SkolTableBotTest {
     @Test
     @DisplayName("Should play the strongest card if first round is drew")
     void shouldPlayTheStrongestCardIfFirstRoundIsDrew() {
-        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.DREW);
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
         List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, DIAMONDS));
