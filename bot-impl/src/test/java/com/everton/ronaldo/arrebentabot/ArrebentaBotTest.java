@@ -446,6 +446,8 @@ class ArrebentaBotTest {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Nested
     class DecideIfRaises {
         List<TrucoCard> openCards = Collections.singletonList(
@@ -541,5 +543,21 @@ class ArrebentaBotTest {
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should not raise in the first hand")
+        void shouldNotRaiseInTheFirstHand() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertFalse(arrebentaBot.decideIfRaises(intel));
+        }
     }
 }

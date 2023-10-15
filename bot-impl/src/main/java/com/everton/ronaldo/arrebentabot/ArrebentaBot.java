@@ -7,6 +7,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ArrebentaBot implements BotServiceProvider {
     @Override
@@ -28,12 +29,17 @@ public class ArrebentaBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         final List<TrucoCard> cards = intel.getCards();
 
-        final Boolean hasManilhas = cards.stream().anyMatch(card -> card.isManilha(intel.getVira()));
+        final boolean hasManilhas = cards.stream().anyMatch(card -> card.isManilha(intel.getVira()));
         int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(intel.getVira())).sum();
         int handPoints = intel.getHandPoints();
         int score = intel.getScore();
 
+        final Boolean hasCopas = cards.stream().anyMatch(card -> card.isCopas(intel.getVira()));
         final Boolean hasOuros = cards.stream().anyMatch(card -> card.isOuros(intel.getVira()));
+
+        if(intel.getCards().size() == 3){
+            return hasCasal(intel);
+        }
 
         if(intel.getOpponentScore() == 11 || intel.getScore() == 11){ return false; }
 
@@ -117,6 +123,16 @@ public class ArrebentaBot implements BotServiceProvider {
     @Override
     public String getName() {
         return BotServiceProvider.super.getName();
+    }
+
+    private boolean hasCasal(GameIntel intel) {
+        List<TrucoCard> manilhas = intel.getCards()
+                .stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .toList();
+
+        if(manilhas.size()>= 2){ return true; }
+        return false;
     }
 
     private TrucoCard higherCard(GameIntel intel) {
