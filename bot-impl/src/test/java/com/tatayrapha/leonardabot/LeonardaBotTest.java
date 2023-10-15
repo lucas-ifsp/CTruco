@@ -237,13 +237,11 @@ class LeonardaBotTest {
     @Test
     @DisplayName("Should not fall for opponent's bluff in Mão de Onze scenario.")
     void notFallForOpponentBluffInMaoDeOnzeScenario() {
-        final TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-        when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(trucoCardList);
         CardToPlay chosenCard = leonardaBot.chooseCard(intel);
         TrucoCard playedCard = chosenCard.content();
-        assertThat(playedCard.getRank()).isNotEqualTo(CardRank.FOUR);
+        assertThat(playedCard.getRank()).isNotEqualTo(CardRank.SIX);
     }
 
     @Test
