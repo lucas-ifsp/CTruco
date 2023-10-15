@@ -309,6 +309,23 @@ class ArrebentaBotTest {
         }
 
         @Test
+        @DisplayName("Should decline raise when lost first hand with good cards")
+        void shouldDeclineRaiseWhenLostFirstHandWithGoodCards() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
+        }
+
+        @Test
         @DisplayName("Should accept raise whe lost first hand but has good Cards")
         void shouldNotAcceptRaiseWhenLostFirstHandButHasGoodCards() {
             GameIntel intel = mock(GameIntel.class);
@@ -403,20 +420,6 @@ class ArrebentaBotTest {
                     .botInfo(cards, 0)
                     .opponentScore(3);
             assertTrue(arrebentaBot.decideIfRaises(stepBuilder.build()));
-        }
-        @Test
-        @DisplayName("Should accept raise when tied and has strong cards")
-        void shouldAcceptRaiseWhenTiedAndHasStrongCards() {
-            List<TrucoCard> cards = Arrays.asList(
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-
-            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.TIED));
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getCards()).thenReturn(cards);
-
-            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
 
         @Test
