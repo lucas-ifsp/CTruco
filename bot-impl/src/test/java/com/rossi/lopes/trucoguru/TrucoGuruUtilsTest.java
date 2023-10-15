@@ -77,7 +77,7 @@ public class TrucoGuruUtilsTest {
     void shouldReturnTrueIfHandHasNoStrongCard() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         List<TrucoCard> cards = List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         );
