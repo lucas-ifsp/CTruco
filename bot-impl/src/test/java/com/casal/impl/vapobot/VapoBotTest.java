@@ -123,7 +123,7 @@ class VapoBotTest {
     }
 
     @Nested
-    @DisplayName("In method getIntAverageCardValue()")
+    @DisplayName("In method getAverageCardValue()")
     class getIntAverageCardValueTest {
 
         @Test
@@ -144,9 +144,9 @@ class VapoBotTest {
                     .botInfo(myCards, 0)
                     .opponentScore(0);
 
-            int average = vapoBot.getIntAverageCardValue();
-
-            assertEquals(average, 7);
+            int average = vapoBot.getAverageCardValue();
+            double result = 23/3;
+            assertEquals(average, result);
         }
     }
 }
