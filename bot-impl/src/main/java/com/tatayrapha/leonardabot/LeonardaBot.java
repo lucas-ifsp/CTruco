@@ -21,8 +21,22 @@ public class LeonardaBot implements BotServiceProvider {
         int opponentScore = intel.getOpponentScore();
         List<TrucoCard> currentHandCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-
-        return opponentScore == MAO_DE_ONZE_THRESHOLD || hasHigherCasal(currentHandCards, vira) || hasCasal(currentHandCards, vira) || (isHandStrong(currentHandCards, vira) && (opponentScore >= 9 || intel.getScore() >= 10));
+        if (opponentScore == MAO_DE_ONZE_THRESHOLD) {
+            return true;
+        }
+        if (hasHigherCasal(currentHandCards, vira)) {
+            return true;
+        }
+        if (hasCasal(currentHandCards, vira)) {
+            return true;
+        }
+        if (isHandStrong(currentHandCards, vira)) {
+            return true;
+        }
+        if (opponentScore >= 9) {
+            return isHandStrong(currentHandCards, vira);
+        }
+        return false;
     }
 
     @Override
