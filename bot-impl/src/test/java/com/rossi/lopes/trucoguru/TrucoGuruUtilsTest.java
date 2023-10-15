@@ -13,10 +13,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class TrucoGuruUtilsTest {
     @Test
-    @DisplayName("Should return true if hand has manilha")
+    @DisplayName("Should return true if hand at least one manilha")
     void shouldReturnTrueIfHandHasManilha() {
         TrucoGuruUtils trucoGuruUtils = new TrucoGuruUtils();
-
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         List<TrucoCard> cards = List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
@@ -24,5 +23,18 @@ public class TrucoGuruUtilsTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         );
         assertThat(trucoGuruUtils.hasManilha(cards, vira)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return false if hand has no manilha")
+    void shouldReturnFalseIfHandHasManilha() {
+        TrucoGuruUtils trucoGuruUtils = new TrucoGuruUtils();
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        assertThat(trucoGuruUtils.hasManilha(cards, vira)).isFalse();
     }
 }
