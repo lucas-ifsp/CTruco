@@ -127,8 +127,8 @@ class VapoBotTest {
     class getIntAverageCardValueTest {
 
         @Test
-        @DisplayName("2D,3D and 7C average should be 7.66...")
-        void shouldHaveAnAverageOf7(){
+        @DisplayName("2D, 3D and 7C average should be 7")
+        void shouldCalculateTheRightAverage1(){
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = Arrays.asList(
@@ -145,7 +145,31 @@ class VapoBotTest {
                     .opponentScore(0);
 
             double average = vapoBot.getAverageCardValue(stepBuilder.build());
-            double result = 23/3;
+            double result = (double) 21/3;
+
+            assertEquals(average, result);
+        }
+
+        @Test
+        @DisplayName("average of 2D, 3C and 7C with vira being 2C should be 7.66...")
+        void shouldCalculateTheRightAverage2(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = Arrays.asList();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(0);
+
+            double average = vapoBot.getAverageCardValue(stepBuilder.build());
+            double result = (double) 23/3;
 
             assertEquals(average, result);
         }
