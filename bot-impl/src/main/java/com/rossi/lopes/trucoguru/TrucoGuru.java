@@ -36,14 +36,16 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        final Boolean isMaoDeOnze = intel.getScore() == 11;
+        if (isMaoDeOnze) return false;
+
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         GameIntel.RoundResult lastRound = roundResults.get(roundResults.size() - 1);
         Boolean hasWonLastRound = lastRound == GameIntel.RoundResult.WON;
         Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(intel.getCards(), intel.getVira());
 
-        if (hasWonLastRound && hasStrongCard) {
-            return true;
-        }
+        if (hasWonLastRound && hasStrongCard) return true;
+
 
         return false;
     }
