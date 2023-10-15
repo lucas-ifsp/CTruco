@@ -14,10 +14,10 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         TrucoCard cardVira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-        if(possuiCasalMaior(intel)){
+        if(hasCasalMaior(intel)){
             return true;
         }
-        if(possuiMaoTres(intel)){
+        if(hasHandOfThree(intel)){
             return true;
         }
         if(manilhaCount(cards, cardVira) == 2){
@@ -70,7 +70,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {return 0;}
 
-    private boolean possuiCasalMaior(GameIntel intel) {
+    private boolean hasCasalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
 
@@ -86,7 +86,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean possuiMaoTres(GameIntel intel){
+    private boolean hasHandOfThree(GameIntel intel){
         Integer contador = 0;
         for(TrucoCard card : intel.getCards()){
             if(card.getRank().value() == 10){
@@ -174,7 +174,27 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     }
 
 
+    private TrucoCard cardStrong(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard cardVira = intel.getVira();
+        Integer maior = 0;
+        Integer indexMaior = -1;
+        for(int i = 0; i < 3; i++){
+            if(cards.get(i).isManilha(cardVira)){
+                if(cards.get(i).relativeValue(cardVira) > maior){
+                    maior = cards.get(i).relativeValue(cardVira);
+                    indexMaior = i;
+                }
+            }else{ //se nao for manilha
+                if(cards.get(i).getRank().value() > maior){
+                    maior = cards.get(i).getRank().value();
+                    indexMaior = i;
+                }
+            }
+        }
+        return cards.get(indexMaior);
 
+    }
 
 
 
