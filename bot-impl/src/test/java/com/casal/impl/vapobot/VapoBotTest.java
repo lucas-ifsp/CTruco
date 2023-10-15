@@ -78,6 +78,27 @@ class VapoBotTest {
     @DisplayName("In method getIntAverageCardValue()")
     class getIntAverageCardValueTest {
 
+        @Test
+        @DisplayName("2D,3D and 7C average should be 7")
+        void shouldHaveAnAverageOf7(){
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = Arrays.asList();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(0);
+
+            int average = vapoBot.getIntAverageCardValue();
+
+            assertEquals(average, 7);
+        }
     }
 }
