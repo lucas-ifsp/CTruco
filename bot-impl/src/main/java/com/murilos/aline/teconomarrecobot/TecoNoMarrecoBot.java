@@ -190,28 +190,27 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     }
         private TrucoCard killOpponentManilha(GameIntel intel) {
-            List<TrucoCard> manilhas = manilhasInTheHand(intel);
-            TrucoCard cardPlay = null;
+            List<TrucoCard> manilhas = manilhasInTheHandLargerThanTheOpponents(intel);
+            TrucoCard cardPlay = weakestCard(intel);
             if (!manilhas.isEmpty()) {
                 cardPlay = manilhas.get(0);
                 for (TrucoCard manilha : manilhas) {
-                    if (manilha.relativeValue(intel.getVira()) > intel.getOpponentCard().get().relativeValue(intel.getVira())
-                            && manilha.relativeValue(intel.getVira()) < cardPlay.relativeValue(intel.getVira())) {
-                        cardPlay = manilha;
-                    }
+                        if (manilha.relativeValue(intel.getVira()) < cardPlay.relativeValue(intel.getVira())){
+                            cardPlay = manilha;
+                        }
                 }
-            } else {
-                cardPlay = weakestCard(intel);
             }
             return cardPlay;
         }
 
 
-        private List<TrucoCard> manilhasInTheHand(GameIntel intel){
+        private List<TrucoCard> manilhasInTheHandLargerThanTheOpponents(GameIntel intel){
             List<TrucoCard> manilhas = new ArrayList<>();
             for (TrucoCard card : intel.getCards()) {
                 if (card.isManilha(intel.getVira())) {
-                    manilhas.add(card);
+                    if (card.relativeValue(intel.getVira()) > intel.getOpponentCard().get().relativeValue(intel.getVira())){
+                        manilhas.add(card);
+                    }
                 }
             }
             return manilhas;
