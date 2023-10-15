@@ -494,8 +494,7 @@ class ArrebentaBotTest {
         void shouldAcceptRaiseWhemhaveManilhas() {
             List<TrucoCard> cards = Arrays.asList(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
             );
 
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
@@ -512,8 +511,7 @@ class ArrebentaBotTest {
         void shouldAcceptRaseWhenTheVCardsValueIsOverOrEqualToFifiteenAndHasManilhas() {
             List<TrucoCard> cards = Arrays.asList(
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
             );
 
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
@@ -558,6 +556,41 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
 
             assertFalse(arrebentaBot.decideIfRaises(intel));
+        }
+
+        @Test
+        @DisplayName("Should raise when in first hand but has casal")
+        void shouldRaiseWhenInFirstHandButHasCasal() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertTrue(arrebentaBot.decideIfRaises(intel));
+        }
+
+        @Test
+        @DisplayName("Should raise when in first hand but has 2 or more THREES")
+        void shouldRaiseWhenInFirstHandButHasAtLestTwoThrees() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertTrue(arrebentaBot.decideIfRaises(intel));
         }
     }
 }

@@ -1,10 +1,9 @@
 package com.everton.ronaldo.arrebentabot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +37,11 @@ public class ArrebentaBot implements BotServiceProvider {
         final Boolean hasOuros = cards.stream().anyMatch(card -> card.isOuros(intel.getVira()));
 
         if(intel.getCards().size() == 3){
-            return hasCasal(intel);
+
+            if(hasThrees(intel)) { return true; }
+            if(hasCasal(intel)) { return true; }
+
+            return false;
         }
 
         if(intel.getOpponentScore() == 11 || intel.getScore() == 11){ return false; }
@@ -132,6 +135,16 @@ public class ArrebentaBot implements BotServiceProvider {
                 .toList();
 
         if(manilhas.size()>= 2){ return true; }
+        return false;
+    }
+
+    private boolean hasThrees(GameIntel intel) {
+        List<TrucoCard> threes = intel.getCards()
+                .stream()
+                .filter(card -> card.getRank().value() == 10)
+                .toList();
+
+        if(threes.size()>= 2){ return true; }
         return false;
     }
 
