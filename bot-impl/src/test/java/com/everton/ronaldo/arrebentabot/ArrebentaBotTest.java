@@ -592,5 +592,23 @@ class ArrebentaBotTest {
 
             assertTrue(arrebentaBot.decideIfRaises(intel));
         }
+
+        @Test
+        @DisplayName("Should raise when in first hand but has 2 or more TWOS")
+        void shouldRaiseWhenInFirstHandButHasAtLestTwoTwos() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertTrue(arrebentaBot.decideIfRaises(intel));
+        }
     }
 }

@@ -38,8 +38,7 @@ public class ArrebentaBot implements BotServiceProvider {
 
         if(intel.getCards().size() == 3){
 
-            if(hasThrees(intel)) { return true; }
-            if(hasCasal(intel)) { return true; }
+            if(hasThrees(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
 
             return false;
         }
@@ -145,6 +144,16 @@ public class ArrebentaBot implements BotServiceProvider {
                 .toList();
 
         if(threes.size()>= 2){ return true; }
+        return false;
+    }
+
+    private boolean hasTwos(GameIntel intel) {
+        List<TrucoCard> twos = intel.getCards()
+                .stream()
+                .filter(card -> card.getRank().value() == 9)
+                .toList();
+
+        if(twos.size()>= 2){ return true; }
         return false;
     }
 
