@@ -20,7 +20,7 @@ class SkolTableBotTest {
     private SkolTable skolTable;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         skolTable = new SkolTable();
     }
 
@@ -61,6 +61,7 @@ class SkolTableBotTest {
 
         assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
     }
+
     @Test
     @DisplayName("Should play weakest card in first round when opponent's card is stronger")
     void shouldPlayWeakestCardInFirstRoundWhenOpponentsCardIsStronger() {
@@ -82,7 +83,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should not rise if lost first round")
-    void ShouldNotRisIfLostFirstRound(){
+    void ShouldNotRisIfLostFirstRound() {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.LOST);
         List<TrucoCard> openCards = List.of();
 
@@ -115,7 +116,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should accept rise if won the first round and have strong card in hand")
-    void ShouldRiseIfWonFirstRoundAndHaveStrongCard(){
+    void ShouldRiseIfWonFirstRoundAndHaveStrongCard() {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         List<TrucoCard> openCards = List.of();
 
@@ -131,7 +132,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should rise again if won the first round and have strong card in hand")
-    void ShouldRiseAgainIfWonFirstRoundAndHaveStrongCard(){
+    void ShouldRiseAgainIfWonFirstRoundAndHaveStrongCard() {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         List<TrucoCard> openCards = List.of();
 
@@ -147,7 +148,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should rise again if have very strong cards in hand")
-    void ShouldRiseAgainIfHaveVeryStrongCards(){
+    void ShouldRiseAgainIfHaveVeryStrongCards() {
         List<TrucoCard> openCards = List.of();
 
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -178,7 +179,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should not accept rise again if have weak cards in hand")
-    void ShouldNotAcceptRiseIfHaveWeakCards(){
+    void ShouldNotAcceptRiseIfHaveWeakCards() {
         List<TrucoCard> openCards = List.of();
 
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -198,7 +199,7 @@ class SkolTableBotTest {
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         List<TrucoCard> openCards = List.of();
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FOUR,CLUBS), TrucoCard.of(ACE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, DIAMONDS));
 
         GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, openCards, vira, 1)
@@ -265,7 +266,7 @@ class SkolTableBotTest {
 
     @Test
     @DisplayName("Should raise if have a pair")
-    void shouldRaiseIfHaveAGoodPair(){
+    void shouldRaiseIfHaveAGoodPair() {
         List<GameIntel.RoundResult> rounds = List.of();
         List<TrucoCard> openCards = List.of();
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
@@ -286,7 +287,7 @@ class SkolTableBotTest {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(ACE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, DIAMONDS));
 
         GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
@@ -302,7 +303,7 @@ class SkolTableBotTest {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(ACE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, DIAMONDS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
@@ -319,7 +320,7 @@ class SkolTableBotTest {
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(FIVE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FIVE, DIAMONDS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
@@ -337,7 +338,7 @@ class SkolTableBotTest {
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
         TrucoCard opponentCard = TrucoCard.of(FOUR, CLUBS);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(FIVE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, DIAMONDS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
@@ -354,7 +355,7 @@ class SkolTableBotTest {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(THREE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(THREE, DIAMONDS));
 
         GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
@@ -362,6 +363,22 @@ class SkolTableBotTest {
                 .opponentScore(0);
 
         assertFalse(skolTable.decideIfRaises(strongHandBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should decide not to raise in the second round with low hand Power Rank after a drew")
+    void shouldNotRaiseInSecondRoundDRWithLowHandPowerRankAfterDrew() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.DREW);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(THREE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
 }
