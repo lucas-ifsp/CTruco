@@ -31,12 +31,23 @@ class VeioDoBarBotTest {
             @DisplayName("Play Manilha First")
             void playManilhaFirst() {
                 when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
-                when(gameIntel.getCards()).thenReturn(List.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)),
+                when(gameIntel.getCards()).thenReturn(
+                        List.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)),
                         List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)),
                         List.of(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
             }
 
         }
+
+    }
+
+    @Nested
+    class SecondRoundTest{
+
+    }
+
+    @Nested
+    class  ThirdRoundTest{
 
     }
 
