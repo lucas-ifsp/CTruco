@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +71,13 @@ class VapoBotTest {
 
             assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), vapoBot.getHighestCard(stepBuilder.build()));
         }
+
+    }
+
+    @Nested
+    @DisplayName("In method getIntAverageCardValue()")
+    class getIntAverageCardValueTest {
+
 
     }
 }
