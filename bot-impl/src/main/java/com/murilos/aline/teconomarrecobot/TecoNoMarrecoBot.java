@@ -58,15 +58,25 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
         List<TrucoCard> cards = intel.getCards();
         Integer manilhas = manilhaCount(cards,intel.getVira());
+
+        // responde a jogadas do oponente
         if (intel.getOpponentCard().isPresent()) {
-            if (!intel.getOpponentCard().get().isManilha(intel.getVira())){
-                return CardToPlay.of(killCard(intel));
-            }else {
+            if (intel.getOpponentCard().get().isManilha(intel.getVira())){
                 return CardToPlay.of(killOpponentManilha(intel));
             }
-        }else{
-            return CardToPlay.of(strongCard(intel));
+            return CardToPlay.of(killCard(intel));
         }
+
+        // joga se tiver manilha
+        if (manilhas>0){
+            // descarta o cagão
+            for (TrucoCard card : intel.getCards()) {
+                if (card.isOuros(intel.getVira()))
+                    return CardToPlay.of(card);
+            }
+        }
+        // joga a carta mais forte da mão
+        return CardToPlay.of(strongCard(intel));
     }
 
     @Override
@@ -173,7 +183,6 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return strongerCards;
     }
-
 
     private TrucoCard strongManilha(GameIntel intel){
         List<TrucoCard> cards = intel.getCards();
