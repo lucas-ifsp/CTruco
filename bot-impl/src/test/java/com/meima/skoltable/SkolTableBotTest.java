@@ -287,7 +287,7 @@ class SkolTableBotTest {
         List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
         TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
-        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(ACE, DIAMONDS));
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(FIVE, DIAMONDS));
 
         GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, List.of(), vira, 1)
