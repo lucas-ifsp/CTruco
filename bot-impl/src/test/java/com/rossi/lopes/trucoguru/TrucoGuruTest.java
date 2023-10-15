@@ -21,5 +21,45 @@
 // Authors: Juan Rossi e Guilherme Lopes
 
 package com.rossi.lopes.trucoguru;
+
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
+import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TrucoGuruTest {
+    @Nested
+    @DisplayName("DecideIfRaisesTests")
+    class DecideIfRaisesTestes {
+        TrucoGuru trucoGuru = new TrucoGuru();
+
+        @Test
+        @DisplayName("Should raise if winned last round and has a strong card")
+        void shouldRaiseIfWinnedLastRoundAndHasStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(trucoGuru.decideIfRaises(intel)).isTrue();
+        }
+    }
 }
