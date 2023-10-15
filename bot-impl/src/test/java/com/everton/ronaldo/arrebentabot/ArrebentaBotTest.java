@@ -233,6 +233,7 @@ class ArrebentaBotTest {
             assertEquals(arrebentaBot.getRaiseResponse(stepBuilder.build()), 1);
         }
 
+
         @Test
         @DisplayName("Shoul accept raise whem the cards value is over or iqual to 18")
         void shouldAcceptRaseWhenTheValueOfTheCardsIsOverOrEqualToFifiteen() {
@@ -307,6 +308,25 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
+        @Test
+        @DisplayName("Should accept raise when lost first hand but has Jack of Spades")
+        void shouldAcceptRaiseWithJackOfSpades() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
+        }
+
+
 
         @Test
         @DisplayName("Should decline raise when lost first hand with good cards")
