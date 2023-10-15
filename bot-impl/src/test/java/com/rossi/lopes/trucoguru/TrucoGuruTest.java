@@ -128,5 +128,27 @@ public class TrucoGuruTest {
 
             assertThat(trucoGuru.getRaiseResponse(intel)).isOne();
         }
+
+        @Test
+        @DisplayName("Should raise if has casal menor")
+        void shouldRaiseIfHasCasalMenorTest(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 3)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(trucoGuru.getRaiseResponse(intel)).isOne();
+        }
     }
 }
