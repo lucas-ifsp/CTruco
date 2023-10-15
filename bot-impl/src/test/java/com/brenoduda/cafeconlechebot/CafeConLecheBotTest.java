@@ -20,5 +20,39 @@
 
 package com.brenoduda.cafeconlechebot;
 
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardSuit.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class CafeConLecheBotTest {
+    @Nested
+    @DisplayName("Test of the bot logic to decide if raises")
+    class ShouldRaise {
+        @Test
+        @DisplayName("Should raise when has 3 manilhas")
+        void shouldRaiseWhenHas3Manilhas() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(ACE, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(true);
+        }
+    }
 }
