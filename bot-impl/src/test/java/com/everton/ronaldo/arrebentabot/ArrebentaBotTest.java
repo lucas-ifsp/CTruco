@@ -324,6 +324,23 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+        @Test
+        @DisplayName("Should accept raise when has excellent cards")
+        void shouldAcceptRaiseWhenHasExcellentCards() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
+        }
+
 
         @Test
         @DisplayName("Should accept raise whe lost first hand but has good Cards")
