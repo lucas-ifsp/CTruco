@@ -150,5 +150,27 @@ public class TrucoGuruTest {
 
             assertThat(trucoGuru.getRaiseResponse(intel)).isOne();
         }
+
+        @Test
+        @DisplayName("Should not raise if the opponent's score is 11")
+        void shouldNotRaiseIfOpponentScoreIs11Test(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 5)
+                    .botInfo(botCards, 0)
+                    .opponentScore(11)
+                    .build();
+
+            assertThat(trucoGuru.getRaiseResponse(intel)).isNegative();
+        }
     }
 }
