@@ -92,6 +92,19 @@ public class TrucoGuruTest {
 
           assertThat(trucoGuru.decideIfRaises(intel)).isFalse();
         }
+
+      @Test
+      @DisplayName("Should not raise if opponent score is 11")
+      void shouldNotRaiseIfOpponentIsEleven() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        GameIntel intel = GameIntel.StepBuilder.with()
+          .gameInfo(List.of(), List.of(), vira, 1)
+          .botInfo(List.of(), 0)
+          .opponentScore(11)
+          .build();
+
+        assertThat(trucoGuru.decideIfRaises(intel)).isFalse();
+      }
     }
 
     @Nested
