@@ -381,4 +381,20 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should decide not to raise in the second round with low hand Power Rank after lost")
+    void shouldNotRaiseInSecondRoundWithLowHandPowerRankAfterLost() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.LOST);
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(FOUR,CLUBS), TrucoCard.of(THREE, DIAMONDS));
+
+        GameIntel.StepBuilder strongHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(strongHand, 0)
+                .opponentScore(0);
+
+        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+    }
+
 }
