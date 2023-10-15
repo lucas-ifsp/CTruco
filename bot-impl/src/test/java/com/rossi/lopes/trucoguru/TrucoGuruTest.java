@@ -105,6 +105,24 @@ public class TrucoGuruTest {
 
           assertThat(trucoGuru.decideIfRaises(intel)).isFalse();
         }
+
+        @Test
+        @DisplayName("Should raise if has cama de gato on second round")
+        void shouldRaiseIfHasCamaDeGatoOnSecondRound() {
+          TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+          List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+
+          List<TrucoCard> openCards = List.of(vira);
+          List<TrucoCard> botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+          GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(roundResults, openCards, vira, 1)
+            .botInfo(botCards, 0)
+            .opponentScore(0)
+            .build();
+
+          assertThat(trucoGuru.decideIfRaises(intel)).isTrue();
+        }
     }
 
     @Nested
