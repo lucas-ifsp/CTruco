@@ -197,5 +197,28 @@ class VapoBotTest {
 
             assertEquals(average, result);
         }
+
+        @Test
+        @DisplayName("average of 3D, 3C and JC with vira being 2C should be 8...")
+        void shouldCalculateTheRightAverage4(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(0);
+
+            double average = vapoBot.getAverageCardValue(stepBuilder.build());
+            double result = (double) 16/2;
+
+            assertEquals(average, result);
+        }
     }
 }
