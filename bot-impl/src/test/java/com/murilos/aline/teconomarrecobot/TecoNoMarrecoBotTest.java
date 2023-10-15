@@ -253,7 +253,16 @@ class TecoNoMarrecoBotTest {
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertEquals(opponentCard.getRank(), cardToPlay.content().getRank());
         }
+        @Test
+        @DisplayName("Testa se tiver amarrado jogar maior manilha")
+        void ifYouTiePlayBiggerManilha() {
+            hand = List.of( TrucoCard.of(KING, SPADES), TrucoCard.of(KING, HEARTS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.DREW);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,HEARTS));
+        }
     }
-
-
 }
