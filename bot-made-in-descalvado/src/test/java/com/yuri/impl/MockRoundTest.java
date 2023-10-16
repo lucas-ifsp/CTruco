@@ -54,7 +54,32 @@ class MockRoundTest {
 
     @Test
     void shouldBuildIntel_FirstRound_APlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            .giveA(cardA0).play()
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB0)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(),
+                List.of(vira, cardA0),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
