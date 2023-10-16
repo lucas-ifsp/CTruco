@@ -683,6 +683,28 @@ class VapoBotTest {
 
             assertFalse(vapoBot.hasAdvantage(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Opponent with any score higher than bot score should return false")
+        void shouldHigherOpponentScoreReturnFalse () {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 3)
+                    .opponentScore(5)
+                    .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+
+            assertFalse(vapoBot.hasAdvantage(stepBuilder.build()));
+        }
+
     }
 
 }
