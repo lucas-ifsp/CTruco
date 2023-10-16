@@ -178,4 +178,18 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should refuse if has two cards lower than Jack")
+    void shouldRefuseIfHasTwoCardsLowerThanJack() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+
+    }
 }
