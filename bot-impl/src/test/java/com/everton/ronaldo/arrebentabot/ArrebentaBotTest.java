@@ -32,6 +32,7 @@ class ArrebentaBotTest {
     @Nested
     class chooseCard {
 
+
         @Test
         @DisplayName("Shoul choose the higher card when tied")
         void shouldChooseTheHigherCardWhenTied() {
