@@ -150,7 +150,7 @@ class VeioDoBarBotTest {
 
 
     @Test
-    @DisplayName("Should accept raise ponts if has one manilha and one card equal or greater than jack")
+    @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
     void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
@@ -158,6 +158,19 @@ class VeioDoBarBotTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         ));
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should accept raise points if has two cards equalts to or greater than two")
+    void shouldAcceptRaisePointsIfHasTwoCardsEqualtsToOrGreaterThanTwo() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
