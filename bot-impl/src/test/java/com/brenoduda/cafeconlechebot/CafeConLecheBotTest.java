@@ -111,5 +111,25 @@ public class CafeConLecheBotTest {
             boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
             assertThat(decideIfRaises).isEqualTo(true);
         }
+
+        @Test
+        @DisplayName("Should raise when has 2 three and hearts")
+        void shouldRaiseWhenHas2ThreeAndHearts() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(THREE, DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(true);
+        }
+
     }
 }
