@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -117,6 +118,22 @@ class VeioDoBarBotTest {
         when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
+    @DisplayName("Should discard the smallest card at second round if lost the first one and unable to win")
+    void shouldDiscardTheSmallestCardAtSecondRoundIfLostTheFirstOneAndUnableToWin() {
+        var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+                playingCard,
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.discard(playingCard));
     }
 
     @Test
