@@ -28,7 +28,7 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var refCard = intel.getOpponentCard().orElse(cards.get(0));
         TrucoCard minCardToWin = null;
 
-        if (cards.get(2).compareValueTo(refCard, vira) > 0)
+        if (cards.size() == 3 && cards.get(2).compareValueTo(refCard, vira) > 0)
             minCardToWin = cards.get(2);
         if (cards.get(1).compareValueTo(refCard, vira) > 0)
             minCardToWin = cards.get(1);

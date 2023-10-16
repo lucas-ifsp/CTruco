@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -109,6 +110,22 @@ class VeioDoBarBotTest {
         ));
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+    
+    @Test
+    @DisplayName("Should play the smallest card at second round if won the first one")
+    void shouldPlayTheSmallestCardAtSecondRoundIfWonTheFirstOne() {
+        var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+            playingCard,
+            TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
