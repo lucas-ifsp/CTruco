@@ -395,6 +395,26 @@ class VapoBotTest {
     @Nested
     @DisplayName("Should have")
     class GetManilhasAmountTest {
+        @Test
+        @DisplayName("2 manilhas on 6H, AC, 6C")
+        void shouldReturn2() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(2, vapoBot.getAmountOfManilhas(stepBuilder.build()));
+        }
 
     }
 
