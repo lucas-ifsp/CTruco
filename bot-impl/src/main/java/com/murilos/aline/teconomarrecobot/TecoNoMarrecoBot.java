@@ -38,7 +38,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        if((intel.getRoundResults().size() >= 1) && valueOfTheHand(intel) >= 15){
+        if((intel.getRoundResults().size() >= 1) && intel.getRoundResults().get(0) != GameIntel.RoundResult.DREW && valueOfTheHand(intel) >= 15){
             return true;
         }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
             return true;
@@ -106,16 +106,16 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     private boolean hasCasalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
-
-        for(int i = 0; i < 3; i++){
-            if (cards.get(i).isZap(cardVira)) {
-                for (int k = 0; k < 3; k++) {
-                    if (cards.get(k).isCopas(cardVira)) {
-                        return true;
-                    }
-                }
+        int contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isZap(cardVira) || card.isCopas(cardVira)){
+                contador =+ 1;
             }
         }
+        if(contador == 2){
+            return true;
+        }
+
         return false;
     }
 
