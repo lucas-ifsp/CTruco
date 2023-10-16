@@ -248,7 +248,7 @@ class VapoBotTest {
         @Test
         @DisplayName("Should return false if does not have zap")
         void shouldReturnFalseIfDoesNotHaveZap() {
-        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
 
             List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
@@ -263,6 +263,29 @@ class VapoBotTest {
                     .opponentScore(3);
 
             assertFalse(vapoBot.hasZap(stepBuilder.build()));
+        }
+    }
+
+    @Nested
+    @DisplayName("Get last round result test")
+    class LastRoundResultTest {
+        @Test
+        @DisplayName("Should return WON")
+        void shouldReturnWon() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(3);
+
+            assertEquals(GameIntel.RoundResult.WON, vapoBot.getLastRoundResult(stepBuilder.build()));
         }
     }
 }
