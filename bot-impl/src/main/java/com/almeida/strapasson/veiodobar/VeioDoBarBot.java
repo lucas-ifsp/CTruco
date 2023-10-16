@@ -60,20 +60,27 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        var param = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        var jackParam = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        var twoParam = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         var vira = intel.getVira();
 
-        var cardsGrateThanJack = intel.getCards()
+
+        var cardsGreaterThanJack = intel.getCards()
                 .stream()
-                .filter(card -> card.compareValueTo(param, intel.getVira()) >= 0)
+                .filter(card -> card.compareValueTo(jackParam, intel.getVira()) >= 0)
                 .toList();
 
-        if (countMainilha(intel) < 2 || cardsGrateThanJack.isEmpty()){
-            if (countMainilha(intel) > 0 || cardsGrateThanJack.size() > 1){
-                return 0;
-            }
-            return -1;
+        if (cardsGreaterThanJack.size() < 2){return -1;}
+        if (countMainilha(intel) > 0){return 0;}
+
+        var cardsGreaterThanTwo = intel.getCards().stream()
+                .filter(card -> card.compareValueTo(twoParam, intel.getVira()) >= 0)
+                .toList();
+
+        if (cardsGreaterThanTwo.size() >= 2){
+            return 0;
         }
+
         return -1;
     }
 
