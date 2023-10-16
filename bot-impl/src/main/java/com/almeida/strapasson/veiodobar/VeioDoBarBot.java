@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class VeioDoBarBot implements BotServiceProvider {
@@ -19,25 +20,21 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        Objects.requireNonNull(intel, "Game intel must be given for the bot choose how to act!");
+
         var cards = sortedCards(intel);
         TrucoCard vira = intel.getVira();
 
-        if (wonTheFirstRound(intel))
-            return CardToPlay.of(cards.get(0));
-        if (hasCasalMaior(vira, cards))
+        if (isLastRound(intel) || wonTheFirstRound(intel) || hasCasalMaior(vira, cards))
             return CardToPlay.of(cards.get(0));
 
         var refCard = intel.getOpponentCard().orElse(cards.get(0));
-        TrucoCard minCardToWin = null;
 
-        if (cards.size() == 3 && cards.get(2).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(2);
-        if (cards.get(1).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(1);
-        if (cards.get(0).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(0);
-
-        return minCardToWin == null ? CardToPlay.discard(cards.get(0)) : CardToPlay.of(minCardToWin);
+        return cards.stream()
+                .filter(card -> card.compareValueTo(refCard, vira) > 0)
+                .min((current, next) -> current.compareValueTo(next, vira))
+                .map(CardToPlay::of)
+                .orElse(CardToPlay.discard(cards.get(0)));
     }
 
     private List<TrucoCard> sortedCards(GameIntel intel) {
@@ -57,6 +54,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var roundResults = intel.getRoundResults();
         return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON;
     }
+
+    private boolean isLastRound(GameIntel intel) { return intel.getRoundResults().size() == 2; }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -118,7 +119,26 @@ class VeioDoBarBotTest {
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
 
+    @Test
+    @DisplayName("Should play the last card at the third round")
+    void shouldPlayTheLastCardAtTheThirdRound() {
+        var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
+        when(intel.getCards()).thenReturn(List.of(playingCard));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
+    @DisplayName("Should throw a descriptive NullPointerException when intel is null")
+    void shouldThrowADescriptiveNullPointerExceptionWhenIntelIsNull() {
+        assertThatThrownBy(() -> sut.chooseCard(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Game intel must be given for the bot choose how to act!");
+    }
 
     @Test
     @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
