@@ -1,8 +1,6 @@
 package com.gatti.casaque.caipirasbot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
@@ -40,6 +38,15 @@ public class CaipirasBot implements BotServiceProvider {
         return false;
     }
 
+    public Boolean checkExistenceManilhaAndStronger(List<TrucoCard> cards, TrucoCard vira) {
+        var count = 0;
+        for (TrucoCard card : cards) {
+            if (card.isManilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),vira) > 0) {
+                count++;
+            }
+        }
+        return count > 2;
+    }
     public boolean checkExistenceCasalMaior(List<TrucoCard> openCards) {
         for (TrucoCard card : openCards) {
             if (card.isCopas(openCards.get(0)) || card.isZap(openCards.get(0))) {
@@ -60,10 +67,7 @@ public class CaipirasBot implements BotServiceProvider {
 
     public boolean bluffWhenOpponentThirdCardIsKnown(List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards) {
         if (roundResults.size() == 2) {
-            if (!checkExistenceCasalMaior(openCards)){
-                return true;
-            }
-            return false;
+            return !checkExistenceCasalMaior(openCards);
         }
         return false;
     }
