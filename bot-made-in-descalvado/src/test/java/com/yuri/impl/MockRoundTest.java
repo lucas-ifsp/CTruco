@@ -8,6 +8,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MockRoundTest {
@@ -113,8 +114,99 @@ class MockRoundTest {
     }
 
     @Test
-    void shouldBuildIntel_SecondRound_NobodyPlayed() {
+    void shouldBuildIntel_SecondRound_NobodyPlayed_AWon() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(SEVEN, CLUBS).play()
+            .giveB(SIX, CLUBS).play()
+            //
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON),
+                List.of(vira, TrucoCard.of(SEVEN, CLUBS), TrucoCard.of(SIX, CLUBS)),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
+    }
+
+    @Test
+    void shouldBuildIntel_SecondRound_NobodyPlayed_ADrew() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(SEVEN, CLUBS).play()
+            .giveB(SEVEN, CLUBS).play()
+            //
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
+
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(DREW),
+                List.of(vira, TrucoCard.of(SEVEN, CLUBS), TrucoCard.of(SEVEN, CLUBS)),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
+    }
+
+    @Test
+    void shouldBuildIntel_SecondRound_NobodyPlayed_ALost() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(SIX, CLUBS).play()
+            .giveB(SEVEN, CLUBS).play()
+            //
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
+
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(LOST),
+                List.of(vira, TrucoCard.of(SIX, CLUBS), TrucoCard.of(SEVEN, CLUBS)),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
