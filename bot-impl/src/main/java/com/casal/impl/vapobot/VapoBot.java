@@ -83,5 +83,8 @@ public class VapoBot implements BotServiceProvider {
         return zap;
     }
 
+    GameIntel.RoundResult getLastRoundResult(GameIntel intel) {
+        return intel.getRoundResults().get(intel.getRoundResults().size()-1);
+    }
 
 }
