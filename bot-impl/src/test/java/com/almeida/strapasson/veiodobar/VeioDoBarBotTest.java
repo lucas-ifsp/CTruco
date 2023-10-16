@@ -13,18 +13,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class VeioDoBarBotTest {
+    private GameIntel intel;
     private VeioDoBarBot sut;
 
     @BeforeEach
     void setUp() {
         sut = new VeioDoBarBot();
+        intel = mock(GameIntel.class);
     }
 
     @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
     void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
-        GameIntel intel = mock(GameIntel.class);
-
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
@@ -38,8 +38,6 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should accept points raising if all cards are upper than jacks and no manilhas")
     void shouldAcceptPointsRaisingIfAllCardsAreUpperThanJacksAndNoManilhas() {
-        GameIntel intel = mock(GameIntel.class);
-
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.KING, CardSuit.SPADES),
                 TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
@@ -53,7 +51,6 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should play the smallest card necessary to win the round")
     void shouldPlayTheSmallestCardNecessaryToWinTheRound() {
-        GameIntel intel = mock(GameIntel.class);
         TrucoCard playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
 
         when(intel.getCards()).thenReturn(List.of(
