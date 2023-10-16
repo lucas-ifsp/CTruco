@@ -91,6 +91,34 @@ public class TrucoGuruUtilsTest {
     }
 
     @Nested
+    @DisplayName("HasCopasTest")
+    class HasCopasTest {
+        @Test
+        @DisplayName("Should return true if hand has copas")
+        void shouldReturnTrueIfHandHasCopas() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasCopas(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false if hand has no copas")
+        void shouldReturnFalseIfHandHasNoCopas() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasZap(cards, vira)).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("HasStrongCardTest")
     class HasStrongCardTest {
         @Test
