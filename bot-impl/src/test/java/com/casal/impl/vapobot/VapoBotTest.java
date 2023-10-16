@@ -639,4 +639,29 @@ class VapoBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("Check if bot has advantage")
+    class HasAdvantageTest {
+        @Test
+        @DisplayName("Bot with score 3 and opponent with score 0 should return true")
+        void shouldDifferenceOfThreePointsToBotReturnTrue () {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 3)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+
+            assertTrue(vapoBot.hasAdvantage(stepBuilder.build()));
+        }
+    }
+
 }
