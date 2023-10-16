@@ -60,8 +60,8 @@ public class TrucoGuru implements BotServiceProvider {
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+    public CardToPlay chooseCard(GameIntel intel)  {
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
@@ -74,6 +74,6 @@ public class TrucoGuru implements BotServiceProvider {
         Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(intel.getCards(), intel.getVira());
         if(hasCasalMenor) return 1;
 
-        return 0;
+        return -1;
     }
 }
