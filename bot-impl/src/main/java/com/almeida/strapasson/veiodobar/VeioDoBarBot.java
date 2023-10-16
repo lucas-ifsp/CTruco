@@ -22,9 +22,7 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var cards = sortedCards(intel);
         TrucoCard vira = intel.getVira();
 
-        if (wonTheFirstRound(intel))
-            return CardToPlay.of(cards.get(0));
-        if (hasCasalMaior(vira, cards))
+        if (isLastRound(intel) || wonTheFirstRound(intel) || hasCasalMaior(vira, cards))
             return CardToPlay.of(cards.get(0));
 
         var refCard = intel.getOpponentCard().orElse(cards.get(0));
@@ -57,6 +55,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var roundResults = intel.getRoundResults();
         return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON;
     }
+
+    private boolean isLastRound(GameIntel intel) { return intel.getRoundResults().size() == 2; }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
