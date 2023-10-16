@@ -461,6 +461,27 @@ class VapoBotTest {
             assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return AS when other card is AC")
+        void shouldReturnAceOfSpadesWhenOtherIsAceOfClubs() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+
+            assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
+        }
     }
 
 }
