@@ -346,4 +346,29 @@ class VapoBotTest {
             assertThrows(ArrayIndexOutOfBoundsException.class, () -> vapoBot.getLastRoundResult(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Get round number test")
+    class RoundNumberTest {
+        @Test
+        @DisplayName("Should return 1")
+        void shouldReturnRoundOne() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 3)
+                    .botInfo(myCards, 6)
+                    .opponentScore(3);
+
+            assertEquals(1, vapoBot.getRoundNumber(stepBuilder.build()));
+        }
+    }
 }
