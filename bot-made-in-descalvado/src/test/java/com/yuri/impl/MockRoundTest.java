@@ -3,6 +3,7 @@ package com.yuri.impl;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ class MockRoundTest {
     private final static TrucoCard cardB0 = TrucoCard.of(ACE, CLUBS);
     private final static TrucoCard cardB1 = TrucoCard.of(ACE, HEARTS);
     private final static TrucoCard cardB2 = TrucoCard.of(ACE, SPADES);
+
+    private final static TrucoCard cardA3 = TrucoCard.of(KING, CLUBS);
+    private final static TrucoCard cardB3 = TrucoCard.of(KING, CLUBS);
 
     @Test
     void shouldBuildIntel_FirstRound_NobodyPlayed() {
@@ -409,16 +413,98 @@ class MockRoundTest {
 
     @Test
     void shouldNotBuildIntel_WithLessThenThreeCards() {
+        RuntimeException e0 = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .giveA(cardA0)
+                .giveA(cardA1)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .giveB(cardB2)
+                .build();
+        });
 
+        assertEquals(MockRound.INVALID_NUMBER_OF_CARDS_MSG, e0.getMessage());
+
+        RuntimeException e1 = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .giveA(cardA0)
+                .giveA(cardA1)
+                .giveA(cardA2)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .build();
+        });
+
+        assertEquals(MockRound.INVALID_NUMBER_OF_CARDS_MSG, e1.getMessage());
     }
 
     @Test
     void shouldNotBuildIntel_WithMoreThenThreeCards() {
+        RuntimeException e0 = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .giveA(cardA0)
+                .giveA(cardA1)
+                .giveA(cardA2)
+                .giveA(cardA3)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .giveB(cardB2)
+                .build();
+        });
 
+        assertEquals(MockRound.INVALID_NUMBER_OF_CARDS_MSG, e0.getMessage());
+
+        RuntimeException e1 = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .giveA(cardA0)
+                .giveA(cardA1)
+                .giveA(cardA2)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .giveB(cardB2)
+                .giveB(cardB3)
+                .build();
+        });
+
+        assertEquals(MockRound.INVALID_NUMBER_OF_CARDS_MSG, e1.getMessage());
     }
 
     @Test
-    void shouldNotBuildIntel_WithInvalidPlays() {
+    void shouldNotBuildIntel_WithInvalidPlays_PlayBeforeCard() {
+        RuntimeException e = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .play()
+                .giveA(cardA0)
+                .giveA(cardA1)
+                .giveA(cardA2)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .giveB(cardB2)
+                .build();
+        });
 
+        assertEquals(MockRound.INVALID_PLAY_STATE_MSG, e.getMessage());
+    }
+
+    @Test
+    void shouldNotBuildIntel_WithInvalidPlays_PlayTwice() {
+        RuntimeException e = assertThrows(RuntimeException.class, () -> {
+            GameIntel intel = MockRound
+                .vira(vira)
+                .giveA(cardA0).play()
+                .giveA(cardA1).play()
+                .giveA(cardA2)
+                .giveB(cardB0)
+                .giveB(cardB1)
+                .giveB(cardB2)
+                .build();
+        });
+
+        assertEquals(MockRound.INVALID_PLAY_STATE_MSG, e.getMessage());
     }
 }
