@@ -204,4 +204,17 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should raise points if has the greater couple")
+    void shouldRaisePointsIfHasTheGreaterCouple() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
 }

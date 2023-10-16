@@ -15,7 +15,10 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        var vira = intel.getVira();
+        var cards = intel.getCards();
+
+        return hasCasalMaior(vira, cards);
     }
 
     @Override
