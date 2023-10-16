@@ -20,9 +20,13 @@ public final class VeioDoBarBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         var cards = sortedCards(intel);
+        TrucoCard vira = intel.getVira();
+
+        if (hasCasalMaior(vira, cards))
+            return CardToPlay.of(cards.get(0));
+
         var refCard = intel.getOpponentCard().orElse(cards.get(0));
         TrucoCard minCardToWin = null;
-        TrucoCard vira = intel.getVira();
 
         if (cards.get(2).compareValueTo(refCard, vira) > 0)
             minCardToWin = cards.get(2);
@@ -39,6 +43,12 @@ public final class VeioDoBarBot implements BotServiceProvider {
                 .stream()
                 .sorted((current, other) -> current.compareValueTo(other, intel.getVira()))
                 .toList();
+    }
+
+    private boolean hasCasalMaior(TrucoCard vira, List<TrucoCard> cards) {
+        var manilhaRank = vira.getRank().next();
+        return cards.contains(TrucoCard.of(manilhaRank, CardSuit.HEARTS)) &&
+                cards.contains(TrucoCard.of(manilhaRank, CardSuit.CLUBS));
     }
 
     @Override
