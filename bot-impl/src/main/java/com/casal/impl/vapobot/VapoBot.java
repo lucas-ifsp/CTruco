@@ -90,6 +90,9 @@ public class VapoBot implements BotServiceProvider {
         return intel.getRoundResults().get(intel.getRoundResults().size()-1);
     }
 
+    int getRoundNumber (GameIntel intel) {
+        return intel.getRoundResults().size() + 1;
+    }
 
 
 }
