@@ -603,6 +603,22 @@ class VapoBotTest {
     @DisplayName("Check if bot")
     class checkIfWillBeTheFirstToPlayTest {
 
+        @Test
+        @DisplayName("will be the first to play")
+        void ShouldBeTheFirstToPlay(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(true, vapoBot.checkIfWillBeTheFirstToPlay(stepBuilder.build()));
+        }
     }
 
 }
