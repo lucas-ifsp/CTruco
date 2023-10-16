@@ -63,4 +63,20 @@ class VeioDoBarBotTest {
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
+
+    @Test
+    @DisplayName("Should discard the smallest card if not able to win the round")
+    void shouldDiscardTheSmallestCardIfNotAbleToWinTheRound() {
+        var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+          playingCard,
+          TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+          TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        ));
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.discard(playingCard));
+    }
 }
