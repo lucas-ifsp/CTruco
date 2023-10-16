@@ -226,7 +226,7 @@ class VapoBotTest {
     @DisplayName("Test if has Zap")
     class HasZapTest {
         @Test
-        @DisplayName("Should return true")
+        @DisplayName("Should return true if has zap")
         void shouldReturnTrueIfHasZap() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
@@ -243,6 +243,26 @@ class VapoBotTest {
                     .opponentScore(3);
 
             assertTrue(vapoBot.hasZap(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return false if does not have zap")
+        void shouldReturnFalseIfDoesNotHaveZap() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(3);
+
+            assertFalse(vapoBot.hasZap(stepBuilder.build()));
         }
     }
 }
