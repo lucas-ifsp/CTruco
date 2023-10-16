@@ -27,68 +27,130 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BotMadeInDescalvado implements BotServiceProvider {
 
+    public static final String INVALID_ROUND_MSG = "Invalid round";
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        return switch (round(intel)) {
+            case 1 -> FirstRound.getRaiseResponse(intel);
+            case 2 -> SecondRound.getRaiseResponse(intel);
+            case 3 -> ThirdRound.getRaiseResponse(intel);
+            default -> throw new RuntimeException(INVALID_ROUND_MSG);
+        };
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return switch (round(intel)) {
+            case 1 -> FirstRound.getMaoDeOnzeResponse(intel);
+            case 2 -> SecondRound.getMaoDeOnzeResponse(intel);
+            case 3 -> ThirdRound.getMaoDeOnzeResponse(intel);
+            default -> throw new RuntimeException(INVALID_ROUND_MSG);
+        };
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return switch (round(intel)) {
+            case 1 -> FirstRound.decideIfRaises(intel);
+            case 2 -> SecondRound.decideIfRaises(intel);
+            case 3 -> ThirdRound.decideIfRaises(intel);
+            default -> throw new RuntimeException(INVALID_ROUND_MSG);
+        };
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        int round = intel.getRoundResults().size() + 1;
-
-        return switch (round) {
-            case 1 -> chooseCardFirstRound(intel);
-            case 2 -> chooseCardSecondRound(intel);
-            case 3 -> chooseCardThirdRound(intel);
-            default -> throw new RuntimeException("Invalid round");
+        return switch (round(intel)) {
+            case 1 -> FirstRound.chooseCard(intel);
+            case 2 -> SecondRound.chooseCard(intel);
+            case 3 -> ThirdRound.chooseCard(intel);
+            default -> throw new RuntimeException(INVALID_ROUND_MSG);
         };
     }
 
-    private CardToPlay chooseCardFirstRound(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
+    private int round(GameIntel intel) {
+        return intel.getRoundResults().size() + 1;
+    }
 
-        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
-        cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+    private static class FirstRound {
+        public static int getRaiseResponse(GameIntel intel) {
+            return 0;
+        }
 
-        boolean playsFirst = intel.getOpponentCard().isEmpty();
+        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
+            return false;
+        }
 
-        if (playsFirst) {
-            int manilhaCount = 0;
+        public static boolean decideIfRaises(GameIntel intel) {
+            return false;
+        }
 
-            for (var card : intel.getCards()) {
-                if (card.isManilha(intel.getVira())) {
-                    manilhaCount += 1;
+        public static CardToPlay chooseCard(GameIntel intel) {
+            TrucoCard vira = intel.getVira();
+
+            List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+            cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+
+            boolean playsFirst = intel.getOpponentCard().isEmpty();
+
+            if (playsFirst) {
+                int manilhaCount = 0;
+
+                for (var card : intel.getCards()) {
+                    if (card.isManilha(intel.getVira())) {
+                        manilhaCount += 1;
+                    }
                 }
-            }
 
-            if (manilhaCount >= 2) {
-                return CardToPlay.discard(intel.getCards().get(2));
+                if (manilhaCount >= 2) {
+                    return CardToPlay.discard(intel.getCards().get(2));
+                } else {
+                    return CardToPlay.of(intel.getCards().get(0));
+                }
             } else {
                 return CardToPlay.of(intel.getCards().get(0));
             }
-        } else {
+        }
+    }
+
+    private static class SecondRound {
+        public static int getRaiseResponse(GameIntel intel) {
+            return 0;
+        }
+
+        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
+            return false;
+        }
+
+        public static boolean decideIfRaises(GameIntel intel) {
+            return false;
+        }
+
+        public static CardToPlay chooseCard(GameIntel intel) {
             return CardToPlay.of(intel.getCards().get(0));
         }
     }
 
-    private CardToPlay chooseCardSecondRound(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
-    }
+    private static class ThirdRound {
+        public static int getRaiseResponse(GameIntel intel) {
+            return 0;
+        }
 
-    private CardToPlay chooseCardThirdRound(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
+            return false;
+        }
+
+        public static boolean decideIfRaises(GameIntel intel) {
+            return false;
+        }
+
+        public static CardToPlay chooseCard(GameIntel intel) {
+            return CardToPlay.of(intel.getCards().get(0));
+        }
     }
 }
