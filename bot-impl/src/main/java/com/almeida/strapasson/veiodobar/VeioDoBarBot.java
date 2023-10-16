@@ -27,17 +27,18 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
         var cards = sortedCards(intel);
         TrucoCard vira = intel.getVira();
+        TrucoCard handSmallestCard = cards.get(0);
 
         if (isLastRound(intel) || wonTheFirstRound(intel) || hasCasalMaior(vira, cards))
-            return CardToPlay.of(cards.get(0));
+            return CardToPlay.of(handSmallestCard);
 
-        var refCard = intel.getOpponentCard().orElse(cards.get(0));
+        var refCard = intel.getOpponentCard().orElse(handSmallestCard);
 
         return cards.stream()
                 .filter(card -> card.compareValueTo(refCard, vira) > 0)
                 .min((current, next) -> current.compareValueTo(next, vira))
                 .map(CardToPlay::of)
-                .orElse(CardToPlay.discard(cards.get(0)));
+                .orElse(isFirstRound(intel) ? CardToPlay.of(handSmallestCard) : CardToPlay.discard(handSmallestCard));
     }
 
     private List<TrucoCard> sortedCards(GameIntel intel) {
@@ -59,6 +60,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
     }
 
     private boolean isLastRound(GameIntel intel) { return intel.getRoundResults().size() == 2; }
+
+    private boolean isFirstRound(GameIntel intel) { return intel.getRoundResults().isEmpty(); }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
