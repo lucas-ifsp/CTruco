@@ -66,13 +66,19 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(intel.getOpponentScore() >= 11) return -1;
-        if(intel.getHandPoints() == 12) return -1;
+        //cobre os casos de de mao de onze e caso esteja chamando no doze (n temos medo de nada)
+        if(intel.getOpponentScore() >= 11) return 0;
+        if(intel.getHandPoints() == 12) return 0;
 
+        //casal maior e menor chama no seis froxo
         Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(intel.getCards(), intel.getVira());
         if(hasCasalMaior) return 1;
         Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(intel.getCards(), intel.getVira());
         if(hasCasalMenor) return 1;
+
+        int roundNumber = intel.getRoundResults().size() + 1;
+
+
 
         return -1;
     }
