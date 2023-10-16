@@ -96,4 +96,20 @@ class VeioDoBarBotTest {
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
+
+    @Test
+    @DisplayName("Should play the smallest card at the first round when it has casal maior")
+    void shouldPlayTheSmallestCardAtTheFirstRoundWhenItHasCasalMaior() {
+        var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+           playingCard,
+           TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+           TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
 }
