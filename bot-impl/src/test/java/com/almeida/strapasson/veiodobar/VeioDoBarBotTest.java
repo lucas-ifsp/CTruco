@@ -150,8 +150,8 @@ class VeioDoBarBotTest {
 
 
     @Test
-    @DisplayName("Should accept raise ponts if has one manilha and one card greater than jack")
-    void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardGreaterThanJack() {
+    @DisplayName("Should accept raise ponts if has one manilha and one card equal or greater than jack")
+    void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
