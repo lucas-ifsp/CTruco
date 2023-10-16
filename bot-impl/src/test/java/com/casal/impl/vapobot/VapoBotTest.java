@@ -287,5 +287,24 @@ class VapoBotTest {
 
             assertEquals(GameIntel.RoundResult.WON, vapoBot.getLastRoundResult(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return LOST")
+        void shouldReturnLost() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 3)
+                    .botInfo(myCards, 6)
+                    .opponentScore(3);
+
+            assertEquals(GameIntel.RoundResult.LOST, vapoBot.getLastRoundResult(stepBuilder.build()));
+        }
     }
 }
