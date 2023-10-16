@@ -58,15 +58,42 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
         List<TrucoCard> cards = intel.getCards();
         Integer manilhas = manilhaCount(cards,intel.getVira());
+
+        // responde a jogadas do oponente
         if (intel.getOpponentCard().isPresent()) {
-            if (!intel.getOpponentCard().get().isManilha(intel.getVira())){
-                return CardToPlay.of(killCard(intel));
-            }else {
+
+            //tenta amarrar se tiver zap seco
+            if (manilhas == 1 && hasZap(intel)){
+                if(intel.getRoundResults().isEmpty()){
+                    for (TrucoCard card : intel.getCards()) {
+                        if(card.getRank() == intel.getOpponentCard().get().getRank() && !card.isManilha(intel.getVira()))
+                            return CardToPlay.of(card);
+                    }
+                }
+
+            }
+            //tenta matar manilha se não der joga mais fraca
+            if (intel.getOpponentCard().get().isManilha(intel.getVira())){
                 return CardToPlay.of(killOpponentManilha(intel));
             }
-        }else{
-            return CardToPlay.of(strongCard(intel));
+            // tenta matar se não for manilha
+            return CardToPlay.of(killCard(intel));
         }
+
+        // joga se tiver manilha
+        if (manilhas>0){
+            // descarta o cagão
+            for (TrucoCard card : intel.getCards()) {
+                if (card.isOuros(intel.getVira()))
+                    return CardToPlay.of(card);
+            }
+            // se tiver amarrado joga maior manilha
+            if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+                return CardToPlay.of(strongManilha(intel));
+            }
+        }
+        // joga a carta mais forte da mão
+        return CardToPlay.of(strongCard(intel));
     }
 
     @Override
@@ -174,7 +201,6 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         return strongerCards;
     }
 
-
     private TrucoCard strongManilha(GameIntel intel){
         List<TrucoCard> cards = intel.getCards();
         Integer maior = 0;
@@ -187,37 +213,44 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return cards.get(indexMaior);
     }
-        private TrucoCard killOpponentManilha(GameIntel intel) {
-            List<TrucoCard> manilhas = manilhasInTheHandLargerThanTheOpponents(intel);
-            TrucoCard cardPlay = weakestCard(intel);
-            if (!manilhas.isEmpty()) {
-                cardPlay = manilhas.get(0);
-                for (TrucoCard manilha : manilhas) {
-                        if (manilha.relativeValue(intel.getVira()) < cardPlay.relativeValue(intel.getVira())){
-                            cardPlay = manilha;
-                        }
-                }
-            }
-            return cardPlay;
-        }
-
-
-        private List<TrucoCard> manilhasInTheHandLargerThanTheOpponents(GameIntel intel){
-            List<TrucoCard> manilhas = new ArrayList<>();
-            for (TrucoCard card : intel.getCards()) {
-                if (card.isManilha(intel.getVira())) {
-                    if (card.relativeValue(intel.getVira()) > intel.getOpponentCard().get().relativeValue(intel.getVira())){
-                        manilhas.add(card);
+    private TrucoCard killOpponentManilha(GameIntel intel) {
+        List<TrucoCard> manilhas = manilhasInTheHandLargerThanTheOpponents(intel);
+        TrucoCard cardPlay = weakestCard(intel);
+        if (!manilhas.isEmpty()) {
+            cardPlay = manilhas.get(0);
+            for (TrucoCard manilha : manilhas) {
+                    if (manilha.relativeValue(intel.getVira()) < cardPlay.relativeValue(intel.getVira())){
+                        cardPlay = manilha;
                     }
+            }
+        }
+        return cardPlay;
+    }
+
+    private List<TrucoCard> manilhasInTheHandLargerThanTheOpponents(GameIntel intel){
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                if (card.relativeValue(intel.getVira()) > intel.getOpponentCard().get().relativeValue(intel.getVira())){
+                    manilhas.add(card);
                 }
             }
-            return manilhas;
         }
-
-
-
-
-
-
-
+        return manilhas;
     }
+
+    private Boolean hasZap(GameIntel intel){
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira()))
+                return true;
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+}

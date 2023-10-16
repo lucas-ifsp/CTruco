@@ -188,10 +188,6 @@ class TecoNoMarrecoBotTest {
 
     }
 
-
-
-
-
     @Nested
     @DisplayName("chooseCard")
     class ChooseCardTests{
@@ -245,7 +241,40 @@ class TecoNoMarrecoBotTest {
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,CLUBS));
 
         }
+        @Test
+        @DisplayName("Testa jogar descartar manilha ouro")
+        void playTheGoldIfYouHaveTheHand(){
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(KING, CLUBS), TrucoCard.of(KING, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,DIAMONDS));
+
+        }
+        @Test
+        @DisplayName("Testa amarrar se tiver zap seco")
+        void tryToTieItIfYouHaveADryZap() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertEquals(opponentCard.getRank(), cardToPlay.content().getRank());
+        }
+        @Test
+        @DisplayName("Testa se tiver amarrado jogar maior manilha")
+        void ifYouTiePlayBiggerManilha() {
+            hand = List.of( TrucoCard.of(KING, SPADES), TrucoCard.of(KING, HEARTS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.DREW);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,HEARTS));
+        }
     }
-
-
 }
