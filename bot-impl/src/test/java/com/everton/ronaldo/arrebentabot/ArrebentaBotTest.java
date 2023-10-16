@@ -21,7 +21,7 @@ class ArrebentaBotTest {
     public ArrebentaBot arrebentaBot;
 
     private GameIntel.StepBuilder stepBuilder;
-    private GameIntel intel;git pull
+    private GameIntel intel;
 
 
 
@@ -611,6 +611,28 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
 
             assertTrue(arrebentaBot.decideIfRaises(intel));
+        }
+        @Test
+        @DisplayName("Should not raise when opponent's score is close to winning")
+        void shouldNotRaiseWhenOpponentScoreIsCloseToWinning() {
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(cards, 6)
+                    .opponentScore(10);
+
+            assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
     }
 }
