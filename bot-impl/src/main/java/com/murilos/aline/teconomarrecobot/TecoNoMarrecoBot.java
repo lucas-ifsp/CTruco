@@ -91,6 +91,10 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
                 return CardToPlay.of(strongManilha(intel));
             }
+            //se tiver casal maior joga nada na primeira
+            if (hasCasalMaior(intel) && intel.getRoundResults().isEmpty()){
+                return CardToPlay.of(weakestCard(intel));
+            }
         }
         // joga a carta mais forte da mão
         return CardToPlay.of(strongCard(intel));
@@ -167,10 +171,18 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         Integer menor = Integer.MAX_VALUE;;
         TrucoCard cardPlay = null;
+
         for (TrucoCard card : intel.getCards()) {
-            if (card.getRank().value() < menor) {
-                menor = card.getRank().value();
-                cardPlay = card;
+            if (card.isManilha(intel.getVira()) ){
+                if (card.relativeValue(intel.getVira()) < menor){
+                    menor = card.relativeValue(intel.getVira());
+                    cardPlay = card;
+                }
+            }else {
+                if (card.getRank().value() < menor) {
+                    menor = card.getRank().value();
+                    cardPlay = card;
+                }
             }
         }
         return cardPlay;
