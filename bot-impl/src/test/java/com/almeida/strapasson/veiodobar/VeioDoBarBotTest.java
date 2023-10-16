@@ -82,8 +82,8 @@ class VeioDoBarBotTest {
     }
     
     @Test
-    @DisplayName("Should play the second strongest card if bot is the very first to play")
-    void shouldPlayTheSecondStrongestCardIfBotIsTheVeryFirstToPlay() {
+    @DisplayName("Should play the second strongest card if bot is the very first to play and no casal maior")
+    void shouldPlayTheSecondStrongestCardIfBotIsTheVeryFirstToPlayAndNoCasalMaior() {
         var playingCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
 
         when(intel.getCards()).thenReturn(List.of(
