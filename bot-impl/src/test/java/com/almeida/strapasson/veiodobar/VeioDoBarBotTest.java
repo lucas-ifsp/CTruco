@@ -112,4 +112,18 @@ class VeioDoBarBotTest {
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
+
+    @Test
+    @DisplayName("should accept raise points if has two manilhas")
+    void shouldRaisePointsIfHasTwoManilhas() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
 }
