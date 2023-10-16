@@ -1,18 +1,14 @@
 package com.almeida.strapasson.veiodobar;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,4 +50,20 @@ class VeioDoBarBotTest {
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should play the smallest card necessary to win the round")
+    void shouldPlayTheSmallestCardNecessaryToWinTheRound() {
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+                playingCard,
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        ));
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
 }
