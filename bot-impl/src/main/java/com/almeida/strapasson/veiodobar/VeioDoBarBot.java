@@ -1,8 +1,9 @@
 package com.almeida.strapasson.veiodobar;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.stream.Collectors;
 
 public final class VeioDoBarBot implements BotServiceProvider {
     @Override
@@ -22,6 +23,12 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        var param = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        var cards = intel.getCards()
+                .stream()
+                .filter(card -> card.compareValueTo(param, intel.getVira()) >= 0)
+                .toList();
+
+        return cards.isEmpty() ? -1 : 0;
     }
 }
