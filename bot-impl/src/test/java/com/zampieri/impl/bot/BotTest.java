@@ -84,4 +84,24 @@ public class BotTest {
         assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
     }
 
+    @Test
+    @DisplayName("If the opponent hidden first card")
+    void testIfOpponentCardsHidden() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard oponentCard = TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(oponentCard);
+
+        assertEquals(CardRank.FIVE, bot.chooseCard(builder.build()).content().getRank());
+    }
+
 }
