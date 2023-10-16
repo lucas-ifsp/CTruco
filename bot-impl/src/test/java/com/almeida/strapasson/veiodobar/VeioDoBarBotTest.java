@@ -134,19 +134,6 @@ class VeioDoBarBotTest {
     }
 
     @Test
-    @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
-    void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-
-        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
-    }
-
-    @Test
     @DisplayName("Should accept points raising if all cards are upper than jacks and no manilhas")
     void shouldAcceptPointsRaisingIfAllCardsAreUpperThanJacksAndNoManilhas() {
         when(intel.getCards()).thenReturn(List.of(
@@ -174,6 +161,33 @@ class VeioDoBarBotTest {
 
 
     @Test
+    @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
+    void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should accept raise points if has two cards equalts to or greater than two")
+    void shouldAcceptRaisePointsIfHasTwoCardsEqualtsToOrGreaterThanTwo() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
+
+    @Test
     @DisplayName("Should refuse raise points if has just one manilha")
     void shouldRefuseRaisePointsIfHasJustOneManilha() {
         when(intel.getCards()).thenReturn(List.of(
@@ -182,6 +196,19 @@ class VeioDoBarBotTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         ));
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
+    void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }

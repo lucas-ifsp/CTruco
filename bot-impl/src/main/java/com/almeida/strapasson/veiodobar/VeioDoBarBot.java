@@ -63,13 +63,13 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var param = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
         var vira = intel.getVira();
 
-        var cardsGrateThanJackOrHavaManilha = intel.getCards()
+        var cardsGrateThanJack = intel.getCards()
                 .stream()
                 .filter(card -> card.compareValueTo(param, intel.getVira()) >= 0)
                 .toList();
 
-        if (countMainilha(intel) < 2 || cardsGrateThanJackOrHavaManilha.isEmpty()){
-            if (countMainilha(intel) > 0 && cardsGrateThanJackOrHavaManilha.size() > 0){
+        if (countMainilha(intel) < 2 || cardsGrateThanJack.isEmpty()){
+            if (countMainilha(intel) > 0 || cardsGrateThanJack.size() > 1){
                 return 0;
             }
             return -1;
