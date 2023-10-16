@@ -13,6 +13,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -392,9 +393,7 @@ class VapoBotTest {
         }
     }
 
-    @Nested
-    @DisplayName("Should have")
-    class GetManilhasAmountTest {
+
         @Test
         @DisplayName("2 manilhas on 6H, AC, 6C")
         void shouldReturn2() {
@@ -436,8 +435,32 @@ class VapoBotTest {
 
             assertEquals(1, vapoBot.getAmountOfManilhas(stepBuilder.build()));
         }
+
+    @Nested
+    @DisplayName("Get lowest card that wins against opponent card")
+    class LowestCardToWinTest {
+        @Test
+        @DisplayName("Should return JS when other card is 2S")
+        void shouldReturnJackOfSpadesWhenOtherCardIsTwoOfSpades() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+
+            assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
+        }
+
     }
-
-
 
 }
