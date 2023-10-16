@@ -42,10 +42,17 @@ public class TrucoGuruUtils {
         return hasManilha || hasStrongCard;
     }
 
+    static Boolean hasHighRank(List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream()
+                .filter(card -> !card.isManilha(vira))
+                .anyMatch(card -> card.getRank().value() >= 8);
+    }
+
     static Boolean hasStrongHand(List<TrucoCard> cards, TrucoCard vira) {
-        Boolean hasManilha = hasManilha(cards, vira);
-        Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE || card.getRank() == CardRank.TWO);
-        return hasManilha && hasStrongCard;
+        boolean hasManilha = hasManilha(cards, vira);
+        boolean hasHighRank = hasHighRank(cards, vira);
+
+        return hasManilha && hasHighRank;
     }
 
     static Boolean hasCasalMaior(List<TrucoCard> cards, TrucoCard vira) {
