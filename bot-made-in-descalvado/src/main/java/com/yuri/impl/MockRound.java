@@ -27,6 +27,11 @@ public class MockRound {
         private final TrucoCard vira;
         private final Stack<TrucoCard> deckA = new Stack<>();
         private final Stack<TrucoCard> deckB = new Stack<>();
+        private final Stack<TrucoCard> played = new Stack<>();
+
+        private Character last;
+        private TrucoCard lastPlayedA;
+        private TrucoCard lastPlayedB;
 
         private Builder(TrucoCard vira) {
             this.vira = vira;
@@ -38,6 +43,7 @@ public class MockRound {
 
         public Builder giveA(TrucoCard card) {
             deckA.push(card);
+            last = A;
             return this;
         }
 
@@ -47,18 +53,42 @@ public class MockRound {
 
         public Builder giveB(TrucoCard card) {
             deckB.push(card);
+            last = B;
             return this;
         }
 
         public Builder play() {
+            if (last == A) {
+                TrucoCard card = deckA.pop();
+                lastPlayedA = card;
+                last = null;
+                played.add(card);
+            }
+
+            if (last == B) {
+                TrucoCard card = deckB.pop();
+                lastPlayedB = card;
+                last = null;
+                played.add(card);
+            }
+
+            if (lastPlayedA != null && lastPlayedB != null) {
+                lastPlayedA = null;
+                lastPlayedB = null;
+            }
+
             return this;
         }
 
         public GameIntel build() {
+            List<TrucoCard> openCards = new ArrayList<>();
+            openCards.add(vira);
+            openCards.addAll(played);
+
             return GameIntel.StepBuilder.with()
                 .gameInfo(
                     new ArrayList<>(),
-                    List.of(vira),
+                    openCards,
                     vira,
                     1
                 )
@@ -67,7 +97,7 @@ public class MockRound {
                     0
                 )
                 .opponentScore(0)
-                .opponentCard(null)
+                .opponentCard(lastPlayedB)
                 .build();
         }
     }
