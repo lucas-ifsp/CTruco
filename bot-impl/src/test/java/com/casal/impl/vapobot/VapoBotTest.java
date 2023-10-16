@@ -416,6 +416,26 @@ class VapoBotTest {
             assertEquals(2, vapoBot.getAmountOfManilhas(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("1 manilhas on AS, 4H, QC")
+        void shouldReturn1() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(1, vapoBot.getAmountOfManilhas(stepBuilder.build()));
+        }
     }
 
 
