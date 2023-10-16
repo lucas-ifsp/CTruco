@@ -22,6 +22,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var cards = sortedCards(intel);
         TrucoCard vira = intel.getVira();
 
+        if (wonTheFirstRound(intel))
+            return CardToPlay.of(cards.get(0));
         if (hasCasalMaior(vira, cards))
             return CardToPlay.of(cards.get(0));
 
@@ -49,6 +51,11 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var manilhaRank = vira.getRank().next();
         return cards.contains(TrucoCard.of(manilhaRank, CardSuit.HEARTS)) &&
                 cards.contains(TrucoCard.of(manilhaRank, CardSuit.CLUBS));
+    }
+
+    private boolean wonTheFirstRound(GameIntel intel) {
+        var roundResults = intel.getRoundResults();
+        return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON;
     }
 
     @Override
