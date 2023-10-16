@@ -29,7 +29,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
-import static com.rossi.lopes.trucoguru.TrucoGuruUtils.hasStrongHand;
+import static com.rossi.lopes.trucoguru.TrucoGuruUtils.*;
 
 public class TrucoGuru implements BotServiceProvider {
     @Override
@@ -86,6 +86,21 @@ public class TrucoGuru implements BotServiceProvider {
             if (hasStrongHand(cards, vira)) {
                 // Mão forte, pode chamar no 6
                 return 1;
+            }
+        } else if (roundNumber == 2) {
+            // Se for a segunda rodada, avalie a situação após a primeira rodada
+            final List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+            GameIntel.RoundResult firstRoundResult = roundResults.get(0);
+            final GameIntel.RoundResult lastRoundResult = roundResults.get(roundResults.size() - 1);
+
+            if (firstRoundResult == GameIntel.RoundResult.WON || lastRoundResult == GameIntel.RoundResult.WON) {
+                if (hasZap(cards, vira) || hasCopas(cards, vira)) {
+                    // Tem zap, pode chamar no 6
+                    return 1;
+                } else if (hasManilha(cards, vira) || hasStrongCard(cards, vira)) {
+                    // Tem manilha ou carta forte, aceita
+                    return 0;
+                }
             }
         }
 
