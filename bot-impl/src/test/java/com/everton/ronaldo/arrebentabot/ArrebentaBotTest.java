@@ -657,5 +657,29 @@ class ArrebentaBotTest {
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should not raise when holding weak cards in initial rounds")
+        void shouldNotRaiseWhenHoldingWeakCardsInInitialRounds() {
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(cards, 9)
+                    .opponentScore(0);  // Initial round
+
+            assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
+        }
+
+
     }
 }
