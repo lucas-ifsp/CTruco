@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class VeioDoBarBot implements BotServiceProvider {
@@ -19,6 +20,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        Objects.requireNonNull(intel, "Game intel must be given for the bot choose how to act!");
+
         var cards = sortedCards(intel);
         TrucoCard vira = intel.getVira();
 
