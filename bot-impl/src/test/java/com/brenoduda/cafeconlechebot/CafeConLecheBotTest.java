@@ -156,4 +156,27 @@ public class CafeConLecheBotTest {
             assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
         }
     }
+
+    @Nested
+    @DisplayName("Test of the bot logic to raise response")
+    class RaiseResponse {
+        @Test
+        @DisplayName("Should reject when has 1 manilha and not has three")
+        void shouldRejectWhenHas1ManilhaAndNotHasThree() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(QUEEN, HEARTS),
+                    TrucoCard.of(FIVE, SPADES),
+                    TrucoCard.of(ACE, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(-1);
+        }
+    }
 }
