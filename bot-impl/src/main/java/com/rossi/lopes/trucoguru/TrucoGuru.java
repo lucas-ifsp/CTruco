@@ -29,6 +29,8 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
+import static com.rossi.lopes.trucoguru.TrucoGuruUtils.hasStrongHand;
+
 public class TrucoGuru implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -70,14 +72,22 @@ public class TrucoGuru implements BotServiceProvider {
         if(intel.getOpponentScore() >= 11) return 0;
         if(intel.getHandPoints() == 12) return 0;
 
-        //casal maior e menor chama no seis froxo
-        Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(intel.getCards(), intel.getVira());
-        if(hasCasalMaior) return 1;
-        Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(intel.getCards(), intel.getVira());
-        if(hasCasalMenor) return 1;
-
         int roundNumber = intel.getRoundResults().size() + 1;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
 
+        if (roundNumber == 1) {
+            //casal maior e menor chama no seis froxo
+            Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(intel.getCards(), intel.getVira());
+            if(hasCasalMaior) return 1;
+            Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(intel.getCards(), intel.getVira());
+            if(hasCasalMenor) return 1;
+
+            if (hasStrongHand(cards, vira)) {
+                // Mão forte, pode chamar no 6
+                return 1;
+            }
+        }
 
 
         return -1;
