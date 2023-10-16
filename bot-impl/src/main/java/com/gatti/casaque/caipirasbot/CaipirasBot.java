@@ -41,11 +41,11 @@ public class CaipirasBot implements BotServiceProvider {
     public Boolean checkExistenceManilhaAndStronger(List<TrucoCard> cards, TrucoCard vira) {
         var count = 0;
         for (TrucoCard card : cards) {
-            if (card.isManilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),vira) > 0) {
+            if (card.isManilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),vira) >= 0) {
                 count++;
             }
         }
-        return count > 2;
+        return count >= 2;
     }
     public boolean checkExistenceCasalMaior(List<TrucoCard> openCards) {
         for (TrucoCard card : openCards) {
