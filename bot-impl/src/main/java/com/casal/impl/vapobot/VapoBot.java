@@ -84,7 +84,12 @@ public class VapoBot implements BotServiceProvider {
     }
 
     GameIntel.RoundResult getLastRoundResult(GameIntel intel) {
+        if (intel.getRoundResults().isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException("There is no last round played.");
+        }
         return intel.getRoundResults().get(intel.getRoundResults().size()-1);
     }
+
+
 
 }
