@@ -51,7 +51,7 @@ public class CafeConLecheBot implements BotServiceProvider {
         }
 
         if(botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() >= 2 &&
-                botCards.stream().filter(card -> card.getSuit().equals(CardSuit.CLUBS)).toList().size() >= 1) {
+                botCards.stream().filter(card -> card.getSuit().equals(CardSuit.CLUBS) || card.getSuit().equals(CardSuit.HEARTS)).toList().size() >= 1) {
             return true;
         }
 
