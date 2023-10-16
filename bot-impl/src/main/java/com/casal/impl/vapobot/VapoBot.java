@@ -7,9 +7,10 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class VapoBot implements BotServiceProvider {
-    private List<TrucoCard> opponentCardsThatHaveBeenPlayed = new ArrayList<>();
+    private final List<TrucoCard> opponentCardsThatHaveBeenPlayed = new ArrayList<>();
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -104,4 +105,8 @@ public class VapoBot implements BotServiceProvider {
         return amount;
     }
 
+    boolean checkIfOpponentCardIsBad(GameIntel intel){
+        TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("O oponente ainda não jogou a carta dele"));
+        return opponentCard.relativeValue(intel.getVira()) < 7;
+    }
 }
