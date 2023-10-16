@@ -40,8 +40,8 @@ class VeioDoBarBotTest {
     }
 
     @Test
-    @DisplayName("Should discard the smallest card if not able to win the round")
-    void shouldDiscardTheSmallestCardIfNotAbleToWinTheRound() {
+    @DisplayName("Should play the smallest card if not able to win the first round")
+    void shouldPlayTheSmallestCardIfNotAbleToWinTheFirstRound() {
         var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
 
         when(intel.getCards()).thenReturn(List.of(
