@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +120,6 @@ class VeioDoBarBotTest {
 
 
 
-
     @Test
     @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
     void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
@@ -148,7 +145,6 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
-
 
     @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
