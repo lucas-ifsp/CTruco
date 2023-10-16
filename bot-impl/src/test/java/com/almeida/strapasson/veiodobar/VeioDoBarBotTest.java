@@ -190,6 +190,18 @@ class VeioDoBarBotTest {
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
 
+    @Test
+    @DisplayName("Should refuse if has two cards lower than two")
+    void shouldRefuseIfHasTwoCardsLessThanTwo() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
 }
