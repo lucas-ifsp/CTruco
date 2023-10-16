@@ -148,8 +148,8 @@ public class TrucoGuruTest {
     class GetRaiseResponseTests{
         TrucoGuru trucoGuru = new TrucoGuru();
         @Test
-        @DisplayName("Should not raise if hand points is twelve")
-        void shouldNotRaiseIfHandPointsIsTwelveTest(){
+        @DisplayName("Should accept if hand points is twelve")
+        void shouldAcceptIfHandPointsIsTwelveTest(){
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -166,7 +166,7 @@ public class TrucoGuruTest {
                     .opponentScore(0)
                     .build();
 
-            assertThat(trucoGuru.getRaiseResponse(intel)).isNegative();
+            assertThat(trucoGuru.getRaiseResponse(intel)).isZero();
         }
 
         @Test
@@ -214,8 +214,8 @@ public class TrucoGuruTest {
         }
 
         @Test
-        @DisplayName("Should not raise if the opponent's score is 11")
-        void shouldNotRaiseIfOpponentScoreIs11Test(){
+        @DisplayName("Should accept if the opponent's score is 11 by dafault")
+        void shouldAcceptIfOpponentScoreIs11Test(){
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -232,7 +232,7 @@ public class TrucoGuruTest {
                     .opponentScore(11)
                     .build();
 
-            assertThat(trucoGuru.getRaiseResponse(intel)).isNegative();
+            assertThat(trucoGuru.getRaiseResponse(intel)).isZero();
         }
 
         @Test
