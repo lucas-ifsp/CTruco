@@ -68,4 +68,18 @@ public class VapoBot implements BotServiceProvider {
         double average = (double) values / intel.getCards().size();
         return average;
     }
+
+    boolean hasZap(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        boolean zap = false;
+
+        for (TrucoCard card : myCards) {
+            if (card.isZap(vira)) {
+                zap = true;
+            }
+        }
+
+        return zap;
+    }
 }
