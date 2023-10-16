@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -112,6 +113,38 @@ class VeioDoBarBotTest {
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
+    
+    @Test
+    @DisplayName("Should play the smallest card at second round if won the first one")
+    void shouldPlayTheSmallestCardAtSecondRoundIfWonTheFirstOne() {
+        var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+            playingCard,
+            TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
+    @DisplayName("Should play the smallest card necessary to win at second round if lost the first one")
+    void shouldPlayTheSmallestCardNecessaryToWinAtSecondRoundIfLostTheFirstOne() {
+        var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+                playingCard,
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
 
     @Test
     @DisplayName("should accept raise points if has two manilhas")
@@ -125,5 +158,4 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
-
 }
