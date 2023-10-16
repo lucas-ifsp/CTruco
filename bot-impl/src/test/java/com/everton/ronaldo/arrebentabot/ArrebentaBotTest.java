@@ -634,5 +634,28 @@ class ArrebentaBotTest {
 
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should not raise when opponent's cards are stronger")
+        void shouldNotRaiseWhenOpponentCardsAreStronger() {
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(cards, 9)
+                    .opponentScore(9);
+
+            assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 }
