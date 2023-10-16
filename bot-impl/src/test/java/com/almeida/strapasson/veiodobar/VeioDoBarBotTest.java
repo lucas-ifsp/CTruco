@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -131,6 +131,14 @@ class VeioDoBarBotTest {
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
+    @DisplayName("Should throw a descriptive NullPointerException when intel is null")
+    void shouldThrowADescriptiveNullPointerExceptionWhenIntelIsNull() {
+        assertThatThrownBy(() -> sut.chooseCard(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Game intel must be given for the bot choose how to act!");
     }
 
     @Test
