@@ -576,4 +576,83 @@ public class PerdeNuncaBotTest {
 
         assertTrue(response);
     }
+
+    @Test
+    @DisplayName("Decline mao de onze when has low rank cards and opponent score is high")
+    public void declineMaoDeOnzeWhenHasLowRankCardsAndOpponentScoreIsHigh() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Decline mao de onze when opponent's score is high")
+    public void declineMaoDeOnzeWhenOpponentsScoreIsHigh() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Decline mao de onze when sum is high")
+    public void declineElevenCardHandWhenSumIsHigh() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(7);
+
+        assertFalse(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze when opponent's score is eight")
+    public void botAcceptsElevenCardHandWhenOpponentsScoreIsLow() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(8);
+
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
 }
