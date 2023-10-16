@@ -106,6 +106,18 @@ public class TrucoGuruUtilsTest {
         }
 
         @Test
+        @DisplayName("Should return true if hand is strong (at least 2)")
+        void shouldReturnTrueIfHandIsStrong() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isTrue();
+        }
+
+        @Test
         @DisplayName("Should return false if hand has no strong card")
         void shouldReturnFalseIfHandHasNoStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
