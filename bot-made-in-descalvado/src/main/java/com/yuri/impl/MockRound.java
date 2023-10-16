@@ -7,7 +7,10 @@ import com.bueno.spi.model.TrucoCard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Stack;
+
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 
 public class MockRound {
 
@@ -28,6 +31,7 @@ public class MockRound {
         private final Stack<TrucoCard> deckA = new Stack<>();
         private final Stack<TrucoCard> deckB = new Stack<>();
         private final Stack<TrucoCard> played = new Stack<>();
+        private final List<GameIntel.RoundResult> results = new ArrayList<>();
 
         private Character last;
         private TrucoCard lastPlayedA;
@@ -73,6 +77,16 @@ public class MockRound {
             }
 
             if (lastPlayedA != null && lastPlayedB != null) {
+                var winner = lastPlayedA.compareValueTo(lastPlayedB, vira);
+
+                if (winner == 1) {
+                    results.add(WON);
+                } else if (winner == 0) {
+                    results.add(DREW);
+                } else {
+                    results.add(LOST);
+                }
+
                 lastPlayedA = null;
                 lastPlayedB = null;
             }
@@ -87,7 +101,7 @@ public class MockRound {
 
             return GameIntel.StepBuilder.with()
                 .gameInfo(
-                    new ArrayList<>(),
+                    results,
                     openCards,
                     vira,
                     1
