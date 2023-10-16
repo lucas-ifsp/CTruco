@@ -440,10 +440,27 @@ class VapoBotTest {
 
     @Nested
     @DisplayName("Check if opponent card")
-    class checkIfOpponentCardIsBad {
+    class checkIfOpponentCardIsBadTest {
 
         @Test
-        @DisplayName("3S is a bad card")
+        @DisplayName("3S is not a bad card")
+        void ShouldCheckThatKSIsNotABadCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+            assertFalse(vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("KS is not a bad card")
         void ShouldCheckThat3SIsNotABadCard(){
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
@@ -455,9 +472,9 @@ class VapoBotTest {
                     .gameInfo(List.of(), openCards, vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(1)
-                    .opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+                    .opponentCard(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
 
-            assertEquals(false, vapoBot.checkIdOponentCardIsBad(stepBuilder.build()));
+            assertEquals(false, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
     }
 
