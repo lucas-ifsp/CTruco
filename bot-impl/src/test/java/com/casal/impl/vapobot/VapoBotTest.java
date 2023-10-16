@@ -442,6 +442,23 @@ class VapoBotTest {
     @DisplayName("Check if opponent card")
     class checkIfOpponentCardIsBad {
 
+        @Test
+        @DisplayName("3S is a bad card")
+        void ShouldCheckThat3SIsNotABadCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            assertEquals(false, vapoBot.checkIdOponentCardIsBad(stepBuilder.build()));
+        }
     }
 
 
