@@ -40,6 +40,15 @@ public class CaipirasBot implements BotServiceProvider {
         return false;
     }
 
+    public boolean checkExistenceCasalMaior(List<TrucoCard> openCards) {
+        for (TrucoCard card : openCards) {
+            if (card.isCopas(openCards.get(0)) || card.isZap(openCards.get(0))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public TrucoCard chooseDiamondInFirstRound(List<TrucoCard> cards, TrucoCard vira){
         for (TrucoCard card : cards) {
             if (card.isOuros(vira)) {
