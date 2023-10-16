@@ -444,7 +444,7 @@ class VapoBotTest {
 
         @Test
         @DisplayName("3S is not a bad card")
-        void ShouldCheckThatKSIsNotABadCard(){
+        void ShouldCheckThatKSIsNotABadCard() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
 
             List<TrucoCard> myCards = List.of();
@@ -461,7 +461,7 @@ class VapoBotTest {
 
         @Test
         @DisplayName("KS is not a bad card")
-        void ShouldCheckThat3SIsNotABadCard(){
+        void ShouldCheckThat3SIsNotABadCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
             List<TrucoCard> myCards = List.of();
@@ -476,42 +476,42 @@ class VapoBotTest {
 
             assertEquals(false, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
-    }
 
-    @Test
-    @DisplayName("QS is a bad card")
-    void ShouldCheckThatQSIsABadCard(){
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        @Test
+        @DisplayName("QS is a bad card")
+        void ShouldCheckThatQSIsABadCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
-        List<TrucoCard> myCards = List.of();
+            List<TrucoCard> myCards = List.of();
 
-        List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> openCards = List.of(vira);
 
-        stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), openCards, vira, 1)
-                .botInfo(myCards, 1)
-                .opponentScore(1)
-                .opponentCard(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
 
-        assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
-    }
+            assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+        }
 
-    @Test
-    @DisplayName("JH is a bad card")
-    void ShouldCheckThatJHIsABadCard(){
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        @Test
+        @DisplayName("JH is a bad card")
+        void ShouldCheckThatJHIsABadCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
-        List<TrucoCard> myCards = List.of();
+            List<TrucoCard> myCards = List.of();
 
-        List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> openCards = List.of(vira);
 
-        stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), openCards, vira, 1)
-                .botInfo(myCards, 1)
-                .opponentScore(1)
-                .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
 
-        assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+            assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+        }
     }
 
 }
