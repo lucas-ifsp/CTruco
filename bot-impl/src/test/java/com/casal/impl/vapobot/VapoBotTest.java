@@ -619,6 +619,24 @@ class VapoBotTest {
 
             assertEquals(true, vapoBot.checkIfWillBeTheFirstToPlay(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("wont be the first to play")
+        void ShouldNotBeTheFirstToPlay(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+
+            assertEquals(false, vapoBot.checkIfWillBeTheFirstToPlay(stepBuilder.build()));
+        }
     }
 
 }
