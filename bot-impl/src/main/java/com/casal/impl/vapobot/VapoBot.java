@@ -95,4 +95,13 @@ public class VapoBot implements BotServiceProvider {
     }
 
 
+    int getAmountOfManilhas(GameIntel intel){
+        int amount = 0;
+        for (TrucoCard card: intel.getCards()) {
+            if(card.isManilha(intel.getVira()))
+                amount += 1;
+        }
+        return amount;
+    }
+
 }
