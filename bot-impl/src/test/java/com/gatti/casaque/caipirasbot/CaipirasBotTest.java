@@ -1,9 +1,6 @@
 package com.gatti.casaque.caipirasbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,7 +44,7 @@ class CaipirasBotTest {
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(cards);
 
-        assertThat(caipirasBot.chooseCard(intel)).isEqualTo(expectedCard);
+        assertThat(caipirasBot.chooseDiamondInFirstRound(cards, vira)).isEqualTo(expectedCard);
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
