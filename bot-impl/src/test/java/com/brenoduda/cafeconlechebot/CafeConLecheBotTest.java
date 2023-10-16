@@ -20,6 +20,7 @@
 
 package com.brenoduda.cafeconlechebot;
 
+import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
@@ -131,5 +132,28 @@ public class CafeConLecheBotTest {
             assertThat(decideIfRaises).isEqualTo(true);
         }
 
+    }
+
+    @Nested
+    @DisplayName("Test of the bot logic to choose card")
+    class ChooseCard {
+        @Test
+        @DisplayName("Should choose diamons in the first round when playing first")
+        void shouldChooseDiamondsInTHeFirstRoundWhenPlayingFirst() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(SEVEN, DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
+        }
     }
 }
