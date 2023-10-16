@@ -1,8 +1,48 @@
 package com.zampieri.impl.bot;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
+import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class BotTest {
-    private Bot Bot;
 
+    private Bot bot;
+    @BeforeEach
+    void setUp() {
+        bot = new Bot();
+    }
 
+    GameIntel.StepBuilder builder;
+
+    @Test
+    @DisplayName("If opponent card is worst")
+    void testIfOpponentCardIsWorst() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+        TrucoCard oponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(oponentCard);
+
+        assertEquals(CardRank.ACE, bot.chooseCard(builder.build()).content().getRank());
+    }
 
 }
