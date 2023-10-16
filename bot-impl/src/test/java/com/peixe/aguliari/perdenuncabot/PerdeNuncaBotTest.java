@@ -35,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PerdeNuncaBotTest {
     private PerdeNuncaBot perdeNuncaBot;
-
     TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
     private final List<TrucoCard> botCards = Arrays.asList(
             TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -489,5 +488,92 @@ public class PerdeNuncaBotTest {
                 .opponentCard(opponentCard);
 
         assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze if the bot has a good hand")
+    public void acceptMaoDeOnzeIfTheBotHasAGoodHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Decline mao de onze if bot has a low chance of winning")
+    public void declineElevenHandIfBotHasALowChanceOfWinning() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+
+        boolean response = perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build());
+
+        assertFalse(response);
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze if opponent is losing")
+    public void acceptElevenHandIfOpponentIsLosing() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(5);
+
+        boolean response = perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build());
+
+        assertTrue(response);
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze if opponent score is six or less")
+    public void acceptMaoDeOnzeIfOpponentScoreIsSixOrLess() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(6);
+
+        boolean response = perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build());
+
+        assertTrue(response);
     }
 }
