@@ -61,11 +61,17 @@ public final class VeioDoBarBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         var param = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
-        var cards = intel.getCards()
+        var vira = intel.getVira();
+
+        var cardsGrateThanJackOrHavaManilha = intel.getCards()
                 .stream()
-                .filter(card -> card.compareValueTo(param, intel.getVira()) >= 0)
+                .filter(card -> card.compareValueTo(param, intel.getVira()) >= 0 || card.isManilha(vira))
                 .toList();
 
-        return cards.isEmpty() ? -1 : 0;
+
+        return cardsGrateThanJackOrHavaManilha.isEmpty() ? -1 : 0;
+
+
+
     }
 }
