@@ -38,4 +38,20 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should accept points raising if all cards are upper than jacks and no manilhas")
+    void shouldAcceptPointsRaisingIfAllCardsAreUpperThanJacksAndNoManilhas() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
 }

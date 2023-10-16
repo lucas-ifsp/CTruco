@@ -4,7 +4,7 @@ import com.bueno.spi.model.GameIntel;
 
 public class ThirdRound implements Strategy{
     @Override
-    public boolean hasMajorityCouple(GameIntel intel) {
+    public boolean hasBiggerCouple(GameIntel intel) {
         return false;
     }
 
