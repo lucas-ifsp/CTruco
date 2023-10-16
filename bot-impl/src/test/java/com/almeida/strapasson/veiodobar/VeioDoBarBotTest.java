@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -78,5 +79,21 @@ class VeioDoBarBotTest {
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.discard(playingCard));
+    }
+    
+    @Test
+    @DisplayName("Should play the second strongest card if bot is the very first to play")
+    void shouldPlayTheSecondStrongestCardIfBotIsTheVeryFirstToPlay() {
+        var playingCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+                playingCard,
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
 }
