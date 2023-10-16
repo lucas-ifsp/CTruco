@@ -102,16 +102,16 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     private boolean hasCasalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
-
-        for(int i = 0; i < 3; i++){
-            if (cards.get(i).isZap(cardVira)) {
-                for (int k = 0; k < 3; k++) {
-                    if (cards.get(k).isCopas(cardVira)) {
-                        return true;
-                    }
-                }
+        int contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isZap(cardVira) || card.isCopas(cardVira)){
+                contador =+ 1;
             }
         }
+        if(contador == 2){
+            return true;
+        }
+
         return false;
     }
 
