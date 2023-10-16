@@ -131,6 +131,22 @@ class VeioDoBarBotTest {
     }
 
     @Test
+    @DisplayName("Should play the smallest card necessary to win at second round if lost the first one")
+    void shouldPlayTheSmallestCardNecessaryToWinAtSecondRoundIfLostTheFirstOne() {
+        var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(
+                playingCard,
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
     @DisplayName("should accept raise points if has two manilhas")
     void shouldRaisePointsIfHasTwoManilhas() {
         when(intel.getCards()).thenReturn(List.of(
