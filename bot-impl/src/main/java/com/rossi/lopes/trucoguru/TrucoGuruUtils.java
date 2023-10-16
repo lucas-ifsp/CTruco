@@ -44,7 +44,7 @@ public class TrucoGuruUtils {
 
     static Boolean hasStrongHand(List<TrucoCard> cards, TrucoCard vira) {
         Boolean hasManilha = hasManilha(cards, vira);
-        Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+        Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE || card.getRank() == CardRank.TWO);
         return hasManilha && hasStrongCard;
     }
 
