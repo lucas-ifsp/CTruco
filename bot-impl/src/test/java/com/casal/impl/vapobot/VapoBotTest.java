@@ -13,6 +13,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -530,6 +531,23 @@ class VapoBotTest {
 
             assertEquals(false, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
+
     }
+
+        @Test
+        @DisplayName("Should throw NoSuchElementException when opponent dont play any card yet")
+        void ShouldThrowsNoSuchElementException() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+            assertThrows(NoSuchElementException.class, (() -> vapoBot.checkIfOpponentCardIsBad(stepBuilder.build())));
+        }
 
 }
