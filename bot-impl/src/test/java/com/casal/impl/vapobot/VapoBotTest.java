@@ -391,4 +391,13 @@ class VapoBotTest {
             assertEquals(2, vapoBot.getRoundNumber(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Should have")
+    class GetManilhasAmountTest {
+
+    }
+
+
+
 }
