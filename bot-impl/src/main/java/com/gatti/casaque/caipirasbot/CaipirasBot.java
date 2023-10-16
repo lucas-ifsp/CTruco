@@ -28,7 +28,7 @@ public class CaipirasBot implements BotServiceProvider {
         return 0;
     }
 
-    public boolean checkExistanceDiamondManilha(List<TrucoCard> cards, TrucoCard vira) {
+    public boolean checkExistenceDiamondManilha(List<TrucoCard> cards, TrucoCard vira) {
         for (TrucoCard card : cards) {
             if (card.isOuros(vira)) {
                 return true;

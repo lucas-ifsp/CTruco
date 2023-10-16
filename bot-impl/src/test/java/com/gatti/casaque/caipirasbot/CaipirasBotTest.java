@@ -27,18 +27,18 @@ class CaipirasBotTest {
 
     @DisplayName("Testa se tem ouros na mão")
     @ParameterizedTest
-    @MethodSource(value = "provideToCheckExistanceOfDiamondManilha")
+    @MethodSource(value = "provideToCheckExistenceOfDiamondManilha")
     void testCheckExistanceDiamondManilha(List<TrucoCard> cards, TrucoCard vira, Boolean exist){
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(cards);
 
-        assertThat(caipirasBot.checkExistanceDiamondManilha(cards, vira)).isEqualTo(exist);
+        assertThat(caipirasBot.checkExistenceDiamondManilha(cards, vira)).isEqualTo(exist);
     }
 
 
-    public static Stream<Arguments> provideToCheckExistanceOfDiamondManilha() {
+    public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
                 Arguments.of(
                         List.of(
