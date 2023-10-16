@@ -53,7 +53,7 @@ class VeioDoBarBotTest {
         when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
 
-        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.discard(playingCard));
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
     
     @Test
