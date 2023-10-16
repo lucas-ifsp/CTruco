@@ -20,6 +20,9 @@ public class CaipirasBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        if(checkExistenceDiamondManilha(intel.getCards(),intel.getVira())){
+            return CardToPlay.of(chooseDiamondInFirstRound(intel.getCards(),intel.getVira()));
+        }
         return null;
     }
 
@@ -35,5 +38,14 @@ public class CaipirasBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    public TrucoCard chooseDiamondInFirstRound(List<TrucoCard> cards, TrucoCard vira){
+        for (TrucoCard card : cards) {
+            if (card.isOuros(vira)) {
+                return card;
+            }
+        }
+        return null;
     }
 }
