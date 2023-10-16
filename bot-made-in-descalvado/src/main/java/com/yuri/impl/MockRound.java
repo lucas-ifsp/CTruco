@@ -7,12 +7,14 @@ import com.bueno.spi.model.TrucoCard;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Stack;
 
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
 
 public class MockRound {
+
+    public static final String INVALID_NUMBER_OF_CARDS_MSG = "";
+    public static final String INVALID_PLAY_STATE_MSG = "";
 
     private static final Character A = 'A';
     private static final Character B = 'B';
@@ -34,8 +36,12 @@ public class MockRound {
         private final List<GameIntel.RoundResult> results = new ArrayList<>();
 
         private Character last;
+        private Character lastPlayed;
+        private Character shoudPlay;
         private TrucoCard lastPlayedA;
         private TrucoCard lastPlayedB;
+        private int cardsGivenToA;
+        private int cardsGivenToB;
 
         private Builder(TrucoCard vira) {
             this.vira = vira;
@@ -48,6 +54,7 @@ public class MockRound {
         public Builder giveA(TrucoCard card) {
             deckA.push(card);
             last = A;
+            cardsGivenToA += 1;
             return this;
         }
 
@@ -58,21 +65,36 @@ public class MockRound {
         public Builder giveB(TrucoCard card) {
             deckB.push(card);
             last = B;
+            cardsGivenToB += 1;
             return this;
         }
 
         public Builder play() {
+            if (last == null) {
+                throw new RuntimeException(INVALID_PLAY_STATE_MSG);
+            }
+
             if (last == A) {
+                if (lastPlayed == A) {
+                    throw new RuntimeException(INVALID_PLAY_STATE_MSG);
+                }
+
                 TrucoCard card = deckA.pop();
                 lastPlayedA = card;
                 last = null;
+                lastPlayed = A;
                 played.add(card);
             }
 
             if (last == B) {
+                if (lastPlayed == B) {
+                    throw new RuntimeException(INVALID_PLAY_STATE_MSG);
+                }
+
                 TrucoCard card = deckB.pop();
                 lastPlayedB = card;
                 last = null;
+                lastPlayed = B;
                 played.add(card);
             }
 
@@ -87,6 +109,13 @@ public class MockRound {
                     results.add(LOST);
                 }
 
+                if (lastPlayed == A) {
+                    shoudPlay = B;
+                } else {
+                    shoudPlay = A;
+                }
+
+                lastPlayed = null;
                 lastPlayedA = null;
                 lastPlayedB = null;
             }
@@ -95,6 +124,10 @@ public class MockRound {
         }
 
         public GameIntel build() {
+            if (cardsGivenToA != 3 || cardsGivenToB != 3) {
+                throw new RuntimeException(INVALID_NUMBER_OF_CARDS_MSG);
+            }
+
             List<TrucoCard> openCards = new ArrayList<>();
             openCards.add(vira);
             openCards.addAll(played);
