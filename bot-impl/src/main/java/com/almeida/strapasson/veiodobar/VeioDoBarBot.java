@@ -29,16 +29,12 @@ public final class VeioDoBarBot implements BotServiceProvider {
             return CardToPlay.of(cards.get(0));
 
         var refCard = intel.getOpponentCard().orElse(cards.get(0));
-        TrucoCard minCardToWin = null;
 
-        if (cards.size() == 3 && cards.get(2).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(2);
-        if (cards.get(1).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(1);
-        if (cards.get(0).compareValueTo(refCard, vira) > 0)
-            minCardToWin = cards.get(0);
-
-        return minCardToWin == null ? CardToPlay.discard(cards.get(0)) : CardToPlay.of(minCardToWin);
+        return cards.stream()
+                .filter(card -> card.compareValueTo(refCard, vira) > 0)
+                .min((current, next) -> current.compareValueTo(next, vira))
+                .map(CardToPlay::of)
+                .orElse(CardToPlay.discard(cards.get(0)));
     }
 
     private List<TrucoCard> sortedCards(GameIntel intel) {
