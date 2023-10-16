@@ -8,6 +8,8 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class VapoBot implements BotServiceProvider {
     private final List<TrucoCard> opponentCardsThatHaveBeenPlayed = new ArrayList<>();
@@ -109,4 +111,21 @@ public class VapoBot implements BotServiceProvider {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("O oponente ainda não jogou a carta dele"));
         return opponentCard.relativeValue(intel.getVira()) < 7;
     }
+
+    Optional<TrucoCard> getLowestCardToWin(GameIntel intel) {
+        TrucoCard cardToPlay = intel.getCards().get(0);
+        TrucoCard vira = intel.getVira();
+        TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("O oponente ainda não jogou a carta dele"));
+        int opponentCardRelativeValue = opponentCard.relativeValue(vira);
+
+        for (TrucoCard card : intel.getCards()) {
+            if (opponentCardRelativeValue < card.relativeValue(vira) &&
+                card.relativeValue(vira) < cardToPlay.relativeValue(vira) ) {
+                cardToPlay = card;
+            }
+        }
+
+        return Optional.ofNullable(cardToPlay);
+    }
+
 }
