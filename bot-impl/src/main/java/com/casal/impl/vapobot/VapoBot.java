@@ -5,7 +5,11 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VapoBot implements BotServiceProvider {
+    private List<TrucoCard> opponentCardsThatHaveBeenPlayed = new ArrayList<>();
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -32,7 +36,7 @@ public class VapoBot implements BotServiceProvider {
         return BotServiceProvider.super.getName();
     }
 
-    public TrucoCard getHighestCard(GameIntel intel){
+    public TrucoCard getHighestCard(GameIntel intel) {
         TrucoCard highestCard = intel.getCards().get(0);
 
         for (TrucoCard card : intel.getCards()) {
@@ -56,12 +60,12 @@ public class VapoBot implements BotServiceProvider {
         return lowestCard;
     }
 
-    double getAverageCardValue(GameIntel intel){
+    double getAverageCardValue(GameIntel intel) {
         int values = 0;
         for (TrucoCard card : intel.getCards()) {
             values += card.relativeValue(intel.getVira());
         }
-        double average = (double) values/intel.getCards().size();
+        double average = (double) values / intel.getCards().size();
         return average;
     }
 }

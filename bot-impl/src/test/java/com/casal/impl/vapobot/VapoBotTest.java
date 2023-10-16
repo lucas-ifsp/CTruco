@@ -221,4 +221,28 @@ class VapoBotTest {
             assertEquals(average, result);
         }
     }
+
+    @Nested
+    @DisplayName("Test if has Zap")
+    class HasZapTest {
+        @Test
+        @DisplayName("Should return true")
+        void shouldReturnTrueIfHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(3);
+
+            assertTrue(vapoBot.hasZap(stepBuilder.build()));
+        }
+    }
 }
