@@ -174,6 +174,18 @@ class TecoNoMarrecoBotTest {
             Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
             assertTrue(requestTruco);
         }
+        @Test
+        @DisplayName("Testa se empatou a primeira rodada e nao possui carta com valor maior que 11")
+        void shouldRequestTrucoIfYDrewTheFirstRoundAndNotHaveACardWithValueGreaterThan11(){
+            hand = List.of(TrucoCard.of(KING, HEARTS), TrucoCard.of(ACE, CLUBS));
+            cardVira = TrucoCard.of(FOUR, CLUBS);
+            roundResult = List.of(GameIntel.RoundResult.DREW);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 4).opponentScore(5);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
+
     }
 
 
