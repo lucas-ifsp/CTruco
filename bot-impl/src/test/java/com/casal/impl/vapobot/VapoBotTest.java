@@ -512,6 +512,24 @@ class VapoBotTest {
 
             assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("6C is a bad card when vira is 5S")
+        void ShouldCheckThat6CIsNotABadCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+
+            assertEquals(false, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+        }
     }
 
 }
