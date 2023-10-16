@@ -211,32 +211,200 @@ class MockRoundTest {
 
     @Test
     void shouldBuildIntel_SecondRound_APlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveB(cardB0).play()
+            .giveA(cardA0).play()
+            // Second Round
+            .giveA(cardA1).play()
+            //
+            .giveA(cardA2)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON),
+                List.of(vira, cardB0, cardA0, cardA1),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
     void shouldBuildIntel_SecondRound_BPlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(cardA0).play()
+            .giveB(cardB0).play()
+            // Second Round
+            .giveB(cardB1).play()
+            //
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON),
+                List.of(vira, cardA0, cardB0, cardB1),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(cardB1)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
     void shouldBuildIntel_ThirdRound_NobodyPlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(cardA0).play()
+            .giveB(cardB0).play()
+            // Second Round
+            .giveB(cardB1).play()
+            .giveA(cardA1).play()
+            //
+            .giveA(cardA2)
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON, WON),
+                List.of(vira, cardA0, cardB0, cardB1, cardA1),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
     void shouldBuildIntel_ThirdRound_APlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveA(cardA0).play()
+            .giveB(cardB0).play()
+            // Second Round
+            .giveB(cardB1).play()
+            .giveA(cardA1).play()
+            // Third Round
+            .giveA(cardA2).play()
+            .giveB(cardB2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON, WON),
+                List.of(vira, cardA0, cardB0, cardB1, cardA1, cardA2),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
     void shouldBuildIntel_ThirdRound_BPlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveB(cardB0).play()
+            .giveA(cardA0).play()
+            // Second Round
+            .giveA(cardA1).play()
+            .giveB(cardB1).play()
+            // Third Round
+            .giveB(cardB2).play()
+            .giveA(cardA2)
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON, WON),
+                List.of(vira, cardB0, cardA0, cardA1, cardB1, cardB2),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA2),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(cardB2)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
     void shouldBuildIntel_AllCardsPlayed() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            // First Round
+            .giveB(cardB0).play()
+            .giveA(cardA0).play()
+            // Second Round
+            .giveA(cardA1).play()
+            .giveB(cardB1).play()
+            // Third Round
+            .giveB(cardB2).play()
+            .giveA(cardA2).play()
+            .build();
 
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(WON, WON, WON),
+                List.of(vira, cardB0, cardA0, cardA1, cardB1, cardB2, cardA2),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(),
+                0
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
     }
 
     @Test
