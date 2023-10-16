@@ -655,4 +655,61 @@ public class PerdeNuncaBotTest {
 
         assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should accept mao de onze if has zap")
+    public void maoDeOnzeZap() {
+        // Arrange
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+        );
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(9);
+
+        boolean maoDeOnzeResponse = perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build());
+
+        assertTrue(maoDeOnzeResponse);
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze when score is equal or greater")
+    public void acceptMaoDeOnzeWhenScoreIsEqualOrGreater() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Accept mao de onze with strong hand")
+    public void acceptMaoDeOnzeWithStrongHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 11);
+
+        assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
 }
