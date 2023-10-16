@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -59,6 +60,22 @@ class CaipirasBotTest {
         when(intel.getOpenCards()).thenReturn(openCards);
 
         assertThat(caipirasBot.checkExistenceCasalMaior(openCards)).isEqualTo(exist);
+    }
+
+    @DisplayName("Testa se blefa truco ao ver a terceira carta do oponente antes de jogar")
+    @ParameterizedTest
+    @MethodSource(value = "provideToBluffWhenOpponentThirdCardIsKnown")
+    void testBluffWhenOpponentThirdCardIsKnown(Optional<TrucoCard> opponentCard, TrucoCard vira) {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getRoundResults()).thenReturn(List.of(
+                GameIntel.RoundResult.WON,
+                GameIntel.RoundResult.LOST
+        ));
+        when(intel.getOpponentCard()).thenReturn(opponentCard);
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(caipirasBot.bluffWhenOpponentThirdCardIsKnown);
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
@@ -158,6 +175,27 @@ class CaipirasBotTest {
                                 TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
                         ),
                         true
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToBluffWhenOpponentThirdCardIsKnown() {
+        return Stream.of(
+                Arguments.of(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
                 )
         );
     }
