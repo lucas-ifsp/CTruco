@@ -134,6 +134,18 @@ public class VapoBot implements BotServiceProvider {
         return intel.getOpponentCard().isEmpty();
     }
 
+    boolean hasAdvantage (GameIntel intel) {
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+        int difference = 0;
 
+        if (botScore > opponentScore) {
+            difference = botScore - opponentScore;
+            return difference >= 3;
+        }
+
+        return false;
+
+    }
 
 }
