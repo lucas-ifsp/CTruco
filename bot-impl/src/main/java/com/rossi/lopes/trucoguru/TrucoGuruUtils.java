@@ -36,6 +36,10 @@ public class TrucoGuruUtils {
         return cards.stream().anyMatch(card -> card.isZap(vira));
     }
 
+    static Boolean hasCopas(List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream().anyMatch(card -> card.isCopas(vira));
+    }
+
     static Boolean hasStrongCard(List<TrucoCard> cards, TrucoCard vira) {
         Boolean hasManilha = hasManilha(cards, vira);
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
