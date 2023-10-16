@@ -26,7 +26,9 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+
+        System.out.println(checkIfWillBeTheFirstToPlay(intel));
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
@@ -127,5 +129,11 @@ public class VapoBot implements BotServiceProvider {
 
         return Optional.ofNullable(cardToPlay);
     }
+
+    boolean checkIfWillBeTheFirstToPlay(GameIntel intel){
+        return intel.getOpponentCard().isEmpty();
+    }
+
+
 
 }
