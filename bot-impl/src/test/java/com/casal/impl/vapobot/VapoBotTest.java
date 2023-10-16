@@ -306,5 +306,44 @@ class VapoBotTest {
 
             assertEquals(GameIntel.RoundResult.LOST, vapoBot.getLastRoundResult(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return WON")
+        void shouldReturnWonFirst() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                    .botInfo(myCards, 6)
+                    .opponentScore(3);
+
+            assertEquals(GameIntel.RoundResult.WON, vapoBot.getLastRoundResult(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should throw error if there is no last round played")
+        void shouldThrowOutOfBoundsException() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 3)
+                    .botInfo(myCards, 6)
+                    .opponentScore(3);
+
+            assertThrows(ArrayIndexOutOfBoundsException.class, () -> vapoBot.getLastRoundResult(stepBuilder.build()));
+        }
     }
 }
