@@ -65,17 +65,17 @@ class CaipirasBotTest {
     @DisplayName("Testa se blefa truco ao ver a terceira carta do oponente antes de jogar")
     @ParameterizedTest
     @MethodSource(value = "provideToBluffWhenOpponentThirdCardIsKnown")
-    void testBluffWhenOpponentThirdCardIsKnown(Optional<TrucoCard> opponentCard, TrucoCard vira) {
+    void testBluffWhenOpponentThirdCardIsKnown(TrucoCard opponentCard, TrucoCard vira) {
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getRoundResults()).thenReturn(List.of(
                 GameIntel.RoundResult.WON,
                 GameIntel.RoundResult.LOST
         ));
-        when(intel.getOpponentCard()).thenReturn(opponentCard);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
         when(intel.getVira()).thenReturn(vira);
 
-        assertTrue(caipirasBot.bluffWhenOpponentThirdCardIsKnown);
+        assertTrue(caipirasBot.bluffWhenOpponentThirdCardIsKnown(intel.getRoundResults(), intel.getOpenCards()));
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
