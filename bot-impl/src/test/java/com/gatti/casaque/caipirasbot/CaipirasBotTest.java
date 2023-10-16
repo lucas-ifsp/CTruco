@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,16 @@ class CaipirasBotTest {
         assertThat(caipirasBot.checkExistenceDiamondManilha(cards, vira)).isEqualTo(exist);
     }
 
+    @DisplayName("Testa se teve casal maior no jogo")
+    @ParameterizedTest
+    @MethodSource(value = "provideToCheckExistenceOfCasalMaior")
+    void testCheckExistenceCasalMaior(List<TrucoCard> openCards, Boolean exist){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpenCards()).thenReturn(openCards);
+
+        assertThat(caipirasBot.checkExistenceCasalMaior(openCards)).isEqualTo(exist);
+    }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
@@ -70,4 +81,41 @@ class CaipirasBotTest {
         );
     }
 
+    public static Stream<Arguments> provideToCheckExistenceOfCasalMaior() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                        ),
+                        false
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                        ),
+                        true
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                        ),
+                        true
+                )
+        );
+    }
 }
