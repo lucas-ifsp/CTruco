@@ -61,6 +61,14 @@ public class CafeConLecheBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        List<TrucoCard> botCards = intel.getCards();
+
+        if(intel.getOpponentCard().isEmpty() &&
+                intel.getRoundResults().isEmpty() &&
+                botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).toList().size() >= 1) {
+            return CardToPlay.of(botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).findFirst().get());
+        }
+
         return null;
     }
 
