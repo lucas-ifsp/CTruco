@@ -58,5 +58,13 @@ public class CaipirasBot implements BotServiceProvider {
         return null;
     }
 
-
+    public boolean bluffWhenOpponentThirdCardIsKnown(List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards) {
+        if (roundResults.size() == 2) {
+            if (!checkExistenceCasalMaior(openCards)){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }
