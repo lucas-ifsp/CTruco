@@ -438,6 +438,11 @@ class VapoBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("Check if opponent card")
+    class checkIfOpponentCardIsBad {
+
+    }
 
 
 }
