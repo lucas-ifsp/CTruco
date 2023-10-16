@@ -38,7 +38,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        if((intel.getRoundResults().size() >= 1) && valueOfTheHand(intel) >= 15){
+        if((intel.getRoundResults().size() >= 1) && intel.getRoundResults().get(0) != GameIntel.RoundResult.DREW && valueOfTheHand(intel) >= 15){
             return true;
         }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
             return true;
