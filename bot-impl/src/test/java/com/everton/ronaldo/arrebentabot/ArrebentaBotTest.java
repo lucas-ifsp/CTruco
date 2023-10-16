@@ -21,7 +21,8 @@ class ArrebentaBotTest {
     public ArrebentaBot arrebentaBot;
 
     private GameIntel.StepBuilder stepBuilder;
-    private GameIntel intel;
+    private GameIntel intel;git pull
+
 
 
     @BeforeEach
