@@ -370,5 +370,25 @@ class VapoBotTest {
 
             assertEquals(1, vapoBot.getRoundNumber(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return 2")
+        void shouldReturnRoundTwo() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 0)
+                    .opponentScore(3);
+
+            assertEquals(2, vapoBot.getRoundNumber(stepBuilder.build()));
+        }
     }
 }
