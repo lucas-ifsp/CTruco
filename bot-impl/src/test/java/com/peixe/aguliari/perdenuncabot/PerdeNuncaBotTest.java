@@ -47,8 +47,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Chooses the smallest card when no cards have been played")
-    void choosesTheSmallestCardWhenNoCardsHaveBeenPlayed() {
+    @DisplayName("Chooses the lowest card when the game is starting")
+    void choosesLowestCardWhenGameIsStarting() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
@@ -61,8 +61,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Bot discards lowest rank card when impossible to win.")
-    public void testBotDiscardsLowestRankCardWhenImpossibleToWin() {
+    @DisplayName("Bot discards lowest rank card when opponent has a higher card")
+    void botDiscardsLowestRankCardWhenOpponentHasHigherCard() {
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
@@ -82,8 +82,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Should play the lowest manilha that beats the opponent, if possible")
-    public void shouldPlayTheLowestManilhaThatBeatsTheOpponentIfPossible() {
+    @DisplayName("Plays the lowest manilha to win the round, if possible")
+    void playsLowestManilhaToWinRoundIfPossible() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
@@ -184,8 +184,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Discards when the opponent plays a unbeatable card ")
-    void discardsWhenTheOpponentPlaysAUnbeatableCard() {
+    @DisplayName("Discards when the opponent has a higher card and no manilhas are in the bot's hand")
+    void discardsWhenOpponentHasHigherCardAndNoManilhasInHand() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
@@ -209,8 +209,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Plays an attack card if has at least two attack cards in hand")
-    void playsAnAttackCardIfHasAtLeastTwoAttackCardsInHand() {
+    @DisplayName("Plays the highest card to win the round, if possible")
+    void playsHighestCardToWinRoundIfPossible() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
         List<TrucoCard> botCards = Arrays.asList(
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -292,8 +292,8 @@ public class PerdeNuncaBotTest {
                 .opponentScore(5)
                 .opponentCard(opponentCard);
 
-        // Assert that the bot raises if it has a manilha and a higher-ranking card than the opponent's card.
         boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
         assertThat(shouldRaise).isTrue();
     }
 
@@ -311,12 +311,13 @@ public class PerdeNuncaBotTest {
                 .opponentCard(opponentCard);
 
         boolean shouldRaise = perdeNuncaBot.decideIfRaises(stepBuilder.build());
+
         assertThat(shouldRaise).isTrue();
     }
 
     @Test
-    @DisplayName("Should not raise if only have trump card")
-    public void shouldNotRaiseIfOnlyHaveTrumpCard() {
+    @DisplayName("Should raise if the player has a strong hand and the leading card is strong")
+    void shouldRaiseIfPlayerHasStrongHandAndLeadingCardIsStrong() {
         TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Arrays.asList(
@@ -331,6 +332,7 @@ public class PerdeNuncaBotTest {
                 .botInfo(cards, 7)
                 .opponentScore(8)
                 .opponentCard(opponentCard);
+
         assertFalse(perdeNuncaBot.decideIfRaises(stepBuilder.build()));
     }
 
@@ -505,6 +507,7 @@ public class PerdeNuncaBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 11)
                 .opponentScore(9);
+
         assertTrue(perdeNuncaBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
@@ -657,8 +660,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Should accept mao de onze if has zap")
-    public void maoDeOnzeZap() {
+    @DisplayName("Accept mao de onze if has zap")
+    public void acceptMaoDeOnzeIfHasZap() {
         // Arrange
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
