@@ -158,4 +158,18 @@ class VeioDoBarBotTest {
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should refuse raise points if has just one manilha")
+    void shouldRefuseRaisePointsIfHasJustOneManilha() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        ));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
 }
