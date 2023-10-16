@@ -78,6 +78,18 @@ class CaipirasBotTest {
         assertTrue(caipirasBot.bluffWhenOpponentThirdCardIsKnown(intel.getRoundResults(), intel.getOpenCards()));
     }
 
+    @DisplayName("Testa se tem manilha e uma carta melhor que 2")
+    @ParameterizedTest
+    @MethodSource(value = "provideToManilhaAndStronger")
+    void testCheckExistenceManilhaAndTwoStronger(List<TrucoCard> cards, TrucoCard vira, Boolean exist) {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpenCards()).thenReturn(cards);
+        when(intel.getVira()).thenReturn(vira);
+
+        assertThat(caipirasBot.checkExistenceManilhaAndStronger(cards, vira)).isEqualTo(exist);
+    }
+
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
                 Arguments.of(
@@ -196,6 +208,38 @@ class CaipirasBotTest {
                 Arguments.of(
                         TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToManilhaAndStronger() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        true
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        false
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        true
                 )
         );
     }
