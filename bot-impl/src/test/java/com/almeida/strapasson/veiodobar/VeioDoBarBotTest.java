@@ -121,6 +121,19 @@ class VeioDoBarBotTest {
     }
 
     @Test
+    @DisplayName("Should play the last card at the third round")
+    void shouldPlayTheLastCardAtTheThirdRound() {
+        var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(List.of(playingCard));
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
     void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
         when(intel.getCards()).thenReturn(List.of(
