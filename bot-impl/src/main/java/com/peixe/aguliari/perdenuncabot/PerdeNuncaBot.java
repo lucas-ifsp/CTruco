@@ -34,7 +34,27 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        if (intel.getOpponentCard().stream().anyMatch(c -> c.isZap(intel.getVira()))) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() == 11) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() >= 9 && hasManilhaAndHighRank(intel)) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() <= 6) {
+            return true;
+        }
+
+        if (hasManilhaAndHighRank(intel)) {
+            return true;
+        }
+
+        return hasAboveAverageValue(intel);
     }
 
     @Override
