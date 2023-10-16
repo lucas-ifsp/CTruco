@@ -234,5 +234,27 @@ public class TrucoGuruTest {
 
             assertThat(trucoGuru.getRaiseResponse(intel)).isNegative();
         }
+
+        @Test
+        @DisplayName("Should decline if hand is not strong")
+        void shouldDeclineIfHandIsNotStrongTest(){
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(trucoGuru.getRaiseResponse(intel)).isNegative();
+        }
     }
 }
