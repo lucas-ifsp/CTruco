@@ -345,10 +345,10 @@ class CaipirasBotTest {
                         List.of(
                                 TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
                                 TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
                         ),
                         TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
                 ),
                 Arguments.of(
                         List.of(
