@@ -78,12 +78,12 @@ public class SabotaBot implements BotServiceProvider {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> manilhas = getManilhasCard(intel);
 
-        if (manilhas.size() >= 1){
+        if (!manilhas.isEmpty()){
             if (manilhas.size() >= 2){
                 return 0;
             }
 
-            if (hasZap(intel)){
+            if (getZap(intel) != null){
                 return 1;
             }
         }
@@ -98,59 +98,85 @@ public class SabotaBot implements BotServiceProvider {
 
 
 
-    // funções gerais
+    // general functions
 
-    private CardToPlay getCardBeingFirstToPlay(GameIntel intel, List<TrucoCard> hand) {
-        // se tiver ouro e carta forte, já sai com ele
-        for (TrucoCard card : hand) {
-            if (card.isOuros(intel.getVira()) && hasStrongCardsNonManilha(intel, hand)) {
-                return CardToPlay.of(card);
+    // manilhas getters
+    private TrucoCard getZap(GameIntel intel){
+
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        if (manilhas.size() >= 1){
+            for (TrucoCard card : manilhas) {
+                if (card.isZap(intel.getVira())){
+                    return card;
+                }
             }
         }
-
-        // sai com a mais forte que não seja manilha
-        return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
+        return null;
     }
 
-    private CardToPlay getResponseToOpponent(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
-        // se tiver carta igual e manilha, amarra pra jogar ela depois
-        if (opponentHasTheSameCard(intel, opponentCard) &&
-            !getManilhasCard(intel).isEmpty()) return getCardToDraw(intel, hand, opponentCard);
+    private TrucoCard getCopas(GameIntel intel){
 
-        // se o oponente jogar carta mais forte que todas, joga a menor
-        if (opponentHasStrongCard(intel, opponentCard)) return CardToPlay.of(getWeakestCard(intel, hand));
-        // se não, joga a maior q não seja manilha
-        else return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
-    }
+        List<TrucoCard> manilhas = getManilhasCard(intel);
 
-    private CardToPlay getCardToDraw(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
-        for (TrucoCard card : hand) {
-            if (card.compareValueTo(opponentCard, intel.getVira()) == 0)
-                return CardToPlay.of(card);
+        if (manilhas.size() >= 1){
+            for (TrucoCard card : manilhas) {
+                if (card.isCopas(intel.getVira())){
+                    return card;
+                }
+            }
         }
-        return CardToPlay.of(hand.get(0));
+        return null;
     }
 
-    private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
-        if (hand.size() == 3) {
-            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
-                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
-                    return hand.get(0);
-                else
-                    return hand.get(2);
-            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
-                return hand.get(1);
-            else
-                return hand.get(2);
-        } else if (hand.size() == 2) {
-            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0)
-                return hand.get(0);
-            else
-                return hand.get(1);
+    private TrucoCard getSpadilha(GameIntel intel){
+
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        if (manilhas.size() >= 1){
+            for (TrucoCard card : manilhas) {
+                if (card.isEspadilha(intel.getVira())){
+                    return card;
+                }
+            }
         }
-        return hand.get(0);
+        return null;
     }
 
+    private TrucoCard getOuro(GameIntel intel){
+
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        if (manilhas.size() >= 1){
+            for (TrucoCard card : manilhas) {
+                if (card.isOuros(intel.getVira())){
+                    return card;
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<TrucoCard> getManilhasCard(GameIntel intel){
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard card : intel.getCards())
+            if (card.isManilha(intel.getVira()))
+                manilhas.add(card);
+        return manilhas;
+    }
+
+    private boolean hasStrongManilha(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+        for (TrucoCard card : manilhas)
+            if (card.isCopas(vira) || card.isZap(vira))
+                return true;
+        return false;
+    }
+
+
+
+    // functions for normal cards
     private List<TrucoCard> getNonManilhas(List<TrucoCard> hand, TrucoCard vira) {
         List<TrucoCard> nonManilhas = new ArrayList<>();
         for (TrucoCard card : hand) {
@@ -180,19 +206,47 @@ public class SabotaBot implements BotServiceProvider {
         return hand.get(0);
     }
 
-    private boolean hasStrongCards(List<TrucoCard> hand) {
-        int TWO_VALUE = 9;
-        for (TrucoCard card : hand)
-            if (card.getRank().value() > TWO_VALUE)
-                return true;
-        return false;
-    }
     private boolean hasStrongCardsNonManilha(GameIntel intel, List<TrucoCard> hand) {
         int KING_VALUE = 7;
         for (TrucoCard card : hand)
             if (card.getRank().value() > KING_VALUE && !card.isManilha(intel.getVira()))
                 return true;
         return false;
+    }
+
+    private boolean hasStrongCards(List<TrucoCard> hand) {
+        int TWO_VALUE = 9;
+        for (TrucoCard card : hand)
+            if (card.getRank().value() >= TWO_VALUE)
+                return true;
+        return false;
+    }
+
+    private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
+        if (hand.size() == 3) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
+                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                    return hand.get(0);
+                else
+                    return hand.get(2);
+            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                return hand.get(1);
+            else
+                return hand.get(2);
+        } else if (hand.size() == 2) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0)
+                return hand.get(0);
+            else
+                return hand.get(1);
+        }
+        return hand.get(0);
+    }
+
+
+
+    // functions related to the opponent and the game
+    private Integer getDiferencePoints(GameIntel intel){
+        return intel.getScore() - intel.getOpponentScore();
     }
 
     private boolean opponentHasStrongCard(GameIntel intel, TrucoCard opponentCard) {
@@ -209,37 +263,43 @@ public class SabotaBot implements BotServiceProvider {
         return false;
     }
 
-    private List<TrucoCard> getManilhasCard(GameIntel intel){
-        List<TrucoCard> manilhas = new ArrayList<>();
-        for (TrucoCard card : intel.getCards())
-            if (card.isManilha(intel.getVira()))
-                manilhas.add(card);
-        return manilhas;
-    }
 
-    private boolean hasZap(GameIntel intel){
 
-        List<TrucoCard> manilhas = getManilhasCard(intel);
-
-        if (manilhas.size() >= 1){
-            for (TrucoCard card : manilhas) {
-                if (card.isZap(intel.getVira())){
-                    return true;
-                }
+    // functions for CardToPlay
+    private CardToPlay getCardBeingFirstToPlay(GameIntel intel, List<TrucoCard> hand) {
+        // se tiver ouro e carta forte, já sai com ele
+        for (TrucoCard card : hand) {
+            if (card.isOuros(intel.getVira()) && hasStrongCardsNonManilha(intel, hand)) {
+                return CardToPlay.of(card);
             }
         }
-        return false;
+
+        // sai com a mais forte que não seja manilha
+        return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
     }
 
-    private boolean hasStrongManilha(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> manilhas = getManilhasCard(intel);
-        for (TrucoCard card : manilhas)
-            if (card.isCopas(vira) || card.isZap(vira))
-                return true;
-        return false;
+    private CardToPlay getResponseToOpponent(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
+        // se tiver carta igual e manilha, amarra pra jogar ela depois
+        if (opponentHasTheSameCard(intel, opponentCard) &&
+                !getManilhasCard(intel).isEmpty()) return getCardToDraw(intel, hand, opponentCard);
+
+        // se o oponente jogar carta mais forte que todas, joga a menor
+        if (opponentHasStrongCard(intel, opponentCard)) return CardToPlay.of(getWeakestCard(intel, hand));
+            // se não, joga a maior q não seja manilha
+        else return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
     }
 
+    private CardToPlay getCardToDraw(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
+        for (TrucoCard card : hand) {
+            if (card.compareValueTo(opponentCard, intel.getVira()) == 0)
+                return CardToPlay.of(card);
+        }
+        return CardToPlay.of(hand.get(0));
+    }
+
+
+
+    // extra functions
     private boolean canRise(GameIntel intel){
         if (intel.getOpponentCard().isPresent())
             return !opponentHasStrongCard(intel, intel.getOpponentCard().get());
@@ -247,4 +307,5 @@ public class SabotaBot implements BotServiceProvider {
             return hasStrongManilha(intel);
         return false;
     }
+    
 }

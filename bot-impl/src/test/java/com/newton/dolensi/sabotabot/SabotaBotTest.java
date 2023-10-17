@@ -322,7 +322,7 @@ public class SabotaBotTest {
             when(intel.getOpponentScore()).thenReturn(11);
 
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
-        
+
         }
         
 
