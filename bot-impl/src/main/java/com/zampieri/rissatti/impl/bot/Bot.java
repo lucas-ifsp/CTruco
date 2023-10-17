@@ -131,15 +131,7 @@ public class Bot implements BotServiceProvider {
                        return CardToPlay.of(card);
                    }
                }
-
-               TrucoCard lowestCard = cards.get(0);
-               for (TrucoCard card : cards) {
-                   if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                       lowestCard = card;
-                   }
-               }
-
-               return CardToPlay.of(lowestCard);
+               return CardToPlay.of(getLowestCard(cards,vira));
            }
             if ( opponentCard.isManilha(vira) && numberOfManilhas == 0) {
                 TrucoCard lowestCard = cards.get(0);
