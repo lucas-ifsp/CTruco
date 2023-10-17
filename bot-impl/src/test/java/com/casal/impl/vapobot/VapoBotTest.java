@@ -1217,6 +1217,24 @@ class VapoBotTest {
             @DisplayName("if play first")
             class PlayFirstTest {
 
+                @Test
+                @DisplayName("and won the first round")
+                void wonFirstRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1);
+                    assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.SPADES), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
+                }
             }
             @Nested
             @DisplayName("if play first")
