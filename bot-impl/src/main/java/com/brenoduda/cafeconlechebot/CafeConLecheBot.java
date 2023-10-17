@@ -122,6 +122,11 @@ public class CafeConLecheBot implements BotServiceProvider {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
+        if(botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() == 2 &&
+                botCards.stream().filter(card -> card.getSuit().equals(CardSuit.HEARTS)).filter(card -> !card.getRank().equals(CardRank.THREE)).toList().size() == 1) {
+            return 1;
+        }
+
         if(botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 1 &&
                 botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() == 0) {
             return -1;
