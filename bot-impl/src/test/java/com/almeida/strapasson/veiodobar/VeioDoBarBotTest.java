@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static com.almeida.strapasson.veiodobar.GameIntelMockBuilder.make;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class VeioDoBarBotTest {
     private VeioDoBarBot sut;
@@ -124,6 +125,16 @@ class VeioDoBarBotTest {
         assertThatThrownBy(() -> sut.chooseCard(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Game intel must be given for the bot choose how to act!");
+    }
+
+    @Test
+    @DisplayName("Should play mao de onze if has at least two cards greater or equal to two")
+    void shouldPlayMaoDeOnzeIfHasAtLeastTwoCardsGreaterOrEqualToTwo() {
+        var intel = make().cardsToBeThreeOf(CardRank.TWO)
+                        .viraToBeDiamondsOfRank(CardRank.TWO)
+                        .finish();
+
+        assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
     }
 
     @Test
