@@ -22,8 +22,6 @@ package com.yuri.impl;
 
 import com.bueno.spi.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,31 +30,142 @@ import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BotMadeInDescalvadoTest {
-    // int getRaiseResponse(GameIntel intel);
-    // Answers a point raise request in a truco hand
-    // -1 quit
-    //  0 accept
-    //  1 re-raise/call
-    // > Tem que retornar no escopo, não pode retornar >= 2 ou <= -2
 
-    // boolean getMaoDeOnzeResponse(GameIntel intel)
-    // Choose if bot plays a mão de onze
-    // false -> quit
-    // true  -> play
+    // CardScore High => THREE TWO TWO => score >= 9.0
+    // CardScore Enough => TWO TWO ACE => score >= 8.5
+
+    // OpponentScore High => score >= 8
+
+    // HandPoints High => points >= 6
 
     @Test
-    @DisplayName("getMaoDeOnzeResponse should return true when score is enough")
-    void getMaoDeOnzeResponse_ShouldReturnTrue_WhenScoreIsEnough() {
+    @DisplayName("\"getRaiseResponse\" should re-raise when card score is high and opponent has low score")
+    void getRaiseResponse_ShouldReRaise_WhenCardScoreIsHigh_AndOpponentHasLowScore() {
         BotMadeInDescalvado bot = new BotMadeInDescalvado();
 
         GameIntel intel = MockRound
             .vira(FOUR, CLUBS)
-            .giveA(TWO, CLUBS)
-            .giveA(TWO, HEARTS)
-            .giveA(TWO, CLUBS)
-            .giveB(SIX, CLUBS)
-            .giveB(SIX, HEARTS)
-            .giveB(SIX, SPADES)
+            .giveScoreB(7)
+            .giveA(THREE, CLUBS) // 10
+            .giveA(TWO, HEARTS) // 9
+            .giveA(TWO, SPADES) // 9
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertEquals(1, bot.getRaiseResponse(intel));
+    }
+
+    @Test
+    @DisplayName("\"getRaiseResponse\" should re-raise when card score is enough and opponent has low score")
+    void getRaiseResponse_ShouldReRaise_WhenCardScoreIsEnough_AndOpponentHasLowScore() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveScoreB(7)
+            .giveA(TWO, CLUBS) // 9
+            .giveA(TWO, HEARTS) // 9
+            .giveA(ACE, SPADES) // 8
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertEquals(1, bot.getRaiseResponse(intel));
+    }
+
+    @Test
+    @DisplayName("\"getRaiseResponse\" should accept when card score is high and opponent has high score")
+    void getRaiseResponse_ShouldAccept_WhenCardScoreIsHigh_AndOpponentHasHighScore() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveScoreB(8)
+            .giveA(THREE, CLUBS) // 10
+            .giveA(TWO, HEARTS) // 9
+            .giveA(TWO, SPADES) // 9
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertEquals(0, bot.getRaiseResponse(intel));
+    }
+
+    @Test
+    @DisplayName("\"getRaiseResponse\" should accept when card score is enough and opponent has low score")
+    void getRaiseResponse_ShouldAccept_WhenCardScoreIsEnough_AndOpponentHasLowScore_AndHandPointsIsHigh() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .hand(6)
+            .giveScoreB(7)
+            .giveA(TWO, CLUBS) // 9
+            .giveA(TWO, HEARTS) // 9
+            .giveA(ACE, SPADES) // 8
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertEquals(0, bot.getRaiseResponse(intel));
+    }
+
+    @Test
+    @DisplayName("\"getRaiseResponse\" should quit when card score is low")
+    void getRaiseResponse_ShouldQuit_WhenCardScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveA(KING, CLUBS) // 7
+            .giveA(KING, HEARTS) // 7
+            .giveA(KING, SPADES) // 7
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertEquals(-1, bot.getRaiseResponse(intel));
+    }
+
+    @Test
+    @DisplayName("getMaoDeOnzeResponse should return true when score is enough")
+    void getMaoDeOnzeResponse_ShouldReturnTrue_WhenOpponentScoreIsHigh_AndCardScoreIsHigh() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveScoreB(8)
+            .giveA(THREE, CLUBS) // 10
+            .giveA(TWO, HEARTS) // 9
+            .giveA(TWO, SPADES) // 9
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertTrue(bot.getMaoDeOnzeResponse(intel));
+    }
+
+    @Test
+    @DisplayName("getMaoDeOnzeResponse should return true when score is enough")
+    void getMaoDeOnzeResponse_ShouldReturnTrue_WhenOpponentScoreIsHigh_AndCardScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveScoreB(8)
+            .giveA(KING, CLUBS) // 7
+            .giveA(KING, HEARTS) // 7
+            .giveA(KING, SPADES) // 7
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
             .build();
 
         assertTrue(bot.getMaoDeOnzeResponse(intel));
@@ -64,33 +173,199 @@ public class BotMadeInDescalvadoTest {
 
     @Test
     @DisplayName("getMaoDeOnzeResponse should return false when score is low")
-    void getMaoDeOnzeResponse_ShouldReturnFalse_WhenScoreIsLow() {
+    void getMaoDeOnzeResponse_ShouldReturnTrue_WhenOpponentScoreIsLow_AndCardScoreIsEnough() {
         BotMadeInDescalvado bot = new BotMadeInDescalvado();
 
         GameIntel intel = MockRound
             .vira(FOUR, CLUBS)
-            .giveA(TWO, CLUBS)
-            .giveA(TWO, HEARTS)
-            .giveA(ACE, CLUBS)
-            .giveB(SIX, CLUBS)
-            .giveB(SIX, HEARTS)
-            .giveB(SIX, SPADES)
+            .giveScoreB(7)
+            .giveA(THREE, CLUBS) // 10
+            .giveA(TWO, HEARTS) // 9
+            .giveA(TWO, SPADES) // 9
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertTrue(bot.getMaoDeOnzeResponse(intel));
+    }
+
+    @Test
+    @DisplayName("getMaoDeOnzeResponse should return false when score is low")
+    void getMaoDeOnzeResponse_ShouldReturnFalse_WhenOpponentScoreIsLow_AndCardScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveScoreB(7)
+            .giveA(KING, CLUBS) // 7
+            .giveA(KING, HEARTS) // 7
+            .giveA(KING, SPADES) // 7
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
             .build();
 
         assertFalse(bot.getMaoDeOnzeResponse(intel));
     }
 
-    // boolean decideIfRaises(GameIntel intel)
-    // Choose if bot starts a point raise request
-    // false -> nothing
-    // true  -> raise
+    @Test
+    @DisplayName("\"decideIfRaises\" should raise when it is the first round if the card score is enough")
+    void decideIfRaises_ShouldRaise_WhenFirstRound_IfCardScoreIsEnough() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
 
-    // Ganho zap, perdeu 2, tem manilha spa -> Truco
-    // Ganho zap, perdeu 2, nao tem manilha spa -> Nao Truco
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveA(TWO, CLUBS) // 9
+            .giveA(TWO, HEARTS) // 9
+            .giveA(ACE, SPADES) // 8
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
 
-    // CardToPlay chooseCard(GameIntel intel)
-    // Provided the card will be played or discarded in the current round
-    // > Tem que retornar uma carta que tem na mão
+        assertTrue(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should not raise when it is the first round if the card score is low")
+    void decideIfRaises_ShouldNotRaise_WhenFirstRound_IfCardScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveA(KING, CLUBS) // 7
+            .giveA(KING, HEARTS) // 7
+            .giveA(KING, SPADES) // 7
+            .giveB(FIVE, CLUBS)
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertFalse(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should raise when it is the second round if it won the first round and the card score is enough")
+    void decideIfRaises_ShouldRaise_WhenSecondRound_IfWonFirst_AndCardScoreIsEnough() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(TWO, CLUBS).play()
+            .giveB(SIX, CLUBS).play()
+            //
+            .giveA(TWO, HEARTS) // 9
+            .giveA(ACE, CLUBS) // 8
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertTrue(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should raise when it is the second round if it lost the first round and the card score is enough")
+    void decideIfRaises_ShouldRaise_WhenSecondRound_IfLostFirst_AndCardScoreIsEnough() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(SIX, CLUBS).play()
+            .giveB(TWO, CLUBS).play()
+            //
+            .giveA(TWO, HEARTS) // 9
+            .giveA(ACE, CLUBS) // 8
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertTrue(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should not raise when it is the second round if it won the first round and the card score is low")
+    void decideIfRaises_ShouldNotRaise_WhenSecondRound_IfWonFirst_AndScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(TWO, CLUBS).play()
+            .giveB(SIX, CLUBS).play()
+            //
+            .giveA(ACE, HEARTS) // 8
+            .giveA(ACE, CLUBS) // 8
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertFalse(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should not raise when it is the second round if it lost the first round and the card score is low")
+    void decideIfRaises_ShouldNotRaise_WhenSecondRound_IfLostFirst_AndScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(SIX, CLUBS).play()
+            .giveB(TWO, CLUBS).play()
+            //
+            .giveA(ACE, HEARTS) // 8
+            .giveA(ACE, CLUBS) // 8
+            .giveB(FIVE, HEARTS)
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertFalse(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should raise when it is the third round if the card score is enough")
+    void decideIfRaises_ShouldRaise_WhenThirdRound_IfScoreIsEnough() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(TWO, CLUBS).play()
+            .giveB(SIX, CLUBS).play()
+            // Second Round
+            .giveB(TWO, HEARTS).play()
+            .giveA(SIX, HEARTS).play()
+            //
+            .giveA(TWO, CLUBS) // 9
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertTrue(bot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("\"decideIfRaises\" should not raise when it is the third round if the card score is low")
+    void decideIfRaises_ShouldNotRaise_WhenThirdRound_IfScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            // First Round
+            .giveA(TWO, CLUBS).play()
+            .giveB(SIX, CLUBS).play()
+            // Second Round
+            .giveB(TWO, HEARTS).play()
+            .giveA(SIX, HEARTS).play()
+            //
+            .giveA(ACE, CLUBS) // 8
+            .giveB(FIVE, SPADES)
+            .build();
+
+        assertFalse(bot.decideIfRaises(intel));
+    }
 
     @Test
     @DisplayName("\"chooseCard\" should discard weakest when it is the first round and it plays first and it has at least two manilhas")
@@ -196,8 +471,6 @@ public class BotMadeInDescalvadoTest {
         assertEquals(TrucoCard.of(QUEEN, CLUBS), playedCard.content());
         assertFalse(playedCard.isDiscard());
     }
-
-    //
 
     @Test
     @DisplayName("\"chooseCard\" should discard weakest when it won the first round and plays first")
@@ -314,6 +587,29 @@ public class BotMadeInDescalvadoTest {
         CardToPlay playedCard = bot.chooseCard(intel);
 
         assertEquals(TrucoCard.of(TWO, CLUBS), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play strongest when it drew first round")
+    void chooseCard_ShouldPlayStrongest_WhenDrewFirstRound() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveA(FIVE, CLUBS).play()
+            .giveB(FIVE, HEARTS).play()
+            // Second Round
+            .giveA(FIVE, SPADES)
+            .giveA(SIX, SPADES)
+            .giveB(FOUR, HEARTS)
+            .giveB(FOUR, DIAMONDS)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(SIX, SPADES), playedCard.content());
         assertFalse(playedCard.isDiscard());
     }
 
