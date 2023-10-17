@@ -307,6 +307,18 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se nao pede truco com apenas uma manilha na mao")
+        void shouldNotRequestTrucoIfOneManilha(){
+            hand = List.of(TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, SPADES));
+            cardVira = TrucoCard.of(KING, HEARTS);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 2).opponentScore(2);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
+
     }
 
     @Nested
