@@ -366,7 +366,7 @@ public class BotTest {
     }
 
     @Test
-    @DisplayName("Test if the bot draw the round")
+    @DisplayName("Test if draw the round")
     void testTestIfDrawTheRound() {
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
@@ -386,7 +386,7 @@ public class BotTest {
     }
 
     @Test
-    @DisplayName("Test if the bot plays the lowest card first")
+    @DisplayName("Test if plays the lowest card first")
     void testTestIfBotPlaysTheLowestCardFirst() {
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
