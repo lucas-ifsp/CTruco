@@ -25,6 +25,9 @@ public class TrucoMachineBot implements BotServiceProvider {
         if(strongCards.size() == 3 && manilhas.size() > 0 && intel.getOpponentScore() <=7){
             return true;
         }
+        if (strongCards.size() == 3 && intel.getOpponentScore() >=8) {
+            return true;
+        }
         return false;
     }
 
