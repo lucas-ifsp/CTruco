@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CafeConLecheBotTest {
@@ -125,6 +126,25 @@ public class CafeConLecheBotTest {
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(true);
+        }
+
+        @Test
+        @DisplayName("Should raise when has clubs and the first round is drew")
+        void shoudRaiseWhenHasClubsAndTheFirstRoundIsDrew() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(THREE, CLUBS),
+                    TrucoCard.of(THREE, DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(DREW), List.of(vira), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
