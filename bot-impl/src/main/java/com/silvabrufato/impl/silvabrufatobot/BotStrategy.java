@@ -26,6 +26,12 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
+            if (gameIntel.getOpenCards().size() == 2){ //opponent start
+                if(hasAHigherAndDifferentCardThanZap(gameIntel)) return true;
+
+                return false;
+            }
+
             //if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
             return false;
         }
@@ -96,6 +102,13 @@ public enum BotStrategy {
             return BotBluff.of(Probability.P20).bluff();
         }
     };
+
+    private static boolean hasAHigherAndDifferentCardThanZap(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 || !card.isZap(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
 
     private static boolean drewThePreviousRound(GameIntel gameIntel) {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
