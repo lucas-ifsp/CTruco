@@ -65,8 +65,8 @@ public class Bot implements BotServiceProvider {
                 return false;
             }
 
-            if( highest.relativeValue(vira) > 8 && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
-                return true;
+            if( highest.relativeValue(vira) > 8 && !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW && result.get(0) == GameIntel.RoundResult.WON) {
+              return true;
             }
 
         }
