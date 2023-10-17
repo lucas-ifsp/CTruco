@@ -91,4 +91,17 @@ public class TrucoMachineBotTest {
         CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
         assertEquals(CardToPlay.of(TrucoCard.of(THREE, CLUBS)), cardToPlay);
     }
+    @Test
+    @DisplayName("Should play last round")
+    void ShouldPlayLastRound() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
+        assertEquals(CardToPlay.of(TrucoCard.of(THREE, CLUBS)), cardToPlay);
+    }
 }
