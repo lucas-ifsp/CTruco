@@ -264,17 +264,35 @@ public class TrucoMachineBotTest {
     @Test
     @DisplayName("Should accept mao de onze when having 3 strong cards including manilha ")
     void shouldAcceptMaoDeOnzeWhenHaving3StrongCardsIncludingManilha(){
-    TrucoCard manilha = TrucoCard.of(TWO,CLUBS);
-    List<TrucoCard> botCards = List.of(
-            TrucoCard.of(THREE,SPADES),
-            TrucoCard.of(THREE, DIAMONDS),
-            manilha
-    );
-    GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
-            .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
-            .botInfo(botCards, 0);
+        TrucoCard manilha = TrucoCard.of(TWO,CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE,SPADES),
+                TrucoCard.of(THREE, DIAMONDS),
+                manilha
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 0);
 
-    boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
-    assertTrue(playMaoDeOnze);
+        boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertTrue(playMaoDeOnze);
+    }
+
+    @Test
+    @DisplayName("Should not accept mao de onze when having 3 strong cards not including manilha ")
+    void shouldNotAcceptMaoDeOnzeWhenHaving3StrongCardsNotIncludingManilha(){
+        TrucoCard manilha = TrucoCard.of(THREE,CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE,SPADES),
+                TrucoCard.of(THREE, DIAMONDS),
+                manilha
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertFalse(playMaoDeOnze);
+
     }
 }
