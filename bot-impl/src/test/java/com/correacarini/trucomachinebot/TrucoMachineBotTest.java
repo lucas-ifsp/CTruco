@@ -10,6 +10,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardRank.HIDDEN;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -224,5 +225,15 @@ public class TrucoMachineBotTest {
 
         CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
         assertEquals(CardToPlay.of(TrucoCard.of(QUEEN, CLUBS)), cardToPlay);
+    }
+    @Test
+    @DisplayName("Should raise if has zap on third round")
+    void ShouldRaiseIfHasZapOnThirdRound() {
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON, LOST), List.of(), TrucoCard.of(TWO, SPADES), 1)
+                .botInfo(List.of(TrucoCard.of(THREE, CLUBS)), 0);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raise);
     }
 }
