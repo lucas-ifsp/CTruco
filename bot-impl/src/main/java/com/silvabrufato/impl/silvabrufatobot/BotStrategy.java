@@ -20,7 +20,7 @@ public enum BotStrategy {
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
             if (countManilhas(gameIntel) >= 2 || hasZapAndThree(gameIntel) ||
-                hasCopasAndThree(gameIntel))
+                    hasCopasAndThree(gameIntel))
                 return 0;
             return -1;
         }
@@ -29,8 +29,8 @@ public enum BotStrategy {
         public boolean raisePoints(GameIntel gameIntel) {
             if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel))
                 return true;
-            if (countManilhas(gameIntel) >= 1 && hasZap(gameIntel))
-                return BotBluff.of(Probability.P60).bluff();
+            if (hasZap(gameIntel) || hasCopas(gameIntel) || hasEspadilha(gameIntel))
+                return true;
             if (countManilhas(gameIntel) >= 1)
                 return BotBluff.of(Probability.P40).bluff();
             if (countThree(gameIntel) >= 2 || countCardsEqualOrHigherThanAce(gameIntel) >= 2)
@@ -72,14 +72,16 @@ public enum BotStrategy {
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
-                if (countManilhas(gameIntel) == 2 || hasZap(gameIntel) || hasCopas(gameIntel) )
+                if (countManilhas(gameIntel) == 2 || hasZap(gameIntel))
                     return true;
             }
-            if(countManilhas(gameIntel) >= 2) 
+            if (countManilhas(gameIntel) >= 2)
                 return true;
-            if(countManilhas(gameIntel) == 1)
+            if (hasZap(gameIntel) || hasCopas(gameIntel) || hasEspadilha(gameIntel))
+                return true;
+            if (hasOuros(gameIntel))
                 return BotBluff.of(Probability.P60).bluff();
-            if(countThree(gameIntel) >= 2)
+            if (countThree(gameIntel) >= 2)
                 return BotBluff.of(Probability.P20).bluff();
             return false;
         }
@@ -93,17 +95,14 @@ public enum BotStrategy {
 
         @Override
         public int responseToRaisePoints(GameIntel gameIntel) {
-            /*
-             * if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
-             * if (hasEspadilha(gameIntel) || hasOuros(gameIntel))
-             * return 0;
-             * }
-             * if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
-             * if (hasEspadilha(gameIntel) || hasOuros(gameIntel) || countThree(gameIntel) >
-             * 0)
-             * return 0;
-             * }
-             */
+            if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
+                if (hasEspadilha(gameIntel) || hasOuros(gameIntel))
+                    return 0;
+            }
+            if (gameIntel.getRoundResults().get(0) == RoundResult.WON) {
+                if (hasEspadilha(gameIntel) || hasOuros(gameIntel) || countThree(gameIntel) > 0)
+                    return 0;
+            }
             return -1;
         }
 
@@ -113,7 +112,7 @@ public enum BotStrategy {
                 return true;
             if (BotStrategy.hasOuros(gameIntel))
                 return true;
-            return false;
+            return BotBluff.of(Probability.P20).bluff();
         }
     };
 

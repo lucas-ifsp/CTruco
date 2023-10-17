@@ -711,17 +711,6 @@ public class SilvaBrufatoBotTest {
             @DisplayName("if the opponent starts")
             class ifTheOpponentStarts{
                 @Test
-                @DisplayName("theReturnMustBeDifferentFromNull")
-                void theReturnMustBeDifferentFromNull() {
-                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
-                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
-                    when(gameIntel.getCards()).thenReturn(List.of(
-                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                    assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
-                }
-
-                @Test
                 @DisplayName("shouldReturnTrueIfBotHasCopas")
                 void shouldReturnTrueIfBotHasCopas() {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
