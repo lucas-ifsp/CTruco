@@ -294,8 +294,8 @@ public class TrucoGuruUtilsTest {
                 TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.FOUR);
-            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
+            assertEquals(TrucoGuruUtils.getWeakestCard(cards, vira).getRank(), CardRank.FOUR);
+            assertEquals(TrucoGuruUtils.getWeakestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
         }
 
         @Test
@@ -307,8 +307,21 @@ public class TrucoGuruUtilsTest {
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
-            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.THREE);
-            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
+            assertEquals(TrucoGuruUtils.getWeakestCard(cards, vira).getRank(), CardRank.THREE);
+            assertEquals(TrucoGuruUtils.getWeakestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
+        }
+
+        @Test
+        @DisplayName("Should return the correct weakestCard when provided with no manilhas")
+        void shouldReturnWeakestCardWhenProvidedWithNoManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.SEVEN);
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.SPADES);
         }
     }
 }
