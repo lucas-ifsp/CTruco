@@ -45,58 +45,79 @@ public class SabotaBotTest {
         @DisplayName("First Round Plays")
         class FirstRoundTests{
 
-            @Test
-            @DisplayName("Should play a strong card if is first to play")
-            void shouldPlayAStrongCardIfIsFirstToPlay(){
-                var cards = IntelMock.cardList3Cards();
-                when(intel.getCards()).thenReturn(cards);
-                when(intel.getVira()).thenReturn(IntelMock.vira5C());
+            @Nested
+            @DisplayName("Is First To Play")
+            class IsFirstToPlay{
+                @Test
+                @DisplayName("Should play a strong card if is first to play")
+                void shouldPlayAStrongCardIfIsFirstToPlay(){
+                    var cards = IntelMock.cardList3Cards();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
-                assertEquals(cards.get(2), sut.chooseCard(intel).content());
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                    assertEquals(cards.get(2), sut.chooseCard(intel).content());
+                }
+
+                @Test
+                @DisplayName("Should play a strong card non manilha")
+                void shouldPlayAStrongCardNonManilha(){
+                    var cards = IntelMock.cardList3Cards();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.vira2H());
+
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                    assertEquals(cards.get(0), sut.chooseCard(intel).content());
+                }
+
+                @Test
+                @DisplayName("Should play diamonds if has it and good values")
+                void shouldPlayDiamondsIfHasItAndGoodValues(){
+                    var cards = IntelMock.diamondsAndGoodValues();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+                    assertTrue(sut.chooseCard(intel).content().isOuros(intel.getVira()));
+                }
+
+                @Test
+                @DisplayName("Should keep diamonds if it is the strongest card")
+                void shouldKeepDiamondsIfItIsTheStrongestCard(){
+                    var cards = IntelMock.onlyDiamonds();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+                    assertFalse(sut.chooseCard(intel).content().isOuros(intel.getVira()));
+                }
+
             }
 
-            @Test
-            @DisplayName("Should play a strong card non manilha")
-            void shouldPlayAStrongCardNonManilha(){
-                var cards = IntelMock.cardList3Cards();
-                when(intel.getCards()).thenReturn(cards);
-                when(intel.getVira()).thenReturn(IntelMock.vira2H());
+            @Nested
+            @DisplayName("Is Second To Play")
+            class IsSecondToPlay{
+                @Test
+                @DisplayName("Should play the weakest card if other player plays a strong card")
+                void shouldPlayTheWeakestCardIfOtherPlayerPlaysAStrongCard(){
+                    var cards = IntelMock.cardList3Cards();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
-                assertEquals(cards.get(0), sut.chooseCard(intel).content());
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                    assertEquals(cards.get(1), sut.chooseCard(intel).content());
+                }
+
+                @Test
+                @DisplayName("Should play a card greater the opponent's if it has")
+                void shouldPlayACardGreaterTheOpponentsIfItHas(){
+                    var cards = IntelMock.cardList3Cards();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.vira5C());
+
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                    assertEquals(cards.get(2), sut.chooseCard(intel).content());
+                }
             }
 
-            @Test
-            @DisplayName("Should play the weakest card if other player plays a strong card")
-            void shouldPlayTheWeakestCardIfOtherPlayerPlaysAStrongCard(){
-                var cards = IntelMock.cardList3Cards();
-                when(intel.getCards()).thenReturn(cards);
-                when(intel.getVira()).thenReturn(IntelMock.vira5C());
-
-                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                assertEquals(cards.get(1), sut.chooseCard(intel).content());
-            }
-
-            @Test
-            @DisplayName("Should play diamonds if has it and good values")
-            void shouldPlayDiamondsIfHasItAndGoodValues(){
-                var cards = IntelMock.diamondsAndGoodValues();
-                when(intel.getCards()).thenReturn(cards);
-                when(intel.getVira()).thenReturn(IntelMock.viraKC());
-
-                assertTrue(sut.chooseCard(intel).content().isOuros(intel.getVira()));
-            }
-
-            @Test
-            @DisplayName("Should keep diamonds if it is the strongest card")
-            void shouldKeepDiamondsIfItIsTheStrongestCard(){
-                var cards = IntelMock.onlyDiamonds();
-                when(intel.getCards()).thenReturn(cards);
-                when(intel.getVira()).thenReturn(IntelMock.viraKC());
-
-                assertFalse(sut.chooseCard(intel).content().isOuros(intel.getVira()));
-            }
         }
 
         @Nested
