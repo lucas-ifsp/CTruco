@@ -51,10 +51,15 @@ public class Bot implements BotServiceProvider {
                 numberOfManilhas ++;
             }
         }
+        if ( intel.getOpponentScore() >= 9) {
+            return false;
+        }
 
         if ( numberOfManilhas >= 1) {
             return true;
         }
+
+
         return false;
     }
 

@@ -206,8 +206,8 @@ public class BotTest {
     }
 
     @Test
-    @DisplayName("Decide if raises when opponent has 9 points or higher")
-    void testDecidesIfRaisesWhenOpponentHas9PointsOrHigher() {
+    @DisplayName("Decide if raises when opponent has 9 points or more")
+    void testDecidesIfRaisesWhenOpponentHas9PointsOrMore() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
         List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
