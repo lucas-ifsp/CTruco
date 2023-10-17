@@ -30,8 +30,8 @@ public enum BotStrategy {
                 if(hasAHigherAndDifferentCardThanZap(gameIntel) && BotStrategy.hasZap(gameIntel)) return true;
                 if(hasAHigherAndDifferentCardThanCopas(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
                 if(hasAHigherAndDifferentCardThanSpades(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
-
-                return false;
+            }else{
+                if(BotStrategy.hasZap(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
             }
 
             //if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
