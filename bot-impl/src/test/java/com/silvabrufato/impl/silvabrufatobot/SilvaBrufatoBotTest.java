@@ -827,6 +827,16 @@ public class SilvaBrufatoBotTest {
                         TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
                 assertThat(sut.decideIfRaises(gameIntel)).isTrue();
             }
+
+            @Test
+            @DisplayName("shouldReturnTrueIfBotHasDiamonds")
+            void shouldReturnTrueIfBotHasDiamonds() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST, RoundResult.WON));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            }
         }
     }
 }
