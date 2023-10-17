@@ -137,9 +137,9 @@ public class CafeConLecheBotTest {
         @DisplayName("Should raise when has clubs and the first round is drew")
         void shoudRaiseWhenHasClubsAndTheFirstRoundIsDrew() {
             List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(JACK, HEARTS),
-                    TrucoCard.of(THREE, CLUBS),
-                    TrucoCard.of(THREE, DIAMONDS)
+                    TrucoCard.of(JACK, DIAMONDS),
+                    TrucoCard.of(QUEEN, CLUBS),
+                    TrucoCard.of(QUEEN, DIAMONDS)
             );
             TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
 
