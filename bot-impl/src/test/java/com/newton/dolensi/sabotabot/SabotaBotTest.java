@@ -143,6 +143,17 @@ public class SabotaBotTest {
 
                 assertNotNull(sut.chooseCard(intel).content());
             }
+
+            @Test
+            @DisplayName("Should play the greatest card if draw first round")
+            void shouldPlayTheGreatestCardIfDrawFirstRound(){
+                var cards = IntelMock.cardList4C3D();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira3C());
+                when(intel.getRoundResults()).thenReturn(IntelMock.roundResultDrawFirstRound());
+
+                assertEquals(cards.get(0), sut.chooseCard(intel).content());
+            }
         }
 
         @Nested

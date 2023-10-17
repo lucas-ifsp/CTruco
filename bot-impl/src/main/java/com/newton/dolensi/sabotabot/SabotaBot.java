@@ -55,21 +55,28 @@ public class SabotaBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         var hand = intel.getCards();
         var opponentCard = intel.getOpponentCard();
+        var roundResults = intel.getRoundResults();
 
-        // se for o primeiro a jogar
-        if (opponentCard.isEmpty()) return getCardBeingFirstToPlay(intel, hand);
-        // resposta à jogada do adversário
-        else {
-            // se o oponente jogar carta forte, joga a menor
-            if (opponentHasStrongCard(intel, opponentCard.get())) return CardToPlay.of(getWeakestCard(intel, hand));
+        // se for o primeiro round
+        if (roundResults.isEmpty()) {
+            // se for o primeiro a jogar
+            if (opponentCard.isEmpty()) return getCardBeingFirstToPlay(intel, hand);
+                // resposta à jogada do adversário
+            else {
+                // se o oponente jogar carta forte, joga a menor
+                if (opponentHasStrongCard(intel, opponentCard.get())) return CardToPlay.of(getWeakestCard(intel, hand));
 
-            // se tiver carta igual e manilha, amarra pra jogar ela depois
-            if (opponentHasTheSameCard(intel, opponentCard.get()) && !getManilhasCard(intel).isEmpty()){
-                return getCardToDraw(intel, hand, opponentCard.get());
-            } else {
-                return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
+                // se tiver carta igual e manilha, amarra pra jogar ela depois
+                if (opponentHasTheSameCard(intel, opponentCard.get()) && !getManilhasCard(intel).isEmpty()){
+                    return getCardToDraw(intel, hand, opponentCard.get());
+                } else {
+                    return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
+                }
             }
+        } else if (roundResults.get(0) == GameIntel.RoundResult.DREW){
+            return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
         }
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override
@@ -115,7 +122,7 @@ public class SabotaBot implements BotServiceProvider {
             else
                 return nonMalinhaCards.get(1);
         }
-        return hand.get(0);
+        return nonMalinhaCards.get(0);
     }
 
     private List<TrucoCard> getNonManilhas(List<TrucoCard> hand, TrucoCard vira) {

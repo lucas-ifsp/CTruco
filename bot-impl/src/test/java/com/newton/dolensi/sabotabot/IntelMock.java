@@ -2,6 +2,7 @@ package com.newton.dolensi.sabotabot;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel.*;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
@@ -35,19 +36,13 @@ public class IntelMock {
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
     }
 
-    public static TrucoCard vira5C() {
-        return TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
-    }
+    public static TrucoCard vira5C() { return TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS); }
+    public static TrucoCard vira6C() { return TrucoCard.of(CardRank.SIX, CardSuit.CLUBS); }
+    public static TrucoCard viraKC() { return TrucoCard.of(CardRank.KING, CardSuit.CLUBS); }
+    public static TrucoCard vira2H() { return TrucoCard.of(CardRank.TWO, CardSuit.HEARTS); }
+    public static TrucoCard vira3C() { return TrucoCard.of(CardRank.THREE, CardSuit.CLUBS); }
 
-    public static TrucoCard vira6C() {
-        return TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-    }
-
-    public static TrucoCard viraKC() {
-
-        return TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
-    }
-    public static TrucoCard vira2H() {
-        return TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+    public static List<RoundResult> roundResultDrawFirstRound() {
+        return List.of(RoundResult.DREW);
     }
 }
