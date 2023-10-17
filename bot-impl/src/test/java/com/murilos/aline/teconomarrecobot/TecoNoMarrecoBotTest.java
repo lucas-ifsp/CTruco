@@ -249,7 +249,7 @@ class TecoNoMarrecoBotTest {
         }
         @Test
         @DisplayName("Testa se empatou a primeira rodada e nao possui carta com valor maior que 11")
-        void shouldRequestTrucoIfYDrewTheFirstRoundAndNotHaveACardWithValueGreaterThan11(){
+        void shouldNotRequestTrucoIfYDrewTheFirstRoundAndNotHaveACardWithValueGreaterThan11(){
             hand = List.of(TrucoCard.of(KING, HEARTS), TrucoCard.of(ACE, CLUBS));
             cardVira = TrucoCard.of(FOUR, CLUBS);
             roundResult = List.of(GameIntel.RoundResult.DREW);
@@ -271,6 +271,17 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se na segunda rodada possuir mão com valor menor que 15  nao pede truco")
+        void shouldNotRequestTrucoIfInTheSecondRoundHaveAHandWithAValueLowerThan15(){
+            hand = List.of(TrucoCard.of(SIX, DIAMONDS), TrucoCard.of(FIVE, DIAMONDS));
+            cardVira = TrucoCard.of(TWO, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(1);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
 
     }
 
