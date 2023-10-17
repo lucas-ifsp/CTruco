@@ -59,7 +59,7 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
 
         if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(WON)){
-            if(hasZap(intel)) return true;
+            if(hasZap(intel) || hasHearts(intel)) return true;
         }
         return false;
     }
@@ -197,6 +197,16 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
         return false;
     }
+
+    private boolean hasHearts(GameIntel intel) {
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isCopas(intel.getVira())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean has3Threes(GameIntel intel){
         int threes = 0;
         for (TrucoCard card : intel.getCards()) {
