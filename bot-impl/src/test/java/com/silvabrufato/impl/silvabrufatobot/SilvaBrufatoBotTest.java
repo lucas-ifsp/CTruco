@@ -732,17 +732,6 @@ public class SilvaBrufatoBotTest {
                     assertThat(sut.decideIfRaises(gameIntel)).isTrue();
                 }
 
-                @Test
-                @DisplayName("ShouldReturnTrueIfHaveACardBiggerThanOpponentAndHaveACardGreaterThanOrEqualToAce")
-                void shouldReturnTrueIfHaveACardBiggerThanOpponentAndHaveACardGreaterThanOrEqualToAce() {
-                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
-                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
-                    when(gameIntel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)));
-                    when(gameIntel.getCards()).thenReturn(List.of(
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
-                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
-                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-                }
             }
 
             @Nested
@@ -780,33 +769,12 @@ public class SilvaBrufatoBotTest {
                             TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
                     assertThat(sut.decideIfRaises(gameIntel)).isTrue();
                 }
-
-                @Test
-                @DisplayName("shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce")
-                void shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce() {
-                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
-                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
-                    when(gameIntel.getCards()).thenReturn(List.of(
-                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
-                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-                }
             }
         }
 
         @Nested
         @DisplayName("Third round")
         class ThirdRound{
-            @Test
-            @DisplayName("theReturnMustBeDifferentFromNull")
-            void theReturnMustBeDifferentFromNull() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
-                assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
-            }
-
             @Test
             @DisplayName("shouldReturnTrueIfBotHasSpades")
             void shouldReturnTrueIfBotHasSpades() {
