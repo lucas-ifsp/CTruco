@@ -201,6 +201,19 @@ class CaipirasBotTest {
         assertThat(caipirasBot.checkOnlyZap(cards, vira).equals(validate));
     }
 
+    @DisplayName("Testa se ele truca no primeiro round")
+    @ParameterizedTest
+    @MethodSource(value = "provideToCheckRaiseInFirstRound")
+    void testCheckRaiseInFirstRound(List<TrucoCard> cards, TrucoCard vira, Boolean validate){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getRoundResults()).thenReturn(List.of());
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(cards);
+
+        assertThat(caipirasBot.checkRaiseInFirstRound(cards, vira).equals(validate));
+    }
+
     static Stream<Arguments> provideToKillOpponentCard() {
         return Stream.of(
                 Arguments.of(
@@ -575,6 +588,38 @@ class CaipirasBotTest {
                                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                         ),
                         TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToCheckRaiseInFirstRound() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        true
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        false
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        false
                 )
         );
     }
