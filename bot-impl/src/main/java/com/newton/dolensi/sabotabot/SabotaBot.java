@@ -61,7 +61,6 @@ public class SabotaBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         var hand = intel.getCards();
         var opponentCard = intel.getOpponentCard();
-        CardToPlay cardToPlay = CardToPlay.of(hand.get(0));
 
         if (opponentCard.isEmpty()) {
             for (TrucoCard card : hand) {
@@ -69,11 +68,11 @@ public class SabotaBot implements BotServiceProvider {
                     return CardToPlay.of(card);
                 }
             }
-            cardToPlay = CardToPlay.of(getGreatestCard(intel, hand));
+            return CardToPlay.of(getGreatestCard(intel, hand));
         } else if (opponentHasStrongCard(intel, opponentCard.get()))
-            cardToPlay = CardToPlay.of(getWeakestCard(intel, hand));
+            return CardToPlay.of(getWeakestCard(intel, hand));
 
-        return cardToPlay;
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override
