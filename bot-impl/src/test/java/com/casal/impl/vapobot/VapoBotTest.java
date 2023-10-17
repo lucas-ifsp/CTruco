@@ -1218,7 +1218,7 @@ class VapoBotTest {
             class PlayFirstTest {
 
                 @Test
-                @DisplayName("and won the first round")
+                @DisplayName("and won the first round should choose 2D")
                 void wonFirstRound() {
                     TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
@@ -1231,6 +1231,25 @@ class VapoBotTest {
 
                     stepBuilder = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1);
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)), vapoBot.chooseCard(stepBuilder.build()));
+                }
+
+                @Test
+                @DisplayName("and lost the first round shold choose AD")
+                void lostFirstRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                             .botInfo(myCards, 1)
                             .opponentScore(1);
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)), vapoBot.chooseCard(stepBuilder.build()));
