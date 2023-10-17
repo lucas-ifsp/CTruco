@@ -174,6 +174,25 @@ public class CafeConLecheBotTest {
             assertThat(decideIfRaises).isEqualTo(true);
         }
 
+        @Test
+        @DisplayName("Should not raise when has 1 manilha and not has three")
+        void shouldNotRaiseWhenHas1MnilhaAndNotHasThree() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(SIX, DIAMONDS),
+                    TrucoCard.of(QUEEN, HEARTS),
+                    TrucoCard.of(QUEEN, DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(false);
+        }
+
     }
 
     @Nested
