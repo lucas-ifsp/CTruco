@@ -83,7 +83,7 @@ public class SabotaBot implements BotServiceProvider {
                 return 0;
             }
 
-            if (getZap(intel) != null){
+            if (roundResults.contains(GameIntel.RoundResult.WON) && getZap(intel) != null){
                 return 1;
             }
         }
@@ -307,5 +307,5 @@ public class SabotaBot implements BotServiceProvider {
             return hasStrongManilha(intel);
         return false;
     }
-    
+
 }
