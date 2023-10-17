@@ -795,6 +795,17 @@ public class SilvaBrufatoBotTest {
                         TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
                 assertThat(sut.decideIfRaises(gameIntel)).isTrue();
             }
+
+            @Test
+            @DisplayName("shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce")
+            void shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            }
         }
     }
 }
