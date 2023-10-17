@@ -23,6 +23,8 @@ package com.brenoduda.cafeconlechebot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.assertj.core.api.Assert;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class CafeConLecheBotTest {
     @Nested
@@ -218,4 +221,18 @@ public class CafeConLecheBotTest {
             assertThat(raiseResponse).isEqualTo(-1);
         }
     }
+
+
+    @Test
+    @DisplayName("get maoDeOnze positive response if oponent has score 11")
+    void shouldGetMaoDeonzeIfopenentScore11(GameIntel intel){
+        int score=intel.getOpponentScore();
+
+        assert
+
+    }
+
+
+
+
 }
