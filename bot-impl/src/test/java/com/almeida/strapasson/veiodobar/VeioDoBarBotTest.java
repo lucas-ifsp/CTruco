@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static com.almeida.strapasson.veiodobar.GameIntelMockBuilder.make;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class VeioDoBarBotTest {
     private VeioDoBarBot sut;
@@ -127,6 +128,16 @@ class VeioDoBarBotTest {
     }
 
     @Test
+    @DisplayName("Should play mao de onze if has at least two cards greater or equal to two")
+    void shouldPlayMaoDeOnzeIfHasAtLeastTwoCardsGreaterOrEqualToTwo() {
+        var intel = make().cardsToBeThreeOf(CardRank.TWO)
+                        .viraToBeDiamondsOfRank(CardRank.TWO)
+                        .finish();
+
+        assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+    }
+
+    @Test
     @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
     void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
         var intel = make().cardsToBe(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
@@ -154,7 +165,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
     void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
-        var intel = make().cardsToBeThreeOf(CardRank.FOUR, CardSuit.SPADES, CardSuit.HEARTS, CardSuit.CLUBS)
+        var intel = make().cardsToBeThreeOf(CardRank.FOUR)
                         .viraToBeDiamondsOfRank(CardRank.FOUR)
                         .finish();
 
@@ -176,7 +187,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse if has two cards lower than two")
     void shouldRefuseIfHasTwoCardsLessThanTwo() {
-        var intel = make().cardsToBeThreeOf(CardRank.ACE, CardSuit.DIAMONDS, CardSuit.CLUBS, CardSuit.HEARTS)
+        var intel = make().cardsToBeThreeOf(CardRank.ACE)
                         .viraToBeDiamondsOfRank(CardRank.FOUR)
                         .finish();
 
@@ -199,7 +210,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should raise points if has three cards three")
     void shouldRaisePointsIfHasThreeCardsThree() {
-        var intel = make().cardsToBeThreeOf(CardRank.THREE, CardSuit.DIAMONDS, CardSuit.HEARTS, CardSuit.CLUBS)
+        var intel = make().cardsToBeThreeOf(CardRank.THREE)
                         .viraToBeDiamondsOfRank(CardRank.ACE)
                         .finish();
 

@@ -10,7 +10,15 @@ import java.util.stream.Collectors;
 public final class VeioDoBarBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        TrucoCard vira = intel.getVira();
+        TrucoCard refCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        long numberOfCardsGreaterOrEqualToTwo = intel.getCards()
+                .stream()
+                .filter(card -> card.compareValueTo(refCard, vira) >= 0)
+                .count();
+
+        return numberOfCardsGreaterOrEqualToTwo > 2;
     }
 
     @Override
