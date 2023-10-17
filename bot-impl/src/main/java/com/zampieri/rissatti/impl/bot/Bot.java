@@ -85,7 +85,15 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return CountManilhas(intel) >= 2;
+        if(CountManilhas(intel) >= 2){
+            return true;
+        }
+        else{
+            if(hasZap(intel)){
+                return AnyCardsWithValueHigherThanKing(intel);
+            }
+        }
+        return false;
     }
 
     @Override
