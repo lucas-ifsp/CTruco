@@ -88,6 +88,10 @@ public class SabotaBot implements BotServiceProvider {
             }
         }
 
+        if (intel.getOpponentScore() == 11){
+            return -1;
+        }
+
 
         return -1;
     }
