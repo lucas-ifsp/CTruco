@@ -34,6 +34,9 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(intel.getOpponentScore() < 4 && !(valueOfTheHand(intel) < 18)){
             return true;
         }
+        if(intel.getOpponentScore() == 11 && intel.getScore() == 11){
+            return true;
+        }
         return false;
 
     }
