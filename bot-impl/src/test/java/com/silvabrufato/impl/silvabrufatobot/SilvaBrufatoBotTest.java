@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -755,6 +756,18 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                             TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
+
+                @Test
+                @DisplayName("ShouldReturnTrueIfHaveACardBiggerThanOpponentAndHaveACardGreaterThanOrEqualToAce")
+                void shouldReturnTrueIfHaveACardBiggerThanOpponentAndHaveACardGreaterThanOrEqualToAce() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                    when(gameIntel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
                     assertThat(sut.decideIfRaises(gameIntel)).isTrue();
                 }
             }
