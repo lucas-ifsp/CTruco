@@ -90,16 +90,17 @@ class CaipirasBotTest {
         assertThat(caipirasBot.checkExistenceManilhaAndStronger(cards, vira)).isEqualTo(exist);
     }
 
-    @DisplayName("Testa se tem espadilha na mão")
+    @DisplayName("Testa se joga a menor carta na primeira rodada")
     @ParameterizedTest
-    @MethodSource(value = "provideToCheckExistenceOfSpadesManilha")
-    void testCheckExistanceSpadesManilha(List<TrucoCard> cards, TrucoCard vira, Boolean exist){
+    @MethodSource(value = "provideToChooseWeakInFirstRound")
+    void testChooseWeakInFirstRound(List<TrucoCard> cards, TrucoCard vira, TrucoCard weakCard) {
         GameIntel intel = mock(GameIntel.class);
 
+        when(intel.getRoundResults()).thenReturn(List.of());
         when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(cards);
+        when(intel.getOpenCards()).thenReturn(cards);
 
-        assertThat(caipirasBot.checkExistenceSpadesManilha(cards, vira)).isEqualTo(exist);
+        assertThat(caipirasBot.chooseWeakInFirstRound(cards, vira)).isEqualTo(weakCard);
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
@@ -127,38 +128,6 @@ class CaipirasBotTest {
                                 TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                                 TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
-                        ),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
-                        true
-                )
-        );
-    }
-
-    public static Stream<Arguments> provideToCheckExistenceOfSpadesManilha() {
-        return Stream.of(
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
-                        ),
-                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                        true
-                ),
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
-                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
-                        ),
-                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                        false
-                ),
-                Arguments.of(
-                        List.of(
-                                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
-                                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
                         ),
                         TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
                         true
@@ -284,6 +253,38 @@ class CaipirasBotTest {
                         ),
                         TrucoCard.of(CardRank.KING, CardSuit.SPADES),
                         true
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToChooseWeakInFirstRound() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
                 )
         );
     }
