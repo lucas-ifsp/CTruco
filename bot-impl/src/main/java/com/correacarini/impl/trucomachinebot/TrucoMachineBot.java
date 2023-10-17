@@ -57,6 +57,10 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
             if(intel.getCards().get(0).isZap(intel.getVira())) return true;
         }
+
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(WON)){
+            if(hasZap(intel)) return true;
+        }
         return false;
     }
 
