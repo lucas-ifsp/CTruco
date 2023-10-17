@@ -27,7 +27,7 @@ public class CaipirasBot implements BotServiceProvider {
         if(checkExistenceSpadesManilha(intel.getCards(), intel.getVira())){
             return CardToPlay.of(chooseSpadesInFirstRound(intel.getCards(),intel.getVira()));
         }
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class CaipirasBot implements BotServiceProvider {
     public TrucoCard chooseSpadesInFirstRound(List<TrucoCard> cards, TrucoCard vira){
         var count = 0;
         for (TrucoCard card : cards) {
-            if (card.isEspadilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),vira) >= 0) {
+            if (card.isEspadilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),vira) >= 0) {
                 count++;
             }
         }
@@ -97,7 +97,7 @@ public class CaipirasBot implements BotServiceProvider {
                 }
             }
         }
-        return chooseWeakInFirstRound(cards, vira);
+        return null;
     }
 
     public TrucoCard chooseWeakInFirstRound(List<TrucoCard> cards, TrucoCard vira){
