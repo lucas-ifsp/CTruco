@@ -30,7 +30,7 @@ class CaipirasBotTest {
     @DisplayName("Testa se tem ouros na mão")
     @ParameterizedTest
     @MethodSource(value = "provideToCheckExistenceOfDiamondManilha")
-    void testCheckExistanceDiamondManilha(List<TrucoCard> cards, TrucoCard vira, Boolean exist){
+    void testCheckExistenceDiamondManilha(List<TrucoCard> cards, TrucoCard vira, Boolean exist){
         GameIntel intel = mock(GameIntel.class);
 
         when(intel.getVira()).thenReturn(vira);
