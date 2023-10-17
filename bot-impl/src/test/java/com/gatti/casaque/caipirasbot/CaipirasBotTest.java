@@ -211,7 +211,7 @@ class CaipirasBotTest {
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(cards);
 
-        assertThat(caipirasBot.checkRaiseInFirstRound(cards, vira).equals(validate));
+        assertThat(caipirasBot.checkRaiseInFirstRound(cards, vira)).isEqualTo(validate);
     }
 
     static Stream<Arguments> provideToKillOpponentCard() {
@@ -620,6 +620,15 @@ class CaipirasBotTest {
                         ),
                         TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         false
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                        true
                 )
         );
     }

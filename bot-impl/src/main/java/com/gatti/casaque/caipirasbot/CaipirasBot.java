@@ -66,6 +66,23 @@ public class CaipirasBot implements BotServiceProvider {
         return false;
     }
 
+    public boolean checkRaiseInFirstRound(List<TrucoCard> cards, TrucoCard vira){
+        var count = 0;
+        var hasTwo = false;
+        for (TrucoCard card : cards) {
+            if(card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), vira) > 0){
+                count++;
+                if(card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), vira) == 0){
+                    hasTwo = true;
+                }
+                if(card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), vira) == 0 && hasTwo && !card.isManilha(vira)){
+                    count--;
+                }
+            }
+        }
+        return count>=2;
+    }
+
     public Boolean checkEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard){
         return enemyCard.isPresent();
     }
