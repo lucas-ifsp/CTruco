@@ -43,9 +43,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHandHasManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasManilha(cards, vira)).isTrue();
         }
@@ -55,9 +55,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnFalseIfHandHasNoManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasManilha(cards, vira)).isFalse();
         }
@@ -71,9 +71,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHandHasZap() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasZap(cards, vira)).isTrue();
         }
@@ -83,9 +83,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnFalseIfHandHasNoZap() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasZap(cards, vira)).isFalse();
         }
@@ -99,9 +99,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHandHasCopas() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCopas(cards, vira)).isTrue();
         }
@@ -111,9 +111,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnFalseIfHandHasNoCopas() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasZap(cards, vira)).isFalse();
         }
@@ -127,9 +127,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHandHasStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasStrongCard(cards, vira)).isTrue();
         }
@@ -139,9 +139,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHandIsStrong() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isTrue();
         }
@@ -151,9 +151,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnFalseIfHandHasNoStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasStrongCard(cards, vira)).isFalse();
         }
@@ -167,9 +167,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHasCasalMaior() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCasalMaior(cards, vira)).isTrue();
         }
@@ -179,9 +179,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnFalseIfNotHasCasalMaior() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCasalMaior(cards, vira)).isFalse();
         }
@@ -191,9 +191,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfHasCasalMenor() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCasalMenor(cards, vira)).isTrue();
         }
@@ -203,9 +203,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnTrueIfNotHasCasalMenor() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCasalMenor(cards, vira)).isFalse();
         }
@@ -219,9 +219,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnStrongestCardWhenProvidedWithOneManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
@@ -232,9 +232,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnStrongestCardWhenProvidedWithMoreThanOneManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.CLUBS);
@@ -245,9 +245,9 @@ public class TrucoGuruUtilsTest {
         void shouldReturnStrongestCardWhenProvidedWithNoManilhas() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.THREE);
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);

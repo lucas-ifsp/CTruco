@@ -48,8 +48,8 @@ public class TrucoGuruUtils {
 
     static Boolean hasHighRank(List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream()
-                .filter(card -> !card.isManilha(vira))
-                .anyMatch(card -> card.getRank().value() >= 8);
+            .filter(card -> !card.isManilha(vira))
+            .anyMatch(card -> card.getRank().value() >= 8);
     }
 
     static Boolean hasStrongHand(List<TrucoCard> cards, TrucoCard vira) {
@@ -72,7 +72,7 @@ public class TrucoGuruUtils {
     static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard strongestCard = cards.get(0);
         for (TrucoCard card : cards) {
-          if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
+            if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
         }
 
         return strongestCard;
