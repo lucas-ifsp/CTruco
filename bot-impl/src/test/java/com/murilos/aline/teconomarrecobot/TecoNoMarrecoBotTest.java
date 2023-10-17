@@ -492,6 +492,50 @@ class TecoNoMarrecoBotTest {
 
             assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
         }
+        @Test
+        @DisplayName("Testa pede aumento se tem manilha forte")
+        void askForRaiseIfHaveManilhaStrong() {
+            hand = List.of(TrucoCard.of(ACE,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.DREW);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+        }
+        @Test
+        @DisplayName("Testa aceita se tem uam ou mais manilha e tiver um três")
+        void acceptIfHaveManilhaEndStrongCard() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+        }
+        @Test
+        @DisplayName("Testa recusar se não tiver carta")
+        void refuseIfYouDontHaveGoodCards() {
+            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(THREE, CLUBS));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 9).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isNegative();
+
+        }
+        @Test
+        @DisplayName("Testa recusar se perdeu a primeira e não tem carta forte")
+        void RefuseIfYouLostTheFirstRoundAndHaveWeakCards() {
+            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(ACE, SPADES));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
+           Integer result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(-1,result);
+
+        }
+
 
     }
 }
