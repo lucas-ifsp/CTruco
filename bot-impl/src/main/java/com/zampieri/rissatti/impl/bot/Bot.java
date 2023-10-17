@@ -105,9 +105,9 @@ public class Bot implements BotServiceProvider {
 
         if ( !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW) {
             TrucoCard highestCard = cards.get(0);
-            for (TrucoCard trucoCard : cards) {
-                if (trucoCard.relativeValue(vira) > highestCard.relativeValue(vira)) {
-                    highestCard = trucoCard;
+            for (TrucoCard card : cards) {
+                if (card.relativeValue(vira) > highestCard.relativeValue(vira)) {
+                    highestCard = card;
                 }
             }
 
@@ -119,25 +119,25 @@ public class Bot implements BotServiceProvider {
 
            if (opponentCard.getRank().equals(CardRank.HIDDEN)) {
                TrucoCard lowestCard = cards.get(0);
-               for (TrucoCard trucoCard : cards) {
-                   if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                       lowestCard = trucoCard;
+               for (TrucoCard card : cards) {
+                   if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+                       lowestCard = card;
                    }
                }
 
                return CardToPlay.of(lowestCard);
            }
            if ( opponentCard.isManilha(vira) && numberOfManilhas >= 1) {
-               for (TrucoCard trucoCard : cards) {
-                   if ( trucoCard.relativeValue(vira) > opponentCard.relativeValue(vira)) {
-                       return CardToPlay.of(trucoCard);
+               for (TrucoCard card : cards) {
+                   if ( card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
+                       return CardToPlay.of(card);
                    }
                }
 
                TrucoCard lowestCard = cards.get(0);
-               for (TrucoCard trucoCard : cards) {
-                   if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                       lowestCard = trucoCard;
+               for (TrucoCard card : cards) {
+                   if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+                       lowestCard = card;
                    }
                }
 
@@ -145,25 +145,25 @@ public class Bot implements BotServiceProvider {
            }
             if ( opponentCard.isManilha(vira) && numberOfManilhas == 0) {
                 TrucoCard lowestCard = cards.get(0);
-              for (TrucoCard trucoCard : cards) {
-                  if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                       lowestCard = trucoCard;
+              for (TrucoCard card : cards) {
+                  if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+                       lowestCard = card;
                     }
                 }
 
                return CardToPlay.of(lowestCard);
             }
             else {
-                for (TrucoCard trucoCard : cards) {
-                    if ( trucoCard.relativeValue(vira) > opponentCard.relativeValue(vira)) {
-                        return CardToPlay.of(trucoCard);
+                for (TrucoCard card : cards) {
+                    if ( card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
+                        return CardToPlay.of(card);
                     }
                 }
 
                 TrucoCard lowestCard = cards.get(0);
-                for (TrucoCard trucoCard : cards) {
-                    if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                        lowestCard = trucoCard;
+                for (TrucoCard card : cards) {
+                    if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+                        lowestCard = card;
                     }
                 }
 
