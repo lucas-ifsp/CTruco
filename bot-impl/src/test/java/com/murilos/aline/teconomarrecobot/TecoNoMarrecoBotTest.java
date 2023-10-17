@@ -455,6 +455,18 @@ class TecoNoMarrecoBotTest {
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,CLUBS));
         }
+        @Test
+        @DisplayName("Testa jogar a manilha se oponente jogou manilha")
+        void testPlayManilhaIfOpponentPlayedManilha() {
+            hand = List.of(TrucoCard.of(KING, SPADES), TrucoCard.of(KING, HEARTS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(KING, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertEquals(TrucoCard.of(KING, SPADES), cardToPlay.value());
+        }
     }
 
     @Nested
