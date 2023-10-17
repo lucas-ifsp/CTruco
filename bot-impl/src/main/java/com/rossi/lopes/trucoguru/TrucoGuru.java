@@ -42,6 +42,11 @@ public class TrucoGuru implements BotServiceProvider {
         Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(cards, vira);
         if(hasCasalMenor) return true;
 
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+        Boolean hasDoubleManilhas = TrucoGuruUtils.hasDoubleManilhas(cards, vira);
+        if(botScore - opponentScore <= 5) return hasDoubleManilhas;
+
         return false;
     }
 
