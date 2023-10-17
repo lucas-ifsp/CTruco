@@ -295,4 +295,21 @@ public class TrucoMachineBotTest {
         assertFalse(playMaoDeOnze);
 
     }
+    
+    @Test
+    @DisplayName("Should not accept mao de onze when not having 3 strong cards")
+    void shouldNotAcceptMaoDeOnzeWhenNotHaving3StrongCards(){
+        TrucoCard manilha = TrucoCard.of(THREE,CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE,SPADES),
+                TrucoCard.of(QUEEN, DIAMONDS),
+                manilha
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertFalse(playMaoDeOnze);
+    }
 }
