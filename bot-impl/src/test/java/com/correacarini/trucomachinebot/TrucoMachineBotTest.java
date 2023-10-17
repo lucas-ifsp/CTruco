@@ -236,4 +236,16 @@ public class TrucoMachineBotTest {
         boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raise);
     }
+
+    @Test
+    @DisplayName("Should accept mao de onze when opponent score is 11")
+    void shouldAcceptMaoDeOnzeWhenOpponentScoreIs11(){
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(List.of(TrucoCard.of(ACE, CLUBS)), 0)
+                .opponentScore(11);
+
+        boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertTrue(playMaoDeOnze);
+    }
 }
