@@ -150,9 +150,20 @@ public class SabotaBotTest {
                 var cards = IntelMock.cardList4C3D();
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getVira()).thenReturn(IntelMock.vira3C());
-                when(intel.getRoundResults()).thenReturn(IntelMock.roundResultDrawFirstRound());
 
+                when(intel.getRoundResults()).thenReturn(IntelMock.roundResultDrewIn1st());
                 assertEquals(cards.get(0), sut.chooseCard(intel).content());
+            }
+
+            @Test
+            @DisplayName("Should discard the lowest if won first round and has strong card")
+            void shouldDiscardTheLowestIfWOnFirstRoundAndHasStrongCard(){
+                var cards = IntelMock.cardList4C3D();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira3C());
+
+                when(intel.getRoundResults()).thenReturn(IntelMock.roundResultWonIn1st());
+                assertTrue(sut.chooseCard(intel).isDiscard());
             }
         }
 

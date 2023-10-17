@@ -42,7 +42,10 @@ public class IntelMock {
     public static TrucoCard vira2H() { return TrucoCard.of(CardRank.TWO, CardSuit.HEARTS); }
     public static TrucoCard vira3C() { return TrucoCard.of(CardRank.THREE, CardSuit.CLUBS); }
 
-    public static List<RoundResult> roundResultDrawFirstRound() {
+    public static List<RoundResult> roundResultDrewIn1st() {
         return List.of(RoundResult.DREW);
+    }
+    public static List<RoundResult> roundResultWonIn1st() {
+        return List.of(RoundResult.WON);
     }
 }
