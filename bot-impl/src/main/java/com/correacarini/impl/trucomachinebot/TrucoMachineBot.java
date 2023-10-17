@@ -8,14 +8,21 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bueno.spi.model.CardRank.THREE;
-import static com.bueno.spi.model.CardRank.TWO;
+import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class TrucoMachineBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+        List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+        List<TrucoCard> strongCards = cards.stream().filter(card -> card.getRank().compareTo(KING) > 0 || card.isManilha(vira))
+                .toList();
         if(intel.getOpponentScore()==11){
+            return true;
+        }
+        if(strongCards.size() == 3 && manilhas.size() > 0){
             return true;
         }
         return false;
