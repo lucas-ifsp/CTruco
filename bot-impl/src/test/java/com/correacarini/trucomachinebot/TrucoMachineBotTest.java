@@ -11,8 +11,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TrucoMachineBotTest {
     @Test
@@ -103,5 +102,15 @@ public class TrucoMachineBotTest {
 
         CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
         assertEquals(CardToPlay.of(TrucoCard.of(THREE, CLUBS)), cardToPlay);
+    }
+    @Test
+    @DisplayName("Should not raise when bot score is equal to 11")
+    void ShouldNotRaiseWhenBotScoreIsEqualTo11() {
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(List.of(), 11);
+
+        boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertFalse(raises);
     }
 }
