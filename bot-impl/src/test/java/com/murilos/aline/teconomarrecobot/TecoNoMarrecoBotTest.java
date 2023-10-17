@@ -463,10 +463,23 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of(GameIntel.RoundResult.LOST);
             cards = List.of();
             TrucoCard opponentCard = TrucoCard.of(KING, DIAMONDS);
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertEquals(TrucoCard.of(KING, SPADES), cardToPlay.value());
         }
+        @Test
+        @DisplayName("Testa jogar menor manilha quando não tem descarte")
+        void playsSmallerShackleWhenThereNotDisposal() {
+            hand = List.of(TrucoCard.of(KING, DIAMONDS),TrucoCard.of(KING, SPADES), TrucoCard.of(KING, HEARTS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(KING, CLUBS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertEquals(TrucoCard.of(KING, DIAMONDS), cardToPlay.value());
+        }
+
     }
 
     @Nested
