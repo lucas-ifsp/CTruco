@@ -107,6 +107,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
         // seis rato!
         if (hasCasalMaior(intel))return 1;
+        if (!intel.getRoundResults().isEmpty() && hasZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
 
         // desce que eu quero ver!
         if (manilhas > 1) return 0;
