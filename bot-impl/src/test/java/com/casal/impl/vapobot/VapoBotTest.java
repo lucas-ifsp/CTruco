@@ -439,6 +439,27 @@ class VapoBotTest {
             assertEquals(1, vapoBot.getAmountOfManilhas(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("no manilhas on AS, 4H, QC")
+        void shouldReturn0() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(0, vapoBot.getAmountOfManilhas(stepBuilder.build()));
+        }
+
         @Nested
         @DisplayName("Get lowest card that wins against opponent card")
         class LowestCardToWinTest {
