@@ -5,7 +5,7 @@ import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
-import com.zampieri.impl.bot.Bot;
+import com.zampieri.rissatti.impl.bot.Bot;
 
 module bot.impl {
     requires bot.spi;

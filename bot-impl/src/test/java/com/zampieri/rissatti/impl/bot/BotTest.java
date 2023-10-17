@@ -1,9 +1,10 @@
-package com.zampieri.impl.bot;
+package com.zampieri.rissatti.impl.bot;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.zampieri.rissatti.impl.bot.Bot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,6 +103,26 @@ public class BotTest {
                 .opponentCard(oponentCard);
 
         assertEquals(CardRank.FIVE, bot.chooseCard(builder.build()).content().getRank());
+    }
+
+    @Test
+    @DisplayName("If the opponent has manilha")
+    void testIfOpponentHasManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+        TrucoCard oponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(oponentCard);
+
+        assertEquals(CardRank.FOUR, bot.chooseCard(builder.build()).content().getRank());
     }
 
 }
