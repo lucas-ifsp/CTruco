@@ -120,6 +120,34 @@ public class TrucoGuruUtilsTest {
     }
 
     @Nested
+    @DisplayName("HasDoubleManilhas")
+    class HasDoubleManilhasTest{
+        @Test
+        @DisplayName("Should return true if hand has double manilhas")
+        void shouldReturnTrueIfHandHasDoubleManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasDoubleManilhas(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false if hand has no double manilhas")
+        void shouldReturnFalseIfHandHasNoDoubleManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasDoubleManilhas(cards, vira)).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("HasStrongCardTest")
     class HasStrongCardTest {
         @Test
