@@ -35,6 +35,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -624,6 +625,22 @@ public class SilvaBrufatoBotTest {
                 void theReturnMustBeDifferentFromNull() {
                     when(gameIntel.getRoundResults()).thenReturn(List.of());
                     assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfItIsPossibleWinTheOpponentCardWithACardOtherThanZapAndHasZap")
+                void shouldReturnTrueIfItIsPossibleWinTheOpponentCardWithACardOtherThanZapAndHasZap() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of());
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+                    when(gameIntel.getOpenCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), //vira
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS) //opponent card
+                    ));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
                 }
             }
 
