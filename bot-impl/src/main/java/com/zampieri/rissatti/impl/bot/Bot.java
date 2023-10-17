@@ -188,7 +188,7 @@ public class Bot implements BotServiceProvider {
         return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 6);
     }
 
-    public Integer CountManilhas(GameIntel intel){
-        return 3;
+    public long CountManilhas(GameIntel intel){
+        return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
     }
 }
