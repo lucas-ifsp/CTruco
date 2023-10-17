@@ -304,8 +304,8 @@ public class TrucoGuruTest {
     class GetMaoDeOnzeResponseTests{
         TrucoGuru trucoGuru = new TrucoGuru();
         @Test
-        @DisplayName("Should accept mao de onze if the cards are strong")
-        public void shouldAcceptMaoDeOnzeIfTheCarsAreStrongTest(){
+        @DisplayName("Should accept mao de onze if has casal maior")
+        public void shouldAcceptMaoDeOnzeIfHasCasalMaior(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -313,7 +313,7 @@ public class TrucoGuruTest {
 
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
             GameIntel intel = GameIntel.StepBuilder.with()
