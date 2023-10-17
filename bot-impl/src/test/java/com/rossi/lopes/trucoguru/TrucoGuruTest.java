@@ -347,5 +347,27 @@ public class TrucoGuruTest {
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
         }
 
+        @Test
+        @DisplayName("Should decline mao de onze when hand is weak")
+        public void shouldDeclineMaoDeOnzeWhenHandIsWeak(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(9)
+                    .build();
+
+            assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isFalse();
+        }
+
     }
 }
