@@ -1002,4 +1002,23 @@ public class PerdeNuncaBotTest {
         assertThat(perdeNuncaBot.getRaiseResponse(stepBuilder.build())).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("Raise if our score is 3 and opponent score is 3 or less and does not have zap, manilha, 2 or 3")
+    public void raiseIfOurScoreIs3AndOpponentScoreIs3OrLessAndDoesNotHaveZapManilha2or3() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 3)
+                .opponentScore(3);
+
+        assertThat(perdeNuncaBot.getRaiseResponse(stepBuilder.build())).isEqualTo(1);
+    }
+
 }
