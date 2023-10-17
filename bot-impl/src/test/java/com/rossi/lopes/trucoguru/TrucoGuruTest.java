@@ -319,7 +319,7 @@ public class TrucoGuruTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                     .botInfo(botCards, 11)
-                    .opponentScore(9)
+                    .opponentScore(3)
                     .build();
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
@@ -341,7 +341,7 @@ public class TrucoGuruTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                     .botInfo(botCards, 11)
-                    .opponentScore(9)
+                    .opponentScore(3)
                     .build();
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
@@ -363,10 +363,32 @@ public class TrucoGuruTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                     .botInfo(botCards, 11)
-                    .opponentScore(9)
+                    .opponentScore(3)
                     .build();
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should only accept mao de onze when winning by 5 or less when has double manilhas")
+        public void shouldOnlyAcceptMaoDeOnzeWhenWinningBy5OrLessWhenHasDoubleManilhas(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8)
+                    .build();
+
+            assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
         }
 
     }
