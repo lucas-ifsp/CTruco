@@ -30,13 +30,15 @@ import java.util.List;
 public class CafeConLecheBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-
-        if(hasStrongCards(intel)){
-            return false;
+        if(intel.getOpponentScore()==11){
+            return true;
         }
 
-        return true;
+        if(hasStrongCards(intel)){
+            return true;
+        }
+        
+        return false;
 
     }
 
@@ -61,6 +63,9 @@ public class CafeConLecheBot implements BotServiceProvider {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
+        if(intel.getScore()==11){
+            return false;
+        }
         if(botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 3) {
             return true;
         }
