@@ -16,7 +16,7 @@ public class TrucoMachineBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(intel.getScore() == 11) return false;
+        if(intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
         return false;
     }
 
