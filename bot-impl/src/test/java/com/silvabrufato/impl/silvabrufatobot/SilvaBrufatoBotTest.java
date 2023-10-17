@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -656,6 +657,22 @@ public class SilvaBrufatoBotTest {
                     when(gameIntel.getCards()).thenReturn(List.of(
                             TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfItIsPossibleWinTheOpponentCardWithACardOtherThanSpadesAndHasSpades")
+                void shouldReturnTrueIfItIsPossibleWinTheOpponentCardWithACardOtherThanSpadesAndHasSpades() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of());
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+                    when(gameIntel.getOpenCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), //vira
+                            TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS) //opponent card
+                    ));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                             TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
                     assertThat(sut.decideIfRaises(gameIntel)).isTrue();
                 }
