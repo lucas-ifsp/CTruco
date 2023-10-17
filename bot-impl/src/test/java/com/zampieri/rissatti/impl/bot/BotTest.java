@@ -264,4 +264,24 @@ public class BotTest {
 
         assertEquals(0, bot.getRaiseResponse(builder.build()));
     }
+
+    @Test
+    @DisplayName("Play the highest card if the round value is six or more")
+    void testPlayTheHighestCardIfTheRoundValueIsSixOrMore() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(CardRank.THREE, bot.chooseCard(builder.build()).content().getRank());
+    }
 }
