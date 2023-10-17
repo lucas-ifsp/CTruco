@@ -797,6 +797,11 @@ class VapoBotTest {
     @DisplayName("Choose card test")
     class ChooseCardTest {
 
+        @Nested
+        @DisplayName("in first round")
+        class FisrtRoundTest {
 
+
+        }
     }
 }
