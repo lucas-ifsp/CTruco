@@ -50,7 +50,7 @@ public class ArrebentaBot implements BotServiceProvider {
         }
 
         if(intel.getCards().size() == 1){
-            if(hasManilhas){
+            if(hasManilhas || hasThree(intel)){
                 return true;
             }
         }
@@ -215,4 +215,16 @@ public class ArrebentaBot implements BotServiceProvider {
         }
         return hasHigher;
     }
+
+    private boolean hasThree(GameIntel intel){
+        final List<TrucoCard> cards = intel.getCards();
+        boolean hasThree = false;
+        for (TrucoCard card : intel.getCards()) {
+            if(card.getRank().value() == 10){
+                hasThree = true;
+            }
+        }
+        return hasThree;
+    }
+
 }

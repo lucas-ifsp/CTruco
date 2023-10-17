@@ -808,5 +808,20 @@ class ArrebentaBotTest {
             assertTrue(arrebentaBot.decideIfRaises(intel));
 
         }
+        @Test
+        @DisplayName("Should raise when have Three in last hand")
+        void ShouldRaiseWhenHaveThreeInLastHand() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+
+            assertTrue(arrebentaBot.decideIfRaises(intel));
+
+        }
     }
 }
