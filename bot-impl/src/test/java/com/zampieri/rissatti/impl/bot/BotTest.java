@@ -60,8 +60,7 @@ public class BotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
-
-        assertEquals(CardRank.SIX, bot.chooseCard(builder.build()).content().getRank());
+        assertTrue(bot.hasZap(builder.build()));
     }
 
     @Test
