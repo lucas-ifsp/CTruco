@@ -339,6 +339,38 @@ class CaipirasBotTest {
         );
     }
 
+    public static Stream<Arguments> provideToCheckIfChoosedSpadilhaInFirstRound() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                )
+        );
+    }
+
     public static Stream<Arguments> provideToChooseWeakInFirstRound() {
         return Stream.of(
                 Arguments.of(
