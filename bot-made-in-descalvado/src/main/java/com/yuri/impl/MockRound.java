@@ -42,9 +42,21 @@ public class MockRound {
         private TrucoCard lastPlayedB;
         private int cardsGivenToA;
         private int cardsGivenToB;
+        private int scoreGivenToA = 0;
+        private int scoreGivenToB = 0;
 
         private Builder(TrucoCard vira) {
             this.vira = vira;
+        }
+
+        public Builder giveScoreA(int score) {
+            scoreGivenToA += score;
+            return this;
+        }
+
+        public Builder giveScoreB(int score) {
+            scoreGivenToB += score;
+            return this;
         }
 
         public Builder giveA(CardRank rank, CardSuit suit) {
@@ -141,9 +153,9 @@ public class MockRound {
                 )
                 .botInfo(
                     deckA,
-                    0
+                    scoreGivenToA
                 )
-                .opponentScore(0)
+                .opponentScore(scoreGivenToB)
                 .opponentCard(lastPlayedB)
                 .build();
         }
