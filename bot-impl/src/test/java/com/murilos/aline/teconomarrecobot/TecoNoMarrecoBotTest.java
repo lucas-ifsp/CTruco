@@ -331,6 +331,18 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se nao pede truco com mao media na segunda rodada")
+        void shouldNotRequestTrucoIfMiddleHandInSecondRound(){
+            hand = List.of(TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(ACE, CLUBS));
+            cardVira = TrucoCard.of(QUEEN, CLUBS);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 9).opponentScore(6);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
+
     }
 
     @Nested
