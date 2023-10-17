@@ -535,6 +535,22 @@ class SkolTableBotTest {
         assertEquals(TrucoCard.of(THREE, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
     }
 
+    @Test
+    @DisplayName("Should not raise if is bot eleven hand round")
+    void ShouldNotRiseIsBotElevenHandRound () {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+        List<TrucoCard> hand = List.of();
+        GameIntel.StepBuilder powerRank3HandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(hand, 11)
+                .opponentScore(0);
+
+        assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+    }
+
+
 
 
 
