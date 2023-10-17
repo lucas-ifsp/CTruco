@@ -27,7 +27,8 @@ public class TrucoMachineBot implements BotServiceProvider {
         TrucoCard greatestCard = getGreatestCard(cards, vira);
 
         if(intel.getOpponentCard().isPresent()){
-            CardToPlay.of(intel.getCards().get(0));
+            TrucoCard minimalGreaterCard = getMinimalGreaterCard(cards, vira, intel.getOpponentCard().get());
+            return CardToPlay.of(minimalGreaterCard);
         }
 
         return CardToPlay.of(greatestCard);
@@ -54,5 +55,20 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
 
         return greatestCard;
+    }
+
+    private TrucoCard getMinimalGreaterCard( List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+        TrucoCard minimalGreaterCard = null;
+
+        for (TrucoCard card : cards) {
+            int comparison = card.compareValueTo(opponentCard, vira);
+            if (comparison > 0) {
+                if (minimalGreaterCard == null || card.compareValueTo(minimalGreaterCard, vira) < 0) {
+                    minimalGreaterCard = card;
+                }
+            }
+        }
+
+        return minimalGreaterCard;
     }
 }
