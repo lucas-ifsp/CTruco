@@ -44,6 +44,42 @@ public class BotMadeInDescalvadoTest {
     // false -> quit
     // true  -> play
 
+    @Test
+    @DisplayName("getMaoDeOnzeResponse should return true when score is enough")
+    void getMaoDeOnzeResponse_ShouldReturnTrue_WhenScoreIsEnough() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveA(TWO, CLUBS)
+            .giveA(TWO, HEARTS)
+            .giveA(TWO, CLUBS)
+            .giveB(SIX, CLUBS)
+            .giveB(SIX, HEARTS)
+            .giveB(SIX, SPADES)
+            .build();
+
+        assertTrue(bot.getMaoDeOnzeResponse(intel));
+    }
+
+    @Test
+    @DisplayName("getMaoDeOnzeResponse should return false when score is low")
+    void getMaoDeOnzeResponse_ShouldReturnFalse_WhenScoreIsLow() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(FOUR, CLUBS)
+            .giveA(TWO, CLUBS)
+            .giveA(TWO, HEARTS)
+            .giveA(ACE, CLUBS)
+            .giveB(SIX, CLUBS)
+            .giveB(SIX, HEARTS)
+            .giveB(SIX, SPADES)
+            .build();
+
+        assertFalse(bot.getMaoDeOnzeResponse(intel));
+    }
+
     // boolean decideIfRaises(GameIntel intel)
     // Choose if bot starts a point raise request
     // false -> nothing
