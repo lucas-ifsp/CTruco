@@ -1,15 +1,10 @@
 package com.casal.impl.vapobot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
-import com.cremonezzi.impl.carlsenbot.Carlsen;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -802,9 +797,28 @@ class VapoBotTest {
         class FisrtRoundTest {
 
             @Nested
-            @DisplayName("if play fisrt")
+            @DisplayName("if play first")
             class PlayFirstTest {
 
+                @Test
+                @DisplayName("and has 2 manilhas")
+                void Has2Manilhas(){
+                    TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1);
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
+                }
             }
 
         }
