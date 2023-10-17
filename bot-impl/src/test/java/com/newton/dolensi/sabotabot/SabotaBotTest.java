@@ -176,7 +176,7 @@ public class SabotaBotTest {
     }
 
     @Nested
-    @DisplayName("Decide If Raises decideIfRaises")
+    @DisplayName("Decide If Raises")
     class DecideIfRaisesTests{
 
 
@@ -275,6 +275,27 @@ public class SabotaBotTest {
 
             assertThat(sut.decideIfRaises(intel)).isTrue();
 
+        }
+    }
+
+    @Nested
+    @DisplayName("Get Raise Response")
+    class GetRaiseResponseTests{
+
+
+        @Test
+        @DisplayName("should accept rise if has two manilhas card")
+        void shouldAcceptRiseIfHasTwoManilhasCard(){
+
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+
+            assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+            
         }
     }
 }
