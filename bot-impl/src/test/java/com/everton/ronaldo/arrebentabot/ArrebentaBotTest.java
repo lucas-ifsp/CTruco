@@ -606,6 +606,22 @@ class ArrebentaBotTest {
             assertEquals(arrebentaBot.getRaiseResponse(intel),1);
         }
 
+        @Test
+        @DisplayName("Should accept raise when in the last hand and opponent score over 8 but have two")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreOverEightButHaveTwo() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel),1);
+        }
+
 
     }
 
