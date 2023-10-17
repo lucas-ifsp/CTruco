@@ -52,6 +52,13 @@ public class CaipirasBot implements BotServiceProvider {
         return cardToPlay;
     }
 
+    public Boolean acceptRaiseByOpponentIfFirstRoundWon(GameIntel intel) {
+        if (checkExistenceCasalMaior(intel.getCards()) && checkExistenceManilhaAndStronger(intel.getCards(), intel.getVira())) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean playMaoDeOnzeCondition(GameIntel intel) {
         var count = 0;
         for (TrucoCard card : intel.getCards()) {

@@ -61,7 +61,7 @@ class CaipirasBotTest {
         when(intel.getCards()).thenReturn(cards);
         when(intel.getVira()).thenReturn(vira);
 
-        assertTrue(caipirasBot.acceptRaiseByOpponentIfFirstRoundWon());
+        assertTrue(caipirasBot.acceptRaiseByOpponentIfFirstRoundWon(intel));
     }
 
     @DisplayName("Testa se tem ouros na mão")
