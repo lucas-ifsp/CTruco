@@ -12,8 +12,6 @@ import java.util.List;
 ;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.CardRank.*;
-import static com.bueno.spi.model.CardSuit.*;
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
