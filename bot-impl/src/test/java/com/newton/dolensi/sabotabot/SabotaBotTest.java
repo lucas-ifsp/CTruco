@@ -295,7 +295,7 @@ public class SabotaBotTest {
             when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
 
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
-            
+
         }
     }
 }

@@ -86,6 +86,10 @@ public class SabotaBot implements BotServiceProvider {
         return -1;
     }
 
+
+
+    // funções gerais
+
     private CardToPlay getCardBeingFirstToPlay(GameIntel intel, List<TrucoCard> hand) {
         // se tiver ouro e carta forte, já sai com ele
         for (TrucoCard card : hand) {
