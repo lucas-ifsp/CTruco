@@ -28,12 +28,26 @@ public class CaipirasBot implements BotServiceProvider {
         if(checkExistenceSpadesManilha(intel.getCards(), intel.getVira())){
             return CardToPlay.of(chooseSpadesInFirstRound(intel.getCards(),intel.getVira()));
         }
-        return CardToPlay.of(intel.getCards().get(0));
+        return CardToPlay.of(tryToKillOpponentCard(intel));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    public TrucoCard tryToKillOpponentCard(GameIntel intel) {
+        TrucoCard cardToPlay = chooseWeakInFirstRound(intel.getCards(), intel.getVira());
+        if (checkEnemyIsFirstPLayer(intel.getOpponentCard())) {
+            for (TrucoCard card : intel.getCards()) {
+                if (card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) >= 0) {
+                    if (card.compareValueTo(cardToPlay, intel.getVira()) < 0) {
+                        cardToPlay = card;
+                    }
+                }
+            }
+        }
+        return cardToPlay;
     }
 
     public Boolean checkEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard){
