@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -323,4 +324,26 @@ public class BotTest {
 
         assertEquals(1, bot.getRaiseResponse(builder.build()));
     }
+
+    @Test
+    @DisplayName("Test if any card worst than a six")
+    void testTestIfTheValueOfTheCardIsWorstThanSix() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertTrue(bot.AnyCardsWithValueLowerThanSix(builder.build()));
+    }
+
+
 }
