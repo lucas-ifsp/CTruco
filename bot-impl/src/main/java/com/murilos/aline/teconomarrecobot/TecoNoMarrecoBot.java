@@ -118,7 +118,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if (manilhas > 0 && strongManilha(intel).relativeValue(intel.getVira()) >= 11) return 1;
 
         // desce que eu quero ver!
-        if (manilhas > 0 && hasHandOfThree(intel) > 1) return 0;
+        if (!intel.getRoundResults().isEmpty() && hasHandOfThree(intel) >= 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 0;
+        if (manilhas > 0 && hasHandOfThree(intel) >= 1) return 0;
         if (manilhas >= 1) return 0;
 
         // volta pro monte..
