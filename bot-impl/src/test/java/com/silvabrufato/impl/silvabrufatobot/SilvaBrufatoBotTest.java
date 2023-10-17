@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -734,6 +735,17 @@ public class SilvaBrufatoBotTest {
             void theReturnMustBeDifferentFromNull() {
                 when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
                 assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
+            }
+
+            @Test
+            @DisplayName("shouldReturnTrueIfBotHasCopas")
+            void shouldReturnTrueIfBotHasCopas() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
             }
         }
     }
