@@ -109,14 +109,7 @@ public class Bot implements BotServiceProvider {
         }
 
         if ( !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW) {
-            TrucoCard highestCard = cards.get(0);
-            for (TrucoCard card : cards) {
-                if (card.relativeValue(vira) > highestCard.relativeValue(vira)) {
-                    highestCard = card;
-                }
-            }
-
-            return CardToPlay.of(highestCard);
+            return CardToPlay.of(getHighestCard(cards, vira));
         }
 
         if ( intel.getOpponentCard().isPresent()) {
@@ -176,5 +169,16 @@ public class Bot implements BotServiceProvider {
         }
 
         return lowestCard;
+    }
+
+    public TrucoCard getHighestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard highestCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            if (card.relativeValue(vira) > highestCard.relativeValue(vira)) {
+                highestCard = card;
+            }
+        }
+
+        return highestCard;
     }
 }
