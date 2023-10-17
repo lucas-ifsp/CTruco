@@ -94,12 +94,7 @@ public class Bot implements BotServiceProvider {
         int numberOfManilhas = 0;
 
         if (intel.getHandPoints() >= 6) {
-            TrucoCard highest = cards.get(0);
-            for ( TrucoCard card : cards) {
-                if (card.relativeValue(vira) > highest.relativeValue(vira)) {
-                    highest = card;
-                }}
-            return CardToPlay.of(highest);
+            return CardToPlay.of(getHighestCard(cards, vira));
         }
 
         for ( TrucoCard card : cards) {
