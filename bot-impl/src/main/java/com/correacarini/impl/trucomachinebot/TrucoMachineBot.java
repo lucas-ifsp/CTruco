@@ -15,6 +15,9 @@ import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 public class TrucoMachineBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(intel.getOpponentScore()==11){
+            return true;
+        }
         return false;
     }
 
