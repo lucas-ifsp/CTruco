@@ -17,17 +17,22 @@ public final class VeioDoBarBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         var vira = intel.getVira();
         var cards = intel.getCards();
-        var param = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        var paramCardThree = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        var paramCardTwo = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
         var cardsThree = intel.getCards().stream()
-                .filter(card -> card.compareValueTo(param, vira) >= 0)
+                .filter(card -> card.compareValueTo(paramCardThree, vira) >= 0)
+                .toList();
+
+        var usableCards = intel.getCards().stream()
+                .filter(card -> card.compareValueTo(paramCardTwo, vira) >= 0)
                 .toList();
 
         if(hasCasalMaior(vira, cards)){
             return true;
         }
 
-        if (cardsThree.size() == 3){
+        if (cardsThree.size() == 3 || usableCards.size() >= 2){
             return true;
         }
 

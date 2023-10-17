@@ -207,4 +207,16 @@ class VeioDoBarBotTest {
 
     }
 
+    @Test
+    @DisplayName("Should raise points if has one manilha and one card equal or greater than two")
+    void shouldRaisePointsIfHasOneManilhaAndOneCardEqualOrGreaterThanTwo() {
+        var intel = make().cardsToBe(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .finish();
+
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
 }
