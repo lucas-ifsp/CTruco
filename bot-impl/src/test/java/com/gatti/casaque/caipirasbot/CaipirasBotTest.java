@@ -164,6 +164,18 @@ class CaipirasBotTest {
         assertThat(caipirasBot.checkEnemyIsFirstPLayer(enemyCard).equals(validate));
     }
 
+    @DisplayName("Testa se tem zap seco")
+    @ParameterizedTest
+    @MethodSource(value = "provideToCheckOnlyZap")
+    void testCheckOnlyZap(List<TrucoCard> cards, TrucoCard vira, Boolean validate){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getCards()).thenReturn(cards);
+        when(intel.getVira()).thenReturn(vira);
+
+        assertThat(caipirasBot.checkOnlyZap(cards, vira).isEqualsTo(validate));
+    }
+
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
                 Arguments.of(
@@ -422,6 +434,38 @@ class CaipirasBotTest {
                 ),
                 Arguments.of(
                         Optional.empty(),
+                        false
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToCheckOnlyZap() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        true
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        false
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         false
                 )
         );
