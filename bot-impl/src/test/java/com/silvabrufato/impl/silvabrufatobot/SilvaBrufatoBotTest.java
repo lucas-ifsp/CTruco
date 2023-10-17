@@ -722,89 +722,100 @@ public class SilvaBrufatoBotTest {
                 }
             }
         }
-    }
 
-    @Nested
-    @DisplayName("Second round")
-    class SecondRound{
         @Nested
-        @DisplayName("if the opponent starts")
-        class ifTheOpponentStarts{
-            @Test
-            @DisplayName("theReturnMustBeDifferentFromNull")
-            void theReturnMustBeDifferentFromNull() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
-                assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
+        @DisplayName("Second round")
+        class SecondRound{
+            @Nested
+            @DisplayName("if the opponent starts")
+            class ifTheOpponentStarts{
+                @Test
+                @DisplayName("theReturnMustBeDifferentFromNull")
+                void theReturnMustBeDifferentFromNull() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                    assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfBotHasCopas")
+                void shouldReturnTrueIfBotHasCopas() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfBotHasTwoManilhas")
+                void shouldReturnTrueIfBotHasTwoManilhas() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
             }
 
-            @Test
-            @DisplayName("shouldReturnTrueIfBotHasCopas")
-            void shouldReturnTrueIfBotHasCopas() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-            }
+            @Nested
+            @DisplayName("if the SilvaBrufatoBot starts")
+            class ifTheSilvaBrufatoBotStarts{
+                @Test
+                @DisplayName("shouldReturnTrueIfBotHasZap")
+                void shouldReturnTrueIfBotHasZap() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
 
-            @Test
-            @DisplayName("shouldReturnTrueIfBotHasTwoManilhas")
-            void shouldReturnTrueIfBotHasTwoManilhas() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                @Test
+                @DisplayName("shouldReturnTrueIfBotHasCopas")
+                void shouldReturnTrueIfBotHasCopas() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfBotHasSpades")
+                void shouldReturnTrueIfBotHasSpades() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
+
+                @Test
+                @DisplayName("shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce")
+                void shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                    assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+                }
             }
         }
 
         @Nested
-        @DisplayName("if the SilvaBrufatoBot starts")
-        class ifTheSilvaBrufatoBotStarts{
+        @DisplayName("Third round")
+        class ThirdRound{
             @Test
-            @DisplayName("shouldReturnTrueIfBotHasZap")
-            void shouldReturnTrueIfBotHasZap() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-            }
-
-            @Test
-            @DisplayName("shouldReturnTrueIfBotHasCopas")
-            void shouldReturnTrueIfBotHasCopas() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-            }
-
-            @Test
-            @DisplayName("shouldReturnTrueIfBotHasSpades")
-            void shouldReturnTrueIfBotHasSpades() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-            }
-
-            @Test
-            @DisplayName("shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce")
-            void shouldReturnTrueIfHasTwoCardsGreaterThanOrEqualToTheAce() {
-                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
-                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            @DisplayName("theReturnMustBeDifferentFromNull")
+            void theReturnMustBeDifferentFromNull() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
+                assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
             }
         }
     }
