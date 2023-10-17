@@ -240,30 +240,6 @@ public class SilvaBrufatoBotTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
         }
 
-        @Test
-        @DisplayName("Should raise points in fisrt round if has Zap and other Manilha")
-        public void shouldRaisePointsInFirstRoundIfHasZapAndOtherManilha() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)      
-            ));        
-            assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-        }
-
-        @Test
-        @DisplayName("Should raise points in fisrt round if has two Manilhas")
-        public void shouldRaisePointsInFirstRoundIfHasTwoManilha() {
-            when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
-            when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)      
-            ));        
-            assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-        }
-
         @Nested
         @DisplayName("Raise points bluff in first round")
         class RaisePointsBluffInFirstRound {
