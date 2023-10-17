@@ -173,7 +173,7 @@ class CaipirasBotTest {
         when(intel.getCards()).thenReturn(cards);
         when(intel.getVira()).thenReturn(vira);
 
-        assertThat(caipirasBot.checkOnlyZap(cards, vira).isEqualsTo(validate));
+        assertThat(caipirasBot.checkOnlyZap(cards, vira).equals(validate));
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
