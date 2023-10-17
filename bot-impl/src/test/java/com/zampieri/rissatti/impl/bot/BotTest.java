@@ -284,4 +284,24 @@ public class BotTest {
 
         assertEquals(CardRank.THREE, bot.chooseCard(builder.build()).content().getRank());
     }
+
+    @Test
+    @DisplayName("Raises if has casal")
+    void testRaisesIfHasCasal() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(1, bot.getRaiseResponse(builder.build()));
+    }
 }
