@@ -45,6 +45,19 @@ public class CafeConLecheBot implements BotServiceProvider {
         return true;
 
     }
+
+    private boolean hasStrongCards(GameIntel intel){
+        int counter=
+                howManyEquals(intel,CardRank.THREE )+
+                        howManyEquals(intel,CardRank.TWO)+
+                        howManyEquals(intel,CardRank.ACE)+
+                        howManyEquals(intel,intel.getVira().getRank());
+        if(counter>=2){
+            return true;
+        }
+        return false;
+    }
+
     private int howManyEquals(GameIntel intel, CardRank rank){
         return (int )intel.getCards().stream().filter(card -> card.getRank().equals(rank)).count();
     }
