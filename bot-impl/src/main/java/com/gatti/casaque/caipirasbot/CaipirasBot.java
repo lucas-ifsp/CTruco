@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CaipirasBot implements BotServiceProvider {
     @Override
@@ -33,6 +34,10 @@ public class CaipirasBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    public Boolean checkEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard){
+        return enemyCard.isPresent();
     }
 
     public boolean checkExistenceDiamondManilha(List<TrucoCard> cards, TrucoCard vira) {

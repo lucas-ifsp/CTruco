@@ -156,12 +156,12 @@ class CaipirasBotTest {
     @DisplayName("Testa se o adversário é o primeiro jogador")
     @ParameterizedTest
     @MethodSource(value = "provideToCheckFirstPLayer")
-    void testCheckEnemyIsFirstPLayer(TrucoCard enemyCard, Boolean validate){
+    void testCheckEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard, Boolean validate){
         GameIntel intel = mock(GameIntel.class);
 
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(enemyCard));
+        when(intel.getOpponentCard()).thenReturn(enemyCard);
 
-        assertThat(caipirasBot.checkEnemyIsFirstPLayer(enemyCard).isEqual(validate));
+        assertThat(caipirasBot.checkEnemyIsFirstPLayer(enemyCard).equals(validate));
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
@@ -417,7 +417,7 @@ class CaipirasBotTest {
     public static Stream<Arguments> provideToCheckFirstPLayer() {
         return Stream.of(
                 Arguments.of(
-                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        Optional.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)),
                         true
                 ),
                 Arguments.of(
