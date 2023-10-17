@@ -69,6 +69,18 @@ public class TrucoGuruUtils {
         return hasCasalMenor;
     }
 
+    static Boolean hasDoubleManilhas(List<TrucoCard> cards, TrucoCard vira){
+        int numberOfManilhas = 0;
+        for (TrucoCard card : cards) {
+            if (card.isZap(vira)) numberOfManilhas += 1;
+            if (card.isCopas(vira)) numberOfManilhas += 1;
+            if (card.isEspadilha(vira)) numberOfManilhas += 1;
+            if (card.isOuros(vira)) numberOfManilhas += 1;
+        }
+        Boolean hasDoubleManilhas = numberOfManilhas > 1;
+        return hasDoubleManilhas;
+    }
+
     static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard strongestCard = cards.get(0);
         for (TrucoCard card : cards) {
