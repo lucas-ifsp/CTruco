@@ -788,6 +788,13 @@ class VapoBotTest {
     }
 
     @Nested
+    @DisplayName("Counts how many cards have a relative value greater than")
+    class numberOfCardsThatHasARelativeValueGreaterThanTest {
+
+
+    }
+
+    @Nested
     @DisplayName("Get the highest card that is not a manilha")
     class GetTheHighestCardThatIsNotAManilha {
 
@@ -924,6 +931,25 @@ class VapoBotTest {
                             .botInfo(myCards, 1)
                             .opponentScore(1);
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
+                }
+                @Test
+                @DisplayName("and has one manilha and weak cards")
+                void HasOneManilhaWitWeakCards(){
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS   )
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1);
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)), vapoBot.chooseCard(stepBuilder.build()));
                 }
             }
         }
