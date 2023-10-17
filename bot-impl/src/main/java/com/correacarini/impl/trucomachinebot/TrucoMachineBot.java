@@ -17,6 +17,9 @@ public class TrucoMachineBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+
+        if(hasZapAndManilha(intel)) return true;
+
         return false;
     }
 
@@ -92,5 +95,21 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
 
         return lowestCard;
+    }
+
+    private boolean hasZapAndManilha(GameIntel intel) {
+        boolean zap = false;
+        int manilhas = 0;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira())) {
+                zap = true;
+            }
+            if (card.isOuros(intel.getVira()) || card.isEspadilha(intel.getVira()) || card.isCopas(intel.getVira())) {
+                manilhas += 1;
+            }
+        }
+
+        return zap && manilhas >= 1;
     }
 }
