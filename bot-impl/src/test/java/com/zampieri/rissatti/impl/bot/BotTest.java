@@ -146,6 +146,24 @@ public class BotTest {
     }
 
 
+    @Test
+    @DisplayName("If has manilha but don`t use in first round")
+    void testIfHasManilhaButDontUseInFirstRound() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard oponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(oponentCard);
+
+        assertEquals(CardRank.KING, bot.chooseCard(builder.build()).content().getRank());
+    }
 
 }
