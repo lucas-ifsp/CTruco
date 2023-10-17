@@ -112,14 +112,7 @@ public class Bot implements BotServiceProvider {
            TrucoCard opponentCard = intel.getOpponentCard().get();
 
            if (opponentCard.getRank().equals(CardRank.HIDDEN)) {
-               TrucoCard lowestCard = cards.get(0);
-               for (TrucoCard trucoCard : cards) {
-                   if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
-                       lowestCard = trucoCard;
-                   }
-               }
-
-               return CardToPlay.of(lowestCard);
+               return CardToPlay.of(getLowestCard(cards,vira));
            }
            if ( opponentCard.isManilha(vira) && numberOfManilhas >= 1) {
                for (TrucoCard trucoCard : cards) {
@@ -184,5 +177,16 @@ public class Bot implements BotServiceProvider {
         }
 
         return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    public TrucoCard getLowestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard lowestCard = cards.get(0);
+        for (TrucoCard trucoCard : cards) {
+            if (trucoCard.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+                lowestCard = trucoCard;
+            }
+        }
+
+        return lowestCard;
     }
 }
