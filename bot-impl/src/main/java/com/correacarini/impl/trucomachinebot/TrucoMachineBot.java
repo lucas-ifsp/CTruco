@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.THREE;
+import static com.bueno.spi.model.CardRank.TWO;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class TrucoMachineBot implements BotServiceProvider {
     @Override
@@ -22,8 +24,12 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         if(hasZapAndManilha(intel)) return true;
 
-        if(intel.getScore() - intel.getOpponentScore() > 3 && hasManilhaAndThree(intel)) return true;
-
+        if(intel.getScore() - intel.getOpponentScore() > 3) {
+            if(hasManilhaAndThree(intel))  return true;
+            if(intel.getRoundResults().get(0).equals(WON)){
+                if(hasManilhaAndTwo(intel)) return true;
+            }
+        }
         return false;
     }
 
@@ -131,5 +137,20 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
 
         return hasThree && manilhas >= 1;
+    }
+
+    private boolean hasManilhaAndTwo(GameIntel intel) {
+        int manilhas = 0;
+        boolean hasTwo = false;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().equals(TWO)) {
+                hasTwo = true;
+            }
+            if (card.isOuros(intel.getVira()) || card.isEspadilha(intel.getVira()) || card.isCopas(intel.getVira()) || card.isZap(intel.getVira())) {
+                manilhas += 1;
+            }
+        }
+        return hasTwo && manilhas >= 1;
     }
 }
