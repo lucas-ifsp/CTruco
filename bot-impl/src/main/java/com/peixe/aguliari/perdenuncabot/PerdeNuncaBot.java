@@ -113,10 +113,7 @@ public class PerdeNuncaBot implements BotServiceProvider {
         boolean hasManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
 
         // Checks if the player has a card with a high value.
-        Optional<TrucoCard> highRankCard = cards.stream()
-                .filter(card -> !card.isManilha(vira))
-                .filter(card -> card.getRank().value() > 4)
-                .findFirst();
+        Optional<TrucoCard> highRankCard = cards.stream().filter(card -> !card.isManilha(vira)).filter(card -> card.getRank().value() > 4).findFirst();
 
         // Returns true if the player has a shackle and a card with a high value.
         return hasManilha && highRankCard.isPresent();
@@ -130,9 +127,7 @@ public class PerdeNuncaBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         // Calculates the value of the hand.
-        int handValue = cards.stream()
-                .mapToInt(card -> card.relativeValue(vira))
-                .sum();
+        int handValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
 
         // Returns true if the hand value is greater than or equal to 18.
         return handValue >= 18;
@@ -146,10 +141,7 @@ public class PerdeNuncaBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         // Returns the value of the highest card.
-        return cards.stream()
-                .mapToInt(card -> card.relativeValue(vira))
-                .max()
-                .orElse(0);
+        return cards.stream().mapToInt(card -> card.relativeValue(vira)).max().orElse(0);
     }
 
     @Override
@@ -183,15 +175,11 @@ public class PerdeNuncaBot implements BotServiceProvider {
     // This method gets the lowest attack card in the player's hand.
     private static TrucoCard getLowestAttackCard(GameIntel intel) {
         // Get a list of all attack cards in the player's hand.
-        List<TrucoCard> attackCards = intel.getCards().stream()
-                .filter(card -> offCards.contains(card.getRank()))
-                .toList();
+        List<TrucoCard> attackCards = intel.getCards().stream().filter(card -> offCards.contains(card.getRank())).toList();
 
         // If the player has at least two attack cards, return the lowest attack card.
         if (attackCards.size() >= 2) {
-            return attackCards.stream()
-                    .min(TrucoCard::relativeValue)
-                    .get();
+            return attackCards.stream().min(TrucoCard::relativeValue).get();
         }
 
         // If the player has no attack cards, return null.
@@ -247,5 +235,9 @@ public class PerdeNuncaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    private boolean getManilha(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(intel.getVira()));
     }
 }
