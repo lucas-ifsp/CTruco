@@ -313,7 +313,7 @@ class CaipirasBotTest {
                         List.of(
                                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
                                 TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
                         ),
                         TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         true
@@ -321,11 +321,11 @@ class CaipirasBotTest {
                 Arguments.of(
                         List.of(
                                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
                         ),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
-                        false
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                        true
                 ),
                 Arguments.of(
                         List.of(
@@ -334,7 +334,7 @@ class CaipirasBotTest {
                                 TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
                         ),
                         TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                        true
+                        false
                 )
         );
     }
