@@ -165,4 +165,24 @@ public class BotTest {
         assertEquals(CardRank.KING, bot.chooseCard(builder.build()).content().getRank());
     }
 
+    @Test
+    @DisplayName("If round drew, play the highest card")
+    void testIfRoundDrewPlayTheHighestCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard oponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(oponentCard);
+
+        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+    }
+
 }

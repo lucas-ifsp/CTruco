@@ -58,6 +58,17 @@ public class Bot implements BotServiceProvider {
             }
         }
 
+        if ( !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW) {
+            TrucoCard highestCard = cards.get(0);
+            for (TrucoCard trucoCard : cards) {
+                if (trucoCard.relativeValue(vira) > highestCard.relativeValue(vira)) {
+                    highestCard = trucoCard;
+                }
+            }
+
+            return CardToPlay.of(highestCard);
+        }
+
         if ( intel.getOpponentCard().isPresent()) {
            TrucoCard opponentCard = intel.getOpponentCard().get();
 
