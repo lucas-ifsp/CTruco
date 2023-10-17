@@ -15,7 +15,13 @@ public class ArrebentaBot implements BotServiceProvider {
         var vira = intel.getVira();
         int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
 
+        if ( intel.getOpponentScore() >= 9){
+            if(cardsValue >= 22) { return true; }
+
+            return false;
+        }
         if((cardsValue < 15) && (intel.getOpponentScore() < 11)){
+
             return false;
         }
 

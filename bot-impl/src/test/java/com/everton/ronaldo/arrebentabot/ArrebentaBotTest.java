@@ -210,8 +210,26 @@ class ArrebentaBotTest {
                     .opponentScore(11);
             assertTrue(arrebentaBot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
-    }
+        @Test
+        @DisplayName("Should not accept mao de onze when oppponent has nine or more points and has weak cards")
+        void ShouldNotAcceptMaoDeOnzeWhenOppponentHasNineOrMorePointsAndHasWeakCards() {
+            GameIntel intel = mock(GameIntel.class);
 
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertFalse(arrebentaBot.getMaoDeOnzeResponse(intel));
+
+        }
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
     @Nested
     class getRaiseResponse {
         List<TrucoCard> openCards = Collections.singletonList(
@@ -327,6 +345,8 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
+
 
         @Test
         @DisplayName("Should accept raise when lost first hand but has Seven of Clubs")
@@ -679,7 +699,5 @@ class ArrebentaBotTest {
 
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
         }
-
-
     }
 }
