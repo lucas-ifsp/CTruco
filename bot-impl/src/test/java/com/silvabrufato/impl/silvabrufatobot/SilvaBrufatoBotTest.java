@@ -817,6 +817,16 @@ public class SilvaBrufatoBotTest {
                 when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
                 assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
             }
+
+            @Test
+            @DisplayName("shouldReturnTrueIfBotHasSpades")
+            void shouldReturnTrueIfBotHasSpades() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST, RoundResult.WON));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            }
         }
     }
 }
