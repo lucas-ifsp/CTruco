@@ -38,17 +38,13 @@ public final class VeioDoBarBot implements BotServiceProvider {
                 .filter(card -> card.compareValueTo(paramCardTwo, vira) >= 0)
                 .toList();
 
-        if(hasCasalMaior(vira, cards)){
-            return true;
-        }
+        if(botScore + 6 > opponentScore && botScore + 6 < 9){return true;}
 
-        if (cardsThree.size() == 3 || usableCards.size() >= 2){
-            return true;
-        }
+        if ( botScore + 9 == botScore + 9){return false;}
 
-        if(botScore + 6 > opponentScore && botScore + 6 < 9){
-            return true;
-        }
+        if(hasCasalMaior(vira, cards)){return true;}
+
+        if (cardsThree.size() == 3 || usableCards.size() >= 2){return true;}
 
         return false;
     }
@@ -71,6 +67,7 @@ public final class VeioDoBarBot implements BotServiceProvider {
                 .min((current, next) -> current.compareValueTo(next, vira))
                 .map(CardToPlay::of)
                 .orElse(isFirstRound(intel) ? CardToPlay.of(handSmallestCard) : CardToPlay.discard(handSmallestCard));
+
     }
 
     private List<TrucoCard> sortedCards(GameIntel intel) {

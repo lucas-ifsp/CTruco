@@ -245,4 +245,20 @@ class VeioDoBarBotTest {
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
 
+    @Test
+    @DisplayName("Shouldn't raise point if score of both bots is equals to nine")
+    void shouldnTRaisePointIfScoreOfBothBotsIsEqualsToNine() {
+        var intel = make()
+                .scoreToBe(9)
+                .scoreOponentToBe(9)
+                .cardsToBe(
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .finish();
+
+        assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
 }
