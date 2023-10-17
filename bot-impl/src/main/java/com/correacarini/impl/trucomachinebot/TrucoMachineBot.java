@@ -26,7 +26,7 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         if(intel.getScore() - intel.getOpponentScore() > 3) {
             if(hasManilhaAndThree(intel))  return true;
-            if(intel.getRoundResults().get(0).equals(WON)){
+            if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(WON)){
                 if(hasManilhaAndTwo(intel)) return true;
             }
         }
