@@ -205,4 +205,24 @@ public class BotTest {
         assertTrue(bot.decideIfRaises(builder.build()));
     }
 
+    @Test
+    @DisplayName("Decide if raises when opponent has 9 points or higher")
+    void testDecidesIfRaisesWhenOpponentHas9PointsOrHigher() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(9)
+                .opponentCard(opponentCard);
+
+        assertFalse(bot.decideIfRaises(builder.build()));
+    }
+
 }
