@@ -320,7 +320,7 @@ public class TrucoGuruTest {
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                     .botInfo(botCards, 11)
                     .opponentScore(9)
-                            .build();
+                    .build();
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
         }
