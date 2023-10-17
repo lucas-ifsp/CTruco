@@ -140,4 +140,21 @@ public class TrucoMachineBotTest {
         boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raises);
     }
+    @Test
+    @DisplayName("Should raise when has manilha and 3 and score difference is greater than 3")
+    void ShouldRaiseWhenHasManilhaAnd3AndScoreDifferenceIsGreaterThan3() {
+        TrucoCard vira = TrucoCard.of(FIVE, SPADES);
+        List<TrucoCard> card = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(THREE, CLUBS)
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(card, 4)
+                .opponentScore(0);
+
+        boolean decideIfRaises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(decideIfRaises);
+    }
 }
