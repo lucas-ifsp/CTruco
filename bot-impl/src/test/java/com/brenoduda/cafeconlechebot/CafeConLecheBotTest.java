@@ -298,6 +298,25 @@ public class CafeConLecheBotTest {
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
             assertThat(raiseResponse).isEqualTo(1);
         }
+
+        @Test
+        @DisplayName("Should raise when has 2 theree and hearts")
+        void shouldRaiseWhenHas2ThreeAndHearts() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(THREE, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(1);
+        }
     }
 
 
