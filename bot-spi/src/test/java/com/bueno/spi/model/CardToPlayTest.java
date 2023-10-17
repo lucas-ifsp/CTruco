@@ -79,4 +79,25 @@ class CardToPlayTest {
         assertThrows(NullPointerException.class, () -> CardToPlay.discard(null));
     }
 
+    @Test
+    @DisplayName("Should CardToPlay objects be equal if bot content and side are equals")
+    void shouldCardToPlayObjectsBeEqualIfBotContentAndSideAreEquals() {
+        final TrucoCard card = TrucoCard.of(TWO, HEARTS);
+        assertEquals(CardToPlay.of(card), CardToPlay.of(card));
+    }
+
+    @Test
+    @DisplayName("Should CardToPlay objects not be equals if one is open and the other is discarded")
+    void shouldCardToPlayObjectsNotBeEqualsIfOneIsOpenAndTheOtherIsDiscarded() {
+        final TrucoCard card = TrucoCard.of(TWO, HEARTS);
+        assertNotEquals(CardToPlay.of(card), CardToPlay.discard(card));
+    }
+
+    @Test
+    @DisplayName("Should CardToPlay objects not be equals if one they hold different TrucoCard objects")
+    void shouldCardToPlayObjectsNotBeEqualsIfTheyHoldDifferentTrucoCardObjects() {
+        final TrucoCard card1 = TrucoCard.of(TWO, HEARTS);
+        final TrucoCard card2 = TrucoCard.of(TWO, CLUBS);
+        assertNotEquals(CardToPlay.of(card1), CardToPlay.discard(card2));
+    }
 }
