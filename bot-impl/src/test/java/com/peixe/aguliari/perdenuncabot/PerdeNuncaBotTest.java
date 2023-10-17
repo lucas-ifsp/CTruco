@@ -831,7 +831,6 @@ public class PerdeNuncaBotTest {
         assertThat(perdeNuncaBot.getRaiseResponse(stepBuilder.build())).isEqualTo(1);
     }
 
-
     @Test
     @DisplayName("Raise response if has zap")
     public void raiseResponseIfHasZap() {
@@ -847,6 +846,25 @@ public class PerdeNuncaBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 2)
                 .opponentScore(6);
+
+        assertThat(perdeNuncaBot.getRaiseResponse(stepBuilder.build())).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Raise response if has zap and opponent score is higher than 9")
+    public void raiseResponseIfHasZapAndOpponentScoreIsHigherThan9() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 2)
+                .opponentScore(11);
 
         assertThat(perdeNuncaBot.getRaiseResponse(stepBuilder.build())).isEqualTo(1);
     }
