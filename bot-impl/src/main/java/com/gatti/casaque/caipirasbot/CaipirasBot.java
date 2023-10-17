@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CaipirasBot implements BotServiceProvider {
     @Override
@@ -33,6 +34,23 @@ public class CaipirasBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    public Boolean checkEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard){
+        return enemyCard.isPresent();
+    }
+
+    public Boolean checkOnlyZap(List<TrucoCard> cards, TrucoCard vira){
+        var count = 0;
+        for (TrucoCard card : cards) {
+            if (card.isZap(vira)) {
+                count++;
+            }
+            if(card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), vira) > 0){
+                count++;
+            }
+        }
+        return count <= 1;
     }
 
     public boolean checkExistenceDiamondManilha(List<TrucoCard> cards, TrucoCard vira) {
