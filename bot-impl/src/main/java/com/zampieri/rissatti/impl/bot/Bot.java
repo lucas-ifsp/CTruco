@@ -187,4 +187,8 @@ public class Bot implements BotServiceProvider {
     public boolean AnyCardsWithValueLowerThanSix(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 6);
     }
+
+    public Integer CountManilhas(GameIntel intel){
+        return 3;
+    }
 }
