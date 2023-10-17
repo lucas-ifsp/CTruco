@@ -1041,7 +1041,7 @@ class VapoBotTest {
                 }
 
                 @Test
-                @DisplayName("and has one manilha and weak cards")
+                @DisplayName("and has no manilhas and strong cards")
                 void HasStrongCardsAndNoManilhas() {
                     TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
