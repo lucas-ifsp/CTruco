@@ -325,5 +325,27 @@ public class TrucoGuruTest {
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
         }
 
+        @Test
+        @DisplayName("Should accept mao de onze if has casal menor")
+        public void shouldAcceptMaoDeOnzeIfHasCasalMenor(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(9)
+                    .build();
+
+            assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
     }
 }
