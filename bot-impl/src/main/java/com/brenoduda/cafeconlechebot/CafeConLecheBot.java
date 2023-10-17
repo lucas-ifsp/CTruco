@@ -25,6 +25,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class CafeConLecheBot implements BotServiceProvider {
@@ -106,6 +107,13 @@ public class CafeConLecheBot implements BotServiceProvider {
             return CardToPlay.of(botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).findFirst().get());
         }
 
+        if(intel.getOpponentCard().isPresent()) {
+            Optional<TrucoCard> cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+            if(cardToPlay.isPresent()) {
+                return CardToPlay.of(cardToPlay.get());
+            }
+        }
+
         return null;
     }
 
@@ -117,6 +125,22 @@ public class CafeConLecheBot implements BotServiceProvider {
         if(botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 1 &&
                 botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() == 0) {
             return -1;
+        }
+
+        if(botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+            return -1;
+        }
+
+        if(!botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty() &&
+                !intel.getRoundResults().isEmpty()) {
+            if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON)) {
+                return 1;
+            }
+        }
+
+        if(botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() == 1 &&
+                botCards.stream().filter(card -> card.getSuit().equals(CardSuit.CLUBS)).toList().size() == 1) {
+            return 1;
         }
 
         return 0;

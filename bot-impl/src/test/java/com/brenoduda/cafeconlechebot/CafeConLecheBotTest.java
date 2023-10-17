@@ -34,6 +34,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -197,6 +198,26 @@ public class CafeConLecheBotTest {
             CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
             assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, DIAMONDS));
         }
+
+        @Test
+        @DisplayName("Should drew when has equal card")
+        void shouldDrewWhenHasEqualCard() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(JACK, DIAMONDS)), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(JACK, DIAMONDS));
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(JACK, HEARTS));
+        }
     }
 
     @Nested
@@ -219,6 +240,63 @@ public class CafeConLecheBotTest {
 
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
             assertThat(raiseResponse).isEqualTo(-1);
+        }
+
+        @Test
+        @DisplayName("Should reject when not has manilha")
+        void shouldRejectWhenNotHasManilha() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(FIVE, SPADES),
+                    TrucoCard.of(JACK, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(-1);
+        }
+
+        @Test
+        @DisplayName("Should raise when has manilha and get first round")
+        void shouldRaiseWhenHasManilhaAndGetFirstRound() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(JACK, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(WON), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("Should raise when has clubs and three")
+        void shouldRaiseWhenHasClubsAndThree() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(JACK, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(1);
         }
     }
 
