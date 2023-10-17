@@ -434,7 +434,7 @@ class TecoNoMarrecoBotTest {
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,HEARTS));
         }
         @Test
-        @DisplayName("Testa jogar carta menor se tiver casal maior")
+        @DisplayName("Testa jogar carta menor na primeira rodada se tiver casal maior")
         void playingSmallerCardIfYouHaveBiggerCouple() {
             hand = List.of( TrucoCard.of(THREE, HEARTS),TrucoCard.of(KING, CLUBS), TrucoCard.of(KING, HEARTS));
             cardVira = TrucoCard.of(JACK, SPADES);
@@ -443,6 +443,17 @@ class TecoNoMarrecoBotTest {
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,HEARTS));
+        }
+        @Test
+        @DisplayName("Testa jogar carta mais forte se tiver casal maior")
+        void playStrongerCardsIfHaveBiggerCouple() {
+            hand = List.of(TrucoCard.of(KING, CLUBS), TrucoCard.of(KING, HEARTS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(KING,CLUBS));
         }
     }
 
