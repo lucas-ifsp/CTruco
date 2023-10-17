@@ -94,27 +94,39 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
             if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
                 return CardToPlay.of(strongManilha(intel));
             }
+            //se tiver casal maior joga nada na primeira
+            if (hasCasalMaior(intel) && intel.getRoundResults().isEmpty()){
+                return CardToPlay.of(weakestCard(intel));
+            }
         }
         // joga a carta mais forte da mão
         return CardToPlay.of(strongCard(intel));
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {return 0;}
+    public int getRaiseResponse(GameIntel intel) {
+
+        Integer manilhas =  manilhaCount(intel.getCards(),intel.getVira());
+
+        // seis rato!
+        if (hasCasalMaior(intel))return 1;
+
+        // desce que eu quero ver!
+        if (manilhas > 1) return 0;
+        return -1;
+    }
 
     private boolean hasCasalMaior(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
         int contador = 0;
         for(TrucoCard card : intel.getCards()){
             if(card.isZap(cardVira) || card.isCopas(cardVira)){
-                contador =+ 1;
+                contador ++;
             }
         }
         if(contador == 2){
             return true;
         }
-
         return false;
     }
 
@@ -167,10 +179,18 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         Integer menor = Integer.MAX_VALUE;;
         TrucoCard cardPlay = null;
+
         for (TrucoCard card : intel.getCards()) {
-            if (card.getRank().value() < menor) {
-                menor = card.getRank().value();
-                cardPlay = card;
+            if (card.isManilha(intel.getVira()) ){
+                if (card.relativeValue(intel.getVira()) < menor){
+                    menor = card.relativeValue(intel.getVira());
+                    cardPlay = card;
+                }
+            }else {
+                if (card.getRank().value() < menor) {
+                    menor = card.getRank().value();
+                    cardPlay = card;
+                }
             }
         }
         return cardPlay;
