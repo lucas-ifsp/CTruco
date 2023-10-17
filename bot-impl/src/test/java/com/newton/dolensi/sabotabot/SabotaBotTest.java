@@ -116,6 +116,17 @@ public class SabotaBotTest {
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
                     assertEquals(cards.get(2), sut.chooseCard(intel).content());
                 }
+
+                @Test
+                @DisplayName("Should draw and keep a manilha next if it has it")
+                void shouldDrawAndKeepAManilhaIfItHasIt(){
+                    var cards = IntelMock.cardListAD7CKH();
+                    when(intel.getCards()).thenReturn(cards);
+                    when(intel.getVira()).thenReturn(IntelMock.vira6C());
+
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+                    assertEquals(cards.get(2), sut.chooseCard(intel).content());
+                }
             }
 
         }

@@ -77,9 +77,17 @@ public class SabotaBot implements BotServiceProvider {
         } else if (opponentHasStrongCard(intel, opponentCard.get())) {
             // se o oponente jogar carta forte, joga a menor
             return CardToPlay.of(getWeakestCard(intel, hand));
+        } else if (opponentHasTheSameCard(intel, opponentCard.get())){
+            // se tiver uma igual e manilha, amarra pra jogar ela depois
+            for (TrucoCard card : hand) {
+                if (card.compareValueTo(opponentCard.get(), intel.getVira()) == 0
+                && !getManilhasCard(intel).isEmpty())
+                    return CardToPlay.of(card);
+            }
         } else {
             return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
         }
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override

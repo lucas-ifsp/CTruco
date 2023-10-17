@@ -39,6 +39,10 @@ public class IntelMock {
         return TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
     }
 
+    public static TrucoCard vira6C() {
+        return TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+    }
+
     public static TrucoCard viraKC() {
 
         return TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
