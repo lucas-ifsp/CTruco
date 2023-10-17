@@ -812,7 +812,7 @@ class VapoBotTest {
             assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
         }
         @Test
-        @DisplayName("choose AC on KC, 2H and 7D with 6H as vira")
+        @DisplayName("choose AC on JC, JH and AC with QD as vira")
         void getACAsHighestNotManilhaCard() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
@@ -830,6 +830,27 @@ class VapoBotTest {
                     .opponentScore(1);
 
             assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
+        }
+        @Test
+        @DisplayName("return Optional.empty() when all the cards are manilha")
+        void shouldReturnOptionalEmpty() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            System.out.println(vapoBot.getAmountOfManilhas(stepBuilder.build()));
+            assertEquals(Optional.empty(), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()));
         }
     }
 
