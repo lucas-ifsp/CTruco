@@ -352,7 +352,7 @@ public class BotTest {
 
         List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
 
-        List<TrucoCard> openCards = Collections.emptyList();
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 

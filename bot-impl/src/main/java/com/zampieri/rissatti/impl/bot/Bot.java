@@ -77,7 +77,10 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return hasZap(intel);
+        if(hasZap(intel)) return !AnyCardsWithValueLowerThanSix(intel);
+        else{
+            return false;
+        }
     }
 
     @Override
@@ -182,6 +185,6 @@ public class Bot implements BotServiceProvider {
     }
 
     public boolean AnyCardsWithValueLowerThanSix(GameIntel intel) {
-        return intel.getCards().stream().allMatch(card -> card.relativeValue(intel.getVira()) < 6);
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 6);
     }
 }
