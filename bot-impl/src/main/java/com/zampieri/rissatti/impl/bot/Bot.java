@@ -85,6 +85,14 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if(CountManilhas(intel) >= 2){
+            return true;
+        }
+        else{
+            if(hasZap(intel)){
+                return AnyCardsWithValueHigherThanKing(intel);
+            }
+        }
         return false;
     }
 
@@ -186,6 +194,14 @@ public class Bot implements BotServiceProvider {
     }
 
     public boolean AnyCardsWithValueLowerThanSix(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 6);
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 3);
+    }
+
+    public long CountManilhas(GameIntel intel){
+        return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
+    }
+
+    public boolean AnyCardsWithValueHigherThanKing(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 7);
     }
 }
