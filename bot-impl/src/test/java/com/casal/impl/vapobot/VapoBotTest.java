@@ -954,7 +954,7 @@ class VapoBotTest {
 
         @Nested
         @DisplayName("in first round")
-        class FisrtRoundTest {
+        class FirstRoundTest {
 
             @Nested
             @DisplayName("if play first")
@@ -1207,6 +1207,12 @@ class VapoBotTest {
                     }
                 }
             }
+        }
+
+        @Nested
+        @DisplayName("in second round")
+        class SecondRoundTest {
+
         }
     }
 }
