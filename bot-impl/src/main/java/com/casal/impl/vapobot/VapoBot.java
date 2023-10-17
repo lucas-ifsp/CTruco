@@ -8,7 +8,6 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class VapoBot implements BotServiceProvider {
@@ -31,6 +30,8 @@ public class VapoBot implements BotServiceProvider {
             if (checkIfWillBeTheFirstToPlay(intel)){
                 if (getAmountOfManilhas(intel) >= 2){
                     return CardToPlay.of(getHighestCard(intel));
+                } else if (getAmountOfManilhas(intel) == 1){
+                    return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).get());
                 }
             }
         }
@@ -105,7 +106,6 @@ public class VapoBot implements BotServiceProvider {
         return intel.getRoundResults().size() + 1;
     }
 
-
     int getAmountOfManilhas(GameIntel intel){
         int amount = 0;
         for (TrucoCard card: intel.getCards()) {
@@ -133,6 +133,19 @@ public class VapoBot implements BotServiceProvider {
             }
         }
         return cardToPlay;
+    }
+
+    Optional<TrucoCard> getHighestCardThatIsNotAManilha(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        if(getAmountOfManilhas(intel) == 2) return Optional.of(getLowestCard(intel));
+        else if (getAmountOfManilhas(intel) == 1){
+            for (TrucoCard card : intel.getCards()) {
+                if (!card.isManilha(vira) && !card.equals(getLowestCard(intel))) {
+                    return Optional.of(card);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     boolean checkIfWillBeTheFirstToPlay(GameIntel intel){
