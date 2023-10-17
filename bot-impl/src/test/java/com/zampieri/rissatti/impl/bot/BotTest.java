@@ -484,4 +484,24 @@ public class BotTest {
         assertTrue(bot.decideIfRaises(builder.build()));
     }
 
+    @Test
+    @DisplayName("Test if win first round and has a good card should start a point raise request")
+    void testTestIfWinFirstRoundAndHasGoodCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertTrue(bot.decideIfRaises(builder.build()));
+    }
+
 }

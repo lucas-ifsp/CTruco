@@ -89,6 +89,9 @@ public class Bot implements BotServiceProvider {
             return true;
         }
         else{
+            if( !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON ) {
+                return AnyCardsWithValueHigherThanTwo(intel);
+            }
             if(hasZap(intel)){
                 return AnyCardsWithValueHigherThanKing(intel);
             }
@@ -203,5 +206,9 @@ public class Bot implements BotServiceProvider {
 
     public boolean AnyCardsWithValueHigherThanKing(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 7);
+    }
+
+    public boolean AnyCardsWithValueHigherThanTwo(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 8);
     }
 }
