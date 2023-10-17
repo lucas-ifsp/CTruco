@@ -105,26 +105,25 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
         Integer manilhas =  manilhaCount(intel.getCards(),intel.getVira());
 
+        // seis rato!
+        if (hasCasalMaior(intel))return 1;
+
         // desce que eu quero ver!
-
-        if (manilhas >= 1) return 0;
-
+        if (manilhas > 1) return 0;
         return -1;
     }
 
     private boolean hasCasalMaior(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
         TrucoCard cardVira = intel.getVira();
         int contador = 0;
         for(TrucoCard card : intel.getCards()){
             if(card.isZap(cardVira) || card.isCopas(cardVira)){
-                contador =+ 1;
+                contador ++;
             }
         }
         if(contador == 2){
             return true;
         }
-
         return false;
     }
 
