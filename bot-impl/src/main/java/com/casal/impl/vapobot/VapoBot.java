@@ -27,7 +27,13 @@ public class VapoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
-        System.out.println(checkIfWillBeTheFirstToPlay(intel));
+        if (getRoundNumber(intel) == 1){
+            if (checkIfWillBeTheFirstToPlay(intel)){
+                if (getAmountOfManilhas(intel) >= 2){
+                    return CardToPlay.of(getHighestCard(intel));
+                }
+            }
+        }
         return CardToPlay.of(intel.getCards().get(0));
     }
 
