@@ -37,6 +37,18 @@ class CaipirasBotTest {
         assertThat(caipirasBot.tryToKillOpponentCard(intel)).isEqualTo(expected);
     }
 
+    @DisplayName("Testa se o bot aceita jogar a mão de onze")
+    @ParameterizedTest
+    @MethodSource(value = "provideToPlayMaoDeOnzeCondition")
+    void testPlayMaoDeOnzeCondition(List<TrucoCard> cards, TrucoCard vira) {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getCards()).thenReturn(cards);
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(caipirasBot.playMaoDeOnzeCondition(intel));
+    }
+
     @DisplayName("Testa se tem ouros na mão")
     @ParameterizedTest
     @MethodSource(value = "provideToCheckExistenceOfDiamondManilha")
@@ -534,6 +546,35 @@ class CaipirasBotTest {
                         ),
                         TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                         false
+                )
+        );
+    }
+
+    public static Stream<Arguments> provideToPlayMaoDeOnzeCondition() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
                 )
         );
     }
