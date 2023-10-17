@@ -812,6 +812,28 @@ class VapoBotTest {
             assertEquals(2, vapoBot.numberOfCardsThatHasARelativeValueGreaterThan(stepBuilder.build(), 5));
 
         }
+
+        @Test
+        @DisplayName("7 with cards 4D, 7C, AC")
+        void shouldReturn1Card() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(1, vapoBot.numberOfCardsThatHasARelativeValueGreaterThan(stepBuilder.build(), 7));
+
+        }
     }
 
     @Nested
