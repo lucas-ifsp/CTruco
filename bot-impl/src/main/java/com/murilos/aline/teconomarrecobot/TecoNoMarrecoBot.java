@@ -31,7 +31,7 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(manilhaCount(cards, cardVira) == 1 && hasHandOfThree(intel) == 1){
             return true;
         }
-        if(intel.getOpponentScore() < 4 && !(valueOfTheHand(intel) < 10)){
+        if(intel.getOpponentScore() < 4 && !(valueOfTheHand(intel) < 18)){
             return true;
         }
         return false;
