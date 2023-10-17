@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BotTest {
 
@@ -185,6 +185,24 @@ public class BotTest {
         assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
     }
 
+    @Test
+    @DisplayName("Decide if raises with manilha")
+    void testDecidesIfRaisesWithManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
+        List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertTrue(bot.decideIfRaises(builder.build()));
+    }
 
 }
