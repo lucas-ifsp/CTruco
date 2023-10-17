@@ -917,7 +917,7 @@ class VapoBotTest {
 
                 @Test
                 @DisplayName("and has 2 manilhas")
-                void Has2Manilhas(){
+                void Has2Manilhas() {
                     TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
                     List<TrucoCard> myCards = List.of(
@@ -937,7 +937,7 @@ class VapoBotTest {
 
                 @Test
                 @DisplayName("and has 3 manilhas")
-                void Has3Manilhas(){
+                void Has3Manilhas() {
                     TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
                     List<TrucoCard> myCards = List.of(
@@ -957,7 +957,7 @@ class VapoBotTest {
 
                 @Test
                 @DisplayName("and has one manilha and a strong card")
-                void HasOneManilhaWithStrongCard(){
+                void HasOneManilhaWithStrongCard() {
                     TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
                     List<TrucoCard> myCards = List.of(
@@ -974,15 +974,16 @@ class VapoBotTest {
                             .opponentScore(1);
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
                 }
+
                 @Test
                 @DisplayName("and has one manilha and weak cards")
-                void HasOneManilhaWitWeakCards(){
+                void HasOneManilhaWitWeakCards() {
                     TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
                     List<TrucoCard> myCards = List.of(
                             TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                             TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS   )
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
                     );
 
                     List<TrucoCard> openCards = List.of(vira);
@@ -993,6 +994,13 @@ class VapoBotTest {
                             .opponentScore(1);
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)), vapoBot.chooseCard(stepBuilder.build()));
                 }
+            }
+
+            @Nested
+            @DisplayName("if opponent play first")
+            class OpponentPlayFirstTest {
+
+
             }
         }
     }
