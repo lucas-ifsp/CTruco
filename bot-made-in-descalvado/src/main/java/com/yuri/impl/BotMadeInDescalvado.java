@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 
 public class BotMadeInDescalvado implements BotServiceProvider {
 
@@ -37,41 +37,40 @@ public class BotMadeInDescalvado implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return switch (round(intel)) {
-            case 1 -> FirstRound.getRaiseResponse(intel);
-            case 2 -> SecondRound.getRaiseResponse(intel);
-            case 3 -> ThirdRound.getRaiseResponse(intel);
-            default -> throw new RuntimeException(INVALID_ROUND_MSG);
-        };
+        int opponentScore = intel.getOpponentScore();
+        int handPoints = intel.getHandPoints();
+
+        float s = score(intel);
+
+        if (s >= 9.0) {
+            if (opponentScore >= 8) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else if (s >= 8.5) {
+            if (opponentScore >= 8) {
+                return 1;
+            } else if (handPoints >= 6) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+
+        return -1;
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> cards = intel.getCards();
+        int opponentScore = intel.getOpponentScore();
+        float s = score(intel);
 
-        Integer score = cards.stream()
-            .map((c) -> {
-                if (c.isManilha(vira)) {
-                    return switch (c.getSuit()) {
-                        case CLUBS -> 14;
-                        case HEARTS -> 13;
-                        case SPADES -> 12;
-                        case DIAMONDS -> 11;
-                        default -> 0;
-                    };
-                } else {
-                    if (c.getRank().value() <= vira.getRank().value()) {
-                        return c.getRank().value() + 4;
-                    } else {
-                        return c.getRank().value();
-                    }
-                }
-            })
-            .reduce(Integer::sum)
-            .orElse(0);
-
-        return score >= 27;
+        if (opponentScore >= 8) {
+            return true;
+        } else {
+            return s >= 9;
+        }
     }
 
     @Override
@@ -98,13 +97,37 @@ public class BotMadeInDescalvado implements BotServiceProvider {
         return intel.getRoundResults().size() + 1;
     }
 
-    private static class FirstRound {
-        public static int getRaiseResponse(GameIntel intel) {
-            return 0;
-        }
+    private static float score(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
 
+        return cards.stream()
+            .map((c) -> {
+                if (c.isManilha(vira)) {
+                    return switch (c.getSuit()) {
+                        case CLUBS -> 14;
+                        case HEARTS -> 13;
+                        case SPADES -> 12;
+                        case DIAMONDS -> 11;
+                        default -> 0;
+                    };
+                } else {
+                    if (c.getRank().value() <= vira.getRank().value()) {
+                        return c.getRank().value() + 4;
+                    } else {
+                        return c.getRank().value();
+                    }
+                }
+            })
+            .reduce(Integer::sum)
+            .orElse(0) / (float) cards.size();
+    }
+
+    private static class FirstRound {
         public static boolean decideIfRaises(GameIntel intel) {
-            return false;
+            float s = score(intel);
+
+            return s >= 8.5;
         }
 
         public static CardToPlay chooseCard(GameIntel intel) {
@@ -159,12 +182,17 @@ public class BotMadeInDescalvado implements BotServiceProvider {
     }
 
     private static class SecondRound {
-        public static int getRaiseResponse(GameIntel intel) {
-            return 0;
-        }
-
         public static boolean decideIfRaises(GameIntel intel) {
-            return false;
+            GameIntel.RoundResult firstRoundResult = intel.getRoundResults().get(0);
+            float s = score(intel);
+
+            if (s >= 8.5) {
+                if (firstRoundResult == WON) {
+                    return true;
+                } else return firstRoundResult == LOST;
+            } else {
+                return false;
+            }
         }
 
         public static CardToPlay chooseCard(GameIntel intel) {
@@ -198,6 +226,12 @@ public class BotMadeInDescalvado implements BotServiceProvider {
 
                     return CardToPlay.of(card);
                 }
+            } else if (firstRoundResult == DREW) {
+                TrucoCard card = cards.stream()
+                    .max((a, b) -> a.compareValueTo(b, vira))
+                    .orElse(cards.get(0));
+
+                return CardToPlay.of(card);
             } else {
                 if (isFirst) {
                     TrucoCard card = cards.stream()
@@ -220,12 +254,10 @@ public class BotMadeInDescalvado implements BotServiceProvider {
     }
 
     private static class ThirdRound {
-        public static int getRaiseResponse(GameIntel intel) {
-            return 0;
-        }
-
         public static boolean decideIfRaises(GameIntel intel) {
-            return false;
+            float s = score(intel);
+
+            return s >= 8.5;
         }
 
         public static CardToPlay chooseCard(GameIntel intel) {
