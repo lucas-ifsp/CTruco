@@ -398,10 +398,20 @@ class TecoNoMarrecoBotTest {
         void acceptIfHaveManilhaEndStrongCard() {
             hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(TWO, CLUBS));
             cardVira = TrucoCard.of(JACK, SPADES);
-            roundResult = List.of(GameIntel.RoundResult.DREW);
+            roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
             assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+        }
+        @Test
+        @DisplayName("Testa recusar se não tiver carta")
+        void refuseIfYouDontHaveGoodCards() {
+            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(THREE, CLUBS));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 9).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isNegative();
         }
 
     }
