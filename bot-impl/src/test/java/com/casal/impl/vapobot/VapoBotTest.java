@@ -811,6 +811,26 @@ class VapoBotTest {
 
             assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
         }
+        @Test
+        @DisplayName("choose AC on KC, 2H and 7D with 6H as vira")
+        void getACAsHighestNotManilhaCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
+        }
     }
 
     @Nested
@@ -866,7 +886,7 @@ class VapoBotTest {
                 }
 
                 @Test
-                @DisplayName("and has one manilha and a string card")
+                @DisplayName("and has one manilha and a strong card")
                 void HasOneManilhaWithStrongCard(){
                     TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
