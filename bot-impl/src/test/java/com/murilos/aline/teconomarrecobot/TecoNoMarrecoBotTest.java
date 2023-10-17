@@ -122,6 +122,18 @@ class TecoNoMarrecoBotTest {
             Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(acceptMaoDeOnze);
         }
+
+        @Test
+        @DisplayName("Testa se rejeita mao de onze com tres cartas As")
+        void shouldRejectHandOfElevenWithThreeCardsAce(){
+            hand = List.of(TrucoCard.of(ACE, HEARTS), TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(ACE, CLUBS));
+            cardVira = TrucoCard.of(FOUR, CLUBS);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 11).opponentScore(7);
+            Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(acceptMaoDeOnze);
+        }
     }
 
     @Nested

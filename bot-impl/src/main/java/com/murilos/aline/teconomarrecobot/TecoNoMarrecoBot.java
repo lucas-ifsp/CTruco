@@ -19,13 +19,16 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         if(hasCasalMaior(intel)){
             return true;
         }
-        if(hasHandOfThree(intel)){
+        if(hasHandOfThree(intel) == 3 || hasHandOfThree(intel) == 2){
             return true;
         }
         if(manilhaCount(cards, cardVira) == 2){
             return true;
         }
-        if(valueOfTheHand(intel) > 20){
+        if(manilhaCount(cards, cardVira) == 1 && valueOfTheHand(intel) >= 28){
+            return true;
+        }
+        if(manilhaCount(cards, cardVira) == 1 && hasHandOfThree(intel) == 1){
             return true;
         }
         if(intel.getOpponentScore() < 4){
@@ -130,17 +133,14 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean hasHandOfThree(GameIntel intel){
+    private int hasHandOfThree(GameIntel intel){
         Integer contador = 0;
         for(TrucoCard card : intel.getCards()){
             if(card.getRank().value() == 10){
                 contador += 1;
             }
         }
-        if(contador == 3){
-            return true;
-        }
-        return  false;
+        return contador;
     }
 
     private int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
