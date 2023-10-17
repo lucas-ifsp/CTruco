@@ -78,9 +78,18 @@ public class SabotaBot implements BotServiceProvider {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> manilhas = getManilhasCard(intel);
 
-        if (manilhas.size() >= 2){
-            return 0;
+        if (manilhas.size() >= 1){
+            if (manilhas.size() >= 2){
+                return 0;
+            }
+
+            for (TrucoCard card : manilhas) {
+                if (card.isZap(intel.getVira())){
+                    return 1;
+                }
+            }
         }
+
 
 
         return -1;
