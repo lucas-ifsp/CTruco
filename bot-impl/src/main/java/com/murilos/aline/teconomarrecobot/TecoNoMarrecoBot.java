@@ -101,7 +101,16 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {return 0;}
+    public int getRaiseResponse(GameIntel intel) {
+
+        Integer manilhas =  manilhaCount(intel.getCards(),intel.getVira());
+
+        // desce que eu quero ver!
+
+        if (manilhas >= 1) return 0;
+
+        return -1;
+    }
 
     private boolean hasCasalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
