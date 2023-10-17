@@ -40,6 +40,21 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<GameIntel.RoundResult> result = intel.getRoundResults();
+
+        int numberOfManilhas = 0;
+
+        for ( TrucoCard card : cards) {
+            if (card.isManilha(vira)) {
+                numberOfManilhas ++;
+            }
+        }
+
+        if ( numberOfManilhas >= 1) {
+            return true;
+        }
         return false;
     }
 
@@ -47,7 +62,6 @@ public class Bot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        List<TrucoCard> openCards = intel.getOpenCards();
         List<GameIntel.RoundResult> result = intel.getRoundResults();
 
         int numberOfManilhas = 0;
