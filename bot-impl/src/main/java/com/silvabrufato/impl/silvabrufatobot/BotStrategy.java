@@ -27,7 +27,8 @@ public enum BotStrategy {
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
             if (gameIntel.getOpenCards().size() == 2){ //opponent start
-                if(hasAHigherAndDifferentCardThanZap(gameIntel)) return true;
+                if(hasAHigherAndDifferentCardThanZap(gameIntel) && BotStrategy.hasZap(gameIntel)) return true;
+                if(hasAHigherAndDifferentCardThanCopas(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
 
                 return false;
             }
@@ -105,7 +106,14 @@ public enum BotStrategy {
 
     private static boolean hasAHigherAndDifferentCardThanZap(GameIntel gameIntel){
         for (TrucoCard card : gameIntel.getCards()) {
-            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 || !card.isZap(gameIntel.getVira())) return true;
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isZap(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
+
+    private static boolean hasAHigherAndDifferentCardThanCopas(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isCopas(gameIntel.getVira())) return true;
         }
         return false;
     }
