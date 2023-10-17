@@ -33,6 +33,7 @@ public enum BotStrategy {
             }else{
                 if(BotStrategy.hasZap(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
                 if(BotStrategy.hasZap(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
+                if(BotStrategy.hasCopas(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
             }
 
             //if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
