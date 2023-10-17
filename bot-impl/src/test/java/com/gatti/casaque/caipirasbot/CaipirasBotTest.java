@@ -1,9 +1,6 @@
 package com.gatti.casaque.caipirasbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,6 +48,7 @@ class CaipirasBotTest {
 
         assertThat(caipirasBot.chooseDiamondInFirstRound(cards, vira)).isEqualTo(expectedCard);
     }
+
     @DisplayName("Testa se teve casal maior no jogo")
     @ParameterizedTest
     @MethodSource(value = "provideToCheckExistenceOfCasalMaior")
@@ -103,6 +101,18 @@ class CaipirasBotTest {
         assertThat(caipirasBot.chooseWeakInFirstRound(cards, vira)).isEqualTo(weakCard);
     }
 
+    @DisplayName("Testa se o método chooseCard joga ouro na prmeira rodada")
+    @ParameterizedTest
+    @MethodSource(value = "provideToCheckIfChoosedDiamondInFirstRound")
+    void testChooseCardDiamondInFirstRound(List<TrucoCard> cards, TrucoCard vira, TrucoCard expectedCard){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getRoundResults()).thenReturn(List.of());
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(cards);
+
+        assertThat(caipirasBot.chooseCard(intel)).isEqualTo(CardToPlay.of(expectedCard));
+    }
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
                 Arguments.of(
