@@ -383,6 +383,16 @@ class TecoNoMarrecoBotTest {
 
             assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
         }
+        @Test
+        @DisplayName("Testa pede aumento se tem manilha forte")
+        void askForRaiseIfHaveManilhaStrong() {
+            hand = List.of(TrucoCard.of(ACE,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.DREW);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+        }
 
     }
 }
