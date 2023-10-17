@@ -385,6 +385,23 @@ public class BotTest {
         assertEquals(CardRank.TWO ,bot.chooseCard(builder.build()).content().getRank());
     }
 
+    @Test
+    @DisplayName("Test if the bot plays the lowest card first")
+    void testTestIfBotPlaysTheLowestCardFirst() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(CardRank.FOUR ,bot.chooseCard(builder.build()).content().getRank());
+    }
 
 }
