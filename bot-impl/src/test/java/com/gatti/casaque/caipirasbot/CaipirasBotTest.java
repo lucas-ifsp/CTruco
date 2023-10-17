@@ -24,6 +24,19 @@ class CaipirasBotTest {
     @BeforeEach
     void setUp() {caipirasBot = new CaipirasBot();}
 
+    @DisplayName("Testa se mata a carta do oponente")
+    @ParameterizedTest
+    @MethodSource("provideToKillOpponentCard")
+    void testKillOpponentCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard, TrucoCard expected) {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getCards()).thenReturn(cards);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(caipirasBot.tryToKillOpponentCard(intel)).isEqualTo(expected);
+    }
+
     @DisplayName("Testa se tem ouros na mão")
     @ParameterizedTest
     @MethodSource(value = "provideToCheckExistenceOfDiamondManilha")
@@ -174,6 +187,51 @@ class CaipirasBotTest {
         when(intel.getVira()).thenReturn(vira);
 
         assertThat(caipirasBot.checkOnlyZap(cards, vira).equals(validate));
+    }
+
+    static Stream<Arguments> provideToKillOpponentCard() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                        ),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                ),
+                Arguments.of(
+                        List.of(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+                        ),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                )
+        );
     }
 
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
