@@ -47,7 +47,31 @@ public class BotMadeInDescalvado implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return true;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        Integer score = cards.stream()
+            .map((c) -> {
+                if (c.isManilha(vira)) {
+                    return switch (c.getSuit()) {
+                        case CLUBS -> 14;
+                        case HEARTS -> 13;
+                        case SPADES -> 12;
+                        case DIAMONDS -> 11;
+                        default -> 0;
+                    };
+                } else {
+                    if (c.getRank().value() <= vira.getRank().value()) {
+                        return c.getRank().value() + 4;
+                    } else {
+                        return c.getRank().value();
+                    }
+                }
+            })
+            .reduce(Integer::sum)
+            .orElse(0);
+
+        return score >= 27;
     }
 
     @Override
