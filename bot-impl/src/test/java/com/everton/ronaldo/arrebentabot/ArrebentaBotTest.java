@@ -201,8 +201,8 @@ class ArrebentaBotTest {
         }
 
         @Test
-        @DisplayName("Shoul accept mao de onze when opponent score is 11")
-        void shouldAcceptMaoDeOnzeWhemOpponentScoreIsEleven() {
+        @DisplayName("Should accept mao de onze when opponent score is 11")
+        void shouldAcceptMaoDeOnzeWhenOpponentScoreIsEleven() {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -211,8 +211,8 @@ class ArrebentaBotTest {
             assertTrue(arrebentaBot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
         @Test
-        @DisplayName("Should not accept mao de onze when oppponent has nine or more points and has weak cards")
-        void ShouldNotAcceptMaoDeOnzeWhenOppponentHasNineOrMorePointsAndHasWeakCards() {
+        @DisplayName("Should not accept mao de onze when opponent has nine or more points and has weak cards")
+        void ShouldNotAcceptMaoDeOnzeWhenOpponentHasNineOrMorePointsAndHasWeakCards() {
             GameIntel intel = mock(GameIntel.class);
 
             List<TrucoCard> cards = Arrays.asList(
@@ -775,6 +775,38 @@ class ArrebentaBotTest {
                     .opponentScore(0);  // Initial round
 
             assertFalse(arrebentaBot.decideIfRaises(stepBuilder.build()));
+        }
+        @Test
+        @DisplayName("Should not raise when have weak card in last hand")
+        void ShouldNotRaiseWhenHaveWeakCardInLastHand() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertFalse(arrebentaBot.decideIfRaises(intel));
+
+        }
+        @Test
+        @DisplayName("Should raise when have manilha in last hand")
+        void ShouldRaiseWhenHaveManilhaInLastHand() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertTrue(arrebentaBot.decideIfRaises(intel));
+
         }
     }
 }

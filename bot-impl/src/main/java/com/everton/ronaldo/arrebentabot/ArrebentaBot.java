@@ -15,7 +15,7 @@ public class ArrebentaBot implements BotServiceProvider {
         var vira = intel.getVira();
         int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
 
-        if ( intel.getOpponentScore() >= 9){
+        if ( intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11){
             if(cardsValue >= 22 || hasCasal(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
 
             return false;
@@ -47,6 +47,12 @@ public class ArrebentaBot implements BotServiceProvider {
             if(hasCasal(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
 
             return false;
+        }
+
+        if(intel.getCards().size() == 1){
+            if(hasManilhas){
+                return true;
+            }
         }
 
         if(intel.getOpponentScore() == 11 || intel.getScore() == 11){ return false; }
