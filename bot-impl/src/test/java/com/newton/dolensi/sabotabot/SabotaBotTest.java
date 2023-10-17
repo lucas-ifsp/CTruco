@@ -34,7 +34,7 @@ public class SabotaBotTest {
         @Test
         @DisplayName("Should play any card from hand")
         void shouldPlayAnyCardFromHand(){
-            var cards = IntelMock.cardList3Cards();
+            var cards = IntelMock.cardListAC4C3H();
             when(intel.getCards()).thenReturn(cards);
             when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
@@ -51,7 +51,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should play a strong card if is first to play")
                 void shouldPlayAStrongCardIfIsFirstToPlay(){
-                    var cards = IntelMock.cardList3Cards();
+                    var cards = IntelMock.cardListAC4C3H();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
@@ -62,7 +62,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should play a strong card non manilha")
                 void shouldPlayAStrongCardNonManilha(){
-                    var cards = IntelMock.cardList3Cards();
+                    var cards = IntelMock.cardListAC4C3H();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.vira2H());
 
@@ -73,7 +73,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should play diamonds if has it and good values")
                 void shouldPlayDiamondsIfHasItAndGoodValues(){
-                    var cards = IntelMock.diamondsAndGoodValues();
+                    var cards = IntelMock.cardListAD2CAH();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.viraKC());
 
@@ -83,7 +83,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should keep diamonds if it is the strongest card")
                 void shouldKeepDiamondsIfItIsTheStrongestCard(){
-                    var cards = IntelMock.onlyDiamonds();
+                    var cards = IntelMock.cardListAD7CKH();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.viraKC());
 
@@ -98,7 +98,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should play the weakest card if other player plays a strong card")
                 void shouldPlayTheWeakestCardIfOtherPlayerPlaysAStrongCard(){
-                    var cards = IntelMock.cardList3Cards();
+                    var cards = IntelMock.cardListAC4C3H();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
@@ -109,7 +109,7 @@ public class SabotaBotTest {
                 @Test
                 @DisplayName("Should play a card greater the opponent's if it has")
                 void shouldPlayACardGreaterTheOpponentsIfItHas(){
-                    var cards = IntelMock.cardList3Cards();
+                    var cards = IntelMock.cardListAC4C3H();
                     when(intel.getCards()).thenReturn(cards);
                     when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
@@ -126,7 +126,7 @@ public class SabotaBotTest {
             @Test
             @DisplayName("Should play a card in second round")
             void shouldPlayACardInSecondRound(){
-                var cards = IntelMock.cardList2Cards();
+                var cards = IntelMock.cardList4C3D();
                 when(intel.getCards()).thenReturn(cards);
                 when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
@@ -188,7 +188,7 @@ public class SabotaBotTest {
         @DisplayName("should rise if drew the first and have card to win the second round")
         void shouldRiseIfDrewTheFirstAndHaveCardToWinTheSecondRound(){
 
-            var cards = IntelMock.cardList2Cards();
+            var cards = IntelMock.cardList4C3D();
             when(intel.getCards()).thenReturn(cards);
 
             when(intel.getOpponentCard()).thenReturn(

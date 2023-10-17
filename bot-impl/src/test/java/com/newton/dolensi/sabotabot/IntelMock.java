@@ -8,28 +8,28 @@ import java.util.List;
 
 public class IntelMock {
 
-    public static List<TrucoCard> cardList3Cards() {
+    public static List<TrucoCard> cardListAC4C3H() {
         return List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
     }
 
-    public static List<TrucoCard> diamondsAndGoodValues() {
+    public static List<TrucoCard> cardListAD2CAH() {
         return List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
     }
 
-    public static List<TrucoCard> onlyDiamonds() {
+    public static List<TrucoCard> cardListAD7CKH() {
         return List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
     }
 
-    public static List<TrucoCard> cardList2Cards() {
+    public static List<TrucoCard> cardList4C3D() {
         return List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
