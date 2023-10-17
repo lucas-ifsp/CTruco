@@ -115,19 +115,18 @@ public class VapoBot implements BotServiceProvider {
     }
 
     Optional<TrucoCard> getLowestCardToWin(GameIntel intel) {
-        TrucoCard cardToPlay = intel.getCards().get(0);
+        TrucoCard comparisonCard = intel.getCards().get(0);
+        Optional<TrucoCard> cardToPlay = Optional.empty();
         TrucoCard vira = intel.getVira();
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("O oponente ainda não jogou a carta dele"));
         int opponentCardRelativeValue = opponentCard.relativeValue(vira);
-
         for (TrucoCard card : intel.getCards()) {
-            if (opponentCardRelativeValue < card.relativeValue(vira) &&
-                card.relativeValue(vira) < cardToPlay.relativeValue(vira) ) {
-                cardToPlay = card;
+            if (opponentCardRelativeValue < card.relativeValue(vira) && card.relativeValue(vira) <= comparisonCard.relativeValue(vira)) {
+                comparisonCard = card;
+                cardToPlay = Optional.of(card);
             }
         }
-
-        return Optional.ofNullable(cardToPlay);
+        return cardToPlay;
     }
 
     boolean checkIfWillBeTheFirstToPlay(GameIntel intel){
