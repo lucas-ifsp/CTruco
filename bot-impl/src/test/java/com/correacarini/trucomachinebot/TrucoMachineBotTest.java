@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrucoMachineBotTest {
@@ -97,7 +98,7 @@ public class TrucoMachineBotTest {
                 TrucoCard.of(THREE, CLUBS)
         );
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, WON), List.of(), TrucoCard.of(ACE, SPADES), 1)
                 .botInfo(botCards, 0);
 
         CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
@@ -156,5 +157,22 @@ public class TrucoMachineBotTest {
 
         boolean decideIfRaises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(decideIfRaises);
+    }
+    @Test
+    @DisplayName("Should raise when has manilha and 2 if score difference is greater than 3 and won first round")
+    void ShouldRaiseWhenHasManilhaAnd2IfScoreDifferenceIsGreaterThan3AndWonFirstRound() {
+        TrucoCard vira = TrucoCard.of(FIVE, SPADES);
+        List<TrucoCard> card = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(TWO, CLUBS)
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON), List.of(), vira, 1)
+                .botInfo(card, 4)
+                .opponentScore(0);
+
+        boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raises);
     }
 }
