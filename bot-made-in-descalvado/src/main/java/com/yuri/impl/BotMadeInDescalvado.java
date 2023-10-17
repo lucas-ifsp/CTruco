@@ -91,29 +91,52 @@ public class BotMadeInDescalvado implements BotServiceProvider {
         }
 
         public static CardToPlay chooseCard(GameIntel intel) {
-            TrucoCard vira = intel.getVira();
-
+            boolean isFirst = intel.getOpponentCard().isEmpty();
             List<TrucoCard> cards = new ArrayList<>(intel.getCards());
-            cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+            TrucoCard vira = intel.getVira();
+            Optional<TrucoCard> maybeOpponentCard = intel.getOpponentCard();
 
-            boolean playsFirst = intel.getOpponentCard().isEmpty();
-
-            if (playsFirst) {
-                int manilhaCount = 0;
-
-                for (var card : intel.getCards()) {
-                    if (card.isManilha(intel.getVira())) {
-                        manilhaCount += 1;
-                    }
-                }
+            if (isFirst) {
+                long manilhaCount = cards.stream().filter((c) -> c.isManilha(vira)).count();
 
                 if (manilhaCount >= 2) {
-                    return CardToPlay.discard(intel.getCards().get(2));
+                    TrucoCard notManilha = cards.stream()
+                        .filter((c) -> !c.isManilha(vira))
+                        .findFirst()
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.discard(notManilha);
                 } else {
-                    return CardToPlay.of(intel.getCards().get(0));
+                    TrucoCard card = cards.stream()
+                        .max((a, b) -> a.compareValueTo(b, vira))
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.of(card);
                 }
             } else {
-                return CardToPlay.of(intel.getCards().get(0));
+                TrucoCard opponentCard = maybeOpponentCard.get();
+
+                Optional<TrucoCard> maybeCardToWin = cards.stream()
+                    .filter((c) -> c.compareValueTo(opponentCard, vira) > 0)
+                    .min((a, b) -> a.compareValueTo(b, vira));
+
+                if (maybeCardToWin.isPresent()) {
+                    return CardToPlay.of(maybeCardToWin.get());
+                }
+
+                Optional<TrucoCard> maybeCardToDraw = cards.stream()
+                    .filter((c) -> c.compareValueTo(opponentCard, vira) == 0)
+                    .min((a, b) -> a.compareValueTo(b, vira));
+
+                if (maybeCardToDraw.isPresent()) {
+                    return CardToPlay.of(maybeCardToDraw.get());
+                }
+
+                TrucoCard card = cards.stream()
+                    .min((a, b) -> a.compareValueTo(b, vira))
+                    .orElse(cards.get(0));
+
+                return CardToPlay.of(card);
             }
         }
     }

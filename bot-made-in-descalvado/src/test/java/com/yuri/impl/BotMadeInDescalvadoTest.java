@@ -142,8 +142,6 @@ public class BotMadeInDescalvadoTest {
     void chooseCard_ShouldPlayWeakest_WhenImpossibleToWinOrDraw_AndFirstRound_AndPlaysSecond() {
         BotMadeInDescalvado bot = new BotMadeInDescalvado();
 
-        TrucoCard expectedPlayedCard = TrucoCard.of(CardRank.TWO, CLUBS);
-
         GameIntel intel = MockRound
             .vira(FOUR, CLUBS)
             .giveA(KING, CLUBS)
