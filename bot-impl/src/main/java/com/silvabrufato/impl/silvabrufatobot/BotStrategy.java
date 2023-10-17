@@ -81,9 +81,6 @@ public enum BotStrategy {
                 if(BotStrategy.hasCopas(gameIntel)) return true;
                 if(BotStrategy.hasEspadilha(gameIntel)) return true;
                 if(BotStrategy.countCardsEqualOrHigherThanAce(gameIntel) == 2) return true;
-                if(gameIntel.getOpponentCard().get().getRank().value() <= 5 &&
-                        !gameIntel.getOpponentCard().get().isManilha(gameIntel.getVira())) return true;
-
             }
 
             //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
