@@ -54,8 +54,8 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("First round")
-    class FirstRoundTests{
+    @DisplayName("chooseCard first round")
+    class FirstRoundChooseCardTests{
         @Test
         @DisplayName("Should win the first round if possible using the highest card when opponent start the round")
         public void ShouldWinTheFirstRoundIfPossibleUsingTheHighestCardWhenTheOpponentStartTheRound() {
@@ -253,8 +253,8 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("Second round")
-    class SecondRoundTests{
+    @DisplayName("chooseCard second round")
+    class SecondRoundChooseCardTests{
         @Test
         @DisplayName("Should win the second round if possible")
         public void shouldWinTheSecondRoundIfPossible() {
@@ -306,8 +306,8 @@ public class SilvaBrufatoBotTest {
     }
 
     @Nested
-    @DisplayName("Third round")
-    class ThirdRoundTests {
+    @DisplayName("chooseCard third round")
+    class ThirdRoundChooseCardTests {
         @Test
         @DisplayName("ShouldWinTheThreeRoundIfPossible")
         void shouldWinTheThreeRoundIfPossible() {
