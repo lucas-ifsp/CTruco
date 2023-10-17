@@ -56,6 +56,11 @@ public class VapoBot implements BotServiceProvider {
                         return CardToPlay.of(getLowestCard(intel));
                     }
                 }
+            } else {
+                System.out.println(intel.getCards());
+                System.out.println(intel.getOpponentCard().get());
+                System.out.println(getAmountOfManilhas(intel));
+                return CardToPlay.of(getLowestCardToWin(intel).get());
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
@@ -143,7 +148,7 @@ public class VapoBot implements BotServiceProvider {
     }
 
     Optional<TrucoCard> getLowestCardToWin(GameIntel intel) {
-        TrucoCard comparisonCard = intel.getCards().get(0);
+        TrucoCard comparisonCard = getHighestCard(intel);
         Optional<TrucoCard> cardToPlay = Optional.empty();
         TrucoCard vira = intel.getVira();
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("O oponente ainda não jogou a carta dele"));
