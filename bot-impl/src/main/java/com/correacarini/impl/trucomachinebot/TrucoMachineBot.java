@@ -26,6 +26,10 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         TrucoCard greatestCard = getGreatestCard(cards, vira);
 
+        if(intel.getOpponentCard().isPresent()){
+            CardToPlay.of(intel.getCards().get(0));
+        }
+
         return CardToPlay.of(greatestCard);
     }
 
