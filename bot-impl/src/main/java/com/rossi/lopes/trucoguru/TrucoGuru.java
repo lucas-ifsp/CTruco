@@ -34,6 +34,14 @@ import static com.rossi.lopes.trucoguru.TrucoGuruUtils.*;
 public class TrucoGuru implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        final TrucoCard vira = intel.getVira();
+        final List<TrucoCard> cards = intel.getCards();
+
+        Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
+        if(hasCasalMaior) return true;
+        Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(cards, vira);
+        if(hasCasalMenor) return true;
+
         return false;
     }
 
