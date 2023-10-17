@@ -77,4 +77,8 @@ public class TrucoGuruUtils {
 
         return strongestCard;
     }
+
+    static TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira) {
+        return null;
+    }
 }
