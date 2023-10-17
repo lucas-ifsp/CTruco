@@ -224,7 +224,7 @@ class CaipirasBotTest {
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(cards);
 
-        assertThat(caipirasBot.chooseMidleCart(cards, vira, List.of())).isEqualTo(expectedCard);
+        assertThat(caipirasBot.chooseMiddleCart(cards, vira, List.of())).isEqualTo(expectedCard);
     }
 
     static Stream<Arguments> provideToKillOpponentCard() {
