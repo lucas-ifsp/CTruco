@@ -101,7 +101,7 @@ public class MockRound {
             if (lastPlayedA != null && lastPlayedB != null) {
                 var winner = lastPlayedA.compareValueTo(lastPlayedB, vira);
 
-                if (winner == 1) {
+                if (winner > 0) {
                     results.add(WON);
                 } else if (winner == 0) {
                     results.add(DREW);
