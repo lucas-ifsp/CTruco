@@ -261,4 +261,22 @@ class VeioDoBarBotTest {
         assertThat(sut.decideIfRaises(intel)).isFalse();
     }
 
+    @Test
+    @DisplayName("Should raise points if all bots score equals to 9 and the bot has greater couple")
+    void shouldRaisePointsIfAllBotsScoreEqualsTo9AndTheBotHasGreaterCouple() {
+        var intel = make()
+                .scoreToBe(9)
+                .scoreOponentToBe(9)
+                .cardsToBe(
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .finish();
+
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+
+    }
+
+
 }
