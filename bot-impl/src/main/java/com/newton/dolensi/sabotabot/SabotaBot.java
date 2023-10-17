@@ -74,7 +74,16 @@ public class SabotaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        if (manilhas.size() >= 2){
+            return 0;
+        }
+
+
+        return -1;
     }
 
     private CardToPlay getCardBeingFirstToPlay(GameIntel intel, List<TrucoCard> hand) {
