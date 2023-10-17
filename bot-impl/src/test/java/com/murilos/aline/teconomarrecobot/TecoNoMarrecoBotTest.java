@@ -134,6 +134,17 @@ class TecoNoMarrecoBotTest {
             Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertFalse(acceptMaoDeOnze);
         }
+        @Test
+        @DisplayName("Testa se rejeita mao de onze com mão fraca")
+        void shouldRejectHandOfElevenWithWeakHand(){
+            hand = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(SIX, CLUBS));
+            cardVira = TrucoCard.of(TWO, HEARTS);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 11).opponentScore(2);
+            Boolean acceptMaoDeOnze = tecoNoMarrecoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(acceptMaoDeOnze);
+        }
     }
 
     @Nested
