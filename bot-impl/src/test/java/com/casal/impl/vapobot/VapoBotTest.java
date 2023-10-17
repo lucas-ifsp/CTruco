@@ -1213,6 +1213,11 @@ class VapoBotTest {
         @DisplayName("in second round")
         class SecondRoundTest {
 
+            @Nested
+            @DisplayName("if play first")
+            class PlayFirstTest {
+
+            }
         }
     }
 }
