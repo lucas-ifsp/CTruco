@@ -38,6 +38,15 @@ public class CaipirasBot implements BotServiceProvider {
         return false;
     }
 
+    public boolean checkExistenceSpadesManilha(List<TrucoCard> cards, TrucoCard vira) {
+        for (TrucoCard card : cards) {
+            if (card.isEspadilha(vira)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Boolean checkExistenceManilhaAndStronger(List<TrucoCard> cards, TrucoCard vira) {
         var count = 0;
         for (TrucoCard card : cards) {
