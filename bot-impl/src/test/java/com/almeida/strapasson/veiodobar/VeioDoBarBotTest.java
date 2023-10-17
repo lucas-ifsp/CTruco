@@ -5,37 +5,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Optional;
-
+import static com.almeida.strapasson.veiodobar.GameIntelMockBuilder.make;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class VeioDoBarBotTest {
-    private GameIntel intel;
     private VeioDoBarBot sut;
 
     @BeforeEach
     void setUp() {
         sut = new VeioDoBarBot();
-        intel = mock(GameIntel.class);
     }
 
     @Test
     @DisplayName("Should play the smallest card necessary to win the round")
     void shouldPlayTheSmallestCardNecessaryToWinTheRound() {
         TrucoCard playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-                playingCard,
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
-        ));
-        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+        var intel = make().cardsToBeAceTwoAndThreeOfSuit(CardSuit.SPADES)
+                        .opponentCardToBe(TrucoCard.of(CardRank.KING, CardSuit.SPADES))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -44,14 +33,10 @@ class VeioDoBarBotTest {
     @DisplayName("Should play the smallest card if not able to win the first round")
     void shouldPlayTheSmallestCardIfNotAbleToWinTheFirstRound() {
         var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-          playingCard,
-          TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-          TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
-        ));
-        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+        var intel = make().cardsToBeAceTwoAndThreeOfSuit(CardSuit.SPADES)
+                        .opponentCardToBe(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -60,14 +45,10 @@ class VeioDoBarBotTest {
     @DisplayName("Should play the second strongest card if bot is the very first to play and no casal maior")
     void shouldPlayTheSecondStrongestCardIfBotIsTheVeryFirstToPlayAndNoCasalMaior() {
         var playingCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-                playingCard,
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        var intel = make().cardsToBeAceTwoAndThreeOfSuit(CardSuit.SPADES)
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .botToBeFirstToPlay()
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -76,30 +57,24 @@ class VeioDoBarBotTest {
     @DisplayName("Should play the smallest card at the first round when it has casal maior")
     void shouldPlayTheSmallestCardAtTheFirstRoundWhenItHasCasalMaior() {
         var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-           playingCard,
-           TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-           TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        var intel = make().cardsToBe(playingCard, TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .botToBeFirstToPlay()
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
-    
+
     @Test
     @DisplayName("Should play the smallest card at second round if won the first one")
     void shouldPlayTheSmallestCardAtSecondRoundIfWonTheFirstOne() {
         var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-            playingCard,
-            TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        var intel = make().cardsToBe(playingCard, TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .botToBeFirstToPlay()
+                        .botToWinTheFirstRound()
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -108,14 +83,11 @@ class VeioDoBarBotTest {
     @DisplayName("Should play the smallest card necessary to win at second round if lost the first one")
     void shouldPlayTheSmallestCardNecessaryToWinAtSecondRoundIfLostTheFirstOne() {
         var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-                playingCard,
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)));
+        var intel = make().cardsToBe(playingCard, TrucoCard.of(CardRank.TWO, CardSuit.SPADES))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .botToLoseTheFirstRound()
+                        .opponentCardToBe(TrucoCard.of(CardRank.THREE, CardSuit.SPADES))
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -124,14 +96,11 @@ class VeioDoBarBotTest {
     @DisplayName("Should discard the smallest card at second round if lost the first one and unable to win")
     void shouldDiscardTheSmallestCardAtSecondRoundIfLostTheFirstOneAndUnableToWin() {
         var playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(
-                playingCard,
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
+        var intel = make().cardsToBe(playingCard, TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .botToLoseTheFirstRound()
+                        .opponentCardToBe(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS))
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.discard(playingCard));
     }
@@ -140,11 +109,11 @@ class VeioDoBarBotTest {
     @DisplayName("Should play the last card at the third round")
     void shouldPlayTheLastCardAtTheThirdRound() {
         var playingCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(playingCard));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON));
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        var intel = make().cardsToBe(playingCard)
+                        .viraToBeDiamondsOfRank(CardRank.KING)
+                        .roundResultToBe(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON)
+                        .opponentCardToBe(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS))
+                        .finish();
 
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
@@ -160,12 +129,11 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should accept raise points if has one manilha and one card equal or greater than jack")
     void shouldAcceptRaisePontsIfHasOneManilhaAndOneCardEqualOrGreaterThanJack() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+        var intel = make().cardsToBe(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                        .viraToBeDiamondsOfRank(CardRank.FOUR)
+                        .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
@@ -173,12 +141,12 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should accept raise points if has two cards equalts to or greater than two")
     void shouldAcceptRaisePointsIfHasTwoCardsEqualtsToOrGreaterThanTwo() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+        var intel = make().cardsToBe(
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                        .viraToBeDiamondsOfRank(CardRank.TWO)
+                        .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
@@ -186,12 +154,9 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
     void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        var intel = make().cardsToBeThreeOf(CardRank.FOUR, CardSuit.SPADES, CardSuit.HEARTS, CardSuit.CLUBS)
+                        .viraToBeDiamondsOfRank(CardRank.FOUR)
+                        .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
@@ -199,12 +164,11 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse if has two cards lower than Jack")
     void shouldRefuseIfHasTwoCardsLowerThanJack() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        var intel = make().cardsToBe(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
+                        .viraToBeDiamondsOfRank(CardRank.FOUR)
+                        .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
@@ -212,12 +176,9 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse if has two cards lower than two")
     void shouldRefuseIfHasTwoCardsLessThanTwo() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+        var intel = make().cardsToBeThreeOf(CardRank.ACE, CardSuit.DIAMONDS, CardSuit.CLUBS, CardSuit.HEARTS)
+                        .viraToBeDiamondsOfRank(CardRank.FOUR)
+                        .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
@@ -225,12 +186,12 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should raise points if has the greater couple")
     void shouldRaisePointsIfHasTheGreaterCouple() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        var intel = make().cardsToBe(
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                        .viraToBeDiamondsOfRank(CardRank.ACE)
+                        .finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
