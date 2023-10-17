@@ -50,6 +50,10 @@ public class Bot implements BotServiceProvider {
                 highest = card;
             }
         }
+
+        if ( numberOfManilhas > 1) {
+            return 1;
+        }
         //Jack represents de relative value = 6
         if( lowestCard.relativeValue(vira) < 6) {
             return -1;
@@ -61,11 +65,9 @@ public class Bot implements BotServiceProvider {
             return -1;
         }
 
-        if ( numberOfManilhas >= 1) {
+        if ( numberOfManilhas == 1) {
             return 0;
         }
-
-
 
         return -1;
     }
