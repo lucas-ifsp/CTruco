@@ -91,6 +91,11 @@ public class TrucoGuruUtils {
     }
 
     static TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira) {
-        return null;
+        TrucoCard wekeastCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(wekeastCard, vira) < 0) wekeastCard = card;
+        }
+
+        return wekeastCard;
     }
 }
