@@ -370,8 +370,22 @@ public class TrucoMachineBotTest {
     @DisplayName("Should raise if won first round and has zap")
     void ShouldRaiseIfWonFirstRoundAndHasZap() {
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(KING, DIAMONDS),
                 TrucoCard.of(SIX, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON), List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raise);
+    }
+    @Test
+    @DisplayName("Should raise if won first round and has hearts")
+    void ShouldRaiseIfWonFirstRoundAndHasHearts() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX, HEARTS),
+                TrucoCard.of(KING, CLUBS)
         );
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
                 .gameInfo(List.of(WON), List.of(), TrucoCard.of(FIVE, SPADES), 1)
