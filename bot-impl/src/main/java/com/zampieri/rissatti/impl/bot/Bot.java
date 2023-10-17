@@ -46,6 +46,7 @@ public class Bot implements BotServiceProvider {
 
         int numberOfManilhas = 0;
         TrucoCard lowestCard = cards.get(0);
+        TrucoCard highest = cards.get(0);
         for ( TrucoCard card : cards) {
             if (card.isManilha(vira)) {
                 numberOfManilhas ++;
@@ -55,12 +56,17 @@ public class Bot implements BotServiceProvider {
                 lowestCard = card;
             }
 
+            if ( card.relativeValue(vira) > highest.relativeValue(vira)) {
+                highest = card;
+            }
+
             //Jack represents de relative value = 6
             if( lowestCard.relativeValue(vira) < 6) {
                 return false;
-            } else {
-                return true;
+            }
 
+            if( highest.relativeValue(vira) > 8 && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
+                return true;
             }
 
         }
