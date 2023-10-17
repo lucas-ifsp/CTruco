@@ -54,6 +54,13 @@ public class Bot implements BotServiceProvider {
         if ( numberOfManilhas > 1) {
             return 1;
         }
+
+        if ( numberOfManilhas == 1) {
+            if ( !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
+                return 1;
+            }
+            return 0;
+        }
         //Jack represents de relative value = 6
         if( lowestCard.relativeValue(vira) < 6) {
             return -1;
@@ -63,10 +70,6 @@ public class Bot implements BotServiceProvider {
         }
         if ( intel.getOpponentScore() >= 9) {
             return -1;
-        }
-
-        if ( numberOfManilhas == 1) {
-            return 0;
         }
 
         return -1;
