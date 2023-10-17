@@ -839,6 +839,26 @@ class VapoBotTest {
                             .opponentScore(1);
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)), vapoBot.chooseCard(stepBuilder.build()));
                 }
+
+                @Test
+                @DisplayName("and has one manilha and a string card")
+                void HasOneManilhaWithStrongCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1);
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
+                }
             }
         }
     }
