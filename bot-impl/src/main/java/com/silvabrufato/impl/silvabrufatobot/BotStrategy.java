@@ -26,7 +26,16 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
-            if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
+            if (gameIntel.getOpenCards().size() == 2){ //opponent start
+                if(hasAHigherAndDifferentCardThanZap(gameIntel) && BotStrategy.hasZap(gameIntel)) return true;
+                if(hasAHigherAndDifferentCardThanCopas(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
+                if(hasAHigherAndDifferentCardThanSpades(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
+            }else{
+                if(BotStrategy.hasZap(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
+                if(BotStrategy.hasZap(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
+                if(BotStrategy.hasCopas(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
+            }
+
             return false;
         }
     },
@@ -63,11 +72,23 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
-            if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
-                if(countManilhas(gameIntel) >= 1) return true;
-                return BotBluff.of(Probability.P40).bluff();
+            if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
+                if(BotStrategy.hasCopas(gameIntel)) return true;
+                if(BotStrategy.countManilhas(gameIntel) == 2) return true;
+                if(cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(gameIntel)) return true;
+            }else{
+                if(BotStrategy.hasZap(gameIntel)) return true;
+                if(BotStrategy.hasCopas(gameIntel)) return true;
+                if(BotStrategy.hasEspadilha(gameIntel)) return true;
+                if(BotStrategy.countCardsEqualOrHigherThanAce(gameIntel) == 2) return true;
             }
-            return BotBluff.of(Probability.P20).bluff();
+
+            //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
+            //    if(countManilhas(gameIntel) >= 1) return true;
+            //    return BotBluff.of(Probability.P40).bluff();
+            //}
+            //return BotBluff.of(Probability.P20).bluff();
+            return false;
         }
     },
 
@@ -92,9 +113,45 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
-            return BotBluff.of(Probability.P20).bluff();
+            if(BotStrategy.hasEspadilha(gameIntel)) return true;
+            if(BotStrategy.hasOuros(gameIntel)) return true;
+            return false;
         }
     };
+
+    private static boolean cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(GameIntel gameIntel){
+        List<TrucoCard> cards = sortCards(gameIntel);
+
+        if(cards.get(0).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) {
+            if (cards.get(1).getRank().value() == 10 || cards.get(1).getRank().value() == 9 || cards.get(1).getRank().value() == 8) return true;
+        }
+        if(cards.get(1).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0){
+            if (cards.get(0).getRank().value() == 10 || cards.get(0).getRank().value() == 9 || cards.get(0).getRank().value() == 8) return true;
+        }
+
+        return false;
+    }
+
+    private static boolean hasAHigherAndDifferentCardThanZap(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isZap(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
+
+    private static boolean hasAHigherAndDifferentCardThanSpades(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isEspadilha(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
+
+    private static boolean hasAHigherAndDifferentCardThanCopas(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isCopas(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
 
     private static boolean drewThePreviousRound(GameIntel gameIntel) {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
