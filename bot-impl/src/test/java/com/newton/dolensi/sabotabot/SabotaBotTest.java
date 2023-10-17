@@ -297,5 +297,21 @@ public class SabotaBotTest {
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
 
         }
+
+        @Test
+        @DisplayName("should up rise if won one round and has zap")
+        void shouldUpRiseIfWonOneRoundAndHasZap(){
+
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON,
+                                                             GameIntel.RoundResult.LOST));
+
+            assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+
+        }
     }
 }
