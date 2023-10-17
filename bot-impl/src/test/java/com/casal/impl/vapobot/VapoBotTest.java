@@ -791,7 +791,26 @@ class VapoBotTest {
     @DisplayName("Get the highest card that is not a manilha")
     class GetTheHighestCardThatIsNotAManilha {
 
+        @Test
+        @DisplayName("choose 2H on KC, 2H and 7D with 6H as vira")
+        void get2HAsHighestNotManilhaCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
 
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+
+            assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
+        }
     }
 
     @Nested
