@@ -551,7 +551,7 @@ class TecoNoMarrecoBotTest {
         @Test
         @DisplayName("Testa se corre com uma mailha")
         void refuseIfItHasOneManilha() {
-            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, SPADES));
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(TWO, SPADES));
             cardVira = TrucoCard.of(ACE, SPADES);
             roundResult = List.of(GameIntel.RoundResult.WON);
             cards = List.of();
@@ -559,7 +559,17 @@ class TecoNoMarrecoBotTest {
             int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
             assertNotEquals(result,-1);
         }
-
+        @Test
+        @DisplayName("Testa se corre quando perdeu a primeira e tem duas manilhas")
+        void refusesWhenHeLostTheFirstOneAndHasTwoManilhas() {
+            hand = List.of(TrucoCard.of(TWO,HEARTS), TrucoCard.of(TWO, SPADES));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertNotEquals(result,-1);
+        }
 
     }
 }
