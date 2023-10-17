@@ -792,4 +792,11 @@ class VapoBotTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("Choose card test")
+    class ChooseCardTest {
+
+
+    }
 }
