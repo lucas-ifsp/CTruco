@@ -176,4 +176,8 @@ public class Bot implements BotServiceProvider {
 
         return highestCard;
     }
+
+    public boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
 }
