@@ -39,26 +39,23 @@ public class Bot implements BotServiceProvider {
         TrucoCard highest = cards.get(0);
         for ( TrucoCard card : cards) {
             if (card.isManilha(vira)) {
-                numberOfManilhas ++;
+                numberOfManilhas++;
             }
 
-            if ( card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
+            if (card.relativeValue(vira) < lowestCard.relativeValue(vira)) {
                 lowestCard = card;
             }
 
-            if ( card.relativeValue(vira) > highest.relativeValue(vira)) {
+            if (card.relativeValue(vira) > highest.relativeValue(vira)) {
                 highest = card;
             }
-
-            //Jack represents de relative value = 6
-            if( lowestCard.relativeValue(vira) < 6) {
-                return -1;
-            }
-
-            if( highest.relativeValue(vira) > 8 && !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW && result.get(0) == GameIntel.RoundResult.WON) {
-                return 0;
-            }
-
+        }
+        //Jack represents de relative value = 6
+        if( lowestCard.relativeValue(vira) < 6) {
+            return -1;
+        }
+        if( highest.relativeValue(vira) > 8 && !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
+            return 0;
         }
         if ( intel.getOpponentScore() >= 9) {
             return -1;
@@ -90,6 +87,15 @@ public class Bot implements BotServiceProvider {
         List<GameIntel.RoundResult> result = intel.getRoundResults();
 
         int numberOfManilhas = 0;
+
+        if (intel.getHandPoints() >= 6) {
+            TrucoCard highest = cards.get(0);
+            for ( TrucoCard card : cards) {
+                if (card.relativeValue(vira) > highest.relativeValue(vira)) {
+                    highest = card;
+                }}
+            return CardToPlay.of(highest);
+        }
 
         for ( TrucoCard card : cards) {
             if (card.isManilha(vira)) {
