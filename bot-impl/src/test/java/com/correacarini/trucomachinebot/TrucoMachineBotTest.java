@@ -335,4 +335,20 @@ public class TrucoMachineBotTest {
         assertTrue(playMaoDeOnze);
 
     }
+    @Test
+    @DisplayName("Should raise if has 3 three cards and score difference is greater than 3")
+    void ShouldRaiseIfHas3ThreeCardsAndScoreDifferenceIsGreaterThan3() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE,SPADES),
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(THREE, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 5)
+                .opponentScore(0);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raise);
+    }
 }
