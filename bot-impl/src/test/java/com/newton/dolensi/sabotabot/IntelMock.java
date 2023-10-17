@@ -22,6 +22,13 @@ public class IntelMock {
                 TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
     }
 
+    public static List<TrucoCard> onlyDiamonds() {
+        return List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
+    }
+
     public static List<TrucoCard> cardList2Cards() {
         return List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),

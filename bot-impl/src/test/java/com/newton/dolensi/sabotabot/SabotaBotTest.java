@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,6 +75,16 @@ public class SabotaBotTest {
                 when(intel.getVira()).thenReturn(IntelMock.viraKC());
 
                 assertTrue(sut.chooseCard(intel).content().isOuros(intel.getVira()));
+            }
+
+            @Test
+            @DisplayName("Should keep diamonds if it is the strongest card")
+            void shouldKeepDiamondsIfItIsTheStrongestCard(){
+                var cards = IntelMock.onlyDiamonds();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+                assertFalse(sut.chooseCard(intel).content().isOuros(intel.getVira()));
             }
         }
 
