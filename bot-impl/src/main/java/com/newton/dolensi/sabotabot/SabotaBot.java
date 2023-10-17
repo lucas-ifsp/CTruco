@@ -83,13 +83,10 @@ public class SabotaBot implements BotServiceProvider {
                 return 0;
             }
 
-            for (TrucoCard card : manilhas) {
-                if (card.isZap(intel.getVira())){
-                    return 1;
-                }
+            if (hasZap(intel)){
+                return 1;
             }
         }
-
 
 
         return -1;
@@ -214,6 +211,20 @@ public class SabotaBot implements BotServiceProvider {
             if (card.isManilha(intel.getVira()))
                 manilhas.add(card);
         return manilhas;
+    }
+
+    private boolean hasZap(GameIntel intel){
+
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        if (manilhas.size() >= 1){
+            for (TrucoCard card : manilhas) {
+                if (card.isZap(intel.getVira())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean hasStrongManilha(GameIntel intel) {
