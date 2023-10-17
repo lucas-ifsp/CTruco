@@ -490,6 +490,18 @@ class TecoNoMarrecoBotTest {
             CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,HEARTS));
         }
+        @Test
+        @DisplayName("Testa amarrar se tiver não tiver manilha")
+        void tieIfDontHaveManilha() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(FOUR, CLUBS));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = tecoNoMarrecoBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isNotEqualTo(TrucoCard.of(THREE,HEARTS));
+        }
 
     }
 
@@ -552,7 +564,7 @@ class TecoNoMarrecoBotTest {
             assertThat(result).isZero();
         }
         @Test
-        @DisplayName("Testa aceita se tem uam ou mais manilha e tiver um três")
+        @DisplayName("Testa aceita se tem uma ou mais manilha e tiver um três")
         void acceptIfHaveManilhaEndStrongCard() {
             hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(TWO, CLUBS));
             cardVira = TrucoCard.of(JACK, SPADES);
