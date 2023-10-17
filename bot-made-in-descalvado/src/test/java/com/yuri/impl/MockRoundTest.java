@@ -543,12 +543,12 @@ class MockRoundTest {
         GameIntel intel = MockRound
             .vira(vira)
             .giveScoreB(5)
-            .giveB(cardB0)
             .giveA(cardA0)
             .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB0)
             .giveB(cardB1)
             .giveB(cardB2)
-            .giveA(cardA2)
             .build();
 
         GameIntel expect = GameIntel.StepBuilder.with()
@@ -563,6 +563,37 @@ class MockRoundTest {
                 0
             )
             .opponentScore(5)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
+    }
+
+    @Test
+    void shouldBuildIntel_WithHandPoints() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            .hand(3)
+            .giveA(cardA0)
+            .giveA(cardA1)
+            .giveA(cardA2)
+            .giveB(cardB0)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .build();
+
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(),
+                List.of(vira),
+                vira,
+                3
+            )
+            .botInfo(
+                List.of(cardA0, cardA1, cardA2),
+                0
+            )
+            .opponentScore(0)
             .opponentCard(null)
             .build();
 
