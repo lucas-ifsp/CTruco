@@ -21,6 +21,10 @@ public class CaipirasBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        TrucoCard middle = chooseMiddleCart(intel.getCards(), intel.getVira(), intel.getRoundResults());
+        if(middle!=null){
+            return CardToPlay.of(middle);
+        }
         if(checkExistenceDiamondManilha(intel.getCards(),intel.getVira())){
             return CardToPlay.of(chooseDiamondInFirstRound(intel.getCards(),intel.getVira()));
         }
