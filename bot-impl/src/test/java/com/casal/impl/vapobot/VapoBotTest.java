@@ -545,6 +545,31 @@ class VapoBotTest {
 
             assertEquals(Optional.empty(), vapoBot.getLowestCardToWin(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return AH as the lowest card to win")
+        void ShouldReturnAH() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+            );
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), vapoBot.getLowestCardToWin(stepBuilder.build()).get());
+        }
+
+
     }
 
 
@@ -1049,7 +1074,7 @@ class VapoBotTest {
                     }
 
                     @Test
-                    @DisplayName("and has one manilhas and should win")
+                    @DisplayName("and has one manilha should win")
                     void HasOneManilhas() {
                         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
                         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
@@ -1069,8 +1094,9 @@ class VapoBotTest {
                                 .opponentCard(opponentCard);
                         assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
                     }
-                }
 
+
+                }
             }
         }
     }
