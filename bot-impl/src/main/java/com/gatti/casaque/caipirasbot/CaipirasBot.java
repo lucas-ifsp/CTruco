@@ -65,6 +65,19 @@ public class CaipirasBot implements BotServiceProvider {
         return null;
     }
 
+    public TrucoCard chooseWeakInFirstRound(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard weak = null;
+        for (TrucoCard card : cards) {
+            if (weak == null) {
+                weak = card;
+            }
+            if(weak.compareValueTo(card,vira) > 0){
+                weak = card;
+            }
+        }
+        return weak;
+    }
+
     public boolean bluffWhenOpponentThirdCardIsKnown(List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards) {
         if (roundResults.size() == 2) {
             return !checkExistenceCasalMaior(openCards);
