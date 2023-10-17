@@ -80,12 +80,30 @@ public class SabotaBot implements BotServiceProvider {
 
         if (!manilhas.isEmpty()){
             if (manilhas.size() >= 2){
+
+                int upRise = 0;
+                for (TrucoCard manilha : manilhas) {
+
+                    if (manilha.isZap(intel.getVira())){
+                        upRise++;
+                    }
+
+                    if (manilha.isCopas(intel.getVira())){
+                        upRise++;
+                    }
+                }
+                if (upRise == 2){
+                    return 1;
+                }
+
                 return 0;
             }
 
             if (roundResults.contains(GameIntel.RoundResult.WON) && getZap(intel) != null){
                 return 1;
             }
+
+
         }
 
         if (intel.getOpponentScore() == 11){

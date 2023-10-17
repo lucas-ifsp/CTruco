@@ -332,7 +332,7 @@ public class SabotaBotTest {
             when(intel.getCards()).thenReturn(
                     List.of(
                             TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)));
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
             when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
 
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
