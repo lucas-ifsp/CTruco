@@ -457,7 +457,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isZero();
         }
         @Test
         @DisplayName("Testa pede aumento se tiver casal maior")
@@ -467,8 +468,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
-
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isOne();
         }
         @Test
         @DisplayName("Testa pede aumento se ganhou a primeira e ainda tem zap")
@@ -478,8 +479,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of(GameIntel.RoundResult.WON);
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
-
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isOne();
         }
         @Test
         @DisplayName("Testa pede aumento se teve empate  tem zap")
@@ -489,8 +490,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of(GameIntel.RoundResult.DREW);
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
-
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isOne();
         }
         @Test
         @DisplayName("Testa pede aumento se tem manilha forte")
@@ -500,7 +501,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of(GameIntel.RoundResult.DREW);
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isZero();
         }
         @Test
         @DisplayName("Testa aceita se tem uam ou mais manilha e tiver um três")
@@ -510,7 +512,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isZero();
         }
         @Test
         @DisplayName("Testa recusar se não tiver carta")
@@ -520,7 +523,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of();
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 9).opponentScore(0);
-            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isNegative();
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isNegative();
 
         }
         @Test
@@ -531,8 +535,8 @@ class TecoNoMarrecoBotTest {
             roundResult = List.of(GameIntel.RoundResult.LOST);
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
-           Integer result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
-            assertEquals(-1,result);
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isNegative();
 
         }
 
