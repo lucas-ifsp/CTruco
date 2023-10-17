@@ -42,9 +42,9 @@ public class CaipirasBot implements BotServiceProvider {
         TrucoCard cardToPlay = chooseWeakInFirstRound(intel.getCards(), intel.getVira());
         if (checkEnemyIsFirstPLayer(intel.getOpponentCard())) {
             for (TrucoCard card : intel.getCards()) {
-                if (card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) >= 0) {
+                if (card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0) {
                     if (card.compareValueTo(cardToPlay, intel.getVira()) < 0) {
-                        cardToPlay = card;
+                        return card;
                     }
                 }
             }
