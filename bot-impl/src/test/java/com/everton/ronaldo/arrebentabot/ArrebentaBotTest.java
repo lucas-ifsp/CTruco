@@ -539,10 +539,57 @@ class ArrebentaBotTest {
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
-//            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
-
-            assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
+         assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
+        @Test
+        @DisplayName("Should not accept raise when in the last hand, have weak cards and opponent score over 8")
+        void ShouldNotAcceptRaiseWhenInTheLastHandHaveWeakCardsAndOpponentScoreOverEight() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel),0);
+        }
+
+        @Test
+        @DisplayName("Should not accept raise when in the last hand, have weak cards and opponent score under 9")
+        void ShouldNotAcceptRaiseWhenInTheLastHandHaveWeakCardsAndOpponentScoreUnderNine() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(3);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel),0);
+        }
+
+        @Test
+        @DisplayName("Should accept raise when in the last hand and opponent score over 8 but have manilha")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreOverEightButHaveManilha() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Collections.singletonList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertEquals(arrebentaBot.getRaiseResponse(intel),1);
+        }
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

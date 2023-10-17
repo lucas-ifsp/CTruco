@@ -109,29 +109,50 @@ public class ArrebentaBot implements BotServiceProvider {
         return CardToPlay.of(smallerCard(intel));
     }
 
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        final List<TrucoCard> cards = intel.getCards();
-        var vira = intel.getVira();
 
-        final Boolean hasManilhas = cards.stream().anyMatch(card -> card.isManilha(vira));
-        int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
-        final Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+   @Override
+   public int getRaiseResponse(GameIntel intel) {
+       final List<TrucoCard> cards = intel.getCards();
+       var vira = intel.getVira();
 
-        if(intel.getCards().size() == 2){
-            if((!intel.getRoundResults().isEmpty()) && (intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST)){
-                if(!hasManilhas){
-                    if(cardsValue >= 12){
-                        return 1;
-                    }
-                    return 0; }
-            }
-        }
+       final Boolean hasManilhas = cards.stream().anyMatch(card -> card.isManilha(vira));
+       int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
+       final Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        if(cardsValue >= 18 || hasManilhas) { return 1; }
+       if (intel.getCards().size() == 2) {
+           if ((!intel.getRoundResults().isEmpty()) && (intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST)) {
+               if (!hasManilhas) {
+                   if (cardsValue >= 12) {
+                       return 1;
+                   }
+                   return 0;
+               }
+           }
+       }
 
-        return 0;
-    }
+       if (intel.getCards().size() == 1) {
+
+           if(intel.getOpponentScore() >= 9){
+               if (hasManilhas || hasThree(intel) || hasTwo(intel)) {
+                   return 1;
+               }
+               return 0;
+           }
+           if(intel.getOpponentScore() < 9){
+               if (hasManilhas || hasThree(intel) || hasTwo(intel) || hasAce(intel)) {
+                   return 1;
+               }
+           }
+           return 0;
+       }
+
+       if (cardsValue >= 18 || hasManilhas) {
+           return 1;
+       }
+
+       return 0;
+   }
+
 
     @Override
     public String getName() {
