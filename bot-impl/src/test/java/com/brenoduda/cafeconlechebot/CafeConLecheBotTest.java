@@ -211,6 +211,25 @@ public class CafeConLecheBotTest {
             boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
             assertThat(decideIfRaises).isEqualTo(false);
         }
+
+        @Test
+        @DisplayName("Should not raise when the first round is lost and not has good card")
+        void shouldNotRaiseWhenTheFirstRoundIsLostAndNotHasGoodCard() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(FIVE, SPADES),
+                    TrucoCard.of(SIX, SPADES),
+                    TrucoCard.of(SEVEN, SPADES)
+            );
+            TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(false);
+        }
     }
 
     @Nested
