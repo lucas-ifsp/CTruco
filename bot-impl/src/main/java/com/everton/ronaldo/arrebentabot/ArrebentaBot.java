@@ -48,7 +48,7 @@ public class ArrebentaBot implements BotServiceProvider {
         }
 
         if(intel.getCards().size() == 1){
-            if(hasManilhas || hasThree(intel) || hasTwo(intel)){
+            if(hasManilhas || hasThree(intel) || hasTwo(intel) || hasAce(intel)){
                 return true;
             }
             return false;
@@ -235,6 +235,17 @@ public class ArrebentaBot implements BotServiceProvider {
             }
         }
         return hasTwo;
+    }
+
+    private boolean hasAce(GameIntel intel){
+        final List<TrucoCard> cards = intel.getCards();
+        boolean hasAce = false;
+        for (TrucoCard card : intel.getCards()) {
+            if(card.getRank().value() == 8){
+                hasAce = true;
+            }
+        }
+        return hasAce;
     }
 
 }
