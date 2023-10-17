@@ -96,9 +96,6 @@ public class Bot implements BotServiceProvider {
 
         int numberOfManilhas = 0;
 
-        if (intel.getHandPoints() >= 6) {
-            return CardToPlay.of(getHighestCard(cards, vira));
-        }
 
         for ( TrucoCard card : cards) {
             if (card.isManilha(vira)) {
@@ -129,7 +126,7 @@ public class Bot implements BotServiceProvider {
             }
             else {
                 for (TrucoCard card : cards) {
-                    if ( card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
+                    if ( card.relativeValue(vira) >= opponentCard.relativeValue(vira)) {
                         return CardToPlay.of(card);
                     }
                 }
@@ -149,6 +146,10 @@ public class Bot implements BotServiceProvider {
 
                 return CardToPlay.of(lowestCard);
             } else {
+                if (intel.getHandPoints() >= 6) {
+                    return CardToPlay.of(getHighestCard(cards, vira));
+                }
+
                 if (card.relativeValue(vira) > lowestCard.relativeValue(vira) && !card.isManilha(vira)) {
                     return CardToPlay.of(card);
                 }
