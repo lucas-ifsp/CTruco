@@ -39,6 +39,7 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         if(intel.getScore() - intel.getOpponentScore() > 3) {
             if(hasManilhaAndThree(intel))  return true;
+            if(has3Threes(intel)) return true;
             if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(WON)){
                 if(hasManilhaAndTwo(intel)) return true;
             }
@@ -187,5 +188,14 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+    private boolean has3Threes(GameIntel intel){
+        int threes = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().equals(THREE)) {
+                threes++;
+            }
+        }
+        return threes == 3;
     }
 }
