@@ -36,7 +36,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TrucoGuruTest {
     @Nested
@@ -296,5 +297,33 @@ public class TrucoGuruTest {
 
             assertThat(trucoGuru.getRaiseResponse(intel)).isZero();
         }
+    }
+
+    @Nested
+    @DisplayName("GetMaoDeOnzeResponseTests")
+    class GetMaoDeOnzeResponseTests{
+        TrucoGuru trucoGuru = new TrucoGuru();
+        @Test
+        @DisplayName("Should accept mao de onze if the cards are strong")
+        public void shouldAcceptMaoDeOnzeIfTheCarsAreStrongTest(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(9)
+                            .build();
+
+            assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
     }
 }
