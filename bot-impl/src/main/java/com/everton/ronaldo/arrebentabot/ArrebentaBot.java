@@ -3,10 +3,8 @@ package com.everton.ronaldo.arrebentabot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ArrebentaBot implements BotServiceProvider {
     @Override
@@ -50,9 +48,10 @@ public class ArrebentaBot implements BotServiceProvider {
         }
 
         if(intel.getCards().size() == 1){
-            if(hasManilhas || hasThree(intel)){
+            if(hasManilhas || hasThree(intel) || hasTwo(intel)){
                 return true;
             }
+            return false;
         }
 
         if(intel.getOpponentScore() == 11 || intel.getScore() == 11){ return false; }
@@ -225,6 +224,17 @@ public class ArrebentaBot implements BotServiceProvider {
             }
         }
         return hasThree;
+    }
+
+    private boolean hasTwo(GameIntel intel){
+        final List<TrucoCard> cards = intel.getCards();
+        boolean hasTwo = false;
+        for (TrucoCard card : intel.getCards()) {
+            if(card.getRank().value() == 9){
+                hasTwo = true;
+            }
+        }
+        return hasTwo;
     }
 
 }
