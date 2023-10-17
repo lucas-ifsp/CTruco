@@ -1233,7 +1233,7 @@ class VapoBotTest {
                             .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                             .botInfo(myCards, 1)
                             .opponentScore(1);
-                    assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.SPADES), vapoBot.getHighestCardThatIsNotAManilha(stepBuilder.build()).get());
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)), vapoBot.chooseCard(stepBuilder.build()));
                 }
             }
             @Nested
