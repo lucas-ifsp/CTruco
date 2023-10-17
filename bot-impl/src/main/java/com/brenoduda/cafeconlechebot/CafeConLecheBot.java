@@ -97,6 +97,10 @@ public class CafeConLecheBot implements BotServiceProvider {
             return -1;
         }
 
+        if(botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+            return -1;
+        }
+
         return 0;
     }
 }
