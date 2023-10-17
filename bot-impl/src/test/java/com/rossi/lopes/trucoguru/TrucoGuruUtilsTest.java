@@ -269,5 +269,18 @@ public class TrucoGuruUtilsTest {
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.FOUR);
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
         }
+
+        @Test
+        @DisplayName("Should return the correct weakestCard when provided with more than one manilha")
+        void shouldReturnWeakestCardWhenProvidedWithMoreThanOneManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.THREE);
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
+        }
     }
 }
