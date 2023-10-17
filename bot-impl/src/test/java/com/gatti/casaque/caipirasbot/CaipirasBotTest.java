@@ -509,7 +509,7 @@ class CaipirasBotTest {
                                 TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
                         ),
                         TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
                 )
         );
     }
