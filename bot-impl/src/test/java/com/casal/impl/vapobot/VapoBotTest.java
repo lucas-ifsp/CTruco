@@ -480,55 +480,78 @@ class VapoBotTest {
 
             assertEquals(3, vapoBot.getAmountOfManilhas(stepBuilder.build()));
         }
+    }
+    @Nested
+    @DisplayName("Get lowest card that wins against opponent card")
+    class LowestCardToWinTest {
 
-        @Nested
-        @DisplayName("Get lowest card that wins against opponent card")
-        class LowestCardToWinTest {
-            @Test
-            @DisplayName("Should return JS when other card is 2S")
-            void shouldReturnJackOfSpadesWhenOtherCardIsTwoOfSpades() {
-                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-                TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        @Test
+        @DisplayName("Should return JS when other card is 2S")
+        void shouldReturnJackOfSpadesWhenOtherCardIsTwoOfSpades() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
 
-                List<TrucoCard> myCards = Arrays.asList(
-                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
-                );
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+            );
 
-                List<TrucoCard> openCards = List.of(vira, opponentCard);
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
 
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
-                        .botInfo(myCards, 1)
-                        .opponentScore(1)
-                        .opponentCard(opponentCard);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
 
-                assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
-            }
+            assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
+        }
 
-            @Test
-            @DisplayName("Should return AS when other card is AC")
-            void shouldReturnAceOfSpadesWhenOtherIsAceOfClubs() {
-                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-                TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        @Test
+        @DisplayName("Should return AS when other card is AC")
+        void shouldReturnAceOfSpadesWhenOtherIsAceOfClubs() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
-                List<TrucoCard> myCards = Arrays.asList(
-                        TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
-                );
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
 
-                List<TrucoCard> openCards = List.of(vira, opponentCard);
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
 
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
-                        .botInfo(myCards, 1)
-                        .opponentScore(1)
-                        .opponentCard(opponentCard);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
 
-                assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
-            }
+            assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)), vapoBot.getLowestCardToWin(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return Optional.Empty() when there are no cards that can win")
+        void shouldReturnEmptyOptional() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+
+            assertEquals(Optional.empty(), vapoBot.getLowestCardToWin(stepBuilder.build()));
         }
     }
+
 
     @Nested
     @DisplayName("Check if opponent card")
