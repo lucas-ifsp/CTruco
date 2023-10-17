@@ -31,10 +31,11 @@ public class VapoBot implements BotServiceProvider {
                 if (getAmountOfManilhas(intel) >= 2){
                     return CardToPlay.of(getHighestCard(intel));
                 } else if (getAmountOfManilhas(intel) == 1){
-                    if (getAverageCardValue(intel) > 7) {
-
+                    if (numberOfCardsThatHasARelativeValueGreaterThan(intel, 7) > 1) {
+                        return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).get());
+                    } else {
+                        return CardToPlay.of(getLowestCard(intel));
                     }
-                    return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).get());
                 }
             }
         }
