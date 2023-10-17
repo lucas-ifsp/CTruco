@@ -283,6 +283,18 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se nao pede truco com mao fraca")
+        void shouldNotRequestTrucoIfWeakHand(){
+            hand = List.of(TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FIVE, SPADES), TrucoCard.of(FIVE, HEARTS));
+            cardVira = TrucoCard.of(KING, HEARTS);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 2).opponentScore(8);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
+
     }
 
     @Nested
