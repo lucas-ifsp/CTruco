@@ -27,6 +27,8 @@ public final class VeioDoBarBot implements BotServiceProvider {
         var cards = intel.getCards();
         var paramCardThree = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
         var paramCardTwo = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        var botScore = intel.getScore();
+        var opponentScore = intel.getOpponentScore();
 
         var cardsThree = intel.getCards().stream()
                 .filter(card -> card.compareValueTo(paramCardThree, vira) >= 0)
@@ -41,6 +43,10 @@ public final class VeioDoBarBot implements BotServiceProvider {
         }
 
         if (cardsThree.size() == 3 || usableCards.size() >= 2){
+            return true;
+        }
+
+        if(botScore + 6 > opponentScore && botScore + 6 < 9){
             return true;
         }
 
