@@ -57,7 +57,7 @@ public class VapoBot implements BotServiceProvider {
                     }
                 }
             } else {
-                return CardToPlay.of(getLowestCardToWin(intel).get());
+                return CardToPlay.of(getLowestCardToWin(intel).orElse(intel.getCards().get(0)));
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
