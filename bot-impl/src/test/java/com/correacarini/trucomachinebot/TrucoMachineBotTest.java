@@ -175,4 +175,25 @@ public class TrucoMachineBotTest {
         boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raises);
     }
+    @Test
+    @DisplayName("Should raise if last round card is greater than opponent card")
+    void ShouldRaiseIfLastRoundCardIsGreaterThanOpponentCard() {
+        TrucoCard vira = TrucoCard.of(ACE, SPADES);
+        List<TrucoCard> card = List.of(
+                TrucoCard.of(TWO, CLUBS)
+        );
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON,
+                GameIntel.RoundResult.LOST
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(TrucoCard.of(FOUR, CLUBS)), vira, 1)
+                .botInfo(card, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(FOUR, DIAMONDS));
+
+        boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raises);
+    }
 }
