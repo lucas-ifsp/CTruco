@@ -32,13 +32,7 @@ public class CafeConLecheBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
-        if(intel.getCards().stream().filter(card -> card.isManilha(vira)).count() >= 2){
-            return false;
-        }
-
-        if(intel.getCards().stream().filter(card -> card.isManilha(vira)).count() == 1 &&
-                intel.getCards().stream().anyMatch(card -> card.getRank().equals(CardRank.THREE))
-        ){
+        if(hasStrongCards(intel)){
             return false;
         }
 
