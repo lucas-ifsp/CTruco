@@ -47,12 +47,7 @@ public class BotMadeInDescalvado implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return switch (round(intel)) {
-            case 1 -> FirstRound.getMaoDeOnzeResponse(intel);
-            case 2 -> SecondRound.getMaoDeOnzeResponse(intel);
-            case 3 -> ThirdRound.getMaoDeOnzeResponse(intel);
-            default -> throw new RuntimeException(INVALID_ROUND_MSG);
-        };
+        return true;
     }
 
     @Override
@@ -82,10 +77,6 @@ public class BotMadeInDescalvado implements BotServiceProvider {
     private static class FirstRound {
         public static int getRaiseResponse(GameIntel intel) {
             return 0;
-        }
-
-        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
-            return false;
         }
 
         public static boolean decideIfRaises(GameIntel intel) {
@@ -148,10 +139,6 @@ public class BotMadeInDescalvado implements BotServiceProvider {
             return 0;
         }
 
-        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
-            return false;
-        }
-
         public static boolean decideIfRaises(GameIntel intel) {
             return false;
         }
@@ -211,10 +198,6 @@ public class BotMadeInDescalvado implements BotServiceProvider {
     private static class ThirdRound {
         public static int getRaiseResponse(GameIntel intel) {
             return 0;
-        }
-
-        public static boolean getMaoDeOnzeResponse(GameIntel intel) {
-            return false;
         }
 
         public static boolean decideIfRaises(GameIntel intel) {
