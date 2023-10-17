@@ -49,7 +49,7 @@ public class TrucoMachineBot implements BotServiceProvider {
 
     @Override
     public String getName() {
-        return BotServiceProvider.super.getName();
+        return "Truco Machine";
     }
 
     private TrucoCard getGreatestCard( List<TrucoCard> cards, TrucoCard vira){
