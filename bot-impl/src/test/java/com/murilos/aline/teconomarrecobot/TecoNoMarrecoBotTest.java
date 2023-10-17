@@ -516,7 +516,7 @@ class TecoNoMarrecoBotTest {
             assertThat(result).isZero();
         }
         @Test
-        @DisplayName("Testa recusar se não tiver carta")
+        @DisplayName("Testa recusar se não tiver carta boas")
         void refuseIfYouDontHaveGoodCards() {
             hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(KING, SPADES), TrucoCard.of(THREE, CLUBS));
             cardVira = TrucoCard.of(ACE, SPADES);
@@ -525,7 +525,6 @@ class TecoNoMarrecoBotTest {
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 9).opponentScore(0);
             int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
             assertThat(result).isNegative();
-
         }
         @Test
         @DisplayName("Testa recusar se perdeu a primeira e não tem carta forte")
@@ -537,8 +536,20 @@ class TecoNoMarrecoBotTest {
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
             int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
             assertThat(result).isNegative();
+        }
+        @Test
+        @DisplayName("Testa aceita se ganhou a primeira e tem um tres")
+        void acceptIfWonTheFirstRoundOneAndHaveIsOneThree() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(KING, SPADES));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.WON);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isZero();
 
         }
+
 
 
     }
