@@ -288,4 +288,20 @@ class TecoNoMarrecoBotTest {
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,HEARTS));
         }
     }
+
+    @Nested
+    @DisplayName("getRaiseResponse")
+    class GetRaiseResponse{
+        @Test
+        @DisplayName("Testa aceita truco se tiver uma manilha ou mais")
+        void acceptRaiseIfYouHaveManilhaOrMore() {
+            hand = List.of(TrucoCard.of(QUEEN,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(SEVEN, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 3).opponentScore(0);
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
+        }
+
+    }
 }
