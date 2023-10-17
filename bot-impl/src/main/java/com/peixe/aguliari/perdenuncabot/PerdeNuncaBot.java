@@ -237,8 +237,11 @@ public class PerdeNuncaBot implements BotServiceProvider {
         return 0;
     }
 
-
     private boolean getManilha(GameIntel intel) {
         return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(intel.getVira()));
+    }
+
+    public boolean get2or3(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.TWO || card.getRank() == CardRank.THREE);
     }
 }
