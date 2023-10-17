@@ -587,7 +587,7 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
             when(intel.getOpponentScore()).thenReturn(3);
 
-            assertEquals(arrebentaBot.getRaiseResponse(intel),0);
+            assertEquals(arrebentaBot.getRaiseResponse(intel),1);
         }
 
         @Test
