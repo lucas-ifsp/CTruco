@@ -45,6 +45,10 @@ public class CafeConLecheBot implements BotServiceProvider {
         return true;
 
     }
+    private int howManyEquals(GameIntel intel, CardRank rank){
+        return (int )intel.getCards().stream().filter(card -> card.getRank().equals(rank)).count();
+    }
+
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
