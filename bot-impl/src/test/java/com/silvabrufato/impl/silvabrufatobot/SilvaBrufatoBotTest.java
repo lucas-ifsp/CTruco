@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -705,6 +706,18 @@ public class SilvaBrufatoBotTest {
                         TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                         TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            }
+
+            @Test
+            @DisplayName("shouldReturnTrueIfBotHasCopasAndSpades")
+            void shouldReturnTrueIfBotHasCopasAndSpades() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of());
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
                 assertThat(sut.decideIfRaises(gameIntel)).isTrue();
             }
 
