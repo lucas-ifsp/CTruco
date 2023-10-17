@@ -28,7 +28,11 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         if(intel.getOpponentCard().isPresent()){
             TrucoCard minimalGreaterCard = getMinimalGreaterCard(cards, vira, intel.getOpponentCard().get());
-            if(minimalGreaterCard == null){
+            if(minimalGreaterCard == null) {
+                if (greatestCard.relativeValue(vira) == intel.getOpponentCard().get().relativeValue((vira))){
+                    return CardToPlay.of(greatestCard);
+                }
+
                 TrucoCard lowestCard = getLowestCard(cards, vira);
                 return CardToPlay.of(lowestCard);
             }
