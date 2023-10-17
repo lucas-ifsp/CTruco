@@ -33,8 +33,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -316,6 +315,25 @@ public class CafeConLecheBotTest {
 
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
             assertThat(raiseResponse).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("Should reject when the first round is lost and not has good card")
+        void shouldRejectWhenTheFirstRoundIsLostAndNotHasGoodCard() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, SPADES),
+                    TrucoCard.of(SIX, SPADES),
+                    TrucoCard.of(SEVEN, SPADES)
+            );
+            TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(-1);
         }
     }
 
