@@ -48,9 +48,14 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        final int elevenHandPoints = 11;
         List<GameIntel.RoundResult> rounds = intel.getRoundResults();
         TrucoCard vira = intel.getVira();
         List<TrucoCard> hand = intel.getCards();
+
+        if (intel.getScore() == elevenHandPoints || intel.getOpponentScore() == elevenHandPoints){
+            return false;
+        }
 
         if (rounds.isEmpty()) {
             int handPowerRank = getPowerRankFirstRound(hand, vira);
