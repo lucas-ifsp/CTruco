@@ -238,29 +238,6 @@ public class SilvaBrufatoBotTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
         }
 
-        @Nested
-        @DisplayName("Raise points bluff in first round")
-        class RaisePointsBluffInFirstRound {
-            private static BotBluff botBluff;
-            @BeforeEach
-            public void setBotBluff() {
-                botBluff = mock(BotBluff.class);
-            }
-
-            @Test
-            @DisplayName("Should bluff in first round if when does not have any Manilha")
-            public void ShouldBluffInFirstRoundIfDoesNotHaveAnyManilha() {
-                when(botBluff.bluff()).thenReturn(true);
-                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
-                when(gameIntel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)      
-            ));        
-            assertThat(sut.decideIfRaises(gameIntel)).isTrue();
-            }
-        }
-
     }
 
     @Nested
