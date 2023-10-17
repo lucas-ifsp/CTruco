@@ -735,6 +735,10 @@ public class SilvaBrufatoBotTest {
                 @DisplayName("theReturnMustBeDifferentFromNull")
                 void theReturnMustBeDifferentFromNull() {
                     when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST));
+                    when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+                    when(gameIntel.getCards()).thenReturn(List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
                     assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
                 }
 
@@ -838,6 +842,9 @@ public class SilvaBrufatoBotTest {
             @DisplayName("theReturnMustBeDifferentFromNull")
             void theReturnMustBeDifferentFromNull() {
                 when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.LOST,RoundResult.WON));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES)));
                 assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
             }
 
