@@ -412,7 +412,21 @@ class TecoNoMarrecoBotTest {
             cards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 9).opponentScore(0);
             assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isNegative();
+
         }
+        @Test
+        @DisplayName("Testa recusar se perdeu a primeira e não tem carta forte")
+        void RefuseIfYouLostTheFirstRoundAndHaveWeakCards() {
+            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(ACE, SPADES));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
+           Integer result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(-1,result);
+
+        }
+
 
     }
 }
