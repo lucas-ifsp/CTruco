@@ -789,9 +789,13 @@ class VapoBotTest {
 
     @Nested
     @DisplayName("Counts how many cards have a relative value greater than")
-    class numberOfCardsThatHasARelativeValueGreaterThanTest {
+    class NumberOfCardsThatHasARelativeValueGreaterThanTest {
 
+        @Test
+        @DisplayName("5 with cards 4D, 7C, AC")
+        void shouldReturn2cards() {
 
+        }
     }
 
     @Nested
