@@ -72,7 +72,7 @@ public class TrucoGuruUtils {
     static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard strongestCard = cards.get(0);
         for (TrucoCard card : cards) {
-          if (card.compareValueTo(strongestCard, vira) == 1) strongestCard = card;
+          if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
         }
 
         return strongestCard;

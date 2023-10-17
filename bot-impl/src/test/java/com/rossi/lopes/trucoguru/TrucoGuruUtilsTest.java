@@ -224,6 +224,7 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
         }
 
         @Test
@@ -236,6 +237,7 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.CLUBS);
         }
 
         @Test
@@ -248,6 +250,7 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.THREE);
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getSuit(), CardSuit.DIAMONDS);
         }
     }
 }
