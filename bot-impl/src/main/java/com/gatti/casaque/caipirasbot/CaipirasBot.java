@@ -14,7 +14,9 @@ public class CaipirasBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        var raise = false;
+        raise = checkRaiseInFirstRound(intel.getCards(),intel.getVira());
+        return raise;
     }
 
     @Override
