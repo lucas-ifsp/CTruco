@@ -234,36 +234,37 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (intel.getCards().size() == 1) {
-            if (intel.getCards().get(0).isZap(intel.getVira())) {
-                return 1;
-            }
-            if (getManilha(intel)) {
-                return 1;
-            }
-            if (get2or3(intel)) {
-                return 1;
-            }
-        }
-        if (intel.getHandPoints() == 9 && intel.getOpponentScore() == 9) {
-            return 0;
-        }
-        if (intel.getHandPoints() == 9 && intel.getOpponentScore() <= 6) {
+        if (intel.getCards().get(0).isZap(intel.getVira())) {
             return 1;
         }
-        if (intel.getHandPoints() == 6 && intel.getOpponentScore() >= 9) {
-            return 0;
-        }
-        if (intel.getHandPoints() == 6 && intel.getOpponentScore() <= 6) {
+        if (getManilha(intel)) {
             return 1;
         }
-        if (intel.getHandPoints() == 3 && intel.getOpponentScore() >= 6) {
+        if (get2or3(intel)) {
+            return 1;
+        }
+        if (intel.getScore() == 9 && intel.getOpponentScore() == 9) {
             return 0;
         }
-        if (intel.getHandPoints() == 3 && intel.getOpponentScore() <= 3) {
+        if (intel.getScore() == 9 && intel.getOpponentScore() <= 6) {
+            return 1;
+        }
+        if (intel.getScore() == 6 && intel.getOpponentScore() >= 9) {
+            return 0;
+        }
+        if (intel.getScore() == 6 && intel.getOpponentScore() <= 6) {
+            return 1;
+        }
+        if (intel.getScore() == 3 && intel.getOpponentScore() >= 6) {
+            return 0;
+        }
+        if (intel.getScore() == 3 && intel.getOpponentScore() <= 3) {
             return 1;
         }
         if (intel.getOpponentScore() == 0) {
+            return 1;
+        }
+        if (intel.getHandPoints() == 0 && intel.getOpponentScore() == 0) {
             return 1;
         }
         if (intel.getScore() >= intel.getOpponentScore() + 3) {
