@@ -345,5 +345,24 @@ public class BotTest {
         assertTrue(bot.AnyCardsWithValueLowerThanSix(builder.build()));
     }
 
+    @Test
+    @DisplayName("Test if have zap and cards below 6 should not play eleven-point hand")
+    void testTestIfHaveZapAndCardsBelowSixShoudntPlay() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.emptyList();
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertFalse(bot.getMaoDeOnzeResponse(builder.build()));
+    }
 
 }
