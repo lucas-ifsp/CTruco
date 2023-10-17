@@ -185,10 +185,14 @@ public class Bot implements BotServiceProvider {
     }
 
     public boolean AnyCardsWithValueLowerThanSix(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 6);
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) < 3);
     }
 
     public long CountManilhas(GameIntel intel){
         return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
+    }
+
+    public boolean AnyCardsWithValueHigherThanKing(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 7);
     }
 }
