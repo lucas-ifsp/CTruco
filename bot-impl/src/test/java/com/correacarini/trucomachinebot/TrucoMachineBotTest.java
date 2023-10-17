@@ -394,4 +394,20 @@ public class TrucoMachineBotTest {
         boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raise);
     }
+
+    @Test
+    @DisplayName("Should raise if score difference is grater than 3 and won first round and has diamond and king")
+    void ShouldRaiseIfScoredifferenceIsGreaterThan3AndWonFirstRoundAndHasDiamondAndKing() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(KING, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON), List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 4)
+                .opponentScore(0);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raise);
+    }
 }
