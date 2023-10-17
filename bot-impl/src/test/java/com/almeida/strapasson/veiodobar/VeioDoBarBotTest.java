@@ -199,12 +199,9 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should raise points if has three cards three")
     void shouldRaisePointsIfHasThreeCardsThree() {
-        when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
-        ));
-        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+        var intel = make().cardsToBeThreeOf(CardRank.THREE, CardSuit.DIAMONDS, CardSuit.HEARTS, CardSuit.CLUBS)
+                        .viraToBeDiamondsOfRank(CardRank.ACE)
+                        .finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
 
