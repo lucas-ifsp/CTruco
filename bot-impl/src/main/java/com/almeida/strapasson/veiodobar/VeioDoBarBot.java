@@ -40,7 +40,7 @@ public final class VeioDoBarBot implements BotServiceProvider {
 
         if(botScore + 6 > opponentScore && botScore + 6 < 9){return true;}
 
-        if ( botScore + 9 == botScore + 9){return false;}
+        if (botScore + 9 == opponentScore + 9){return false;}
 
         if(hasCasalMaior(vira, cards)){return true;}
 
