@@ -787,6 +787,12 @@ class VapoBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("Get the highest card that is not a manilha")
+    class GetTheHighestCardThatIsNotAManilha {
+
+
+    }
 
     @Nested
     @DisplayName("Choose card test")
