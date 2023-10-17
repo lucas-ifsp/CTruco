@@ -77,7 +77,7 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return hasZap(intel);
     }
 
     @Override
