@@ -62,18 +62,7 @@ public class SabotaBot implements BotServiceProvider {
             // se for o primeiro a jogar
             if (opponentCard.isEmpty()) return getCardBeingFirstToPlay(intel, hand);
             // resposta à jogada do adversário
-            else {
-                // se tiver carta igual e manilha, amarra pra jogar ela depois
-                if (opponentHasTheSameCard(intel, opponentCard.get()) && !getManilhasCard(intel).isEmpty())
-                    return getCardToDraw(intel, hand, opponentCard.get());
-
-                // se o oponente jogar carta mais forte que todas, joga a menor
-                // se não, joga a maior q não seja manilha
-                if (opponentHasStrongCard(intel, opponentCard.get()))
-                    return CardToPlay.of(getWeakestCard(intel, hand));
-                else
-                    return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
-            }
+            else return getResponseToOpponent(intel, hand, opponentCard.get());
         } else if (roundResults.get(0) == GameIntel.RoundResult.DREW){
             return CardToPlay.of(getGreatestCard(intel, hand));
         }
@@ -95,6 +84,17 @@ public class SabotaBot implements BotServiceProvider {
 
         // sai com a mais forte que não seja manilha
         return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
+    }
+
+    private CardToPlay getResponseToOpponent(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
+        // se tiver carta igual e manilha, amarra pra jogar ela depois
+        if (opponentHasTheSameCard(intel, opponentCard) &&
+            !getManilhasCard(intel).isEmpty()) return getCardToDraw(intel, hand, opponentCard);
+
+        // se o oponente jogar carta mais forte que todas, joga a menor
+        if (opponentHasStrongCard(intel, opponentCard)) return CardToPlay.of(getWeakestCard(intel, hand));
+        // se não, joga a maior q não seja manilha
+        else return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
     }
 
     private CardToPlay getCardToDraw(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
