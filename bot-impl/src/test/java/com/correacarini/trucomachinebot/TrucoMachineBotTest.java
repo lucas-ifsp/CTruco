@@ -124,4 +124,20 @@ public class TrucoMachineBotTest {
         boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertFalse(raises);
     }
+    @Test
+    @DisplayName("Should raise if has zap and manilha")
+    void ShouldRaiseIfHasZapAndManilha() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SEVEN, CLUBS),
+                TrucoCard.of(FIVE, DIAMONDS),
+                TrucoCard.of(FIVE, CLUBS)
+        );
+
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(FOUR, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raises);
+    }
 }
