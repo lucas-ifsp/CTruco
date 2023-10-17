@@ -75,6 +75,7 @@ public enum BotStrategy {
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
                 if(BotStrategy.hasCopas(gameIntel)) return true;
                 if(BotStrategy.countManilhas(gameIntel) == 2) return true;
+                if(cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(gameIntel)) return true;
             }else{
                 if(BotStrategy.hasZap(gameIntel)) return true;
                 if(BotStrategy.hasCopas(gameIntel)) return true;
@@ -117,6 +118,19 @@ public enum BotStrategy {
             return false;
         }
     };
+
+    private static boolean cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(GameIntel gameIntel){
+        List<TrucoCard> cards = sortCards(gameIntel);
+
+        if(cards.get(0).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) {
+            if (cards.get(1).getRank().value() == 10 || cards.get(1).getRank().value() == 9 || cards.get(1).getRank().value() == 8) return true;
+        }
+        if(cards.get(1).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0){
+            if (cards.get(0).getRank().value() == 10 || cards.get(0).getRank().value() == 9 || cards.get(0).getRank().value() == 8) return true;
+        }
+
+        return false;
+    }
 
     private static boolean hasAHigherAndDifferentCardThanZap(GameIntel gameIntel){
         for (TrucoCard card : gameIntel.getCards()) {
