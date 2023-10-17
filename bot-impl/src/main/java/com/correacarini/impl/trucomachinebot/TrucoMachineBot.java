@@ -8,6 +8,8 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bueno.spi.model.CardRank.THREE;
+
 public class TrucoMachineBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -19,6 +21,8 @@ public class TrucoMachineBot implements BotServiceProvider {
         if(intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
 
         if(hasZapAndManilha(intel)) return true;
+
+        if(intel.getScore() - intel.getOpponentScore() > 3 && hasManilhaAndThree(intel)) return true;
 
         return false;
     }
@@ -111,5 +115,21 @@ public class TrucoMachineBot implements BotServiceProvider {
         }
 
         return zap && manilhas >= 1;
+    }
+
+    private boolean hasManilhaAndThree(GameIntel intel) {
+        int manilhas = 0;
+        boolean hasThree = false;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().equals(THREE)) {
+                hasThree = true;
+            }
+            if (card.isOuros(intel.getVira()) || card.isEspadilha(intel.getVira()) || card.isCopas(intel.getVira()) || card.isZap(intel.getVira())) {
+                manilhas += 1;
+            }
+        }
+
+        return hasThree && manilhas >= 1;
     }
 }
