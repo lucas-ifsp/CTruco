@@ -65,6 +65,9 @@ public class SabotaBot implements BotServiceProvider {
             else return getResponseToOpponent(intel, hand, opponentCard.get());
         } else if (roundResults.get(0) == GameIntel.RoundResult.DREW){
             return CardToPlay.of(getGreatestCard(intel, hand));
+        } else if (roundResults.get(0) == GameIntel.RoundResult.WON){
+            if (hasStrongCards(hand))
+                return CardToPlay.discard(getWeakestCard(intel, hand));
         }
         return CardToPlay.of(hand.get(0));
     }
@@ -154,6 +157,13 @@ public class SabotaBot implements BotServiceProvider {
         return hand.get(0);
     }
 
+    private boolean hasStrongCards(List<TrucoCard> hand) {
+        int TWO_VALUE = 9;
+        for (TrucoCard card : hand)
+            if (card.getRank().value() > TWO_VALUE)
+                return true;
+        return false;
+    }
     private boolean hasStrongCardsNonManilha(GameIntel intel, List<TrucoCard> hand) {
         int KING_VALUE = 7;
         for (TrucoCard card : hand)
