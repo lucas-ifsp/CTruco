@@ -9,7 +9,7 @@ import java.util.Optional;
 public class CaipirasBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return playMaoDeOnzeCondition(intel);
     }
 
     @Override
@@ -48,6 +48,22 @@ public class CaipirasBot implements BotServiceProvider {
             }
         }
         return cardToPlay;
+    }
+
+    public boolean playMaoDeOnzeCondition(GameIntel intel) {
+        var count = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                count += 2;
+            }
+            if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), intel.getVira()) >= 0) {
+                count++;
+            }
+        }
+        if (count >= 3) {
+            return true;
+        }
+        return false;
     }
 
     public Boolean checkEnemyIsFirstPLayer(Optional<TrucoCard> enemyCard){
