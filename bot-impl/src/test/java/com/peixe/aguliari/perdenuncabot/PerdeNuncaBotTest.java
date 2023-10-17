@@ -682,8 +682,8 @@ public class PerdeNuncaBotTest {
     }
 
     @Test
-    @DisplayName("Accept mao de onze when score is equal or greater")
-    public void acceptMaoDeOnzeWhenScoreIsEqualOrGreater() {
+    @DisplayName("Accept mao de onze when score is equal or higher")
+    public void acceptMaoDeOnzeWhenScoreIsEqualOrHigher() {
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Collections.singletonList(
