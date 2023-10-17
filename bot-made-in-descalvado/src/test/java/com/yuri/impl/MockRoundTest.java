@@ -506,4 +506,66 @@ class MockRoundTest {
 
         assertEquals(MockRound.INVALID_PLAY_STATE_MSG, e.getMessage());
     }
+
+    @Test
+    void shouldBuildIntel_WithBotScore() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            .giveScoreA(5)
+            .giveB(cardB0)
+            .giveA(cardA0)
+            .giveA(cardA1)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .giveA(cardA2)
+            .build();
+
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(),
+                List.of(vira),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA0, cardA1, cardA2),
+                5
+            )
+            .opponentScore(0)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
+    }
+
+    @Test
+    void shouldBuildIntel_WithOpponentScore() {
+        GameIntel intel = MockRound
+            .vira(vira)
+            .giveScoreB(5)
+            .giveB(cardB0)
+            .giveA(cardA0)
+            .giveA(cardA1)
+            .giveB(cardB1)
+            .giveB(cardB2)
+            .giveA(cardA2)
+            .build();
+
+        GameIntel expect = GameIntel.StepBuilder.with()
+            .gameInfo(
+                List.of(),
+                List.of(vira),
+                vira,
+                1
+            )
+            .botInfo(
+                List.of(cardA0, cardA1, cardA2),
+                0
+            )
+            .opponentScore(5)
+            .opponentCard(null)
+            .build();
+
+        assertEquals(expect, intel);
+    }
 }
