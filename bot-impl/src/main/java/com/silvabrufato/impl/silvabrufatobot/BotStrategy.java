@@ -112,7 +112,8 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
-            return BotBluff.of(Probability.P20).bluff();
+            if(BotStrategy.hasEspadilha(gameIntel)) return true;
+            return false;
         }
     };
 
