@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TrucoGuruUtilsTest {
     @Nested
@@ -207,6 +208,46 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TrucoGuruUtils.hasCasalMenor(cards, vira)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("GetStrongestCard")
+    class GetStrongestCardTest {
+        @Test
+        @DisplayName("Should return the correct strongestCard when provided with one manilha")
+        void shouldReturnStrongestCardWhenProvidedWithOneManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
+        }
+
+        @Test
+        @DisplayName("Should return the correct strongestCard when provided with more than one manilha")
+        void shouldReturnStrongestCardWhenProvidedWithMoreThanOneManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.ACE);
+        }
+
+        @Test
+        @DisplayName("Should return the correct strongestCard when provided with no manilhas")
+        void shouldReturnStrongestCardWhenProvidedWithNoManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoGuruUtils.getStrongestCard(cards, vira).getRank(), CardRank.THREE);
         }
     }
 }

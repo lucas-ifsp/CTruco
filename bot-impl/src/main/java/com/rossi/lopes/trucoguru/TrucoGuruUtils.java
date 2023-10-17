@@ -68,4 +68,8 @@ public class TrucoGuruUtils {
         Boolean hasCasalMenor = cards.stream().anyMatch(card -> card.isOuros(vira)) && cards.stream().anyMatch(card -> card.isEspadilha(vira));
         return hasCasalMenor;
     }
+
+    static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {
+        return null;
+    }
 }
