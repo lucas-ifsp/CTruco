@@ -319,6 +319,18 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se nao pede truco com carta media na ultima rodada")
+        void shouldNotRequestTrucoIfMiddleCardInThirdRound(){
+            hand = List.of(TrucoCard.of(ACE, SPADES));
+            cardVira = TrucoCard.of(SEVEN, CLUBS);
+            roundResult = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 10).opponentScore(10);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
+
     }
 
     @Nested
