@@ -324,6 +324,19 @@ public class SabotaBotTest {
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
 
         }
+
+        @Test
+        @DisplayName("should up rise if has manilhas major casal")
+        void shouldUpRiseIfHasManilhasMajorCasal(){
+
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+
+            assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+        }
         
 
     }
