@@ -78,6 +78,7 @@ public enum BotStrategy {
             }else{
                 if(BotStrategy.hasZap(gameIntel)) return true;
                 if(BotStrategy.hasCopas(gameIntel)) return true;
+                if(BotStrategy.hasEspadilha(gameIntel)) return true;
             }
 
             //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
