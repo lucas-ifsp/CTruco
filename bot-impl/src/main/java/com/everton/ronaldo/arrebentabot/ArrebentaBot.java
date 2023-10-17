@@ -16,7 +16,7 @@ public class ArrebentaBot implements BotServiceProvider {
         int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
 
         if ( intel.getOpponentScore() >= 9){
-            if(cardsValue >= 22 || hasCasal(intel)) { return true; }
+            if(cardsValue >= 22 || hasCasal(intel) || hasThrees(intel)) { return true; }
 
             return false;
         }
