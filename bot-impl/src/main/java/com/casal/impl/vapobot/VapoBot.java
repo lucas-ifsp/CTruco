@@ -31,6 +31,9 @@ public class VapoBot implements BotServiceProvider {
                 if (getAmountOfManilhas(intel) >= 2){
                     return CardToPlay.of(getHighestCard(intel));
                 } else if (getAmountOfManilhas(intel) == 1){
+                    if (getAverageCardValue(intel) > 7) {
+
+                    }
                     return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).get());
                 }
             }
@@ -164,6 +167,16 @@ public class VapoBot implements BotServiceProvider {
 
         return false;
 
+    }
+
+    int numberOfCardsThatHasARelativeValueGreaterThan(GameIntel intel, int relativeValue) {
+        int count = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.relativeValue(intel.getVira()) > relativeValue){
+                count++;
+            }
+        }
+        return count;
     }
 
 }
