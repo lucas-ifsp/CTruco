@@ -35,7 +35,10 @@ public class CaipirasBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (acceptRaiseByOpponentIfFirstRoundWon(intel)) {
+            return 0;
+        }
+        return -1;
     }
 
     public TrucoCard tryToKillOpponentCard(GameIntel intel) {
@@ -53,8 +56,12 @@ public class CaipirasBot implements BotServiceProvider {
     }
 
     public Boolean acceptRaiseByOpponentIfFirstRoundWon(GameIntel intel) {
-        if (checkExistenceCasalMaior(intel.getCards()) && checkExistenceManilhaAndStronger(intel.getCards(), intel.getVira())) {
-            return true;
+        if (!intel.getRoundResults().isEmpty()) {
+            if (intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON)) {
+                if (checkExistenceManilhaAndStronger(intel.getCards(), intel.getVira())) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -153,10 +160,14 @@ public class CaipirasBot implements BotServiceProvider {
     public Boolean checkExistenceManilhaAndStronger(List<TrucoCard> cards, TrucoCard vira) {
         var count = 0;
         for (TrucoCard card : cards) {
-            if (card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),vira) >= 0) {
-                count++;
-                if(card.isOuros(vira) || card.isEspadilha(vira)){
-                    count--;
+            if (card.isManilha(vira)) {
+                if (card.isZap(vira) || card.isCopas(vira)) {
+                    count++;
+                }
+            }
+            else {
+                if (card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),vira) >= 0 || card.compareValueTo(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),vira) > 0) {
+                    count++;
                 }
             }
         }
