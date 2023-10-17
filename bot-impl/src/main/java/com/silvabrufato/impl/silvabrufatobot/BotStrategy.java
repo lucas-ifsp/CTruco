@@ -77,6 +77,7 @@ public enum BotStrategy {
                 if(BotStrategy.countManilhas(gameIntel) == 2) return true;
             }else{
                 if(BotStrategy.hasZap(gameIntel)) return true;
+                if(BotStrategy.hasCopas(gameIntel)) return true;
             }
 
             //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
