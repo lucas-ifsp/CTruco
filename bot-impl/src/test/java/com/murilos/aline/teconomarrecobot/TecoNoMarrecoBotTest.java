@@ -570,6 +570,17 @@ class TecoNoMarrecoBotTest {
             int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
             assertNotEquals(result,-1);
         }
+        @Test
+        @DisplayName("Testa se corre com casal maior")
+        void refusalWithBiggerCouple() {
+            hand = List.of(TrucoCard.of(TWO,HEARTS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(ACE, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.LOST);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 3).opponentScore(1);
+            int result = tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build());
+            assertNotEquals(result,-1);
+        }
 
     }
 }
