@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+
 public class BotMadeInDescalvado implements BotServiceProvider {
 
     public static final String INVALID_ROUND_MSG = "Invalid round";
@@ -155,7 +157,54 @@ public class BotMadeInDescalvado implements BotServiceProvider {
         }
 
         public static CardToPlay chooseCard(GameIntel intel) {
-            return CardToPlay.of(intel.getCards().get(0));
+            GameIntel.RoundResult firstRoundResult = intel.getRoundResults().get(0);
+            boolean isFirst = intel.getOpponentCard().isEmpty();
+            List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+            TrucoCard vira = intel.getVira();
+            Optional<TrucoCard> maybeOpponentCard = intel.getOpponentCard();
+
+            if (firstRoundResult == WON) {
+                if (isFirst) {
+                    TrucoCard card = cards.stream()
+                        .min((a, b) -> a.compareValueTo(b, vira))
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.discard(card);
+                } else {
+                    TrucoCard opponentCard = maybeOpponentCard.get();
+
+                    Optional<TrucoCard> maybeStrong = cards.stream()
+                        .filter((c) -> c.compareValueTo(opponentCard, vira) > 0)
+                        .max((a, b) -> a.compareValueTo(b, vira));
+
+                    if (maybeStrong.isPresent()) {
+                        return CardToPlay.of(maybeStrong.get());
+                    }
+
+                    TrucoCard card = cards.stream()
+                        .min((a, b) -> a.compareValueTo(b, vira))
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.of(card);
+                }
+            } else {
+                if (isFirst) {
+                    TrucoCard card = cards.stream()
+                        .max((a, b) -> a.compareValueTo(b, vira))
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.of(card);
+                } else {
+                    TrucoCard opponentCard = maybeOpponentCard.get();
+
+                    TrucoCard card = cards.stream()
+                        .filter((c) -> c.compareValueTo(opponentCard, vira) > 0)
+                        .min((a, b) -> a.compareValueTo(b, vira))
+                        .orElse(cards.get(0));
+
+                    return CardToPlay.of(card);
+                }
+            }
         }
     }
 
