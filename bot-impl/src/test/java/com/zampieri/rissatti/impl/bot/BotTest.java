@@ -202,7 +202,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertEquals(0, bot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -222,7 +222,7 @@ public class BotTest {
                 .opponentScore(9)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.decideIfRaises(builder.build()));
+        assertEquals(-1, bot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.decideIfRaises(builder.build()));
+        assertEquals(-1, bot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -262,6 +262,6 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertEquals(0, bot.getRaiseResponse(builder.build()));
     }
 }

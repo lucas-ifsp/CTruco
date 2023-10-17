@@ -30,17 +30,7 @@ import java.util.List;
 public class Bot implements BotServiceProvider {
 
     @Override
-    public int getRaiseResponse(GameIntel intel) { return 1;
-    }
-
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
-    }
-
-    @Override
-    public boolean decideIfRaises(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
+    public int getRaiseResponse(GameIntel intel) { List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
         List<GameIntel.RoundResult> result = intel.getRoundResults();
 
@@ -62,24 +52,34 @@ public class Bot implements BotServiceProvider {
 
             //Jack represents de relative value = 6
             if( lowestCard.relativeValue(vira) < 6) {
-                return false;
+                return -1;
             }
 
             if( highest.relativeValue(vira) > 8 && !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW && result.get(0) == GameIntel.RoundResult.WON) {
-              return true;
+                return 0;
             }
 
         }
         if ( intel.getOpponentScore() >= 9) {
-            return false;
+            return -1;
         }
 
         if ( numberOfManilhas >= 1) {
-            return true;
+            return 0;
         }
 
 
 
+        return -1;
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public boolean decideIfRaises(GameIntel intel) {
         return false;
     }
 
