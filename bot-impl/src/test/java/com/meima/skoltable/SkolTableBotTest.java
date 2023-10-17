@@ -581,6 +581,20 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(builder.build()));
     }
 
+    @Test
+    @DisplayName("Can raise if it's not opponents eleven hand round")
+    void CanRiseIfItIsNotOpponentsElevenHandRound () {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+        List<TrucoCard> hand = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(SIX, SPADES));
+        GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 1)
+                .botInfo(hand, 10)
+                .opponentScore(10);
+
+        assertTrue(skolTable.decideIfRaises(builder.build()));
+    }
 
 
 
