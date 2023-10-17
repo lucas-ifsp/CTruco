@@ -175,8 +175,6 @@ class ArrebentaBotTest {
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Nested
     class gettingMaoDeOnzeResponse {
         List<TrucoCard> cards = Arrays.asList(
@@ -226,8 +224,8 @@ class ArrebentaBotTest {
             when(intel.getOpponentScore()).thenReturn(9);
 
             assertFalse(arrebentaBot.getMaoDeOnzeResponse(intel));
-
         }
+
         @Test
         @DisplayName("Should accept mao de onze when oppponent has nine or more points and have good cards")
         void ShouldAcceptMaoDeOnzeWhenOppponentHasNineOrMorePointsAndHaveGoodCards() {
@@ -239,14 +237,12 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
 
-
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
             when(intel.getOpponentScore()).thenReturn(9);
-
             assertTrue(arrebentaBot.getMaoDeOnzeResponse(intel));
-
         }
+
         @Test
         @DisplayName("Should accept mao de onze when oppponent has nine or more points but have casal")
         void ShouldAcceptMaoDeOnzeWhenOppponentHasNineOrMorePointsButHaveCasal() {
@@ -258,14 +254,12 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
 
-
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
             when(intel.getOpponentScore()).thenReturn(9);
-
             assertTrue(arrebentaBot.getMaoDeOnzeResponse(intel));
-
         }
+
         @Test
         @DisplayName("Should accept mao de onze when opponent has nine or more points but have threes")
         void ShouldAcceptMaoDeOnzeWhenOpponentHasNineOrMorePointsButHaveThrees() {
@@ -277,13 +271,10 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
 
-
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
             when(intel.getOpponentScore()).thenReturn(9);
-
             assertTrue(arrebentaBot.getMaoDeOnzeResponse(intel));
-
         }
 
         @Test
@@ -296,8 +287,6 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
-
-
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
             when(intel.getOpponentScore()).thenReturn(9);
@@ -306,7 +295,7 @@ class ArrebentaBotTest {
 
         }
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Nested
     class getRaiseResponse {
         List<TrucoCard> openCards = Collections.singletonList(
@@ -330,7 +319,6 @@ class ArrebentaBotTest {
             assertEquals(arrebentaBot.getRaiseResponse(stepBuilder.build()), 1);
         }
 
-
         @Test
         @DisplayName("Shoul accept raise whem the cards value is over or iqual to 18")
         void shouldAcceptRaseWhenTheValueOfTheCardsIsOverOrEqualToFifiteen() {
@@ -347,7 +335,6 @@ class ArrebentaBotTest {
                     .botInfo(cards, 3)
                     .opponentScore(3);
             assertEquals(arrebentaBot.getRaiseResponse(stepBuilder.build()), 1);
-
         }
 
         @Test
@@ -382,7 +369,6 @@ class ArrebentaBotTest {
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
-//            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
         }
@@ -397,11 +383,9 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
 
-
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(cards);
-//            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
@@ -422,8 +406,6 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
-
-
 
         @Test
         @DisplayName("Should accept raise when lost first hand but has Seven of Clubs")
@@ -458,6 +440,7 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
         }
+
         @Test
         @DisplayName("Should accept raise when lost first hand but has King of Hearts")
         void shouldAcceptRaiseWithKingOfHearts() {
@@ -474,6 +457,7 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
         @Test
         @DisplayName("Should decline raise when lost first hand with good cards")
         void shouldDeclineRaiseWhenLostFirstHandWithGoodCards() {
@@ -490,6 +474,7 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel), 1);
         }
+
         @Test
         @DisplayName("Should accept raise when has excellent cards")
         void shouldAcceptRaiseWhenHasExcellentCards() {
@@ -524,7 +509,6 @@ class ArrebentaBotTest {
             assertEquals(arrebentaBot.getRaiseResponse(intel), 0);
         }
 
-
         @Test
         @DisplayName("Should accept raise whe lost first hand but has good Cards")
         void shouldNotAcceptRaiseWhenLostFirstHandButHasGoodCards() {
@@ -534,7 +518,6 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-
 
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
             when(intel.getVira()).thenReturn(vira);
@@ -575,8 +558,8 @@ class ArrebentaBotTest {
         }
 
         @Test
-        @DisplayName("Should not accept raise when in the last hand and opponent score under 9 and have manilha")
-        void ShouldNotAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveManilha() {
+        @DisplayName("Should accept raise when in the last hand and opponent score under 9 and have manilha")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveManilha() {
             GameIntel intel = mock(GameIntel.class);
 
             List<TrucoCard> cards = Collections.singletonList(
@@ -591,8 +574,8 @@ class ArrebentaBotTest {
         }
 
         @Test
-        @DisplayName("Should not accept raise when in the last hand and opponent score under 9 and have three")
-        void ShouldNotAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveThree() {
+        @DisplayName("Should accept raise when in the last hand and opponent score under 9 and have three")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveThree() {
             GameIntel intel = mock(GameIntel.class);
 
             List<TrucoCard> cards = Collections.singletonList(
@@ -607,8 +590,8 @@ class ArrebentaBotTest {
         }
 
         @Test
-        @DisplayName("Should not accept raise when in the last hand and opponent score under 9 and have two")
-        void ShouldNotAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveTwo() {
+        @DisplayName("Should  accept raise when in the last hand and opponent score under 9 and have two")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveTwo() {
             GameIntel intel = mock(GameIntel.class);
 
             List<TrucoCard> cards = Collections.singletonList(
@@ -623,8 +606,8 @@ class ArrebentaBotTest {
         }
 
         @Test
-        @DisplayName("Should not accept raise when in the last hand and opponent score under 9 and have Ace")
-        void ShouldNotAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveAce() {
+        @DisplayName("Should  accept raise when in the last hand and opponent score under 9 and have Ace")
+        void ShouldAcceptRaiseWhenInTheLastHandAndOpponentScoreUnderNineAndHaveAce() {
             GameIntel intel = mock(GameIntel.class);
 
             List<TrucoCard> cards = Collections.singletonList(
@@ -685,11 +668,7 @@ class ArrebentaBotTest {
 
             assertEquals(arrebentaBot.getRaiseResponse(intel),1);
         }
-
-
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Nested
     class DecideIfRaises {
@@ -739,7 +718,6 @@ class ArrebentaBotTest {
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
             );
-
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
             stepBuilder = GameIntel.StepBuilder.with()
@@ -965,7 +943,6 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
 
             assertTrue(arrebentaBot.decideIfRaises(intel));
-
         }
 
         @Test
@@ -981,7 +958,6 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
 
             assertTrue(arrebentaBot.decideIfRaises(intel));
-
         }
 
         @Test
@@ -997,7 +973,6 @@ class ArrebentaBotTest {
             when(intel.getCards()).thenReturn(cards);
 
             assertTrue(arrebentaBot.decideIfRaises(intel));
-
         }
     }
 }

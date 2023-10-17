@@ -15,18 +15,13 @@ public class ArrebentaBot implements BotServiceProvider {
 
         if ( intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11){
             if(cardsValue >= 22 || hasCasal(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
-
             return false;
         }
         if((cardsValue < 15) && (intel.getOpponentScore() < 11)){
-
             return false;
         }
-
         return true;
     }
-
-
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
@@ -81,7 +76,6 @@ public class ArrebentaBot implements BotServiceProvider {
         if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW)
             return CardToPlay.of(higherCard(intel));
 
-
         if(intel.getCards().size() > 2){
             if(!intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
                 if(opponentCard.isPresent() && (opponentCard.get().relativeValue(vira) < middleCard(intel).relativeValue(vira)) &&
@@ -105,10 +99,8 @@ public class ArrebentaBot implements BotServiceProvider {
             }
         }
 
-
         return CardToPlay.of(smallerCard(intel));
     }
-
 
    @Override
    public int getRaiseResponse(GameIntel intel) {
@@ -152,7 +144,6 @@ public class ArrebentaBot implements BotServiceProvider {
 
        return 0;
    }
-
 
     @Override
     public String getName() {
@@ -229,7 +220,7 @@ public class ArrebentaBot implements BotServiceProvider {
         var vira = intel.getVira();
         boolean hasHigher = false;
         for (TrucoCard card : intel.getCards()) {
-            if(card.relativeValue(vira) > opponentCard.get().relativeValue(vira)){
+            if(opponentCard.isPresent() && (card.relativeValue(vira) > opponentCard.get().relativeValue(vira))){
                 hasHigher = true;
             }
         }
@@ -268,5 +259,4 @@ public class ArrebentaBot implements BotServiceProvider {
         }
         return hasAce;
     }
-
 }
