@@ -1117,7 +1117,11 @@ class VapoBotTest {
                         assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)), vapoBot.chooseCard(stepBuilder.build()));
                     }
 
+                    @Nested
+                    @DisplayName("and cannot win the round")
+                    class CannotWin {
 
+                    }
                 }
             }
         }
