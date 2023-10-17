@@ -228,6 +228,25 @@ class ArrebentaBotTest {
             assertFalse(arrebentaBot.getMaoDeOnzeResponse(intel));
 
         }
+        @Test
+        @DisplayName("Should accept mao de onze when oppponent has nine or more points and have good cards")
+        void ShouldAcceptMaoDeOnzeWhenOppponentHasNineOrMorePointsAndHaveGoodCards() {
+            GameIntel intel = mock(GameIntel.class);
+
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getOpponentScore()).thenReturn(9);
+
+            assertTrue(arrebentaBot.getMaoDeOnzeResponse(intel));
+
+        }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     @Nested
