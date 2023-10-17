@@ -351,4 +351,19 @@ public class TrucoMachineBotTest {
         boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raise);
     }
+    @Test
+    @DisplayName("Should raise if lost first round and has 2 manilhas")
+    void ShouldRaiseIfLostFirstRoundAndHas2Manilhas() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(SIX, SPADES)
+        );
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(LOST), List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 5)
+                .opponentScore(0);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertTrue(raise);
+    }
 }
