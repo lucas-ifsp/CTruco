@@ -33,6 +33,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SilvaBrufatoBotTest {
@@ -629,6 +631,26 @@ public class SilvaBrufatoBotTest {
                     assertThat(sut.getRaiseResponse(gameIntel)).isZero();
                 }
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("Response to decideIfRaises")
+    class ResponsedecideIfRaises{
+        @Nested
+        @DisplayName("First round")
+        class FirstRound{
+            @Nested
+            @DisplayName("if the opponent starts")
+            class ifTheOpponentStarts{
+                @Test
+                @DisplayName("theReturnMustBeDifferentFromNull")
+                void theReturnMustBeDifferentFromNull() {
+                    when(gameIntel.getRoundResults()).thenReturn(List.of());
+                    assertThat(sut.decideIfRaises(gameIntel)).isNotNull();
+                }
+            }
+
         }
     }
 }
