@@ -25,7 +25,26 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        switch (getRoundNumber(intel)){
+            case 1: return chooseCardFirstRound(intel);
+            case 2: return chooseCardSecondRound(intel);
+            case 3: return chooseCardLastRound(intel);
+            default: return CardToPlay.of(intel.getCards().get(0));
+        }
 
+    }
+
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
+    }
+
+    @Override
+    public String getName() {
+        return BotServiceProvider.super.getName();
+    }
+
+    private CardToPlay chooseCardFirstRound(GameIntel intel){
         if (getRoundNumber(intel) == 1){
             if (checkIfWillBeTheFirstToPlay(intel)){
                 if (getAmountOfManilhas(intel) >= 2){
@@ -42,15 +61,14 @@ public class VapoBot implements BotServiceProvider {
         return CardToPlay.of(intel.getCards().get(0));
     }
 
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return 0;
+    private CardToPlay chooseCardSecondRound(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
-    @Override
-    public String getName() {
-        return BotServiceProvider.super.getName();
+    private CardToPlay chooseCardLastRound(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
     }
+
 
     public TrucoCard getHighestCard(GameIntel intel) {
         TrucoCard highestCard = intel.getCards().get(0);
