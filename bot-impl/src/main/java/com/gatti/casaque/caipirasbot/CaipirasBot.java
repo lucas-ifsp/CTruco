@@ -69,10 +69,7 @@ public class CaipirasBot implements BotServiceProvider {
                 count++;
             }
         }
-        if (count >= 3) {
-            return true;
-        }
-        return false;
+        return count >= 3;
     }
 
     public boolean checkRaiseInFirstRound(List<TrucoCard> cards, TrucoCard vira){
@@ -116,6 +113,32 @@ public class CaipirasBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    public TrucoCard chooseMiddleCart(List<TrucoCard> cards, TrucoCard vira, List<GameIntel.RoundResult> roundResults){
+        TrucoCard weak = chooseWeakInFirstRound(cards, vira);
+        TrucoCard middle = null;
+        TrucoCard strong = null;
+
+        for (TrucoCard card : cards) {
+            if (strong == null && card.compareValueTo(weak,vira) > 0) {
+                strong = card;
+            }
+            if(strong != null && card.compareValueTo(strong,vira) > 0){
+                middle = strong;
+                strong = card;
+            }else{
+                if(card.compareValueTo(weak,vira) != 0){
+                    middle = card;
+                }
+            }
+        }
+
+        if(roundResults.isEmpty()){
+            return middle;
+        }
+
+        return null;
     }
 
     public boolean checkExistenceSpadesManilha(List<TrucoCard> cards, TrucoCard vira) {
