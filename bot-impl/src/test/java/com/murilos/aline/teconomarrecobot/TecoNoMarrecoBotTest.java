@@ -303,5 +303,17 @@ class TecoNoMarrecoBotTest {
             assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isZero();
         }
 
+        @Test
+        @DisplayName("Testa pede aumento se tiver casal maior")
+        void askForRaiseIfHaveBiggerCouplee() {
+            hand = List.of(TrucoCard.of(KING,HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+            cardVira = TrucoCard.of(JACK, SPADES);
+            roundResult = List.of();
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 3).botInfo(hand, 1).opponentScore(0);
+
+            assertThat(tecoNoMarrecoBot.getRaiseResponse(stepBuilder.build())).isOne();
+        }
+
     }
 }
