@@ -44,6 +44,7 @@ public class MockRound {
         private int cardsGivenToB;
         private int scoreGivenToA = 0;
         private int scoreGivenToB = 0;
+        private int handPoints = 1;
 
         private Builder(TrucoCard vira) {
             this.vira = vira;
@@ -56,6 +57,11 @@ public class MockRound {
 
         public Builder giveScoreB(int score) {
             scoreGivenToB += score;
+            return this;
+        }
+
+        public Builder hand(int points) {
+            handPoints = points;
             return this;
         }
 
@@ -149,7 +155,7 @@ public class MockRound {
                     results,
                     openCards,
                     vira,
-                    1
+                    handPoints
                 )
                 .botInfo(
                     deckA,
