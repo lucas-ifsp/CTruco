@@ -759,5 +759,20 @@ public class SilvaBrufatoBotTest {
                 assertThat(sut.decideIfRaises(gameIntel)).isTrue();
             }
         }
+
+        @Nested
+        @DisplayName("if the SilvaBrufatoBot starts")
+        class ifTheSilvaBrufatoBotStarts{
+            @Test
+            @DisplayName("shouldReturnTrueIfBotHasZap")
+            void shouldReturnTrueIfBotHasZap() {
+                when(gameIntel.getRoundResults()).thenReturn(List.of(RoundResult.WON));
+                when(gameIntel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                when(gameIntel.getCards()).thenReturn(List.of(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+                assertThat(sut.decideIfRaises(gameIntel)).isTrue();
+            }
+        }
     }
 }
