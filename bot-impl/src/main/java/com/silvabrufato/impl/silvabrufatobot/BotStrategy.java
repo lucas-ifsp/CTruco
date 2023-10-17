@@ -72,8 +72,13 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
-            if(BotStrategy.hasCopas(gameIntel)) return true;
-            if(BotStrategy.countManilhas(gameIntel) == 2) return true;
+            if (gameIntel.getRoundResults().get(0) == RoundResult.LOST){
+                if(BotStrategy.hasCopas(gameIntel)) return true;
+                if(BotStrategy.countManilhas(gameIntel) == 2) return true;
+            }else{
+                if(BotStrategy.hasZap(gameIntel)) return true;
+            }
+
             //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
             //    if(countManilhas(gameIntel) >= 1) return true;
             //    return BotBluff.of(Probability.P40).bluff();
