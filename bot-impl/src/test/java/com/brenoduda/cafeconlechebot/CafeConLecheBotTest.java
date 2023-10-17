@@ -237,5 +237,24 @@ public class CafeConLecheBotTest {
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
             assertThat(raiseResponse).isEqualTo(-1);
         }
+
+        @Test
+        @DisplayName("Should reject when not has manilha")
+        void shouldRejectWhenNotHasManilha() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(FIVE, SPADES),
+                    TrucoCard.of(JACK, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(-1);
+        }
     }
 }
