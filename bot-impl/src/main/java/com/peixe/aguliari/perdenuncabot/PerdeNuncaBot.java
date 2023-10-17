@@ -237,6 +237,7 @@ public class PerdeNuncaBot implements BotServiceProvider {
         return 0;
     }
 
+
     private boolean getManilha(GameIntel intel) {
         return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(intel.getVira()));
     }
