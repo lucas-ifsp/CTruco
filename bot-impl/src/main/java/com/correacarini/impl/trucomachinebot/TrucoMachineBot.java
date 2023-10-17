@@ -31,10 +31,13 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
         }
 
-        if(intel.getRoundResults().size() == 2 && intel.getOpponentCard().isPresent()){
-            if(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
-                return true;
+        if(intel.getRoundResults().size() == 2){
+            if(intel.getOpponentCard().isPresent()){
+                if(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
+                    return true;
+                }
             }
+            if(intel.getCards().get(0).isZap(intel.getVira())) return true;
         }
         return false;
     }
