@@ -26,7 +26,7 @@ public class CaipirasBot implements BotServiceProvider {
             return CardToPlay.of(chooseWeakInFirstRound(intel.getCards(),intel.getVira()));
         }
         if(checkExistenceSpadesManilha(intel.getCards(), intel.getVira())){
-            return CardToPlay.of(chooseSpadesInFirstRound(intel.getCards(),intel.getVira()));
+            return CardToPlay.of(chooseSpadesInFirstRound(intel));
         }
         return CardToPlay.of(tryToKillOpponentCard(intel));
     }
@@ -131,21 +131,21 @@ public class CaipirasBot implements BotServiceProvider {
         return null;
     }
 
-    public TrucoCard chooseSpadesInFirstRound(List<TrucoCard> cards, TrucoCard vira){
+    public TrucoCard chooseSpadesInFirstRound(GameIntel intel){
         var count = 0;
-        for (TrucoCard card : cards) {
-            if (card.isEspadilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),vira) >= 0) {
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isEspadilha(intel.getVira()) || card.compareValueTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),intel.getVira()) >= 0) {
                 count++;
             }
         }
         if (count == 3) {
-            for (TrucoCard card : cards) {
-                if (card.isEspadilha(vira)) {
+            for (TrucoCard card : intel.getCards()) {
+                if (card.isEspadilha(intel.getVira())) {
                     return card;
                 }
             }
         }
-        return null;
+        return tryToKillOpponentCard(intel);
     }
 
     public TrucoCard chooseWeakInFirstRound(List<TrucoCard> cards, TrucoCard vira){
