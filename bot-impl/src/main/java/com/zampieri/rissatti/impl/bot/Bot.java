@@ -85,7 +85,7 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return CountManilhas(intel) >= 2;
     }
 
     @Override
