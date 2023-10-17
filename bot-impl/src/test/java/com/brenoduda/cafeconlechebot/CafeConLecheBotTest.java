@@ -32,6 +32,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CafeConLecheBotTest {
@@ -255,6 +256,25 @@ public class CafeConLecheBotTest {
 
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
             assertThat(raiseResponse).isEqualTo(-1);
+        }
+
+        @Test
+        @DisplayName("Should raise when has manilha and get first round")
+        void shouldRaiseWhenHasManilhaAndGetFirstRound() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(JACK, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(WON), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+            assertThat(raiseResponse).isEqualTo(1);
         }
     }
 }
