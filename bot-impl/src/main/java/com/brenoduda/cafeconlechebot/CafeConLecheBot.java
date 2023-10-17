@@ -55,6 +55,13 @@ public class CafeConLecheBot implements BotServiceProvider {
             return true;
         }
 
+        if(botCards.stream().filter(card -> card.getSuit().equals(CardSuit.CLUBS)).toList().size() >= 1 &&
+                intel.getRoundResults().size() > 0) {
+            if (intel.getRoundResults().get(0).equals(GameIntel.RoundResult.DREW)) {
+                return true;
+            }
+        }
+
         return false;
 
     }
