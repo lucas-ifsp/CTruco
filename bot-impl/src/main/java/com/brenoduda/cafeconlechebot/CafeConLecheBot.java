@@ -127,6 +127,12 @@ public class CafeConLecheBot implements BotServiceProvider {
             return 1;
         }
 
+        if(!intel.getRoundResults().isEmpty()) {
+            if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST) && !hasStrongCards(intel)) {
+                return -1;
+            }
+        }
+
         if(botCards.stream().filter(card -> card.isManilha(vira)).toList().size() == 1 &&
                 botCards.stream().filter(card -> card.getRank().equals(CardRank.THREE)).toList().size() == 0) {
             return -1;
