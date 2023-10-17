@@ -49,6 +49,9 @@ public class BotMadeInDescalvadoTest {
     // false -> nothing
     // true  -> raise
 
+    // Ganho zap, perdeu 2, tem manilha spa -> Truco
+    // Ganho zap, perdeu 2, nao tem manilha spa -> Nao Truco
+
     // CardToPlay chooseCard(GameIntel intel)
     // Provided the card will be played or discarded in the current round
     // > Tem que retornar uma carta que tem na mão
@@ -158,58 +161,147 @@ public class BotMadeInDescalvadoTest {
         assertFalse(playedCard.isDiscard());
     }
 
-    // Second Round
-    // Ganho, Joga Primeiro
-        // Mais fraca para fazer gastar
-    // Ganho, Joga Segundo
-        // Se der pra ganhar ganha
-            // Se não mais fraca para fazer gastar
-    // Perdeu, Joga Primeiro
-        // A mais forte
-    // Perdeu, Joga Segundo
-        // O minimo pra ganhar
-            // Senão F
+    //
 
-//    @Test
-//    @DisplayName("\"chooseCard\" should weakest card when won first round and plays first")
-//    void chooseCardShouldWeakestCardWhenWonFirstRoundAndPlaysFirst() {
-//        BotMadeInDescalvado bot = new BotMadeInDescalvado();
-//
-//        TrucoCard expectedPlayedCard = TrucoCard.of(CardRank.TWO, CLUBS);
-//
-//        GameIntel intel = MockRound.builder()
-//            .vira(TrucoCard.of(CardRank.FOUR, CLUBS))
-//            .deckBot(
-//                expectedPlayedCard,
-//                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-//                TrucoCard.of(CardRank.KING, CLUBS)
-//            )
-//            .deckOpponent(
-//                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-//                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-//                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
-//            )
-//            .opponentPlays(0)
-//            .build();
-//
-//        CardToPlay playedCard = bot.chooseCard(intel);
-//
-//        assertEquals(expectedPlayedCard, playedCard.content());
-//        assertFalse(playedCard.isDiscard());
-//    }
+    @Test
+    @DisplayName("\"chooseCard\" should discard weakest when it won the first round and plays first")
+    void chooseCard_ShouldDircardWeakest_WhenWonFirstRound_AndPlaysFirst() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
 
-    // Third Round
-        // Joga
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveB(FIVE, CLUBS).play()
+            .giveA(FOUR, CLUBS).play() // Manilha
+            //
+            .giveA(SIX, CLUBS)
+            .giveA(FIVE, HEARTS)
+            .giveB(SEVEN, CLUBS)
+            .giveB(SEVEN, HEARTS)
+            .build();
 
-    // boolean getMaoDeOnzeResponse(GameIntel intel)
-    // 1  - Se eu tiver 3 manilha = true
-    // 2  - Se eu tiver 2 manilha = true
-    // 3  - Se eu tiver 1 manilha e dois 3 = true
-    // 4  - Se eu tiver 1 manilha e um 3 = true
-    // 5  - Se eu tiver Tres 3 = true
-    // 6  - Se eu tiver Dois 3 e um Dois = true
-    // 7  - Se eu NÃO tiver nenhuma manilha = false
-    // 8  - Se eu tiver uma manilha e nenhum 3 = false
-    // 9  - Se eu tiver apenas um 3 = false
-    // 10 - Se eu não tiver com manilha ou 3 = false
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(FIVE, HEARTS), playedCard.content());
+        assertTrue(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play strongest when it won the first round and plays second")
+    void chooseCard_ShouldPlayStrongest_WhenWonFirstRound_AndPlaysSecond() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveA(FOUR, CLUBS).play() // Manilha
+            .giveB(FIVE, CLUBS).play()
+            // Second Round
+            .giveB(SIX, CLUBS).play()
+            //
+            .giveA(FOUR, HEARTS) // Manilha
+            .giveA(ACE, CLUBS)
+            .giveB(ACE, HEARTS)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(FOUR, HEARTS), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play weakest if impossible to win when it won the first round and plays second")
+    void chooseCard_ShouldPlayWeakest_IfImpossibleToWin_WhenWonFirstRound_AndPlaySecond() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveA(FOUR, CLUBS).play() // Manilha
+            .giveB(FIVE, CLUBS).play()
+            // Second Round
+            .giveB(SEVEN, CLUBS).play()
+            //
+            .giveA(SIX, CLUBS)
+            .giveA(FIVE, HEARTS)
+            .giveB(ACE, HEARTS)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(FIVE, HEARTS), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play strongest when it lost the first round and plays first")
+    void chooseCard_ShouldPlayStrongest_WhenLostFirstRound_AndPlaysFirst() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveB(FOUR, CLUBS).play() // Manilha
+            .giveA(FIVE, CLUBS).play()
+            //
+            .giveA(SIX, CLUBS)
+            .giveA(FIVE, HEARTS)
+            .giveB(ACE, HEARTS)
+            .giveB(ACE, SPADES)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(SIX, CLUBS), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play weakest to win when it lost the first round and plays second")
+    void chooseCard_ShouldPlayWeakestToWin_WhenLostFirstRound_AndPlaysSecond() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveA(FIVE, CLUBS).play()
+            .giveB(FOUR, CLUBS).play() // Manilha
+            // Second Round
+            .giveB(ACE, HEARTS).play()
+            //
+            .giveA(TWO, CLUBS)
+            .giveA(THREE, HEARTS)
+            .giveB(ACE, SPADES)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(TWO, CLUBS), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
+
+    @Test
+    @DisplayName("\"chooseCard\" should play anything when it is at the third round")
+    void chooseCard_ShouldPlayAnything_WhenAtThirdRound() {
+        BotMadeInDescalvado bot = new BotMadeInDescalvado();
+
+        GameIntel intel = MockRound
+            .vira(THREE, CLUBS)
+            // First Round
+            .giveA(FOUR, CLUBS).play() // Manilha
+            .giveB(FIVE, CLUBS).play()
+            // Second Round
+            .giveB(FOUR, HEARTS).play() // Manilha
+            .giveA(FIVE, HEARTS).play()
+            //
+            .giveA(FIVE, SPADES)
+            .giveB(FIVE, DIAMONDS)
+            .build();
+
+        CardToPlay playedCard = bot.chooseCard(intel);
+
+        assertEquals(TrucoCard.of(FIVE, SPADES), playedCard.content());
+        assertFalse(playedCard.isDiscard());
+    }
 }
