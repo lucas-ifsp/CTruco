@@ -21,6 +21,9 @@ public class CaipirasBot implements BotServiceProvider {
         if(checkExistenceDiamondManilha(intel.getCards(),intel.getVira())){
             return CardToPlay.of(chooseDiamondInFirstRound(intel.getCards(),intel.getVira()));
         }
+        if(checkExistenceManilhaAndStronger(intel.getCards(),intel.getVira())){
+            return CardToPlay.of(chooseWeakInFirstRound(intel.getCards(),intel.getVira()));
+        }
         return null;
     }
 
@@ -50,8 +53,11 @@ public class CaipirasBot implements BotServiceProvider {
     public Boolean checkExistenceManilhaAndStronger(List<TrucoCard> cards, TrucoCard vira) {
         var count = 0;
         for (TrucoCard card : cards) {
-            if (card.isManilha(vira) || card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),vira) >= 0) {
+            if (card.compareValueTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),vira) >= 0) {
                 count++;
+                if(card.isOuros(vira) || card.isEspadilha(vira)){
+                    count--;
+                }
             }
         }
         return count >= 2;
