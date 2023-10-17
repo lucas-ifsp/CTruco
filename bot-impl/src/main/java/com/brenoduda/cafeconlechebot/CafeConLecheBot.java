@@ -24,6 +24,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CafeConLecheBot implements BotServiceProvider {
     @Override
@@ -74,6 +75,13 @@ public class CafeConLecheBot implements BotServiceProvider {
                 intel.getRoundResults().isEmpty() &&
                 botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).toList().size() >= 1) {
             return CardToPlay.of(botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).findFirst().get());
+        }
+
+        if(intel.getOpponentCard().isPresent()) {
+            Optional<TrucoCard> cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+            if(cardToPlay.isPresent()) {
+                return CardToPlay.of(cardToPlay.get());
+            }
         }
 
         return null;
