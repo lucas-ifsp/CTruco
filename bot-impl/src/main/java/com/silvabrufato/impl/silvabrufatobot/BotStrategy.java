@@ -72,28 +72,15 @@ public enum BotStrategy {
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
             if (gameIntel.getRoundResults().get(0) == RoundResult.LOST) {
-                if (BotStrategy.hasCopas(gameIntel))
-                    return true;
-                if (BotStrategy.countManilhas(gameIntel) == 2)
-                    return true;
-                if (cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(gameIntel))
-                    return true;
-            } else {
-                if (BotStrategy.hasZap(gameIntel))
-                    return true;
-                if (BotStrategy.hasCopas(gameIntel))
-                    return true;
-                if (BotStrategy.hasEspadilha(gameIntel))
-                    return true;
-                if (BotStrategy.countCardsEqualOrHigherThanAce(gameIntel) == 2)
+                if (countManilhas(gameIntel) == 2 || hasZap(gameIntel) || hasCopas(gameIntel) )
                     return true;
             }
-
-            // if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
-            // if(countManilhas(gameIntel) >= 1) return true;
-            // return BotBluff.of(Probability.P40).bluff();
-            // }
-            // return BotBluff.of(Probability.P20).bluff();
+            if(countManilhas(gameIntel) >= 2) 
+                return true;
+            if(countManilhas(gameIntel) == 1)
+                return BotBluff.of(Probability.P60).bluff();
+            if(countThree(gameIntel) >= 2)
+                return BotBluff.of(Probability.P20).bluff();
             return false;
         }
     },
@@ -130,23 +117,6 @@ public enum BotStrategy {
         }
     };
 
-    private static boolean cardGreaterThaAndAnotherCardGreaterThanOrEqualToTheAce(GameIntel gameIntel) {
-        List<TrucoCard> cards = sortCards(gameIntel);
-
-        if (cards.get(0).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) {
-            if (cards.get(1).getRank().value() == 10 || cards.get(1).getRank().value() == 9
-                    || cards.get(1).getRank().value() == 8)
-                return true;
-        }
-        if (cards.get(1).compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0) {
-            if (cards.get(0).getRank().value() == 10 || cards.get(0).getRank().value() == 9
-                    || cards.get(0).getRank().value() == 8)
-                return true;
-        }
-
-        return false;
-    }
-
     private static boolean drewThePreviousRound(GameIntel gameIntel) {
         return gameIntel.getRoundResults().get(gameIntel.getRoundResults().size() - 1) == RoundResult.DREW;
     }
@@ -181,7 +151,8 @@ public enum BotStrategy {
     }
 
     private static CardToPlay chooseCardToWinTheRoundIfPossible(GameIntel gameIntel, boolean discard) {
-        for (TrucoCard card : gameIntel.getCards())
+        List<TrucoCard> cards = sortCards(gameIntel);
+        for (TrucoCard card : cards)
             if (card.compareValueTo(gameIntel.getOpponentCard().get(), gameIntel.getVira()) > 0)
                 return CardToPlay.of(card);
         return chooseTheLowestCardToPlay(gameIntel, discard);
