@@ -259,6 +259,17 @@ class TecoNoMarrecoBotTest {
             assertFalse(requestTruco);
         }
 
+        @Test
+        @DisplayName("Testa se na ultima rodada possuir mão com valor menor que 10 nao pede truco")
+        void shouldNotRequestTrucoIfInTheLastRoundHaveAHandWithAValueLowerThan10(){
+            hand = List.of(TrucoCard.of(FOUR, SPADES));
+            cardVira = TrucoCard.of(FOUR, CLUBS);
+            roundResult = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
+            cards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cards, cardVira, 1).botInfo(hand, 2).opponentScore(3);
+            Boolean requestTruco = tecoNoMarrecoBot.decideIfRaises(stepBuilder.build());
+            assertFalse(requestTruco);
+        }
 
 
     }
