@@ -17,7 +17,7 @@ public class TrucoMachineBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        return null;
     }
 
     @Override
