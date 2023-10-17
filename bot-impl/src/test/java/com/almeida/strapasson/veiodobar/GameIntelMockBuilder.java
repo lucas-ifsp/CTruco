@@ -26,6 +26,16 @@ final class GameIntelMockBuilder {
         return this;
     }
 
+    GameIntelMockBuilder scoreToBe(int botScore){
+        when(intel.getScore()).thenReturn(botScore);
+        return this;
+    }
+
+    GameIntelMockBuilder scoreOponentToBe(int oponentScore){
+        when(intel.getOpponentScore()).thenReturn(oponentScore);
+        return this;
+    }
+
     GameIntelMockBuilder cardsToBeAceTwoAndThreeOfSuit(CardSuit suit) {
         return cardsToBe(
                 TrucoCard.of(CardRank.ACE, suit),
