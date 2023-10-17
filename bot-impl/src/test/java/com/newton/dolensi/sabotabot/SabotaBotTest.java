@@ -313,5 +313,18 @@ public class SabotaBotTest {
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
 
         }
+
+
+        @Test
+        @DisplayName("should accept rise if opponent has eleven points")
+        void shouldAcceptRiseIfOpponentHasElevenPoints(){
+
+            when(intel.getOpponentScore()).thenReturn(11);
+
+            assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+        
+        }
+        
+
     }
 }
