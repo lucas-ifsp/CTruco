@@ -1,8 +1,6 @@
 package com.correacarini.trucomachinebot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardRank.HIDDEN;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
@@ -209,5 +208,21 @@ public class TrucoMachineBotTest {
 
         CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
         assertEquals(CardToPlay.discard(TrucoCard.of(THREE, CLUBS)), cardToPlay);
+    }
+    @Test
+    @DisplayName("Should choose lowest card when opponent discard")
+    void ShouldChooseLowestCardWhenOpponentDiscard() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(QUEEN, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON), List.of(), TrucoCard.of(SIX, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+
+        CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
+        assertEquals(CardToPlay.of(TrucoCard.of(QUEEN, CLUBS)), cardToPlay);
     }
 }
