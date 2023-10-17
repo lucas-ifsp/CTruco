@@ -30,6 +30,12 @@ public class TrucoMachineBot implements BotServiceProvider {
                 if(hasManilhaAndTwo(intel)) return true;
             }
         }
+
+        if(intel.getRoundResults().size() == 2 && intel.getOpponentCard().isPresent()){
+            if(intel.getCards().get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
+                return true;
+            }
+        }
         return false;
     }
 
