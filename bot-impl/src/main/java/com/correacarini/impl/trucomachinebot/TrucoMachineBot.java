@@ -46,6 +46,10 @@ public class TrucoMachineBot implements BotServiceProvider {
 
         TrucoCard greatestCard = getGreatestCard(cards, vira);
 
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(WON)){
+            if(hasZap(intel)) return CardToPlay.discard(getLowestCard(intel.getCards(), vira));
+        }
+
         if(intel.getOpponentCard().isPresent()){
             TrucoCard minimalGreaterCard = getMinimalGreaterCard(cards, vira, intel.getOpponentCard().get());
             if(minimalGreaterCard == null) {
@@ -158,5 +162,14 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
         }
         return hasTwo && manilhas >= 1;
+    }
+
+    private boolean hasZap(GameIntel intel) {
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
