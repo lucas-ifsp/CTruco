@@ -34,11 +34,11 @@ final class GameIntelMockBuilder {
         );
     }
 
-    GameIntelMockBuilder cardsToBeThreeOf(CardRank rank, CardSuit... suits) {
+    GameIntelMockBuilder cardsToBeThreeOf(CardRank rank) {
         return cardsToBe(
-                TrucoCard.of(rank, suits[0]),
-                TrucoCard.of(rank, suits[1]),
-                TrucoCard.of(rank, suits[2])
+                TrucoCard.of(rank, CardSuit.SPADES),
+                TrucoCard.of(rank, CardSuit.HEARTS),
+                TrucoCard.of(rank, CardSuit.CLUBS)
         );
     }
 

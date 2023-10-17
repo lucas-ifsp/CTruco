@@ -154,7 +154,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse points raising if all cards are lower than jacks and no manilhas")
     void shouldRefusePointsRaisingIfAllCardsAreLowerThanJacksAndNoManilhas(){
-        var intel = make().cardsToBeThreeOf(CardRank.FOUR, CardSuit.SPADES, CardSuit.HEARTS, CardSuit.CLUBS)
+        var intel = make().cardsToBeThreeOf(CardRank.FOUR)
                         .viraToBeDiamondsOfRank(CardRank.FOUR)
                         .finish();
 
@@ -176,7 +176,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should refuse if has two cards lower than two")
     void shouldRefuseIfHasTwoCardsLessThanTwo() {
-        var intel = make().cardsToBeThreeOf(CardRank.ACE, CardSuit.DIAMONDS, CardSuit.CLUBS, CardSuit.HEARTS)
+        var intel = make().cardsToBeThreeOf(CardRank.ACE)
                         .viraToBeDiamondsOfRank(CardRank.FOUR)
                         .finish();
 
@@ -199,7 +199,7 @@ class VeioDoBarBotTest {
     @Test
     @DisplayName("Should raise points if has three cards three")
     void shouldRaisePointsIfHasThreeCardsThree() {
-        var intel = make().cardsToBeThreeOf(CardRank.THREE, CardSuit.DIAMONDS, CardSuit.HEARTS, CardSuit.CLUBS)
+        var intel = make().cardsToBeThreeOf(CardRank.THREE)
                         .viraToBeDiamondsOfRank(CardRank.ACE)
                         .finish();
 
