@@ -57,6 +57,17 @@ public class SabotaBotTest {
             }
 
             @Test
+            @DisplayName("Should play a strong card non manilha")
+            void shouldPlayAStrongCardNonManilha(){
+                var cards = IntelMock.cardList3Cards();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira2H());
+
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                assertEquals(cards.get(0), sut.chooseCard(intel).content());
+            }
+
+            @Test
             @DisplayName("Should play the weakest card if other player plays a strong card")
             void shouldPlayTheWeakestCardIfOtherPlayerPlaysAStrongCard(){
                 var cards = IntelMock.cardList3Cards();

@@ -12,7 +12,7 @@ public class IntelMock {
         return List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
     }
 
     public static List<TrucoCard> diamondsAndGoodValues() {
@@ -40,6 +40,10 @@ public class IntelMock {
     }
 
     public static TrucoCard viraKC() {
+
         return TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+    }
+    public static TrucoCard vira2H() {
+        return TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
     }
 }
