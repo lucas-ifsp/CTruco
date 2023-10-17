@@ -272,7 +272,9 @@ public class TrucoMachineBotTest {
         );
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
-                .botInfo(botCards, 0);
+                .botInfo(botCards, 0)
+                .opponentScore(7);
+
 
         boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
         assertTrue(playMaoDeOnze);
@@ -289,7 +291,8 @@ public class TrucoMachineBotTest {
         );
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
-                .botInfo(botCards, 0);
+                .botInfo(botCards, 0)
+                .opponentScore(7);
 
         boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
         assertFalse(playMaoDeOnze);
@@ -307,7 +310,8 @@ public class TrucoMachineBotTest {
         );
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
-                .botInfo(botCards, 0);
+                .botInfo(botCards, 0)
+                .opponentScore(7);
 
         boolean playMaoDeOnze = new TrucoMachineBot().getMaoDeOnzeResponse(stepBuilder.build());
         assertFalse(playMaoDeOnze);
