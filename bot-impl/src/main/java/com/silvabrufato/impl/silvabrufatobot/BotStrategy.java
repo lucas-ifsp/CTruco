@@ -36,7 +36,6 @@ public enum BotStrategy {
                 if(BotStrategy.hasCopas(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
             }
 
-            //if (countManilhas(gameIntel) >= 2 && hasZap(gameIntel)) return true;
             return false;
         }
     },
@@ -73,12 +72,13 @@ public enum BotStrategy {
 
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
+            if(BotStrategy.hasCopas(gameIntel)) return true;
             //if(gameIntel.getRoundResults().get(0) == RoundResult.WON) {
             //    if(countManilhas(gameIntel) >= 1) return true;
             //    return BotBluff.of(Probability.P40).bluff();
             //}
             //return BotBluff.of(Probability.P20).bluff();
-            return true;
+            return false;
         }
     },
 
