@@ -801,6 +801,11 @@ class VapoBotTest {
         @DisplayName("in first round")
         class FisrtRoundTest {
 
+            @Nested
+            @DisplayName("if play fisrt")
+            class PlayFirstTest {
+
+            }
 
         }
     }
