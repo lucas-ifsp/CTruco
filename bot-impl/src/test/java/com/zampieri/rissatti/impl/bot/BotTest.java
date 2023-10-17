@@ -33,13 +33,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.ACE, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -53,13 +53,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.SIX, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -73,13 +73,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -93,13 +93,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.FIVE, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -113,13 +113,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.FOUR, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -133,13 +133,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.FOUR, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -154,13 +154,13 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.KING, bot.chooseCard(builder.build()).content().getRank());
     }
@@ -174,15 +174,17 @@ public class BotTest {
 
         List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
-        TrucoCard oponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
                 .botInfo(botCards, 0)
                 .opponentScore(0)
-                .opponentCard(oponentCard);
+                .opponentCard(opponentCard);
 
         assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
     }
+
+
 
 }
