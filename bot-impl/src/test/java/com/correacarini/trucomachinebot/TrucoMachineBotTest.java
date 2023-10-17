@@ -196,4 +196,18 @@ public class TrucoMachineBotTest {
         boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raises);
     }
+    @Test
+    @DisplayName("Should discard second round when has zap and won first round")
+    void ShouldDiscardSecondRoundWhenHasZapAndWonFirstRound() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE, CLUBS),
+                TrucoCard.of(SEVEN, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(WON), List.of(), TrucoCard.of(SIX, SPADES), 1)
+                .botInfo(botCards, 0);
+
+        CardToPlay cardToPlay = new TrucoMachineBot().chooseCard(stepBuilder.build());
+        assertEquals(CardToPlay.discard(TrucoCard.of(THREE, CLUBS)), cardToPlay);
+    }
 }
