@@ -1162,7 +1162,7 @@ class VapoBotTest {
                         }
 
                         @Test
-                        @DisplayName("and has 2 manilhas and should win")
+                        @DisplayName("and has 3 manilhas and should win")
                         void Has3Manilhas() {
                             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
                             TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);

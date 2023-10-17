@@ -45,22 +45,22 @@ public class VapoBot implements BotServiceProvider {
     }
 
     private CardToPlay chooseCardFirstRound(GameIntel intel){
-        if (getRoundNumber(intel) == 1){
-            if (checkIfWillBeTheFirstToPlay(intel)){
-                if (getAmountOfManilhas(intel) >= 2){
-                    return CardToPlay.of(getHighestCard(intel));
-                } else if (getAmountOfManilhas(intel) == 1){
-                    if (numberOfCardsThatHasARelativeValueGreaterThan(intel, 7) > 1) {
-                        return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).orElse(getLowestCard(intel)));
-                    } else {
-                        return CardToPlay.of(getLowestCard(intel));
-                    }
-                }
-            } else {
-                return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCard(intel)));
+        if (checkIfWillBeTheFirstToPlay(intel)){
+            if (getAmountOfManilhas(intel) >= 2) {
+                return CardToPlay.of(getHighestCard(intel));
             }
+
+            if (getAmountOfManilhas(intel) == 1){
+                if (numberOfCardsThatHasARelativeValueGreaterThan(intel, 7) > 1) {
+                    return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).orElse(getLowestCard(intel)));
+                };
+                return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).orElse(getHighestCard(intel)));
+            }
+
+        } else {
+            return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCard(intel)));
         }
-        return CardToPlay.of(intel.getCards().get(0));
+        return CardToPlay.of(getHighestCard(intel));
     }
 
     private CardToPlay chooseCardSecondRound(GameIntel intel){
