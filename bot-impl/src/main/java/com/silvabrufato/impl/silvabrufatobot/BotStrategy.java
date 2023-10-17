@@ -29,6 +29,7 @@ public enum BotStrategy {
             if (gameIntel.getOpenCards().size() == 2){ //opponent start
                 if(hasAHigherAndDifferentCardThanZap(gameIntel) && BotStrategy.hasZap(gameIntel)) return true;
                 if(hasAHigherAndDifferentCardThanCopas(gameIntel) && BotStrategy.hasCopas(gameIntel)) return true;
+                if(hasAHigherAndDifferentCardThanSpades(gameIntel) && BotStrategy.hasEspadilha(gameIntel)) return true;
 
                 return false;
             }
@@ -107,6 +108,13 @@ public enum BotStrategy {
     private static boolean hasAHigherAndDifferentCardThanZap(GameIntel gameIntel){
         for (TrucoCard card : gameIntel.getCards()) {
             if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isZap(gameIntel.getVira())) return true;
+        }
+        return false;
+    }
+
+    private static boolean hasAHigherAndDifferentCardThanSpades(GameIntel gameIntel){
+        for (TrucoCard card : gameIntel.getCards()) {
+            if(card.compareValueTo(gameIntel.getOpenCards().get(1), gameIntel.getVira()) > 0 && !card.isEspadilha(gameIntel.getVira())) return true;
         }
         return false;
     }
