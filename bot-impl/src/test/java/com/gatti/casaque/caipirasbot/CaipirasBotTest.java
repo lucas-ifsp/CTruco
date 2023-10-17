@@ -125,6 +125,19 @@ class CaipirasBotTest {
 
         assertThat(caipirasBot.chooseCard(intel)).isEqualTo(CardToPlay.of(expectedCard));
     }
+
+    @DisplayName("Testa se o método chooseCard joga a menor na prmeira rodada, apenas quando tiver manilha e maior que 2")
+    @ParameterizedTest
+    @MethodSource(value = "provideToChooseWeakInFirstRound")
+    void testChooseCardWeakInFirstRound(List<TrucoCard> cards, TrucoCard vira, TrucoCard expectedCard){
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getRoundResults()).thenReturn(List.of());
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(cards);
+
+        assertThat(caipirasBot.chooseCard(intel)).isEqualTo(CardToPlay.of(expectedCard));
+    }
     public static Stream<Arguments> provideToCheckExistenceOfDiamondManilha() {
         return Stream.of(
                 Arguments.of(
