@@ -152,6 +152,25 @@ public class CafeConLecheBotTest {
             assertThat(decideIfRaises).isEqualTo(true);
         }
 
+        @Test
+        @DisplayName("Should raise when has hearts and the first round is drew")
+        void shoudRaiseWhenHasHeartsAndTheFirstRoundIsDrew() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, DIAMONDS),
+                    TrucoCard.of(QUEEN, HEARTS),
+                    TrucoCard.of(QUEEN, DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(DREW), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            boolean decideIfRaises = new CafeConLecheBot().decideIfRaises(stepBuilder.build());
+            assertThat(decideIfRaises).isEqualTo(true);
+        }
+
     }
 
     @Nested
