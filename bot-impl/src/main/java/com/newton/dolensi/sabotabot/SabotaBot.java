@@ -61,20 +61,21 @@ public class SabotaBot implements BotServiceProvider {
         if (roundResults.isEmpty()) {
             // se for o primeiro a jogar
             if (opponentCard.isEmpty()) return getCardBeingFirstToPlay(intel, hand);
-                // resposta à jogada do adversário
+            // resposta à jogada do adversário
             else {
-                // se o oponente jogar carta forte, joga a menor
-                if (opponentHasStrongCard(intel, opponentCard.get())) return CardToPlay.of(getWeakestCard(intel, hand));
-
                 // se tiver carta igual e manilha, amarra pra jogar ela depois
-                if (opponentHasTheSameCard(intel, opponentCard.get()) && !getManilhasCard(intel).isEmpty()){
+                if (opponentHasTheSameCard(intel, opponentCard.get()) && !getManilhasCard(intel).isEmpty())
                     return getCardToDraw(intel, hand, opponentCard.get());
-                } else {
-                    return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
-                }
+
+                // se o oponente jogar carta mais forte que todas, joga a menor
+                // se não, joga a maior q não seja manilha
+                if (opponentHasStrongCard(intel, opponentCard.get()))
+                    return CardToPlay.of(getWeakestCard(intel, hand));
+                else
+                    return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
             }
         } else if (roundResults.get(0) == GameIntel.RoundResult.DREW){
-            return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
+            return CardToPlay.of(getGreatestCard(intel, hand));
         }
         return CardToPlay.of(hand.get(0));
     }
@@ -93,7 +94,7 @@ public class SabotaBot implements BotServiceProvider {
         }
 
         // sai com a mais forte que não seja manilha
-        return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
+        return CardToPlay.of(getGreatestCard(intel, getNonManilhas(hand, intel.getVira())));
     }
 
     private CardToPlay getCardToDraw(GameIntel intel, List<TrucoCard> hand, TrucoCard opponentCard) {
@@ -101,28 +102,27 @@ public class SabotaBot implements BotServiceProvider {
             if (card.compareValueTo(opponentCard, intel.getVira()) == 0)
                 return CardToPlay.of(card);
         }
-        return CardToPlay.of(getGreatestCardNonManilha(intel, hand));
+        return CardToPlay.of(hand.get(0));
     }
 
-    private TrucoCard getGreatestCardNonManilha(GameIntel intel, List<TrucoCard> hand) {
-        var nonMalinhaCards = getNonManilhas(hand, intel.getVira());
-        if (nonMalinhaCards.size() == 3) {
-            if (nonMalinhaCards.get(0).compareValueTo(nonMalinhaCards.get(1), intel.getVira()) > 0) {
-                if (nonMalinhaCards.get(0).compareValueTo(nonMalinhaCards.get(2), intel.getVira()) > 0)
-                    return nonMalinhaCards.get(0);
+    private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
+        if (hand.size() == 3) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0) {
+                if (hand.get(0).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                    return hand.get(0);
                 else
-                    return nonMalinhaCards.get(2);
-            } else if (nonMalinhaCards.get(1).compareValueTo(nonMalinhaCards.get(2), intel.getVira()) > 0)
-                return nonMalinhaCards.get(1);
+                    return hand.get(2);
+            } else if (hand.get(1).compareValueTo(hand.get(2), intel.getVira()) > 0)
+                return hand.get(1);
             else
-                return nonMalinhaCards.get(2);
-        } else if (nonMalinhaCards.size() == 2) {
-            if (nonMalinhaCards.get(0).compareValueTo(nonMalinhaCards.get(1), intel.getVira()) > 0)
-                return nonMalinhaCards.get(0);
+                return hand.get(2);
+        } else if (hand.size() == 2) {
+            if (hand.get(0).compareValueTo(hand.get(1), intel.getVira()) > 0)
+                return hand.get(0);
             else
-                return nonMalinhaCards.get(1);
+                return hand.get(1);
         }
-        return nonMalinhaCards.get(0);
+        return hand.get(0);
     }
 
     private List<TrucoCard> getNonManilhas(List<TrucoCard> hand, TrucoCard vira) {
