@@ -1000,7 +1000,11 @@ class VapoBotTest {
             @DisplayName("if opponent play first")
             class OpponentPlayFirstTest {
 
+                @Nested
+                @DisplayName("and can win the round")
+                class CanWin {
 
+                }
             }
         }
     }
