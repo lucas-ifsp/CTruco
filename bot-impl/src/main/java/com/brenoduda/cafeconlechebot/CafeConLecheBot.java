@@ -21,16 +21,30 @@
 package com.brenoduda.cafeconlechebot;
 
 import com.bueno.spi.model.*;
+
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
+
 public class CafeConLecheBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
-    }
+        TrucoCard vira = intel.getVira();
 
+        if(intel.getCards().stream().filter(card -> card.isManilha(vira)).count() >= 2){
+            return false;
+        }
+
+        if(intel.getCards().stream().filter(card -> card.isManilha(vira)).count() == 1 &&
+                intel.getCards().stream().anyMatch(card -> card.getRank().equals(CardRank.THREE))
+        ){
+            return false;
+        }
+
+        return true;
+
+    }
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
