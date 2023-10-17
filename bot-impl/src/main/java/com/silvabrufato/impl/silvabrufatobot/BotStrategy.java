@@ -113,6 +113,7 @@ public enum BotStrategy {
         @Override
         public boolean raisePoints(GameIntel gameIntel) {
             if(BotStrategy.hasEspadilha(gameIntel)) return true;
+            if(BotStrategy.hasOuros(gameIntel)) return true;
             return false;
         }
     };
