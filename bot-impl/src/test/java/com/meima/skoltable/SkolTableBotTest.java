@@ -596,6 +596,20 @@ class SkolTableBotTest {
         assertTrue(skolTable.decideIfRaises(builder.build()));
     }
 
+    @Test
+    @DisplayName("Should not raise if hand points is 12")
+    void ShouldNotRiseIfHandPointsIs12 () {
+        List<GameIntel.RoundResult> rounds = List.of();
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+        List<TrucoCard> hand = List.of(TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(SIX, SPADES));
+        GameIntel.StepBuilder powerRank3HandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, openCards, vira, 12)
+                .botInfo(hand, 0)
+                .opponentScore(0);
+
+        assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+    }
 
 
 
