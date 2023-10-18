@@ -564,4 +564,24 @@ public class BotTest {
         assertFalse(bot.decideIfRaises(builder.build()));
     }
 
+    @Test
+    @DisplayName("Test if has 0 manilhas should not start a a point raise request")
+    void testTestIfHas0ManilhasShouldNotStartPointRaiseRequest() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.SPADES), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertFalse(bot.decideIfRaises(builder.build()));
+    }
+
 }
