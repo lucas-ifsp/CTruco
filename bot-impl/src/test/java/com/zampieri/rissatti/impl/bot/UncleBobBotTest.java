@@ -893,4 +893,23 @@ public class UncleBobBotTest {
 
         assertEquals( CardRank.FOUR, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
+
+    @Test
+    @DisplayName("Test if has 3 cards 3 should accept raise ")
+    void testIfHas3Cards3ShouldAcceptRaise() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS) ,TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+
+        assertEquals(0, uncleBobBot.getRaiseResponse(builder.build()));
+    }
 }
