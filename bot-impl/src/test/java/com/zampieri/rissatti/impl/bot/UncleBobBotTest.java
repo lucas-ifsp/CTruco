@@ -801,4 +801,23 @@ public class UncleBobBotTest {
 
         assertTrue(uncleBobBot.HandPointsEqualEleven(builder.build()));
     }
+
+    @Test
+    @DisplayName("Test if return the lowest card in hand")
+    void testIfReturnLowestCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 11)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+
+        assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),uncleBobBot.getLowestCard(botCards, vira));
+    }
 }
