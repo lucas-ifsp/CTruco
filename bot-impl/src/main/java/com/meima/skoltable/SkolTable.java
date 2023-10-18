@@ -90,56 +90,76 @@ public class SkolTable implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        boolean isFirstRound = intel.getRoundResults().isEmpty();
-        boolean existsOpponentCard = intel.getOpponentCard().isPresent();
+        if (isFirstRound(intel)) {
+            return chooseCardFirstRound(intel);
+        } else {
+            return chooseCardSubsequentRound(intel);
+        }
+    }
 
+    private boolean isFirstRound(GameIntel intel) {
+        return intel.getRoundResults().isEmpty();
+    }
+
+    private CardToPlay chooseCardFirstRound(GameIntel intel) {
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        if (hasCopasAndZap(hand, vira)) {
+            return CardToPlay.of(getWeakestCardInHand(intel, vira));
+        }
+
+        if (intel.getOpponentCard().isPresent()) {
+            TrucoCard opponentCard = intel.getOpponentCard().get();
+            TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
+            TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
+
+            if (strongestCardInHand.compareValueTo(opponentCard, vira) > 0) {
+                if (opponentCard.relativeValue(vira) < 8) {
+                    return CardToPlay.of(weakestCapableOfWin(opponentCard, vira, hand));
+                }
+                return CardToPlay.of(strongestCardInHand);
+            } else {
+                return CardToPlay.of(weakestCardInHand);
+            }
+        }
+        return CardToPlay.of(getStrongestCardInHand(intel, vira));
+    }
+
+    private CardToPlay chooseCardSubsequentRound(GameIntel intel) {
         List<GameIntel.RoundResult> rounds = intel.getRoundResults();
         TrucoCard vira = intel.getVira();
-        TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
-        TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
-        TrucoCard opponentCard;
         List<TrucoCard> hand = intel.getCards();
 
-
-        if(isFirstRound){
-            if(hasCopasAndZap(hand, vira)){
-                return CardToPlay.of(weakestCardInHand);
-            }
-
-            if(existsOpponentCard) {
-                opponentCard = intel.getOpponentCard().get();
-                if(strongestCardInHand.compareValueTo(opponentCard, vira) > 0){
-                    if(opponentCard.relativeValue(vira) < 8){
-                        return CardToPlay.of(weakestCapableOfWin(opponentCard, vira, hand));
-                    }
-                    return CardToPlay.of(strongestCardInHand);
-                } else {
-                    return CardToPlay.of(weakestCardInHand);
-                }
-            }
-            return CardToPlay.of(strongestCardInHand);
+        if (opponentCardIsHiddenOrZap(intel)) {
+            return CardToPlay.of(getWeakestCardInHand(intel, vira));
         }
 
-        if (existsOpponentCard){
-            opponentCard = intel.getOpponentCard().get();
-            if (opponentCard.getRank().equals(CardRank.HIDDEN) || opponentCard.isZap(vira)){
+        if (rounds.get(0).equals(GameIntel.RoundResult.DREW) || rounds.get(0).equals(GameIntel.RoundResult.LOST)) {
+            return CardToPlay.of(getStrongestCardInHand(intel, vira));
+        }
+
+        if (rounds.get(0).equals(GameIntel.RoundResult.WON)) {
+            TrucoCard strongestCardInHand = getStrongestCardInHand(intel, vira);
+            TrucoCard weakestCardInHand = getWeakestCardInHand(intel, vira);
+
+            if (strongestCardInHand.isZap(vira) && rounds.size() == 1) {
                 return CardToPlay.of(weakestCardInHand);
             }
         }
-
-        if(rounds.get(0).equals(GameIntel.RoundResult.DREW) || rounds.get(0).equals(GameIntel.RoundResult.LOST)){
-            return CardToPlay.of(strongestCardInHand);
-        }
-
-        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
-            if(strongestCardInHand.isZap(vira) && rounds.size() == 1){
-                return CardToPlay.of(weakestCardInHand);
-            }
-        }
-
 
         return CardToPlay.of(hand.get(0));
     }
+
+    private boolean opponentCardIsHiddenOrZap(GameIntel intel) {
+        if (intel.getOpponentCard().isPresent()) {
+            TrucoCard opponentCard = intel.getOpponentCard().get();
+            TrucoCard vira = intel.getVira();
+            return opponentCard.getRank().equals(CardRank.HIDDEN) || opponentCard.isZap(vira);
+        }
+        return false;
+    }
+
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
