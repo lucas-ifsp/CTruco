@@ -411,6 +411,28 @@ public class TrucoGuruTest {
         }
 
         @Test
+        @DisplayName("Should accept mao de onze when score equals to opponent")
+        public void shouldAcceptMaoDeOnzeWhenScoresEqualsToOpponent(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(11)
+                    .build();
+
+            assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
+        @Test
         @DisplayName("Should decline mao de onze when winning by 5 or less when has no double manilhas")
         public void shouldOnlyAcceptMaoDeOnzeWhenWinningBy5OrLessWhenHasDoubleManilhas(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
