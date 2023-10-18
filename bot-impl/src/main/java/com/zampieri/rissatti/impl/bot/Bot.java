@@ -77,6 +77,7 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(CountManilhas(intel) >= 2){return true;}
         if(hasZap(intel)) return !AnyCardsWithValueLowerThanSix(intel);
         else{
             return false;
