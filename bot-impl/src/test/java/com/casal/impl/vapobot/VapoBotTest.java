@@ -1388,5 +1388,27 @@ class VapoBotTest {
                 assertTrue(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
             }
         }
+
+        @Nested
+        @DisplayName("Test decideIfRaises method")
+        class DecideIfRaisesTes {
+            @Test
+            @DisplayName("Should return true when has any manilhas")
+            void shouldReturnTrueIfHasManilhas () {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 11)
+                        .opponentScore(7);
+                assertTrue(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
+        }
     }
 }
