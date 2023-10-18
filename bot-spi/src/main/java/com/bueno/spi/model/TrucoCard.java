@@ -160,6 +160,7 @@ public final class TrucoCard {
     public boolean isManilha(TrucoCard vira) {
         Objects.requireNonNull(vira, "TrucoCard representing the vira must not be null.");
         return getRank() == vira.getRank().next();
+
     }
 
     /**
