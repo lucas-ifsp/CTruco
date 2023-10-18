@@ -94,7 +94,8 @@ public class TrucoMachineBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(hasZapCopas(intel)) return 1;
+        return -1;
     }
 
     @Override
@@ -240,5 +241,22 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
         }
         return diamond && king;
+    }
+
+    private boolean hasZapCopas(GameIntel intel){
+        boolean zap = false;
+        boolean copas = false;
+        for (TrucoCard card : intel.getCards()){
+            if (card.isZap(intel.getVira())){
+                zap = true;
+            }
+
+            if (card.isCopas(intel.getVira())){
+                copas = true;
+            }
+        }
+
+        if (zap && copas) return true;
+        return false;
     }
 }
