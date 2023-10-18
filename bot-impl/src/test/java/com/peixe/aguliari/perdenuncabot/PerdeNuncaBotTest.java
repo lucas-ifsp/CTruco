@@ -85,20 +85,20 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Plays the lowest manilha to win the round, if possible")
     void playsLowestManilhaToWinRoundIfPossible() {
-        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
         List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 9)
                 .opponentScore(4)
-                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+                .opponentCard(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
 
         CardToPlay botCard = perdeNuncaBot.chooseCard(stepBuilder.build());
 
