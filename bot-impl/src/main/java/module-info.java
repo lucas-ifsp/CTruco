@@ -7,6 +7,7 @@ import com.everton.ronaldo.arrebentabot.ArrebentaBot;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
 import com.tatayrapha.leonardabot.LeonardaBot;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
@@ -34,6 +35,7 @@ module bot.impl {
             LeonardaBot,
             VeioDoBarBot,
             PerdeNuncaBot,
+            TrucoMachineBot,
             DummyBot, 
             Carlsen, 
             DestroyerBot, 
