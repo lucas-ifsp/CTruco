@@ -783,5 +783,22 @@ public class UncleBobBotTest {
 
 
 
+    @Test
+    @DisplayName("Test if as mao de onze")
+    void testIfAsMaoDeOnze() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 11)
+                .botInfo(botCards, 11)
+                .opponentScore(11);
+
+        assertTrue(uncleBobBot.HandPointsEqualEleven(builder.build()));
+    }
 }
