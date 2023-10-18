@@ -1350,6 +1350,24 @@ class VapoBotTest {
                         .opponentScore(7);
                 assertTrue(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("Should return false when opponent score is higher than 7 and bot cards are low in average")
+            void shouldReturnFalseDependingOnCardsAverageAndOpponentScore () {
+                TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 11)
+                        .opponentScore(8);
+                assertFalse(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
         }
     }
 }
