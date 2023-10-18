@@ -193,6 +193,8 @@ public class TrucoMachineBot implements BotServiceProvider {
                 List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
                 if (manilhas.isEmpty()) {
                     return -1;
+                } else {
+                    return 0;
                 }
             }
         }
