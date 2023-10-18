@@ -233,10 +233,10 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should not rise if opponent has specific points")
     public void shouldNotRiseIfOpponentHasSpecificPoints() {
-        TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> playedCards = Arrays.asList(vira, opponentCard);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, vira, 1)
                 .botInfo(botCards, 9)
                 .opponentScore(9)
                 .opponentCard(opponentCard);
@@ -249,10 +249,10 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if has good hand and specific conditions")
     public void shouldRaiseIfHasGoodHandAndSpecificPoints() {
-        TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> playedCards = Arrays.asList(vira, opponentCard);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, vira, 1)
                 .botInfo(botCards, 9)
                 .opponentScore(8)
                 .opponentCard(opponentCard);
@@ -265,12 +265,12 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Bot does not raise if it has a weak hand")
     public void botDoesNotRaiseIfItHasAWeakHand() {
-        TrucoCard trumpCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
         List<TrucoCard> playedCards = Arrays.asList(
                 TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                 opponentCard);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, vira, 1)
                 .botInfo(botCards, 3)
                 .opponentScore(3)
                 .opponentCard(opponentCard);
