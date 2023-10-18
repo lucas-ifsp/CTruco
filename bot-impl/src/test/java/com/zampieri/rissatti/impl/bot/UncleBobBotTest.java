@@ -4,23 +4,23 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BotTest {
+public class UncleBobBotTest {
 
-    private Bot bot;
+    private UncleBobBot uncleBobBot;
     @BeforeEach
     void setUp() {
-        bot = new Bot();
+        uncleBobBot = new UncleBobBot();
     }
 
     GameIntel.StepBuilder builder;
@@ -42,7 +42,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.ACE, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.ACE, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class BotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
-        assertTrue(bot.hasZap(builder.build()));
+        assertTrue(uncleBobBot.hasZap(builder.build()));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.SEVEN, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.FIVE, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.FIVE, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.FOUR, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.FOUR, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.FOUR, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.FOUR, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
 
@@ -162,7 +162,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.KING, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.KING, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.SEVEN, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -202,7 +202,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(0, bot.getRaiseResponse(builder.build()));
+        assertEquals(0, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -222,7 +222,7 @@ public class BotTest {
                 .opponentScore(9)
                 .opponentCard(opponentCard);
 
-        assertEquals(-1, bot.getRaiseResponse(builder.build()));
+        assertEquals(-1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(-1, bot.getRaiseResponse(builder.build()));
+        assertEquals(-1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -262,7 +262,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(0, bot.getRaiseResponse(builder.build()));
+        assertEquals(0, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -282,7 +282,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.THREE, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.THREE, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -302,7 +302,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(1, bot.getRaiseResponse(builder.build()));
+        assertEquals(1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -322,7 +322,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(1, bot.getRaiseResponse(builder.build()));
+        assertEquals(1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -342,7 +342,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.AnyCardsWithValueLowerThanSix(builder.build()));
+        assertTrue(uncleBobBot.AnyCardsWithValueLowerThanSix(builder.build()));
     }
 
     @Test
@@ -362,7 +362,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.getMaoDeOnzeResponse(builder.build()));
+        assertFalse(uncleBobBot.getMaoDeOnzeResponse(builder.build()));
     }
 
     @Test
@@ -382,7 +382,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.TWO ,bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.TWO , uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -401,7 +401,7 @@ public class BotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
 
-        assertEquals(CardRank.FOUR ,bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.FOUR , uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -422,7 +422,7 @@ public class BotTest {
                 .opponentCard(opponentCard);
 
 
-        assertEquals(CardRank.THREE ,bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.THREE , uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
     @Test
     @DisplayName("Test if hand has 3 manilhas")
@@ -441,7 +441,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(3, bot.CountManilhas(builder.build()));
+        assertEquals(3, uncleBobBot.CountManilhas(builder.build()));
     }
 
     @Test
@@ -461,7 +461,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertTrue(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -481,7 +481,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertTrue(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -501,7 +501,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertTrue(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -521,7 +521,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertTrue(bot.decideIfRaises(builder.build()));
+        assertTrue(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -541,7 +541,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.getMaoDeOnzeResponse(builder.build()));
+        assertFalse(uncleBobBot.getMaoDeOnzeResponse(builder.build()));
     }
 
     @Test
@@ -561,7 +561,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.decideIfRaises(builder.build()));
+        assertFalse(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -581,7 +581,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertFalse(bot.decideIfRaises(builder.build()));
+        assertFalse(uncleBobBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -601,7 +601,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(-1, bot.getRaiseResponse(builder.build()));
+        assertEquals(-1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -621,7 +621,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(1, bot.getRaiseResponse(builder.build()));
+        assertEquals(1, uncleBobBot.getRaiseResponse(builder.build()));
     }
 
     @Test
@@ -641,7 +641,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.TWO, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.TWO, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -661,7 +661,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.SEVEN, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
     @Test
@@ -681,7 +681,7 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+        assertEquals(CardRank.SEVEN, uncleBobBot.chooseCard(builder.build()).content().getRank());
     }
 
 }

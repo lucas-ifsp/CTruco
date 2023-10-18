@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.zampieri.rissatti.impl.bot;
+package com.zampieri.rissatti.impl.UncleBobBot;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
@@ -27,7 +27,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
-public class Bot implements BotServiceProvider {
+public class UncleBobBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) { List<TrucoCard> cards = intel.getCards();
