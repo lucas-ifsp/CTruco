@@ -601,5 +601,25 @@ public class TrucoMachineBotTest {
         assertThat(raiseResponse).isZero();
 
     }
+    @Test
+    @DisplayName("should accept truco if round is 0 having two Manilhas")
+    void shouldAcceptTrucoIfRoundIs0HavingTwoManilhas(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+        );
+
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX,SPADES),
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(FOUR, SPADES)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isZero();
+
+    }
 
 }
