@@ -6,6 +6,17 @@ import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
+import com.meima.skoltable.SkolTable;
+import com.rossi.lopes.trucoguru.TrucoGuru;
+import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
+import com.everton.ronaldo.arrebentabot.ArrebentaBot;
+import com.almeida.strapasson.veiodobar.VeioDoBarBot;
+import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
+import com.tatayrapha.leonardabot.LeonardaBot;
+import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
+import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
+import com.yuri.impl.BotMadeInDescalvado;
 
 module bot.impl {
     requires bot.spi;
@@ -17,6 +28,33 @@ module bot.impl {
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.brenoduda.cafeconlechebot;
+    exports com.meima.skoltable;
+    exports com.rossi.lopes.trucoguru;
+    exports com.almeida.strapasson.veiodobar;
+    exports com.tatayrapha.leonardabot;
+    exports com.murilos.aline.teconomarrecobot;
+    exports com.silvabrufato.impl.silvabrufatobot;
+    exports com.everton.ronaldo.arrebentabot;
+    exports com.yuri.impl;
+
     provides com.bueno.spi.service.BotServiceProvider with
-            DummyBot, Carlsen, DestroyerBot, WrkncacnterBot, PaulistaBot, MarrecoBot, AddTheNewSoul, CafeConLecheBot;
+            ArrebentaBot,
+            TecoNoMarrecoBot,
+            SilvaBrufatoBot,
+            LeonardaBot,
+            VeioDoBarBot,
+            PerdeNuncaBot,
+            TrucoMachineBot,
+            BotMadeInDescalvado,
+            TrucoGuru,
+            SkolTable,
+            UncleBobBot,
+            CafeConLecheBot,
+            DummyBot,
+            Carlsen,
+            DestroyerBot,
+            WrkncacnterBot,
+            PaulistaBot,
+            MarrecoBot,
+            AddTheNewSoul;
 }
