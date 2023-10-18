@@ -1485,6 +1485,23 @@ class VapoBotTest {
                         .opponentScore(7);
                 assertEquals(1, vapoBot.getRaiseResponse(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("Should accept when has OK average - above 6")
+            void shouldAcceptIfHasOKAverage() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 5)
+                        .opponentScore(7);
+                assertEquals(0, vapoBot.getRaiseResponse(stepBuilder.build()));
+            }
         }
     }
 }
