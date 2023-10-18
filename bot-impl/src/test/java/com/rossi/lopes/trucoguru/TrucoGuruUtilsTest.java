@@ -24,6 +24,7 @@ package com.rossi.lopes.trucoguru;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -327,7 +328,7 @@ public class TrucoGuruUtilsTest {
     }
 
     @Nested
-    @DisplayName("getWeakestStrongerCard")
+    @DisplayName("getWeakestStrongerCardTest")
     class GetWeakestStrongerCardTest {
         @Test
         @DisplayName("Should return the correct weakestCard card that wins the round")
@@ -363,6 +364,34 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             );
             assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+        }
+    }
+
+    @Nested
+    @DisplayName("HasStrongHandTest")
+    class HasStrongHandTest {
+        @Test
+        @DisplayName("Should return true when have strong hand")
+        void shouldReturnTrueWhenHaveStrongHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false when have no strong hand")
+        void shouldReturnFalseWhenHaveNoStrongHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isFalse();
         }
     }
 }
