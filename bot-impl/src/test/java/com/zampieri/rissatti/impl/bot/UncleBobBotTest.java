@@ -874,4 +874,23 @@ public class UncleBobBotTest {
 
         assertEquals(-1 ,uncleBobBot.getRaiseResponse(builder.build()));
     }
+
+    @Test
+    @DisplayName("Test if is the first to play and dont have good cards")
+    void testIfIsFirstToPlayAndHaveLowCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 11)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals( CardRank.FOUR, uncleBobBot.chooseCard(builder.build()).content().getRank());
+    }
 }
