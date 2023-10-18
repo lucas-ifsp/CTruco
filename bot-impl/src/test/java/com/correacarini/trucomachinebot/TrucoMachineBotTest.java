@@ -454,4 +454,26 @@ public class TrucoMachineBotTest {
 
     }
 
+    @Test
+    @DisplayName("Should reraise truco when having zap and Manilha in round2")
+    void shouldReraiseTrucoWhenHavingZapAndManilhaInRound2(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(THREE,CLUBS),
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(KING, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(TWO, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isOne();
+
+    }
+
 }
