@@ -133,8 +133,17 @@ public class TrucoMachineBot implements BotServiceProvider {
 
                 if (ternos.isPresent()) {
                     return 0;
+                } else {
+                    for (TrucoCard card : intel.getCards()) {
+                        if (card.isZap(intel.getVira()) || card.isCopas(intel.getVira())) {
+                            if (duques.isPresent()) {
+                                return 0;
+                            }
+                        }
+                    }
                 }
             }
+
         }
 
 
