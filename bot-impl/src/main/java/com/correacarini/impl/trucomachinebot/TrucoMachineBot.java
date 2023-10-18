@@ -144,6 +144,7 @@ public class TrucoMachineBot implements BotServiceProvider {
                 }
             }
             if (manilhas.size() == 2) return 0;
+            if (manilhas.size() == 3) return 0;
 
 
         }
