@@ -278,11 +278,14 @@ public class SabotaBotTest {
         }
 
         @Test
-        @DisplayName("should not rise if is eleven hand")
-        void shouldNotRiseIfIsElevenHand(){
+        @DisplayName("should rise if it has ten points and four or more different to opponent")
+        void shouldRiseIfItHasTenPointsAndFourOrMoreDifferentToOpponent(){
 
-            when(intel.getScore()).thenReturn(11);
-            assertThat(sut.decideIfRaises(intel)).isFalse();
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+            when(intel.getScore()).thenReturn(10);
+            when(intel.getOpponentScore()).thenReturn(6);
+
+            assertThat(sut.decideIfRaises(intel)).isTrue();
         }
     }
 

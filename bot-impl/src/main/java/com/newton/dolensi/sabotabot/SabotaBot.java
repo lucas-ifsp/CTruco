@@ -10,7 +10,7 @@ public class SabotaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return true;
     }
 
     @Override
@@ -22,6 +22,8 @@ public class SabotaBot implements BotServiceProvider {
         if (intel.getRoundResults().isEmpty()){
             return false;
         }
+
+
 
         // se ganhou a primeira rodada e tem manilha forte: truco
         if (roundResults.get(0) == GameIntel.RoundResult.WON) {
@@ -48,6 +50,12 @@ public class SabotaBot implements BotServiceProvider {
                 return opponentHasTheSameCard(intel, intel.getOpponentCard().get());
             }
         }
+
+        // se estamos com 10 pontos e mais de 4 pontos de diff do oponente: truco
+        if (intel.getScore() == 10 && getDiferencePoints(intel) >= 4){
+            return true;
+        }
+
         return false;
     }
 
