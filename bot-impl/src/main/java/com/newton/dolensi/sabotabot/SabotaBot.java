@@ -12,8 +12,11 @@ public class SabotaBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         var hand = intel.getCards();
         var vira = intel.getVira();
-
-        return true;
+        int count = 0;
+        for (TrucoCard card : hand) {
+            if (card.isManilha(vira)) count++;
+        }
+        return count >= 2;
     }
 
     @Override
