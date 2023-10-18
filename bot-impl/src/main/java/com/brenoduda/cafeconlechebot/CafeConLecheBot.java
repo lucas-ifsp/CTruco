@@ -116,6 +116,7 @@ public class CafeConLecheBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
 
         int maxValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).max(Integer::compareTo).get();
         int minValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).min(Integer::compareTo).get();
@@ -128,13 +129,19 @@ public class CafeConLecheBot implements BotServiceProvider {
         }
 
         if(intel.getOpponentCard().isPresent()) {
-            Optional<TrucoCard> cardToPlay;
+            Optional<TrucoCard> cardToPlay = Optional.empty();
 
             if(intel.getOpponentCard().get().getRank().equals(CardRank.HIDDEN) &&
                     intel.getOpponentCard().get().getSuit().equals(CardSuit.HIDDEN)) {
                 cardToPlay = botCards.stream().filter(card -> card.getRank().value() == minValue).findAny();
             } else {
-                cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+                if(!botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+                    if(botCards.stream().filter(card -> card.isManilha(vira)).filter(card -> card.compareValueTo(intel.getOpponentCard().get(), vira) <= 0).toList().isEmpty()) {
+                        cardToPlay = botCards.stream().filter(card -> !card.isManilha(vira)).filter(card -> card.getRank().value() == minValue).findAny();
+                    }
+                } else {
+                    cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+                }
             }
 
             if(cardToPlay.isPresent()) {
@@ -142,7 +149,12 @@ public class CafeConLecheBot implements BotServiceProvider {
             }
         }
 
-        return null;
+        if(intel.getRoundResults().isEmpty() &&
+                botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+            return CardToPlay.of(botCards.stream().filter(card -> card.getRank().value() == maxValue).findAny().get());
+        }
+
+        return CardToPlay.of(botCards.stream().filter(card -> card.getRank().value() == maxValue).findAny().get());
     }
 
     @Override
@@ -182,6 +194,6 @@ public class CafeConLecheBot implements BotServiceProvider {
             return 1;
         }
 
-        return 0;
+        return -1;
     }
 }

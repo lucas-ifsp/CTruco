@@ -283,13 +283,52 @@ public class CafeConLecheBotTest {
             TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(JACK, DIAMONDS)), vira, 1)
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN)), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0)
                     .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
 
             CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
             assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, HEARTS));
+        }
+
+        @Test
+        @DisplayName("Should choose bigger card when not has manilha and playing first")
+        void shouldChooseBiggerCardWhenNotHasManilhaAndPlayingFirst() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
+        }
+
+        @Test
+        @DisplayName("Should choose lower card when opponent to plays bigger manilha than his")
+        void shouldChooseLowerCardWhenOpponentToPlaysBiggerManihaThanHis() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(QUEEN, HEARTS),
+                    TrucoCard.of(SIX, HEARTS),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(ACE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(SIX, CLUBS)), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(SIX,CLUBS));
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(SIX, HEARTS));
         }
     }
 
