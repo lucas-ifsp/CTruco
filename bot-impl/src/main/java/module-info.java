@@ -19,6 +19,7 @@ import com.tatayrapha.leonardabot.LeonardaBot;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
+import com.gatti.casaque.caipirasbot.CaipirasBot;
 
 module bot.impl {
     requires bot.spi;
@@ -39,6 +40,7 @@ module bot.impl {
     exports com.silvabrufato.impl.silvabrufatobot;
     exports com.everton.ronaldo.arrebentabot;
     exports com.yuri.impl;
+    exports com.gatti.casaque.caipirasbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -55,6 +57,7 @@ module bot.impl {
             CafeConLecheBot,
             VapoBot,
             SabotaBot,
+            CaipirasBot,
             DummyBot,
             Carlsen,
             DestroyerBot,
