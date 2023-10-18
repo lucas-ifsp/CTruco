@@ -1,4 +1,5 @@
 import com.bonelli.noli.paulistabot.PaulistaBot;
+import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
@@ -26,6 +27,7 @@ module bot.impl {
     exports com.caueisa.destroyerbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
+    exports com.brenoduda.cafeconlechebot;
     exports com.meima.skoltable;
     exports com.rossi.lopes.trucoguru;
     exports com.almeida.strapasson.veiodobar;
@@ -47,6 +49,7 @@ module bot.impl {
             TrucoGuru,
             SkolTable,
             UncleBobBot,
+            CafeConLecheBot,
             DummyBot,
             Carlsen,
             DestroyerBot,
