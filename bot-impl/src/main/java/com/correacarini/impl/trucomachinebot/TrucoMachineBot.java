@@ -167,7 +167,25 @@ public class TrucoMachineBot implements BotServiceProvider {
                     }
                 }
                 else if (manilhas.size() == 2) return 0;
+                else return -1;
             }
+            if (roundResults.get(0).equals(GameIntel.RoundResult.WON)) {
+                List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+                if (manilhas.isEmpty()) {
+                    List<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).toList();
+                    List<TrucoCard> duques = cards.stream().filter(card -> card.getRank().equals(TWO)).toList();
+                    if (ternos.size() > 0) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+
+                } else{
+                    return 0;
+                }
+            }
+
         }
 
 
