@@ -23,15 +23,12 @@ package com.correacarini.trucomachinebot;
 
 import com.bueno.spi.model.*;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
-import com.hermespiassi.casados.marrecobot.MarrecoBot;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
-import static com.bueno.spi.model.CardRank.HIDDEN;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
