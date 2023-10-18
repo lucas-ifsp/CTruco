@@ -46,17 +46,12 @@ public class VapoBot implements BotServiceProvider {
 
     private CardToPlay chooseCardFirstRound(GameIntel intel){
         if (checkIfWillBeTheFirstToPlay(intel)){
-            if (getAmountOfManilhas(intel) >= 2) {
-                return CardToPlay.of(getHighestCard(intel));
-            }
-
+            if (getAmountOfManilhas(intel) >= 2) return CardToPlay.of(getHighestCard(intel));
             if (getAmountOfManilhas(intel) == 1){
-                if (numberOfCardsThatHasARelativeValueGreaterThan(intel, 7) > 1) {
+                if (numberOfCardsThatHasARelativeValueGreaterThan(intel, 7) > 1)
                     return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).orElse(getLowestCard(intel)));
-                };
                 return CardToPlay.of(getHighestCardThatIsNotAManilha(intel).orElse(getHighestCard(intel)));
             }
-
         } else {
             return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCard(intel)));
         }
@@ -66,12 +61,8 @@ public class VapoBot implements BotServiceProvider {
     private CardToPlay chooseCardSecondRound(GameIntel intel){
         if(checkIfWillBeTheFirstToPlay(intel)) {
             if (getLastRoundResult(intel).equals(GameIntel.RoundResult.WON)){
-                if (getAmountOfManilhas(intel) == 2) {
-                    return CardToPlay.of(getLowestCard(intel));
-                }
-                if (getAmountOfManilhas(intel) == 1) {
-                    return CardToPlay.of(getHighestCard(intel));
-                }
+                if (getAmountOfManilhas(intel) == 2) return CardToPlay.of(getLowestCard(intel));
+                if (getAmountOfManilhas(intel) == 1) return CardToPlay.of(getHighestCard(intel));
                 return CardToPlay.of(getLowestCard(intel));
             }
             return CardToPlay.of(getHighestCard(intel));
@@ -87,32 +78,27 @@ public class VapoBot implements BotServiceProvider {
     public TrucoCard getHighestCard(GameIntel intel) {
         TrucoCard highestCard = intel.getCards().get(0);
 
-        for (TrucoCard card : intel.getCards()) {
-            if (card.relativeValue(intel.getVira()) > highestCard.relativeValue(intel.getVira())) {
+        for (TrucoCard card : intel.getCards())
+            if (card.relativeValue(intel.getVira()) > highestCard.relativeValue(intel.getVira()))
                 highestCard = card;
-            }
-        }
-
         return highestCard;
     }
 
     public TrucoCard getLowestCard(GameIntel intel) {
         TrucoCard lowestCard = intel.getCards().get(0);
 
-        for (TrucoCard card : intel.getCards()) {
-            if (lowestCard.relativeValue(intel.getVira()) > card.relativeValue(intel.getVira())) {
+        for (TrucoCard card : intel.getCards())
+            if (lowestCard.relativeValue(intel.getVira()) > card.relativeValue(intel.getVira()))
                 lowestCard = card;
-            }
-        }
-
         return lowestCard;
     }
 
     double getAverageCardValue(GameIntel intel) {
         int values = 0;
-        for (TrucoCard card : intel.getCards()) {
+
+        for (TrucoCard card : intel.getCards())
             values += card.relativeValue(intel.getVira());
-        }
+
         double average = (double) values / intel.getCards().size();
         return average;
     }
@@ -122,19 +108,15 @@ public class VapoBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         boolean zap = false;
 
-        for (TrucoCard card : myCards) {
-            if (card.isZap(vira)) {
+        for (TrucoCard card : myCards)
+            if (card.isZap(vira))
                 zap = true;
-            }
-        }
-
         return zap;
     }
 
     GameIntel.RoundResult getLastRoundResult(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty()) {
+        if (intel.getRoundResults().isEmpty())
             throw new ArrayIndexOutOfBoundsException("There is no last round played.");
-        }
         return intel.getRoundResults().get(intel.getRoundResults().size()-1);
     }
 
@@ -144,10 +126,9 @@ public class VapoBot implements BotServiceProvider {
 
     int getAmountOfManilhas(GameIntel intel){
         int amount = 0;
-        for (TrucoCard card: intel.getCards()) {
+        for (TrucoCard card: intel.getCards())
             if(card.isManilha(intel.getVira()))
                 amount += 1;
-        }
         return amount;
     }
 
@@ -174,13 +155,10 @@ public class VapoBot implements BotServiceProvider {
     Optional<TrucoCard> getHighestCardThatIsNotAManilha(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         if(getAmountOfManilhas(intel) == 2) return Optional.of(getLowestCard(intel));
-        else if (getAmountOfManilhas(intel) == 1){
-            for (TrucoCard card : intel.getCards()) {
-                if (!card.isManilha(vira) && !card.equals(getLowestCard(intel))) {
+        if (getAmountOfManilhas(intel) == 1)
+            for (TrucoCard card : intel.getCards())
+                if (!card.isManilha(vira) && !card.equals(getLowestCard(intel)))
                     return Optional.of(card);
-                }
-            }
-        }
         return Optional.empty();
     }
 
@@ -197,19 +175,14 @@ public class VapoBot implements BotServiceProvider {
             difference = botScore - opponentScore;
             return difference >= 3;
         }
-
         return false;
-
     }
 
     int numberOfCardsThatHasARelativeValueGreaterThan(GameIntel intel, int relativeValue) {
         int count = 0;
-        for (TrucoCard card : intel.getCards()) {
-            if (card.relativeValue(intel.getVira()) > relativeValue){
-                count++;
-            }
-        }
+
+        for (TrucoCard card : intel.getCards())
+            if (card.relativeValue(intel.getVira()) > relativeValue) count++;
         return count;
     }
-
 }
