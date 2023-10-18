@@ -20,9 +20,7 @@
 
 package com.brenoduda.cafeconlechebot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.assertj.core.api.Assert;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
@@ -272,6 +270,26 @@ public class CafeConLecheBotTest {
 
             CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
             assertThat(card.value()).isEqualTo(TrucoCard.of(JACK, HEARTS));
+        }
+
+        @Test
+        @DisplayName("Should choose lower card when opponent card is hidden")
+        void shouldChooseLowerCArdWhenOpponentCardIsHidden() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(JACK, DIAMONDS)), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, HEARTS));
         }
     }
 
