@@ -99,7 +99,7 @@ public class TrucoGuruUtils {
         return wekeastCard;
     }
 
-    static TrucoCard getWeakestStrongestCard(List<TrucoCard> cards, TrucoCard opennedCard) {
-        return null;
+    static TrucoCard getWeakestStrongestCard(List<TrucoCard> cards, TrucoCard openedCard) {
+
     }
 }
