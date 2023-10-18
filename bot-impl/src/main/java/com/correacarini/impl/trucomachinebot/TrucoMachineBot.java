@@ -46,6 +46,7 @@ public class TrucoMachineBot implements BotServiceProvider {
                 if(hasManilhaAndTwo(intel)) return true;
                 if(hasDiamondAndKing(intel)) return true;
                 if(hasDiamondAndAce(intel)) return true;
+                if(has2Threes(intel)) return true;
             }
             if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(LOST)){
                 if(getNumberOfManilhas(intel) == 2) return true;
@@ -323,6 +324,16 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
         }
         return threes == 3;
+    }
+
+    private boolean has2Threes(GameIntel intel){
+        int threes = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().equals(THREE)) {
+                threes++;
+            }
+        }
+        return threes == 2;
     }
 
     private int getNumberOfManilhas(GameIntel intel) {
