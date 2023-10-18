@@ -622,4 +622,26 @@ public class TrucoMachineBotTest {
 
     }
 
+    @Test
+    @DisplayName("should accept truco if round is 0 having three Manilhas")
+    void shouldAcceptTrucoIfRoundIs0HavingThreeManilhas(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+        );
+
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX,SPADES),
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(SIX, HEARTS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isZero();
+
+
+    }
+
 }
