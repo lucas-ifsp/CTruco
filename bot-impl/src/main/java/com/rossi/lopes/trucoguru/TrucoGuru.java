@@ -88,12 +88,18 @@ public class TrucoGuru implements BotServiceProvider {
         final int currentRound = intel.getRoundResults().size() + 1;
         final List<TrucoCard> cards = intel.getCards();
         final TrucoCard vira = intel.getVira();
+        final Boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
 
         if (currentRound == 1) {
             final Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
             if (hasCasalMaior) {
                 final TrucoCard weakestCard = TrucoGuruUtils.getWeakestCard(cards, vira);
                 return CardToPlay.of(weakestCard);
+            }
+
+            if (isFirstToPlay) {
+                final TrucoCard strongestCard = TrucoGuruUtils.getStrongestCard(cards, vira);
+                return CardToPlay.of(strongestCard);
             }
         }
 
