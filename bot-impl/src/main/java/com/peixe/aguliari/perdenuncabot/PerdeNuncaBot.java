@@ -274,10 +274,6 @@ public class PerdeNuncaBot implements BotServiceProvider {
         if (intel.getOpponentScore() == 0) {
             return 1;
         }
-        // If both scores are 0, accept
-        if (intel.getHandPoints() == 0 && intel.getOpponentScore() == 0) {
-            return 1;
-        }
         // If our score is 3 or higher than opponent score, accept
         if (intel.getScore() >= intel.getOpponentScore() + 3) {
             return 1;
