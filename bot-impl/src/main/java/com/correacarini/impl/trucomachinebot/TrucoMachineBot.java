@@ -95,6 +95,13 @@ public class TrucoMachineBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if(hasZapCopas(intel)) return 1;
+
+        if (hasZapAndManilha(intel)){
+            int round = intel.getRoundResults().size();
+
+            // Se for a primeira rodada eu só aceito
+            if (round == 0) return 0;
+        }
         return -1;
     }
 
