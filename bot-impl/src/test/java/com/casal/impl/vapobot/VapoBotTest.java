@@ -1306,6 +1306,7 @@ class VapoBotTest {
             }
 
         }
+
         @Nested
         @DisplayName("in last round")
         class LastRoundTest {
@@ -1335,7 +1336,7 @@ class VapoBotTest {
         class MaoDeOnzeResponseTest {
             @Test
             @DisplayName("Should return true when has any manilhas")
-            void shouldReturnTrueIfHasManilhas () {
+            void shouldReturnTrueIfHasManilhas() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1353,7 +1354,7 @@ class VapoBotTest {
 
             @Test
             @DisplayName("Should return false when opponent score is higher than 7 and bot cards are low in average")
-            void shouldReturnFalseDependingOnCardsAverageAndOpponentScore () {
+            void shouldReturnFalseDependingOnCardsAverageAndOpponentScore() {
                 TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1372,7 +1373,7 @@ class VapoBotTest {
             @Test
             @DisplayName("Should return true even if has bad card average and no manilhas," +
                     " but opponent score is lower than 7")
-            void shouldReturnTrueIfOpponentHasLowScoreAndHasLowAverage () {
+            void shouldReturnTrueIfOpponentHasLowScoreAndHasLowAverage() {
                 TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1391,10 +1392,10 @@ class VapoBotTest {
 
         @Nested
         @DisplayName("Test decideIfRaises method")
-        class DecideIfRaisesTes {
+        class DecideIfRaisesTest {
             @Test
             @DisplayName("Should return true when has any manilhas")
-            void shouldReturnTrueIfHasManilhas () {
+            void shouldReturnTrueIfHasManilhas() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1412,7 +1413,7 @@ class VapoBotTest {
 
             @Test
             @DisplayName("Should return false when opponent score is higher than 7 and bot cards are low in average")
-            void shouldReturnFalseDependingOnCardsAverageAndOpponentScore () {
+            void shouldReturnFalseDependingOnCardsAverageAndOpponentScore() {
                 TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1431,7 +1432,7 @@ class VapoBotTest {
             @Test
             @DisplayName("Should return true even if has bad card average and no manilhas," +
                     " but opponent score is lower than 7")
-            void shouldReturnTrueIfOpponentHasLowScoreAndHasLowAverage () {
+            void shouldReturnTrueIfOpponentHasLowScoreAndHasLowAverage() {
                 TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
 
                 List<TrucoCard> myCards = List.of(
@@ -1445,6 +1446,27 @@ class VapoBotTest {
                         .botInfo(myCards, 11)
                         .opponentScore(3);
                 assertTrue(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
+        }
+
+        @Nested
+        @DisplayName("Test getRaiseResponse method")
+        class GetRaiseResponseTest {
+            @Test
+            @DisplayName("Should return true when has any manilhas")
+            void shouldReturnTrueIfHasManilhas() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 5)
+                        .opponentScore(7);
+                assertEquals(1, vapoBot.getRaiseResponse(stepBuilder.build()));
             }
         }
     }
