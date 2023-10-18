@@ -117,6 +117,10 @@ public class CafeConLecheBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
 
+        int maxValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).max(Integer::compareTo).get();
+        int minValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).min(Integer::compareTo).get();
+
+
         if(intel.getOpponentCard().isEmpty() &&
                 intel.getRoundResults().isEmpty() &&
                 botCards.stream().filter(card -> card.getSuit().equals(CardSuit.DIAMONDS)).toList().size() >= 1) {
@@ -124,7 +128,15 @@ public class CafeConLecheBot implements BotServiceProvider {
         }
 
         if(intel.getOpponentCard().isPresent()) {
-            Optional<TrucoCard> cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+            Optional<TrucoCard> cardToPlay;
+
+            if(intel.getOpponentCard().get().getRank().equals(CardRank.HIDDEN) &&
+                    intel.getOpponentCard().get().getSuit().equals(CardSuit.HIDDEN)) {
+                cardToPlay = botCards.stream().filter(card -> card.getRank().value() == minValue).findAny();
+            } else {
+                cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+            }
+
             if(cardToPlay.isPresent()) {
                 return CardToPlay.of(cardToPlay.get());
             }
