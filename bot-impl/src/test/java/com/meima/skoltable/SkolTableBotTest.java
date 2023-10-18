@@ -666,6 +666,22 @@ class SkolTableBotTest {
         assertEquals(TrucoCard.of(TWO, SPADES), skolTable.chooseCard(stepBuilder3.build()).content());
     }
 
+    @Test
+    @DisplayName("Should play the weakest card on second round if won first round and have zap with different combination")
+    void shouldPlayTheWeakestCardIfWonFirstRoundAndHaveZap2() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(SIX, HEARTS);
+
+        List<TrucoCard> strongHand = List.of(TrucoCard.of(SEVEN, CLUBS), TrucoCard.of(ACE, DIAMONDS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 6)
+                .botInfo(strongHand, 9)
+                .opponentScore(0);
+
+        assertEquals(TrucoCard.of(ACE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+    }
+
 
 
 }
