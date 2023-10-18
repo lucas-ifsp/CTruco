@@ -234,42 +234,55 @@ public class PerdeNuncaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        // If we have zap accept
         if (intel.getCards().get(0).isZap(intel.getVira())) {
             return 1;
         }
+        // If we have Manilha accept
         if (getManilha(intel)) {
             return 1;
         }
+        // If we have 2 or 3 accept
         if (get2or3(intel)) {
             return 1;
         }
+        // If both scores are 9, deny
         if (intel.getScore() == 9 && intel.getOpponentScore() == 9) {
             return 0;
         }
+        // If our score is 9 and opponent score is 6 or less, accept
         if (intel.getScore() == 9 && intel.getOpponentScore() <= 6) {
             return 1;
         }
+        // If our score is 6 and opponent score is 9 or higher, deny
         if (intel.getScore() == 6 && intel.getOpponentScore() >= 9) {
             return 0;
         }
+        // If our score is 6 and opponent score is 6 or less, accept
         if (intel.getScore() == 6 && intel.getOpponentScore() <= 6) {
             return 1;
         }
+        // If our score is 3 and opponent score is 6 or higher, deny
         if (intel.getScore() == 3 && intel.getOpponentScore() >= 6) {
             return 0;
         }
+        // If our score is 3 and opponent score is 3 or less, accept
         if (intel.getScore() == 3 && intel.getOpponentScore() <= 3) {
             return 1;
         }
+        // If opponent score is 0, accept
         if (intel.getOpponentScore() == 0) {
             return 1;
         }
+        // If both scores are 0, accept
         if (intel.getHandPoints() == 0 && intel.getOpponentScore() == 0) {
             return 1;
         }
+        // If our score is 3 or higher than opponent score, accept
         if (intel.getScore() >= intel.getOpponentScore() + 3) {
             return 1;
         }
+        // If opponent score is 9 or higher, deny
         if (intel.getOpponentScore() >= 9) {
             return 0;
         }
@@ -278,10 +291,12 @@ public class PerdeNuncaBot implements BotServiceProvider {
     }
 
     private boolean getManilha(GameIntel intel) {
+        // Getting manilha
         return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(intel.getVira()));
     }
 
     public boolean get2or3(GameIntel intel) {
+        // Getting 2 or 3
         return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.TWO || card.getRank() == CardRank.THREE);
     }
 }
