@@ -1304,6 +1304,13 @@ class VapoBotTest {
                 }
 
             }
+
+        }
+        @Nested
+        @DisplayName("in last round")
+        class LastRoundTest {
+
+
         }
     }
 }
