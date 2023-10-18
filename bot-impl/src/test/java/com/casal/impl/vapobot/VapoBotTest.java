@@ -1427,6 +1427,25 @@ class VapoBotTest {
                         .opponentScore(8);
                 assertFalse(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("Should return true even if has bad card average and no manilhas," +
+                    " but opponent score is lower than 7")
+            void shouldReturnTrueIfOpponentHasLowScoreAndHasLowAverage () {
+                TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 11)
+                        .opponentScore(3);
+                assertTrue(vapoBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
         }
     }
 }
