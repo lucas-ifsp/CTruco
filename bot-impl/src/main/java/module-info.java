@@ -6,6 +6,7 @@ import com.everton.ronaldo.arrebentabot.ArrebentaBot;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 
 module bot.impl {
@@ -17,15 +18,18 @@ module bot.impl {
     exports com.caueisa.destroyerbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
+    exports com.murilos.aline.teconomarrecobot;
     exports com.silvabrufato.impl.silvabrufatobot;
     exports com.everton.ronaldo.arrebentabot;
+    
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
+            TecoNoMarrecoBot,
+            SilvaBrufatoBot,
             DummyBot, 
             Carlsen, 
             DestroyerBot, 
             WrkncacnterBot, 
             PaulistaBot, 
             MarrecoBot,  
-            SilvaBrufatoBot,
             AddTheNewSoul;
