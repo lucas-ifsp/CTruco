@@ -64,12 +64,12 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Bot discards lowest rank card when opponent has a higher card")
     void botDiscardsLowestRankCardWhenOpponentHasHigherCard() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -148,11 +148,11 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should play the card with the lowest rank to win")
     public void shouldPlayTheCardWithTheLowestRankToWinTest() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -584,10 +584,10 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Decline mao de onze when has low rank cards and opponent score is high")
     public void declineMaoDeOnzeWhenHasLowRankCardsAndOpponentScoreIsHigh() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
 
         List<TrucoCard> botCards = Arrays.asList(
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
