@@ -35,6 +35,9 @@ public class Bot implements BotServiceProvider {
         List<GameIntel.RoundResult> result = intel.getRoundResults();
 
         int numberOfManilhas = 0;
+        if ( cards.isEmpty()) {
+            return -1;
+        }
         TrucoCard lowestCard = cards.get(0);
         TrucoCard highest = cards.get(0);
         for ( TrucoCard card : cards) {
@@ -56,7 +59,7 @@ public class Bot implements BotServiceProvider {
         }
 
         if ( numberOfManilhas == 1) {
-            if ( !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
+            if ( !result.isEmpty() && (result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON)) {
                 return 1;
             }
             return 0;
@@ -65,7 +68,7 @@ public class Bot implements BotServiceProvider {
         if( lowestCard.relativeValue(vira) < 6) {
             return -1;
         }
-        if( highest.relativeValue(vira) > 8 && !result.isEmpty() && result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON) {
+        if( highest.relativeValue(vira) > 8 && !result.isEmpty() && (result.get(0) == GameIntel.RoundResult.DREW || result.get(0) == GameIntel.RoundResult.WON)) {
             return 0;
         }
         if ( intel.getOpponentScore() >= 9) {
