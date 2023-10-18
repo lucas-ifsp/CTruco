@@ -643,5 +643,27 @@ public class TrucoMachineBotTest {
 
 
     }
+    
+    @Test
+    @DisplayName("should not accept truco if lost round0 and dont have manilhas")
+    void shouldNotAcceptTrucoIfLostRound0AndDontHaveManilhas(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX, SPADES),
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(SIX, HEARTS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(TWO, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isNegative();
+
+    }
 
 }
