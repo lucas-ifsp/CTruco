@@ -65,9 +65,6 @@ public class VapoBot implements BotServiceProvider {
 
     private CardToPlay chooseCardSecondRound(GameIntel intel){
         if(checkIfWillBeTheFirstToPlay(intel)) {
-            {
-                System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
-            }
             if (getLastRoundResult(intel).equals(GameIntel.RoundResult.WON)){
                 if (getAmountOfManilhas(intel) == 2) {
                     return CardToPlay.of(getLowestCard(intel));
