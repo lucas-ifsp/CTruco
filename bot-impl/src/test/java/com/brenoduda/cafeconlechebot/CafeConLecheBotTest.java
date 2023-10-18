@@ -283,7 +283,7 @@ public class CafeConLecheBotTest {
             TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(JACK, DIAMONDS)), vira, 1)
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN)), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0)
                     .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));

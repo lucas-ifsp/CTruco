@@ -154,7 +154,7 @@ public class CafeConLecheBot implements BotServiceProvider {
             return CardToPlay.of(botCards.stream().filter(card -> card.getRank().value() == maxValue).findAny().get());
         }
 
-        return null;
+        return CardToPlay.of(botCards.stream().filter(card -> card.getRank().value() == maxValue).findAny().get());
     }
 
     @Override
@@ -194,6 +194,6 @@ public class CafeConLecheBot implements BotServiceProvider {
             return 1;
         }
 
-        return 0;
+        return -1;
     }
 }
