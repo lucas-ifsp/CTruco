@@ -10,14 +10,8 @@ public class SabotaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        int KING_VALUE = 7;
         var hand = intel.getCards();
-        var count = 0;
-        for (TrucoCard card : hand) {
-            if (card.getRank().value() > KING_VALUE) count++;
-        }
-        if (count == 1) return false;
-        return hasStrongCards(hand);
+        return hasAtLeastTwoStrongCards(hand);
     }
 
     @Override
@@ -266,6 +260,15 @@ public class SabotaBot implements BotServiceProvider {
             if (card.getRank().value() >= TWO_VALUE)
                 return true;
         return false;
+    }
+
+    private boolean hasAtLeastTwoStrongCards(List<TrucoCard> hand) {
+        int KING_VALUE = 7;
+        var count = 0;
+        for (TrucoCard card : hand) {
+            if (card.getRank().value() > KING_VALUE) count++;
+        }
+        return count >= 2;
     }
 
     private TrucoCard getGreatestCard(GameIntel intel, List<TrucoCard> hand) {
