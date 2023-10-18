@@ -310,6 +310,26 @@ public class CafeConLecheBotTest {
             CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
             assertThat(card.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
         }
+
+        @Test
+        @DisplayName("Should choose lower card when opponent to plays bigger manilha than his")
+        void shouldChooseLowerCardWhenOpponentToPlaysBiggerManihaThanHis() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(QUEEN, HEARTS),
+                    TrucoCard.of(SIX, HEARTS),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(ACE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(SIX, CLUBS)), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(SIX,CLUBS));
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(SIX, HEARTS));
+        }
     }
 
     @Nested
