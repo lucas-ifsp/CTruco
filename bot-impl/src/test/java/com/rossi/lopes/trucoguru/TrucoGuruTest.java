@@ -284,7 +284,7 @@ public class TrucoGuruTest {
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
             List<TrucoCard> openCards = List.of(vira);
-            List<TrucoCard> botCards = List.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+            List<TrucoCard> botCards = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
 
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(roundResults, openCards, vira, 1)
