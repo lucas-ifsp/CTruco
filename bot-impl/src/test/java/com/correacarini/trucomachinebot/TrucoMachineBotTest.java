@@ -581,4 +581,25 @@ public class TrucoMachineBotTest {
 
     }
 
+    @Test
+    @DisplayName("should accept truco if round is 0 having one Zap or one Copas and atleast one duque")
+    void shouldAcceptTrucoIfRoundIs0HavingOneZapOrOneCopasAndAtleastOneDuque(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+        );
+
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX,CLUBS),
+                TrucoCard.of(FOUR, DIAMONDS),
+                TrucoCard.of(TWO, SPADES)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isZero();
+
+    }
+
 }
