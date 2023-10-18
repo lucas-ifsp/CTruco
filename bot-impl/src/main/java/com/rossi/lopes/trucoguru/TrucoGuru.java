@@ -76,6 +76,18 @@ public class TrucoGuru implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel)  {
+        final int currentRound = intel.getRoundResults().size() + 1;
+        final List<TrucoCard> cards = intel.getCards();
+        final TrucoCard vira = intel.getVira();
+
+        if (currentRound == 1) {
+            final Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
+            if (hasCasalMaior) {
+                final TrucoCard weakestCard = TrucoGuruUtils.getWeakestCard(cards, vira);
+                return CardToPlay.of(weakestCard);
+            }
+        }
+
         return CardToPlay.of(intel.getCards().get(0));
     }
 
