@@ -46,7 +46,10 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (getAmountOfManilhas(intel) > 0) return 1;
+        if (getAverageCardValue(intel) > 8) return 1;
+        if (getAverageCardValue(intel) > 6) return 0;
+        return -1;
     }
 
     @Override
