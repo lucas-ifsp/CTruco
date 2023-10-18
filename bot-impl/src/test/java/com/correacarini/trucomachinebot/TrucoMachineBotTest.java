@@ -129,6 +129,16 @@ public class TrucoMachineBotTest {
         assertFalse(raises);
     }
     @Test
+    @DisplayName("Should not raise when bot and opponent score is equal to 11")
+    void ShouldNotRaiseWhenBotAndOpponentScoreIsEqualTo11() {
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(List.of(), 11);
+
+        boolean raises = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertFalse(raises);
+    }
+    @Test
     @DisplayName("Should raise if has zap and manilha")
     void ShouldRaiseIfHasZapAndManilha() {
         List<TrucoCard> botCards = List.of(
