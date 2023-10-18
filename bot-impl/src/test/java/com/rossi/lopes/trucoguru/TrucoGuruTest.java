@@ -382,7 +382,7 @@ public class TrucoGuruTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), openCards, vira, 1)
                     .botInfo(botCards, 11)
-                    .opponentScore(8)
+                    .opponentScore(2)
                     .build();
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
