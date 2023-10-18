@@ -553,5 +553,30 @@ public class TrucoGuruTest {
             assertThat(intel.getRoundResults().size()).isOne();
             assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), card.content());
         }
+
+        @Test
+        @DisplayName("Should use weakest card to win if starts second in first round")
+        void shouldUseWeakestCardToWinIfStartsSecondInFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = List.of(vira);
+            TrucoCard opponentCard =  TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
+
+            final CardToPlay card = trucoGuru.chooseCard(intel);
+            assertThat(intel.getRoundResults().size()).isZero();
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), card.content());
+        }
     }
 }
