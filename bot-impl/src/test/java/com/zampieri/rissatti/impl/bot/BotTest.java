@@ -541,6 +541,26 @@ public class BotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
+        assertFalse(bot.getMaoDeOnzeResponse(builder.build()));
+    }
+
+    @Test
+    @DisplayName("Test if has 3 bad cards should not start a point raise request")
+    void testTestIfHas3BadCardsShouldNotStartPointRaiseRequest() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), TrucoCard.of(CardRank.FOUR, CardSuit.SPADES), TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
         assertFalse(bot.decideIfRaises(builder.build()));
     }
 
