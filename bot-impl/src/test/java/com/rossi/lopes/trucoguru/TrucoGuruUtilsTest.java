@@ -343,8 +343,8 @@ public class TrucoGuruUtilsTest {
         }
 
         @Test
-        @DisplayName("Should return null if no card beats the openned card")
-        void shouldReturnNullIfNoCardBeatsTheOpennedCard() {
+        @DisplayName("Should return null if no card beats the opened card")
+        void shouldReturnNullIfNoCardBeatsTheOpenedCard() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
@@ -355,7 +355,7 @@ public class TrucoGuruUtilsTest {
         }
 
         @Test
-        @DisplayName("Should return null if card is equal in value with openned card")
+        @DisplayName("Should return null if card is equal in value with opened card")
         void shouldReturnNullIfCardIsEqualInValueWithOpenedCard() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
