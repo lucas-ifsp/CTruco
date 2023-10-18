@@ -324,4 +324,20 @@ public class TrucoGuruUtilsTest {
             assertEquals(CardSuit.SPADES, TrucoGuruUtils.getWeakestCard(cards, vira).getSuit());
         }
     }
+
+    @Nested
+    @DisplayName("getWeakestStrongerCard")
+    class GetWeakestStrongerCardTest {
+        @Test
+        @DisplayName("Should return the correct weakestCard card that wins the round")
+        void shouldReturnWeakestCardWhenProvidedWithNoManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+        }
+    }
 }
