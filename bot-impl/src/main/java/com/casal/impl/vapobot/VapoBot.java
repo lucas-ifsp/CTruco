@@ -25,7 +25,12 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        if (getAmountOfManilhas(intel) > 0)
+            return true;
+        if (intel.getOpponentScore() > 7) {
+            return getAverageCardValue(intel) > 7;
+        }
+        return true;
     }
 
     @Override
