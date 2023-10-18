@@ -382,7 +382,6 @@ public class SabotaBotTest {
         void shouldReturnTrueIfHasTwoManilhas(){
             var cards = IntelMock.cardListAD2CAH();
             when(intel.getCards()).thenReturn(cards);
-            when(intel.getVira()).thenReturn(IntelMock.viraKC());
 
             assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
         }
@@ -392,7 +391,15 @@ public class SabotaBotTest {
         void shouldReturnTrueIfHas2and3(){
             var cards = IntelMock.cardList3D7C2H();
             when(intel.getCards()).thenReturn(cards);
-            when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+            assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return true if has a 3 and two Aces")
+        void shouldReturnTrueIfHasA3AndTwoAces(){
+            var cards = IntelMock.cardList3DACAH();
+            when(intel.getCards()).thenReturn(cards);
 
             assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
         }
