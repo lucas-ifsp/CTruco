@@ -39,6 +39,7 @@ public class TrucoGuru implements BotServiceProvider {
         int opponentScore = intel.getOpponentScore();
         int botScore = intel.getScore();
         int advantageOfScore = botScore - opponentScore;
+        if(advantageOfScore == 0) return true;
 
         Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
         if(hasCasalMaior) return true;
