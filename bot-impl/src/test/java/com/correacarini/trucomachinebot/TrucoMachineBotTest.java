@@ -709,4 +709,26 @@ public class TrucoMachineBotTest {
 
     }
 
+    @Test
+    @DisplayName("should accept truco if won round0 dont haves manilhas but haves atleast one terno ")
+    void shouldAcceptTrucoIfWonRound0DontHavesManilhasButHavesAtleastOneTerno(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON
+        );
+
+        List<TrucoCard> botCards = List.of(
+
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(FOUR, HEARTS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isZero();
+
+    }
+
 }
