@@ -52,6 +52,9 @@ public class TrucoGuru implements BotServiceProvider {
         Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(cards, vira);
         if(advantageOfScore >= 7 && hasStrongCard) return true;
 
+        Boolean hasStrongHand = TrucoGuruUtils.hasStrongHand(cards, vira);
+        if(advantageOfScore <= 4 && hasStrongHand) return true;
+
         return false;
     }
 
