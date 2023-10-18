@@ -116,6 +116,7 @@ public class CafeConLecheBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
 
         int maxValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).max(Integer::compareTo).get();
         int minValue = botCards.stream().map(TrucoCard::getRank).map(CardRank::value).min(Integer::compareTo).get();
@@ -140,6 +141,11 @@ public class CafeConLecheBot implements BotServiceProvider {
             if(cardToPlay.isPresent()) {
                 return CardToPlay.of(cardToPlay.get());
             }
+        }
+
+        if(intel.getRoundResults().isEmpty() &&
+                botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+            return CardToPlay.of(botCards.stream().filter(card -> card.getRank().value() == maxValue).findAny().get());
         }
 
         return null;
