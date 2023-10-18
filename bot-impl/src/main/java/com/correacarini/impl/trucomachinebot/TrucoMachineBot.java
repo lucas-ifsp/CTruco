@@ -94,6 +94,9 @@ public class TrucoMachineBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        TrucoCard vira  = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
         if(hasZapCopas(intel)) return 1;
 
         if (hasZapAndManilha(intel)){
@@ -104,6 +107,22 @@ public class TrucoMachineBot implements BotServiceProvider {
             // Se for a segunda rodada, aceito e peço 6
             if (round == 1) return 1;
         }
+
+        if (roundResults.size() == 0) {
+            List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
+
+            if (manilhas.isEmpty()) {
+                List<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).toList();
+                if (ternos.size() == 3) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+
+            }
+        }
+
+
         return -1;
     }
 
