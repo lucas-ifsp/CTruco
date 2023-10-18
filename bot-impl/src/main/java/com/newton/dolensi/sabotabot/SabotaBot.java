@@ -79,27 +79,30 @@ public class SabotaBot implements BotServiceProvider {
         List<TrucoCard> manilhas = getManilhasCard(intel);
 
         if (!manilhas.isEmpty()){
+
             if (manilhas.size() >= 2){
 
+                // se tem casal maior: 6 no marreco
                 if (hasCasalMaior(intel)){
                     return 1;
                 }
 
+                // se tem duas manilhas: pode descer
                 return 0;
             }
 
+            // se ganhamos uma e temos zap: 6 no marreco
             if (roundResults.contains(GameIntel.RoundResult.WON) && getZap(intel) != null){
                 return 1;
             }
-
-
         }
-
+        
+        // só para não ter bugs
         if (intel.getOpponentScore() == 11){
             return -1;
         }
 
-
+        // se chegou até aqui: corre que não é desta vez
         return -1;
     }
 
