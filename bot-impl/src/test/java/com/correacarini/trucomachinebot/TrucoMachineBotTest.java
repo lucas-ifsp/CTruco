@@ -2,6 +2,8 @@ package com.correacarini.trucomachinebot;
 
 import com.bueno.spi.model.*;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
+import com.hermespiassi.casados.marrecobot.MarrecoBot;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +14,7 @@ import static com.bueno.spi.model.CardRank.HIDDEN;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrucoMachineBotTest {
@@ -410,4 +413,23 @@ public class TrucoMachineBotTest {
         boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raise);
     }
+
+    @Test
+    @DisplayName("Should accept truco when having zap copas")
+    void shouldAcceptTrucoWhenHavingZapCopas(){
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(TWO,CLUBS),
+                TrucoCard.of(TWO, HEARTS),
+                TrucoCard.of(THREE, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isOne();
+
+    }
+
 }
