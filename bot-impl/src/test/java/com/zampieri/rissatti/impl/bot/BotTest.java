@@ -664,6 +664,24 @@ public class BotTest {
         assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
     }
 
+    @Test
+    @DisplayName("Test to don't play manilha if the opponent hidden card")
+    void testTestIfBotDontPlayManilhaVsOpponentHiddenCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+    }
 
 }
