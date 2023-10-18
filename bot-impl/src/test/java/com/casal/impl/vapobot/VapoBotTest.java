@@ -1276,8 +1276,29 @@ class VapoBotTest {
             }
 
             @Nested
-            @DisplayName("if play first")
+            @DisplayName("if opponent play first")
             class OpponentPlayFirstTest {
+                @Test
+                @DisplayName("and lost the first round should choose 2D")
+                void wonFirstRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira,
+                            TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1)
+                            .opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.SPADES)), vapoBot.chooseCard(stepBuilder.build()));
+                }
 
             }
         }

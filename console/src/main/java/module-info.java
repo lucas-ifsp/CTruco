@@ -3,5 +3,4 @@ requires java.logging;
 requires domain;
 requires com.google.common;
 requires application.persistence;
-requires commons.csv;
 }
