@@ -394,4 +394,32 @@ public class TrucoGuruUtilsTest {
             assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("HasHighRankTest")
+    class HasHighRankTest {
+        @Test
+        @DisplayName("Should return true when have high rank")
+        void shouldReturnTrueWhenHaveHighRank() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasHighRank(cards, vira)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false when have low rank")
+        void shouldReturnFalseWhenHaveLowRank() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            );
+            assertThat(TrucoGuruUtils.hasStrongHand(cards, vira)).isFalse();
+        }
+    }
 }
