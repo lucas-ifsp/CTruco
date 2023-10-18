@@ -36,16 +36,21 @@ public class TrucoGuru implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         final TrucoCard vira = intel.getVira();
         final List<TrucoCard> cards = intel.getCards();
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+        int advantageOfScore = botScore - opponentScore;
 
         Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
         if(hasCasalMaior) return true;
         Boolean hasCasalMenor = TrucoGuruUtils.hasCasalMenor(cards, vira);
         if(hasCasalMenor) return true;
 
-        int opponentScore = intel.getOpponentScore();
-        int botScore = intel.getScore();
         Boolean hasDoubleManilhas = TrucoGuruUtils.hasDoubleManilhas(cards, vira);
-        if(botScore - opponentScore <= 5) return hasDoubleManilhas;
+        Boolean IsOpponentScoreClose =  advantageOfScore <= 5;
+        if(IsOpponentScoreClose && hasDoubleManilhas) return true;
+
+        Boolean hasStrongCard = TrucoGuruUtils.hasStrongCard(cards, vira);
+        if(advantageOfScore >= 7 && hasStrongCard) return true;
 
         return false;
     }
