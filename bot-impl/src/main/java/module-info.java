@@ -1,3 +1,4 @@
+import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.caueisa.destroyerbot.DestroyerBot;
@@ -19,6 +20,7 @@ module bot.impl {
     exports com.caueisa.destroyerbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
+    exports com.almeida.strapasson.veiodobar;
     exports com.tatayrapha.leonardabot;
     exports com.murilos.aline.teconomarrecobot;
     exports com.silvabrufato.impl.silvabrufatobot;
@@ -29,6 +31,7 @@ module bot.impl {
             TecoNoMarrecoBot,
             SilvaBrufatoBot,
             LeonardaBot,
+            VeioDoBarBot,
             DummyBot, 
             Carlsen, 
             DestroyerBot, 
