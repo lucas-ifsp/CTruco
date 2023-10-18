@@ -113,9 +113,12 @@ public class TrucoMachineBot implements BotServiceProvider {
 
             if (manilhas.isEmpty()) {
                 List<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).toList();
+                List<TrucoCard> duques = cards.stream().filter(card -> card.getRank().equals(TWO)).toList();
                 if (ternos.size() == 3) {
                     return 0;
                 } else if (ternos.size() == 2) {
+                    return 0;
+                } else if (ternos.size() == 1 && duques.size() == 2) {
                     return 0;
                 } else {
                     return -1;
