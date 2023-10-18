@@ -15,6 +15,8 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if (getAmountOfManilhas(intel) > 0)
+            return true;
         return false;
     }
 
