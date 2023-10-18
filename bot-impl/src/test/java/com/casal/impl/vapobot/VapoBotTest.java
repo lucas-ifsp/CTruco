@@ -1329,5 +1329,11 @@ class VapoBotTest {
 
             }
         }
+
+        @Nested
+        @DisplayName("Test mão de onze method")
+        class MaoDeOnzeResponseTest {
+
+        }
     }
 }
