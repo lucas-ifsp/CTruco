@@ -869,4 +869,18 @@ public class TrucoMachineBotTest {
         boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
         assertTrue(raise);
     }
+    @Test
+    @DisplayName("Should not raise")
+    void ShouldNotRaise() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(SIX, SPADES),
+                TrucoCard.of(FOUR, CLUBS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(ACE, SPADES), 1)
+                .botInfo(botCards, 4);
+
+        boolean raise = new TrucoMachineBot().decideIfRaises(stepBuilder.build());
+        assertFalse(raise);
+    }
 }
