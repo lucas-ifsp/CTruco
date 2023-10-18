@@ -177,6 +177,8 @@ public class TrucoMachineBot implements BotServiceProvider {
                     List<TrucoCard> duques = cards.stream().filter(card -> card.getRank().equals(TWO)).toList();
                     if (ternos.size() > 0) {
                         return 0;
+                    } else if (duques.size() > 0) {
+                        return 0;
                     } else {
                         return -1;
                     }
