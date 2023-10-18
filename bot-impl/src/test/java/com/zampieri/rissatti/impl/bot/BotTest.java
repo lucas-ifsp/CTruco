@@ -624,6 +624,46 @@ public class BotTest {
         assertEquals(1, bot.getRaiseResponse(builder.build()));
     }
 
+    @Test
+    @DisplayName("Test if the bot manilha is greater than opponent manilha")
+    void testTestIfBotManilhaIsGreaterThanOpponentManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(CardRank.TWO, bot.chooseCard(builder.build()).content().getRank());
+    }
+
+    @Test
+    @DisplayName("Test if the bot manilha is lower than opponent manilha")
+    void testTestIfBotManilhaIsLowerThanOpponentManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(CardRank.SEVEN, bot.chooseCard(builder.build()).content().getRank());
+    }
+
 
 
 }
