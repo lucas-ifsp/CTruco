@@ -352,5 +352,17 @@ public class TrucoGuruUtilsTest {
             );
             assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
         }
+
+        @Test
+        @DisplayName("Should return null if card is equal in value with openned card")
+        void shouldReturnNullIfCardIsEqualInValueWithOpenedCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            );
+            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+        }
     }
 }
