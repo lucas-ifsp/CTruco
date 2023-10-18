@@ -89,15 +89,17 @@ public class Bot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(CountManilhas(intel) >= 2){
-            return true;
-        }
-        else{
-            if( !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON ) {
-                return AnyCardsWithValueHigherThanTwo(intel);
+        if(!HandPointsEqualEleven(intel)){
+            if(CountManilhas(intel) >= 2){
+                return true;
             }
-            if(hasZap(intel)){
-                return AnyCardsWithValueHigherThanKing(intel);
+            else{
+                if( !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON ) {
+                    return AnyCardsWithValueHigherThanTwo(intel);
+                }
+                if(hasZap(intel)){
+                    return AnyCardsWithValueHigherThanKing(intel);
+                }
             }
         }
         return false;
@@ -214,5 +216,9 @@ public class Bot implements BotServiceProvider {
 
     public boolean AnyCardsWithValueHigherThanTwo(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 8);
+    }
+
+    public boolean HandPointsEqualEleven(GameIntel intel){
+        return intel.getHandPoints() == 11;
     }
 }
