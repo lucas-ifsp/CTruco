@@ -99,7 +99,17 @@ public class TrucoGuruUtils {
         return wekeastCard;
     }
 
-    static TrucoCard getWeakestStrongestCard(List<TrucoCard> cards, TrucoCard openedCard) {
+    static TrucoCard getWeakestStrongestCard(List<TrucoCard> cards, TrucoCard openedCard, TrucoCard vira) {
+        TrucoCard weakestCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            final Boolean isCardStrongerThanOpenedCard = card.compareValueTo(openedCard, vira) > 0;
+            final Boolean isCardWeakerThanTheCurrentWeakest = card.compareValueTo(weakestCard, vira) < 0;
+            if (isCardStrongerThanOpenedCard && isCardWeakerThanTheCurrentWeakest) weakestCard = card;
+        }
 
+        if (weakestCard.compareValueTo(openedCard, vira) == 0) return null;
+        if (weakestCard.compareValueTo(openedCard, vira) < 0) return null;
+
+        return weakestCard;
     }
 }
