@@ -446,6 +446,27 @@ public class CafeConLecheBotTest {
 
     }
 
+    @Test
+    @DisplayName("get maoDeOnze true if dont have strong handCards")
+    void shouldGetMaoDeonzeIfCardsArentStrong(){
+        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(JACK, SPADES),
+                TrucoCard.of(SIX, SPADES),
+                TrucoCard.of(SEVEN, SPADES)
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(LOST), botCards, vira, 1)
+                .botInfo(List.of(), 11)
+                .opponentScore(2);
+
+        boolean maoDeOnze = new CafeConLecheBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(maoDeOnze).isTrue();
+
+    }
+
+
 
 
 }
