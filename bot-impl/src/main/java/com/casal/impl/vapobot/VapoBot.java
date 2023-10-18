@@ -20,7 +20,7 @@ public class VapoBot implements BotServiceProvider {
         if (intel.getOpponentScore() > 7) {
             return getAverageCardValue(intel) > 7;
         }
-        return false;
+        return true;
     }
 
     @Override
