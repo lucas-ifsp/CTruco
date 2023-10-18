@@ -22,10 +22,7 @@
 
 package com.rossi.lopes.trucoguru;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -412,6 +409,35 @@ public class TrucoGuruTest {
 
             assertThat(trucoGuru.getMaoDeOnzeResponse(intel)).isTrue();
         }
+    }
 
+    @Nested
+    @DisplayName("ChooseCard")
+    class ChooseCardTest {
+        TrucoGuru trucoGuru = new TrucoGuru();
+
+        @Test
+        @DisplayName("Should use weakest card on first round if have casal maior")
+        void shouldRaiseIfWonLastRoundAndHasStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+            final CardToPlay card = trucoGuru.chooseCard(intel);
+            assertThat(intel.getRoundResults().size()).isZero();
+            assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), card.content());
+        }
     }
 }
