@@ -276,6 +276,14 @@ public class SabotaBotTest {
             assertThat(sut.decideIfRaises(intel)).isTrue();
 
         }
+
+        @Test
+        @DisplayName("should not rise if is eleven hand")
+        void shouldNotRiseIfIsElevenHand(){
+
+            when(intel.getScore()).thenReturn(11);
+            assertThat(sut.decideIfRaises(intel)).isFalse();
+        }
     }
 
     @Nested
