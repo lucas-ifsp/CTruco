@@ -333,37 +333,40 @@ public class TrucoGuruUtilsTest {
         @Test
         @DisplayName("Should return the correct weakestCard card that wins the round")
         void shouldReturnWeakestCardWhenProvidedWithNoManilhas() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            TrucoCard openedCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             );
-            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoGuruUtils.getWeakestStrongestCard(cards, openedCard, vira));
         }
 
         @Test
         @DisplayName("Should return null if no card beats the opened card")
         void shouldReturnNullIfNoCardBeatsTheOpenedCard() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard openedCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             );
-            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, openedCard, vira));
         }
 
         @Test
         @DisplayName("Should return null if card is equal in value with opened card")
         void shouldReturnNullIfCardIsEqualInValueWithOpenedCard() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard openedCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             );
-            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, openedCard, vira));
         }
     }
 
