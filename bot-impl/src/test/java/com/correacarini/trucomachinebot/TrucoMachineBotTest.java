@@ -540,8 +540,8 @@ public class TrucoMachineBotTest {
     }
 
     @Test
-    @DisplayName("Shounld not accept truco if round is 0 and dont have manilhas and atleat one terno")
-    void shounldNotAcceptTrucoIfRoundIs0AndDontHaveManilhasAndAtleatOneTerno(){
+    @DisplayName("Should not accept truco if round is 0 and dont have manilhas and atleat one terno")
+    void shouldNotAcceptTrucoIfRoundIs0AndDontHaveManilhasAndAtleatOneTerno(){
         List<GameIntel.RoundResult> roundResults = List.of(
         );
 
