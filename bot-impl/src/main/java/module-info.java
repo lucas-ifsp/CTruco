@@ -5,6 +5,7 @@ import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.rossi.lopes.trucoguru.TrucoGuru;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
@@ -45,6 +46,7 @@ module bot.impl {
             BotMadeInDescalvado,
             TrucoGuru,
             SkolTable,
+            UncleBobBot,
             DummyBot,
             Carlsen,
             DestroyerBot,
