@@ -166,6 +166,7 @@ public class TrucoMachineBot implements BotServiceProvider {
                         }
                     }
                 }
+                else if (manilhas.size() == 2) return 0;
             }
         }
 
