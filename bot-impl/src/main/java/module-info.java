@@ -7,6 +7,7 @@ import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.newton.dolensi.sabotabot.SabotaBot;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.rossi.lopes.trucoguru.TrucoGuru;
@@ -28,6 +29,7 @@ module bot.impl {
     exports com.caueisa.destroyerbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
+    exports com.newton.dolensi.sabotabot;
     exports com.brenoduda.cafeconlechebot;
     exports com.meima.skoltable;
     exports com.rossi.lopes.trucoguru;
@@ -52,6 +54,7 @@ module bot.impl {
             UncleBobBot,
             CafeConLecheBot,
             VapoBot,
+            SabotaBot,
             DummyBot,
             Carlsen,
             DestroyerBot,
