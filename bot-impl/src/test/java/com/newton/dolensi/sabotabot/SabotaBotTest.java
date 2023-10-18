@@ -170,7 +170,15 @@ public class SabotaBotTest {
         @Nested
         @DisplayName("Third Round Plays")
         class ThirdRoundTests{
+            @Test
+            @DisplayName("Should play a card in third round")
+            void shouldPlayACardInThirdRound(){
+                var cards = IntelMock.cardList2H();
+                when(intel.getCards()).thenReturn(cards);
+                when(intel.getVira()).thenReturn(IntelMock.vira5C());
 
+                assertNotNull(sut.chooseCard(intel).content());
+            }
         }
 
     }
