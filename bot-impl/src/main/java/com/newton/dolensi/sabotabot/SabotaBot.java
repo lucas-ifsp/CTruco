@@ -81,18 +81,7 @@ public class SabotaBot implements BotServiceProvider {
         if (!manilhas.isEmpty()){
             if (manilhas.size() >= 2){
 
-                int upRise = 0;
-                for (TrucoCard manilha : manilhas) {
-
-                    if (manilha.isZap(intel.getVira())){
-                        upRise++;
-                    }
-
-                    if (manilha.isCopas(intel.getVira())){
-                        upRise++;
-                    }
-                }
-                if (upRise == 2){
+                if (hasCasalMaior(intel)){
                     return 1;
                 }
 
@@ -192,6 +181,27 @@ public class SabotaBot implements BotServiceProvider {
         return false;
     }
 
+    private boolean hasCasalMaior(GameIntel intel){
+
+        List<TrucoCard> manilhas = getManilhasCard(intel);
+
+        int upRise = 0;
+        for (TrucoCard manilha : manilhas) {
+
+            if (manilha.isZap(intel.getVira())){
+                upRise++;
+            }
+
+            if (manilha.isCopas(intel.getVira())){
+                upRise++;
+            }
+        }
+        if (upRise == 2){
+            return true;
+        }
+
+        return false;
+    }
 
 
     // functions for normal cards
