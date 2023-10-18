@@ -100,16 +100,20 @@ public class TrucoGuruUtils {
     }
 
     static TrucoCard getWeakestStrongestCard(List<TrucoCard> cards, TrucoCard openedCard, TrucoCard vira) {
-        TrucoCard weakestCard = cards.get(0);
+        TrucoCard weakestStrongerCard = null;
         for (TrucoCard card : cards) {
             final Boolean isCardStrongerThanOpenedCard = card.compareValueTo(openedCard, vira) > 0;
-            final Boolean isCardWeakerThanTheCurrentWeakest = card.compareValueTo(weakestCard, vira) < 0;
-            if (isCardStrongerThanOpenedCard && isCardWeakerThanTheCurrentWeakest) weakestCard = card;
+            if (isCardStrongerThanOpenedCard && weakestStrongerCard == null) {
+                weakestStrongerCard = card;
+                continue;
+            }
+
+            if (weakestStrongerCard == null) continue;
+
+            final Boolean isCardWeakerThanTheCurrentWeakest = card.compareValueTo(weakestStrongerCard, vira) < 0;
+            if (isCardStrongerThanOpenedCard && isCardWeakerThanTheCurrentWeakest) weakestStrongerCard = card;
         }
 
-        if (weakestCard.compareValueTo(openedCard, vira) == 0) return null;
-        if (weakestCard.compareValueTo(openedCard, vira) < 0) return null;
-
-        return weakestCard;
+        return weakestStrongerCard;
     }
 }
