@@ -138,7 +138,9 @@ public class TrucoGuru implements BotServiceProvider {
                     // Tem zap, pode chamar no 6
                     return 1;
                 } else if (TrucoGuruUtils.hasManilha(cards, vira) || TrucoGuruUtils.hasStrongCard(cards, vira)) {
-                    // Tem manilha ou carta forte, aceita
+                    // Tem manilha ou carta forte, seis
+                    return 1;
+                } else if (TrucoGuruUtils.hasHighRank(cards, vira)){
                     return 0;
                 }
             }
