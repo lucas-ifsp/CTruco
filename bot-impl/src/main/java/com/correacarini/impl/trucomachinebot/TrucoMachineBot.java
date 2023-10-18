@@ -115,6 +115,8 @@ public class TrucoMachineBot implements BotServiceProvider {
                 List<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).toList();
                 if (ternos.size() == 3) {
                     return 0;
+                } else if (ternos.size() == 2) {
+                    return 0;
                 } else {
                     return -1;
                 }
