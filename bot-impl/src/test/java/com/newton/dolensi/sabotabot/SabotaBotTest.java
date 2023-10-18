@@ -403,5 +403,14 @@ public class SabotaBotTest {
 
             assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
         }
+
+        @Test
+        @DisplayName("Should return false if has an only good card")
+        void shouldReturnFalseIfHasAnOnlyGoodCard(){
+            var cards = IntelMock.cardList3D5CQH();
+            when(intel.getCards()).thenReturn(cards);
+
+            assertThat(sut.getMaoDeOnzeResponse(intel)).isFalse();
+        }
     }
 }
