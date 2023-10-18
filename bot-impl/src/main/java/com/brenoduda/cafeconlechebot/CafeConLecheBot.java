@@ -35,7 +35,7 @@ public class CafeConLecheBot implements BotServiceProvider {
             return true;
         }
 
-        if(hasStrongCards(intel)){
+        if(!hasStrongCards(intel)){
             return true;
         }
         

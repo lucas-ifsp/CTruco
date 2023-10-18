@@ -21,6 +21,8 @@
 package com.brenoduda.cafeconlechebot;
 
 import com.bueno.spi.model.*;
+import org.assertj.core.api.Assert;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,30 +39,6 @@ public class CafeConLecheBotTest {
     @Nested
     @DisplayName("Test of the bot logic to decide if raises")
     class ShouldRaise {
-
-        @Test
-        @DisplayName("Should raise when has 3 manilhas")
-        void shouldAcceptMaoDeOnze(){
-            List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
-            );
-
-            TrucoCard vira = TrucoCard.of(TWO, SPADES);
-
-            List<GameIntel.RoundResult> roundResults = List.of(
-                    GameIntel.RoundResult.WON,
-                    GameIntel.RoundResult.LOST
-            );
-
-
-            GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResults, List.of(vira), vira, 1)
-                    .botInfo(botCards, 0)
-                    .opponentScore(0)
-                    .build();
-        }
         @Test
         @DisplayName("Should raise when has 3 manilhas")
         void shouldRaiseWhenHas3Manilhas() {
@@ -293,6 +271,26 @@ public class CafeConLecheBotTest {
             CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
             assertThat(card.value()).isEqualTo(TrucoCard.of(JACK, HEARTS));
         }
+
+        @Test
+        @DisplayName("Should choose lower card when opponent card is hidden")
+        void shouldChooseLowerCArdWhenOpponentCardIsHidden() {
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira, TrucoCard.of(JACK, DIAMONDS)), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+
+            CardToPlay card = new CafeConLecheBot().chooseCard(stepBuilder.build());
+            assertThat(card.value()).isEqualTo(TrucoCard.of(SEVEN, HEARTS));
+        }
     }
 
     @Nested
@@ -395,16 +393,17 @@ public class CafeConLecheBotTest {
 
         @Test
         @DisplayName("Should reject when the first round is lost and not has good card")
-        void shouldRejectWhenTheFirstRoundIsLostAndDontHaveGoodCard() {
+        void shouldRejectWhenTheFirstRoundIsLostAndNotHasGoodCard() {
             List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(JACK, SPADES),
                     TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(SEVEN, SPADES)
             );
             TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(LOST), botCards, vira, 1)
-                    .botInfo(botCards, 11)
+                    .gameInfo(List.of(LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 0)
                     .opponentScore(0);
 
             int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
@@ -412,32 +411,40 @@ public class CafeConLecheBotTest {
         }
     }
 
-        @Test
-        @DisplayName("Should reject when your score is 11")
-        void shouldRejectWhenScoreIs11() {
+    @Test
+    @DisplayName("Should reject when your score is 11")
+    void shouldRejectWhenScoreIs11() {
 
-            TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
 
-            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(LOST), List.of(), vira, 1)
-                    .botInfo(List.of(), 11)
-                    .opponentScore(0);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(LOST), List.of(), vira, 1)
+                .botInfo(List.of(), 11)
+                .opponentScore(0);
 
-            int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
-            assertThat(raiseResponse).isEqualTo(-1);
-        }
+        int raiseResponse = new CafeConLecheBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isEqualTo(-1);
+    }
 
+    @Test
+    @DisplayName("get maoDeOnze positive response if oponent has score 11")
+    void shouldGetMaoDeonzeIfopenentScore11(){
+        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(JACK, SPADES),
+                TrucoCard.of(SIX, SPADES),
+                TrucoCard.of(SEVEN, SPADES)
+        );
 
-    /*
-        @Test
-        @DisplayName("get maoDeOnze positive response if oponent has score 11")
-        void shouldGetMaoDeonzeIfopenentScore11(GameIntel intel){
-            int score=intel.getOpponentScore();
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(LOST), botCards, vira, 1)
+                .botInfo(List.of(), 11)
+                .opponentScore(11);
 
-            assert
+        boolean maoDeOnze = new CafeConLecheBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(maoDeOnze).isTrue();
 
-        }*/
-
+    }
 
 
 
