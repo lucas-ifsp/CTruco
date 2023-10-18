@@ -365,16 +365,16 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if the sum of card values is above the average and the leading card is strong")
     public void shouldRaiseIfSumOfCardValuesIsAboveAverageAndLeadingCardIsStrong() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
 
         List<TrucoCard> playerCards = Arrays.asList(
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
 
         int sumOfPlayerCardValues = calculateSumOfCardValues(playerCards);
 
@@ -402,15 +402,15 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if only have manilhas")
     public void shouldRaiseIfOnlyHaveManilhas() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                 opponentCard);
 
         List<TrucoCard> playerCards = Arrays.asList(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -443,15 +443,15 @@ public class PerdeNuncaBotTest {
     @DisplayName("Should not raise when has low rank cards")
     public void shouldNotRaiseWhenHasLowRankCards() {
 
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
                 opponentCard);
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
-                .botInfo(Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.SPADES), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)), 3)
+                .botInfo(Arrays.asList(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)), 3)
                 .opponentScore(2)
                 .opponentCard(opponentCard);
 
@@ -515,15 +515,15 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Decline mao de onze if bot has a low chance of winning")
     public void declineElevenHandIfBotHasALowChanceOfWinning() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
 
         List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -561,15 +561,15 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Accept mao de onze if opponent score is six or less")
     public void acceptMaoDeOnzeIfOpponentScoreIsSixOrLess() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
 
         List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -684,10 +684,10 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Accept mao de onze when score is equal or higher")
     public void acceptMaoDeOnzeWhenScoreIsEqualOrHigher() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -700,15 +700,15 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Accept mao de onze with strong hand")
     public void acceptMaoDeOnzeWithStrongHand() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
         List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
         GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
@@ -872,14 +872,14 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Don't raise if opponent score is higher than 9 and does not have zap, manilha, 2 or 3")
     public void dontRaiseIfOpponentScoreIsHigherThan9andDoesNotHaveZapManilha2or3() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
         List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 2)
