@@ -17,6 +17,9 @@ public class VapoBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (getAmountOfManilhas(intel) > 0)
             return true;
+        if (intel.getOpponentScore() > 7) {
+            return getAverageCardValue(intel) > 7;
+        }
         return false;
     }
 
