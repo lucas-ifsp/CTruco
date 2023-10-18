@@ -337,7 +337,21 @@ public class SabotaBotTest {
 
             assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
         }
-        
+
+        @Test
+        @DisplayName("should not rise if dont have manilha")
+        void shouldNotRiseIfDontHaveManilha(){
+
+            when(intel.getCards()).thenReturn(
+                    List.of(
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+            assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+        }
+
+
 
     }
 }
