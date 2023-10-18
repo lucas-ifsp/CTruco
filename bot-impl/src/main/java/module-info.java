@@ -1,6 +1,7 @@
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
+import com.casal.impl.vapobot.VapoBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
@@ -50,6 +51,7 @@ module bot.impl {
             SkolTable,
             UncleBobBot,
             CafeConLecheBot,
+            VapoBot,
             DummyBot,
             Carlsen,
             DestroyerBot,
