@@ -301,12 +301,12 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should not raise if does not have manilha")
     public void shouldNotRaiseIfDoesNotHaveManilha() {
-        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
         List<TrucoCard> openCards = Arrays.asList(
-                leadCard,
+                vira,
                 opponentCard);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(botCards, 9)
                 .opponentScore(5)
                 .opponentCard(opponentCard);
@@ -319,7 +319,7 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if the player has a strong hand and the leading card is strong")
     void shouldRaiseIfPlayerHasStrongHandAndLeadingCardIsStrong() {
-        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
@@ -329,7 +329,7 @@ public class PerdeNuncaBotTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(cards, 7)
                 .opponentScore(8)
                 .opponentCard(opponentCard);
@@ -365,7 +365,7 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if the sum of card values is above the average and the leading card is strong")
     public void shouldRaiseIfSumOfCardValuesIsAboveAverageAndLeadingCardIsStrong() {
-        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
@@ -380,7 +380,7 @@ public class PerdeNuncaBotTest {
 
         int averageCardValue = calculateAverageCardValue(openCards);
 
-        boolean shouldRaise = sumOfPlayerCardValues > averageCardValue && leadCard.getRank().value() >= 10;
+        boolean shouldRaise = sumOfPlayerCardValues > averageCardValue && vira.getRank().value() >= 10;
 
         assertFalse(shouldRaise);
     }
@@ -402,7 +402,7 @@ public class PerdeNuncaBotTest {
     @Test
     @DisplayName("Should raise if only have manilhas")
     public void shouldRaiseIfOnlyHaveManilhas() {
-        TrucoCard leadCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Arrays.asList(
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
@@ -413,7 +413,7 @@ public class PerdeNuncaBotTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, leadCard, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(playerCards, 3)
                 .opponentScore(2)
                 .opponentCard(opponentCard);
