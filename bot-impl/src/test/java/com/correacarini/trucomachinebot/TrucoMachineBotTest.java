@@ -652,7 +652,6 @@ public class TrucoMachineBotTest {
         );
 
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(SIX, SPADES),
                 TrucoCard.of(SIX, DIAMONDS),
                 TrucoCard.of(SIX, HEARTS)
         );
@@ -663,6 +662,28 @@ public class TrucoMachineBotTest {
 
         int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
         assertThat(raiseResponse).isNegative();
+
+    }
+
+    @Test
+    @DisplayName("should  accept truco if lost round0 having one zap or one Copas and atleast one terno or duque")
+    void shouldAcceptTrucoIfLostRound0HavingOneZapOrOneCopasAndAtleastOneTernoOrDuque(){
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST
+        );
+
+        List<TrucoCard> botCards = List.of(
+
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(SIX, HEARTS)
+        );
+        GameIntel.StepBuilder stepBuilder = (GameIntel.StepBuilder) GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), TrucoCard.of(FIVE, SPADES), 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        int raiseResponse = new TrucoMachineBot().getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isZero();
 
     }
 
