@@ -128,10 +128,10 @@ public class TrucoGuru implements BotServiceProvider {
             final GameIntel.RoundResult lastRoundResult = roundResults.get(roundResults.size() - 1);
 
             if (firstRoundResult == GameIntel.RoundResult.WON || lastRoundResult == GameIntel.RoundResult.WON) {
-                if (hasZap(cards, vira) || hasCopas(cards, vira)) {
+                if (TrucoGuruUtils.hasZap(cards, vira) || TrucoGuruUtils.hasCopas(cards, vira)) {
                     // Tem zap, pode chamar no 6
                     return 1;
-                } else if (hasManilha(cards, vira) || hasStrongCard(cards, vira)) {
+                } else if (TrucoGuruUtils.hasManilha(cards, vira) || TrucoGuruUtils.hasStrongCard(cards, vira)) {
                     // Tem manilha ou carta forte, aceita
                     return 0;
                 }
