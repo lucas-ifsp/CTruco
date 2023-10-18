@@ -386,5 +386,15 @@ public class SabotaBotTest {
 
             assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
         }
+
+        @Test
+        @DisplayName("Should return true if has 2 and 3")
+        void shouldReturnTrueIfHas2and3(){
+            var cards = IntelMock.cardList3D7C2H();
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+            assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+        }
     }
 }

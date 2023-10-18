@@ -30,6 +30,13 @@ public class IntelMock {
                 TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
     }
 
+    public static List<TrucoCard> cardList3D7C2H() {
+        return List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+    }
+
     public static List<TrucoCard> cardList4C3D() {
         return List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),

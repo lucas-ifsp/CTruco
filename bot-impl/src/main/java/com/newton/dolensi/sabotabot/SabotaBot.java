@@ -15,6 +15,7 @@ public class SabotaBot implements BotServiceProvider {
         int count = 0;
         for (TrucoCard card : hand) {
             if (card.isManilha(vira)) count++;
+            if (hasStrongCards(hand)) count++;
         }
         return count >= 2;
     }
