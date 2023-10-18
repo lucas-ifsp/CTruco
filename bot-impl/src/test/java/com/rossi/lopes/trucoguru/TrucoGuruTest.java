@@ -44,7 +44,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should raise If won last round and has a strong card")
-        void shouldRaiseIfWonLastRoundAndHasStrongCard() {
+        void shouldRaiseIfWonLastRoundAndHasStrongCardTest() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
@@ -62,7 +62,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should not raise If won last round but does not have a strong card")
-        void shouldNotRaiseIfWonLastRoundAndDoesNotHaveStrongCard() {
+        void shouldNotRaiseIfWonLastRoundAndDoesNotHaveStrongCardTest() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
@@ -80,7 +80,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should not raise if bot score is 11")
-        void shouldNotRaiseIfBotScoreIsEleven() {
+        void shouldNotRaiseIfBotScoreIsElevenTest() {
           TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
           GameIntel intel = GameIntel.StepBuilder.with()
             .gameInfo(List.of(), List.of(), vira, 1)
@@ -93,7 +93,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should not raise if opponent score is 11")
-        void shouldNotRaiseIfOpponentIsEleven() {
+        void shouldNotRaiseIfOpponentIsElevenTest() {
           TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
           GameIntel intel = GameIntel.StepBuilder.with()
             .gameInfo(List.of(), List.of(), vira, 1)
@@ -106,7 +106,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should raise if has cama de gato on second round")
-        void shouldRaiseIfHasCamaDeGatoOnSecondRound() {
+        void shouldRaiseIfHasCamaDeGatoOnSecondRoundTest() {
           TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
           List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
 
@@ -124,7 +124,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should not raise on first round")
-        void shouldNotRaiseOnFirstRound() {
+        void shouldNotRaiseOnFirstRoundTest() {
           TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
           List<GameIntel.RoundResult> roundResults = List.of();
 
@@ -279,7 +279,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should accept when win the first round or last round and has an attack card")
-        void shouldAcceptWhenWinTheFirstRoundOrLastRoundAndHasAttackCard(){
+        void shouldAcceptWhenWinTheFirstRoundOrLastRoundAndHasAttackCardTest(){
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
@@ -302,7 +302,7 @@ public class TrucoGuruTest {
         TrucoGuru trucoGuru = new TrucoGuru();
         @Test
         @DisplayName("Should accept mao de onze if has casal maior")
-        public void shouldAcceptMaoDeOnzeIfHasCasalMaior(){
+        public void shouldAcceptMaoDeOnzeIfHasCasalMaiorTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -324,7 +324,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should accept mao de onze if has casal menor")
-        public void shouldAcceptMaoDeOnzeIfHasCasalMenor(){
+        public void shouldAcceptMaoDeOnzeIfHasCasalMenorTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -346,7 +346,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should decline mao de onze when hand is weak")
-        public void shouldDeclineMaoDeOnzeWhenHandIsWeak(){
+        public void shouldDeclineMaoDeOnzeWhenHandIsWeakTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -368,7 +368,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should accept mao de onze when winning by 7 or more and have strong card")
-        public void shouldAcceptMaoDeOnzeWhenWinningBy7orMoreAndHaveStrongCard(){
+        public void shouldAcceptMaoDeOnzeWhenWinningBy7orMoreAndHaveStrongCardTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -390,7 +390,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should accept mao de onze when winning by 4 or less and have strong hand")
-        public void shouldAcceptMaoDeOnzeWhenWinningBy4orLessAndHaveStrongHand(){
+        public void shouldAcceptMaoDeOnzeWhenWinningBy4orLessAndHaveStrongHandTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -412,7 +412,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should accept mao de onze when score equals to opponent")
-        public void shouldAcceptMaoDeOnzeWhenScoresEqualsToOpponent(){
+        public void shouldAcceptMaoDeOnzeWhenScoresEqualsToOpponentTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -434,7 +434,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should decline mao de onze when winning by 5 or less when has no double manilhas")
-        public void shouldOnlyAcceptMaoDeOnzeWhenWinningBy5OrLessWhenHasDoubleManilhas(){
+        public void shouldOnlyAcceptMaoDeOnzeWhenWinningBy5OrLessWhenHasDoubleManilhasTest(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -462,7 +462,7 @@ public class TrucoGuruTest {
 
         @Test
         @DisplayName("Should use weakest card on first round if have casal maior")
-        void shouldRaiseIfWonLastRoundAndHasStrongCard() {
+        void shouldRaiseIfWonLastRoundAndHasStrongCardTest() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<GameIntel.RoundResult> roundResults = List.of();
 
