@@ -742,6 +742,24 @@ public class UncleBobBotTest {
         assertEquals(0 ,uncleBobBot.getRaiseResponse(builder.build()));
     }
 
+    @Test
+        @DisplayName("Test if Any card higher than two")
+    void testIfAnyCardHighertThanTwo() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 11)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertTrue(uncleBobBot.AnyCardsWithValueHigherThanTwo(builder.build()));
+    }
 
 
 
