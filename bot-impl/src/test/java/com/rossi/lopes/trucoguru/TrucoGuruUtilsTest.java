@@ -33,6 +33,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TrucoGuruUtilsTest {
     @Nested
@@ -338,6 +339,18 @@ public class TrucoGuruUtilsTest {
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
             );
             assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
+        }
+
+        @Test
+        @DisplayName("Should return null if no card beats the openned card")
+        void shouldReturnNullIfNoCardBeatsTheOpennedCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            );
+            assertNull(TrucoGuruUtils.getWeakestStrongestCard(cards, vira));
         }
     }
 }
