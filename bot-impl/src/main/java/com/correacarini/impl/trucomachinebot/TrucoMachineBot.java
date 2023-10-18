@@ -145,8 +145,15 @@ public class TrucoMachineBot implements BotServiceProvider {
             }
             if (manilhas.size() == 2) return 0;
             if (manilhas.size() == 3) return 0;
+        } else if (roundResults.size() == 1) {
 
+            if (roundResults.get(0).equals(GameIntel.RoundResult.LOST)) {
+                List<TrucoCard> manilhas = cards.stream().filter(card -> card.isManilha(vira)).toList();
 
+                if (manilhas.isEmpty()) {
+                    return -1;
+                }
+            }
         }
 
 
