@@ -218,11 +218,11 @@ public class SabotaBot implements BotServiceProvider {
     // functions for normal cards
     private List<TrucoCard> getNonManilhas(List<TrucoCard> hand, TrucoCard vira) {
         List<TrucoCard> nonManilhas = new ArrayList<>();
-        for (TrucoCard card : hand) {
+        for (TrucoCard card : hand)
             if (!card.isManilha(vira))
                 nonManilhas.add(card);
-        }
-        return nonManilhas;
+        if (!nonManilhas.isEmpty()) return nonManilhas;
+        else return hand;
     }
 
     private TrucoCard getWeakestCard(GameIntel intel, List<TrucoCard> hand) {
