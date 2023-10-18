@@ -1310,7 +1310,24 @@ class VapoBotTest {
         @DisplayName("in last round")
         class LastRoundTest {
 
+            @Test
+            @DisplayName("should choose the left card")
+            void lastRound() {
+                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                );
+                List<TrucoCard> openCards = List.of(vira, opponentCard);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 1)
+                        .opponentScore(1)
+                        .opponentCard(opponentCard);
+                assertEquals(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)), vapoBot.chooseCard(stepBuilder.build()));
+
+            }
         }
     }
 }
