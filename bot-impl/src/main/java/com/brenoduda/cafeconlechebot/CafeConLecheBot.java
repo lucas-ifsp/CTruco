@@ -129,13 +129,19 @@ public class CafeConLecheBot implements BotServiceProvider {
         }
 
         if(intel.getOpponentCard().isPresent()) {
-            Optional<TrucoCard> cardToPlay;
+            Optional<TrucoCard> cardToPlay = Optional.empty();
 
             if(intel.getOpponentCard().get().getRank().equals(CardRank.HIDDEN) &&
                     intel.getOpponentCard().get().getSuit().equals(CardSuit.HIDDEN)) {
                 cardToPlay = botCards.stream().filter(card -> card.getRank().value() == minValue).findAny();
             } else {
-                cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+                if(!botCards.stream().filter(card -> card.isManilha(vira)).toList().isEmpty()) {
+                    if(botCards.stream().filter(card -> card.isManilha(vira)).filter(card -> card.compareValueTo(intel.getOpponentCard().get(), vira) <= 0).toList().isEmpty()) {
+                        cardToPlay = botCards.stream().filter(card -> !card.isManilha(vira)).filter(card -> card.getRank().value() == minValue).findAny();
+                    }
+                } else {
+                    cardToPlay = botCards.stream().filter(card -> card.getRank().equals(intel.getOpponentCard().get().getRank())).findFirst();
+                }
             }
 
             if(cardToPlay.isPresent()) {
