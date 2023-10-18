@@ -10,6 +10,9 @@ public class SabotaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        var hand = intel.getCards();
+        var vira = intel.getVira();
+
         return true;
     }
 

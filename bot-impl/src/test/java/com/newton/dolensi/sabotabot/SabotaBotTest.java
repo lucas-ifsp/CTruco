@@ -373,4 +373,18 @@ public class SabotaBotTest {
 
 
     }
+
+    @Nested
+    @DisplayName("Get Mao De Onze Response Tests")
+    class GetMaoDeOnzeResponseTests{
+        @Test
+        @DisplayName("Should return true if has two manilhas")
+        void shouldReturnTrueIfHasTwoManilhas(){
+            var cards = IntelMock.cardListAD2CAH();
+            when(intel.getCards()).thenReturn(cards);
+            when(intel.getVira()).thenReturn(IntelMock.viraKC());
+
+            assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+    }
 }
