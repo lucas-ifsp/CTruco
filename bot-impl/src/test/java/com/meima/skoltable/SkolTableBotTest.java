@@ -611,6 +611,21 @@ class SkolTableBotTest {
         assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should respond to raises correctly with different scores")
+    void shouldRespondFalseToRaisesCorrectlyWithDifferentScores() {
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+        List<TrucoCard> openCards = List.of();
+
+        List<TrucoCard> botCardsWithWeakHand = List.of(TrucoCard.of(SEVEN, DIAMONDS), TrucoCard.of(SIX, SPADES), TrucoCard.of(FIVE, CLUBS));
+        GameIntel.StepBuilder weakHandBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCardsWithWeakHand, 11)
+                .opponentScore(8);
+
+        assertFalse(skolTable.decideIfRaises(weakHandBuilder.build()));
+    }
+
 
 
 }
