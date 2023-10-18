@@ -7,6 +7,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
@@ -124,6 +125,15 @@ public class TrucoMachineBot implements BotServiceProvider {
                     return -1;
                 }
 
+            }
+
+            if (manilhas.size() == 1) {
+                Optional<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+                Optional<TrucoCard> duques = cards.stream().filter(card -> card.getRank().equals(TWO)).findFirst();
+
+                if (ternos.isPresent()) {
+                    return 0;
+                }
             }
         }
 
