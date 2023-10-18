@@ -101,6 +101,8 @@ public class TrucoMachineBot implements BotServiceProvider {
 
             // Se for a primeira rodada eu só aceito
             if (round == 0) return 0;
+            // Se for a segunda rodada, aceito e peço 6
+            if (round == 1) return 1;
         }
         return -1;
     }
