@@ -626,6 +626,20 @@ class SkolTableBotTest {
         assertFalse(skolTable.decideIfRaises(weakHandBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should play the strongest card in different combinations (1)")
+    void shouldPlayStrongestCardWithDifferentCombinations1() {
+        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+        List<TrucoCard> botCards1 = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, HEARTS));
+        List<TrucoCard> openCards1 = List.of(vira);
+        GameIntel.StepBuilder stepBuilder1 = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards1, vira, 1)
+                .botInfo(botCards1, 0)
+                .opponentScore(0);
+        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder1.build()).content());
+    }
+
 
 
 }
