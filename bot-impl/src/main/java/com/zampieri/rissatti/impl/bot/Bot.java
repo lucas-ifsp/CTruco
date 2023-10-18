@@ -111,7 +111,6 @@ public class Bot implements BotServiceProvider {
 
         int numberOfManilhas = 0;
 
-
         for ( TrucoCard card : cards) {
             if (card.isManilha(vira)) {
                 numberOfManilhas ++;
