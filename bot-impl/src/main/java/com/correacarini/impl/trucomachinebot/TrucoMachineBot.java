@@ -153,6 +153,19 @@ public class TrucoMachineBot implements BotServiceProvider {
                 if (manilhas.isEmpty()) {
                     return -1;
                 }
+                else if (manilhas.size() == 1) {
+                    Optional<TrucoCard> ternos = cards.stream().filter(card -> card.getRank().equals(THREE)).findFirst();
+                    Optional<TrucoCard> duques = cards.stream().filter(card -> card.getRank().equals(TWO)).findFirst();
+                    for (TrucoCard card : intel.getCards()) {
+                        if (card.isZap(intel.getVira()) || card.isCopas(intel.getVira())) {
+                            if (ternos.isPresent() || duques.isPresent()){
+                                return 0;
+                            } else{
+                                return -1;
+                            }
+                        }
+                    }
+                }
             }
         }
 
