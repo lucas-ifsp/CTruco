@@ -28,6 +28,7 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.rossi.lopes.trucoguru.TrucoGuruUtils.*;
 
@@ -89,21 +90,37 @@ public class TrucoGuru implements BotServiceProvider {
         final List<TrucoCard> cards = intel.getCards();
         final TrucoCard vira = intel.getVira();
         final Boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
+        final Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        final CardToPlay strongestCard = CardToPlay.of(TrucoGuruUtils.getStrongestCard(cards, vira));
+        final CardToPlay weakestCard = CardToPlay.of(TrucoGuruUtils.getWeakestCard(cards, vira));
+
 
         if (currentRound == 1) {
             final Boolean hasCasalMaior = TrucoGuruUtils.hasCasalMaior(cards, vira);
-            if (hasCasalMaior) {
-                final TrucoCard weakestCard = TrucoGuruUtils.getWeakestCard(cards, vira);
-                return CardToPlay.of(weakestCard);
-            }
+            if (hasCasalMaior) return weakestCard;
 
-            if (isFirstToPlay) {
-                final TrucoCard strongestCard = TrucoGuruUtils.getStrongestCard(cards, vira);
-                return CardToPlay.of(strongestCard);
+            if (isFirstToPlay) return strongestCard;
+            else {
+                final TrucoCard weakestCardToWin = TrucoGuruUtils.getWeakestStrongestCard(cards, opponentCard.get(), vira);
+                if (weakestCardToWin != null) return CardToPlay.of(weakestCardToWin);
+                if (strongestCard.content().compareValueTo(opponentCard.get(), vira) >= 0) return strongestCard;
+                return weakestCard;
             }
         }
 
-        return CardToPlay.of(intel.getCards().get(0));
+        if (currentRound == 2) {
+            // Perdeu o primeiro round, tenta ganhar com a mais fraca
+            if (opponentCard.isPresent()) {
+                final TrucoCard weakestCardToWin = TrucoGuruUtils.getWeakestStrongestCard(cards, opponentCard.get(), vira);
+                if (weakestCardToWin != null) return CardToPlay.of(weakestCardToWin);
+            }
+
+            // Ganhou o primeiro round, joga a mais fraca ou não tem carta pra jogar.
+            return weakestCard;
+        }
+
+        return strongestCard;
     }
 
     @Override
