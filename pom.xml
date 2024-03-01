@@ -20,7 +20,7 @@
         <module>bot-spi</module>
         <module>bot-impl</module>
         <module>web</module>
-        <module>bot-made-in-descalvado</module>
+<!--        <module>bot-made-in-descalvado</module>-->
     </modules>
 
     <parent>
