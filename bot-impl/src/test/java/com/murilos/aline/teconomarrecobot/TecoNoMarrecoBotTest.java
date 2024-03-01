@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.CardRank.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

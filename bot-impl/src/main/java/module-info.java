@@ -20,6 +20,7 @@ import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
+import com.gustavo.contiero.lazybot.LazyBot;
 
 module bot.impl {
     requires bot.spi;
@@ -41,6 +42,7 @@ module bot.impl {
     exports com.everton.ronaldo.arrebentabot;
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
+    exports com.gustavo.contiero.lazybot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -64,5 +66,6 @@ module bot.impl {
             WrkncacnterBot,
             PaulistaBot,
             MarrecoBot,
-            AddTheNewSoul;
+            AddTheNewSoul,
+            LazyBot;
 }
