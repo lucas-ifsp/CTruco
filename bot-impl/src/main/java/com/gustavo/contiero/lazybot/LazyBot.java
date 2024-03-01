@@ -19,7 +19,6 @@ public class LazyBot implements BotServiceProvider {
      */
     private List<TrucoCard> myCards;
     private TrucoCard vira;
-    private boolean myBotThrownTheFirstCard = false;
     private TrucoCard bestCard;
     private TrucoCard worstCard;
 
@@ -30,14 +29,8 @@ public class LazyBot implements BotServiceProvider {
         }
     }
 
-
     private void setVira(TrucoCard vira) {
         this.vira = vira;
-    }
-
-
-    private void turnTrueMyBotThrownTheFirstCard() {
-        this.myBotThrownTheFirstCard = true;
     }
 
     public void setBestCard() {
@@ -82,7 +75,6 @@ public class LazyBot implements BotServiceProvider {
         List<TrucoCard> opponentCardsThrown = setCardsThrownByOpponent(intel);
 
         if (firstRound(intel) && firstToPlay(intel)){
-            turnTrueMyBotThrownTheFirstCard();
             return powerLevel >= powerToDecideIfRaises;
         }
         else if (firstRound(intel)){
@@ -111,12 +103,16 @@ public class LazyBot implements BotServiceProvider {
      */
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (firstRound(intel) && firstToPlay(intel)){
-            turnTrueMyBotThrownTheFirstCard();
+        setState(intel);
+        if (firstRound(intel)){
+            return (firstRoundChooseCard(intel));
         }
-        CardToPlay choosenCard = CardToPlay.of(intel.getCards().get(0));
-//        System.out.println(choosenCard.value().getRank() + "" + choosenCard.value().getSuit());
-        return choosenCard;
+        else if (secondRound(intel)){
+            return(secondRoundChooseCard(intel));
+        }
+        else{
+            return CardToPlay.of(bestCard);
+        }
     }
 
     /**
@@ -216,6 +212,10 @@ public class LazyBot implements BotServiceProvider {
         return intel.getRoundResults().isEmpty();
     }
 
+    private boolean secondRound(GameIntel intel){
+        return intel.getRoundResults().size() == 1;
+    }
+
     private boolean firstToPlay(GameIntel intel){
         return intel.getOpponentCard().isEmpty();
     }
@@ -223,7 +223,7 @@ public class LazyBot implements BotServiceProvider {
     private List<TrucoCard> setCardsThrownByOpponent(GameIntel intel){
         List<TrucoCard> opponentCardsThrown = new ArrayList<>();
         List<TrucoCard> cardsThrown = intel.getOpenCards();
-        if (myBotThrownTheFirstCard){
+        if (firstToPlay(intel)){
             for (int i = 0; i<cardsThrown.size();i++){
                 if (i % 2 == 0 && i != 0){
                     opponentCardsThrown.add(cardsThrown.get(i));
@@ -247,5 +247,31 @@ public class LazyBot implements BotServiceProvider {
             setBestCard();
             setWorstCard();
         }
+        setCardsThrownByOpponent(intel);
+    }
+
+    private CardToPlay firstRoundChooseCard(GameIntel intel){
+        TrucoCard cardThrownByOpponent;
+        int sizeOpenCards = intel.getOpenCards().size();
+        if (! firstToPlay(intel)) {
+            cardThrownByOpponent = intel.getOpenCards().get(sizeOpenCards - 1);
+            if (bestCard.relativeValue(vira) > cardThrownByOpponent.relativeValue(vira)) return CardToPlay.of(bestCard);
+            else return CardToPlay.of(worstCard);
+        }
+        return CardToPlay.of(bestCard);
+    }
+    private CardToPlay secondRoundChooseCard(GameIntel intel){
+        TrucoCard cardThrownByOpponent;
+        int sizeOpenCards = intel.getOpenCards().size();
+        if (! firstToPlay(intel)) {
+            cardThrownByOpponent = intel.getOpenCards().get(sizeOpenCards - 1);
+            if (bestCard.relativeValue(vira) > cardThrownByOpponent.relativeValue(vira)) return CardToPlay.of(bestCard);
+            else return CardToPlay.discard(worstCard);
+        }
+        else if (intel.getRoundResults().contains(GameIntel.RoundResult.WON)){
+            if (worstCard.relativeValue(vira) >= 7) return CardToPlay.of(worstCard);
+            else return CardToPlay.of(bestCard);
+        }
+        return CardToPlay.of(bestCard);
     }
 }
