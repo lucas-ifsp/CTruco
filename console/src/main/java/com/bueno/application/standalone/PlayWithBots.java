@@ -22,16 +22,7 @@ package com.bueno.application.standalone;
 
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
-import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
-import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.domain.usecases.game.repos.GameRepoDisposableImpl;
-
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class PlayWithBots {
 
@@ -39,7 +30,6 @@ public class PlayWithBots {
     private static final UUID uuidBot2 = UUID.randomUUID();
 
     public static void main(String[] args) {
-        final var main = new PlayWithBots();
         final var prompt = new UserPrompt();
         final var botNames = BotProviders.availableBots();
 
@@ -48,41 +38,13 @@ public class PlayWithBots {
         final var bot1 = prompt.scanBotOption(botNames);
         final var bot2 = prompt.scanBotOption(botNames);
         final var times = prompt.scanNumberOfSimulations();
+        String bot1Name = botNames.get(bot1 - 1);
+        String bot2Name = botNames.get(bot2 - 1);
 
         final long start = System.currentTimeMillis();
-        final var results = main.playManyInParallel(times, botNames.get(bot1 - 1), botNames.get(bot2 - 1));
+        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, uuidBot2, bot2Name);
+        final var results = useCase.playManyInParallel(times);
         final long end = System.currentTimeMillis();
         prompt.printResult(times, (end - start), results);
-    }
-
-    private List<PlayWithBotsDto> playManyInParallel(int times, String bot1Name, String bot2Name) {
-        final Callable<PlayWithBotsDto> playGame = () -> play(bot1Name, bot2Name);
-        return Stream.generate(() -> playGame)
-                .limit(times)
-                .parallel()
-                .map(executeGameCall())
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
-    private PlayWithBotsDto play(String bot1Name, String bot2Name){
-        final var repo = new GameRepoDisposableImpl();
-        final var useCase = new PlayWithBotsUseCase(repo);
-        final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
-        final var result = useCase.playWithBots(requestModel);
-        System.out.println("Winner: " + (result.uuid().equals(uuidBot1) ? bot1Name : bot2Name));
-        return result;
-    }
-
-    private static Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> executeGameCall() {
-        return gameCall -> {
-            try {
-                return gameCall.call();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        };
     }
 }
