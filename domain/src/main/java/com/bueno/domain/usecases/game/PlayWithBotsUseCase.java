@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 
 public class PlayWithBotsUseCase {
 
-    private GameRepository gameRepository;
     private final UUID uuidBot1;
     private final String bot1Name;
     private final UUID uuidBot2;
@@ -60,7 +59,7 @@ public class PlayWithBotsUseCase {
     }
 
     private PlayWithBotsDto playWithBots(){
-        gameRepository = new GameRepoDisposableImpl();
+        GameRepository gameRepository = new GameRepoDisposableImpl();
         final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
         final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository);
         createGameUseCase.createForBots(requestModel);
