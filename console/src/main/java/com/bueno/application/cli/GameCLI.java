@@ -55,6 +55,11 @@ public class GameCLI {
         cli.play();
     }
 
+    public void gameCLIStarter() {
+        createGame();
+        play();
+    }
+
     public GameCLI() {
         final var gameRepo = new GameRepositoryInMemoryImpl();
         gameUseCase = new CreateGameUseCase(gameRepo);

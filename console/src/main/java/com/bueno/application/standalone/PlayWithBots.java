@@ -29,7 +29,7 @@ public class PlayWithBots {
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
 
-    public static void main(String[] args) {
+    public void playBotsStarter() {
         final var prompt = new UserPrompt();
         final var botNames = BotProviders.availableBots();
 
@@ -47,4 +47,6 @@ public class PlayWithBots {
         final long end = System.currentTimeMillis();
         prompt.printResult(times, (end - start), results);
     }
+
+
 }
