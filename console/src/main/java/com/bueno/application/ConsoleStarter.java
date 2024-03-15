@@ -1,6 +1,7 @@
 package com.bueno.application;
 
 import com.bueno.application.cli.GameCLI;
+import com.bueno.application.standalone.EvaluateBot;
 import com.bueno.application.standalone.PlayWithBots;
 
 import java.util.Scanner;
@@ -33,6 +34,7 @@ public class ConsoleStarter {
         System.out.println("What do you Wanna Play");
         System.out.println("Player vs Bot...............[1]");
         System.out.println("Simulate Bot vs Bot match...[2]");
+        System.out.println("Evaluate a Bot..............[3]");
         System.out.println("exit........................[0]");
     }
 
@@ -46,7 +48,11 @@ public class ConsoleStarter {
             }
             case "2" ->{
                 final var playBots = new PlayWithBots();
-                playBots.playBotsStarter();
+                playBots.playWithBotsConsole();
+            }
+            case "3" ->{
+                final var evaluateBot = new EvaluateBot();
+                evaluateBot.botTester();
             }
             default -> System.out.println("invalid Answer! \n");
 
