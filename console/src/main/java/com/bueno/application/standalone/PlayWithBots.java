@@ -22,12 +22,22 @@ package com.bueno.application.standalone;
 
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
+
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PlayWithBots {
 
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
+    private String bot1Name;
+    private String bot2Name;
+    private int times;
+
 
     public void playWithBotsConsole(){
         final var prompt = new UserPrompt();
@@ -37,21 +47,20 @@ public class PlayWithBots {
 
         final var bot1 = prompt.scanBotOption(botNames);
         final var bot2 = prompt.scanBotOption(botNames);
-        int times = prompt.scanNumberOfSimulations();
+        times = prompt.scanNumberOfSimulations();
 
-        String bot1Name = botNames.get(bot1 - 1);
-        String bot2Name = botNames.get(bot2 - 1);
-
-        playBotsStarter(prompt,uuidBot1, bot1Name,uuidBot2, bot2Name, times);
-    }
-
-    public static void playBotsStarter(UserPrompt prompt,UUID uuidBot1,String  bot1Name,UUID uuidBot2 ,String bot2Name,int times) {
+        bot1Name = botNames.get(bot1 - 1);
+        bot2Name = botNames.get(bot2 - 1);
 
         final long start = System.currentTimeMillis();
-        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, uuidBot2, bot2Name);
-        final var results = useCase.playManyInParallel(times);
+        final var results = playBotsStarter();
         final long end = System.currentTimeMillis();
         prompt.printResult(times, (end - start), results);
+    }
+
+    private List<PlayWithBotsDto> playBotsStarter() {
+        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, uuidBot2, bot2Name);
+        return useCase.playManyInParallel(times);
     }
 
 

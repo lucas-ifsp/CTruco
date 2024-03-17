@@ -74,4 +74,13 @@ public class UserPrompt {
                 .forEach((bot, wins) -> System.out.println(bot.name() + ": " + wins));
         System.out.println("================================================================");
     }
+
+    void printResultEvaluateBot(int numberOfGames, long computingTime,String bot,Long botWins){
+        String winRate = String.format("%.2f%%",(((double) botWins/numberOfGames)*100));
+        System.out.println("\n================================================================");
+        System.out.println("Time to compute " + numberOfGames + " games: " +  computingTime + "ms.\n");
+        System.out.println("Wins of " + bot + ": " + botWins);
+        System.out.println("Win rate: " + winRate);
+        System.out.println("================================================================");
+    }
 }

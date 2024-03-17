@@ -18,6 +18,7 @@ public class ConsoleStarter {
     }
 
     private void initialMenu(){
+
         System.out.println("=+=+= CTRUCO COSOLE =+=+=");
         menu();
 
@@ -31,7 +32,7 @@ public class ConsoleStarter {
         }
     }
     private void menuOptions(){
-        System.out.println("What do you Wanna Play");
+        System.out.println("\nWhat do you Wanna Play");
         System.out.println("Player vs Bot...............[1]");
         System.out.println("Simulate Bot vs Bot match...[2]");
         System.out.println("Evaluate a Bot..............[3]");
