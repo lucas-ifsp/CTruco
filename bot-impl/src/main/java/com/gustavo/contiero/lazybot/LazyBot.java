@@ -7,6 +7,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class LazyBot implements BotServiceProvider {
@@ -19,10 +20,7 @@ public class LazyBot implements BotServiceProvider {
     private TrucoCard worstCard;
 
     private void setMyCards(List<TrucoCard> myCards) {
-        if (myCards == null) this.myCards = new ArrayList<>();
-        else{
-            this.myCards = myCards;
-        }
+        this.myCards = Objects.requireNonNullElseGet(myCards, ArrayList::new);
     }
 
     private void setVira(TrucoCard vira) {
@@ -78,11 +76,11 @@ public class LazyBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         setState(intel);
-        int oponentScore = intel.getOpponentScore();
+        int opponentScore = intel.getOpponentScore();
         double powerLevel = powerLevelOfTheTwoBestCards();
         double powerNeededToAccept = 7.0;
-        if (oponentScore >= 9) powerNeededToAccept = 10;
-        else if (oponentScore >= 6) powerNeededToAccept = 8.5;
+        if (opponentScore >= 9) powerNeededToAccept = 10;
+        else if (opponentScore >= 6) powerNeededToAccept = 8.5;
         return powerLevel >= powerNeededToAccept;
     }
 
@@ -126,7 +124,7 @@ public class LazyBot implements BotServiceProvider {
             return (firstRoundChooseCard(intel));
         }
         else if (secondRound(intel)){
-            return(secondRoundChooseCard(intel));
+            return(secondRoundChooseCard());
         }
         else{
             return CardToPlay.of(bestCard);
@@ -220,7 +218,7 @@ public class LazyBot implements BotServiceProvider {
         return playedCard;
     }
 
-    private CardToPlay secondRoundChooseCard(GameIntel intel){
+    private CardToPlay secondRoundChooseCard(){
         return CardToPlay.of(bestCard);
     }
     private boolean wonFirstRound(GameIntel intel){
