@@ -18,26 +18,30 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.usecase;
 
-import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
-import com.bueno.domain.usecases.game.dtos.TopWinnersDto;
+import com.bueno.domain.usecases.game.dtos.UserRecordDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.UUID;
 
 @Service
-public class ReportTopWinnersUseCase {
+public class UserRecordUseCase {
+    private final GameResultRepository gameResultRepository;
+    private final UserRepository userRepository;
 
-    private final GameResultRepository resultRepository;
-
-    public ReportTopWinnersUseCase(GameResultRepository resultRepository) {
-        this.resultRepository = resultRepository;
+    public UserRecordUseCase(GameResultRepository gameResultRepository, UserRepository userRepository) {
+        this.gameResultRepository = gameResultRepository;
+        this.userRepository = userRepository;
     }
 
-    public TopWinnersDto create(int numberOfTopPlayers){
-        final List<PlayerWinsDto> topWinners = resultRepository.findTopWinners(numberOfTopPlayers);
-        return new TopWinnersDto(topWinners);
+    public UserRecordDto listByUuid(UUID userUuid){
+        var user = userRepository.findByUuid(userUuid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + userUuid));
+        var userRecord = gameResultRepository.findAllByUserUuid(userUuid);
+        return new UserRecordDto(user.uuid(), user.username(), userRecord);
     }
 }

@@ -20,7 +20,7 @@
 
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.game.UserRecordUseCase;
+import com.bueno.domain.usecases.game.usecase.UserRecordUseCase;
 import com.bueno.domain.usecases.game.dtos.UserRecordDto;
 import com.bueno.domain.usecases.user.FindUserUseCase;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;

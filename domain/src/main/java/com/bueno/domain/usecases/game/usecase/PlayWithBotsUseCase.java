@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.usecases.bot.BotUseCase;
 import com.bueno.domain.usecases.game.converter.GameConverter;

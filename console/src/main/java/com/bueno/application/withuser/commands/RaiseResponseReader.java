@@ -18,19 +18,20 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
-import com.bueno.application.cli.GameCLI;
+import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.application.utils.Command;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RaiseResponseReader implements Command<RaiseResponseReader.RaiseResponseChoice> {
-    private final GameCLI mainCli;
+    private final PlayAgainstBots mainCli;
     private final int nextScore;
     public enum RaiseResponseChoice {QUIT, ACCEPT, RAISE}
 
-    public RaiseResponseReader(GameCLI mainCli, int nextScore) {
+    public RaiseResponseReader(PlayAgainstBots mainCli, int nextScore) {
         this.mainCli = mainCli;
         this.nextScore = nextScore;
     }

@@ -18,10 +18,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli;
+package com.bueno.application.withuser;
 
-import com.bueno.application.cli.commands.*;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.application.withuser.commands.*;
+import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
@@ -34,11 +34,11 @@ import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import java.util.*;
 import java.util.logging.LogManager;
 
-import static com.bueno.application.cli.commands.CardModeReader.CardMode.OPEN;
-import static com.bueno.application.cli.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
-import static com.bueno.application.cli.commands.RaiseRequestReader.RaiseChoice.REQUEST;
+import static com.bueno.application.withuser.commands.CardModeReader.CardMode.OPEN;
+import static com.bueno.application.withuser.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
+import static com.bueno.application.withuser.commands.RaiseRequestReader.RaiseChoice.REQUEST;
 
-public class GameCLI {
+public class PlayAgainstBots {
 
     private final CreateGameUseCase gameUseCase;
     private final PlayCardUseCase playCardUseCase;
@@ -50,7 +50,7 @@ public class GameCLI {
 
     public static void main(String[] args) {
         LogManager.getLogManager().reset();
-        final var cli = new GameCLI();
+        final var cli = new PlayAgainstBots();
         cli.createGame();
         cli.play();
     }
@@ -60,7 +60,7 @@ public class GameCLI {
         play();
     }
 
-    public GameCLI() {
+    public PlayAgainstBots() {
         final var gameRepo = new GameRepositoryInMemoryImpl();
         gameUseCase = new CreateGameUseCase(gameRepo);
         playCardUseCase = new PlayCardUseCase(gameRepo);

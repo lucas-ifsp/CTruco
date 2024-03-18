@@ -18,46 +18,38 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
-import com.bueno.application.cli.GameCLI;
-import com.bueno.domain.usecases.intel.dtos.CardDto;
+import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.application.utils.Command;
 
-import java.util.List;
 import java.util.Scanner;
 
-import static com.google.common.primitives.Ints.tryParse;
+public class RaiseRequestReader implements Command<RaiseRequestReader.RaiseChoice> {
 
-@SuppressWarnings("UnstableApiUsage")
-public class CardReader implements Command<CardDto> {
+    private final PlayAgainstBots mainCli;
+    private final int nextScore;
+    public enum RaiseChoice {REQUEST, NOT_REQUEST}
 
-    public static final int DELAY_IN_MILLISECONDS = 3000;
-    private final GameCLI mainCli;
-    private final List<CardDto> userCards;
-
-    public CardReader(GameCLI mainCli, List<CardDto> userCards) {
+    public RaiseRequestReader(PlayAgainstBots mainCli, int nextScore) {
         this.mainCli = mainCli;
-        this.userCards = userCards;
+        this.nextScore = nextScore;
     }
 
     @Override
-    public CardDto execute() {
+    public RaiseChoice execute() {
         var scanner = new Scanner(System.in);
-        while (true){
-            mainCli.printGameIntel(DELAY_IN_MILLISECONDS);
+        while (true) {
+            mainCli.printGameIntel(3000);
 
-            System.out.print("Carta a jogar [índice] > ");
+            System.out.print("Pedir " + toRequestString(nextScore) + " [s, n]: ");
 
-            final var choice = tryParse(scanner.nextLine());
-            if (choice == null || cardIndexOf(choice) < 0 || cardIndexOf(choice) > userCards.size() - 1) {
+            var choice = scanner.nextLine().toLowerCase();
+            if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            return userCards.get(cardIndexOf(choice));
+            return choice.equalsIgnoreCase("s") ? RaiseChoice.REQUEST : RaiseChoice.NOT_REQUEST;
         }
-    }
-
-    private int cardIndexOf(Integer choice) {
-        return choice - 1;
     }
 }

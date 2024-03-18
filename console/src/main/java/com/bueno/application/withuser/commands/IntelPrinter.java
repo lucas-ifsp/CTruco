@@ -18,8 +18,9 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
+import com.bueno.application.utils.Command;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
@@ -28,7 +29,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class IntelPrinter implements Command<Void>{
+public class IntelPrinter implements Command<Void> {
 
     private final List<IntelDto> history;
     private final int delayInMilliseconds;

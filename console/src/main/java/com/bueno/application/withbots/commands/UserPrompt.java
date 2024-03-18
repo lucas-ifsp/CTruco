@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.standalone;
+package com.bueno.application.withbots.commands;
 
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.google.common.primitives.Ints;
@@ -37,19 +37,19 @@ public class UserPrompt {
         this.scanner = new Scanner(System.in);
     }
 
-    void printAvailableBots(List<String> botNames) {
-        for (int i = 0; i < botNames.size(); i++){
+    public void printAvailableBots(List<String> botNames) {
+        for (int i = 0; i < botNames.size(); i++) {
             System.out.println("[" + (i + 1) + "] " + botNames.get(i));
         }
         System.out.print("\n");
     }
 
-    int scanBotOption(List<String> botNames) {
+    public int scanBotOption(List<String> botNames) {
         Integer botNumber;
-        while (true){
+        while (true) {
             System.out.print("Select a bot by number: ");
             botNumber = Ints.tryParse(scanner.nextLine());
-            if(botNumber == null || botNumber < 1 || botNumber > botNames.size()){
+            if (botNumber == null || botNumber < 1 || botNumber > botNames.size()) {
                 System.out.println("Invalid input!");
                 continue;
             }
@@ -58,7 +58,7 @@ public class UserPrompt {
         return botNumber;
     }
 
-    int scanNumberOfSimulations() {
+    public int scanNumberOfSimulations() {
         final var scanner = new Scanner(System.in);
         System.out.print("Number of simulations: ");
         final int times = scanner.nextInt();
@@ -66,21 +66,20 @@ public class UserPrompt {
         return times;
     }
 
-    void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
+    public void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
         System.out.println("\n================================================================");
-        System.out.println("Time to compute " + numberOfGames + " games: " +  computingTime + "ms.\n");
+        System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         results.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .forEach((bot, wins) -> System.out.println(bot.name() + ": " + wins));
         System.out.println("================================================================");
     }
 
-    void printResultEvaluateBot(int numberOfGames, long computingTime,String bot,Long botWins){
-        String winRate = String.format("%.2f%%",(((double) botWins/numberOfGames)*100));
+    public void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate) {
         System.out.println("\n================================================================");
-        System.out.println("Time to compute " + numberOfGames + " games: " +  computingTime + "ms.\n");
+        System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         System.out.println("Wins of " + bot + ": " + botWins);
-        System.out.println("Win rate: " + winRate);
+        System.out.printf("Win rate: %.2f%%", winRate);
         System.out.println("================================================================");
     }
 }

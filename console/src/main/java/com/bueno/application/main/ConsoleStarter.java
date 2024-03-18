@@ -1,8 +1,8 @@
-package com.bueno.application;
+package com.bueno.application.main;
 
-import com.bueno.application.cli.GameCLI;
-import com.bueno.application.standalone.EvaluateBot;
-import com.bueno.application.standalone.PlayWithBots;
+import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.application.withbots.features.EvaluateBot;
+import com.bueno.application.withbots.features.PlayWithBots;
 
 import java.util.Scanner;
 import java.util.logging.LogManager;
@@ -13,7 +13,7 @@ public class ConsoleStarter {
     private String option = "";
     public static void main(String[] args) {
         ConsoleStarter console = new ConsoleStarter();
-        console.menu();
+        console.initialMenu();
 
     }
 
@@ -44,7 +44,7 @@ public class ConsoleStarter {
             case "0" ->{}
             case "1" -> {
                 LogManager.getLogManager().reset();
-                final var cli = new GameCLI();
+                final var cli = new PlayAgainstBots();
                 cli.gameCLIStarter();
             }
             case "2" ->{
@@ -53,7 +53,7 @@ public class ConsoleStarter {
             }
             case "3" ->{
                 final var evaluateBot = new EvaluateBot();
-                evaluateBot.botTester();
+                evaluateBot.againstAll();
             }
             default -> System.out.println("invalid Answer! \n");
 

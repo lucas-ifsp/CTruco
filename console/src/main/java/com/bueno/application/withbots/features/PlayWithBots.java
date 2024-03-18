@@ -18,17 +18,15 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.standalone;
+package com.bueno.application.withbots.features;
 
+import com.bueno.application.withbots.commands.UserPrompt;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
-import com.bueno.domain.usecases.game.PlayWithBotsUseCase;
+import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class PlayWithBots {
 

@@ -21,8 +21,8 @@
 package com.bueno.controllers;
 
 import com.bueno.domain.entities.game.Game;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
-import com.bueno.domain.usecases.game.RemoveGameUseCase;
+import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
+import com.bueno.domain.usecases.game.usecase.RemoveGameUseCase;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateForUserAndBotDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
