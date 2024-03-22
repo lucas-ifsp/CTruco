@@ -50,7 +50,7 @@ public class UserPrompt {
             System.out.print("Select a bot by number: ");
             botNumber = Ints.tryParse(scanner.nextLine());
             if (botNumber == null || botNumber < 1 || botNumber > botNames.size()) {
-                System.out.println("Invalid input! ");
+                System.out.println("Invalid input!A");
                 continue;
             }
             break;
