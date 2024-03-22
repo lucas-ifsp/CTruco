@@ -75,11 +75,11 @@ public class UserPrompt {
         System.out.println("================================================================");
     }
 
-    public void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate) {
+    public void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate,double percentil) {
         System.out.println("\n================================================================");
         System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         System.out.println("Wins of " + bot + ": " + botWins);
-        System.out.printf("Win rate: %.2f%%", winRate);
+        System.out.printf("Win rate of all: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate,percentil);
         System.out.println("================================================================");
     }
 }
