@@ -79,7 +79,7 @@ public class UserPrompt {
         System.out.println("\n================================================================");
         System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         System.out.println("Wins of " + bot + ": " + botWins);
-        System.out.printf("Win rate of all: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate,percentil);
+        System.out.printf("Win rate of all games: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate,percentil);
         System.out.println("================================================================");
     }
 }
