@@ -58,7 +58,7 @@ public class PlayWithBots {
 
     private List<PlayWithBotsDto> playBotsStarter() {
         final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, uuidBot2, bot2Name);
-        return useCase.playManyInParallel(times);
+        return useCase.playWithBots(times);
     }
 
 

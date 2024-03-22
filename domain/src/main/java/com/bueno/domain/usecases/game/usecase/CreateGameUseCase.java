@@ -90,7 +90,7 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    IntelDto createForBots(CreateForBotsDto request){
+    public IntelDto createForBots(CreateForBotsDto request){
         Objects.requireNonNull(request);
 
         if(hasNoBotServiceWith(request.bot1Name()))
