@@ -20,7 +20,7 @@
 
 package com.bueno.application.withbots.features;
 
-import com.bueno.application.withbots.commands.UserPrompt;
+import com.bueno.application.withbots.commands.*;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
@@ -38,14 +38,13 @@ public class PlayWithBots {
 
 
     public void playWithBotsConsole(){
-        final var prompt = new UserPrompt();
         final var botNames = BotProviders.availableBots();
 
-        prompt.printAvailableBots(botNames);
+        printAvailableBots(botNames);
 
-        final var bot1 = prompt.scanBotOption(botNames);
-        final var bot2 = prompt.scanBotOption(botNames);
-        times = prompt.scanNumberOfSimulations();
+        final var bot1 = scanBotOption(botNames);
+        final var bot2 = scanBotOption(botNames);
+        times = scanNumberOfSimulations();
 
         bot1Name = botNames.get(bot1 - 1);
         bot2Name = botNames.get(bot2 - 1);
@@ -53,7 +52,12 @@ public class PlayWithBots {
         final long start = System.currentTimeMillis();
         final var results = playBotsStarter();
         final long end = System.currentTimeMillis();
-        prompt.printResult(times, (end - start), results);
+        printResult(times, (end - start), results);
+    }
+
+    private int scanNumberOfSimulations() {
+        NumberOfSimulationsReader scanSimulations = new NumberOfSimulationsReader();
+        return scanSimulations.execute();
     }
 
     private List<PlayWithBotsDto> playBotsStarter() {
@@ -61,5 +65,18 @@ public class PlayWithBots {
         return useCase.playWithBots(times);
     }
 
+    private void printAvailableBots(List<String> botNames){
+        BotsAvailablePrinter printer = new BotsAvailablePrinter(botNames);
+        printer.execute();
+    }
 
+    private int scanBotOption(List<String> botNames){
+        BotOptionReader scanOptions = new BotOptionReader(botNames);
+        return scanOptions.execute();
+    }
+
+    private void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results){
+        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(numberOfGames,computingTime,results);
+        printer.execute();
+    }
 }
