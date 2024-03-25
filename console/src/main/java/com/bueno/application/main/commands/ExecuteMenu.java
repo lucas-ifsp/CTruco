@@ -3,6 +3,7 @@ package com.bueno.application.main.commands;
 import com.bueno.application.utils.Command;
 import com.bueno.application.withbots.features.EvaluateBot;
 import com.bueno.application.withbots.features.PlayWithBots;
+import com.bueno.application.withbots.features.RankBots;
 import com.bueno.application.withuser.PlayAgainstBots;
 
 import java.util.Scanner;
@@ -22,11 +23,12 @@ public class ExecuteMenu implements Command<Void> {
         return null;
     }
     private void menuOptions(){
-        System.out.println("\nWhat do you Wanna Play");
-        System.out.println("Player vs Bot...............[1]");
-        System.out.println("Simulate Bot vs Bot match...[2]");
-        System.out.println("Evaluate a Bot..............[3]");
-        System.out.println("exit........................[0]");
+        System.out.println("\nWhat do you Wanna to execute");
+        System.out.println("Play Player vs Bot...............[1]");
+        System.out.println("Simulate Bot vs Bot .............[2]");
+        System.out.println("Evaluate a Bot...................[3]");
+        System.out.println("Rank all Bots....................[4]");
+        System.out.println("exit.............................[0]");
     }
     private void menuSwitch(String  option){
         switch (option){
@@ -43,6 +45,10 @@ public class ExecuteMenu implements Command<Void> {
             case "3" ->{
                 final var evaluateBot = new EvaluateBot();
                 evaluateBot.againstAll();
+            }
+            case"4"->{
+                final var rank = new RankBots();
+                rank.allBots();
             }
             default -> System.out.println("invalid Answer! \n");
 

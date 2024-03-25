@@ -52,7 +52,7 @@ public class PlayManyInParallelService {
         final var winnerUUID = intel.gameWinner().orElseThrow();
         final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
                 requestModel.bot1Name() : requestModel.bot2Name();
-        System.out.println("Winner: " + winnerName);
+//        System.out.println("Winner: " + winnerName);
         return new PlayWithBotsDto(winnerUUID, winnerName);
     }
 

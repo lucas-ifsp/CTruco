@@ -10,12 +10,12 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class EvaluateBotUseCase {
+public class EvaluateBotsUseCase {
     private final UUID uuidBotToEvaluate = UUID.randomUUID();
     private final String botToEvaluateName;
     private final int times;
 
-    public EvaluateBotUseCase(String botToEvaluateName,int times) {
+    public EvaluateBotsUseCase(String botToEvaluateName, int times) {
         this.botToEvaluateName = botToEvaluateName;
         this.times = times;
     }
@@ -29,7 +29,7 @@ public class EvaluateBotUseCase {
         final long end = System.currentTimeMillis();
         double winRate = ((double) evaluatedBotWins / numberOfGames) * 100;
         double percentil = (((double) gameWins/(botNames.size() - 1))*100);
-        return new EvaluateResultsDto(start, numberOfGames, evaluatedBotWins, end, winRate, percentil);
+        return new EvaluateResultsDto(start, numberOfGames, evaluatedBotWins, end, winRate, percentil,gameWins);
     }
 
     private boolean isNotEvaluatedBot(String opponentName) {

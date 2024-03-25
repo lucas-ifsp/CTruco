@@ -5,7 +5,7 @@ import com.bueno.application.withbots.commands.BotOptionReader;
 import com.bueno.application.withbots.commands.EvaluateBotsPrinter;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
-import com.bueno.domain.usecases.game.usecase.EvaluateBotUseCase;
+import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class EvaluateBot {
         final var botToEvaluatePosition = scanBotOption(botNames);
         String botToEvaluateName = botNames.get(botToEvaluatePosition - 1);
 
-        EvaluateBotUseCase useCase = new EvaluateBotUseCase(botToEvaluateName, TIMES);
+        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName, TIMES);
         EvaluateResultsDto results = useCase.getResults(botNames);
 
         printResultEvaluateBot(
