@@ -53,8 +53,8 @@ public class EvaluateBot {
         messagePrinter.execute();
     }
 
-    private void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate, double percentil) {
-        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(numberOfGames, computingTime, bot, botWins, winRate, percentil);
+    private void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate, double percentile) {
+        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(numberOfGames, computingTime, bot, botWins, winRate, percentile);
         printer.execute();
     }
 }

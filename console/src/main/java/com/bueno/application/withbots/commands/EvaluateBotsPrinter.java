@@ -8,15 +8,15 @@ public class EvaluateBotsPrinter implements Command<Void> {
     String bot;
     Long botWins;
     double winRate;
-    double percentil;
+    double percentile;
 
-    public EvaluateBotsPrinter(long numberOfGames, long computingTime, String bot, Long botWins, double winRate, double percentil) {
+    public EvaluateBotsPrinter(long numberOfGames, long computingTime, String bot, Long botWins, double winRate, double percentile) {
         this.numberOfGames = numberOfGames;
         this.computingTime = computingTime;
         this.bot = bot;
         this.botWins = botWins;
         this.winRate = winRate;
-        this.percentil = percentil;
+        this.percentile = percentile;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class EvaluateBotsPrinter implements Command<Void> {
         System.out.println("================================================================");
         System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         System.out.println("Wins of " + bot + ": " + botWins);
-        System.out.printf("Win rate of all games: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate, percentil);
+        System.out.printf("Win rate of all games: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate, percentile);
         System.out.println("================================================================");
         return null;
     }
