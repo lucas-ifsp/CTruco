@@ -25,7 +25,7 @@ public class RankBotsUseCase {
         rankMap.put(botName,getWinMatches(botName));
     }
 
-    public Long getWinMatches(String botToEvaluateName) {
+    private Long getWinMatches(String botToEvaluateName) {
         UUID uuidBotToEvaluate = UUID.randomUUID();
         var results = botNames.stream()
                 .filter(opponentName->isNotEvaluatedBot(opponentName,botToEvaluateName))

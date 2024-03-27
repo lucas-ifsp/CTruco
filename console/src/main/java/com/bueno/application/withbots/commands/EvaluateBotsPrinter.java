@@ -21,7 +21,7 @@ public class EvaluateBotsPrinter implements Command<Void> {
 
     @Override
     public Void execute() {
-        System.out.println("\n================================================================");
+        System.out.println("================================================================");
         System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
         System.out.println("Wins of " + bot + ": " + botWins);
         System.out.printf("Win rate of all games: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate, percentil);
