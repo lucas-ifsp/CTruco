@@ -42,7 +42,7 @@ public class EvaluateBotsUseCase {
     private List<PlayWithBotsDto> runSimulations(String challengedBotName) {
         UUID opponentUuid = UUID.randomUUID();
         final var playManyService = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
-        return playManyService.playManyInParallel(TIMES);
+        return playManyService.runInParallel(TIMES);
     }
 
     private Long resultAccumulator(List<PlayWithBotsDto> results) {

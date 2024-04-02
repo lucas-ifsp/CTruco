@@ -42,7 +42,7 @@ public class PlayWithBotsUseCase {
 
     public List<PlayWithBotsDto> playWithBots(int times){
         final var playManyService = new PlayManyInParallelService(uuidBot1,bot1Name,uuidBot2,bot2Name);
-        return playManyService.playManyInParallel(times);
+        return playManyService.runInParallel(times);
     }
 
 }

@@ -40,8 +40,8 @@ public class RankBotsUseCase {
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
         UUID opponentUuid = UUID.randomUUID();
 
-        final var playManyService = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
-        return playManyService.playManyInParallel(TIMES); // TODO adicionar ao Service (mudar o nome para SimulationService.runInParallel(TIMES))
+        final var simulator = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
+        return simulator.runInParallel(TIMES); // TODO adicionar ao Service (mudar o nome para SimulationService.runInParallel(TIMES))
     }
 
     private Long winsAccumulator(List<PlayWithBotsDto> results, String botToEvaluateName, UUID uuidBotToEvaluate) {

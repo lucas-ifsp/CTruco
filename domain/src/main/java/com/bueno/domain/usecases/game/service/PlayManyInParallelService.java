@@ -28,7 +28,7 @@ public class PlayManyInParallelService {
         this.bot2Name = challengedBotName;
     }
 
-    public List<PlayWithBotsDto> playManyInParallel(int times) {
+    public List<PlayWithBotsDto> runInParallel(int times) {
         final Callable<PlayWithBotsDto> gameWaitingForBeCreatedAndPlayed = this::simulate;
         return Stream.generate(() -> gameWaitingForBeCreatedAndPlayed)
                 .limit(times)
