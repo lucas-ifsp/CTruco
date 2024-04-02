@@ -16,10 +16,10 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class PlayManyInParallelService {
-   UUID uuidBot1;
-   String bot1Name;
-   UUID uuidBot2;
-   String bot2Name;
+   private final UUID uuidBot1;
+   private final String bot1Name;
+   private final UUID uuidBot2;
+   private final String bot2Name;
 
     public PlayManyInParallelService(UUID uuidBotToEvaluate, String botToEvaluateName, UUID opponentUuid, String challengedBotName) {
         this.uuidBot1 = uuidBotToEvaluate;

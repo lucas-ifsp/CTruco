@@ -36,14 +36,7 @@ public class RankBots {
         return mapToSort.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(this::keyMapper, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)); //TODO - tente simplificar com o Gemini
     }
 
-    private String keyMapper(Map.Entry<String, Long> entry) {
-        return entry.getKey();
-    }
-
-    private Long valueMapper(Map.Entry<String, Long> entry) {
-        return entry.getValue();
-    }
 }

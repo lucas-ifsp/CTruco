@@ -11,18 +11,17 @@ import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
 import java.util.List;
 
 public class EvaluateBot {
-    public static final int TIMES = 31;
 
     public void againstAll() {
         final var botNames = BotProviders.availableBots();
 
         printAvailableBots(botNames);
         final var botToEvaluatePosition = scanBotOption(botNames);
-        String botToEvaluateName = botNames.get(botToEvaluatePosition - 1);
-        
+        String botToEvaluateName = botNames.get(botToEvaluatePosition - 1);// TODO devolver nome direto
+
         printWaitingMessage();
-        
-        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName, TIMES);
+
+        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName);
         EvaluateResultsDto results = useCase.getResults(botNames);
 
         printResultEvaluateBot(
@@ -31,10 +30,9 @@ public class EvaluateBot {
                 botToEvaluateName,
                 results.evaluatedBotWins(),
                 results.winRate(),
-                results.percentil()
-        );
+                results.percentile()
+        );// TODO mandar o record direto
     }
-
 
 
     private void printAvailableBots(List<String> botNames) {
@@ -43,8 +41,7 @@ public class EvaluateBot {
     }
 
     private int scanBotOption(List<String> botNames) {
-        BotOptionReader scanOptions = new BotOptionReader
-                (botNames);
+        BotOptionReader scanOptions = new BotOptionReader(botNames);
         return scanOptions.execute();
     }
 
@@ -53,7 +50,12 @@ public class EvaluateBot {
         messagePrinter.execute();
     }
 
-    private void printResultEvaluateBot(long numberOfGames, long computingTime, String bot, Long botWins, double winRate, double percentile) {
+    private void printResultEvaluateBot(long numberOfGames,
+                                        long computingTime,
+                                        String bot,
+                                        Long botWins,
+                                        double winRate,
+                                        double percentile) {
         EvaluateBotsPrinter printer = new EvaluateBotsPrinter(numberOfGames, computingTime, bot, botWins, winRate, percentile);
         printer.execute();
     }
