@@ -4,6 +4,7 @@ import com.bueno.application.withbots.commands.BotRankPrinter;
 import com.bueno.application.withbots.commands.WaitingMessagePrinter;
 import com.bueno.domain.usecases.game.usecase.RankBotsUseCase;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class RankBots {
         showWaitingMessage();
 
         Map<String, Long> rankMap = useCase.rankAll();
-        rankMap = sortMapDescending(rankMap);
+        rankMap = sortByValueDescending(rankMap);
 
         printRank(rankMap);
     }
@@ -32,11 +33,10 @@ public class RankBots {
         messagePrinter.execute();
     }
 
-    private Map<String, Long> sortMapDescending(Map<String, Long> mapToSort) {
-        return mapToSort.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new)); //TODO - tente simplificar com o Gemini
+    private Map<String, Long> sortByValueDescending(Map<String, Long> mapToSort) {
+        return  mapToSort.entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
 }
