@@ -16,22 +16,16 @@ public class EvaluateBot {
         final var botNames = BotProviders.availableBots();
 
         printAvailableBots(botNames);
-        final var botToEvaluatePosition = scanBotOption(botNames);
-        String botToEvaluateName = botNames.get(botToEvaluatePosition - 1);// TODO devolver nome direto
+        String botToEvaluateName = botNames.get(scanBotOption(botNames) - 1);
 
         printWaitingMessage();
 
-        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName);
-        EvaluateResultsDto results = useCase.getResults(botNames);
+        printResultEvaluateBot(getEvaluateResultsDto(botToEvaluateName, botNames), botToEvaluateName);
+    }
 
-        printResultEvaluateBot(
-                results.numberOfGames(),
-                (results.end() - results.start()),
-                botToEvaluateName,
-                results.evaluatedBotWins(),
-                results.winRate(),
-                results.percentile()
-        );// TODO mandar o record direto
+    private static EvaluateResultsDto getEvaluateResultsDto(String botToEvaluateName, List<String> botNames) {
+        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName);
+        return useCase.getResults(botNames);
     }
 
 
@@ -50,13 +44,8 @@ public class EvaluateBot {
         messagePrinter.execute();
     }
 
-    private void printResultEvaluateBot(long numberOfGames,
-                                        long computingTime,
-                                        String bot,
-                                        Long botWins,
-                                        double winRate,
-                                        double percentile) {
-        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(numberOfGames, computingTime, bot, botWins, winRate, percentile);
+    private void printResultEvaluateBot(EvaluateResultsDto resultsDto, String botName) {
+        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(resultsDto,botName);
         printer.execute();
     }
 }
