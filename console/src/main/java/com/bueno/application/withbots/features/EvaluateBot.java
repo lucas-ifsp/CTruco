@@ -23,7 +23,7 @@ public class EvaluateBot {
         printResultEvaluateBot(getEvaluateResultsDto(botToEvaluateName, botNames), botToEvaluateName);
     }
 
-    private static EvaluateResultsDto getEvaluateResultsDto(String botToEvaluateName, List<String> botNames) {
+    private EvaluateResultsDto getEvaluateResultsDto(String botToEvaluateName, List<String> botNames) {
         EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName);
         return useCase.getResults(botNames);
     }

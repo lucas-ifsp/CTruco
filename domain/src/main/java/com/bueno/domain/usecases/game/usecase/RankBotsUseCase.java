@@ -3,6 +3,7 @@ package com.bueno.domain.usecases.game.usecase;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.PlayManyInParallelService;
+import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class RankBotsUseCase {
                 .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
                 .toList();
 
-        Long botWins = results.stream().mapToLong(opponent -> winsAccumulator(opponent, botName, uuidBotToEvaluate))
+        Long botWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botName,TIMES))
                 .sum();
         rankMap.put(botName, botWins);
     }
@@ -42,15 +43,6 @@ public class RankBotsUseCase {
 
         final var simulator = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
         return simulator.runInParallel(TIMES); // TODO adicionar ao Service (mudar o nome para SimulationService.runInParallel(TIMES))
-    }
-
-    private Long winsAccumulator(List<PlayWithBotsDto> results, String botToEvaluateName, UUID uuidBotToEvaluate) {
-        final PlayWithBotsDto bot1 = new PlayWithBotsDto(uuidBotToEvaluate, botToEvaluateName);
-        Map<PlayWithBotsDto, Long> collectResults = results.stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        if (!collectResults.containsKey(bot1)) return 0L;
-        if (collectResults.get(bot1) > (TIMES / 2)) return 1L;
-        return 0L;
     }
 
 }

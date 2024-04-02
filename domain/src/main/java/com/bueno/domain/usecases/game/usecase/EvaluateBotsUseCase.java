@@ -3,11 +3,11 @@ package com.bueno.domain.usecases.game.usecase;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.PlayManyInParallelService;
+import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EvaluateBotsUseCase {
@@ -27,12 +27,12 @@ public class EvaluateBotsUseCase {
         final long end = System.currentTimeMillis();
 
         final long evaluatedBotWins = results.stream().mapToLong(this::resultAccumulator).sum();
-        final long gameWins = results.stream().mapToLong(this::winsAccumulator).sum();
+        final long gameWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match,botToEvaluateName,TIMES)).sum();
 
         double winRate = ((double) evaluatedBotWins / numberOfGames) * 100;
         double percentile = (((double) gameWins / (botNames.size() - 1)) * 100);
 
-        return new EvaluateResultsDto(start, numberOfGames, evaluatedBotWins, end, winRate, percentile, gameWins);
+        return new EvaluateResultsDto((end-start), numberOfGames, evaluatedBotWins, winRate, percentile, gameWins);
     }
 
     private boolean isNotEvaluatedBot(String opponentName) {
@@ -46,17 +46,10 @@ public class EvaluateBotsUseCase {
     }
 
     private Long resultAccumulator(List<PlayWithBotsDto> results) {
-        final PlayWithBotsDto bot1 = results.stream().filter(bot -> !isNotEvaluatedBot(bot.name())).toList().get(0);
-        Map<PlayWithBotsDto, Long> collectResults = results.stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        return collectResults.get(bot1);
+        Map<String, Long> collectResults = results.stream()
+                .collect(Collectors.groupingBy(PlayWithBotsDto::name, Collectors.counting()));
+        if (!collectResults.containsKey(botToEvaluateName)) return 0L;
+        return collectResults.get(botToEvaluateName);
     }
 
-    private Long winsAccumulator(List<PlayWithBotsDto> results) {
-        final PlayWithBotsDto bot1 = results.stream().filter(bot -> !isNotEvaluatedBot(bot.name())).toList().get(0);
-        Map<PlayWithBotsDto, Long> collectResults = results.stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        if (collectResults.get(bot1) > (TIMES / 2)) return 1L;
-        return 0L;
-    }
 }
