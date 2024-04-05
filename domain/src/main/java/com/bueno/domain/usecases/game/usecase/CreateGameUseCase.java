@@ -18,7 +18,7 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
@@ -90,7 +90,7 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    IntelDto createForBots(CreateForBotsDto request){
+    public IntelDto createForBots(CreateForBotsDto request){
         Objects.requireNonNull(request);
 
         if(hasNoBotServiceWith(request.bot1Name()))

@@ -145,7 +145,7 @@ public class BotMadeInDescalvado implements BotServiceProvider {
                         .findFirst()
                         .orElse(cards.get(0));
 
-                    return CardToPlay.discard(notManilha);
+                    return CardToPlay.of(notManilha);
                 } else {
                     TrucoCard card = cards.stream()
                         .max((a, b) -> a.compareValueTo(b, vira))

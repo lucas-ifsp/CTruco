@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2022 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
  *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
@@ -18,26 +18,29 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.usecase;
 
-import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
-import com.bueno.domain.usecases.game.dtos.TopWinnersDto;
-import com.bueno.domain.usecases.game.repos.GameResultRepository;
-import org.springframework.stereotype.Service;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
+import com.bueno.domain.usecases.game.service.SimulationService;
 
 import java.util.List;
+import java.util.UUID;
 
-@Service
-public class ReportTopWinnersUseCase {
+public class PlayWithBotsUseCase {
 
-    private final GameResultRepository resultRepository;
+    private final UUID uuidBot1;
+    private final String bot1Name;
+    private final String bot2Name;
 
-    public ReportTopWinnersUseCase(GameResultRepository resultRepository) {
-        this.resultRepository = resultRepository;
+    public PlayWithBotsUseCase(UUID uuidBot1, String bot1Name, String bot2Name) {
+        this.uuidBot1 = uuidBot1;
+        this.bot1Name = bot1Name;
+        this.bot2Name = bot2Name;
     }
 
-    public TopWinnersDto create(int numberOfTopPlayers){
-        final List<PlayerWinsDto> topWinners = resultRepository.findTopWinners(numberOfTopPlayers);
-        return new TopWinnersDto(topWinners);
+    public List<PlayWithBotsDto> playWithBots(int times) {
+        final var simulator = new SimulationService(uuidBot1, bot1Name, bot2Name);
+        return simulator.runInParallel(times);
     }
+
 }

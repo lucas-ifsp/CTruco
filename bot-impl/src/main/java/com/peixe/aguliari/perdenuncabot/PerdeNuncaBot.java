@@ -235,9 +235,9 @@ public class PerdeNuncaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         // If we have zap accept
-        if (intel.getCards().get(0).isZap(intel.getVira())) {
-            return 1;
-        }
+//        if (intel.getCards().get(0).isZap(intel.getVira())) {
+//            return 1;
+//        }
         // If we have Manilha accept
         if (getManilha(intel)) {
             return 1;

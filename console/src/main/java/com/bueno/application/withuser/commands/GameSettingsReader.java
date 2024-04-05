@@ -18,8 +18,9 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
+import com.bueno.application.utils.Command;
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.google.common.primitives.Ints;
@@ -28,7 +29,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
-public class GameSettingsReader implements Command<CreateDetachedDto>{
+public class GameSettingsReader implements Command<CreateDetachedDto> {
 
     @Override
     public CreateDetachedDto execute() {
