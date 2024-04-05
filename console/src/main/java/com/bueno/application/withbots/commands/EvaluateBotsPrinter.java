@@ -24,8 +24,9 @@ public class EvaluateBotsPrinter implements Command<Void> {
     public Void execute() {
         System.out.println("================================================================");
         System.out.println("Time to compute " + numberOfGames + " games: " + computingTime + "ms.\n");
-        System.out.println("Wins of " + botName + ": " + botWins);
-        System.out.printf("Win rate of all games: %.2f%%\nWin rate against each Bot: %.2f%%\n", winRate, percentile);
+        System.out.println("Wins of " + botName + ": " + botWins + "/" + numberOfGames);
+        System.out.printf("Win rate of all games: %.2f%%\n", winRate);
+        System.out.printf("Win rate against each bot: %.2f%%\n", percentile);
         System.out.println("================================================================");
         return null;
     }

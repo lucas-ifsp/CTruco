@@ -21,7 +21,7 @@
 package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.domain.usecases.game.service.PlayManyInParallelService;
+import com.bueno.domain.usecases.game.service.SimulationService;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,19 +30,17 @@ public class PlayWithBotsUseCase {
 
     private final UUID uuidBot1;
     private final String bot1Name;
-    private final UUID uuidBot2;
     private final String bot2Name;
 
-    public PlayWithBotsUseCase(UUID uuidBot1, String bot1Name, UUID uuidBot2, String bot2Name) {
+    public PlayWithBotsUseCase(UUID uuidBot1, String bot1Name, String bot2Name) {
         this.uuidBot1 = uuidBot1;
         this.bot1Name = bot1Name;
-        this.uuidBot2 = uuidBot2;
         this.bot2Name = bot2Name;
     }
 
-    public List<PlayWithBotsDto> playWithBots(int times){
-        final var playManyService = new PlayManyInParallelService(uuidBot1,bot1Name,uuidBot2,bot2Name);
-        return playManyService.runInParallel(times);
+    public List<PlayWithBotsDto> playWithBots(int times) {
+        final var simulator = new SimulationService(uuidBot1, bot1Name, bot2Name);
+        return simulator.runInParallel(times);
     }
 
 }

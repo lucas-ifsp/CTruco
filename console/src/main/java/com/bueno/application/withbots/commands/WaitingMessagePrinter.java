@@ -6,8 +6,7 @@ public class WaitingMessagePrinter implements Command<Void> {
 
     @Override
     public Void execute() {
-        System.out.println("Simulando Partidas...");
-        System.out.println("Isso pode demorar um pouco.\n");
+        System.out.println("\nSimulating... it may take a while: ");
         return null;
     }
 }

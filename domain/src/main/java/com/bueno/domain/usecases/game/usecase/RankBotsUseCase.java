@@ -2,15 +2,13 @@ package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.usecases.bot.providers.BotProviders;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.domain.usecases.game.service.PlayManyInParallelService;
+import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class RankBotsUseCase {
     private final int TIMES = 7;
@@ -29,7 +27,7 @@ public class RankBotsUseCase {
                 .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
                 .toList();
 
-        Long botWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botName,TIMES))
+        Long botWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
                 .sum();
         rankMap.put(botName, botWins);
     }
@@ -39,10 +37,8 @@ public class RankBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
-        UUID opponentUuid = UUID.randomUUID();
-
-        final var simulator = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
-        return simulator.runInParallel(TIMES); // TODO adicionar ao Service (mudar o nome para SimulationService.runInParallel(TIMES))
+        final var simulator = new SimulationService(uuidBotToEvaluate, botToEvaluateName, challengedBotName);
+        return simulator.runInParallel(TIMES);
     }
 
 }

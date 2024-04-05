@@ -37,7 +37,7 @@ public class PlayWithBots {
     private int times;
 
 
-    public void playWithBotsConsole(){
+    public void playWithBotsConsole() {
         final var botNames = BotProviders.availableBots();
 
         printAvailableBots(botNames);
@@ -45,6 +45,8 @@ public class PlayWithBots {
         final var bot1 = scanBotOption(botNames);
         final var bot2 = scanBotOption(botNames);
         times = scanNumberOfSimulations();
+
+        showWaitingMessage();
 
         bot1Name = botNames.get(bot1 - 1);
         bot2Name = botNames.get(bot2 - 1);
@@ -61,22 +63,27 @@ public class PlayWithBots {
     }
 
     private List<PlayWithBotsDto> playBotsStarter() {
-        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, uuidBot2, bot2Name);
+        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, bot2Name);
         return useCase.playWithBots(times);
     }
 
-    private void printAvailableBots(List<String> botNames){
+    private void printAvailableBots(List<String> botNames) {
         BotsAvailablePrinter printer = new BotsAvailablePrinter(botNames);
         printer.execute();
     }
 
-    private int scanBotOption(List<String> botNames){
+    private int scanBotOption(List<String> botNames) {
         BotOptionReader scanOptions = new BotOptionReader(botNames);
         return scanOptions.execute();
     }
 
-    private void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results){
-        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(numberOfGames,computingTime,results);
+    private void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
+        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(numberOfGames, computingTime, results);
         printer.execute();
+    }
+
+    private void showWaitingMessage() {
+        WaitingMessagePrinter messagePrinter = new WaitingMessagePrinter();
+        messagePrinter.execute();
     }
 }

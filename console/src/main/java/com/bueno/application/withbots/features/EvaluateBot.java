@@ -45,7 +45,7 @@ public class EvaluateBot {
     }
 
     private void printResultEvaluateBot(EvaluateResultsDto resultsDto, String botName) {
-        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(resultsDto,botName);
+        EvaluateBotsPrinter printer = new EvaluateBotsPrinter(resultsDto, botName);
         printer.execute();
     }
 }

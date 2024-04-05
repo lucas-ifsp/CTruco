@@ -2,7 +2,7 @@ package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.domain.usecases.game.service.PlayManyInParallelService;
+import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 
 import java.util.List;
@@ -27,12 +27,12 @@ public class EvaluateBotsUseCase {
         final long end = System.currentTimeMillis();
 
         final long evaluatedBotWins = results.stream().mapToLong(this::resultAccumulator).sum();
-        final long gameWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match,botToEvaluateName,TIMES)).sum();
+        final long gameWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botToEvaluateName, TIMES)).sum();
 
         double winRate = ((double) evaluatedBotWins / numberOfGames) * 100;
         double percentile = (((double) gameWins / (botNames.size() - 1)) * 100);
 
-        return new EvaluateResultsDto((end-start), numberOfGames, evaluatedBotWins, winRate, percentile, gameWins);
+        return new EvaluateResultsDto((end - start), numberOfGames, evaluatedBotWins, winRate, percentile, gameWins);
     }
 
     private boolean isNotEvaluatedBot(String opponentName) {
@@ -40,8 +40,7 @@ public class EvaluateBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName) {
-        UUID opponentUuid = UUID.randomUUID();
-        final var playManyService = new PlayManyInParallelService(uuidBotToEvaluate, botToEvaluateName, opponentUuid, challengedBotName);
+        final var playManyService = new SimulationService(uuidBotToEvaluate, botToEvaluateName, challengedBotName);
         return playManyService.runInParallel(TIMES);
     }
 

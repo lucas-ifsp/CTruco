@@ -15,16 +15,16 @@ import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class PlayManyInParallelService {
+public class SimulationService {
    private final UUID uuidBot1;
    private final String bot1Name;
    private final UUID uuidBot2;
    private final String bot2Name;
 
-    public PlayManyInParallelService(UUID uuidBotToEvaluate, String botToEvaluateName, UUID opponentUuid, String challengedBotName) {
+    public SimulationService(UUID uuidBotToEvaluate, String botToEvaluateName, String challengedBotName) {
         this.uuidBot1 = uuidBotToEvaluate;
         this.bot1Name = botToEvaluateName;
-        this.uuidBot2 = opponentUuid;
+        this.uuidBot2 = UUID.randomUUID();;
         this.bot2Name = challengedBotName;
     }
 
