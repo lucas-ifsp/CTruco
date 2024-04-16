@@ -18,18 +18,19 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
-import com.bueno.application.cli.GameCLI;
+import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.application.utils.Command;
 
 import java.util.Scanner;
 
 public class MaoDeOnzeResponseReader implements Command<MaoDeOnzeResponseReader.MaoDeOnzeChoice> {
 
-    private final GameCLI mainCli;
+    private final PlayAgainstBots mainCli;
     public enum MaoDeOnzeChoice {QUIT, ACCEPT}
 
-    public MaoDeOnzeResponseReader(GameCLI mainCli) {
+    public MaoDeOnzeResponseReader(PlayAgainstBots mainCli) {
         this.mainCli = mainCli;
     }
 

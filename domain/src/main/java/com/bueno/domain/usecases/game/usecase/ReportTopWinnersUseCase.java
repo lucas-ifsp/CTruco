@@ -18,24 +18,26 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.domain.usecases.game;
+package com.bueno.domain.usecases.game.usecase;
 
-import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.dtos.PlayerWinsDto;
+import com.bueno.domain.usecases.game.dtos.TopWinnersDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.List;
 
 @Service
-public class SaveGameResultUseCase {
-    private final GameResultRepository repo;
+public class ReportTopWinnersUseCase {
 
-    public SaveGameResultUseCase(GameResultRepository repo) {
-        this.repo = repo;
+    private final GameResultRepository resultRepository;
+
+    public ReportTopWinnersUseCase(GameResultRepository resultRepository) {
+        this.resultRepository = resultRepository;
     }
 
-    public void save(GameResultDto result){
-        Objects.requireNonNull(result, "Result must not be null");
-        repo.save(result);
+    public TopWinnersDto create(int numberOfTopPlayers){
+        final List<PlayerWinsDto> topWinners = resultRepository.findTopWinners(numberOfTopPlayers);
+        return new TopWinnersDto(topWinners);
     }
 }

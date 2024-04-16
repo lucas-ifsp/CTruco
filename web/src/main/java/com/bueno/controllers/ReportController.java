@@ -20,7 +20,7 @@
 
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.game.ReportTopWinnersUseCase;
+import com.bueno.domain.usecases.game.usecase.ReportTopWinnersUseCase;
 import com.bueno.domain.usecases.game.dtos.TopWinnersDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

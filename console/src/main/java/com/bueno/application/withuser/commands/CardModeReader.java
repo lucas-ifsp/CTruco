@@ -18,37 +18,36 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.bueno.application.cli.commands;
+package com.bueno.application.withuser.commands;
 
-import com.bueno.application.cli.GameCLI;
+import com.bueno.application.utils.Command;
 
 import java.util.Scanner;
 
-public class RaiseRequestReader implements Command<RaiseRequestReader.RaiseChoice> {
+import static com.bueno.application.withuser.commands.CardModeReader.CardMode.*;
+import static com.bueno.application.withuser.commands.CardModeReader.CardMode.DISCARDED;
 
-    private final GameCLI mainCli;
-    private final int nextScore;
-    public enum RaiseChoice {REQUEST, NOT_REQUEST}
+public class CardModeReader implements Command<CardModeReader.CardMode> {
 
-    public RaiseRequestReader(GameCLI mainCli, int nextScore) {
-        this.mainCli = mainCli;
-        this.nextScore = nextScore;
+    public enum CardMode{OPEN, DISCARDED}
+
+    public CardModeReader() {
     }
 
     @Override
-    public RaiseChoice execute() {
+    public CardMode execute() {
         var scanner = new Scanner(System.in);
-        while (true) {
-            mainCli.printGameIntel(3000);
+        while (true){
+            System.out.print("Descartar [s, n] > ");
 
-            System.out.print("Pedir " + toRequestString(nextScore) + " [s, n]: ");
-
-            var choice = scanner.nextLine().toLowerCase();
+            final var choice = scanner.nextLine();
             if (isValidChoice(choice, "s", "n")) {
                 printErrorMessage("Valor inválido!");
                 continue;
             }
-            return choice.equalsIgnoreCase("s") ? RaiseChoice.REQUEST : RaiseChoice.NOT_REQUEST;
+            if (choice.equalsIgnoreCase("n")) return OPEN;
+            return DISCARDED;
         }
     }
 }
+
