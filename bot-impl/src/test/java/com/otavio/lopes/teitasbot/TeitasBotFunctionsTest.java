@@ -36,13 +36,28 @@ class TeitasBotFunctionsTest {
         void shouldReturnFalseIfHandHasNoManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TeitasBotFunctions.hasManilha(cards, vira)).isFalse();
         }
     }
-    
 
+    @Nested
+    class  HasStrongHand{
+        @Test
+        @DisplayName("Should return true if we had a strong hand")
+        void shouldReturnTrueIfHandIsNuts() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isFalse();
+
+
+        }
+    }
 }
