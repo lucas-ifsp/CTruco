@@ -47,17 +47,48 @@ class TeitasBotFunctionsTest {
     @Nested
     class  HasStrongHand{
         @Test
-        @DisplayName("Should return true if we had a strong hand")
+        @DisplayName("Should return true if we had a nuts hand")
         void shouldReturnTrueIfHandIsNuts() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
             );
-            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isFalse();
-
+            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
 
         }
+    }
+    @Nested
+    class  HasGoodHand{
+        @Test
+        @DisplayName("Should return true if we had a good hand")
+        void shouldReturnTrueIfHandIsGood() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
+
+        }
+    }
+
+    @Nested
+    class HasTrashHand{
+        @Test
+        @DisplayName("Should return true if we had a trash hand")
+        void shouldReturnTrueIfHandIsTrash() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
+
+        }
+
     }
 }

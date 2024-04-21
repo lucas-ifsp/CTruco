@@ -18,15 +18,18 @@ public class TeitasBotFunctions {
     static Boolean hasZap(List<TrucoCard> cards, TrucoCard vira){
         return cards.stream().anyMatch(card -> card.isZap(vira));
     }
-    static Boolean hasThree(List<TrucoCard> cards, TrucoCard vira){
+    static Boolean hasThree(List<TrucoCard> cards) {
         return cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
-    static Boolean hasNutsHand(List<TrucoCard> cards,TrucoCard vira){
-        Boolean hasManilha = hasManilha(cards, vira);
-        Boolean hasZap = hasZap(cards,vira);
-        Boolean hasThree = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
-        return hasManilha && hasThree && hasZap;
+
+    static Boolean hasNutsHand(List<TrucoCard> cards, TrucoCard vira) {
+
+        boolean hasZap = hasZap(cards, vira);
+        boolean hasThree = hasThree(cards);
+        boolean hasManilha =  hasManilha(cards, vira);
+
+        return (hasManilha && hasThree && hasZap);
     }
 
     static Boolean hasGoodHand(List<TrucoCard> cards,TrucoCard vira){
@@ -34,9 +37,12 @@ public class TeitasBotFunctions {
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
         return hasManilha || hasStrongCard;
     }
-    static Boolean hasTrashHand(List<TrucoCard> cards)
+    static Boolean hasTrashHand(List<TrucoCard> cards,TrucoCard vira)
     {
-        return true;
+        Boolean hasManilha = hasManilha(cards,vira);
+        Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+
+        return !hasManilha && !hasStrongCard;
 
     }
 
