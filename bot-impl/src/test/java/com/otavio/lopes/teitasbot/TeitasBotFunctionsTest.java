@@ -2,8 +2,10 @@ package com.otavio.lopes.teitasbot;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.otavio.lopes.teitasbot.TeitasBotFunctions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,10 +13,17 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBotTest.gameIntel;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class TeitasBotFunctionsTest {
+    private static GameIntel gameIntel;
+    @BeforeEach
+    public void setGameIntel() {
+        gameIntel = mock(GameIntel.class);
+    }
 
     @Nested
     @DisplayName("HasManilhaTest")
@@ -70,7 +79,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
             );
-            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
+            assertThat(TeitasBotFunctions.hasGoodHand(cards,vira)).isTrue();
 
         }
     }
@@ -86,9 +95,19 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
             );
-            assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
+            assertThat(TeitasBotFunctions.hasTrashHand(cards,vira)).isTrue();
 
         }
 
     }
+    @Nested
+    class WeStart{
+        @Test
+        @DisplayName("should return true if we start")
+        void shouldReturTrueIfWeStart(){
+            assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(GameIntel gameIntel)).isTrue()    ;
+
+        }
+    }
+
 }
