@@ -52,6 +52,6 @@ public class TeitasBotFunctions {
         return gameIntel.getOpponentCard().isPresent();
     }
 
-
+   
 
 }

@@ -102,11 +102,11 @@ class TeitasBotFunctionsTest {
     }
     @Nested
     class WeStart{
+        //game intel error at 'Not found'
         @Test
-        @DisplayName("should return true if we start")
+        @DisplayName("should return true if we last round")
         void shouldReturTrueIfWeStart(){
-            assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(GameIntel gameIntel)).isTrue()    ;
-
+            assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(gameIntel)).isTrue()    ;
         }
     }
 
