@@ -110,4 +110,13 @@ class TeitasBotFunctionsTest {
         }
     }
 
+    @Nested
+    class PlayModes{
+        @Test
+        @DisplayName("Should Plaay at agressive mode if")
+        void ShouldPlayAgressiveMode(){
+
+        }
+    }
+
 }

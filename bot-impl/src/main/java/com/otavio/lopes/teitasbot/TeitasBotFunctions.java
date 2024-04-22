@@ -52,6 +52,11 @@ public class TeitasBotFunctions {
         return gameIntel.getOpponentCard().isPresent();
     }
 
-   
+    //TODO indetify typefunciont
+    static void PlayAgressiveMode(){
+        //method that play at agressive mode
+
+    }
+    
 
 }
