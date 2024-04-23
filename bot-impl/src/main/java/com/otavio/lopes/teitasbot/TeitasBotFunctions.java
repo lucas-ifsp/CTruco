@@ -50,13 +50,24 @@ public class TeitasBotFunctions {
     }
     static boolean isOpponentThatStartTheRound(GameIntel gameIntel) {
         return gameIntel.getOpponentCard().isPresent();
+
+    }
+    static boolean hasStrongHand(cards,vira){
+        
     }
 
     //TODO indetify typefunciont
-    static void PlayAgressiveMode(){
+    static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
         //method that play at agressive mode
+        Boolean nustaHand = hasNutsHand(cards, vira);
+        Boolean hasStrongCard =  hasStrongHand(cards,vira);
+        Boolean weStart = isOpponentThatStartTheRound(gameIntel);
+
+        if weStart{
+            //logical
+        }
 
     }
-    
+
 
 }

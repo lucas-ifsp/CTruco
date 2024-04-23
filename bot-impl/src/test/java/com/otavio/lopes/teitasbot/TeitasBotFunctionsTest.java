@@ -54,7 +54,8 @@ class TeitasBotFunctionsTest {
     }
 
     @Nested
-    class  HasStrongHand{
+    @DisplayName("TypesOfHand")
+    class TypesOfHands{
         @Test
         @DisplayName("Should return true if we had a nuts hand")
         void shouldReturnTrueIfHandIsNuts() {
@@ -67,9 +68,8 @@ class TeitasBotFunctionsTest {
             assertThat(TeitasBotFunctions.hasNutsHand(cards,vira)).isTrue();
 
         }
-    }
-    @Nested
-    class  HasGoodHand{
+
+
         @Test
         @DisplayName("Should return true if we had a good hand")
         void shouldReturnTrueIfHandIsGood() {
@@ -84,8 +84,8 @@ class TeitasBotFunctionsTest {
         }
     }
 
-    @Nested
-    class HasTrashHand{
+
+
         @Test
         @DisplayName("Should return true if we had a trash hand")
         void shouldReturnTrueIfHandIsTrash() {
@@ -115,8 +115,18 @@ class TeitasBotFunctionsTest {
         @Test
         @DisplayName("Should Plaay at agressive mode if")
         void ShouldPlayAgressiveMode(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+
+                List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+
+                );
+                assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira)).isTrue();
 
         }
     }
+
 
 }
