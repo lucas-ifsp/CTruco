@@ -52,8 +52,18 @@ public class TeitasBotFunctions {
         return gameIntel.getOpponentCard().isPresent();
 
     }
-    static boolean hasStrongHand(cards,vira){
-        
+    static boolean hasManilhaAlta( List<TrucoCard> cards,TrucoCard vira) {
+        boolean hasManilha = hasManilha(cards, vira);
+        if (hasManilha) {
+             //TODO verifiicar se a carta que é manilha pertence ao casal maior.Caso sim,chamar jogar agressivo.
+        }
+
+        return
+    }
+
+    }
+    static boolean hasStrongHand(List<TrucoCard> cards,TrucoCard vira){
+        return hasManilhaAlta;
     }
 
     //TODO indetify typefunciont
