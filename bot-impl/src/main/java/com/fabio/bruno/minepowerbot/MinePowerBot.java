@@ -2,6 +2,7 @@ package com.fabio.bruno.minepowerbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class MinePowerBot implements BotServiceProvider {
@@ -17,7 +18,29 @@ public class MinePowerBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        int roundNumber = getRoundNumber(intel);
+        if (!isTheFirstToPlay(intel)) {
+            switch(roundNumber) {
+                case 1 -> {
+                    TrucoCard opponentCard = intel.getOpponentCard().get();
+                    TrucoCard vira = intel.getVira();
+                    var lowestCardStrongerThanOpponentCard =  intel.getCards().stream()
+                            .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                            .min( (card1, card2) -> card1.compareValueTo(card2, vira));
+                    if (lowestCardStrongerThanOpponentCard.isPresent())
+                        return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
+                }
+            }
+        }
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private boolean isTheFirstToPlay(GameIntel intel) {
+        return intel.getOpponentCard().isEmpty();
+    }
+
+    private int getRoundNumber(GameIntel intel) {
+        return intel.getRoundResults().size() + 1;
     }
 
     @Override
