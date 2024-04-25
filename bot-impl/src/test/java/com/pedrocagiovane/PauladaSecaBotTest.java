@@ -34,6 +34,6 @@ public class PauladaSecaBotTest {
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
         CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
-        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,HEARTS));
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE,SPADES));
     }
 }
