@@ -83,21 +83,25 @@ public class PauladaSecaBot {
 
         Integer qtdManilha = contManilha(build.getCards(),build.getVira());
 
-        //joga pior carta se tiver casal maior
+        // PRIMEIRA: joga pior carta se tiver casal maior
         if (temCasalMaior(build) && build.getRoundResults().isEmpty()){
             return CardToPlay.of(piorCarta(build));
         }
 
-        // tenta amarrar se tiver zap ou copas
+        // PRIMEIRA: tenta amarrar se tiver zap ou copas
         if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
             if (build.getRoundResults().isEmpty()) {
-                System.out.println(build.getCards());
                 for (TrucoCard card : build.getCards()) {
                     if (card.getRank() == build.getOpponentCard().get().getRank() && !card.isManilha(build.getVira())) {
                         return CardToPlay.of(card);
                     }
                 }
             }
+        }
+
+        // PRIMEIRA: joga melhor carta se não tiver manilha
+        if(qtdManilha == 0){
+            return CardToPlay.of(melhorCarta(build));
         }
 
         return CardToPlay.of(melhorCarta(build));
