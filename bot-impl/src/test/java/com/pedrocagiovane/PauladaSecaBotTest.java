@@ -37,6 +37,18 @@ public class PauladaSecaBotTest {
     }
 
     @Test
+    @DisplayName("Aumenta aposta se tiver copas e ganhou a primeira")
+    void aumentaApostaSeTiverCopas() {
+        maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(TWO, CLUBS));
+        vira = TrucoCard.of(TWO, HEARTS);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
+        int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
+        assertThat(resultado).isOne();
+    }
+
+    @Test
     @DisplayName("Se tiver zap ou copas tenta amarrar a primeira")
     void amarrarPrimeiraSeTiverZapOuCopas() {
         maoPlayer = List.of( TrucoCard.of(SIX, SPADES),TrucoCard.of(TWO, SPADES), TrucoCard.of(ACE, HEARTS));
