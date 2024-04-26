@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
-import static com.bueno.spi.model.CardRank.THREE;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.CardSuit.HEARTS;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -27,7 +26,7 @@ public class PauladaSecaBotTest {
 
     @Test
     @DisplayName("Jogar menor carta na primeira rodada caso tenha casal maior")
-    void playingSmallerCardIfYouHaveBiggerCouple() {
+    void jogarMenorCartaPrimeiraSeTiverCasalMaior() {
         maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, CLUBS), TrucoCard.of(ACE, HEARTS));
         vira = TrucoCard.of(KING, SPADES);
         roundResult = List.of();
@@ -35,5 +34,18 @@ public class PauladaSecaBotTest {
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
         CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE,SPADES));
+    }
+
+    @Test
+    @DisplayName("Se tiver zap ou copas tenta amarrar a primeira")
+    void amarrarPrimeiraSeTiverZapOuCopas() {
+        maoPlayer = List.of( TrucoCard.of(SIX, SPADES),TrucoCard.of(TWO, SPADES), TrucoCard.of(ACE, HEARTS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        TrucoCard opponentCard = TrucoCard.of(TWO, CLUBS);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(opponentCard);
+        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
     }
 }
