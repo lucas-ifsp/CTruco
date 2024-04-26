@@ -134,4 +134,7 @@ public class PauladaSecaBot {
         return CardToPlay.of(melhorCarta(build));
     }
 
+    public int aumentarAposta(GameIntel build) {
+        return 0;
+    }
 }
