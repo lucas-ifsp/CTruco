@@ -60,4 +60,16 @@ public class PauladaSecaBotTest {
         CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
     }
+
+    @Test
+    @DisplayName("Jogar ouros ou espadas na primeira se tiver")
+    void jogarOurosOuEspadaNaPrimeira() {
+        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, SPADES), TrucoCard.of(SEVEN, HEARTS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
+        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE,SPADES));
+    }
 }
