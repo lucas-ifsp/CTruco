@@ -135,8 +135,11 @@ public class PauladaSecaBot {
     }
 
     public int aumentarAposta(GameIntel build) {
+
         //verifica se a mão ainda ta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!build.getRoundResults().isEmpty() && temZap(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+        if (!build.getRoundResults().isEmpty() && temCopas(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
         return -1;
     }
 }
