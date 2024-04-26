@@ -8,6 +8,7 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.newton.dolensi.sabotabot.SabotaBot;
+import com.remotebot.RemoteBot;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.rossi.lopes.trucoguru.TrucoGuru;
@@ -24,6 +25,8 @@ import com.gustavo.contiero.lazybot.LazyBot;
 
 module bot.impl {
     requires bot.spi;
+    requires java.net.http;
+    requires com.google.gson;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -43,6 +46,9 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.remotebot;
+
+    opens com.remotebot to com.google.gson;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -67,5 +73,6 @@ module bot.impl {
             PaulistaBot,
             MarrecoBot,
             AddTheNewSoul,
-            LazyBot;
+            LazyBot,
+            RemoteBot;
 }
