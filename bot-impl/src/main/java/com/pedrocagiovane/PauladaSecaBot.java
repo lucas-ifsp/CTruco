@@ -79,6 +79,24 @@ public class PauladaSecaBot {
         return false;
     }
 
+    private Boolean temOuros(GameIntel build){
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.isOuros(build.getVira())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean temEspada(GameIntel build){
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.isEspadilha(build.getVira())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public CardToPlay escolherCarta(GameIntel build) {
 
         Integer qtdManilha = contManilha(build.getCards(),build.getVira());
@@ -102,6 +120,15 @@ public class PauladaSecaBot {
         // PRIMEIRA: joga melhor carta se não tiver manilha
         if(qtdManilha == 0){
             return CardToPlay.of(melhorCarta(build));
+        }
+
+        // PRIMEIRA: joga ouros ou espadas se tiver
+        if(temOuros(build) || temEspada(build)){
+            for (TrucoCard card : build.getCards()) {
+                if (card.isOuros(build.getVira()) || card.isEspadilha(build.getVira())) {
+                    return CardToPlay.of(card);
+                }
+            }
         }
 
         return CardToPlay.of(melhorCarta(build));
