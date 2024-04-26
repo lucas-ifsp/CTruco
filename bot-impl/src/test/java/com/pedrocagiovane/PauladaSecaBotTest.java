@@ -38,10 +38,21 @@ public class PauladaSecaBotTest {
 
     @Test
     @DisplayName("Aumenta aposta se tiver copas e ganhou a primeira")
-    void aumentaApostaSeTiverCopas() {
+    void aumentaApostaSeTiverCopasEGanharPrimeira() {
         maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(TWO, CLUBS));
         vira = TrucoCard.of(TWO, HEARTS);
-        roundResult = List.of();
+        roundResult = List.of(GameIntel.RoundResult.WON);
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
+        int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
+        assertThat(resultado).isOne();
+    }
+    @Test
+    @DisplayName("Aumenta aposta se tiver zap e ganhou a primeira")
+    void aumentarApostaSeTiverZapEGanharPrimeira() {
+        maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(ACE, HEARTS), TrucoCard.of(THREE, CLUBS));
+        vira = TrucoCard.of(TWO, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.WON);
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
         int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
@@ -61,17 +72,6 @@ public class PauladaSecaBotTest {
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
     }
 
-    @Test
-    @DisplayName("Aumenta aposta se tiver zap e ganhou a primeira")
-    void aumentarApostaSeTiverZapEGanharPrimeira() {
-        maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(ACE, HEARTS), TrucoCard.of(THREE, CLUBS));
-        vira = TrucoCard.of(TWO, SPADES);
-        roundResult = List.of(GameIntel.RoundResult.WON);
-        cartas = List.of();
-        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
-        int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
-        assertThat(resultado).isOne();
-    }
 
     @Test
     @DisplayName("Jogar melhor carta se não tiver manilha")
