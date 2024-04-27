@@ -59,9 +59,9 @@ public class PauladaSecaBotTest {
         assertThat(resultado).isOne();
     }
     @Test
-    @DisplayName("Truca na primeira se tiver zap e copas")
-    void trucaNaPrimeiraComCasalMaior() {
-        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, CLUBS), TrucoCard.of(ACE, HEARTS));
+    @DisplayName("Truca na primeira se tiver casal menor")
+    void trucaNaPrimeiraComCasalMenor() {
+        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(ACE, SPADES));
         vira = TrucoCard.of(KING, SPADES);
         roundResult = List.of();
         cartas = List.of();

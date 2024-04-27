@@ -21,6 +21,20 @@ public class PauladaSecaBot {
         return false;
     }
 
+    private boolean temCasalMenor(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        int contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isEspadilha(vira) || card.isOuros(vira)){
+                contador ++;
+            }
+        }
+        if(contador == 2){
+            return true;
+        }
+        return false;
+    }
+
     private TrucoCard piorCarta(GameIntel build) {
         Integer menor = 1000;
         TrucoCard cartaMenor = null;
@@ -145,8 +159,8 @@ public class PauladaSecaBot {
 
     public int trucoRato(GameIntel build) {
 
-        //verifica se a mão esta na primeira e se tem casal maior
-        if (build.getRoundResults().isEmpty() && temCasalMaior(build)) return 1;
+        //verifica se a mão esta na primeira e se tem casal menor
+        if (build.getRoundResults().isEmpty() && temCasalMenor(build)) return 1;
 
         return -1;
     }
