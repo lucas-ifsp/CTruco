@@ -145,6 +145,9 @@ public class PauladaSecaBot {
 
     public int trucoRato(GameIntel build) {
 
-        return 0;
+        //verifica se a mão esta na primeira e se tem casal maior
+        if (build.getRoundResults().isEmpty() && temCasalMaior(build)) return 1;
+
+        return -1;
     }
 }
