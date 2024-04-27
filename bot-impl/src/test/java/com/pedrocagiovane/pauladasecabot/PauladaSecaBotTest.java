@@ -1,8 +1,9 @@
-package com.pedrocagiovane;
+package com.pedrocagiovane.pauladasecabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.pedrocagiovane.pauladasecabot.PauladaSecaBot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class PauladaSecaBotTest {
         roundResult = List.of();
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
-        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE,SPADES));
     }
 
@@ -79,7 +80,7 @@ public class PauladaSecaBotTest {
         cartas = List.of();
         TrucoCard opponentCard = TrucoCard.of(TWO, CLUBS);
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(opponentCard);
-        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
     }
 
@@ -92,7 +93,7 @@ public class PauladaSecaBotTest {
         roundResult = List.of();
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
-        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
     }
 
@@ -104,7 +105,7 @@ public class PauladaSecaBotTest {
         roundResult = List.of();
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
-        CardToPlay cardToPlay = pauladaSecaBot.escolherCarta(stepBuilder.build());
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE,SPADES));
     }
 }

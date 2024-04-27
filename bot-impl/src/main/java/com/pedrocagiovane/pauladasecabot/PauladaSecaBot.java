@@ -1,12 +1,13 @@
-package com.pedrocagiovane;
+package com.pedrocagiovane.pauladasecabot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
 
-public class PauladaSecaBot {
+public class PauladaSecaBot implements BotServiceProvider {
     private boolean temCasalMaior(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         int contador = 0;
@@ -111,8 +112,35 @@ public class PauladaSecaBot {
         return false;
     }
 
-    public CardToPlay escolherCarta(GameIntel build) {
+    public int aumentarAposta(GameIntel build) {
 
+        //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
+        if (!build.getRoundResults().isEmpty() && temZap(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+        if (!build.getRoundResults().isEmpty() && temCopas(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
+        return -1;
+    }
+
+    public int trucoRato(GameIntel build) {
+
+        //verifica se a mão esta na primeira e se tem casal menor
+        if (build.getRoundResults().isEmpty() && temCasalMenor(build)) return 1;
+
+        return -1;
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public boolean decideIfRaises(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public CardToPlay chooseCard(GameIntel build) {
         Integer qtdManilha = contManilha(build.getCards(),build.getVira());
 
         // PRIMEIRA: joga pior carta se tiver casal maior
@@ -148,20 +176,8 @@ public class PauladaSecaBot {
         return CardToPlay.of(melhorCarta(build));
     }
 
-    public int aumentarAposta(GameIntel build) {
-
-        //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
-        if (!build.getRoundResults().isEmpty() && temZap(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
-        if (!build.getRoundResults().isEmpty() && temCopas(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
-
-        return -1;
-    }
-
-    public int trucoRato(GameIntel build) {
-
-        //verifica se a mão esta na primeira e se tem casal menor
-        if (build.getRoundResults().isEmpty() && temCasalMenor(build)) return 1;
-
-        return -1;
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
     }
 }
