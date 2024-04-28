@@ -123,4 +123,18 @@ public class PauladaSecaBotTest {
 
     }
 
+    @Test
+    @DisplayName("Matar a manilha do pato")
+    void matarManilha(){
+        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, HEARTS), TrucoCard.of(SEVEN, HEARTS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(ACE, SPADES);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0).opponentCard(maoOponente);
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE, HEARTS));
+
+    }
+
 }
