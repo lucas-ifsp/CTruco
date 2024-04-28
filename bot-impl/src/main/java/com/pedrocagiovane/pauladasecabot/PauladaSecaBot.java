@@ -123,6 +123,7 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
         return maioresCartas;
     }
+
     private TrucoCard matarCartaComMenor(GameIntel build) {
         TrucoCard trucoCard = null;
         List<TrucoCard> maioresCartas = melhoresCartas(build);
@@ -137,6 +138,32 @@ public class PauladaSecaBot implements BotServiceProvider {
             trucoCard = piorCarta(build);
         }
         return trucoCard;
+    }
+
+    private List<TrucoCard> manilhasOponente(GameIntel build){
+        List<TrucoCard> manilhas = new ArrayList<>();
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.isManilha(build.getVira())) {
+                if (carta.relativeValue(build.getVira()) > build.getOpponentCard().get().relativeValue(build.getVira())){
+                    manilhas.add(carta);
+                }
+            }
+        }
+        return manilhas;
+    }
+
+    private TrucoCard matarManilha(GameIntel build) {
+        List<TrucoCard> manilhas = manilhasOponente(build);
+        TrucoCard cardPlay = piorCarta(build);
+        if (!manilhas.isEmpty()) {
+            cardPlay = manilhas.get(0);
+            for (TrucoCard manilha : manilhas) {
+                if (manilha.relativeValue(build.getVira()) < cardPlay.relativeValue(build.getVira())){
+                    cardPlay = manilha;
+                }
+            }
+        }
+        return cardPlay;
     }
 
     @Override
@@ -188,6 +215,9 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
         //jogar depois do pato
         if (build.getOpponentCard().isPresent()) {
+            if (build.getOpponentCard().get().isManilha(build.getVira())) {
+                return CardToPlay.of(matarManilha(build));
+            }
             return CardToPlay.of(matarCartaComMenor(build));
         }
         return CardToPlay.of(melhorCarta(build));
