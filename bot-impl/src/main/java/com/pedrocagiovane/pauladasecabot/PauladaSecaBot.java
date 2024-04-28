@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public class PauladaSecaBot implements BotServiceProvider {
+
     private boolean temCasalMaior(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         int contador = 0;
@@ -112,23 +113,6 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
-    public int aumentarAposta(GameIntel build) {
-
-        //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
-        if (!build.getRoundResults().isEmpty() && temZap(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
-        if (!build.getRoundResults().isEmpty() && temCopas(build) && build.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
-
-        return -1;
-    }
-
-    public int trucoRato(GameIntel build) {
-
-        //verifica se a mão esta na primeira e se tem casal menor
-        if (build.getRoundResults().isEmpty() && temCasalMenor(build)) return 1;
-
-        return -1;
-    }
-
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -136,6 +120,10 @@ public class PauladaSecaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        //verifica se a mão esta na primeira e se tem casal menor
+        if (intel.getRoundResults().isEmpty() && temCasalMenor(intel)) return true;
+
         return false;
     }
 
@@ -178,6 +166,12 @@ public class PauladaSecaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+
+        //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
+        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
+        if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
+        return -1;
     }
 }

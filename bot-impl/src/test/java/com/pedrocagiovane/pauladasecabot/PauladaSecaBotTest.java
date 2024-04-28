@@ -45,7 +45,7 @@ public class PauladaSecaBotTest {
         roundResult = List.of(GameIntel.RoundResult.WON);
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
-        int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
+        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
         assertThat(resultado).isOne();
     }
     @Test
@@ -56,7 +56,7 @@ public class PauladaSecaBotTest {
         roundResult = List.of(GameIntel.RoundResult.WON);
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
-        int resultado = pauladaSecaBot.aumentarAposta(stepBuilder.build());
+        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
         assertThat(resultado).isOne();
     }
     @Test
@@ -67,8 +67,8 @@ public class PauladaSecaBotTest {
         roundResult = List.of();
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
-        int resultado = pauladaSecaBot.trucoRato(stepBuilder.build());
-        assertThat(resultado).isOne();
+        Boolean resultado = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(resultado);
     }
 
     @Test
@@ -108,4 +108,5 @@ public class PauladaSecaBotTest {
         CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE,SPADES));
     }
+
 }
