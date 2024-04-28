@@ -4,6 +4,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -113,6 +114,31 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
+    private List<TrucoCard> melhoresCartas(GameIntel build){
+        List<TrucoCard> maioresCartas = new ArrayList<>();
+        for (TrucoCard trucoCard : build.getCards()) {
+            if (trucoCard.getRank().value() > build.getOpponentCard().get().getRank().value()) {
+                maioresCartas.add(trucoCard);
+            }
+        }
+        return maioresCartas;
+    }
+    private TrucoCard matarCartaComMenor(GameIntel build) {
+        TrucoCard trucoCard = null;
+        List<TrucoCard> maioresCartas = melhoresCartas(build);
+        if (!maioresCartas.isEmpty()) {
+            trucoCard = maioresCartas.get(0);
+            for (TrucoCard carta : maioresCartas) {
+                if (carta.getRank().value() < trucoCard.getRank().value()) {
+                    trucoCard = carta;
+                }
+            }
+        } else {
+            trucoCard = piorCarta(build);
+        }
+        return trucoCard;
+    }
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -160,7 +186,10 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
         }
-
+        //jogar depois do pato
+        if (build.getOpponentCard().isPresent()) {
+            return CardToPlay.of(matarCartaComMenor(build));
+        }
         return CardToPlay.of(melhorCarta(build));
     }
 
