@@ -109,4 +109,18 @@ public class PauladaSecaBotTest {
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE,SPADES));
     }
 
+    @Test
+    @DisplayName("Matar a carta do pato com a menor carta nossa")
+    void matarComMaisFraca(){
+        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, HEARTS), TrucoCard.of(SEVEN, HEARTS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(FOUR, SPADES);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0).opponentCard(maoOponente);
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, SPADES));
+
+    }
+
 }
