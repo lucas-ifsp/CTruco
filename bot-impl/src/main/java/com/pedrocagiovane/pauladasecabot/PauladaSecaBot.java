@@ -180,6 +180,11 @@ public class PauladaSecaBot implements BotServiceProvider {
         // SEGUNDA: se tiver casal maior pede truco
         if (!intel.getRoundResults().isEmpty() && temCasalMaior(intel)) return true;
 
+        //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
+            if( contManilha(intel.getCards(), intel.getVira()) > 0) return true;
+        }
+
         return false;
     }
 
