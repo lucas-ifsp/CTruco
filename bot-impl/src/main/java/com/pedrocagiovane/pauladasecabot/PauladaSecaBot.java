@@ -205,7 +205,7 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         //TERCEIRA: pede truco se tiver dois ou três
         if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
-            if( temTres(intel) || temDois(intel)) return true;
+            if( temTres(intel) || temDois(intel) || contManilha(intel.getCards(), intel.getVira()) > 0) return true;
         }
 
         return false;
