@@ -174,8 +174,11 @@ public class PauladaSecaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
 
-        //verifica se a mão esta na primeira e se tem casal menor
+        // PRIMEIRA: verifica se a mão esta na primeira e se tem casal menor
         if (intel.getRoundResults().isEmpty() && temCasalMenor(intel)) return true;
+
+        // SEGUNDA: se tiver casal maior pede truco
+        if (!intel.getRoundResults().isEmpty() && temCasalMaior(intel)) return true;
 
         return false;
     }
@@ -213,6 +216,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
         }
+
         //jogar depois do pato
         if (build.getOpponentCard().isPresent()) {
             if (build.getOpponentCard().get().isManilha(build.getVira())) {
