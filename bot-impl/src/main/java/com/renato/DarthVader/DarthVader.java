@@ -66,9 +66,6 @@ public class DarthVader implements BotServiceProvider {
                 smallestCard = card;
             }
         }
-        
         return smallestCard;
     }
-
-
 }
