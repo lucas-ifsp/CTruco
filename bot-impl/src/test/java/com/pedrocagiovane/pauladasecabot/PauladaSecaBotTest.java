@@ -124,14 +124,14 @@ public class PauladaSecaBotTest {
     @Test
     @DisplayName("Matar a carta do pato com a menor carta nossa")
     void matarComMaisFraca(){
-        maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(ACE, HEARTS), TrucoCard.of(SEVEN, HEARTS));
+        maoPlayer = List.of( TrucoCard.of(KING, HEARTS),TrucoCard.of(ACE, HEARTS), TrucoCard.of(JACK, HEARTS));
         vira = TrucoCard.of(KING, SPADES);
         roundResult = List.of();
         cartas = List.of();
         TrucoCard maoOponente = TrucoCard.of(FOUR, SPADES);
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0).opponentCard(maoOponente);
         CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
-        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FIVE, SPADES));
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(JACK, HEARTS));
     }
 
     @Test
@@ -169,5 +169,19 @@ public class PauladaSecaBotTest {
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
         boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
         assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("Pede truco na terceira se fez a primeira e consegue amarrar a terceira")
+    void trucoTerceiraSeTiverManilha() {
+        maoPlayer = List.of(TrucoCard.of(ACE,HEARTS), TrucoCard.of(JACK, DIAMONDS), TrucoCard.of(SEVEN, HEARTS));
+        vira = TrucoCard.of(JACK, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(ACE, SPADES);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(maoOponente);
+        boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(result).isTrue();
+
     }
 }
