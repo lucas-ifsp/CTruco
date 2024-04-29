@@ -56,4 +56,19 @@ public class DarthVader implements BotServiceProvider {
         return count;
     }
 
+    public TrucoCard getSmallerCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+
+        TrucoCard smallestCard = null;
+
+        for (TrucoCard card : cards) {
+            if (smallestCard == null || card.compareValueTo(smallestCard, intel.getVira()) < 0) {
+                smallestCard = card;
+            }
+        }
+        
+        return smallestCard;
+    }
+
+
 }
