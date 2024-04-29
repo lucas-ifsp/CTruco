@@ -166,6 +166,24 @@ public class PauladaSecaBot implements BotServiceProvider {
         return cardPlay;
     }
 
+    private Boolean temTres(GameIntel build){
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.getRank().value() == 10) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean temDois(GameIntel build){
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.getRank().value() == 9) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -183,6 +201,11 @@ public class PauladaSecaBot implements BotServiceProvider {
         //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
         if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
             if( contManilha(intel.getCards(), intel.getVira()) > 0) return true;
+        }
+
+        //TERCEIRA: pede truco se tiver dois ou três
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
+            if( temTres(intel) || temDois(intel)) return true;
         }
 
         return false;
