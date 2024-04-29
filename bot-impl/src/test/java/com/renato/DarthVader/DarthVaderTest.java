@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class DarthVaderTest {
@@ -25,7 +26,6 @@ public class DarthVaderTest {
 
     @Nested
     @DisplayName("Tests for the decideIfRaises method")
-
     class DecideIfRaisesMethod {
         @DisplayName("Should not accept if you don't have any manilha and don't have any high cards")
         @Test
@@ -47,6 +47,33 @@ public class DarthVaderTest {
 
             assertFalse(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
         }
+    }
+
+    @Nested
+    @DisplayName("Tests to choose a certain card")
+    class ChooseCardMethod {
+
+        @DisplayName("Should return the lowest card")
+        @Test
+        public void shouldReturnTheLowestCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(5);
+
+            assertEquals(TrucoCard.of(CardRank.FIVE,CardSuit.SPADES),darthVader.getSmallerCard(stepBuilder.build()));
+        }
+
     }
 
 
