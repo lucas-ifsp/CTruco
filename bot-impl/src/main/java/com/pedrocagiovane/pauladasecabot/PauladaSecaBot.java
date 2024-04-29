@@ -184,6 +184,9 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
+
+
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -207,6 +210,15 @@ public class PauladaSecaBot implements BotServiceProvider {
         if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
             if( temTres(intel) || temDois(intel) || contManilha(intel.getCards(), intel.getVira()) > 0) return true;
         }
+
+        //TERCEIRA: pede truco se consegue amarrar a terceira
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
+            for (TrucoCard carta : intel.getCards()){
+                if(carta.getRank().equals(intel.getOpponentCard().get().getRank())) return true;
+            }
+
+        }
+
 
         return false;
     }
