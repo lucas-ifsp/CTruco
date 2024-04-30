@@ -281,6 +281,38 @@ public class DarthVaderTest {
 
     }
 
+    @Nested
+    @DisplayName("Tests for choose better card than opponent")
+
+    class testChooseBetterCardThanOpponent
+    {
+        @Test
+        @DisplayName("Should be return the smallest card that is higher than the opponent's card")
+        public void shouldReturnTheSmallestCardThatIsHigherThanTheOpponentsCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
+        }
+
+    }
+
+
 
 
 }
