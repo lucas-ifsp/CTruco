@@ -134,7 +134,7 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 11).
                     opponentScore(5);
 
-            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.SPADES),darthVader.getSmallerCard(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.SPADES),darthVader.getStrongCard(stepBuilder.build()));
         }
     }
 
