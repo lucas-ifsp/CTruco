@@ -186,9 +186,9 @@ public class DarthVaderTest {
     class checkOpponentsCard
     {
 
-        @DisplayName("Should return true if the opponent's card is bad")
+        @DisplayName("Should return GOOD if the opponent's card is good")
         @Test
-        public void shouldReturnTrueIfTheOpponentsCardIsBad()
+        public void shouldReturnGOODIfTheOpponentsCardIsGood()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
@@ -208,6 +208,31 @@ public class DarthVaderTest {
 
             assertEquals(DarthVader.OpponentCardClassification.GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
+
+        @DisplayName("Should return Average if the opponent's card is Average")
+        @Test
+        public void shouldReturnAverageIfTheOpponentsCardIsAverage()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(DarthVader.OpponentCardClassification.AVERAGE,darthVader.classifyOpponentCard(stepBuilder.build()));
+        }
+
+
     }
 
 
