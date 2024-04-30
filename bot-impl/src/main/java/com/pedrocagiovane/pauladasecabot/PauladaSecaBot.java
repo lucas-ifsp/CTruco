@@ -135,18 +135,18 @@ public class PauladaSecaBot implements BotServiceProvider {
         return maioresCartas;
     }
 
-    private TrucoCard matarCartaComMenor(GameIntel build, TrucoCard card) {
-        CardRank oponentCardRank = card.getRank();
+    private TrucoCard matarCartaComMenor(GameIntel build) {
         TrucoCard trucoCard = null;
-        if(piorCarta(build).getRank().value() > oponentCardRank.value()){
+        List<TrucoCard> maioresCartas = melhoresCartas(build);
+        if (!maioresCartas.isEmpty()) {
+            trucoCard = maioresCartas.get(0);
+            for (TrucoCard carta : maioresCartas) {
+                if (carta.getRank().value() < trucoCard.getRank().value()) {
+                    trucoCard = carta;
+                }
+            }
+        } else {
             trucoCard = piorCarta(build);
-            return trucoCard;
-        } else if(cartaMedia(build).getRank().value() > oponentCardRank.value()){
-            trucoCard = cartaMedia(build);
-            return trucoCard;
-        } else if(melhorCarta(build).getRank().value() > oponentCardRank.value()){
-            trucoCard = melhorCarta(build);
-            return trucoCard;
         }
         return trucoCard;
     }
@@ -223,13 +223,16 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
 
         //TERCEIRA: pede truco se consegue amarrar a terceira
-        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
-            for (TrucoCard carta : intel.getCards()){
-                if(carta.getRank().equals(intel.getOpponentCard().get().getRank())) return true;
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2) {
+            if (intel.getOpponentCard().isPresent()) {
+                TrucoCard opponentCard = intel.getOpponentCard().get();
+                for (TrucoCard carta : intel.getCards()) {
+                    if (carta.getRank().equals(opponentCard.getRank())) {
+                        return true;
+                    }
+                }
             }
-
         }
-
 
         return false;
     }
@@ -280,8 +283,9 @@ public class PauladaSecaBot implements BotServiceProvider {
                 return CardToPlay.of(matarManilha(build));
             }
             // mata carta do oponente com a menor que tiver se possivel
-            return CardToPlay.of(matarCartaComMenor(build, build.getOpponentCard().get()));
+            return CardToPlay.of(matarCartaComMenor(build));
         }
+
         return CardToPlay.of(melhorCarta(build));
     }
 
