@@ -6,6 +6,7 @@ import com.bueno.spi.model.GameIntel;
 public class PassiveChoosing implements Choosing {
     @Override
     public CardToPlay choose(GameIntel intel) {
+        // TESTE
         return null;
     }
 }
