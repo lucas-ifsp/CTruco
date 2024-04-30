@@ -104,5 +104,5 @@ public class DarthVader implements BotServiceProvider {
 
         return mediumCard;
     }
-
+    
 }
