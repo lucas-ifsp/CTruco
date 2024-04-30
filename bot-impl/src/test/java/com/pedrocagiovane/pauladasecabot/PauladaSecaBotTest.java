@@ -159,6 +159,7 @@ public class PauladaSecaBotTest {
         assertThat(result).isTrue();
     }
 
+    //REVISAR
     @Test
     @DisplayName("Pede truco na terceira se tiver dois ou três")
     void trucoTerceiraSeTiverTresOuDois() {
@@ -185,13 +186,39 @@ public class PauladaSecaBotTest {
     }
 
     @Test
-    @DisplayName("BLEFA NO MARRECO: Pede truco na terceira se fez a carta do oponente é um valete ou menor")
+    @DisplayName("BLEFA NO MARRECO: Pede truco na terceira se fez a carta do oponente é um dama ou menor")
     void trucoTerceiraSeOponentCardForRuim() {
         maoPlayer = List.of(TrucoCard.of(QUEEN,HEARTS), TrucoCard.of(FIVE, DIAMONDS), TrucoCard.of(SEVEN, HEARTS));
         vira = TrucoCard.of(JACK, SPADES);
         roundResult = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
         cartas = List.of();
-        TrucoCard maoOponente = TrucoCard.of(JACK, DIAMONDS);
+        TrucoCard maoOponente = TrucoCard.of(QUEEN, DIAMONDS);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(maoOponente);
+        boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("trucar na terceira se a carta for maior e não for manilha e tiver ganho a primeira")
+    void trucoTerceiraSeCartaMaiorQueOponente() {
+        maoPlayer = List.of(TrucoCard.of(QUEEN,HEARTS), TrucoCard.of(FIVE, DIAMONDS), TrucoCard.of(ACE, HEARTS));
+        vira = TrucoCard.of(FIVE, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(KING, DIAMONDS);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(maoOponente);
+        boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("trucar na terceira se a carta for maior e for manilha")
+    void trucoTerceiraSeCartaMaiorQueManilhaOponente() {
+        maoPlayer = List.of(TrucoCard.of(QUEEN,HEARTS), TrucoCard.of(FIVE, DIAMONDS), TrucoCard.of(ACE, CLUBS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(ACE, DIAMONDS);
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(maoOponente);
         boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
         assertThat(result).isTrue();
