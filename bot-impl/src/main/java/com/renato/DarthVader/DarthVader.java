@@ -49,6 +49,11 @@ public class DarthVader implements BotServiceProvider {
         return rank == CardRank.THREE || rank == CardRank.TWO || rank == CardRank.ACE;
     }
 
+    public boolean isAverageCard(TrucoCard card) {
+        CardRank rank = card.getRank();
+        return rank == CardRank.KING || rank == CardRank.JACK || rank == CardRank.QUEEN;
+    }
+
     public int countManilhasAndHighCards(GameIntel intel) {
         int count = 0;
         TrucoCard vira = intel.getVira();
@@ -119,6 +124,8 @@ public class DarthVader implements BotServiceProvider {
         if(isHighCard(opponentCard))
         {
             return OpponentCardClassification.GOOD;
+        }else if (isAverageCard(opponentCard)) {
+            return OpponentCardClassification.AVERAGE;
         }
         return OpponentCardClassification.BAD;
     }
