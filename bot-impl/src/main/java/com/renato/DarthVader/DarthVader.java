@@ -126,13 +126,20 @@ public class DarthVader implements BotServiceProvider {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(()->new NoSuchElementException("Card not found"));
         TrucoCard vira = intel.getVira();
 
-        if(isHighCard(opponentCard))
+        if(opponentCard.isManilha(vira))
+        {
+            return OpponentCardClassification.VERY_GOOD;
+        }
+        else if(isHighCard(opponentCard))
         {
             return OpponentCardClassification.GOOD;
-        }else if (isAverageCard(opponentCard)) {
+        }
+        else if (isAverageCard(opponentCard))
+        {
             return OpponentCardClassification.AVERAGE;
         }
-        else {
+        else
+        {
             return OpponentCardClassification.BAD;
         }
     }
