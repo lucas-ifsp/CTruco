@@ -6,8 +6,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class DarthVader implements BotServiceProvider {
 
@@ -39,6 +38,31 @@ public class DarthVader implements BotServiceProvider {
 
     public TrucoCard chooseTheMinorCard(GameIntel intel) {
         return null;
+    }
+
+    public Map<TrucoCard, CardClassification> classifyMyCards(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        Map<TrucoCard, CardClassification> classificationsMap = new HashMap<>();
+
+        for (TrucoCard card : cards) {
+            CardClassification classification;
+
+            if (card.isManilha(vira)) {
+                classification = CardClassification.VERY_GOOD;
+            } else if (isHighCard(card)) {
+                classification = CardClassification.GOOD;
+            } else if (isAverageCard(card)) {
+                classification = CardClassification.AVERAGE;
+            } else {
+                classification = CardClassification.BAD;
+            }
+
+            classificationsMap.put(card, classification);
+        }
+
+        return classificationsMap;
     }
 
     public enum CardClassification {
