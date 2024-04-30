@@ -37,7 +37,7 @@ public class DarthVader implements BotServiceProvider {
         return 0;
     }
 
-    public enum OpponentCardClassification {
+    public enum CardClassification {
         VERY_GOOD,
         GOOD,
         AVERAGE,
@@ -122,25 +122,25 @@ public class DarthVader implements BotServiceProvider {
         return mediumCard;
     }
 
-    public OpponentCardClassification classifyOpponentCard(GameIntel intel) {
+    public CardClassification classifyOpponentCard(GameIntel intel) {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(()->new NoSuchElementException("Card not found"));
         TrucoCard vira = intel.getVira();
 
         if(opponentCard.isManilha(vira))
         {
-            return OpponentCardClassification.VERY_GOOD;
+            return CardClassification.VERY_GOOD;
         }
         else if(isHighCard(opponentCard))
         {
-            return OpponentCardClassification.GOOD;
+            return CardClassification.GOOD;
         }
         else if (isAverageCard(opponentCard))
         {
-            return OpponentCardClassification.AVERAGE;
+            return CardClassification.AVERAGE;
         }
         else
         {
-            return OpponentCardClassification.BAD;
+            return CardClassification.BAD;
         }
     }
 

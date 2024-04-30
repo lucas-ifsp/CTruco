@@ -206,7 +206,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(DarthVader.OpponentCardClassification.GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
+            assertEquals(DarthVader.CardClassification.GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
 
         @DisplayName("Should return Average if the opponent's card is Average")
@@ -229,7 +229,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(DarthVader.OpponentCardClassification.AVERAGE,darthVader.classifyOpponentCard(stepBuilder.build()));
+            assertEquals(DarthVader.CardClassification.AVERAGE,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
 
         @DisplayName("Should return BAD if the opponent's card is bad")
@@ -252,7 +252,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(DarthVader.OpponentCardClassification.BAD,darthVader.classifyOpponentCard(stepBuilder.build()));
+            assertEquals(DarthVader.CardClassification.BAD,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
 
         @DisplayName("Should return VERY_GOOD if the opponent's card is Manilha")
@@ -275,7 +275,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(DarthVader.OpponentCardClassification.VERY_GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
+            assertEquals(DarthVader.CardClassification.VERY_GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
 
 
