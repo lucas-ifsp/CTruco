@@ -80,6 +80,10 @@ public class DarthVader implements BotServiceProvider {
             if(strongCard == null || card.compareValueTo(strongCard, intel.getVira()) > 0) {
                 strongCard = card;
             }
+            else if(card.compareValueTo(strongCard,intel.getVira()) == 0 && card.getSuit().ordinal() > strongCard.getSuit().ordinal())
+            {
+                strongCard = card;
+            }
         }
         return strongCard;
     }
