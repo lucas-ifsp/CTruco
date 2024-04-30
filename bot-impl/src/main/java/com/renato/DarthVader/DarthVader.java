@@ -37,6 +37,10 @@ public class DarthVader implements BotServiceProvider {
         return 0;
     }
 
+    public TrucoCard chooseTheMinorCard(GameIntel intel) {
+        return null;
+    }
+
     public enum CardClassification {
         VERY_GOOD,
         GOOD,
