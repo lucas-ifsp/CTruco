@@ -206,7 +206,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertTrue(darthVader.verifyOpponentCard(stepBuilder.build()));
+            assertEquals(DarthVader.OpponentCardClassification.GOOD,darthVader.classifyOpponentCard(stepBuilder.build()));
         }
     }
 
