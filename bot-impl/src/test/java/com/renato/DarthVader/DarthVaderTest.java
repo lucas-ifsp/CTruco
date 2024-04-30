@@ -9,7 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -317,9 +319,9 @@ public class DarthVaderTest {
     class testClassifyMyCards{
 
 
-        @DisplayName("Should return a vector with all the classifications of my cards")
+        @DisplayName("Should return a map with all the classifications of my cards")
         @Test
-        public void shouldReturnaVectorWithAllTheClassificationsOfMyCards()
+        public void shouldReturnaMapWithAllTheClassificationsOfMyCards()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
@@ -337,11 +339,11 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            DarthVader.CardClassification[] expectedClassifications = {
-                    DarthVader.CardClassification.GOOD,
-                    DarthVader.CardClassification.GOOD,
-                    DarthVader.CardClassification.VERY_GOOD
-            };
+            Map<TrucoCard, DarthVader.CardClassification> expectedClassifications = new HashMap<>();
+            expectedClassifications.put(trucoCards.get(0), DarthVader.CardClassification.GOOD);
+            expectedClassifications.put(trucoCards.get(1), DarthVader.CardClassification.GOOD);
+            expectedClassifications.put(trucoCards.get(2), DarthVader.CardClassification.VERY_GOOD);
+
 
             assertEquals(expectedClassifications,darthVader.classifyMyCards(stepBuilder.build()));
 
