@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -311,6 +312,30 @@ public class DarthVaderTest {
 
             assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should throw an exception if the opponent's card was not set")
+        public void shouldThrowAnExceptionIfTheOpponentsCardWasNotSet()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+
+            assertThrows(NoSuchElementException.class, () -> darthVader.chooseTheMinorCard(stepBuilder.build()));
+        }
+
 
     }
 
