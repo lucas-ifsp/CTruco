@@ -234,6 +234,18 @@ public class PauladaSecaBot implements BotServiceProvider {
             }
         }
 
+        //TERCEIRA: se a carta do oponente for uma valete ou menor(sem ser manilha), TRUCA no safado!!
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2) {
+            if (intel.getOpponentCard().isPresent()) {
+                TrucoCard opponentCard = intel.getOpponentCard().get();
+                if(!opponentCard.isManilha(intel.getVira())){
+                    if(opponentCard.getRank().value() <= 6){
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
