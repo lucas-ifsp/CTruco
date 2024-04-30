@@ -7,6 +7,7 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class DarthVader implements BotServiceProvider {
 
@@ -36,6 +37,12 @@ public class DarthVader implements BotServiceProvider {
         return 0;
     }
 
+    public enum OpponentCardClassification {
+        VERY_GOOD,
+        GOOD,
+        AVERAGE,
+        BAD
+    }
 
     public boolean isHighCard(TrucoCard card) {
         CardRank rank = card.getRank();
@@ -104,5 +111,16 @@ public class DarthVader implements BotServiceProvider {
 
         return mediumCard;
     }
-    
+
+    public OpponentCardClassification classifyOpponentCard(GameIntel intel) {
+        TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(()->new NoSuchElementException("Card not found"));
+        TrucoCard vira = intel.getVira();
+
+        if(isHighCard(opponentCard))
+        {
+            return OpponentCardClassification.GOOD;
+        }
+        return OpponentCardClassification.BAD;
+    }
+
 }
