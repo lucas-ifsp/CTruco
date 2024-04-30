@@ -125,7 +125,7 @@ public class PauladaSecaBotTest {
     @DisplayName("Matar a carta do pato com a menor carta nossa")
     void matarComMaisFraca(){
         maoPlayer = List.of( TrucoCard.of(KING, HEARTS),TrucoCard.of(ACE, HEARTS), TrucoCard.of(JACK, HEARTS));
-        vira = TrucoCard.of(KING, SPADES);
+        vira = TrucoCard.of(SEVEN, SPADES);
         roundResult = List.of();
         cartas = List.of();
         TrucoCard maoOponente = TrucoCard.of(FOUR, SPADES);

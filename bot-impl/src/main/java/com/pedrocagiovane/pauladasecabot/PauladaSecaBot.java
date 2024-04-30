@@ -1,4 +1,5 @@
 package com.pedrocagiovane.pauladasecabot;
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -70,6 +71,16 @@ public class PauladaSecaBot implements BotServiceProvider {
         return cartaMaior;
     }
 
+    private TrucoCard cartaMedia(GameIntel build) {
+        TrucoCard cartaMedia = null;
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.getRank().value() != melhorCarta(build).getRank().value() && carta.getRank().value() != piorCarta(build).getRank().value()) {
+                cartaMedia = carta;
+            }
+        }
+        return cartaMedia;
+    }
+
     private int contManilha(List<TrucoCard> cartas, TrucoCard vira){
         int cont = 0;
         for(TrucoCard card : cartas){
@@ -124,18 +135,18 @@ public class PauladaSecaBot implements BotServiceProvider {
         return maioresCartas;
     }
 
-    private TrucoCard matarCartaComMenor(GameIntel build) {
+    private TrucoCard matarCartaComMenor(GameIntel build, TrucoCard card) {
+        CardRank oponentCardRank = card.getRank();
         TrucoCard trucoCard = null;
-        List<TrucoCard> maioresCartas = melhoresCartas(build);
-        if (!maioresCartas.isEmpty()) {
-            trucoCard = maioresCartas.get(0);
-            for (TrucoCard carta : maioresCartas) {
-                if (carta.getRank().value() < trucoCard.getRank().value()) {
-                    trucoCard = carta;
-                }
-            }
-        } else {
+        if(piorCarta(build).getRank().value() > oponentCardRank.value()){
             trucoCard = piorCarta(build);
+            return trucoCard;
+        } else if(cartaMedia(build).getRank().value() > oponentCardRank.value()){
+            trucoCard = cartaMedia(build);
+            return trucoCard;
+        } else if(melhorCarta(build).getRank().value() > oponentCardRank.value()){
+            trucoCard = melhorCarta(build);
+            return trucoCard;
         }
         return trucoCard;
     }
@@ -232,37 +243,44 @@ public class PauladaSecaBot implements BotServiceProvider {
             return CardToPlay.of(piorCarta(build));
         }
 
-        // PRIMEIRA: tenta amarrar se tiver zap ou copas
-        if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
-            if (build.getRoundResults().isEmpty()) {
+        // JOGA PRIMEIRO
+        if (!build.getOpponentCard().isPresent()) {
+
+            // PRIMEIRA: joga melhor carta se não tiver manilha
+            if(qtdManilha == 0){
+                return CardToPlay.of(melhorCarta(build));
+            }
+
+            // PRIMEIRA: joga ouros ou espadas se tiver
+            if(temOuros(build) || temEspada(build)){
                 for (TrucoCard card : build.getCards()) {
-                    if (card.getRank() == build.getOpponentCard().get().getRank() && !card.isManilha(build.getVira())) {
+                    if (card.isOuros(build.getVira()) || card.isEspadilha(build.getVira())) {
                         return CardToPlay.of(card);
                     }
                 }
             }
         }
 
-        // PRIMEIRA: joga melhor carta se não tiver manilha
-        if(qtdManilha == 0){
-            return CardToPlay.of(melhorCarta(build));
-        }
+        // JOGA DEPOIS DO PATO
+        if (build.getOpponentCard().isPresent()) {
 
-        // PRIMEIRA: joga ouros ou espadas se tiver
-        if(temOuros(build) || temEspada(build)){
-            for (TrucoCard card : build.getCards()) {
-                if (card.isOuros(build.getVira()) || card.isEspadilha(build.getVira())) {
-                    return CardToPlay.of(card);
+            // PRIMEIRA: tenta amarrar se tiver zap ou copas
+            if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
+                if (build.getRoundResults().isEmpty()) {
+                    for (TrucoCard card : build.getCards()) {
+                        if (card.getRank() == build.getOpponentCard().get().getRank() && !card.isManilha(build.getVira())) {
+                            return CardToPlay.of(card);
+                        }
+                    }
                 }
             }
-        }
 
-        //jogar depois do pato
-        if (build.getOpponentCard().isPresent()) {
+            // mata a manilha oponente com uma manilha maior
             if (build.getOpponentCard().get().isManilha(build.getVira())) {
                 return CardToPlay.of(matarManilha(build));
             }
-            return CardToPlay.of(matarCartaComMenor(build));
+            // mata carta do oponente com a menor que tiver se possivel
+            return CardToPlay.of(matarCartaComMenor(build, build.getOpponentCard().get()));
         }
         return CardToPlay.of(melhorCarta(build));
     }
