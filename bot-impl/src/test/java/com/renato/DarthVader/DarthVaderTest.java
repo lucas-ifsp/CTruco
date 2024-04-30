@@ -157,6 +157,28 @@ public class DarthVaderTest {
 
             assertEquals(TrucoCard.of(CardRank.ACE,CardSuit.CLUBS),darthVader.getStrongCard(stepBuilder.build()));
         }
+
+        @DisplayName("Should return the medium card")
+        @Test
+        public void shouldReturnTheMediumCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+
+            assertEquals(TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),darthVader.getStrongCard(stepBuilder.build()));
+        }
+
     }
 
 
