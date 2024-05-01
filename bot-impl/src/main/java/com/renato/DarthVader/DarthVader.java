@@ -120,6 +120,16 @@ public class DarthVader implements BotServiceProvider {
         return classificationsMap;
     }
 
+    public int getNumberManilhas(GameIntel intel) {
+        int manilhas = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                manilhas++;
+            }
+        }
+        return manilhas;
+    }
+
     public enum CardClassification {
         VERY_GOOD,
         GOOD,
