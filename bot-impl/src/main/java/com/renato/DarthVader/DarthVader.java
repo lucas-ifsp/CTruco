@@ -52,6 +52,10 @@ public class DarthVader implements BotServiceProvider {
                 if (card.compareValueTo(opponentCard, intel.getVira()) > 0) {
                     return card;
                 }
+                else
+                {
+                    return getSmallerCard(intel);
+                }
             }
         }
 
