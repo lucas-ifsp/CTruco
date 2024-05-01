@@ -203,7 +203,13 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),darthVader.getStrongCardwithTheLowestSuit(stepBuilder.build()));
         }
 
+    }
 
+    @Nested
+    @DisplayName("Tests to check the shackles")
+
+    class checkShackles
+    {
         @DisplayName("Should return the weakest shackle if I have two shackles")
         @Test
         public void shouldReturnTheWeakestShackleIfIhaveTwoShackles()
@@ -246,8 +252,29 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.SPADES),darthVader.getTheSmallestManilha(stepBuilder.build()));
         }
 
+        @DisplayName("Should return the number of shackles I have")
+        @Test
+        public void shouldReturnTheNumberOfShacklesIHave()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(5);
+
+            assertEquals(1,darthVader.getNumberManilhas(stepBuilder.build()));
+        }
 
     }
+
 
     @Nested
     @DisplayName("Tests to check if the opponent's card is bad")
