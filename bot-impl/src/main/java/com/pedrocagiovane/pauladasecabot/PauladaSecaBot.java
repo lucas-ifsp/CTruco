@@ -186,6 +186,17 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
+    private int contTres(GameIntel build) {
+        int contadorTres = 0;
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.getRank().value() == 10) {
+                contadorTres++;
+            }
+        }
+        return contadorTres;
+    }
+
+
     private Boolean temDois(GameIntel build){
         for (TrucoCard carta : build.getCards()) {
             if (carta.getRank().value() == 9) {
@@ -356,8 +367,10 @@ public class PauladaSecaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
-        //vendo quantas manilhas temos
+        //vendo qtdd manilha
         int manilha =  contManilha(intel.getCards(),intel.getVira());
+        //vendo qtdd de tres
+        int quantTres = contTres(intel);
 
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
@@ -369,6 +382,9 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         //se tivermos manilha e tres
         if (manilha >= 1 && temTres(intel)) return 0;
+
+        //se tivermos mais de um tres
+        if (quantTres > 1) return 0;
 
         System.out.println("corremo");
         return -1;
