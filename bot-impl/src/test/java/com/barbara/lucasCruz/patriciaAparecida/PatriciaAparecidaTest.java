@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.bueno.spi.model.CardRank.*;
-import static com.bueno.spi.model.CardRank.FIVE;
 import static com.bueno.spi.model.CardSuit.*;
-import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PatriciaAparecidaTest {

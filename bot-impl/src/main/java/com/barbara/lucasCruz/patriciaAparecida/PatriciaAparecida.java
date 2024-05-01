@@ -47,8 +47,32 @@ public class PatriciaAparecida implements BotServiceProvider {
         return (40 - getNumberOfCardsInHand(intel) - getNumberOfPlayedCards(intel));
     }
 
+    public int getNumberOfBestCardsInMyHand(TrucoCard card, GameIntel intel){
+        int count = 0;
+
+        for(int i = 0; i < getNumberOfCardsInHand(intel); i++){
+            if(card.compareValueTo(intel.getCards().get(i),intel.getVira())<0){
+                count ++;
+            }
+        }
+
+        return count;
+    }
+
+    public int getNumberOfBestCardsPlayed(TrucoCard card, GameIntel intel){
+        int count =0;
+
+        for(int i = 0; i < getNumberOfPlayedCards(intel) ; i++){
+            if(card.compareValueTo(intel.getOpenCards().get(i),intel.getVira())<0){
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public int getNumberOfBestCardsKnown(TrucoCard card, GameIntel intel){
-        return -1;
+        return getNumberOfBestCardsInMyHand(card, intel) + getNumberOfBestCardsPlayed(card, intel);
     }
 
 }
