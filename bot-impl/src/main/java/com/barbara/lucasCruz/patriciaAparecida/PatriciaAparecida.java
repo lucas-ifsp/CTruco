@@ -34,4 +34,8 @@ public class PatriciaAparecida implements BotServiceProvider {
         return 0;
     }
 
+    public int getNumberOfRemainderCards(GameIntel intel) {
+        return 0;
+    }
+
 }
