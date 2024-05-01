@@ -4,6 +4,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +16,16 @@ import static org.mockito.Mockito.when;
 
 class MinePowerBotTest {
 
-    private final MinePowerBot sut = new MinePowerBot();
+    private MinePowerBot sut;
     private GameIntel intel;
     private TrucoCard vira;
     private List<TrucoCard> cards;
     private Optional<TrucoCard> opponentCard;
+
+    @BeforeEach
+    void setUp(){
+        sut = new MinePowerBot();
+    }
 
     @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
