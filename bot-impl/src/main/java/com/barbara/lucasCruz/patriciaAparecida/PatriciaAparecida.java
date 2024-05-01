@@ -96,6 +96,15 @@ public class PatriciaAparecida implements BotServiceProvider {
         return  3- intel.getRoundResults().size() - (winTheLastRound(intel) ? 0 : 1 );
     }
 
+    public double probabilityONEOpponentCardIsBetter (TrucoCard card, GameIntel intel){
+        return (getNumberOfRemainderCards(intel)-getNumberOfBestCardsUnknown(card, intel))/getNumberOfRemainderCards(intel);
+        //probabilidadeOponenteNaoTerUMACartaMaior = ((qntCartasNaoVistas-qntCartasMaioresDesconhecidas)/qntCartasNaoVistas);
+    }
 
+    public double probabilityOpponentCardIsBetter (TrucoCard card, GameIntel intel){
+        return (1 - (Math.pow(probabilityONEOpponentCardIsBetter(card,intel), getNumberOfOpponentsCards(intel))));
+        //robabilidadeOponenteTerCartaMaior =
+        //                ( 1 - (Math.pow(probabilidadeOponenteNaoTerUMACartaMaior, cartasNaMaoDoAdversario))) * 100;
+    }
 
 }
