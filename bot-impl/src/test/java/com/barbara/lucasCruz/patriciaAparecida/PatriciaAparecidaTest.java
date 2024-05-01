@@ -178,7 +178,7 @@ class PatriciaAparecidaTest {
         }
 
         @Nested
-        @DisplayName("Should return the number of cards of the opponent ")
+        @DisplayName("Should return the number of opponent's cards ")
         class CardsOfOpponent {
 
             @Test

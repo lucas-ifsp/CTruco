@@ -84,9 +84,18 @@ public class PatriciaAparecida implements BotServiceProvider {
         return ((4*(10-card.relativeValue(intel.getVira())))) - getNumberOfBestCardsKnown(card, intel);
     }
 
-    public int getNumberOfOpponentsCards (GameIntel intel){
-        return -1;
+    public boolean winTheLastRound (GameIntel intel){
+        if (intel.getRoundResults().isEmpty()) {
+            return false;
+        }
+        return intel.getRoundResults().get(intel.getRoundResults().size()-1)
+                == GameIntel.RoundResult.WON ;
     }
+
+    public int getNumberOfOpponentsCards(GameIntel intel){
+        return  3- intel.getRoundResults().size() - (winTheLastRound(intel) ? 0 : 1 );
+    }
+
 
 
 }
