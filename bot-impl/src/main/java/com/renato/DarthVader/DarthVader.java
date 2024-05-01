@@ -205,6 +205,37 @@ public class DarthVader implements BotServiceProvider {
         return strongCard;
     }
 
+
+    public TrucoCard getTheSmallestManilha(GameIntel intel) {
+        Map<CardClassification,Integer> countMap = countCardClassifications(intel);
+
+        int manilhas = countMap.get(CardClassification.VERY_GOOD);
+
+        if (manilhas == 2) {
+            TrucoCard firstManilha = null;
+            TrucoCard secondManilha = null;
+
+            for (Map.Entry<TrucoCard, CardClassification> entry : classifyMyCards(intel).entrySet()) {
+                if (entry.getValue() == CardClassification.VERY_GOOD) {
+                    if (firstManilha == null) {
+                        firstManilha = entry.getKey();
+                    } else {
+                        secondManilha = entry.getKey();
+                    }
+                }
+            }
+
+            if (firstManilha.getSuit().ordinal() < secondManilha.getSuit().ordinal()) {
+                return firstManilha;
+            } else {
+                return secondManilha;
+            }
+        }
+
+        return null;
+    }
+
+
     public TrucoCard getMediumCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
 
