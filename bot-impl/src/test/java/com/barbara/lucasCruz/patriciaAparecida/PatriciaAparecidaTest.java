@@ -141,14 +141,14 @@ class PatriciaAparecidaTest {
                 TrucoCard card5 = TrucoCard.of(KING, DIAMONDS);
 
                 List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(SIX,SPADES),
-                        TrucoCard.of(SIX,DIAMONDS));
+                        TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(SIX, DIAMONDS));
                 TrucoCard vira = TrucoCard.of(FIVE, SPADES);
                 List<TrucoCard> openCards = List.of(
                         vira,
                         TrucoCard.of(KING, DIAMONDS),
                         TrucoCard.of(SIX, HEARTS),
-                        TrucoCard.of(SIX,CLUBS));
+                        TrucoCard.of(SIX, CLUBS));
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(List.of(LOST), openCards, vira, 0).
@@ -162,22 +162,24 @@ class PatriciaAparecidaTest {
             @DisplayName("Case isnt Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsntManilha() {
                 List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(KING,DIAMONDS),
-                        TrucoCard.of(SIX,DIAMONDS));
+                        TrucoCard.of(KING, DIAMONDS),
+                        TrucoCard.of(SIX, DIAMONDS));
                 TrucoCard vira = TrucoCard.of(FIVE, SPADES);
                 List<TrucoCard> openCards = List.of(
                         vira,
-                        TrucoCard.of(SIX,SPADES),
-                        TrucoCard.of(SIX,HEARTS),
-                        TrucoCard.of(SIX,CLUBS);
+                        TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(SIX, HEARTS),
+                        TrucoCard.of(SIX, CLUBS));
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(List.of(LOST), openCards, vira, 0).
                         botInfo(botCards, 0).
                         opponentScore(1);
 
-                assertEquals(patricia.getNumberOfBestCardsUnknown(TrucoCard.of(KING,DIAMONDS), stepBuilder.build()), 12);
+                assertEquals(patricia.getNumberOfBestCardsUnknown(TrucoCard.of(KING, DIAMONDS), stepBuilder.build()), 12);
             }
+        }
+
     }
 
 

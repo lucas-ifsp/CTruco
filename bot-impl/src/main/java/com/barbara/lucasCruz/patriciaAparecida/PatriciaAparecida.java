@@ -77,7 +77,12 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     public int getNumberOfBestCardsUnknown(TrucoCard card, GameIntel intel) {
 
-        return -1;
+        if (card.isManilha(intel.getVira())) {
+            return ((13 - card.relativeValue(intel.getVira())) - getNumberOfBestCardsKnown(card, intel));
+        }
+
+        return ((4*(10-card.relativeValue(intel.getVira())))) - getNumberOfBestCardsKnown(card, intel);
     }
+
 
 }
