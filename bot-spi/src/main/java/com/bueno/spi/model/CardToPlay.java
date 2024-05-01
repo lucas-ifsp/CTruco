@@ -105,4 +105,12 @@ public final class CardToPlay {
     public int hashCode() {
         return Objects.hash(content, discard);
     }
+
+    @Override
+    public String toString() {
+        return "CardToPlay{" +
+                "content=" + content +
+                ", discard=" + discard +
+                '}';
+    }
 }
