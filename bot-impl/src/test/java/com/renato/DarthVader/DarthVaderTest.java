@@ -203,6 +203,29 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),darthVader.getStrongCardwithTheLowestSuit(stepBuilder.build()));
         }
 
+
+        @DisplayName("Should return the weakest shackle if I have two shackles")
+        @Test
+        public void shouldReturnTheWeakestShackleIfIhaveTwoShackles()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(5);
+
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.SPADES),darthVader.getStrongCardwithTheLowestSuit(stepBuilder.build()));
+        }
+
+
     }
 
     @Nested
