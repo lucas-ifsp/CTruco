@@ -367,6 +367,8 @@ public class PauladaSecaBot implements BotServiceProvider {
         //se tivermos mais de uma, independente do nipe, desce
         if (manilha > 1) return 0;
 
+        //se tivermos manilha e tres
+        if (manilha >= 1 && temTres(intel)) return 0;
 
         System.out.println("corremo");
         return -1;
