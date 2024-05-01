@@ -337,6 +337,30 @@ public class DarthVaderTest {
         }
 
 
+        @Test
+        @DisplayName("Should play the card from the next group that is bigger than my opponent. If the next group is a good card and I don't have a shackle, return the worst card")
+        public void ShouldPlayTheCardFromTheNextGroupThatIsBiggerThanMyOpponentIfTheNextGroupIsAGoodCardAndIDontHaveAShackleReturnTheWorstCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
+        }
+
     }
 
     @Nested
