@@ -84,5 +84,9 @@ public class PatriciaAparecida implements BotServiceProvider {
         return ((4*(10-card.relativeValue(intel.getVira())))) - getNumberOfBestCardsKnown(card, intel);
     }
 
+    public int getNumberOfOpponentsCards (GameIntel intel){
+        return -1;
+    }
+
 
 }

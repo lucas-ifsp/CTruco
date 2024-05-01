@@ -16,6 +16,7 @@ import java.util.Random;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PatriciaAparecidaTest {
@@ -34,7 +35,7 @@ class PatriciaAparecidaTest {
 
         @Nested
         @DisplayName("Number of remainder cards")
-        class remainderCards{
+        class RemainderCards{
 
             @Test
             @DisplayName("Start Of the Game")
@@ -83,7 +84,7 @@ class PatriciaAparecidaTest {
 
         @Nested
         @DisplayName("Number of best cards known")
-        class bestCardsKnown{
+        class BestCardsKnown{
 
             @Test
             @DisplayName("Have no better cards known")
@@ -130,15 +131,10 @@ class PatriciaAparecidaTest {
 
         @Nested
         @DisplayName("Number of best cards unknown")
-        class BetterCardsUnkown {
+        class BestCardsUnkown {
             @Test
             @DisplayName("Case is Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsManilha() {
-                TrucoCard card1 = TrucoCard.of(SIX, CLUBS);
-                TrucoCard card2 = TrucoCard.of(SIX, HEARTS);
-                TrucoCard card3 = TrucoCard.of(SIX, SPADES);
-                TrucoCard card4 = TrucoCard.of(SIX, DIAMONDS);
-                TrucoCard card5 = TrucoCard.of(KING, DIAMONDS);
 
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(SIX, SPADES),
@@ -155,12 +151,13 @@ class PatriciaAparecidaTest {
                         botInfo(botCards, 0).
                         opponentScore(0);
 
-                assertEquals(patricia.getNumberOfBestCardsUnknown(card4, stepBuilder.build()), 0);
+                assertEquals(patricia.getNumberOfBestCardsUnknown(TrucoCard.of(SIX,DIAMONDS), stepBuilder.build()), 0);
             }
 
             @Test
             @DisplayName("Case isnt Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsntManilha() {
+
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(KING, DIAMONDS),
                         TrucoCard.of(SIX, DIAMONDS));
@@ -180,7 +177,52 @@ class PatriciaAparecidaTest {
             }
         }
 
+        @Nested
+        @DisplayName("Should return the number of cards of the opponent ")
+        class CardsOfOpponent {
+
+            @Test
+            @DisplayName("Case win the last round")
+            public void ShouldReturnTheNumberOfTheOpponentCardsCaseWinLastRound() {
+                List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(FOUR,SPADES),
+                        TrucoCard.of(TWO,HEARTS));
+
+                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+                List<TrucoCard> openCards = List.of(vira);
+
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(LOST,WON),
+                                openCards,vira,1).
+                        botInfo(botCards,0).
+                        opponentScore(0);
+
+                assertEquals(patricia.getNumberOfOpponentsCards(stepBuilder.build()),1);
+            }
+
+            @Test
+            @DisplayName("Case lost the last round")
+            public void ShouldReturnTheNumberOfTheOpponentCardsCaseLostLastRound(){
+                List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(FOUR,SPADES),
+                        TrucoCard.of(TWO,HEARTS));
+
+                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+                List<TrucoCard> openCards = List.of(vira);
+
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(WON,LOST),
+                                openCards,vira,1).
+                        botInfo(botCards,0).
+                        opponentScore(0);
+
+                assertEquals(patricia.getNumberOfOpponentsCards(stepBuilder.build()),0);
+            }
+        }
     }
+
 
 
         public GameIntel.RoundResult generateRandomRoundResult() {
