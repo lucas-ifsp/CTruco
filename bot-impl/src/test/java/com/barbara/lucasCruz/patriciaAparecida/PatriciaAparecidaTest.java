@@ -15,6 +15,7 @@ import java.util.Random;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PatriciaAparecidaTest {
@@ -126,6 +127,57 @@ class PatriciaAparecidaTest {
                 assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), stepBuilder.build()),1);
             }
         }
+
+        @Nested
+        @DisplayName("Number of best cards unknown")
+        class BetterCardsUnkown {
+            @Test
+            @DisplayName("Case is Manilha")
+            public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsManilha() {
+                TrucoCard card1 = TrucoCard.of(SIX, CLUBS);
+                TrucoCard card2 = TrucoCard.of(SIX, HEARTS);
+                TrucoCard card3 = TrucoCard.of(SIX, SPADES);
+                TrucoCard card4 = TrucoCard.of(SIX, DIAMONDS);
+                TrucoCard card5 = TrucoCard.of(KING, DIAMONDS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SIX,SPADES),
+                        TrucoCard.of(SIX,DIAMONDS));
+                TrucoCard vira = TrucoCard.of(FIVE, SPADES);
+                List<TrucoCard> openCards = List.of(
+                        vira,
+                        TrucoCard.of(KING, DIAMONDS),
+                        TrucoCard.of(SIX, HEARTS),
+                        TrucoCard.of(SIX,CLUBS));
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(LOST), openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
+
+                assertEquals(patricia.getNumberOfBestCardsUnknown(card4, stepBuilder.build()), 0);
+            }
+
+            @Test
+            @DisplayName("Case isnt Manilha")
+            public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsntManilha() {
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(KING,DIAMONDS),
+                        TrucoCard.of(SIX,DIAMONDS));
+                TrucoCard vira = TrucoCard.of(FIVE, SPADES);
+                List<TrucoCard> openCards = List.of(
+                        vira,
+                        TrucoCard.of(SIX,SPADES),
+                        TrucoCard.of(SIX,HEARTS),
+                        TrucoCard.of(SIX,CLUBS);
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(LOST), openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(1);
+
+                assertEquals(patricia.getNumberOfBestCardsUnknown(TrucoCard.of(KING,DIAMONDS), stepBuilder.build()), 12);
+            }
     }
 
 

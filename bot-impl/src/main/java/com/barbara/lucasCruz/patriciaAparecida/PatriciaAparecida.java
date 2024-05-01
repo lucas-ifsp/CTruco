@@ -75,4 +75,9 @@ public class PatriciaAparecida implements BotServiceProvider {
         return getNumberOfBestCardsInMyHand(card, intel) + getNumberOfBestCardsPlayed(card, intel);
     }
 
+    public int getNumberOfBestCardsUnknown(TrucoCard card, GameIntel intel) {
+
+        return -1;
+    }
+
 }
