@@ -273,6 +273,26 @@ public class DarthVaderTest {
             assertEquals(1,darthVader.getNumberManilhas(stepBuilder.build()));
         }
 
+        @DisplayName("Should return the strongest shackle I have")
+        @Test
+        public void shouldReturnTheStrongestShackleIHave()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(5);
+
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),darthVader.getTheStrongestManilha(stepBuilder.build()));
+        }
     }
 
 
