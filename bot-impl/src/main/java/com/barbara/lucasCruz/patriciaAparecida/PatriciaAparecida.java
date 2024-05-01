@@ -2,6 +2,7 @@ package com.barbara.lucasCruz.patriciaAparecida;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class PatriciaAparecida implements BotServiceProvider {
@@ -44,6 +45,10 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     public int getNumberOfRemainderCards(GameIntel intel) {
         return (40 - getNumberOfCardsInHand(intel) - getNumberOfPlayedCards(intel));
+    }
+
+    public int getNumberOfBestCardsKnown(TrucoCard card, GameIntel intel){
+        return -1;
     }
 
 }

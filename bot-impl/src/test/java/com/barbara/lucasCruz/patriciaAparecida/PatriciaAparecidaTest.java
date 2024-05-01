@@ -16,6 +16,7 @@ import java.util.Random;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardRank.FIVE;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PatriciaAparecidaTest {
@@ -81,6 +82,52 @@ class PatriciaAparecidaTest {
 
         }
 
+        @Nested
+        @DisplayName("Number of best cards known")
+        class bestCardsKnown{
+
+            @Test
+            @DisplayName("Have no better cards known")
+            public void ShouldReturnZeroIfHaveNoBetterCardsKnown(){
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(ACE,CLUBS),
+                        TrucoCard.of(ACE,HEARTS),
+                        TrucoCard.of(ACE,SPADES));
+                TrucoCard vira = TrucoCard.of(FOUR,SPADES);
+                List<TrucoCard> openCards = List.of(
+                        vira,
+                        TrucoCard.of(ACE,DIAMONDS));
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
+
+                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), stepBuilder.build()),0);
+            }
+
+            @Test
+            @DisplayName("Have better cards known")
+            public void ShouldReturnAPositiveNuberIfHaveBetterCardsKnown(){
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(ACE,CLUBS),
+                        TrucoCard.of(ACE,HEARTS),
+                        TrucoCard.of(ACE,SPADES));
+                TrucoCard vira = TrucoCard.of(THREE,SPADES);
+                List<TrucoCard> openCards = List.of(
+                        vira,
+                        TrucoCard.of(ACE,DIAMONDS));
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
+
+                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), stepBuilder.build()),1);
+            }
+        }
     }
 
 
