@@ -356,10 +356,17 @@ public class PauladaSecaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
+        //vendo quantas manilhas temos
+        int manilha =  contManilha(intel.getCards(),intel.getVira());
+
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
 
         if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+
+        //se tivermos mais de uma, independente do nipe, desce
+        if (manilha > 1) return 0;
+
 
         System.out.println("corremo");
         return -1;
