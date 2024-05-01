@@ -34,8 +34,16 @@ public class PatriciaAparecida implements BotServiceProvider {
         return 0;
     }
 
+    public int getNumberOfCardsInHand(GameIntel intel) {
+        return intel.getCards().size();
+    }
+
+    public int getNumberOfPlayedCards(GameIntel intel){
+        return  intel.getOpenCards().size();
+    }
+
     public int getNumberOfRemainderCards(GameIntel intel) {
-        return 0;
+        return (40 - getNumberOfCardsInHand(intel) - getNumberOfPlayedCards(intel));
     }
 
 }
