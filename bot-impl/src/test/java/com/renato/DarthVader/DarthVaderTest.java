@@ -420,8 +420,10 @@ public class DarthVaderTest {
 
             Map<DarthVader.CardClassification, Integer> expectedClassifications = new HashMap<>();
 
-            expectedClassifications.put(DarthVader.CardClassification.GOOD, 3);
-
+            expectedClassifications.put(DarthVader.CardClassification.AVERAGE, 0);
+            expectedClassifications.put(DarthVader.CardClassification.VERY_GOOD, 1);
+            expectedClassifications.put(DarthVader.CardClassification.BAD, 0);
+            expectedClassifications.put(DarthVader.CardClassification.GOOD, 2);
 
             assertEquals(expectedClassifications, darthVader.countCardClassifications(stepBuilder.build()));
         }

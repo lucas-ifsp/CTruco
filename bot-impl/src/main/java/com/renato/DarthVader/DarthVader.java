@@ -41,7 +41,7 @@ public class DarthVader implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         Map<CardClassification, Integer> countMap = new HashMap<>();
-        
+
         countMap.put(CardClassification.VERY_GOOD, 0);
         countMap.put(CardClassification.GOOD, 0);
         countMap.put(CardClassification.AVERAGE, 0);
