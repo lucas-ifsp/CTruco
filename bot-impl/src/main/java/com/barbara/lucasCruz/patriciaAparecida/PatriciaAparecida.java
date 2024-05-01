@@ -97,7 +97,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     public double probabilityONEOpponentCardIsBetter (TrucoCard card, GameIntel intel){
-        return (getNumberOfRemainderCards(intel)-getNumberOfBestCardsUnknown(card, intel))/getNumberOfRemainderCards(intel);
+        return (double) (getNumberOfRemainderCards(intel) - getNumberOfBestCardsUnknown(card, intel)) /getNumberOfRemainderCards(intel);
         //probabilidadeOponenteNaoTerUMACartaMaior = ((qntCartasNaoVistas-qntCartasMaioresDesconhecidas)/qntCartasNaoVistas);
     }
 
