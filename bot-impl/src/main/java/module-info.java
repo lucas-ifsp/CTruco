@@ -21,6 +21,7 @@ import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
+import com.shojisilva.fernasbot.FernasBot;
 
 module bot.impl {
     requires bot.spi;
@@ -43,6 +44,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.shojisilva.fernasbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -67,5 +69,6 @@ module bot.impl {
             PaulistaBot,
             MarrecoBot,
             AddTheNewSoul,
-            LazyBot;
+            LazyBot,
+            FernasBot;
 }
