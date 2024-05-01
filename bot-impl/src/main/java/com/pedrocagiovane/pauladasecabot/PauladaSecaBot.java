@@ -386,6 +386,10 @@ public class PauladaSecaBot implements BotServiceProvider {
         //se tivermos mais de um tres
         if (quantTres > 1) return 0;
 
+        //se temos um tres na terceira
+        if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 0;
+
+
         System.out.println("corremo");
         return -1;
     }
