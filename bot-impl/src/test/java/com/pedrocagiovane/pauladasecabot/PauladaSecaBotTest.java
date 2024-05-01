@@ -236,5 +236,17 @@ public class PauladaSecaBotTest {
         assertThat(result).isZero();
     }
 
+    @Test
+    @DisplayName("Aceitamo o truco se tem uma manilha e tres")
+    void aceitaSeTemUmaManilhaETres() {
+        maoPlayer = List.of(TrucoCard.of(FIVE,SPADES),TrucoCard.of(THREE,HEARTS), TrucoCard.of(SEVEN, HEARTS));
+        vira = TrucoCard.of(FOUR, DIAMONDS);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
+        int result = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
+        assertThat(result).isZero();
+    }
+
 
 }
