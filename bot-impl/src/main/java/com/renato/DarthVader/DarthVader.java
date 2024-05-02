@@ -71,7 +71,7 @@ public class DarthVader implements BotServiceProvider {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("Card not found"));
         TrucoCard minorCard = null;
         CardClassification minClassification = null;
-
+        boolean verifica = verifyMyHand(intel);
         Map<TrucoCard, CardClassification> classificationsMap = classifyMyCards(intel);
         CardClassification opponentClassification = classifyOpponentCard(intel);
 
@@ -86,6 +86,13 @@ public class DarthVader implements BotServiceProvider {
                 else
                 {
                     return getSmallerCard(intel);
+                }
+            }
+            else
+            {
+                if(verifica)
+                {
+                    return getStrongCard(intel);
                 }
             }
         }
