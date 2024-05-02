@@ -548,27 +548,27 @@ public class DarthVaderTest {
     class testChooseCardInEachRound{
 
 
-        @DisplayName("Round 1 ")
+        @DisplayName("Tests to check if I have a good hand")
         @Test
         public void RoundOne()
         {
             List<TrucoCard> trucoCards = List.of(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
-            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
 
-            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            List<TrucoCard> openCards = List.of(vira);
 
             stepBuilder = GameIntel.StepBuilder.with().
                     gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
                     botInfo(trucoCards, 5).
                     opponentScore(5);
 
-            assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.verifyMyHand(stepBuilder.build()));
         }
 
     }
