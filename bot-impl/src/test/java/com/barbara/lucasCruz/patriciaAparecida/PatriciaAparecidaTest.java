@@ -228,8 +228,8 @@ class PatriciaAparecidaTest {
     class MaoDeOnze{
 
         @Test
-        @DisplayName("Should Throw exception if bot asks for mão de onze without 11 points")
-        public void shouldThrowExceptionMaoDeOnze(){
+        @DisplayName("Should Throw exception if bot accepts mão de onze without 11 points")
+        public void shouldThrowExceptionInMaoDeOnzeWhenBotDoesntHave11Points(){
             List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR,SPADES),
                     TrucoCard.of(TWO,HEARTS));
@@ -240,7 +240,7 @@ class PatriciaAparecidaTest {
 
             stepBuilder = GameIntel.StepBuilder.with().
                     gameInfo(List.of(WON,LOST), openCards, vira, 1).
-                    botInfo(botCards, 11).
+                    botInfo(botCards, 10).
                     opponentScore(10);
 
             assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(stepBuilder.build())) ;   }
