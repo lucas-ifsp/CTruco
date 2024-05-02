@@ -233,7 +233,24 @@ public class DarthVader implements BotServiceProvider {
 
         return manilhas.get(0);
     }
-    
+
+    public TrucoCard getTheStrongestManilha(GameIntel intel) {
+        List<TrucoCard> manilhas = new ArrayList<>();
+
+        for (Map.Entry<TrucoCard, CardClassification> entry : classifyMyCards(intel).entrySet()) {
+            if (entry.getValue() == CardClassification.VERY_GOOD) {
+                manilhas.add(entry.getKey());
+            }
+        }
+
+        if (manilhas.isEmpty()) {
+            return null;
+        }
+
+        manilhas.sort((card1, card2) -> card2.getSuit().compareTo(card1.getSuit()));
+
+        return manilhas.get(0);
+    }
 
     public TrucoCard getMediumCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
