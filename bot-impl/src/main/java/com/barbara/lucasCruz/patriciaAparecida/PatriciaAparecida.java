@@ -10,8 +10,13 @@ public class PatriciaAparecida implements BotServiceProvider {
     //decide se o bot joga uma "mão de onze".
     // Retornar false significa sair da mão.
     //Retornar true significa aceitar e jogar uma mão de três pontos;
-    @java.lang.Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) { return false; }
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+            if(intel.getOpponentScore() != 11) throw new IllegalArgumentException("Mão de Onze não pode ser jogada sem 11 pontos");
+
+        return false;
+
+    }
 
     //decide se o bot inicia uma solicitação de aumento de ponto.
     //Retornar false significa não fazer nada.
