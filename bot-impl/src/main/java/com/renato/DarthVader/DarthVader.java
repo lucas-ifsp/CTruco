@@ -135,6 +135,20 @@ public class DarthVader implements BotServiceProvider {
         return numeroRodada;
     }
 
+    public boolean verifyMyHand(GameIntel intel) {
+        Map<CardClassification, Integer> countMap = countCardClassifications(intel);
+        int veryGoodCount = countMap.getOrDefault(CardClassification.VERY_GOOD, 0);
+        int goodCount = countMap.getOrDefault(CardClassification.GOOD, 0);
+        int averageCount = countMap.getOrDefault(CardClassification.AVERAGE, 0);
+        int badCount = countMap.getOrDefault(CardClassification.BAD, 0);
+
+        if(veryGoodCount +goodCount > averageCount + badCount)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public enum CardClassification {
         VERY_GOOD,
         GOOD,
