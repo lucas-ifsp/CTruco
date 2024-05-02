@@ -50,9 +50,9 @@ public class DarthVaderTest {
             assertFalse(darthVader.decideIfRaises(stepBuilder.build()));
         }
 
-        @DisplayName("Should accept if i have two or more manilhas")
+        @DisplayName("Should ask if I have two or more shackles")
         @Test
-        public void shouldAcceptIfIHaveTwoOrMoreManilhas()
+        public void shouldAskIfIhaveTwoOrMoreShackles()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
