@@ -33,6 +33,10 @@ public class DarthVader implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(getNumberManilhas(intel) >= 2)
+        {
+            return 1;
+        }
         return 0;
     }
 
