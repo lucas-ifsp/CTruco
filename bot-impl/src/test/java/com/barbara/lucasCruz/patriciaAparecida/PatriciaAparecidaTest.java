@@ -231,6 +231,7 @@ class PatriciaAparecidaTest {
         private TrucoCard vira;
         private List<TrucoCard> openCards ;
 
+
         @BeforeEach
         void setCards(){
                 botCards = List.of(TrucoCard.of(SIX, SPADES),
@@ -260,12 +261,17 @@ class PatriciaAparecidaTest {
             @DisplayName("Should Throw exception if bot raises beyond 12 points")
             public void shouldThrowExceptionInDecideIfRaisesIfBotRaiseAfter12Points() {
                 stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON, LOST), openCards, vira, 13).
+                        gameInfo(List.of(WON, LOST), openCards, vira, 1).
                         botInfo(botCards, 0).
-                        opponentScore(10);
+                        opponentScore(0);
 
-                assertThrows(IllegalArgumentException.class, () -> patricia.decideIfRaises(stepBuilder.build()));
+                assertThrows(IllegalStateException.class, () -> patricia.chooseCard(stepBuilder.build()));
             }
+        }
+        @Nested
+        @DisplayName("ChoiceCardExceptions")
+        class chooseCardExceptions{
+
         }
     }
 
