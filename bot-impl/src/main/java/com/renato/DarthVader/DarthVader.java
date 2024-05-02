@@ -130,6 +130,11 @@ public class DarthVader implements BotServiceProvider {
         return manilhas;
     }
 
+    public int roundNumber(GameIntel intel) {
+        int numeroRodada = intel.getRoundResults().size() +1;
+        return numeroRodada;
+    }
+
     public enum CardClassification {
         VERY_GOOD,
         GOOD,
