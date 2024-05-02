@@ -12,7 +12,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     //Retornar true significa aceitar e jogar uma mão de três pontos;
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-            if(intel.getOpponentScore() != 11) throw new IllegalArgumentException("Mão de Onze não pode ser jogada sem 11 pontos");
+            if(intel.getOpponentScore() != 11) throw new IllegalArgumentException("Hand of Eleven can't be called without 11 Points");
 
         return false;
 
@@ -21,13 +21,13 @@ public class PatriciaAparecida implements BotServiceProvider {
     //decide se o bot inicia uma solicitação de aumento de ponto.
     //Retornar false significa não fazer nada.
     //Retornar true significa solicitar um aumento de ponto;
-    @java.lang.Override
+    @Override
     public boolean decideIfRaises(GameIntel intel) {
         return false;
     }
 
     //fornece o cartão a ser jogado ou descartado na rodada atual.
-    @java.lang.Override
+    @Override
     public CardToPlay chooseCard(GameIntel intel) {
         return null;
     }
@@ -35,7 +35,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
     //O valor de retorno deve ser um dos seguintes:
     //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
-    @java.lang.Override
+    @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
