@@ -37,6 +37,10 @@ public class DarthVader implements BotServiceProvider {
         {
             return 1;
         }
+        if(countManilhasAndHighCards(intel) >= 2)
+        {
+            return 1;
+        }
         return 0;
     }
 
