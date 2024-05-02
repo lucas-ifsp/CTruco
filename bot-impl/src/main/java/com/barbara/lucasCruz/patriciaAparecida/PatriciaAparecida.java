@@ -31,7 +31,8 @@ public class PatriciaAparecida implements BotServiceProvider {
     //fornece o cartão a ser jogado ou descartado na rodada atual.
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
