@@ -47,7 +47,7 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 11).
                     opponentScore(5);
 
-            assertFalse(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
+            assertFalse(darthVader.decideIfRaises(stepBuilder.build()));
         }
     }
 
