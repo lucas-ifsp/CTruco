@@ -1,6 +1,6 @@
 package com.bueno.domain.usecases.game.usecase;
 
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class RankBotsUseCase {
     private final int TIMES = 7;
     private final Map<String, Long> rankMap = new HashMap<>();
-    private final List<String> botNames = BotProviders.availableBots();
+    private final List<String> botNames = BotProviderService.providersNames();
 
     public Map<String, Long> rankAll() {
         botNames.forEach(this::playAgainstAll);

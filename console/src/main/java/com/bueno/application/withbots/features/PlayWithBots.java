@@ -21,7 +21,7 @@
 package com.bueno.application.withbots.features;
 
 import com.bueno.application.withbots.commands.*;
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 
@@ -38,7 +38,7 @@ public class PlayWithBots {
 
 
     public void playWithBotsConsole() {
-        final var botNames = BotProviders.availableBots();
+        final var botNames = BotProviderService.providersNames();
 
         printAvailableBots(botNames);
 

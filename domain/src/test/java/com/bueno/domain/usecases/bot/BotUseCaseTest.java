@@ -28,7 +28,7 @@ import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
 import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.HandResultRepository;
@@ -167,7 +167,7 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should have at least one default bot implementation of bot spi")
     void shouldHaveAtLeastOneDefaultBotImplementationOfBotSpi() {
-        assertThat(BotProviders.availableBots().isEmpty())
+        assertThat(BotProviderService.providersNames().isEmpty())
                 .as("It's false that no implementation is available")
                 .isFalse();
     }

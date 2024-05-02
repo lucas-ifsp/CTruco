@@ -27,13 +27,13 @@ import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
 import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.HandResultRepository;
 import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.spi.service.BotServiceManager;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Objects;
@@ -74,8 +74,7 @@ public class BotUseCase {
         final Intel intel = game.getIntel();
 
         if (!isBotTurn(currentPlayer, intel)) return intel;
-
-        initializeNullHandlers(BotServiceManager.load(currentPlayer.getUsername()));
+        initializeNullHandlers(BotProviderService.load(currentPlayer.getUsername()));
 
         if (maoDeOnzeHandler.shouldHandle(intel))
             return fromDto(maoDeOnzeHandler.handle(intel, currentPlayer));
