@@ -102,6 +102,10 @@ public class DarthVader implements BotServiceProvider {
                 {
                     return getaSmallerCardStrongerThanTheOpponent(intel);
                 }
+                else
+                {
+                    return getSmallerCard(intel);
+                }
             }
         }
 
