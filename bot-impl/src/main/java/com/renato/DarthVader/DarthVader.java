@@ -184,7 +184,6 @@ public class DarthVader implements BotServiceProvider {
     }
 
 
-
     public enum CardClassification {
         VERY_GOOD,
         GOOD,
