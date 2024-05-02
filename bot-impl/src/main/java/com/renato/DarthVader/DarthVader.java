@@ -92,7 +92,7 @@ public class DarthVader implements BotServiceProvider {
             {
                 if(verifica)
                 {
-                    return getStrongCard(intel);
+                    return getaSmallerCardStrongerThanTheOpponent(intel);
                 }
             }
         }

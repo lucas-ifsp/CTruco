@@ -495,7 +495,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
         @Test
