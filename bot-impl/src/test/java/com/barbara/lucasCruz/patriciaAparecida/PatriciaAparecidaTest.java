@@ -271,7 +271,16 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("ChoiceCardExceptions")
         class chooseCardExceptions{
+            @Test
+            @DisplayName("Should Throw exception if bot chooses null as card")
+            public void shouldThrowExceptionIfDecideToChooseNullCard() {
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(WON, LOST), openCards, vira, 13).
+                        botInfo(Collections.EMPTY_LIST, 0).
+                        opponentScore(0);
 
+                assertThrows(IllegalStateException.class, () -> patricia.chooseCard(stepBuilder.build()));
+            }
         }
     }
 
