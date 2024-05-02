@@ -41,7 +41,7 @@ public class DarthVader implements BotServiceProvider {
         {
             return 0;
         }
-        return 0;
+        return -1;
     }
 
     public Map<CardClassification, Integer> countCardClassifications(GameIntel intel) {
