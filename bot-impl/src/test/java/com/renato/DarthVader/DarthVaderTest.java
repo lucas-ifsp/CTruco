@@ -474,6 +474,31 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the highest card if I have a good hand")
+        public void ShouldReturnTheHighestCardIfIHaveAGoodHand()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
+        }
+
+
     }
 
     @Nested
