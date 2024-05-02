@@ -670,8 +670,8 @@ public class DarthVaderTest {
         }
 
         @Test
-        @DisplayName("Should return 1 if I have a good hand")
-        public void shouldReturn1IfIhaveAGoodHand()
+        @DisplayName("Should return zero if I have a good hand")
+        public void shouldReturnZeroIfIhaveAGoodHand()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
@@ -687,9 +687,8 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 5).
                     opponentScore(5);
 
-            assertEquals(1,darthVader.getRaiseResponse(stepBuilder.build()));
+            assertEquals(0,darthVader.getRaiseResponse(stepBuilder.build()));
         }
-
 
     }
 
