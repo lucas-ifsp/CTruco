@@ -519,8 +519,33 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),darthVader.getaSmallerCardStrongerThanTheOpponent(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return the weakest card if there is none greater than the opponent")
+        public void shouldReturnTheWeakestCardIfThereIsNoneGreaterThanOpponent()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
+        }
+
 
 
     }
