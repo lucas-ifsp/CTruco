@@ -546,8 +546,6 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
-
-
     }
 
     @Nested
@@ -643,6 +641,33 @@ public class DarthVaderTest {
                     opponentScore(5);
 
             assertEquals(true,darthVader.verifyMyHand(stepBuilder.build()));
+        }
+
+    }
+
+
+    @Nested
+    @DisplayName("Tests for the method that decides whether to increase")
+    class testIncrease{
+        @Test
+        @DisplayName("Should check how many shackles I have")
+        public void shouldTakeItYouHaveaGoodHand()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+
+            assertEquals(2,darthVader.getCountManilha(stepBuilder.build()));
         }
 
     }
