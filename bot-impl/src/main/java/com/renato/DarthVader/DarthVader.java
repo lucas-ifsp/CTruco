@@ -233,7 +233,7 @@ public class DarthVader implements BotServiceProvider {
 
         return manilhas.get(0);
     }
-
+    
 
     public TrucoCard getMediumCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();

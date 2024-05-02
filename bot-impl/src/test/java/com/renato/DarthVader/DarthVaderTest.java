@@ -278,7 +278,7 @@ public class DarthVaderTest {
         public void shouldReturnTheStrongestShackleIHave()
         {
             List<TrucoCard> trucoCards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
