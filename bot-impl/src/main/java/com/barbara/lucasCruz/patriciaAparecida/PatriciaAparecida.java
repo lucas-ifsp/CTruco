@@ -12,7 +12,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     //Retornar true significa aceitar e jogar uma mão de três pontos;
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-            if(intel.getOpponentScore() != 11) throw new IllegalArgumentException("Hand of Eleven can't be called without 11 Points");
+            if(intel.getScore() != 11) throw new IllegalArgumentException("Hand of Eleven can't be called without 11 Points");
 
         return false;
 
