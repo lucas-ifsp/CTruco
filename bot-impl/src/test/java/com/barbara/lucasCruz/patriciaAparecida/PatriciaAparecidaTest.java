@@ -17,7 +17,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PatriciaAparecidaTest {
 
@@ -223,9 +223,31 @@ class PatriciaAparecidaTest {
         }
     }
 
+    @Nested
+    @DisplayName("Mão de Onze Tests")
+    class MaoDeOnze{
+
+        @Test
+        @DisplayName("Should Throw exception if bot asks for mão de onze without 11 points")
+        public void shouldThrowExceptionMaoDeOnze(){
+            List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
+                    TrucoCard.of(FOUR,SPADES),
+                    TrucoCard.of(TWO,HEARTS));
+
+            TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+            List<TrucoCard> openCards = List.of(vira);
 
 
-        public GameIntel.RoundResult generateRandomRoundResult() {
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(WON,LOST), openCards, vira, 1).
+                    botInfo(botCards, 11).
+                    opponentScore(10);
+
+            assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(stepBuilder.build())) ;   }
+    }
+
+
+    public GameIntel.RoundResult generateRandomRoundResult() {
         GameIntel.RoundResult[] values = GameIntel.RoundResult.values();
 
         Random random = new Random();
