@@ -223,28 +223,53 @@ class PatriciaAparecidaTest {
         }
     }
 
-    @Nested
-    @DisplayName("Mão de Onze Tests")
-    class MaoDeOnze{
 
-        @Test
-        @DisplayName("Should Throw exception if bot accepts mão de onze without 11 points")
-        public void shouldThrowExceptionInMaoDeOnzeWhenBotDoesntHave11Points(){
-            List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
+    @Nested
+    @DisplayName("Exception Thrown by Methods Tests")
+    class ExceptionThrownByMethodsTests{
+        private List<TrucoCard> botCards;
+        private TrucoCard vira;
+        private List<TrucoCard> openCards ;
+
+        @BeforeEach
+        void setBotCards(){
+                botCards = List.of(TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR,SPADES),
                     TrucoCard.of(TWO,HEARTS));
+                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+                openCards = List.of(vira);
+        }
+        @Nested
+        @DisplayName("Mão de Onze Exception Tests")
+        class MaoDeOnzeExceptions{
 
-            TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
-            List<TrucoCard> openCards = List.of(vira);
+            @Test
+            @DisplayName("Should Throw exception if bot accepts mão de onze without 11 points")
+            public void shouldThrowExceptionInMaoDeOnzeWhenBotDoesntHave11Points(){
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(WON,LOST), openCards, vira, 1).
+                        botInfo(botCards, 10).
+                        opponentScore(10);
 
+                assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(stepBuilder.build())) ;   }
+        }
+        @Nested
+        @DisplayName("Decide if Raises Tests")
+        class DecideIfRaisesExceptions{
+            @Test
+            @DisplayName("Should Throw exception if bot raises beyond 12 points")
+            public void shouldThrowExceptionInDecideIfRaisesIfBotRaiseAfter12Points() {
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(List.of(WON, LOST), openCards, vira, 12).
+                        botInfo(botCards, 0).
+                        opponentScore(10);
 
-            stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(List.of(WON,LOST), openCards, vira, 1).
-                    botInfo(botCards, 10).
-                    opponentScore(10);
-
-            assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(stepBuilder.build())) ;   }
+                assertThrows(IllegalArgumentException.class, () -> patricia.decideIfRaises(stepBuilder.build()));
+            }
+        }
     }
+
+
 
 
     public GameIntel.RoundResult generateRandomRoundResult() {
