@@ -261,11 +261,11 @@ class PatriciaAparecidaTest {
             @DisplayName("Should Throw exception if bot raises beyond 12 points")
             public void shouldThrowExceptionInDecideIfRaisesIfBotRaiseAfter12Points() {
                 stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON, LOST), openCards, vira, 1).
+                        gameInfo(List.of(WON, LOST), openCards, vira, 13).
                         botInfo(botCards, 0).
                         opponentScore(0);
 
-                assertThrows(IllegalStateException.class, () -> patricia.chooseCard(stepBuilder.build()));
+                assertThrows(IllegalArgumentException.class, () -> patricia.decideIfRaises(stepBuilder.build()));
             }
         }
         @Nested
