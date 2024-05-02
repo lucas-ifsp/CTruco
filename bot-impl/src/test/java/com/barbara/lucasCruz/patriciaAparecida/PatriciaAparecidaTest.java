@@ -232,11 +232,11 @@ class PatriciaAparecidaTest {
         private List<TrucoCard> openCards ;
 
         @BeforeEach
-        void setBotCards(){
+        void setCards(){
                 botCards = List.of(TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR,SPADES),
                     TrucoCard.of(TWO,HEARTS));
-                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+                vira = TrucoCard.of(FIVE,CLUBS);
                 openCards = List.of(vira);
         }
         @Nested
