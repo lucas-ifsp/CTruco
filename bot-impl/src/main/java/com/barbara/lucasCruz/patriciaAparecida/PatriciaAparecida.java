@@ -103,8 +103,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     //Retornar true significa solicitar um aumento de ponto;
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(intel.getHandPoints() > 1) throw new IllegalArgumentException("Points above limit of hand (12 points) ");
-
+        if(intel.getHandPoints() > 1) throw new IllegalArgumentException("Cant call when already called");
         return false;
     }
 
