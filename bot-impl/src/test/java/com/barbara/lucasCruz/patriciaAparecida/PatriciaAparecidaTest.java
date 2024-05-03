@@ -317,6 +317,20 @@ class PatriciaAparecidaTest {
 
             assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).content() ,patricia.chooseCard(stepBuilder.build()).value());
         }
+        @Test
+        @DisplayName("Discard the weakest card that loses the hand")
+        public void DiscardWeakestCardThatLosesHand(){
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
+                    botInfo(botCards,0).
+                    opponentScore(0)
+                    .opponentCard(TrucoCard.of(SIX,CLUBS));
+
+            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(stepBuilder.build()).content());
+            assertEquals(TrucoCard.closed(),patricia.chooseCard(stepBuilder.build()).value());
+        }
+
     }
 
 
