@@ -15,6 +15,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PatriciaAparecidaTest {
@@ -376,7 +377,49 @@ class PatriciaAparecidaTest {
         }
     }
 
+    @Nested
+    @DisplayName("choose card tests ")
+    class ChooseCard{
+        private List<TrucoCard> botCards;
+        private TrucoCard vira;
 
+        @BeforeEach
+        void setCards(){
+            botCards = List.of(TrucoCard.of(SIX, HEARTS),
+                    TrucoCard.of(FOUR,SPADES),
+                    TrucoCard.of(TWO,HEARTS));
+
+            vira = TrucoCard.of(FIVE,CLUBS);
+
+        }
+
+        @Test
+        @DisplayName("Choose the weakest card that wins the hand")
+        public void ChooseWeakestCardThatWinsHand(){
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
+                    botInfo(botCards,0).
+                    opponentScore(0)
+                    .opponentCard(TrucoCard.of(FIVE,DIAMONDS));
+
+            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).content() ,patricia.chooseCard(stepBuilder.build()).value());
+        }
+        @Test
+        @DisplayName("Discard the weakest card that loses the hand")
+        public void DiscardWeakestCardThatLosesHand(){
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
+                    botInfo(botCards,0).
+                    opponentScore(0)
+                    .opponentCard(TrucoCard.of(SIX,CLUBS));
+
+            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(stepBuilder.build()).content());
+            assertEquals(TrucoCard.closed(),patricia.chooseCard(stepBuilder.build()).value());
+        }
+
+    }
 
 
     public GameIntel.RoundResult generateRandomRoundResult() {
