@@ -140,6 +140,28 @@ public class DarthVaderTest {
             assertTrue(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return true If i have one or more shackle and one or more good card")
+        public void shouldReturnTrueIfIHaveOneOrMoreShackleandOneOrMoreGoodCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(3);
+
+            assertTrue(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
+
+
     }
     @Nested
     @DisplayName("Tests to choose a certain card")
