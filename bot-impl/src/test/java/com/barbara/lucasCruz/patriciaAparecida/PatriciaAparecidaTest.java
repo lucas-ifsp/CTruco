@@ -38,19 +38,20 @@ class PatriciaAparecidaTest {
         class RemainderCards{
 
             private List<TrucoCard> randomBotCards;
-
+            private List<TrucoCard> playedCards;
+            private TrucoCard vira;
             @BeforeEach
             void setCards(){
                 randomBotCards = List.of(
                         generateRandomCardToPlay(),
                         generateRandomCardToPlay(),
                         generateRandomCardToPlay());
+
+                vira = generateRandomCardToPlay();
             }
             @Test
             @DisplayName("Start Of the Game")
             public void startOfTheGame() {
-
-                TrucoCard vira = generateRandomCardToPlay();
                 List<TrucoCard> openCards = List.of(vira);
 
                 stepBuilder = GameIntel.StepBuilder.with().
@@ -66,7 +67,6 @@ class PatriciaAparecidaTest {
             public void lastRound () {
 
                 List<TrucoCard> botCards = List.of(generateRandomCardToPlay());
-                TrucoCard vira = generateRandomCardToPlay();
                 List<TrucoCard> openCards = List.of(
                         vira,
                         generateRandomCardToPlay(),
@@ -135,6 +135,12 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("Number of best cards unknown")
         class BestCardsUnkown {
+            private TrucoCard vira;
+
+            @BeforeEach
+            void setVira(){
+                vira = TrucoCard.of(FIVE, SPADES);
+            }
             @Test
             @DisplayName("Case is Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsManilha() {
@@ -142,7 +148,6 @@ class PatriciaAparecidaTest {
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(SIX, SPADES),
                         TrucoCard.of(SIX, DIAMONDS));
-                TrucoCard vira = TrucoCard.of(FIVE, SPADES);
                 List<TrucoCard> openCards = List.of(
                         vira,
                         TrucoCard.of(KING, DIAMONDS),
@@ -164,7 +169,7 @@ class PatriciaAparecidaTest {
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(KING, DIAMONDS),
                         TrucoCard.of(SIX, DIAMONDS));
-                TrucoCard vira = TrucoCard.of(FIVE, SPADES);
+
                 List<TrucoCard> openCards = List.of(
                         vira,
                         TrucoCard.of(SIX, SPADES),
@@ -184,16 +189,20 @@ class PatriciaAparecidaTest {
         @DisplayName("Should return the number of opponent's cards ")
         class CardsOfOpponent {
 
+            private List<TrucoCard> botCards;
+            private  TrucoCard vira;
+            @BeforeEach
+            void setUp(){
+                botCards = List.of(TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(FOUR,SPADES),
+                        TrucoCard.of(TWO,HEARTS));
+                vira = TrucoCard.of(FIVE,CLUBS);
+            }
             @Test
             @DisplayName("Case win the last round")
             public void ShouldReturnTheNumberOfTheOpponentCardsCaseWinLastRound() {
-                List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
-                        TrucoCard.of(FOUR,SPADES),
-                        TrucoCard.of(TWO,HEARTS));
 
-                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
                 List<TrucoCard> openCards = List.of(vira);
-
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(List.of(LOST,WON),
@@ -207,13 +216,8 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Case lost the last round")
             public void ShouldReturnTheNumberOfTheOpponentCardsCaseLostLastRound(){
-                List<TrucoCard> botCards = List.of(TrucoCard.of(SIX, SPADES),
-                        TrucoCard.of(FOUR,SPADES),
-                        TrucoCard.of(TWO,HEARTS));
 
-                TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
                 List<TrucoCard> openCards = List.of(vira);
-
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(List.of(WON,LOST),
