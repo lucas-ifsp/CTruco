@@ -225,6 +225,9 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     public List<Double> listProbAllCards(GameIntel intel){
         List<Double> listProbAllCards = new ArrayList<>();
+        for(int i=0; i<intel.getCards().size(); i++){
+            listProbAllCards.add(probabilityOpponentCardIsBetter(intel.getCards().get(i),intel));
+        }
         return listProbAllCards;
     }
 }

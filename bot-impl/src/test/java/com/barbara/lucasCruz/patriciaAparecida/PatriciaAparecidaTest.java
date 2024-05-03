@@ -310,8 +310,8 @@ class PatriciaAparecidaTest {
 
                 List<Double> probList = patricia.listProbAllCards(stepBuilder.build());
 
-                assertTrue(probList.get(0) > probList.get(2)
-                        && probList.get(2) > probList.get(1));
+                assertTrue(probList.get(0) < probList.get(2));
+                assertTrue(probList.get(2) < probList.get(1));
             }
         }
     }
