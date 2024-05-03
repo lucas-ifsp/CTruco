@@ -26,7 +26,7 @@ public class DarthVader implements BotServiceProvider {
         {
             return true;
         }
-        if((getCountGoodCards(intel) >= 1) && (intel.getScore() - intel.getOpponentScore() == 4))
+        if((getCountGoodCards(intel) >= 1) && (intel.getScore() - intel.getOpponentScore() >= 4))
         {
             return true;
         }
