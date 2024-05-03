@@ -756,4 +756,32 @@ public class DarthVaderTest {
 
     }
 
+
+    @Nested
+    @DisplayName("Tests for count the number of cards")
+
+    class testCountCards{
+
+        @DisplayName("Should return the number of good cards I have")
+        @Test
+        public void shouldReturnTheNumberOfGoodCardIhave()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 7).
+                    opponentScore(3);
+
+            assertEquals(2,darthVader.getCountGoodCards(stepBuilder.build()));
+        }
+    }
+
 }
