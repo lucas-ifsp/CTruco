@@ -297,9 +297,9 @@ class PatriciaAparecidaTest {
 
         @BeforeEach
         void setCards(){
-            botCards = List.of(TrucoCard.of(SIX, HEARTS),
-                    TrucoCard.of(FOUR,SPADES),
-                    TrucoCard.of(TWO,HEARTS));
+            botCards = List.of(TrucoCard.of(KING, HEARTS), //2
+                    TrucoCard.of(FOUR,SPADES), // 3
+                    TrucoCard.of(TWO,HEARTS)); // 1
 
             vira = TrucoCard.of(FIVE,CLUBS);
 
@@ -313,9 +313,9 @@ class PatriciaAparecidaTest {
                     gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
                     botInfo(botCards,0).
                     opponentScore(0)
-                    .opponentCard(TrucoCard.of(FIVE,DIAMONDS));
+                    .opponentCard(TrucoCard.of(QUEEN,DIAMONDS));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).content() ,patricia.chooseCard(stepBuilder.build()).value());
+            assertEquals(CardToPlay.of(TrucoCard.of(KING, HEARTS)).content() ,patricia.chooseCard(stepBuilder.build()).value());
         }
         @Test
         @DisplayName("Discard the weakest card that loses the hand")
@@ -329,6 +329,18 @@ class PatriciaAparecidaTest {
 
             assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(stepBuilder.build()).content());
             assertEquals(TrucoCard.closed(),patricia.chooseCard(stepBuilder.build()).value());
+        }
+        @Test
+        @DisplayName("Draws if can't win and can draw")
+        public void DrawIfCantWin(){
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
+                    botInfo(botCards,0).
+                    opponentScore(0)
+                    .opponentCard(TrucoCard.of(KING, CLUBS));
+
+            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).value() ,patricia.chooseCard(stepBuilder.build()).value());
         }
 
     }
