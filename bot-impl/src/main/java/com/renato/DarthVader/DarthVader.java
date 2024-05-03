@@ -5,7 +5,6 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-
 import java.util.*;
 
 public class DarthVader implements BotServiceProvider {

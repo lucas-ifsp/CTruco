@@ -71,6 +71,27 @@ public class DarthVaderTest {
             assertTrue(darthVader.decideIfRaises(stepBuilder.build()));
         }
 
+        @DisplayName("Should return true if I am four points ahead of my opponent")
+        @Test
+        public void shouldReturnTrueIfIAmFourPointsAheadOfMyOpponent()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 7).
+                    opponentScore(3);
+
+            assertTrue(darthVader.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 
     @Nested
