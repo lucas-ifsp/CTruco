@@ -161,6 +161,28 @@ public class DarthVaderTest {
             assertTrue(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return true If i have two or more good cards")
+        public void shouldReturnTrueIfIHaveTwoOrMoreGoodCards()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(3);
+
+            assertTrue(darthVader.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
+
+
 
     }
     @Nested
@@ -694,7 +716,6 @@ public class DarthVaderTest {
             assertEquals(expectedClassifications,darthVader.classifyMyCards(stepBuilder.build()));
 
         }
-
 
 
         @Test
