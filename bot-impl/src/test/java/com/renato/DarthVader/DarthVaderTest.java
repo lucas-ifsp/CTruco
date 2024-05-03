@@ -753,7 +753,7 @@ public class DarthVaderTest {
     class testChooseCardInEachRound{
 
 
-        @DisplayName("Tests to check if I have a good hand")
+        @DisplayName("Should return true if I have a good hand")
         @Test
         public void RoundOne()
         {
@@ -774,6 +774,30 @@ public class DarthVaderTest {
                     opponentScore(5);
 
             assertEquals(true,darthVader.verifyMyHand(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return if it's my turn to play")
+
+        public void shouldReturnIfItsMyTurntoPlay()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+
+            assertEquals(true,darthVader.verifyIfMyTurnToPlay(stepBuilder.build()));
         }
 
     }
