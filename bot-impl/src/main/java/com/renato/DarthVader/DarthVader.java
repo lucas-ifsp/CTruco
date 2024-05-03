@@ -88,7 +88,6 @@ public class DarthVader implements BotServiceProvider {
     public TrucoCard chooseTheMinorCard(GameIntel intel) {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("Card not found"));
         TrucoCard minorCard = null;
-        CardClassification minClassification = null;
         boolean verifica = verifyMyHand(intel);
         Map<TrucoCard, CardClassification> classificationsMap = classifyMyCards(intel);
         CardClassification opponentClassification = classifyOpponentCard(intel);
@@ -97,39 +96,17 @@ public class DarthVader implements BotServiceProvider {
             TrucoCard card = entry.getKey();
             CardClassification classification = entry.getValue();
 
-            if (classification == opponentClassification) {
-                if (card.compareValueTo(opponentCard, intel.getVira()) > 0) {
-                    return card;
-                }
-                else
-                {
-                    if(verifica)
-                    {
-                        return getaSmallerCardStrongerThanTheOpponent(intel);
-                    }
-                    else
-                    {
-                        return getSmallerCard(intel);
-                    }
-
-                }
-            }
-            else
-            {
-                if(verifica)
-                {
-                    return getaSmallerCardStrongerThanTheOpponent(intel);
-                }
-                else
-                {
-                    return getSmallerCard(intel);
-                }
+            if ((classification == opponentClassification && card.compareValueTo(opponentCard, intel.getVira()) > 0) || verifica) {
+                minorCard = getaSmallerCardStrongerThanTheOpponent(intel);
+                break;
+            } else {
+                minorCard = getSmallerCard(intel);
             }
         }
 
-
         return minorCard;
     }
+
 
 
     public Map<TrucoCard, CardClassification> classifyMyCards(GameIntel intel) {
