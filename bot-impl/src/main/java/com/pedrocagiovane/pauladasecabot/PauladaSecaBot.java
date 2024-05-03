@@ -378,33 +378,33 @@ public class PauladaSecaBot implements BotServiceProvider {
             System.out.println("aceitou truco se ganhou a primeira e tem zap");
             return 1;
         }
-
         //verifica se a mão não esta na primeira , se tem copas e se eu ganhei a primeira mão
-        if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+        else if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             System.out.println("aceitou truco se ganhou a primeira e tem copas");
             return 1;
         }
-
         //se tivermos mais de uma, independente do nipe, desce
-        if (manilha > 1) {
+        else if (manilha > 1) {
             System.out.println("aceitou truco com mais de uma manilha");
             return 0;
         }
-
         //se tivermos manilha e tres
         if (manilha >= 1 && temTres(intel)) {
             System.out.println("aceitou trucco com manilha e tres de uma manilha");
             return 0;
         }
-
         //se tivermos mais de um tres
-        if (quantTres > 1) {
+        else if (quantTres > 1) {
             System.out.println("aceitou truco com mais de um tres");
             return 0;
         }
-
+        // se tiver feito a primeira e tem tres pra segunda
+        else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && temTres(intel)) {
+            System.out.println("fez a primeira e aceitou truco com tres na segunda");
+            return 0;
+        }
         //se temos um tres na terceira e ganhamos a primeira
-        if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+        else if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             System.out.println("aceitou truco com tres na terceira");
             return 0;
         }
