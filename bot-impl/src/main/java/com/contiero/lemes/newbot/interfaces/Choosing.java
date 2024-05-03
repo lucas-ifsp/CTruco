@@ -1,4 +1,4 @@
-package com.contiero.lemes.newbot.services.choose_card;
+package com.contiero.lemes.newbot.interfaces;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
