@@ -199,6 +199,17 @@ public class DarthVader implements BotServiceProvider {
         return smallestCardStronger;
     }
 
+    public int getCountGoodCards(GameIntel intel) {
+        int goodCards = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if(isHighCard(card))
+            {
+                goodCards++;
+            }
+        }
+        return goodCards;
+    }
+
 
     public enum CardClassification {
         VERY_GOOD,
