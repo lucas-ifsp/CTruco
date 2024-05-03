@@ -22,11 +22,11 @@ public class DarthVader implements BotServiceProvider {
             return true;
         }
 
-        if(getNumberManilhas(intel) >= 2 )
+        if(getNumberManilhas(intel) >= 2)
         {
             return true;
         }
-        if(intel.getScore() - intel.getOpponentScore() == 4)
+        if((intel.getScore() - intel.getOpponentScore() == 4))
         {
             return true;
         }
