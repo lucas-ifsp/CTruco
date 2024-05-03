@@ -193,6 +193,22 @@ public class DarthVader implements BotServiceProvider {
         return intel.getOpponentCard().isEmpty();
     }
 
+    public boolean checkduplicateCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        int totalCards = cards.size();
+
+        for (int i = 0; i < totalCards - 1; i++) {
+            for (int j = i + 1; j < totalCards; j++) {
+                if (cards.get(i).compareValueTo(cards.get(j), intel.getVira()) == 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 
     public enum CardClassification {
         VERY_GOOD,
