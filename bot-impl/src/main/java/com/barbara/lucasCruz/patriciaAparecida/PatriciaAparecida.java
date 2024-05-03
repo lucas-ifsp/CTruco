@@ -91,7 +91,6 @@ public class PatriciaAparecida implements BotServiceProvider {
         if (card.isManilha(intel.getVira())) {
             return ((13 - card.relativeValue(intel.getVira())) - getNumberOfBestCardsKnown(card, intel));
         }
-
         return ((4*(10-card.relativeValue(intel.getVira())))) - getNumberOfBestCardsKnown(card, intel);
     }
 
