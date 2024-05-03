@@ -338,9 +338,9 @@ class PatriciaAparecidaTest {
                     gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
                     botInfo(botCards,0).
                     opponentScore(0)
-                    .opponentCard(TrucoCard.of(KING, CLUBS));
+                    .opponentCard(TrucoCard.of(TWO,CLUBS));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).value() ,patricia.chooseCard(stepBuilder.build()).value());
+            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(stepBuilder.build()).value());
         }
 
     }
