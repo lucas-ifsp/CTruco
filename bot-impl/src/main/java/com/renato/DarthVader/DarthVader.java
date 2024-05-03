@@ -11,7 +11,7 @@ public class DarthVader implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if(getNumberManilhas(intel) >= 2 || (getNumberManilhas(intel) >= 1 && getCountGoodCards(intel) >= 1))
+        if(getNumberManilhas(intel) >= 2 || (getNumberManilhas(intel) >= 1 && getCountGoodCards(intel) >= 1) || getCountGoodCards(intel) >= 2)
             return true;
         return false;
     }
