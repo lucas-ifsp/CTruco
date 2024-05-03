@@ -212,6 +212,10 @@ public class DarthVader implements BotServiceProvider {
         return goodCards;
     }
 
+    public boolean verifyIfMyTurnToPlay(GameIntel intel) {
+        return intel.getOpponentCard().isEmpty();
+    }
+
 
     public enum CardClassification {
         VERY_GOOD,
