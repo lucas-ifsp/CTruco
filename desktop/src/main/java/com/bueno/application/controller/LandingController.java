@@ -21,7 +21,11 @@
 package com.bueno.application.controller;
 
 import com.bueno.application.view.GameTableWindow;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.remote.RemoteBotApiAdapter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -43,7 +47,10 @@ public class LandingController implements ChangeListener<Boolean> {
 
     @FXML
     private void initialize(){
-        final List<String> bots = BotProviderService.providersNames();
+        RemoteBotRepository botRepository = new RemoteBotRepositoryFileImpl();
+        RemoteBotApi botApi = new RemoteBotApiAdapter();
+        BotManagerService botManagerService = new BotManagerService(botRepository, botApi);
+        final List<String> bots = botManagerService.providersNames();
         cbBot.setItems(FXCollections.observableList(bots));
         cbBot.getSelectionModel().select(0);
         txtPlayer.focusedProperty().addListener(this);

@@ -3,4 +3,5 @@ module application.console {
     requires domain;
     requires com.google.common;
     requires application.persistence;
+    requires bot.impl;
 }

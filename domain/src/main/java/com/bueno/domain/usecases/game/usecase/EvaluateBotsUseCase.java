@@ -1,5 +1,7 @@
 package com.bueno.domain.usecases.game.usecase;
 
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
@@ -10,13 +12,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 public class EvaluateBotsUseCase {
+    private static final int TIMES = 31;
     private final UUID uuidBotToEvaluate = UUID.randomUUID();
     private final String botToEvaluateName;
-    public static final int TIMES = 31;
+    private final RemoteBotRepository remoteBotRepository;
+    private final RemoteBotApi botApi;
 
-    public EvaluateBotsUseCase(String botToEvaluateName) {
+    // TODO usar o construtor apenas para injeção de dependência. Pensar em outra forma de passar o botToEvaliate name. Provavelmente no método que faz a avaliação.
+    public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, String botToEvaluateName) {
         this.botToEvaluateName = botToEvaluateName;
+        this.remoteBotRepository = remoteBotRepository;
+        this.botApi = botApi;
     }
 
     public EvaluateResultsDto getResults(List<String> botNames) {
@@ -40,8 +48,8 @@ public class EvaluateBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName) {
-        final var playManyService = new SimulationService(uuidBotToEvaluate, botToEvaluateName, challengedBotName);
-        return playManyService.runInParallel(TIMES);
+        final var playManyService = new SimulationService(remoteBotRepository, botApi);
+        return playManyService.runInParallel(uuidBotToEvaluate, botToEvaluateName, challengedBotName, TIMES);
     }
 
     private Long resultAccumulator(List<PlayWithBotsDto> results) {
@@ -50,5 +58,4 @@ public class EvaluateBotsUseCase {
         if (!collectResults.containsKey(botToEvaluateName)) return 0L;
         return collectResults.get(botToEvaluateName);
     }
-
 }

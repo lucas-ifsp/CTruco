@@ -1,6 +1,8 @@
 package com.bueno.domain.usecases.game.usecase;
 
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
@@ -12,8 +14,19 @@ import java.util.UUID;
 
 public class RankBotsUseCase {
     private final int TIMES = 7;
-    private final Map<String, Long> rankMap = new HashMap<>();
-    private final List<String> botNames = BotProviderService.providersNames();
+
+    private final RemoteBotRepository remoteBotRepository;
+    private final RemoteBotApi remoteBotApi;
+    private final Map<String, Long> rankMap;
+    private final List<String> botNames;
+
+    public RankBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi) {
+        rankMap = new HashMap<>();
+        this.remoteBotRepository = remoteBotRepository;
+        this.remoteBotApi = remoteBotApi;
+        var botProviderService = new BotManagerService(remoteBotRepository, remoteBotApi);
+        botNames = botProviderService.providersNames();
+    }
 
     public Map<String, Long> rankAll() {
         botNames.forEach(this::playAgainstAll);
@@ -37,8 +50,8 @@ public class RankBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
-        final var simulator = new SimulationService(uuidBotToEvaluate, botToEvaluateName, challengedBotName);
-        return simulator.runInParallel(TIMES);
+        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi);
+        return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, challengedBotName, TIMES);
     }
 
 }

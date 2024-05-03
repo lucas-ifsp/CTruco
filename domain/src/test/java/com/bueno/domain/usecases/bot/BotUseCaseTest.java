@@ -28,7 +28,10 @@ import com.bueno.domain.usecases.bot.handlers.CardPlayingHandler;
 import com.bueno.domain.usecases.bot.handlers.MaoDeOnzeHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseHandler;
 import com.bueno.domain.usecases.bot.handlers.RaiseRequestHandler;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.bot.usecase.BotUseCase;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.hand.HandResultRepository;
@@ -41,6 +44,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,6 +60,8 @@ class BotUseCaseTest {
     @Mock Player player;
     @Mock GameRepository gameRepository;
     @Mock GameResultRepository gameResultRepository;
+    @Mock RemoteBotRepository remoteBotRepository;
+    @Mock RemoteBotApi remoteBotApi;
     @Mock HandResultRepository handResultRepository;
     @Mock MaoDeOnzeHandler maoDeOnzeHandler;
     @Mock CardPlayingHandler cardPlayingHandler;
@@ -69,6 +75,7 @@ class BotUseCaseTest {
     void setUp() {
         UUID playerUUID = UUID.randomUUID();
         lenient().when(game.currentHand()).thenReturn(hand);
+        lenient().when(remoteBotRepository.findAll()).thenReturn(List.of());
         lenient().when(game.getIntel()).thenReturn(intel);
         lenient().when(hand.getCurrentPlayer()).thenReturn(player);
         lenient().when(intel.isGameDone()).thenReturn(false);
@@ -86,7 +93,8 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should not accept null repo")
     void shouldNotAcceptNullRepo() {
-        assertThatNullPointerException().isThrownBy(() -> new BotUseCase(null, gameResultRepository, handResultRepository));
+        assertThatNullPointerException().isThrownBy(() -> new BotUseCase(
+                null, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository));
     }
 
     @Test
@@ -159,7 +167,13 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should create default handlers if they are not injected in constructor")
     void shouldCreateDefaultHandlersIfTheyAreNotInjectedInConstructor() {
-        sut = new BotUseCase(gameRepository, gameResultRepository, handResultRepository, null, null, null, null);
+        sut = new BotUseCase(
+                gameRepository,
+                remoteBotRepository,
+                remoteBotApi,
+                gameResultRepository,
+                handResultRepository, null, null, null, null
+        );
         when(game.getIntel().currentPlayerUuid()).thenReturn(Optional.empty());
         assertThatNoException().isThrownBy(() -> sut.playWhenNecessary(game));
     }
@@ -167,7 +181,8 @@ class BotUseCaseTest {
     @Test
     @DisplayName("Should have at least one default bot implementation of bot spi")
     void shouldHaveAtLeastOneDefaultBotImplementationOfBotSpi() {
-        assertThat(BotProviderService.providersNames().isEmpty())
+        BotManagerService botManagerService = new BotManagerService(remoteBotRepository, remoteBotApi);
+        assertThat(botManagerService.providersNames().isEmpty())
                 .as("It's false that no implementation is available")
                 .isFalse();
     }

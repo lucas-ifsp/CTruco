@@ -24,10 +24,15 @@ import com.local.gustavo.contiero.lazybot.LazyBot;
 
 module bot.impl {
     requires bot.spi;
+    requires domain;
+
     requires java.net.http;
     requires spring.webflux;
     requires reactor.core;
     requires com.google.gson;
+    requires spring.web;
+    requires spring.context;
+
     exports com.local.bueno.impl.dummybot;
     exports com.local.indi.impl.addthenewsoul;
     exports com.local.hermespiassi.casados.marrecobot;
@@ -47,7 +52,7 @@ module bot.impl {
     exports com.local.yuri.impl;
     exports com.local.gatti.casaque.caipirasbot;
     exports com.local.gustavo.contiero.lazybot;
-
+    exports com.remote;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
