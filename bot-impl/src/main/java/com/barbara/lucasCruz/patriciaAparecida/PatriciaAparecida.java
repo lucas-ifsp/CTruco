@@ -122,12 +122,18 @@ public class PatriciaAparecida implements BotServiceProvider {
         }
 
     private Optional<TrucoCard> getWeakestCardThatWins(List<TrucoCard> cards, GameIntel intel) {
-         List<TrucoCard> tempcards = new ArrayList<>(cards);
-         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard,intel.getVira()));
+         List<TrucoCard> tempcards = sortCards(cards, intel);
          tempcards = tempcards.stream().filter(trucoCard -> trucoCard.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) > 0).toList();
 
         return tempcards.stream().findFirst();
     }
+
+    private static List<TrucoCard> sortCards(List<TrucoCard> cards, GameIntel intel) {
+        List<TrucoCard> tempcards = new ArrayList<>(cards);
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, intel.getVira()));
+        return tempcards;
+    }
+
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
     //O valor de retorno deve ser um dos seguintes:
     //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
