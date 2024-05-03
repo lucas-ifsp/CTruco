@@ -5,6 +5,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PatriciaAparecida implements BotServiceProvider {
 
     //decide se o bot joga uma "mão de onze".
@@ -115,4 +118,8 @@ public class PatriciaAparecida implements BotServiceProvider {
         //                ( 1 - (Math.pow(probabilidadeOponenteNaoTerUMACartaMaior, cartasNaMaoDoAdversario))) * 100;
     }
 
+    public List<Double> listProbAllCards(GameIntel intel){
+        List<Double> listProbAllCards = new ArrayList<>();
+        return listProbAllCards;
+    }
 }

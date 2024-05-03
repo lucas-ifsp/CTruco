@@ -40,6 +40,7 @@ class PatriciaAparecidaTest {
             private List<TrucoCard> randomBotCards;
             private List<TrucoCard> playedCards;
             private TrucoCard vira;
+
             @BeforeEach
             void setCards(){
                 randomBotCards = List.of(
@@ -227,6 +228,72 @@ class PatriciaAparecidaTest {
 
                 assertEquals(patricia.getNumberOfOpponentsCards(stepBuilder.build()),0);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("Check the probability")
+    class Probability{
+        @Test
+        @DisplayName("Should calculate the probability of each bot's cards")
+        public void ShouldCalculateTheProbOfEachBotCards(){
+            TrucoCard vira = generateRandomCardToPlay();
+            List<TrucoCard> botCards = List.of(
+                    generateRandomCardToPlay(),
+                    generateRandomCardToPlay(),
+                    generateRandomCardToPlay());
+            List<TrucoCard> openCards = List.of(vira);
+            List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(roundResults, openCards, vira, 0).
+                    botInfo(botCards, 0).
+                    opponentScore(0);
+
+            assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(),botCards.size());
+        }
+
+        @Test
+        @DisplayName("Should return the same prob when Know all better cards")
+        public void ShouldReturnTheSameProbWhenKnowAllBetterCards(){
+            TrucoCard vira = TrucoCard.of(FIVE,CLUBS);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(SIX,CLUBS),
+                    TrucoCard.of(SIX,HEARTS),
+                    TrucoCard.of(SIX,DIAMONDS));
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(SIX,SPADES));
+            List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(roundResults, openCards, vira, 0).
+                    botInfo(botCards, 0).
+                    opponentScore(0);
+
+            List<Double> probList = patricia.listProbAllCards(stepBuilder.build());
+
+            assertEquals(probList.get(0),probList.get(1),probList.get(2));
+        }
+
+        @Test
+        @DisplayName("Should return proportional prob to card rank")
+        public void ShouldReturnProportionalProbToCardRank() {
+            TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(SIX, CLUBS),
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(KING, DIAMONDS));
+            List<TrucoCard> openCards = List.of(vira, TrucoCard.of(SIX, SPADES));
+            List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(roundResults, openCards, vira, 0).
+                    botInfo(botCards, 0).
+                    opponentScore(0);
+
+            List<Double> probList = patricia.listProbAllCards(stepBuilder.build());
+
+            assertTrue(probList.get(0) > probList.get(2)
+                    && probList.get(2) > probList.get(1));
         }
     }
 
