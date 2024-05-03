@@ -1,14 +1,12 @@
 package com.barbara.lucasCruz.patriciaAparecida;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -234,23 +232,64 @@ class PatriciaAparecidaTest {
     @Nested
     @DisplayName("Check the probability")
     class Probability{
-        @Test
+        @Nested
         @DisplayName("Should calculate the probability of each bot's cards")
-        public void ShouldCalculateTheProbOfEachBotCards(){
-            TrucoCard vira = generateRandomCardToPlay();
-            List<TrucoCard> botCards = List.of(
-                    generateRandomCardToPlay(),
-                    generateRandomCardToPlay(),
-                    generateRandomCardToPlay());
-            List<TrucoCard> openCards = List.of(vira);
-            List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+        class SameQuantity {
+            @Test
+            @DisplayName("case 3 cards")
+            public void ShouldCalculateTheProbOfEachBotCardsWhen3cards() {
+                TrucoCard vira = generateRandomCard();
+                List<TrucoCard> botCards = List.of(
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay());
+                List<TrucoCard> openCards = List.of(vira);
+                List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
 
-            stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(roundResults, openCards, vira, 0).
-                    botInfo(botCards, 0).
-                    opponentScore(0);
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(roundResults, openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
 
-            assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(),botCards.size());
+                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
+            }
+
+            @Test
+            @DisplayName("case 2 cards")
+            public void ShouldCalculateTheProbOfEachBotCardsWhen2Cards() {
+                TrucoCard vira = generateRandomCardToPlay();
+                List<TrucoCard> botCards = List.of(
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay());
+                List<TrucoCard> openCards = List.of(vira);
+                List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(roundResults, openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
+
+                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
+            }
+            @Test
+            @DisplayName("case 1 card")
+            public void ShouldCalculateTheProbOfEachBotCardsWhen1Card() {
+                TrucoCard vira = generateRandomCardToPlay();
+                List<TrucoCard> botCards = List.of(
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay());
+                List<TrucoCard> openCards = List.of(vira);
+                List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
+
+                stepBuilder = GameIntel.StepBuilder.with().
+                        gameInfo(roundResults, openCards, vira, 0).
+                        botInfo(botCards, 0).
+                        opponentScore(0);
+
+                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
+            }
         }
 
         @Test
@@ -403,6 +442,14 @@ class PatriciaAparecidaTest {
             cardToPlay = generateRandomCard();
         }
         return cardToPlay;
+    }
+
+    public List<TrucoCard> generateTrucoCardToPlayList(int qnt){
+        List<TrucoCard> cardToPlayList = new ArrayList<>();
+        for(int i = 0; i < qnt ; i++){
+            cardToPlayList.add(generateRandomCard());
+        }
+        return cardToPlayList;
     }
 
 }
