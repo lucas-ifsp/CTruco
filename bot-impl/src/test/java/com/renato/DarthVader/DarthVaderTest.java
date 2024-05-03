@@ -337,6 +337,28 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),darthVader.getStrongCardwithTheLowestSuit(stepBuilder.build()));
         }
 
+
+        @DisplayName("Should return true if I have two or three repeated cards")
+        @Test
+        public void shouldReturnTrueIfIHaveTwoOrThreeRepeatedCards()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 11).
+                    opponentScore(5);
+
+            assertTrue(darthVader.checkduplicateCard(stepBuilder.build()));
+        }
+
     }
 
     @Nested
