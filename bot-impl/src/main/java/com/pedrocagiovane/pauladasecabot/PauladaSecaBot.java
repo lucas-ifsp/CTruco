@@ -215,19 +215,23 @@ public class PauladaSecaBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         // PRIMEIRA: verifica se a mão esta na primeira e se tem casal menor
         if (intel.getRoundResults().isEmpty() && temCasalMenor(intel)){
-            System.out.println("casal menor primeira");
+            System.out.println("truco se tiver casal menor primeira");
+            return true;
+        }
+        // SEGUNDA: se tiver casal maior pede truco
+        else if (!intel.getRoundResults().isEmpty() && temCasalMaior(intel)) {
+            System.out.println("truco se tiver casal maior segunda");
             return true;
         }
 
-        // SEGUNDA: se tiver casal maior pede truco
-        if (!intel.getRoundResults().isEmpty() && temCasalMaior(intel)) {
-            System.out.println("casal maior segunda");
+        // SEGUNDA: se tiver feito a primeira e tem 3 pra segunda
+        else if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && temTres(intel)){
+            System.out.println("truco se fez a primeira e tem 3 pra segunda");
             return true;
         }
 
         // JOGA PRIMEIRO
         if (!intel.getOpponentCard().isPresent()) {
-
             //TERCEIRA: pede truco se tiver três ou manilha
             if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
                 System.out.println("terceira tem manilha ou 3");
@@ -237,8 +241,8 @@ public class PauladaSecaBot implements BotServiceProvider {
             }
 
             //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
-            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
-                System.out.println("segunda, ganhando primeira e tem manilha pra segunda");
+            else if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
+                System.out.println("segunda, truco se ganhando primeira e tem manilha pra segunda");
                 if( contManilha(intel.getCards(), intel.getVira()) > 0) {
                     return true;
                 }
@@ -246,7 +250,7 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
 
         // JOGA DEPOIS
-        if (intel.getOpponentCard().isPresent()) {
+        else if (intel.getOpponentCard().isPresent()) {
 
             //TERCEIRA: pede truco se consegue amarrar a terceira
             if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
@@ -262,9 +266,8 @@ public class PauladaSecaBot implements BotServiceProvider {
                     }
                 }
             }
-
             //TERCEIRA: BLEFE se a carta do oponente for uma dama ou menor(sem ser manilha) e se tiver ganho a primeira, TRUCA no safado!!
-            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            else if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
                 System.out.println("blefe");
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
@@ -275,9 +278,8 @@ public class PauladaSecaBot implements BotServiceProvider {
                     }
                 }
             }
-
             //TERCEIRA: trucar se a carta for maior do que a do oponente e se não for manilha e tiver ganho a primeira
-            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            else if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
                 System.out.println("terceira truco se carta for maior e nao for manilha");
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
@@ -290,9 +292,8 @@ public class PauladaSecaBot implements BotServiceProvider {
                     }
                 }
             }
-
             //TERCEIRA: trucar se a carta for maior do que a do oponente e for manilha
-            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2) {
+            else if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2) {
                 System.out.println("terceira truco se carta for maior e for manilha");
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
@@ -373,22 +374,40 @@ public class PauladaSecaBot implements BotServiceProvider {
         int quantTres = contTres(intel);
 
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
-        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            System.out.println("aceitou truco se ganhou a primeira e tem zap");
+            return 1;
+        }
 
-        if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 1;
+        //verifica se a mão não esta na primeira , se tem copas e se eu ganhei a primeira mão
+        if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            System.out.println("aceitou truco se ganhou a primeira e tem copas");
+            return 1;
+        }
 
         //se tivermos mais de uma, independente do nipe, desce
-        if (manilha > 1) return 0;
+        if (manilha > 1) {
+            System.out.println("aceitou truco com mais de uma manilha");
+            return 0;
+        }
 
         //se tivermos manilha e tres
-        if (manilha >= 1 && temTres(intel)) return 0;
+        if (manilha >= 1 && temTres(intel)) {
+            System.out.println("aceitou trucco com manilha e tres de uma manilha");
+            return 0;
+        }
 
         //se tivermos mais de um tres
-        if (quantTres > 1) return 0;
+        if (quantTres > 1) {
+            System.out.println("aceitou truco com mais de um tres");
+            return 0;
+        }
 
-        //se temos um tres na terceira
-        if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)return 0;
-
+        //se temos um tres na terceira e ganhamos a primeira
+        if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            System.out.println("aceitou truco com tres na terceira");
+            return 0;
+        }
 
         System.out.println("corremo");
         return -1;
