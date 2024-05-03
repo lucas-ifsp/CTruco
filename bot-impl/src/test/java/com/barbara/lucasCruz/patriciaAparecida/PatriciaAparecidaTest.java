@@ -37,20 +37,25 @@ class PatriciaAparecidaTest {
         @DisplayName("Number of remainder cards")
         class RemainderCards{
 
+            private List<TrucoCard> randomBotCards;
+
+            @BeforeEach
+            void setCards(){
+                randomBotCards = List.of(
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay(),
+                        generateRandomCardToPlay());
+            }
             @Test
             @DisplayName("Start Of the Game")
             public void startOfTheGame() {
 
-                List<TrucoCard> botCards = List.of(
-                        generateRandomCardToPlay(),
-                        generateRandomCardToPlay(),
-                        generateRandomCardToPlay());
                 TrucoCard vira = generateRandomCardToPlay();
                 List<TrucoCard> openCards = List.of(vira);
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
-                        botInfo(botCards, 0).
+                        botInfo(randomBotCards, 0).
                         opponentScore(0);
 
                 assertEquals(patricia.getNumberOfRemainderCards(stepBuilder.build()), 36);
@@ -85,19 +90,22 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("Number of best cards known")
         class BestCardsKnown{
-
+            private List<TrucoCard> botCards;
+            private TrucoCard openCard;
+            @BeforeEach
+            void setCards(){
+                botCards =  List.of(TrucoCard.of(ACE,CLUBS),
+                        TrucoCard.of(ACE,HEARTS),
+                        TrucoCard.of(ACE,SPADES));
+                openCard = TrucoCard.of(ACE,DIAMONDS);
+            }
             @Test
             @DisplayName("Have no better cards known")
             public void ShouldReturnZeroIfHaveNoBetterCardsKnown(){
-
-                List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(ACE,CLUBS),
-                        TrucoCard.of(ACE,HEARTS),
-                        TrucoCard.of(ACE,SPADES));
                 TrucoCard vira = TrucoCard.of(FOUR,SPADES);
                 List<TrucoCard> openCards = List.of(
                         vira,
-                        TrucoCard.of(ACE,DIAMONDS));
+                        openCard);
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
@@ -110,15 +118,10 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Have better cards known")
             public void ShouldReturnAPositiveNuberIfHaveBetterCardsKnown(){
-
-                List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(ACE,CLUBS),
-                        TrucoCard.of(ACE,HEARTS),
-                        TrucoCard.of(ACE,SPADES));
                 TrucoCard vira = TrucoCard.of(THREE,SPADES);
                 List<TrucoCard> openCards = List.of(
                         vira,
-                        TrucoCard.of(ACE,DIAMONDS));
+                        openCard);
 
                 stepBuilder = GameIntel.StepBuilder.with().
                         gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
