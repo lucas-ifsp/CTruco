@@ -412,4 +412,16 @@ public class PauladaSecaBotTest {
         boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
         assertThat(result).isTrue();
     }
+
+    @Test
+    @DisplayName("Pede truco na segunda se tiver casal vermelho")
+    void trucoSegundaSeTiverCasalVermelho() {
+        maoPlayer = List.of(TrucoCard.of(FIVE,HEARTS), TrucoCard.of(KING, HEARTS), TrucoCard.of(KING, DIAMONDS));
+        vira = TrucoCard.of(JACK, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.LOST);
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+        boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
 }
