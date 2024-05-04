@@ -344,7 +344,7 @@ class PatriciaAparecidaTest {
         public void DiscardWeakestCardThatLosesHand(){
             List<TrucoCard> openCards = List.of(vira);
             stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
+                    gameInfo(List.of(WON),openCards,vira,1).
                     botInfo(botCards,0).
                     opponentScore(0)
                     .opponentCard(TrucoCard.of(SIX,CLUBS));
