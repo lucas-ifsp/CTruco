@@ -212,10 +212,21 @@ public class DarthVader implements BotServiceProvider {
 
         if (verifyIfMyTurnToPlay(intel))
         {
-            if(getNumberManilhas(intel) >= 2)
-                return CardToPlay.of(getTheSmallestManilha(intel));
-            if(getCountGoodCards(intel)>= 2)
-                return CardToPlay.of(getStrongCard(intel));
+            if(verifyMyHand(intel))
+            {
+                if(getNumberManilhas(intel) >= 2)
+                    return CardToPlay.of(getTheSmallestManilha(intel));
+                if(getCountGoodCards(intel)>= 2)
+                    return CardToPlay.of(getStrongCard(intel));
+            }
+            else
+            {
+                if(checkduplicateCard(intel))
+                {
+                    return CardToPlay.of(getStrongCardwithTheLowestSuit(intel));
+                }
+            }
+
         }
         return CardToPlay.of(getSmallerCard(intel));
 
