@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 public class PatoBot implements BotServiceProvider {
@@ -31,4 +32,5 @@ public class PatoBot implements BotServiceProvider {
     public Boolean checkIfOpponentIsFirstToPlay (Optional<TrucoCard> opponentCard){
         return opponentCard.isPresent();
     }
+
 }

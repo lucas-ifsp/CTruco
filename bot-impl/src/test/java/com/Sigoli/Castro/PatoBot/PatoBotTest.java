@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-
+import com.bueno.spi.model.GameIntel;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,14 @@ public class PatoBotTest {
     PatoBot patoBot;
     private GameIntel.StepBuilder stepBuilder;
 
-@BeforeEach
+
+    @BeforeEach
 public void createPatoBot(){
     patoBot = new PatoBot();
 }
     @Test
     @DisplayName("Should return true id opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
-
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
         boolean opponentPlay = true;
         assertThat(patoBot
@@ -42,10 +42,30 @@ public void createPatoBot(){
    @Test
    @DisplayName("Should return false if opponent is not first to play")
     void shouldReturnFalseIfOpponentIsNotFirstToPlay(){
-
         boolean opponentPlay = false;
         assertThat(patoBot.checkIfOpponentIsFirstToPlay(Optional.empty()).equals(opponentPlay));
     }
+   /* @Test
+    @DisplayName("Should return 'first round' if got three cards in hand")
+    void shouldReturnFirstRoundIfGotThreeCardsInHand(){
+   String round = " first Round";
+   assertThat(patoBot.getPresentRound()).equals(round);
+    */
+
+    @Test
+    @DisplayName("Should Return three if got three cards in hand")
+    void shouldReturnThreeIfGotThreeCardsInHand(){
+        int numberOfCards = 3;
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard card2 =  TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
+        TrucoCard card3 = TrucoCard.of(CardRank.THREE,CardSuit.CLUBS);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+
+        assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+    }
+
+
 
 
 }
