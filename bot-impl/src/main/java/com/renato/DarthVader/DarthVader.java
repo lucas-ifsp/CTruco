@@ -210,6 +210,11 @@ public class DarthVader implements BotServiceProvider {
 
     public CardToPlay firstRoundCard(GameIntel intel) {
 
+        if (verifyIfMyTurnToPlay(intel))
+        {
+            if(getNumberManilhas(intel) >= 2)
+                return CardToPlay.of(getTheSmallestManilha(intel));
+        }
         return CardToPlay.of(getSmallerCard(intel));
 
     }
