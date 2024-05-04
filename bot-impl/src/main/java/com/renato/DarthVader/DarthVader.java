@@ -38,7 +38,18 @@ public class DarthVader implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        if(roundNumber(intel) == 1)
+        {
+            return firstRoundCard(intel);
+        }
+        else if(roundNumber(intel) == 2)
+        {
+            return secondRoundCard(intel);
+        }
+        else
+        {
+            return thirdRoundCard(intel);
+        }
     }
 
     @Override
