@@ -34,16 +34,17 @@ public void createPatoBot(){
     @DisplayName("Should return true id opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
-        boolean opponentPlay = true;
-        assertThat(patoBot
-                .checkIfOpponentIsFirstToPlay(Optional.ofNullable(opponentCard)).equals(opponentPlay));
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
+        assertThat( patoBot.checkIfOpponentIsFirstToPlay(intel.getOpponentCard())).isTrue();
     }
 
    @Test
    @DisplayName("Should return false if opponent is not first to play")
     void shouldReturnFalseIfOpponentIsNotFirstToPlay(){
-        boolean opponentPlay = false;
-        assertThat(patoBot.checkIfOpponentIsFirstToPlay(Optional.empty()).equals(opponentPlay));
+       GameIntel intel = mock(GameIntel.class);
+       when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        assertThat(patoBot.checkIfOpponentIsFirstToPlay(intel.getOpponentCard())).isFalse();
     }
    /* @Test
     @DisplayName("Should return 'first round' if got three cards in hand")
@@ -61,6 +62,17 @@ public void createPatoBot(){
         TrucoCard card2 =  TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
         TrucoCard card3 = TrucoCard.of(CardRank.THREE,CardSuit.CLUBS);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+
+        assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+    }
+
+    @Test
+    @DisplayName("Should Return one if got one cards in hand")
+    void shouldReturnOneIfGotOneCardInHand(){
+        int numberOfCards = 1;
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1));
 
         assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
     }
