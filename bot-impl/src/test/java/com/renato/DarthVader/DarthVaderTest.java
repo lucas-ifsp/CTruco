@@ -1103,6 +1103,35 @@ public class DarthVaderTest {
     }
 
 
+    @Nested
+    @DisplayName("Round 3")
+    class Round3
+    {
+        @Test
+        @DisplayName("Should return the last card")
+        public void sholdReturnTheLastCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE,CardSuit.DIAMONDS)),darthVader.thirdRoundCard(stepBuilder.build()));
+        }
+
+    }
+
+
+
 
 
 
