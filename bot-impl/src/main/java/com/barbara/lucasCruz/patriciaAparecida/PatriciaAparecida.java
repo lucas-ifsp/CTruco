@@ -34,7 +34,8 @@ public class PatriciaAparecida implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
         List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
-        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, intel.getVira()));
+        TrucoCard vira = intel.getVira();
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
 
         if(intel.getOpponentCard().isPresent()){
 
@@ -49,6 +50,8 @@ public class PatriciaAparecida implements BotServiceProvider {
 
         }
 
+        TrucoCard StrongestTrucoCard = tempcards.get(tempcards.size() - 1);
+        if(StrongestTrucoCard.isManilha(vira)) return CardToPlay.of(StrongestTrucoCard);
         return CardToPlay.of(intel.getCards().get(0));
         }
 
