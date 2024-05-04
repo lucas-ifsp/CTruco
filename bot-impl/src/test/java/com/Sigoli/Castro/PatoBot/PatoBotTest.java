@@ -46,13 +46,6 @@ public void createPatoBot(){
        when(intel.getOpponentCard()).thenReturn(Optional.empty());
         assertThat(patoBot.checkIfOpponentIsFirstToPlay(intel.getOpponentCard())).isFalse();
     }
-   /* @Test
-    @DisplayName("Should return 'first round' if got three cards in hand")
-    void shouldReturnFirstRoundIfGotThreeCardsInHand(){
-   String round = " first Round";
-   assertThat(patoBot.getPresentRound()).equals(round);
-    */
-
     @Test
     @DisplayName("Should Return three if got three cards in hand")
     void shouldReturnThreeIfGotThreeCardsInHand(){
@@ -75,6 +68,25 @@ public void createPatoBot(){
         when(intel.getCards()).thenReturn(Arrays.asList(card1));
 
         assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+    }
+
+    @Test
+    @DisplayName("Should play lowest winning card if can defeat opponent")
+    public void shouldPlayLowestWinningCardIfCanDefeatOpponent() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(attemptToBeatOpponentCard(intel)).isEquals(expected);
+
     }
 
 
