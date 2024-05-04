@@ -840,6 +840,28 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
+
+        @Test
+        @DisplayName("Should return the smallest shackle if I have 2 or more shackles and it's my turn to play")
+        public void shouldReturnTheSmallestShackleIfIHave2OrMoreShackles()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
+        }
+
+
     }
     @Nested
     @DisplayName("Tests for the method decides whether to increase")
