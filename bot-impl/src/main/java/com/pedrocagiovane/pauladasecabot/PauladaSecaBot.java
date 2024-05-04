@@ -451,6 +451,12 @@ public class PauladaSecaBot implements BotServiceProvider {
             return 1;
         }
 
+        //verifica se a mão não esta na primeira , se tem casal menor e perdeu a primeira
+        if (!intel.getRoundResults().isEmpty() && temCasalMenor(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
+            System.out.println("aceitou truco se perdeu mas tem casal menor");
+            return 1;
+        }
+
 
         //se tivermos mais de uma, independente do nipe, desce
         if (manilha > 1) {
