@@ -842,7 +842,7 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 5).
                     opponentScore(5);
 
-            assertEquals(true,darthVader.verifyMyHand(stepBuilder.build()));
+            assertTrue(darthVader.verifyMyHand(stepBuilder.build()));
         }
 
         @Test
@@ -866,7 +866,7 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 5).
                     opponentScore(5);
 
-            assertEquals(true,darthVader.verifyIfMyTurnToPlay(stepBuilder.build()));
+            assertTrue(darthVader.verifyIfMyTurnToPlay(stepBuilder.build()));
         }
 
 
