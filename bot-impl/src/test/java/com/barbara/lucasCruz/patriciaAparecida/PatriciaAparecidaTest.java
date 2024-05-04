@@ -303,14 +303,60 @@ class PatriciaAparecidaTest {
         private TrucoCard vira;
         private List<GameIntel.RoundResult> firstRound;
 
-        @BeforeEach
-        void setUpAnyRound(){
-            botCards = List.of(TrucoCard.of(KING, HEARTS), //2
-                    TrucoCard.of(FOUR,CLUBS), // 3
-                    TrucoCard.of(TWO,HEARTS)); // 1
 
-            vira = TrucoCard.of(FIVE,CLUBS);
+        @Nested
+        @DisplayName("Unknown Opponent Card Tests")
+        class UnknownOpponentClassTests{
+
+            @Test
+            @DisplayName("Plays if 0 probability of strongest card")
+            public void PlayIfZeroProbabilityOfStrongerCard(){
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
+            }
+
         }
+        @Nested
+        @DisplayName("known Opponent Card Tests")
+        class KnownOpponentClassTests{
+            @BeforeEach
+            void setUpAnyRound(){
+                botCards = List.of(TrucoCard.of(KING, HEARTS), //2
+                        TrucoCard.of(FOUR,CLUBS), // 3
+                        TrucoCard.of(TWO,HEARTS)); // 1
+
+                vira = TrucoCard.of(FIVE,CLUBS);
+            }
+            @Test
+            @DisplayName("Plays if 0 probability of strongest card")
+            public void PlayIfZeroProbabilityOfStrongerCard(){
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
+            }
+
+            @Test
+            @DisplayName("Choose the weakest card that wins the hand")
+            public void ChooseWeakestCardThatWinsHand(){
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(QUEEN, DIAMONDS)));
+
+                assertEquals(CardToPlay.of(TrucoCard.of(KING, HEARTS)).content() ,patricia.chooseCard(intel).value());
+            }
+
+            @Test
+            @DisplayName("Draws if can't win and can draw")
+            public void DrawIfCantWin(){
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(TWO, CLUBS)));
+
+                assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(intel).value());
+            }
+        }
+
 
         @Nested
         @DisplayName("Second Round Tests")
@@ -339,33 +385,7 @@ class PatriciaAparecidaTest {
 
         }
 
-        @Test
-        @DisplayName("Choose the weakest card that wins the hand")
-        public void ChooseWeakestCardThatWinsHand(){
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getCards()).thenReturn(botCards);
-            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(QUEEN, DIAMONDS)));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(KING, HEARTS)).content() ,patricia.chooseCard(intel).value());
-        }
-
-        @Test
-        @DisplayName("Draws if can't win and can draw")
-        public void DrawIfCantWin(){
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getCards()).thenReturn(botCards);
-            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(TWO, CLUBS)));
-
-            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(intel).value());
-        }
-
-        @Test
-        @DisplayName("Plays if 0 probability of strongest card")
-        public void PlayIfZeroProbabilityOfStrongerCard(){
-            when(intel.getCards()).thenReturn(botCards);
-            when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
-            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
-        }
     }
 
 
