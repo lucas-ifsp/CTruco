@@ -33,19 +33,20 @@ public class PatriciaAparecida implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
-
+        List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, intel.getVira()));
 
         if(intel.getOpponentCard().isPresent()){
 
-              Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
-              if(weakestCardThatWins.isPresent()) return CardToPlay.of(weakestCardThatWins.get());
-              Optional<TrucoCard> cardThatDraws = getCardThatDraws(intel.getCards(),intel);
+            Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards,intel);
+            if(getWeakestCardThatWins(tempcards,intel).isPresent()) return CardToPlay.of(weakestCardThatWins.get());
+            Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards,intel);
             if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
-
             if(!intel.getRoundResults().isEmpty()) {
-                 return CardToPlay.discard(sortCards(intel.getCards(),intel).stream().findFirst().get());
+                 return CardToPlay.discard(tempcards.stream().findFirst().get());
             }
-            else return CardToPlay.of(sortCards(intel.getCards(),intel).stream().findFirst().get());
+            else return CardToPlay.of(tempcards.stream().findFirst().get());
+
         }
 
         return CardToPlay.of(intel.getCards().get(0));
@@ -54,21 +55,12 @@ public class PatriciaAparecida implements BotServiceProvider {
     private Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
         for (TrucoCard card : cards)
             if(card.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) == 0) return Optional.of(card);
-
         return Optional.empty();
     }
 
     private Optional<TrucoCard> getWeakestCardThatWins(List<TrucoCard> cards, GameIntel intel) {
-         List<TrucoCard> tempcards = sortCards(cards, intel);
-         tempcards = tempcards.stream().filter(trucoCard -> trucoCard.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) > 0).toList();
-
-        return tempcards.stream().findFirst();
-    }
-
-    private static List<TrucoCard> sortCards(List<TrucoCard> cards, GameIntel intel) {
-        List<TrucoCard> tempcards = new ArrayList<>(cards);
-        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, intel.getVira()));
-        return tempcards;
+        cards = cards.stream().filter(trucoCard -> trucoCard.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) > 0).toList();
+        return cards.stream().findFirst();
     }
 
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
