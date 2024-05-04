@@ -232,6 +232,10 @@ public class DarthVader implements BotServiceProvider {
             }
 
         }
+        else
+        {
+            return CardToPlay.of(chooseTheMinorCard(intel));
+        }
         return CardToPlay.of(getSmallerCard(intel));
 
     }
