@@ -1,9 +1,6 @@
 package com.renato.DarthVader;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -824,8 +821,8 @@ public class DarthVaderTest {
 
 
         @Test
-        @DisplayName("Should check if it's my turn to play")
-        public void shouldCheckIfItIsMyTurntoPlay()
+        @DisplayName("Should return the smallest card")
+        public void shouldReturnTheSmallestCard()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
@@ -840,7 +837,7 @@ public class DarthVaderTest {
                     gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
                     botInfo(trucoCards, 5).
                     opponentScore(5);
-            assertEquals(true,darthVader.firstRoundCard(stepBuilder.build()));
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
     }
