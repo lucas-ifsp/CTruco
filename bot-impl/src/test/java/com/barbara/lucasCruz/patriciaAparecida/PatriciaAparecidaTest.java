@@ -311,7 +311,9 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Plays if 0 probability of strongest card")
             public void PlayIfZeroProbabilityOfStrongerCard(){
-                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(KING, HEARTS), //2
+                        TrucoCard.of(FOUR,CLUBS), // 3
+                        TrucoCard.of(TWO,HEARTS)));
                 when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
             }
@@ -321,19 +323,12 @@ class PatriciaAparecidaTest {
         @DisplayName("known Opponent Card Tests")
         class KnownOpponentClassTests{
             @BeforeEach
-            void setUpAnyRound(){
+            void setUpCardsKnownOpponentCardCase(){
                 botCards = List.of(TrucoCard.of(KING, HEARTS), //2
                         TrucoCard.of(FOUR,CLUBS), // 3
                         TrucoCard.of(TWO,HEARTS)); // 1
 
                 vira = TrucoCard.of(FIVE,CLUBS);
-            }
-            @Test
-            @DisplayName("Plays if 0 probability of strongest card")
-            public void PlayIfZeroProbabilityOfStrongerCard(){
-                when(intel.getCards()).thenReturn(botCards);
-                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
-                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
             }
 
             @Test
@@ -355,34 +350,18 @@ class PatriciaAparecidaTest {
 
                 assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(intel).value());
             }
-        }
 
-
-        @Nested
-        @DisplayName("Second Round Tests")
-        class CCSecondRound{
-            @BeforeEach
-            void setUpSecondRound(){
-                botCards = List.of(TrucoCard.of(KING, HEARTS), //2
-                        TrucoCard.of(FOUR,CLUBS), // 3
-                        TrucoCard.of(TWO,HEARTS)); // 1
-
-                vira = TrucoCard.of(FIVE,CLUBS);
-                firstRound = List.of(LOST);
-
-            }
             @Test
             @DisplayName("Discard the weakest card that loses the hand")
             public void DiscardWeakestCardThatLosesHand(){
 
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getCards()).thenReturn(botCards);
-                when(intel.getRoundResults()).thenReturn(firstRound);
+                when(intel.getRoundResults()).thenReturn(List.of(LOST));
                 when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(SIX, CLUBS)));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).content() ,patricia.chooseCard(intel).content());
                 assertEquals(TrucoCard.closed(),patricia.chooseCard(intel).value());
             }
-
         }
 
 
