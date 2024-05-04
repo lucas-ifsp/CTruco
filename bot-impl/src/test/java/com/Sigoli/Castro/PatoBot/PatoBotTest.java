@@ -24,10 +24,15 @@ import static org.mockito.Mockito.when;
 public class PatoBotTest {
     PatoBot patoBot;
     private GameIntel.StepBuilder stepBuilder;
+
+@BeforeEach
+public void createPatoBot(){
+    patoBot = new PatoBot();
+}
     @Test
     @DisplayName("Should return true id opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
-        patoBot = new PatoBot();
+
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
         boolean opponentPlay = true;
         assertThat(patoBot
@@ -37,7 +42,7 @@ public class PatoBotTest {
    @Test
    @DisplayName("Should return false if opponent is not first to play")
     void shouldReturnFalseIfOpponentIsNotFirstToPlay(){
-        patoBot = new PatoBot();
+
         boolean opponentPlay = false;
         assertThat(patoBot.checkIfOpponentIsFirstToPlay(Optional.empty()).equals(opponentPlay));
     }
