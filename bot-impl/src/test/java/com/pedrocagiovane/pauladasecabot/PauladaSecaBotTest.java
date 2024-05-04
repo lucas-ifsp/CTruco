@@ -50,8 +50,8 @@ public class PauladaSecaBotTest {
     }
 
     @Test
-    @DisplayName("Aumenta aposta se tiver copas e ganhou a primeira")
-    void aumentaApostaSeTiverCopasEGanharPrimeira() {
+    @DisplayName("Aceita aposta se tiver copas e ganhou a primeira")
+    void aceitaApostaSeTiverCopasEGanharPrimeira() {
         maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(TWO, CLUBS));
         vira = TrucoCard.of(TWO, HEARTS);
         roundResult = List.of(GameIntel.RoundResult.WON);
@@ -61,8 +61,8 @@ public class PauladaSecaBotTest {
         assertThat(resultado).isOne();
     }
     @Test
-    @DisplayName("Aumenta aposta se tiver zap e ganhou a primeira")
-    void aumentarApostaSeTiverZapEGanharPrimeira() {
+    @DisplayName("Aceita aposta se tiver zap e ganhou a primeira")
+    void aceitaApostaSeTiverZapEGanharPrimeira() {
         maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(ACE, HEARTS), TrucoCard.of(THREE, CLUBS));
         vira = TrucoCard.of(TWO, SPADES);
         roundResult = List.of(GameIntel.RoundResult.WON);
@@ -252,7 +252,7 @@ public class PauladaSecaBotTest {
     @Test
     @DisplayName("Aceitamo o truco se tem dois tres")
     void aceitaSeTemDoisTres() {
-        maoPlayer = List.of(TrucoCard.of(THREE,SPADES),TrucoCard.of(THREE,HEARTS), TrucoCard.of(SEVEN, HEARTS));
+        maoPlayer = List.of(TrucoCard.of(THREE,SPADES),TrucoCard.of(TWO,HEARTS), TrucoCard.of(SEVEN, HEARTS));
         vira = TrucoCard.of(FOUR, DIAMONDS);
         roundResult = List.of();
         cartas = List.of();
@@ -301,6 +301,17 @@ public class PauladaSecaBotTest {
     @DisplayName("Aceita truco se casal vermelho e perdeu a primeira")
     void aceitarApostaSeTiverCasalVermelho() {
         maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(TWO, HEARTS), TrucoCard.of(TWO, DIAMONDS));
+        vira = TrucoCard.of(ACE, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.LOST);
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
+        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
+        assertThat(resultado).isOne();
+    }
+    @Test
+    @DisplayName("Aceita truco se casal preto e perdeu a primeira")
+    void aceitarApostaSeTiverCasalPreto() {
+        maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(TWO, CLUBS), TrucoCard.of(TWO, SPADES));
         vira = TrucoCard.of(ACE, SPADES);
         roundResult = List.of(GameIntel.RoundResult.LOST);
         cartas = List.of();

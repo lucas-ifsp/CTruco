@@ -25,6 +25,20 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
+    private boolean temCasalPreto(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        int contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isZap(vira) || card.isEspadilha(vira)){
+                contador ++;
+            }
+        }
+        if(contador == 2){
+            return true;
+        }
+        return false;
+    }
+
     private boolean temCasalVermelho(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         int contador = 0;
@@ -38,7 +52,6 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
         return false;
     }
-
 
     private boolean temCasalMenor(GameIntel intel) {
         TrucoCard vira = intel.getVira();
@@ -336,6 +349,18 @@ public class PauladaSecaBot implements BotServiceProvider {
         if (temCasalMaior(build) && build.getRoundResults().isEmpty()){
             return CardToPlay.of(piorCarta(build));
         }
+        // PRIMEIRA: joga pior carta se tiver casal vermelho
+        if (temCasalVermelho(build) && build.getRoundResults().isEmpty()){
+            return CardToPlay.of(piorCarta(build));
+        }
+        // PRIMEIRA: joga pior carta se tiver casal preto
+        if (temCasalPreto(build) && build.getRoundResults().isEmpty()){
+            return CardToPlay.of(piorCarta(build));
+        }
+        // PRIMEIRA: joga pior carta se tiver casal menor
+        if (temCasalMenor(build) && build.getRoundResults().isEmpty()){
+            return CardToPlay.of(piorCarta(build));
+        }
 
         // JOGA PRIMEIRO
         if (!build.getOpponentCard().isPresent()) {
@@ -404,6 +429,12 @@ public class PauladaSecaBot implements BotServiceProvider {
         //verifica se a mão não esta na primeira , se tem casal vermelho e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalVermelho(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
             System.out.println("aceitou truco se perdeu mas tem casal vermelho");
+            return 1;
+        }
+
+        //verifica se a mão não esta na primeira , se tem casal preto e perdeu a primeira
+        if (!intel.getRoundResults().isEmpty() && temCasalPreto(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
+            System.out.println("aceitou truco se perdeu mas tem casal preto");
             return 1;
         }
 
