@@ -37,7 +37,7 @@ class JakareDuMatuBotTest {
 //        @DisplayName("Decide que vai pedir truco na primeira rodada com casal maior")
         @DisplayName("Decide that you will ask for tricks in the first round with an older couple")
         public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
-            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
             List<GameIntel.RoundResult> roundResults = List.of();
