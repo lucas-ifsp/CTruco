@@ -248,6 +248,10 @@ public class DarthVader implements BotServiceProvider {
 
     }
 
+    public GameIntel.RoundResult checkIfIWonTheRound(GameIntel intel) {
+        return intel.getRoundResults().get(intel.getRoundResults().size()-1);
+    }
+
 
     public enum CardClassification {
         VERY_GOOD,
