@@ -996,6 +996,28 @@ public class DarthVaderTest {
 
     }
     @Nested
+    @DisplayName("Test to check if I won the first round")
+    class checkIfIWonTheFirstRoundTest{
+        @Test
+        @DisplayName("Should check that I didn't win the round")
+        public void shouldCheckThatIWonTheFirstRound()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 0).
+                    opponentScore(3);
+
+            assertEquals(GameIntel.RoundResult.LOST,darthVader.checkIfIWonTheRound(stepBuilder.build()));
+        }
+    }
+    @Nested
     @DisplayName("Tests for the method decides whether to increase")
     class testIncrease{
 
