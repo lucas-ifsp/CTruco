@@ -881,6 +881,26 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the lowest card if i have two cards duplicate and my cards is bad")
+        public void shouldReturnTheLowestCardIfIHaveTwoCardsDuplicate()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN,CardSuit.CLUBS)),darthVader.firstRoundCard(stepBuilder.build()));
+        }
+
 
     }
     @Nested
