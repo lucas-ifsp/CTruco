@@ -906,7 +906,7 @@ public class DarthVaderTest {
         public void shouldReturnTheMediumCardIfMyHandIsBad()
         {
             List<TrucoCard> trucoCards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
@@ -918,7 +918,7 @@ public class DarthVaderTest {
                     gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
                     botInfo(trucoCards, 5).
                     opponentScore(5);
-            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS)),darthVader.firstRoundCard(stepBuilder.build()));
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
 
