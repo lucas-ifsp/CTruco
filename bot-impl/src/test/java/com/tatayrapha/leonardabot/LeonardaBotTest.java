@@ -47,7 +47,9 @@ class LeonardaBotTest {
     @DisplayName("Should play the second-highest card to win the second round.")
     void playSecondHighestCardToWinSecondRound() {
         final TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
-        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
+        final List<TrucoCard> trucoCardList = Arrays.asList(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(trucoCardList);
         when(intel.getRoundResults()).thenReturn(Arrays.asList(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
