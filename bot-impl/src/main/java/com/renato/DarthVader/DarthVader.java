@@ -226,6 +226,7 @@ public class DarthVader implements BotServiceProvider {
                     return CardToPlay.of(getTheSmallestManilha(intel));
                 if(getCountGoodCards(intel)>= 2)
                     return CardToPlay.of(getStrongCard(intel));
+                return CardToPlay.of(getStrongCard(intel));
             }
             else
             {
@@ -237,6 +238,7 @@ public class DarthVader implements BotServiceProvider {
                 {
                     return CardToPlay.of(getMediumCard(intel));
                 }
+                return CardToPlay.of(getSmallerCard(intel));
             }
 
         }
