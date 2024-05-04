@@ -3,6 +3,7 @@ package com.miguelestevan.jakaredumatubot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,25 +17,32 @@ class JakareDuMatuBotTest {
         jakareDuMatuBot = new JakareDuMatuBot();
     }
 
-    @Test
-    void getMaoDeOnzeResponse() {
+    @Nested
+    class getMaoDeOnzeResponse {
+
     }
 
-    @Test
-    void decideIfRaises() {
+    @Nested
+    class decideIfRaises {
     }
 
-    @Test
-    void chooseCard() {
+    @Nested
+    class chooseCard {
     }
 
-    @Test
-    void getRaiseResponse() {
+    @Nested
+    class getRaiseResponse {
     }
 
-    @Test
-    @DisplayName("Should name of Bot jakareDuMatuBot")
-    void getName() {
-        assertEquals(jakareDuMatuBot.getName(), "JakaréDuMatuBóty");
+    @Nested
+    @DisplayName("getName Tests")
+    class getName {
+        @Test
+        @DisplayName("Should name of Bot jakareDuMatuBot")
+        public void showNameOfJakareDuMatuBot(){
+            assertEquals(jakareDuMatuBot.getName(), "JakaréDuMatuBóty");
+        }
+
     }
+
 }
