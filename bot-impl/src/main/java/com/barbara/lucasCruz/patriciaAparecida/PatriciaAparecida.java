@@ -25,7 +25,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     //Retornar true significa solicitar um aumento de ponto;
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(intel.getHandPoints() > 1) throw new IllegalArgumentException("Cant call when already called");
+        if(intel.getHandPoints() > 12) throw new IllegalArgumentException("Cant Increase Points indefinitely");
         return false;
     }
 
@@ -39,11 +39,14 @@ public class PatriciaAparecida implements BotServiceProvider {
               Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
               if(weakestCardThatWins.isPresent()) return CardToPlay.of(weakestCardThatWins.get());
               Optional<TrucoCard> cardThatDraws = getCardThatDraws(intel.getCards(),intel);
+
             if(intel.getRoundResults().isEmpty()) {
                 if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
+                else return CardToPlay.of(sortCards(intel.getCards(),intel).stream().findFirst().get());
             }
-              else return CardToPlay.discard(sortCards(intel.getCards(),intel).stream().findFirst().get());
+            else return CardToPlay.discard(sortCards(intel.getCards(),intel).stream().findFirst().get());
         }
+
         return CardToPlay.of(intel.getCards().get(0));
         }
 
