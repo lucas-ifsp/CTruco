@@ -208,6 +208,11 @@ public class DarthVader implements BotServiceProvider {
         return false;
     }
 
+    public CardToPlay firstRoundCard(GameIntel intel) {
+
+        return CardToPlay.of(getSmallerCard(intel));
+
+    }
 
 
     public enum CardClassification {
