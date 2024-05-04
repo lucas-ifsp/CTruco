@@ -25,6 +25,21 @@ public class PauladaSecaBot implements BotServiceProvider {
         return false;
     }
 
+    private boolean temCasalVermelho(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        int contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.isCopas(vira) || card.isOuros(vira)){
+                contador ++;
+            }
+        }
+        if(contador == 2){
+            return true;
+        }
+        return false;
+    }
+
+
     private boolean temCasalMenor(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         int contador = 0;
@@ -385,6 +400,13 @@ public class PauladaSecaBot implements BotServiceProvider {
             System.out.println("aceitou truco se ganhou a primeira e tem copas");
             return 1;
         }
+
+        //verifica se a mão não esta na primeira , se tem casal vermelho e perdeu a primeira
+        if (!intel.getRoundResults().isEmpty() && temCasalVermelho(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
+            System.out.println("aceitou truco se perdeu mas tem casal vermelho");
+            return 1;
+        }
+
         //se tivermos mais de uma, independente do nipe, desce
         if (manilha > 1) {
             System.out.println("aceitou truco com mais de uma manilha");
@@ -395,6 +417,12 @@ public class PauladaSecaBot implements BotServiceProvider {
             System.out.println("aceitou trucco com manilha e tres de uma manilha");
             return 0;
         }
+
+        if (temDois(intel) && temTres(intel)) {
+            System.out.println("aceitou trucco com dois e tres");
+            return 0;
+        }
+
         //se tivermos mais de um tres
         if (quantTres > 1) {
             System.out.println("aceitou truco com mais de um tres");
