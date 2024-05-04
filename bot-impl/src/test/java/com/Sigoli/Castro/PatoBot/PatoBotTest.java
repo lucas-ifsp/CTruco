@@ -27,9 +27,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should return true id opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
+        patoBot = new PatoBot();
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
         boolean opponentPlay = true;
-        assertThat(patoBot.checkIfOpponentIsFirstToPlay(opponentCard).equals(opponentPlay));
+        assertThat(patoBot
+                .checkIfOpponentIsFirstToPlay(Optional.ofNullable(opponentCard)).equals(opponentPlay));
     }
 }
 

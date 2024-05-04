@@ -2,7 +2,10 @@ package com.Sigoli.Castro.PatoBot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Optional;
 
 public class PatoBot implements BotServiceProvider {
     @Override
@@ -23,5 +26,9 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    public Boolean checkIfOpponentIsFirstToPlay (Optional<TrucoCard> opponentCard){
+        return opponentCard.isPresent();
     }
 }
