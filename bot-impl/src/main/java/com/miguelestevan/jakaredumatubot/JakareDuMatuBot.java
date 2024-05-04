@@ -17,6 +17,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+
         return null;
     }
 
