@@ -271,12 +271,8 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Should Throw exception if bot accepts mão de onze without 11 points")
             public void shouldThrowExceptionInMaoDeOnzeWhenBotDoesntHave11Points(){
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON,LOST), openCards, vira, 1).
-                        botInfo(botCards, 10).
-                        opponentScore(10);
-
-                assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(stepBuilder.build())) ;   }
+                when(intel.getScore()).thenReturn(10);
+                assertThrows(IllegalArgumentException.class , () -> patricia.getMaoDeOnzeResponse(intel)) ;   }
         }
         @Nested
         @DisplayName("Decide if Raises Tests")
@@ -284,12 +280,8 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Should Throw exception if bot raises beyond 12 points")
             public void shouldThrowExceptionInDecideIfRaisesIfBotRaiseAfter12Points() {
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON, LOST), openCards, vira, 2).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
-
-                assertThrows(IllegalArgumentException.class, () -> patricia.decideIfRaises(stepBuilder.build()));
+                when(intel.getHandPoints()).thenReturn(13);
+                assertThrows(IllegalArgumentException.class, () -> patricia.decideIfRaises(intel));
             }
         }
         @Nested
@@ -298,12 +290,8 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Should Throw exception if bot chooses null as card")
             public void shouldThrowExceptionIfDecideToChooseNullCard() {
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON, LOST), openCards, vira, 13).
-                        botInfo(Collections.EMPTY_LIST, 0).
-                        opponentScore(0);
-
-                assertThrows(IllegalStateException.class, () -> patricia.chooseCard(stepBuilder.build()));
+                when(intel.getCards()).thenReturn(Collections.EMPTY_LIST);
+                assertThrows(IllegalStateException.class, () -> patricia.chooseCard(intel));
             }
         }
     }
