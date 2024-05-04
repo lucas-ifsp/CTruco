@@ -41,7 +41,7 @@ public class PatriciaAparecida implements BotServiceProvider {
               Optional<TrucoCard> cardThatDraws = getCardThatDraws(intel.getCards(),intel);
 
             if(intel.getRoundResults().isEmpty()) {
-                if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
+                if (cardThatDraws.isPresent() && intel.getOpponentCard().equals(cardThatDraws)) return CardToPlay.of(cardThatDraws.get());
                 else return CardToPlay.of(sortCards(intel.getCards(),intel).stream().findFirst().get());
             }
             else return CardToPlay.discard(sortCards(intel.getCards(),intel).stream().findFirst().get());
