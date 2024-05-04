@@ -575,7 +575,6 @@ public class DarthVaderTest {
                     botInfo(trucoCards, 5).
                     opponentScore(5).
                     opponentCard(opponentCard);
-
             assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
@@ -675,7 +674,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES),darthVader.chooseTheMinorCard(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
         @Test

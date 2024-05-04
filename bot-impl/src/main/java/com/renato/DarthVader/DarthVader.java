@@ -87,34 +87,29 @@ public class DarthVader implements BotServiceProvider {
 
     public TrucoCard chooseTheMinorCard(GameIntel intel) {
         TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new NoSuchElementException("Card not found"));
-        TrucoCard minorCard = null;
-        boolean verifica = verifyMyHand(intel);
-        Map<TrucoCard, CardClassification> classificationsMap = classifyMyCards(intel);
-        CardClassification opponentClassification = classifyOpponentCard(intel);
 
-        for (Map.Entry<TrucoCard, CardClassification> entry : classificationsMap.entrySet()) {
-            TrucoCard card = entry.getKey();
-            CardClassification classification = entry.getValue();
+        List<TrucoCard> strongerCards = new ArrayList<>();
 
-            if (card.getRank() == opponentCard.getRank())
+        for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(opponentCard, intel.getVira()) > 0) {
+                strongerCards.add(card);
+            }
+            if(card.getRank() == opponentCard.getRank())
             {
-                if (card.getSuit().ordinal() > opponentCard.getSuit().ordinal()) {
-                    minorCard = card;
-                    break;
+                if(card.getSuit().ordinal() > opponentCard.getSuit().ordinal())
+                {
+                    strongerCards.add(card);
                 }
-            } else if ((classification == opponentClassification && card.compareValueTo(opponentCard, intel.getVira()) > 0) || verifica) {
-                minorCard = getaSmallerCardStrongerThanTheOpponent(intel);
-            }
-            else if(card.compareValueTo(opponentCard, intel.getVira()) > 0)
-            {
-                minorCard = card;
-            }
-            else {
-                minorCard = getSmallerCard(intel);
             }
         }
 
-        return minorCard;
+        if (strongerCards.isEmpty()) {
+            return getSmallerCard(intel);
+        }
+
+        strongerCards.sort((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+
+        return strongerCards.get(0);
     }
 
 
