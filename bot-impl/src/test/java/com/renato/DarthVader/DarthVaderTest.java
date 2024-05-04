@@ -861,6 +861,26 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should I return the strong card if I have two or three strong cards")
+        public void shouldReturnTheStrongCardIfIHaveTwoOrThreeStrongCards()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
+        }
+
 
     }
     @Nested
