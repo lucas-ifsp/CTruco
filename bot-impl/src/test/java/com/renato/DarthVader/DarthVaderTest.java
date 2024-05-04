@@ -1246,6 +1246,31 @@ public class DarthVaderTest {
             assertEquals(-1,darthVader.getRaiseResponse(stepBuilder.build()));
         }
 
+
+        @Test
+        @DisplayName("Should return 1 if i have one or more good cards")
+        public void shouldReturn1IfIHaveOneOrMoreGoodCards()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+
+            assertEquals(1,darthVader.getRaiseResponse(stepBuilder.build()));
+        }
+
+
+
+
     }
 
 
