@@ -921,6 +921,27 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the smallest card that is higher than your opponent's. If there is no larger one, return the smaller one")
+        public void shouldReturnTheSmallestCardThatIsHigherThanTheOpponent()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira,opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5)
+                    .opponentCard(opponentCard);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
+        }
+
 
     }
     @Nested
