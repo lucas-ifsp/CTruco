@@ -223,6 +223,15 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
         return contadorTres;
     }
+    private int contDois(GameIntel build) {
+        int contadorDois = 0;
+        for (TrucoCard carta : build.getCards()) {
+            if (carta.getRank().value() == 9) {
+                contadorDois++;
+            }
+        }
+        return contadorDois;
+    }
 
 
     private Boolean temDois(GameIntel build){
@@ -422,6 +431,8 @@ public class PauladaSecaBot implements BotServiceProvider {
         //vendo qtdd de tres
         int quantTres = contTres(intel);
 
+        int quantDois = contDois(intel);
+
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             System.out.println("aceitou truco se ganhou a primeira e tem zap");
@@ -457,6 +468,11 @@ public class PauladaSecaBot implements BotServiceProvider {
             return 1;
         }
 
+        //verifica se a mão não esta na primeira , se tem mais de um 2 e se eu ganhei a primeira mão
+        if ( quantDois > 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            System.out.println("aceitou truco se ganhou a primeira e ainda tem dois 2");
+            return 1;
+        }
 
         //se tivermos mais de uma, independente do nipe, desce
         if (manilha > 1) {
