@@ -32,5 +32,8 @@ public class PatoBot implements BotServiceProvider {
     public Boolean checkIfOpponentIsFirstToPlay (Optional<TrucoCard> opponentCard){
         return opponentCard.isPresent();
     }
-
+    public int getNumberOfCardsInHand (GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+         return cards.size();
+    }
 }
