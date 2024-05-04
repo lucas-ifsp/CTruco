@@ -249,6 +249,8 @@ public class DarthVader implements BotServiceProvider {
     }
 
     public GameIntel.RoundResult checkIfIWonTheRound(GameIntel intel) {
+        if(intel.getRoundResults().isEmpty())
+            throw new IllegalStateException("No round has occurred yet");
         return intel.getRoundResults().get(intel.getRoundResults().size()-1);
     }
 
