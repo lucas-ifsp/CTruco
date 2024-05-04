@@ -64,8 +64,11 @@ public class TeitasBotFunctions {
     }
 
     static boolean hasStrongHand(List<TrucoCard> cards,TrucoCard vira){
-
-        return hasManilhaAlta;
+        boolean hasManilhaAlta =  hasManilhaAlta(cards,vira);
+        boolean hasManilhaAndThree =  hasManilha(cards, vira) & hasThree(cards);
+        if (hasManilhaAndThree)
+            return true;
+        else return hasManilhaAlta;
     }
 
     //TODO indetify typefunciont
@@ -76,9 +79,7 @@ public class TeitasBotFunctions {
         Boolean hasStrongCard =  hasStrongHand(cards,vira);
         Boolean weStart = isOpponentThatStartTheRound(gameIntel);
 
-        if weStart{
-            //logical
-        }
+       return true;
 
     }
 
