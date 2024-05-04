@@ -1,5 +1,8 @@
 package com.miguelestevan.jakaredumatubot;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.TrucoCard;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +22,17 @@ class JakareDuMatuBotTest {
 
     @Nested
     class getMaoDeOnzeResponse {
+        @Test
+        @DisplayName("Should accept mao de onze if have casal maior")
+        public void shouldAcceptMaoDeOnzeIfHaveCasalMaior(){
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+
+
+        }
+
+
+
 
     }
 
