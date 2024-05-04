@@ -872,12 +872,12 @@ public class DarthVaderTest {
 
 
         @Test
-        @DisplayName("Should return the smallest card")
-        public void shouldReturnTheSmallestCard()
+        @DisplayName("Should return the strongest card")
+        public void shouldReturnTheStrongestCard()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
 
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
@@ -888,7 +888,7 @@ public class DarthVaderTest {
                     gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1).
                     botInfo(trucoCards, 5).
                     opponentScore(5);
-            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
 
