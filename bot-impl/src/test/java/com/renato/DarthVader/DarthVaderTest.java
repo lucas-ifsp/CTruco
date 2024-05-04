@@ -992,9 +992,41 @@ public class DarthVaderTest {
                     .opponentCard(opponentCard);
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)),darthVader.firstRoundCard(stepBuilder.build()));
         }
+    }
 
+    @Nested
+    @DisplayName("Round 2")
+    class Round2
+    {
+        @Test
+        @DisplayName("Should return the highest card I have if it is my turn and if I won the last round")
+        public void shouldReturnTheHighestCardIWonTheLastRound()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.SPADES)),darthVader.secondRoundCard(stepBuilder.build()));
+        }
 
     }
+
+
+
+
+
+
+
+
     @Nested
     @DisplayName("Test to check if I won the first round")
     class checkIfIWonTheFirstRoundTest{
