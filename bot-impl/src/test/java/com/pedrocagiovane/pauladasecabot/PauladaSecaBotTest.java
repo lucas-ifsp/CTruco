@@ -365,4 +365,16 @@ public class PauladaSecaBotTest {
         int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
         assertThat(resultado).isOne();
     }
+
+    @Test
+    @DisplayName("Aceita truco se casal menor e perdeu a primeira")
+    void aceitarApostaSeTiverCasalMenor() {
+        maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(TWO, SPADES), TrucoCard.of(TWO, DIAMONDS));
+        vira = TrucoCard.of(ACE, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.LOST);
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
+        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
+        assertThat(resultado).isOne();
+    }
 }
