@@ -11,10 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
@@ -316,53 +313,61 @@ class PatriciaAparecidaTest {
     class ChooseCard{
         private List<TrucoCard> botCards;
         private TrucoCard vira;
+        private List<GameIntel.RoundResult> firstRound;
 
+        @Nested
+        @DisplayName("Second Round Tests")
+        class CCSecondRound{
+            @BeforeEach
+            void setUpAnyRound(){
+                botCards = List.of(TrucoCard.of(KING, HEARTS), //2
+                        TrucoCard.of(FOUR,SPADES), // 3
+                        TrucoCard.of(TWO,HEARTS)); // 1
+
+                vira = TrucoCard.of(FIVE,CLUBS);
+                firstRound = List.of(LOST);
+
+            }
+            @Test
+            @DisplayName("Discard the weakest card that loses the hand")
+            public void DiscardWeakestCardThatLosesHand(){
+
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getRoundResults()).thenReturn(firstRound);
+                when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(SIX, CLUBS)));
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(intel).content());
+                assertEquals(TrucoCard.closed(),patricia.chooseCard(intel).value());
+            }
+
+        }
         @BeforeEach
-        void setCards(){
+        void setUpAnyRound(){
             botCards = List.of(TrucoCard.of(KING, HEARTS), //2
                     TrucoCard.of(FOUR,SPADES), // 3
                     TrucoCard.of(TWO,HEARTS)); // 1
 
             vira = TrucoCard.of(FIVE,CLUBS);
-
         }
 
         @Test
         @DisplayName("Choose the weakest card that wins the hand")
         public void ChooseWeakestCardThatWinsHand(){
-            List<TrucoCard> openCards = List.of(vira);
-            stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
-                    botInfo(botCards,0).
-                    opponentScore(0)
-                    .opponentCard(TrucoCard.of(QUEEN,DIAMONDS));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(botCards);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(QUEEN, DIAMONDS)));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(KING, HEARTS)).content() ,patricia.chooseCard(stepBuilder.build()).value());
+            assertEquals(CardToPlay.of(TrucoCard.of(KING, HEARTS)).content() ,patricia.chooseCard(intel).value());
         }
-        @Test
-        @DisplayName("Discard the weakest card that loses the hand")
-        public void DiscardWeakestCardThatLosesHand(){
-            List<TrucoCard> openCards = List.of(vira);
-            stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(List.of(WON),openCards,vira,1).
-                    botInfo(botCards,0).
-                    opponentScore(0)
-                    .opponentCard(TrucoCard.of(SIX,CLUBS));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(stepBuilder.build()).content());
-            assertEquals(TrucoCard.closed(),patricia.chooseCard(stepBuilder.build()).value());
-        }
         @Test
         @DisplayName("Draws if can't win and can draw")
         public void DrawIfCantWin(){
-            List<TrucoCard> openCards = List.of(vira);
-            stepBuilder = GameIntel.StepBuilder.with().
-                    gameInfo(Collections.EMPTY_LIST,openCards,vira,1).
-                    botInfo(botCards,0).
-                    opponentScore(0)
-                    .opponentCard(TrucoCard.of(TWO,CLUBS));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(botCards);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(TWO, CLUBS)));
 
-            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(stepBuilder.build()).value());
+            assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(intel).value());
         }
 
     }
