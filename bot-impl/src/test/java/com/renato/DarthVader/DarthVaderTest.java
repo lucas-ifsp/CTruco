@@ -1038,6 +1038,25 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING,CardSuit.CLUBS)),darthVader.secondRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the strongest card if I still have one good card")
+        public void shouldReturnTheStrongestCardIfItHasOneGoodCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE,CardSuit.CLUBS)),darthVader.secondRoundCard(stepBuilder.build()));
+        }
+
     }
 
 
