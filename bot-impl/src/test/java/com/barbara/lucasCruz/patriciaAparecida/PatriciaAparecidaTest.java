@@ -306,7 +306,7 @@ class PatriciaAparecidaTest {
         @BeforeEach
         void setUpAnyRound(){
             botCards = List.of(TrucoCard.of(KING, HEARTS), //2
-                    TrucoCard.of(FOUR,SPADES), // 3
+                    TrucoCard.of(FOUR,CLUBS), // 3
                     TrucoCard.of(TWO,HEARTS)); // 1
 
             vira = TrucoCard.of(FIVE,CLUBS);
