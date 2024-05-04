@@ -842,8 +842,8 @@ public class DarthVaderTest {
 
 
         @Test
-        @DisplayName("Should return the strongest shackle if I have 2 or more shackles and it's my turn to play")
-        public void shouldReturnTheStrongestShackleIfIHave2OrMoreShackles()
+        @DisplayName("Should return the smallest shackle if I have 2 or more shackles and it's my turn to play")
+        public void shouldReturnTheSmallestShackleIfIHave2OrMoreShackles()
         {
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
@@ -858,7 +858,7 @@ public class DarthVaderTest {
                     gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
                     botInfo(trucoCards, 5).
                     opponentScore(5);
-            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.CLUBS)),darthVader.firstRoundCard(stepBuilder.build()));
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS)),darthVader.firstRoundCard(stepBuilder.build()));
         }
 
         @Test
