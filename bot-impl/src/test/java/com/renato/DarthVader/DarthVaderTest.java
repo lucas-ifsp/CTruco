@@ -1016,6 +1016,25 @@ public class DarthVaderTest {
 
             assertEquals(GameIntel.RoundResult.LOST,darthVader.checkIfIWonTheRound(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return an exception if no round has happened yet")
+        public void shouldReturnAnExceptionIfNoRoundHasHappened()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(), openCards, vira, 1).
+                    botInfo(trucoCards, 0).
+                    opponentScore(3);
+
+            assertThrows(IllegalStateException.class,() -> darthVader.checkIfIWonTheRound(stepBuilder.build()));
+        }
     }
     @Nested
     @DisplayName("Tests for the method decides whether to increase")
