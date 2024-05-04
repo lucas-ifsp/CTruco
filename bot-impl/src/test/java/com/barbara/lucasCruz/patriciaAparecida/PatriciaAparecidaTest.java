@@ -5,6 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,9 +22,12 @@ import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PatriciaAparecidaTest {
-
+    @Mock
+    GameIntel intel;
     private PatriciaAparecida patricia;
     private GameIntel.StepBuilder stepBuilder;
 
@@ -42,14 +50,11 @@ class PatriciaAparecidaTest {
 
                 List<TrucoCard> randomBotCards = generateTrucoCardToPlayList(3);
                 List<TrucoCard> openCards = generateTrucoCardToPlayList(1);
-                TrucoCard vira = openCards.get(0);
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
-                        botInfo(randomBotCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(randomBotCards);
+                when(intel.getOpenCards()).thenReturn(openCards);
 
-                assertEquals(patricia.getNumberOfRemainderCards(stepBuilder.build()), 36);
+                assertEquals(patricia.getNumberOfRemainderCards(intel),36);
             }
 
             @Test
@@ -58,16 +63,11 @@ class PatriciaAparecidaTest {
 
                 List<TrucoCard> botCards = generateTrucoCardToPlayList(1);
                 List<TrucoCard> openCards = generateTrucoCardToPlayList(6);
-                TrucoCard vira = openCards.get(0);
-                List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON,
-                                                                GameIntel.RoundResult.LOST);
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getOpenCards()).thenReturn(openCards);
 
-                assertEquals(patricia.getNumberOfRemainderCards(stepBuilder.build()), 33);
+                assertEquals(patricia.getNumberOfRemainderCards(intel),33);
             }
 
         }
@@ -75,9 +75,8 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("Number of best cards known")
         class BestCardsKnown{
-
-            private List<TrucoCard> botCards;
             private TrucoCard openCard;
+            private List<TrucoCard> botCards;
 
             @BeforeEach
             void setCards(){
@@ -91,32 +90,26 @@ class PatriciaAparecidaTest {
             @DisplayName("Have no better cards known")
             public void ShouldReturnZeroIfHaveNoBetterCardsKnown(){
                 TrucoCard vira = TrucoCard.of(FOUR,SPADES);
-                List<TrucoCard> openCards = List.of(
-                        vira,
-                        openCard);
+                List<TrucoCard> openCards = List.of(vira, openCard);
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getOpenCards()).thenReturn(openCards);
 
-                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), stepBuilder.build()),0);
+                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1),intel),0);
             }
 
             @Test
             @DisplayName("Have better cards known")
-            public void ShouldReturnAPositiveNuberIfHaveBetterCardsKnown(){
+            public void ShouldReturnANumberOfBetterCardsKnown(){
                 TrucoCard vira = TrucoCard.of(THREE,SPADES);
-                List<TrucoCard> openCards = List.of(
-                        vira,
-                        openCard);
+                List<TrucoCard> openCards = List.of(vira, openCard);
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(Collections.EMPTY_LIST, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getOpenCards()).thenReturn(openCards);
 
-                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), stepBuilder.build()),1);
+                assertEquals(patricia.getNumberOfBestCardsKnown(botCards.get(1), intel),1);
             }
         }
 
@@ -144,24 +137,23 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Case is Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsManilha() {
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(LOST),openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
 
-                assertEquals(patricia.getNumberOfBestCardsUnknown(botCards.get(1), stepBuilder.build()), 0);
+                when(intel.getOpenCards()).thenReturn(openCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(botCards);
+
+                assertEquals(patricia.getNumberOfBestCardsUnknown(botCards.get(1),intel),0);
             }
 
             @Test
             @DisplayName("Case isnt Manilha")
             public void ShouldReturnTheNumberOfBetterCardsUnknownInCaseOfCardIsntManilha() {
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(LOST), openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(1);
+                when(intel.getOpenCards()).thenReturn(openCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getCards()).thenReturn(botCards);
 
-                assertEquals(patricia.getNumberOfBestCardsUnknown(botCards.get(2), stepBuilder.build()), 7);
+                assertEquals(patricia.getNumberOfBestCardsUnknown(botCards.get(2),intel), 7);
             }
         }
 
@@ -169,42 +161,18 @@ class PatriciaAparecidaTest {
         @DisplayName("Should return the number of opponent's cards ")
         class CardsOfOpponent {
 
-            private List<TrucoCard> botCards;
-            private  TrucoCard vira;
-            List<TrucoCard> openCards;
-
-            @BeforeEach
-            void setUp(){
-                botCards = List.of(TrucoCard.of(SIX, SPADES),
-                        TrucoCard.of(FOUR,SPADES),
-                        TrucoCard.of(TWO,HEARTS));
-                vira = TrucoCard.of(FIVE,CLUBS);
-                openCards = List.of(vira);
-            }
-
             @Test
             @DisplayName("Case win the last round")
             public void ShouldReturnTheNumberOfTheOpponentCardsCaseWinLastRound() {
-
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(LOST,WON),
-                                openCards,vira,1).
-                        botInfo(botCards,0).
-                        opponentScore(0);
-
-                assertEquals(patricia.getNumberOfOpponentsCards(stepBuilder.build()),1);
+                when(intel.getRoundResults()).thenReturn(List.of(LOST,WON));
+                assertEquals(patricia.getNumberOfOpponentsCards((intel)),1);
             }
 
             @Test
             @DisplayName("Case lost the last round")
             public void ShouldReturnTheNumberOfTheOpponentCardsCaseLostLastRound(){
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(List.of(WON,LOST),
-                                openCards,vira,1).
-                        botInfo(botCards,0).
-                        opponentScore(0);
-
-                assertEquals(patricia.getNumberOfOpponentsCards(stepBuilder.build()),0);
+                when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
+                assertEquals(patricia.getNumberOfOpponentsCards(intel),0);
             }
         }
     }
@@ -213,81 +181,48 @@ class PatriciaAparecidaTest {
     @DisplayName("Check the probability")
     class Probability{
 
-        @Nested
+        @ParameterizedTest
+        @ValueSource(ints = {1, 2, 3})
         @DisplayName("Should calculate the probability of each bot's cards")
-        class SameQuantity {
+        public void ShouldCalculateTheProbOfEachBotCardsWhen3cards(int qnt) {
+            List<TrucoCard> botCards = generateTrucoCardToPlayList(qnt);
+            TrucoCard vira = generateRandomCardToPlay();
 
-            private  TrucoCard vira;
-            List<TrucoCard> openCards;
-            List<GameIntel.RoundResult> roundResults;
+            when(intel.getCards()).thenReturn(botCards);
+            when(intel.getVira()).thenReturn(vira);
 
-            @BeforeEach
-            void setUp(){
-                vira = generateRandomCardToPlay();
-                openCards = List.of(vira);
-                roundResults = Collections.EMPTY_LIST;
-            }
-
-            @Test
-            @DisplayName("case 3 cards")
-            public void ShouldCalculateTheProbOfEachBotCardsWhen3cards() {
-                List<TrucoCard> botCards = generateTrucoCardToPlayList(3);
-
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
-
-                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
-            }
-
-            @Test
-            @DisplayName("case 2 cards")
-            public void ShouldCalculateTheProbOfEachBotCardsWhen2Cards() {
-                List<TrucoCard> botCards = generateTrucoCardToPlayList(2);
-
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
-
-                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
-            }
-            @Test
-            @DisplayName("case 1 card")
-            public void ShouldCalculateTheProbOfEachBotCardsWhen1Card() {
-                List<TrucoCard> botCards = generateTrucoCardToPlayList(1);
-
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
-
-                assertEquals(patricia.listProbAllCards(stepBuilder.build()).size(), botCards.size());
-            }
+            assertEquals(patricia.listProbAllCards(intel).size(),botCards.size());
         }
 
         @Nested
         @DisplayName("Check values")
         class ProbValues{
 
+            private TrucoCard vira;
+            private List<TrucoCard> openCards;
+            private List<GameIntel.RoundResult> roundResults;
+
+            @BeforeEach
+            void setCards(){
+                vira = TrucoCard.of(FIVE, CLUBS);
+                openCards = List.of(vira, TrucoCard.of(SIX, SPADES));
+                roundResults = Collections.EMPTY_LIST;
+            }
+
             @Test
             @DisplayName("Should return the same prob when Know all better cards")
             public void ShouldReturnTheSameProbWhenKnowAllBetterCards () {
-                TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(SIX, CLUBS),
                         TrucoCard.of(SIX, HEARTS),
                         TrucoCard.of(SIX, DIAMONDS));
-                List<TrucoCard> openCards = List.of(vira, TrucoCard.of(SIX, SPADES));
-                List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getOpenCards()).thenReturn(openCards);
+                when(intel.getRoundResults()).thenReturn(roundResults);
 
-                List<Double> probList = patricia.listProbAllCards(stepBuilder.build());
+                List<Double> probList = patricia.listProbAllCards(intel);
 
                 assertEquals(probList.get(0), probList.get(1), probList.get(2));
             }
@@ -295,21 +230,20 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Should return proportional prob to card rank")
             public void ShouldReturnProportionalProbToCardRank () {
-                TrucoCard vira = TrucoCard.of(FIVE, CLUBS);
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(SIX, CLUBS),
                         TrucoCard.of(FOUR, HEARTS),
                         TrucoCard.of(KING, DIAMONDS));
-                List<TrucoCard> openCards = List.of(vira, TrucoCard.of(SIX, SPADES));
-                List<GameIntel.RoundResult> roundResults = Collections.EMPTY_LIST;
 
-                stepBuilder = GameIntel.StepBuilder.with().
-                        gameInfo(roundResults, openCards, vira, 0).
-                        botInfo(botCards, 0).
-                        opponentScore(0);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(vira);
+                when(intel.getOpenCards()).thenReturn(openCards);
+                when(intel.getRoundResults()).thenReturn(roundResults);
 
-                List<Double> probList = patricia.listProbAllCards(stepBuilder.build());
+                List<Double> probList = patricia.listProbAllCards(intel);
 
+                assertTrue(intel.getCards().get(0).compareValueTo(intel.getCards().get(2),vira)>0);
+                assertTrue(intel.getCards().get(2).compareValueTo(intel.getCards().get(1),vira)>0);
                 assertTrue(probList.get(0) < probList.get(2));
                 assertTrue(probList.get(2) < probList.get(1));
             }
@@ -327,11 +261,11 @@ class PatriciaAparecidaTest {
 
         @BeforeEach
         void setCards(){
-                botCards = List.of(TrucoCard.of(SIX, SPADES),
+            botCards = List.of(TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR,SPADES),
                     TrucoCard.of(TWO,HEARTS));
-                vira = TrucoCard.of(FIVE,CLUBS);
-                openCards = List.of(vira);
+            vira = TrucoCard.of(FIVE,CLUBS);
+            openCards = List.of(vira);
         }
         @Nested
         @DisplayName("Mão de Onze Exception Tests")
