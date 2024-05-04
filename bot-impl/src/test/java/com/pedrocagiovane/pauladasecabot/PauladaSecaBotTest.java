@@ -379,15 +379,15 @@ public class PauladaSecaBotTest {
     }
 
     @Test
-    @DisplayName("Aceita truco se tem dois 2 e ganhou a primeira")
-    void aceitarApostaSeTiverDoisDois() {
+    @DisplayName("Pede truco se tem dois 2 e ganhou a primeira")
+    void TrucaSeTiverDoisDoiseGanhouPrimeira() {
         maoPlayer = List.of(TrucoCard.of(JACK,CLUBS), TrucoCard.of(TWO, SPADES), TrucoCard.of(TWO, DIAMONDS));
-        vira = TrucoCard.of(THREE, SPADES);
+        vira = TrucoCard.of(FOUR, SPADES);
         roundResult = List.of(GameIntel.RoundResult.WON);
         cartas = List.of();
         stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 3).botInfo(maoPlayer, 1).opponentScore(0);
-        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
-        assertThat(resultado).isOne();
+        boolean resultado = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(resultado).isTrue();
     }
 
     @Test

@@ -250,6 +250,9 @@ public class PauladaSecaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        int quantDois = contDois(intel);
+
         // PRIMEIRA: verifica se a mão esta na primeira e se tem casal menor
         if (intel.getRoundResults().isEmpty() && temCasalMenor(intel)){
             System.out.println("truco se tiver casal menor primeira");
@@ -286,6 +289,8 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
 
+
+            //TODO FIX FUNCTION QUEBRADA RETORNA TRUE NO TEST (TrucaSeTiverDoisDoiseGanhouPrimeira)
             //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
             if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
                 System.out.println("segunda, truco se ganhando primeira e tem manilha pra segunda");
@@ -300,6 +305,12 @@ public class PauladaSecaBot implements BotServiceProvider {
                     System.out.println("truco se fez a primeira e tem 3 pra segunda");
                     return true;
                 }
+            }
+
+            //SEGUNDA: se a mão não esta na primeira , se tem mais de um 2 e se eu ganhei a primeira mão
+            if (!intel.getRoundResults().isEmpty() &&  quantDois > 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+                System.out.println("aceitou truco se ganhou a primeira e ainda tem dois 2");
+                return true;
             }
         }
 
@@ -446,8 +457,6 @@ public class PauladaSecaBot implements BotServiceProvider {
         //vendo qtdd de tres
         int quantTres = contTres(intel);
 
-        int quantDois = contDois(intel);
-
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             System.out.println("aceitou truco se ganhou a primeira e tem zap");
@@ -480,12 +489,6 @@ public class PauladaSecaBot implements BotServiceProvider {
         //verifica se a mão não esta na primeira , se tem casal menor e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalMenor(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
             System.out.println("aceitou truco se perdeu mas tem casal menor");
-            return 1;
-        }
-
-        //verifica se a mão não esta na primeira , se tem mais de um 2 e se eu ganhei a primeira mão
-        if ( quantDois > 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            System.out.println("aceitou truco se ganhou a primeira e ainda tem dois 2");
             return 1;
         }
 
