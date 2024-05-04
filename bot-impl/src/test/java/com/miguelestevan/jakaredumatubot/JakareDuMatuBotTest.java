@@ -57,7 +57,6 @@ class JakareDuMatuBotTest {
     class decideIfRaises {
         // First Hand
         @Test
-//        @DisplayName("Decide que vai pedir truco na primeira rodada com casal maior")
         @DisplayName("Decide that you will ask for tricks in the first round with an older couple")
         public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
@@ -71,6 +70,31 @@ class JakareDuMatuBotTest {
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.decideIfRaises(intel)).isEqualTo(true);
+        }
+
+        @Test
+        @DisplayName("Should raise request truco when you have two shackles") // Pedir truco quando tiver duas manilhas na mão na primeira rodada
+        public void ShouldRaiseRequestTrucoWhenYouHaveTwoShackles(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = List.of(vira);
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
             );
 
             GameIntel intel = GameIntel.StepBuilder.with()

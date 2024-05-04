@@ -32,6 +32,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 if(getManilhas(intel.getCards(), intel.getVira()).containsAll(List.of(CardSuit.CLUBS, CardSuit.HEARTS))){
                     // Hand contains zap and copas
                     return true;
+                } else if (getManilhas(intel.getCards(), intel.getVira()).size() == 2) {
+                    return true;
                 }
             }
             case 1 -> {
