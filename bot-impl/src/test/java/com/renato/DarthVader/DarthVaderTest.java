@@ -1057,6 +1057,28 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE,CardSuit.CLUBS)),darthVader.secondRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the strongest card than opponent")
+        public void shouldReturnTheStrongestCardThanOpponent()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+            
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE,CardSuit.CLUBS)),darthVader.secondRoundCard(stepBuilder.build()));
+        }
+
     }
 
 
