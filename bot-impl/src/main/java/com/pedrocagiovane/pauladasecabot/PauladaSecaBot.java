@@ -290,11 +290,11 @@ public class PauladaSecaBot implements BotServiceProvider {
             }
 
 
-            //TODO FIX FUNCTION QUEBRADA RETORNA TRUE NO TEST (TrucaSeTiverDoisDoiseGanhouPrimeira)
+
             //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
             if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
-                System.out.println("segunda, truco se ganhando primeira e tem manilha pra segunda");
                 if( contManilha(intel.getCards(), intel.getVira()) > 0) {
+                    System.out.println("segunda, truco se ganhando primeira e tem manilha pra segunda");
                     return true;
                 }
             }
