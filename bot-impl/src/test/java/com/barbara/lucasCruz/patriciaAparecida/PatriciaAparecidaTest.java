@@ -303,13 +303,22 @@ class PatriciaAparecidaTest {
         private TrucoCard vira;
         private List<GameIntel.RoundResult> firstRound;
 
+        @BeforeEach
+        void setUpAnyRound(){
+            botCards = List.of(TrucoCard.of(KING, HEARTS), //2
+                    TrucoCard.of(FOUR,SPADES), // 3
+                    TrucoCard.of(TWO,HEARTS)); // 1
+
+            vira = TrucoCard.of(FIVE,CLUBS);
+        }
+
         @Nested
         @DisplayName("Second Round Tests")
         class CCSecondRound{
             @BeforeEach
-            void setUpAnyRound(){
+            void setUpSecondRound(){
                 botCards = List.of(TrucoCard.of(KING, HEARTS), //2
-                        TrucoCard.of(FOUR,SPADES), // 3
+                        TrucoCard.of(FOUR,CLUBS), // 3
                         TrucoCard.of(TWO,HEARTS)); // 1
 
                 vira = TrucoCard.of(FIVE,CLUBS);
@@ -324,18 +333,10 @@ class PatriciaAparecidaTest {
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getRoundResults()).thenReturn(firstRound);
                 when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(TrucoCard.of(SIX, CLUBS)));
-                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).content() ,patricia.chooseCard(intel).content());
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).content() ,patricia.chooseCard(intel).content());
                 assertEquals(TrucoCard.closed(),patricia.chooseCard(intel).value());
             }
 
-        }
-        @BeforeEach
-        void setUpAnyRound(){
-            botCards = List.of(TrucoCard.of(KING, HEARTS), //2
-                    TrucoCard.of(FOUR,SPADES), // 3
-                    TrucoCard.of(TWO,HEARTS)); // 1
-
-            vira = TrucoCard.of(FIVE,CLUBS);
         }
 
         @Test
@@ -358,6 +359,13 @@ class PatriciaAparecidaTest {
             assertEquals(CardToPlay.of(TrucoCard.of(TWO,HEARTS)).value() ,patricia.chooseCard(intel).value());
         }
 
+        @Test
+        @DisplayName("Plays if 0 probability of strongest card")
+        public void PlayIfZeroProbabilityOfStrongerCard(){
+            when(intel.getCards()).thenReturn(botCards);
+            when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+            assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
+        }
     }
 
 
