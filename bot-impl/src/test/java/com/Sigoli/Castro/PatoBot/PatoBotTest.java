@@ -33,6 +33,17 @@ public class PatoBotTest {
         assertThat(patoBot
                 .checkIfOpponentIsFirstToPlay(Optional.ofNullable(opponentCard)).equals(opponentPlay));
     }
+
+   @Test
+   @DisplayName("Should return false if opponent is not first to play")
+    void shouldReturnFalseIfOpponentIsNotFirstToPlay(){
+        patoBot = new PatoBot();
+        boolean opponentPlay = false;
+        assertThat(patoBot.checkIfOpponentIsFirstToPlay(Optional.empty()).equals(opponentPlay));
+    }
+
+
 }
+
 
 
