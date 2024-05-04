@@ -86,47 +86,61 @@ class TeitasBotFunctionsTest {
 
 
 
-        @Test
-        @DisplayName("Should return true if we had a trash hand")
-        void shouldReturnTrueIfHandIsTrash() {
-            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-            List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
-            );
-            assertThat(TeitasBotFunctions.hasTrashHand(cards,vira)).isTrue();
-
-        }
+    @Test
+    @DisplayName("Should return true if we had a trash hand")
+    void shouldReturnTrueIfHandIsTrash() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+        );
+        assertThat(TeitasBotFunctions.hasTrashHand(cards,vira)).isTrue();
 
     }
-    @Nested
-    class WeStart{
-        //game intel error at 'Not found'
-        @Test
-        @DisplayName("should return true if we last round")
-        void shouldReturTrueIfWeStart(){
-            assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(gameIntel)).isTrue()    ;
-        }
+    @Test
+    @DisplayName("Shoul return True if we ha Strong Hand --  lowest than nuts and better than trash")
+    void shouldReturnTrueIfHandIsStrong() {
+        TrucoCard vira =  TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        assertThat(TeitasBotFunctions.hasStrongHand(cards,vira)).isTrue();
+
     }
 
-    @Nested
-    class PlayModes{
-        @Test
-        @DisplayName("Should Plaay at agressive mode if")
-        void ShouldPlayAgressiveMode(){
-                TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
-
-                List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
-
-                );
-                assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira)).isTrue();
-
-        }
+}
+@Nested
+class WeStart{
+    //game intel error at 'Not found'
+    @Test
+    @DisplayName("should return true if we last round")
+    void shouldReturTrueIfWeStart(){
+        assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(gameIntel)).isTrue()    ;
     }
+}
+
+
+
+@Nested
+class PlayModes{
+    @Test
+    @DisplayName("Should Plaay at agressive mode if")
+    void ShouldPlayAgressiveMode(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+
+        );
+        assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira)).isTrue();
+
+    }
+}
 
 
 }

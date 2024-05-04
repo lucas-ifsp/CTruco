@@ -25,7 +25,7 @@ public class TeitasBotFunctions {
 
 
     static Boolean hasNutsHand(List<TrucoCard> cards, TrucoCard vira) {
-    //we have the best one. manilha + zap + 3.
+        //we have the best one. manilha + zap + 3.
         boolean hasZap = hasZap(cards, vira);
         boolean hasThree = hasThree(cards);
         boolean hasManilha =  hasManilha(cards, vira);
@@ -40,7 +40,7 @@ public class TeitasBotFunctions {
         return hasManilha || hasStrongCard;
     }
     static Boolean hasTrashHand(List<TrucoCard> cards,TrucoCard vira)
-        //the worst.
+    //the worst.
     {
         Boolean hasManilha = hasManilha(cards,vira);
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
@@ -49,24 +49,27 @@ public class TeitasBotFunctions {
 
     }
     static boolean isOpponentThatStartTheRound(GameIntel gameIntel) {
-        return gameIntel.getOpponentCard().isPresent();
 
+        return gameIntel.getOpponentCard().isPresent();
     }
+
     static boolean hasManilhaAlta( List<TrucoCard> cards,TrucoCard vira) {
         boolean hasManilha = hasManilha(cards, vira);
         if (hasManilha) {
-             //TODO verifiicar se a carta que é manilha pertence ao casal maior.Caso sim,chamar jogar agressivo.
+
+            return cards.stream().anyMatch(card -> card.isZap(vira)) && cards.stream().anyMatch(card -> card.isCopas(vira));
         }
 
-        return
+        return false;
     }
 
-    }
     static boolean hasStrongHand(List<TrucoCard> cards,TrucoCard vira){
+
         return hasManilhaAlta;
     }
 
     //TODO indetify typefunciont
+
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
         //method that play at agressive mode
         Boolean nustaHand = hasNutsHand(cards, vira);
