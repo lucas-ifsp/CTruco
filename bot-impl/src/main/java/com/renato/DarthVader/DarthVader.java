@@ -96,15 +96,20 @@ public class DarthVader implements BotServiceProvider {
             TrucoCard card = entry.getKey();
             CardClassification classification = entry.getValue();
 
-            if (card.getRank() == opponentCard.getRank()) {
+            if (card.getRank() == opponentCard.getRank())
+            {
                 if (card.getSuit().ordinal() > opponentCard.getSuit().ordinal()) {
                     minorCard = card;
                     break;
                 }
             } else if ((classification == opponentClassification && card.compareValueTo(opponentCard, intel.getVira()) > 0) || verifica) {
                 minorCard = getaSmallerCardStrongerThanTheOpponent(intel);
-                break;
-            } else {
+            }
+            else if(card.compareValueTo(opponentCard, intel.getVira()) > 0)
+            {
+                minorCard = card;
+            }
+            else {
                 minorCard = getSmallerCard(intel);
             }
         }
@@ -260,6 +265,10 @@ public class DarthVader implements BotServiceProvider {
                     return CardToPlay.of(getStrongCard(intel));
                 return CardToPlay.of(getStrongCard(intel));
             }
+        }
+        else
+        {
+            return CardToPlay.of(chooseTheMinorCard(intel));
         }
         return CardToPlay.of(getStrongCard(intel));
 
