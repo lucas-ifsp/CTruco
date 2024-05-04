@@ -1018,6 +1018,26 @@ public class DarthVaderTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE,CardSuit.SPADES)),darthVader.secondRoundCard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return the strongest shackle")
+        public void shouldReturnTheStrongestShackle()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5);
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING,CardSuit.CLUBS)),darthVader.secondRoundCard(stepBuilder.build()));
+        }
+
     }
 
 
