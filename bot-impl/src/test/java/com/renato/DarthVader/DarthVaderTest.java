@@ -579,6 +579,32 @@ public class DarthVaderTest {
             assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.chooseTheMinorCard(stepBuilder.build()));
         }
 
+
+        @Test
+        @DisplayName("Should return the highest card if the opponent played a very high card")
+        public void shouldReturnTheHighestCardThatIsHigherThanTheOpponentsCard()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+            stepBuilder = GameIntel.StepBuilder.with().
+                    gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(trucoCards, 5).
+                    opponentScore(5).
+                    opponentCard(opponentCard);
+
+            assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.getaSmallerCardStrongerThanTheOpponent(stepBuilder.build()));
+        }
+
+
         @Test
         @DisplayName("Should throw an exception if the opponent's card was not set")
         public void shouldThrowAnExceptionIfTheOpponentsCardWasNotSet()
