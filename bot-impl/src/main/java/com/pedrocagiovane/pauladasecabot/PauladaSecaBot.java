@@ -267,7 +267,12 @@ public class PauladaSecaBot implements BotServiceProvider {
         }
         // SEGUNDA: se tiver casal preto pede truco
         if (!intel.getRoundResults().isEmpty() && temCasalPreto(intel)) {
-            System.out.println("truco se tiver preto na segunda");
+            System.out.println("truco se tiver casal preto na segunda");
+            return true;
+        }
+        // SEGUNDA: se tiver casal preto pede truco
+        if (!intel.getRoundResults().isEmpty() && temCasalVermelho(intel)) {
+            System.out.println("truco se tiver casal vermelho na segunda");
             return true;
         }
 
