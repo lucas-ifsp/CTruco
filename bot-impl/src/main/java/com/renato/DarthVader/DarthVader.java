@@ -248,11 +248,26 @@ public class DarthVader implements BotServiceProvider {
 
     }
 
+    public CardToPlay secondRoundCard(GameIntel intel) {
+        if (verifyIfMyTurnToPlay(intel))
+        {
+            if(checkIfIWonTheRound(intel).equals(GameIntel.RoundResult.WON))
+            {
+                return CardToPlay.of(getStrongCard(intel));
+            }
+        }
+        return CardToPlay.of(getStrongCard(intel));
+
+    }
+
+
+
     public GameIntel.RoundResult checkIfIWonTheRound(GameIntel intel) {
         if(intel.getRoundResults().isEmpty())
             throw new IllegalStateException("No round has occurred yet");
         return intel.getRoundResults().get(intel.getRoundResults().size()-1);
     }
+
 
 
     public enum CardClassification {
