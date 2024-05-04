@@ -28,7 +28,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
     @Override
     public String getName() {
-        return BotServiceProvider.super.getName();
+        return "JakaréDuMatuBóty";
     }
     // The correct way to say is JakaréDuMatuBóty
 
