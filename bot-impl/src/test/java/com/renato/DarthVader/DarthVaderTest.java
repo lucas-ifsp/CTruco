@@ -601,7 +601,7 @@ public class DarthVaderTest {
                     opponentScore(5).
                     opponentCard(opponentCard);
 
-            assertEquals(TrucoCard.of(CardRank.KING,CardSuit.HEARTS),darthVader.getaSmallerCardStrongerThanTheOpponent(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.THREE,CardSuit.CLUBS),darthVader.getaSmallerCardStrongerThanTheOpponent(stepBuilder.build()));
         }
 
 
