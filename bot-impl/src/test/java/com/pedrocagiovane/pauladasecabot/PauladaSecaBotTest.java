@@ -59,7 +59,17 @@ public class PauladaSecaBotTest {
         assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,SPADES));
     }
 
-
+    @Test
+    @DisplayName("Jogar menor carta na primeira rodada caso tenha casal vermelho")
+    void jogarMenorCartaPrimeiraSeTiverCasalVermelho() {
+        maoPlayer = List.of( TrucoCard.of(THREE, SPADES),TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(ACE, HEARTS));
+        vira = TrucoCard.of(KING, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 3).opponentScore(0);
+        CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
+        assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE,SPADES));
+    }
 
     @Test
     @DisplayName("Pede truco na segunda se tiver casal maior")

@@ -363,6 +363,11 @@ public class PauladaSecaBot implements BotServiceProvider {
             return CardToPlay.of(piorCarta(build));
         }
 
+        // PRIMEIRA: joga pior carta se tiver casal vermelho
+        if (temCasalVermelho(build) && build.getRoundResults().isEmpty()){
+            System.out.printf("temos casal vermelho e jogamos %s", piorCarta(build));
+            return CardToPlay.of(piorCarta(build));
+        }
 
         // JOGA PRIMEIRO
         if (!build.getOpponentCard().isPresent()) {
