@@ -99,7 +99,7 @@ class TeitasBotFunctionsTest {
 
     }
     @Test
-    @DisplayName("Shoul return True if we ha Strong Hand --  lowest than nuts and better than trash")
+    @DisplayName("Should return True if we ha Strong Hand --  lowest than nuts and better than trash")
     void shouldReturnTrueIfHandIsStrong() {
         TrucoCard vira =  TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         List<TrucoCard> cards = List.of(
