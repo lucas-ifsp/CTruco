@@ -276,6 +276,9 @@ public class DarthVader implements BotServiceProvider {
 
     }
 
+    public CardToPlay thirdRoundCard(GameIntel intel) {
+        return CardToPlay.of(intel.getCards().get(0));
+    }
 
 
     public GameIntel.RoundResult checkIfIWonTheRound(GameIntel intel) {
