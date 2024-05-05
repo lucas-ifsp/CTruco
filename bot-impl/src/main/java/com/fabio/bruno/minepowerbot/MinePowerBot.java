@@ -5,6 +5,8 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
+
 
 public class MinePowerBot implements BotServiceProvider {
     @Override
@@ -34,6 +36,13 @@ public class MinePowerBot implements BotServiceProvider {
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private List<TrucoCard> getManilha(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.isManilha(vira))
+                .toList();
     }
 
     private boolean isTheFirstToPlay(GameIntel intel) {
