@@ -13,6 +13,13 @@ public class MinePowerBot implements BotServiceProvider {
         return false;
     }
 
+    private List<TrucoCard> getCardAboveRank(GameIntel intel, CardRank rank){
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .filter(card -> card.getRank().compareTo(rank) >= 0)
+                .toList();
+    }
+
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         var manilhaFraca = getWeakerManilha(intel);
@@ -20,13 +27,13 @@ public class MinePowerBot implements BotServiceProvider {
         var opponentScore = intel.getOpponentScore();
         var countManilhas = listManilhas(intel).size();
 
-        if (countManilhas >=2){
+        if (countManilhas >=2)
             return true;
-        }
-        if (manilhaFraca != null) {
+        if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
+            return true;
+        if (manilhaFraca != null)
             if (botScore == opponentScore || botScore + 6 <= opponentScore || botScore > opponentScore) {
                 return true;
-            }
         }
         return false;
     }
