@@ -108,19 +108,17 @@ public class PatoBot implements BotServiceProvider {
         return count >= threshold;
     }
 
-    public boolean checkBigHand(GameIntel intel){
+    public boolean checkIfRaiseGame(GameIntel intel){
         int count = 0;
+        TrucoCard vira = intel.getVira();
         TrucoCard CardToCompare = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
         List<TrucoCard> cards = intel.getCards();
         for (TrucoCard card: cards){
-            if(card.compareValueTo(CardToCompare, intel.getVira()) == 0){
-                count ++;
-            }
-            if (card.isEspadilha(intel.getVira())){
-                count++;
-            }
+            if(card.compareValueTo(CardToCompare, intel.getVira()) == 0 || card.isManilha(vira) ){ count ++;}
         }
         return count >=2;
     };
+
+
 
 }

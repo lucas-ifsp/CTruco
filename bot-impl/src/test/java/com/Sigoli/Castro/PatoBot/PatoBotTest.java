@@ -331,7 +331,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
-        assertTrue(patoBot.checkBigHand(intel));
+        assertTrue(patoBot.checkIfRaiseGame(intel));
     }
 
     @Test
@@ -344,7 +344,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
-        assertFalse(patoBot.checkBigHand(intel));
+        assertFalse(patoBot.checkIfRaiseGame(intel));
     }
 
 
