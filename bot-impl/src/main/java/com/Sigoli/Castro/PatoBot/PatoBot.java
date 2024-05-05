@@ -1,18 +1,16 @@
 package com.Sigoli.Castro.PatoBot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
-import com.bueno.spi.service.BotServiceProvider;
 
-import javax.lang.model.type.NullType;
+
 import java.util.List;
 import java.util.Optional;
+import com.bueno.spi.model.*;
+import com.bueno.spi.service.BotServiceProvider;
 
 public class PatoBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return checkIfAcceptMaoDeOnze(intel);
     }
 
     @Override
@@ -42,8 +40,8 @@ public class PatoBot implements BotServiceProvider {
 
     public TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
         TrucoCard cardToPlay = null;
-        List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
+        List<TrucoCard> hand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         for (TrucoCard card : hand) {
             if (card.compareValueTo(opponentCard.get(), vira) > 0) {
@@ -76,7 +74,7 @@ public class PatoBot implements BotServiceProvider {
         TrucoCard strongestCard = null;
 
         for (TrucoCard card : hand) {
-            if (!card.isZap(vira) && !card.isCopas(vira)) {  // Exclui Zap e Copas
+            if (!card.isZap(vira) && !card.isCopas(vira)) {
                 if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
                     strongestCard = card;
                 }
@@ -84,5 +82,18 @@ public class PatoBot implements BotServiceProvider {
         }
 
         return strongestCard;
+    }
+
+    public boolean checkIfAcceptMaoDeOnze(GameIntel intel){
+        int count = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                count += 3;
+            }
+            if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), intel.getVira()) >= 0) {
+                count++;
+            }
+        }
+        return count >= 4;
     }
 }
