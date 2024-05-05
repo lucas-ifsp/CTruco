@@ -184,7 +184,6 @@ public class PatoBotTest {
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
-
     @Test
     @DisplayName("Should play lowest winning card if can defeat opponent and is the second to Play on first Round")
     public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSecondToPlayonFirstRound(){
@@ -432,6 +431,19 @@ public class PatoBotTest {
     }
 
     @Test
+    @DisplayName("Should raise game if I've won the first round and have strong cards")
+    public void shouldRaiseGameIfIveWonTheFirstRoundAndHaveStrongCards(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        when(intel.getVira()).thenReturn(vira);
+        assertTrue(patoBot.checkIfRaiseGame(intel));
+    }
+
+    @Test
     @DisplayName("Should not Raise if is playing Mao de Onze")
     public void shouldNotRaiseIfIsPlayingMaoDeOnze(){
         GameIntel intel = mock(GameIntel.class);
@@ -459,10 +471,6 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(1);
     }
-
-
-
-
 
 
 }
