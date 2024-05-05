@@ -399,7 +399,7 @@ public class PatoBotTest {
     }
 
     @Test
-    @DisplayName("Should not Rais if is playing Mao de Onze")
+    @DisplayName("Should not Raise if is playing Mao de Onze")
     public void shouldNotRaiseIfIsPlayingMaoDeOnze(){
         GameIntel intel = mock(GameIntel.class);
         int playerPoints = 11;
