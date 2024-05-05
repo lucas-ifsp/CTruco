@@ -89,7 +89,7 @@ public class PatoBot implements BotServiceProvider {
         return strongestCard;
     }
 
-    public boolean checkIfAcceptMaoDeOnze(GameIntel intel){
+    public boolean checkIfAcceptMaoDeOnze(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
             if (card.isManilha(intel.getVira())) {
@@ -99,6 +99,11 @@ public class PatoBot implements BotServiceProvider {
                 count++;
             }
         }
-        return count >= 4;
+
+        int opponentPoints = intel.getOpponentScore();
+        int threshold = 4;
+        if (opponentPoints >= 8) {threshold = 6;}
+        return count >= threshold;
     }
+
 }
