@@ -313,11 +313,11 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Plays weakest card if it has no stronger card")
             public void ChooseWeakestCardIfHasAllStrongest(){
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,SPADES), //2
-                        TrucoCard.of(FOUR,CLUBS), // 3
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,CLUBS),
+                        TrucoCard.of(FOUR,SPADES),// 3
                         TrucoCard.of(FOUR,HEARTS)));
                 when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
-                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,DIAMONDS)).value(),patricia.chooseCard(intel).value());
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).value(),patricia.chooseCard(intel).value());
             }
         }
         @Nested
