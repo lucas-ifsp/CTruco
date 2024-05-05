@@ -43,6 +43,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.erick.itaipavabot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
