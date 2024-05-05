@@ -46,7 +46,7 @@ class TeitasBotFunctionsTest {
         void shouldReturnFalseIfHandHasNoManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
