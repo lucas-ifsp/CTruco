@@ -335,6 +335,20 @@ public class PatoBotTest {
     }
 
     @Test
+    @DisplayName("Should Raise when holding a Two and Manilha")
+    public void shouldRaiseWhenHoldingTwoAndManilha(){
+        GameIntel intel = mock((GameIntel.class));
+        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        assertTrue(patoBot.checkIfRaiseGame(intel));
+
+    }
+
+    @Test
     @DisplayName("Should not Raise if got only one 'Manilha' and no threes or twos")
     public void shouldNotRaiseIfGotOnlyOneManilhaAndNoThreesorTwos(){
         GameIntel intel = mock((GameIntel.class));
