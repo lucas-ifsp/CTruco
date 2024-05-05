@@ -109,7 +109,18 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public boolean checkBigHand(GameIntel intel){
-        return false;
+        int count = 0;
+        TrucoCard CardToCompare = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        List<TrucoCard> cards = intel.getCards();
+        for (TrucoCard card: cards){
+            if(card.compareValueTo(CardToCompare, intel.getVira()) == 0){
+                count ++;
+            }
+            if (card.isEspadilha(intel.getVira())){
+                count++;
+            }
+        }
+        return count >=2;
     };
 
 }
