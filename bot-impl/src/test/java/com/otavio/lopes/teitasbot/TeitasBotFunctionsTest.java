@@ -185,19 +185,20 @@ class TeitasBotFunctionsTest {
         }
 
         @Test
-        @DisplayName("Should Play at safe mode if")
-        void ShouldPlaySafeMode(){
+        @DisplayName("Should play at safe mode, if we had and strong to nuts hand")
+        void ShouldReturnTrueIfNutsOrStrongHand(){
+
             TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
 
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
-
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
             );
-            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isFalse();
 
+            assertThat(TeitasBotFunctions.PlaySafeMood(cards,vira, gameIntel)).isTrue();
         }
+
         @Test
         @DisplayName("Should Play at good/fun mode if")
         void ShouldPlayGoodMode(){
