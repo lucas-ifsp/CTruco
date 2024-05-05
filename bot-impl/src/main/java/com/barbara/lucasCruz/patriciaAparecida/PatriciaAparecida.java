@@ -33,18 +33,32 @@ public class PatriciaAparecida implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
+
         List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
+
         TrucoCard vira = intel.getVira();
+
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
 
         if(intel.getOpponentCard().isPresent()){
 
             Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards,intel);
+
             if(getWeakestCardThatWins(tempcards,intel).isPresent()) return CardToPlay.of(weakestCardThatWins.get());
+            //aqui voce so esta pegando uma carta que ganha, como o oponente ja jogou uma é legal usar prob
+            //alem disso tem que ser a menor que ganha.
+
             Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards,intel);
+            //tem que considerar a prob das cartas que voce nao vai jogar pra empatar
+            //empatar vem antes de ter carta que ganha na primiera rodada
+            //se fizemos a primeira vem antes na segunda tb
+
             if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
+
+
             if(!intel.getRoundResults().isEmpty()) {
                  return CardToPlay.discard(tempcards.stream().findFirst().get());
+                 //ta dizendo que no primeiro round a gente só torna pra cima?
             }
             else return CardToPlay.of(tempcards.stream().findFirst().get());
 
@@ -53,6 +67,7 @@ public class PatriciaAparecida implements BotServiceProvider {
         TrucoCard StrongestTrucoCard = tempcards.get(tempcards.size() - 1);
         if(StrongestTrucoCard.isManilha(vira)) return CardToPlay.of(StrongestTrucoCard);
         return CardToPlay.of(intel.getCards().get(0));
+        //aqui conversamos sobre ontem
         }
 
     private Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
