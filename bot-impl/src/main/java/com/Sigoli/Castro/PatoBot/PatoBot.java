@@ -16,7 +16,8 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getScore() == 11|| intel.getOpponentScore()==11) return false;
-        return true;
+
+        return false;
     }
 
     @Override
@@ -110,7 +111,6 @@ public class PatoBot implements BotServiceProvider {
                 count++;
             }
         }
-
         int opponentPoints = intel.getOpponentScore();
         int threshold = 4;
         if (opponentPoints >= 8) {threshold = 6;}
