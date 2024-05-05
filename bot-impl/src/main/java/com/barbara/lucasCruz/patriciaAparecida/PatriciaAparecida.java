@@ -66,13 +66,9 @@ public class PatriciaAparecida implements BotServiceProvider {
         List<Double> probCards = listProbAllCards(intel);
         final List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
 
-        if(StrongestCards.size() >= 2){
+        if(!StrongestCards.isEmpty()){
             return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         }
-
-
-        TrucoCard StrongestTrucoCard = tempcards.get(tempcards.size() - 1);
-        if(StrongestTrucoCard.isManilha(vira)) return CardToPlay.of(StrongestTrucoCard);
         return CardToPlay.of(intel.getCards().get(0));
         //aqui conversamos sobre ontem
         }
