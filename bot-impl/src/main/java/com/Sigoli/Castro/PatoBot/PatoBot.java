@@ -35,7 +35,7 @@ public class PatoBot implements BotServiceProvider {
         } else if (getNumberOfCardsInHand(intel)==2 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
             cardToPlay = CardToPlay.of(selectLowestCard(intel.getCards(),intel.getVira()));
         } else if (getNumberOfCardsInHand(intel) == 2 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
-            cardToPlay = CardToPlay.of(selectStrongerCardExcludingZapAndCopas(intel));
+            cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
         }
 
 
