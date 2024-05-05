@@ -399,6 +399,15 @@ public class PatoBotTest {
     }
 
     @Test
+    @DisplayName("Should not Rais if is playing Mao de Onze")
+    public void shouldNotRaiseIfIsPlayingMaoDeOnze(){
+        GameIntel intel = mock(GameIntel.class);
+        int playerPoints = 11;
+        when(intel.getScore()).thenReturn(playerPoints);
+        assertFalse(patoBot.decideIfRaises(intel));
+    }
+
+    @Test
     @DisplayName("Should Raise if 'Truco' is called in first round")
     public void shouldRaiseIfTrucoIsCalledInFirstRound(){
         GameIntel intel = mock(GameIntel.class);
