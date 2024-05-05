@@ -1,8 +1,6 @@
 package com.fabio.bruno.minepowerbot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
@@ -16,6 +14,15 @@ public class MinePowerBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        var manilha = getManilha(intel);
+        var botScore = intel.getScore();
+        var opponentScore = intel.getOpponentScore();
+
+        if (manilha != null) {
+            if (botScore == opponentScore || botScore + 6 <= opponentScore || botScore > opponentScore) {
+                return true;
+            }
+        }
         return false;
     }
 
