@@ -248,7 +248,6 @@ public class PatoBotTest {
     @DisplayName("Should accept Mão de Onze when my cards are stronger")
     public void shouldAcceptMaoDeOnzeWhenMyCardsAreStronger(){
         GameIntel intel = mock(GameIntel.class);
-
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
         TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
         TrucoCard card3 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
@@ -259,6 +258,23 @@ public class PatoBotTest {
 
         assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
     }
+
+    @Test
+    @DisplayName("Should Accept Mao de Onze when Cards are okay and opponent score is <= 7")
+    public void shouldAcceptMaoDeOnzeWhenCardsAreOkayAndOpponentScoreIsLessThanOrEqualToSeven() {
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+        int opponentScore = 6;
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
+    }
+
 
     @Test
     @DisplayName("Should not accept Mão de Onze when my cards are weak")
