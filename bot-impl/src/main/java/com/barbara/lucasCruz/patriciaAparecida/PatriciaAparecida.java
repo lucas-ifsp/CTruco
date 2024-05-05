@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.Collections.max;
+
+
 public class PatriciaAparecida implements BotServiceProvider {
 
 
@@ -62,16 +65,59 @@ public class PatriciaAparecida implements BotServiceProvider {
             else return CardToPlay.of(tempcards.stream().findFirst().get());
 
         }
-
         List<Double> probCards = listProbAllCards(intel);
-        final List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
-
+        List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
         if(!StrongestCards.isEmpty()){
             return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         }
+        if(intel.getRoundResults().contains(GameIntel.RoundResult.LOST)) return CardToPlay.of(intel.getCards().get(0));
+
+        if( chanceToDrawIsBetter(intel,tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel),tempcards);
+
         return CardToPlay.of(intel.getCards().get(0));
         //aqui conversamos sobre ontem
         }
+
+
+    //responde a uma solicitação de aumento de ponto em uma mão de truco.
+    //O valor de retorno deve ser um dos seguintes:
+    //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
+    }
+
+
+
+    private Double probabilityOpponentCardDraws(TrucoCard trucoCard, GameIntel intel) {
+        int numberOfSameRankCards = 4;
+        for (TrucoCard card : intel.getOpenCards()) {
+            if(card.getRank() == trucoCard.getRank()) --numberOfSameRankCards;
+        }
+        final int remainderSameRankCards = getNumberOfRemainderCards(intel) - numberOfSameRankCards;
+        return (1 - (Math.pow((double)
+                remainderSameRankCards /getNumberOfRemainderCards(intel),getNumberOfOpponentsCards(intel))));
+    }
+
+    private List<Double> listProbDrawAllCards(GameIntel intel) {
+        List<Double> listProbDrawAllCards = new ArrayList<>();
+        for(int i=0; i<intel.getCards().size(); i++){
+            listProbDrawAllCards.add(probabilityOpponentCardDraws(intel.getCards().get(i),intel));
+        }
+        return listProbDrawAllCards;
+    }
+
+    private CardToPlay cardWithHighestChanceToDraw(List<Double> probabilities, List<TrucoCard> tempcards) {
+        final Double maxProbability = max(probabilities);
+        probabilities.indexOf(maxProbability);
+        return CardToPlay.of(tempcards.get(probabilities.indexOf(maxProbability)));
+    }
+
+    private boolean chanceToDrawIsBetter(GameIntel intel, List<TrucoCard> tempcards) {
+        List<Double> chanceToDraw = listProbDrawAllCards(intel);
+        List<Double> chanceToHaveStrongerCard = listProbAllCards(intel);
+        return (max(chanceToDraw) < max(chanceToHaveStrongerCard));
+    }
 
     private Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
         for (TrucoCard card : cards)
@@ -84,13 +130,6 @@ public class PatriciaAparecida implements BotServiceProvider {
         return cards.stream().findFirst();
     }
 
-    //responde a uma solicitação de aumento de ponto em uma mão de truco.
-    //O valor de retorno deve ser um dos seguintes:
-    //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return 0;
-    }
 
     public int getNumberOfCardsInHand(GameIntel intel) {
         return intel.getCards().size();
