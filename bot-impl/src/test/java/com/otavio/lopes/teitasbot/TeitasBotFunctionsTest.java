@@ -112,11 +112,10 @@ class TeitasBotFunctionsTest {
 
     @Nested
     class WeStart{
-        //game intel error at 'Not found'
         @Test
         @DisplayName("should return true if we last round")
         void shouldReturTrueIfWeStart(){
-            assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(gameIntel)).isTrue()    ;
+            assertThat(TeitasBotFunctions.firstToPlay(gameIntel)).isTrue()    ;
         }
     }
 
@@ -164,16 +163,12 @@ class TeitasBotFunctionsTest {
             assertEquals(CardSuit.SPADES, TeitasBotFunctions.getMiddleCardLevel(cards, vira).getSuit());
 
         }
-
-
     }
-
-
 
     @Nested
     class PlayModes{
         @Test
-        @DisplayName("Should Plaay at agressive mode if")
+        @DisplayName("Should Play at agressive mode if")
         void ShouldPlayAgressiveMode(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
 
@@ -186,7 +181,36 @@ class TeitasBotFunctionsTest {
             assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
 
         }
+        @Test
+        @DisplayName("Should Play at safe mode if")
+        void ShouldPlaySafeMode(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+
+            );
+            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
+
+        }
+        @Test
+        @DisplayName("Should Play at good/fun mode if")
+        void ShouldPlayGoodMode(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+
+            );
+            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
+
+        }
     }
+
 
 
 

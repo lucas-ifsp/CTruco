@@ -8,8 +8,6 @@ import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
 
-
-
 public class TeitasBotFunctions {
 
     static Boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
@@ -22,7 +20,6 @@ public class TeitasBotFunctions {
     static Boolean hasThree(List<TrucoCard> cards) {
         return cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
-
 
     static Boolean hasNutsHand(List<TrucoCard> cards, TrucoCard vira) {
         //we have the best one. manilha + zap + 3.
@@ -40,7 +37,7 @@ public class TeitasBotFunctions {
         return hasManilha || hasStrongCard;
     }
     static Boolean hasTrashHand(List<TrucoCard> cards,TrucoCard vira)
-    //the worst.
+        //the worst.
     {
         Boolean hasManilha = hasManilha(cards,vira);
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
@@ -48,10 +45,7 @@ public class TeitasBotFunctions {
         return !hasManilha && !hasStrongCard;
 
     }
-    static boolean isOpponentThatStartTheRound(GameIntel gameIntel) {
 
-        return gameIntel.getOpponentCard().isPresent();
-    }
 
     static boolean hasManilhaAlta( List<TrucoCard> cards,TrucoCard vira) {
         boolean hasManilha = hasManilha(cards, vira);
@@ -103,25 +97,29 @@ public class TeitasBotFunctions {
         return null;
     }
 
-    //TODO indetify typefunciont
+    boolean firstRound(GameIntel intel){
+        return intel.getRoundResults().isEmpty();
+    }
+
+    boolean secondRound(GameIntel intel){
+        return intel.getRoundResults().size() == 1;
+    }
+
+    static boolean firstToPlay(GameIntel intel){
+        return intel.getOpponentCard().isEmpty();
+    }
 
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
         //method that play at agressive mode
+
         Boolean nustHand = hasNutsHand(cards, vira);
         Boolean hasStrongCard =  hasStrongHand(cards,vira);
-        Boolean weStart = isOpponentThatStartTheRound(gameIntel);
-        if (nustHand & hasStrongCard & weStart){
-            //logical porpose
+        Boolean weStart = firstToPlay(gameIntel);
 
+        if (nustHand & weStart){
+            return true;
         }
-        else if (hasStrongCard & weStart){
-            //logical porpose to play at agressive mode
-        }
-        else{
-            return false;
-        }
-
-       return true;
+        else return hasStrongCard & weStart;
 
     }
 
