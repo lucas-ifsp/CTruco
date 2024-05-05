@@ -324,18 +324,18 @@ class PatriciaAparecidaTest {
             @DisplayName("Play card that draws if probability is lower than card that wins")
             public void ChooseCardThatDrawsIfHigherChance(){
                 when(intel.getRoundResults()).thenReturn(List.of(WON));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,DIAMONDS),
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,CLUBS),
                         TrucoCard.of(FIVE,DIAMONDS)));
 
                 when(intel.getVira()).thenReturn(TrucoCard.of(SEVEN,DIAMONDS));
 
                 when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(SEVEN,DIAMONDS),
-                        TrucoCard.of(QUEEN,DIAMONDS),
-                        TrucoCard.of(QUEEN,CLUBS)));
+                        TrucoCard.of(FIVE,CLUBS),
+                        TrucoCard.of(FIVE,SPADES)));
 
-                assertEquals(CardToPlay.of(TrucoCard.of(FIVE, DIAMONDS)).value(), patricia.chooseCard(intel).value());
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(), patricia.chooseCard(intel).value());
                 when(intel.getRoundResults()).thenReturn(List.of(DREW));
-                assertEquals(CardToPlay.of(TrucoCard.of(FIVE, DIAMONDS)).value(), patricia.chooseCard(intel).value());
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(), patricia.chooseCard(intel).value());
             }
         }
 
