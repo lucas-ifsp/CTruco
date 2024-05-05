@@ -76,9 +76,19 @@ public class TeitasBotFunctions {
 
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
         //method that play at agressive mode
-        Boolean nustaHand = hasNutsHand(cards, vira);
+        Boolean nustHand = hasNutsHand(cards, vira);
         Boolean hasStrongCard =  hasStrongHand(cards,vira);
         Boolean weStart = isOpponentThatStartTheRound(gameIntel);
+        if (nustHand & hasStrongCard & weStart){
+            //logical porpose
+
+        }
+        else if (hasStrongCard & weStart){
+            //logical porpose to play at agressive mode
+        }
+        else{
+            return false;
+        }
 
        return true;
 
