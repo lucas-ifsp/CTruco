@@ -499,7 +499,18 @@ public class PatoBotTest {
 
     }
 
+    @Test
+    @DisplayName("Should raise if I've won the first round, lost second round and have a 'Manilha'")
+    public void shouldRaiseIfIvieWonTheFirstRoundLostSecondRoundAndHaveAManilha(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS);
 
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(Collections.singletonList(card1));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST));
+        assertTrue(patoBot.decideIfRaises(intel));
+    }
 
 
 }
