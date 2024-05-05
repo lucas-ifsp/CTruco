@@ -49,6 +49,20 @@ class MinePowerBotTest {
     }
 
     @Test
+    @DisplayName("Should play the lowest rank manilha if it has at least two of them in hand")
+    void shouldPlayLowestRankManilhaIfItHasAtLeastTwoOfThemInHandInTheFirstRoundAndItIsTheFirstToPlay() {
+        intel = create()
+                .viraToBe(CardRank.KING, CardSuit.DIAMONDS)
+                .cards(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), // Manilha
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), // Manilha
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)).finish();
+
+        assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+    }
+
+
+    @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
     void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
         intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(
