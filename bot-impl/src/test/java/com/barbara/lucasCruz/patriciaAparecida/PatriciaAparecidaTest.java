@@ -302,7 +302,7 @@ class PatriciaAparecidaTest {
             }
 
             @Test
-            @DisplayName("Plays weakest card if it has no stronger card")
+            @DisplayName("Choose weakest card of strong cards if it has no stronger")
             public void ChooseWeakestCardOfStrongInHand(){
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE, HEARTS), //2
                         TrucoCard.of(FOUR,CLUBS), // 3
@@ -310,7 +310,15 @@ class PatriciaAparecidaTest {
                 when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,HEARTS)).value(),patricia.chooseCard(intel).value());
             }
-
+            @Test
+            @DisplayName("Plays weakest card if it has no stronger card")
+            public void ChooseWeakestCardIfHasAllStrongest(){
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,DIAMONDS), //2
+                        TrucoCard.of(FOUR,CLUBS), // 3
+                        TrucoCard.of(FOUR,HEARTS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,DIAMONDS)).value(),patricia.chooseCard(intel).value());
+            }
         }
         @Nested
         @DisplayName("known Opponent Card Tests")
