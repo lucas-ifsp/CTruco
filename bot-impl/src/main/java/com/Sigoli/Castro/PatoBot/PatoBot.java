@@ -111,10 +111,10 @@ public class PatoBot implements BotServiceProvider {
     public boolean checkIfRaiseGame(GameIntel intel){
         int count = 0;
         TrucoCard vira = intel.getVira();
-        TrucoCard CardToCompare = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        TrucoCard CardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<TrucoCard> cards = intel.getCards();
         for (TrucoCard card: cards){
-            if(card.compareValueTo(CardToCompare, intel.getVira()) == 0 || card.isManilha(vira) ){ count ++;}
+            if(card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira) ){ count ++;}
         }
         return count >=2;
     };
