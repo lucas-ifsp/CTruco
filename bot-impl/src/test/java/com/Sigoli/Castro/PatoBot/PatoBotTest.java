@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,9 +27,10 @@ public class PatoBotTest {
     private GameIntel.StepBuilder stepBuilder;
 
     @BeforeEach
-public void createPatoBot(){
-    patoBot = new PatoBot();
-}
+    public void createPatoBot(){
+        patoBot = new PatoBot();
+    }
+
     @Test
     @DisplayName("Should return true id opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
@@ -41,8 +43,8 @@ public void createPatoBot(){
    @Test
    @DisplayName("Should return false if opponent is not first to play")
     void shouldReturnFalseIfOpponentIsNotFirstToPlay(){
-       GameIntel intel = mock(GameIntel.class);
-       when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
         assertThat(patoBot.checkIfOpponentIsFirstToPlay(intel.getOpponentCard())).isFalse();
     }
 
@@ -123,9 +125,22 @@ public void createPatoBot(){
         assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Should discard the lowest card if my hand doesn't have a card that wins the second round")
+    public void shouldDiscardTheLowestCardIfMyHandDoesntHaveACardThatWinsTheSecondRound() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard expected = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
 
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
 
-
+        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+    }
 }
 
 
