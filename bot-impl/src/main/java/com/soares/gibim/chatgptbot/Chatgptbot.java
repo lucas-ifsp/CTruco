@@ -1,4 +1,4 @@
 package com.soares.gibim.chatgptbot;
 
-public class chatgptbot {
+public class Chatgptbot {
 }
