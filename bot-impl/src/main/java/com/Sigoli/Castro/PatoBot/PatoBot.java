@@ -126,7 +126,7 @@ public class PatoBot implements BotServiceProvider {
             if(card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira) ){ count ++;}
         }
         if (cards.size() == 3) { return count >=2; }
-        else if(cards.size() >= 1){return count >=1;}
+        else if(!cards.isEmpty()){return count >=1;}
         return count >0;
     };
 

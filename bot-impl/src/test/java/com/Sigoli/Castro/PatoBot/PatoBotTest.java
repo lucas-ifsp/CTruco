@@ -171,7 +171,7 @@ public class PatoBotTest {
 
     @Test
     @DisplayName("Should play lowest winning card if can defeat opponent and is the second to Play on first Round")
-    public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSecondToPLayonFirstRound(){
+    public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSecondToPlayonFirstRound(){
 
         GameIntel intel  = mock(GameIntel.class);
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
