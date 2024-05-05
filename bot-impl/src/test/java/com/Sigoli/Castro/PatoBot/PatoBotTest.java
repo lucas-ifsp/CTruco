@@ -123,6 +123,24 @@ public void createPatoBot(){
         assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Should play a strong card, excluding Copas")
+    public void shouldPlayStrongCardExcludingCopas() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        TrucoCard expected = TrucoCard.of(CardRank.THREE,CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
+    }
+
+
 
 
 
