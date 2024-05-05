@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static com.fabio.bruno.minepowerbot.MinePowerBotIntelMockBuilder.create;
+import static org.mockito.Mockito.when;
 
 class MinePowerBotTest {
 
@@ -70,6 +71,19 @@ class MinePowerBotTest {
                         TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)).finish();
+
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should raise if bot has two cards above rank two")
+    void shouldRaiseIfHasTwoCardsAboveRankTwo(){
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
+        .cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS))
+                .opponentCardToBe(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS))
+                .finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
