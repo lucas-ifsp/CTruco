@@ -224,11 +224,10 @@ public class PatoBotTest {
         TrucoCard card2 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
         TrucoCard card3 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
         CardToPlay expected = CardToPlay.of(card2);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 

@@ -21,8 +21,11 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         CardToPlay cardToPlay = null;
-        if(getNumberOfCardsInHand(intel) ==3 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())){
+        if(getNumberOfCardsInHand(intel) == 3 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())){
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
+        }
+        else if(getNumberOfCardsInHand(intel)== 3 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+            cardToPlay = CardToPlay.of(selectStrongerCardExcludingZapAndCopas(intel));
         }
         return cardToPlay;
     }
