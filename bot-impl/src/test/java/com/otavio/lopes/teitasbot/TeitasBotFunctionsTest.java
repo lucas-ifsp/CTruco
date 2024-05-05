@@ -195,23 +195,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
             );
-
             assertThat(TeitasBotFunctions.PlaySafeMood(cards,vira, gameIntel)).isTrue();
-        }
-
-        @Test
-        @DisplayName("Should Play at good/fun mode if")
-        void ShouldPlayGoodMode(){
-            TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
-
-            List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
-
-            );
-            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
-
         }
     }
 

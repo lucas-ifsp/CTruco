@@ -113,7 +113,6 @@ public class TeitasBotFunctions {
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
         //if some of these is true. pression to the opponent
 
-
         Boolean first =  firstToPlay(gameIntel);
         Boolean hasGoodHand =  hasGoodHand(cards, vira);
         Boolean hasWeakHand =  hasTrashHand(cards, vira);
@@ -121,18 +120,16 @@ public class TeitasBotFunctions {
         return (hasGoodHand & first | hasWeakHand & first);
     }
 
-    static Boolean PlayGoodMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
 
-        Boolean hasGoodHand =  hasGoodHand(cards,vira);
-
-        return hasGoodHand(cards, vira);
-    }
     static Boolean PlaySafeMood(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
+        // if we had nuts or strong hand, and is the first : play safe mode
         Boolean hasNutsHand = hasNutsHand(cards, vira);
         Boolean isFirst = firstToPlay(gameIntel);
         Boolean hasStrongHand =  hasStrongHand(cards, vira);
 
-        return hasNutsHand & isFirst | hasStrongHand & isFirst;
+        return (!isFirst && hasNutsHand) || (!isFirst && hasStrongHand);
+
+
     }
 
 
