@@ -9,6 +9,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+
+import javax.smartcardio.Card;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -23,7 +26,7 @@ public class PatoBotTest {
     }
 
     @Test
-    @DisplayName("Should return true id opponent is first to play")
+    @DisplayName("Should return true if opponent is first to play")
     void shoulReturnTrueIfOpponentIsFirstToPlay() {
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
         GameIntel intel = mock(GameIntel.class);
@@ -79,6 +82,20 @@ public class PatoBotTest {
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
         assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
 
+    }
+    @Test
+    @DisplayName("Should play lowest winning card if can defeat opponent in second round")
+    public void shouldPlayLowestWinningCardIfCanDefeatOpponentInSecondRound() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        CardToPlay expected = CardToPlay.of(card2);
+        when(intel.getCards()).thenReturn(Arrays.asList(card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
