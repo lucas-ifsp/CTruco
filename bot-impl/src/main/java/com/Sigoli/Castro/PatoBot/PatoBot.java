@@ -116,7 +116,9 @@ public class PatoBot implements BotServiceProvider {
         for (TrucoCard card: cards){
             if(card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira) ){ count ++;}
         }
-        return count >=2;
+        if (cards.size() == 3) { return count >=2; }
+        else if(cards.size() >= 1){return count >=1;}
+        return count >0;
     };
 
 
