@@ -26,6 +26,8 @@ public class MinePowerBot implements BotServiceProvider {
         var botScore = intel.getScore();
         var opponentScore = intel.getOpponentScore();
         var countManilhas = listManilhas(intel).size();
+        if(intel.getScore() > opponentScore + 3)
+            return true;
         if(opponentScore <= 5)
             return true;
         if (countManilhas >=2)
