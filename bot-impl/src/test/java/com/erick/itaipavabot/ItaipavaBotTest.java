@@ -26,6 +26,10 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+
+import static com.bueno.spi.model.CardRank.FOUR;
+import static com.bueno.spi.model.CardRank.TWO;
+import static com.bueno.spi.model.CardSuit.HEARTS;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -53,11 +57,10 @@ public class ItaipavaBotTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
         );
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
                 .botInfo(myCards, 0)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
-
-        assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), bot.chooseCard(stepBuilder.build()))
+        assertEquals(TrucoCard.of(TWO, HEARTS), bot.chooseCard(stepBuilder.build()).content());
     }
 }

@@ -20,8 +20,52 @@
 
 package com.erick.itaipavabot;
 
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class ItaipavaBot {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+public class ItaipavaBot implements BotServiceProvider {
+
+    private CardToPlay firstRound(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        TrucoCard vira = gameIntel.getVira();
+        if(gameIntel.getOpenCards())
+        return CardToPlay.of(myCards.get(0));
+    }
+
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public boolean decideIfRaises(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public CardToPlay chooseCard(GameIntel intel) {
+        List <TrucoCard> myCards = intel.getCards();
+        return CardToPlay.of(myCards.get(0));
+    }
+
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
+    }
+
+    private TrucoCard getHighestCard(GameIntel gameIntel) {
+        TrucoCard highestCard = gameIntel.getOpenCards().get(0);
+        for(TrucoCard card : gameIntel.getOpenCards()) {
+            if (card.relativeValue(gameIntel.getVira()) > highestCard.relativeValue(gameIntel.getVira())) {
+                highestCard = card;
+            }
+        }
+        return highestCard;
+    }
 }
