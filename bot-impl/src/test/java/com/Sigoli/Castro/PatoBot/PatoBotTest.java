@@ -245,6 +245,20 @@ public class PatoBotTest {
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
 }
 
+    @Test
+    @DisplayName("Should Play Lowest card to trick opponent")
+    public  void  shouldPlayLowestToTrickOpponent(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+        TrucoCard card2 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(card1);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
+    }
+
 }
 
 
