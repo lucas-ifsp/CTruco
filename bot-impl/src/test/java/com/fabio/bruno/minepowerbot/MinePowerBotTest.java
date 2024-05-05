@@ -103,10 +103,19 @@ class MinePowerBotTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"4", "5", "6"})
+    @CsvSource({"4", "5", "6"}) // só 4 e 5 passam no teste
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
     void shouldRaiseIfOpponentScoreIsEqualOrLessThanThreshold(int opponentScore) {
         intel = create().scoreOponent(opponentScore).finish();
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"4, 0", "8, 6", "10,10"}) // só o primeiro passa no teste
+    @DisplayName("Will raise bet when winning by 3+ points difference")
+    void shouldRaiseIfIsWinningByThreePoints(int botScore, int opponentScore){
+        intel = create().scoreOponent(opponentScore).scoreMine(botScore).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
