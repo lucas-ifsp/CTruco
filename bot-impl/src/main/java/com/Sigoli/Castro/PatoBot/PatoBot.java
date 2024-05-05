@@ -70,5 +70,19 @@ public class PatoBot implements BotServiceProvider {
         return lowestCard;
     }
 
+    public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        TrucoCard strongestCard = null;
 
+        for (TrucoCard card : hand) {
+            if (!card.isZap(vira) && !card.isCopas(vira)) {  // Exclui Zap e Copas
+                if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                    strongestCard = card;
+                }
+            }
+        }
+
+        return strongestCard;
+    }
 }
