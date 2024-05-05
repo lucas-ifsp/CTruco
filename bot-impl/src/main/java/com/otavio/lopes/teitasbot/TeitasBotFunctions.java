@@ -80,6 +80,15 @@ public class TeitasBotFunctions {
         return wekeastCard;
     }
 
+    static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard strongestCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
+        }
+
+        return strongestCard;
+    }
+
 
 
 
