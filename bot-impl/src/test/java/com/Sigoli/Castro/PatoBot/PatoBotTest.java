@@ -84,8 +84,7 @@ public void createPatoBot(){
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-
-        assertThat(attemptToBeatOpponentCard(intel)).isEquals(expected);
+        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
 
     }
 
