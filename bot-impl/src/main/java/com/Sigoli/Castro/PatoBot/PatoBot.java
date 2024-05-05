@@ -1,7 +1,5 @@
 package com.Sigoli.Castro.PatoBot;
 
-
-
 import java.util.List;
 import java.util.Optional;
 import com.bueno.spi.model.*;
@@ -62,7 +60,6 @@ public class PatoBot implements BotServiceProvider {
         if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.get(), vira) <= 0) {
             cardToPlay = selectLowestCard(hand, vira);
         }
-
         return cardToPlay;
     }
 
@@ -89,7 +86,6 @@ public class PatoBot implements BotServiceProvider {
                 }
             }
         }
-
         return strongestCard;
     }
 

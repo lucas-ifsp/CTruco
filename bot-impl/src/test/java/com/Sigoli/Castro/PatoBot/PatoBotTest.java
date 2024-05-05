@@ -151,37 +151,7 @@ public class PatoBotTest {
         assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
     }
 
-    @Test
-    @DisplayName("Should accept Mão de Onze when my cards are stronger")
-    public void shouldAcceptMaoDeOnzeWhenMyCardsAreStronger(){
-        GameIntel intel = mock(GameIntel.class);
 
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
-        when(intel.getVira()).thenReturn(vira);
-
-        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
-    }
-
-    @Test
-    @DisplayName("Should not accept Mão de Onze when my cards are weak")
-    public void shouldNotAcceptMaoDeOnzeWhenMyCardsAreWeak() {
-        GameIntel intel = mock(GameIntel.class);
-
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
-        when(intel.getVira()).thenReturn(vira);
-
-        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
-    }
     @Test
     @DisplayName("Should play lowest winning card if can defeat opponent and is the second to Play on first Round")
     public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSecondToPLayonFirstRound(){
@@ -273,6 +243,56 @@ public class PatoBotTest {
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
+
+    @Test
+    @DisplayName("Should accept Mão de Onze when my cards are stronger")
+    public void shouldAcceptMaoDeOnzeWhenMyCardsAreStronger(){
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
+    }
+
+    @Test
+    @DisplayName("Should not accept Mão de Onze when my cards are weak")
+    public void shouldNotAcceptMaoDeOnzeWhenMyCardsAreWeak() {
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+    }
+
+    @Test
+    @DisplayName("Should reject 'Mão de Onze' if own cards are weak and opponent's points >= 8")
+    public void shouldRejectMaoDeOnzeIfOwnCardsWeakAndOpponentPointsAtLeastEight() {
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+        int opponentScore = 8;
+
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+
+    }
 
 }
 
