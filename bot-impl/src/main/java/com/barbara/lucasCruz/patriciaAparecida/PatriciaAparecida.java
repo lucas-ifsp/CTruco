@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Collections.max;
+import static java.util.Collections.min;
 
 
 public class PatriciaAparecida implements BotServiceProvider {
@@ -67,12 +68,14 @@ public class PatriciaAparecida implements BotServiceProvider {
         }
         List<Double> probCards = listProbAllCards(intel);
         List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
+
         if(!StrongestCards.isEmpty()){
             return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         }
+
         if(intel.getRoundResults().contains(GameIntel.RoundResult.LOST)) return CardToPlay.of(intel.getCards().get(0));
 
-        if( chanceToDrawIsBetter(intel,tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel),tempcards);
+        if( chanceToDrawIsBetter(intel,tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel,tempcards),tempcards);
 
         return CardToPlay.of(intel.getCards().get(0));
         //aqui conversamos sobre ontem
@@ -90,33 +93,36 @@ public class PatriciaAparecida implements BotServiceProvider {
 
 
     private Double probabilityOpponentCardDraws(TrucoCard trucoCard, GameIntel intel) {
+
         int numberOfSameRankCards = 4;
         for (TrucoCard card : intel.getOpenCards()) {
             if(card.getRank() == trucoCard.getRank()) --numberOfSameRankCards;
         }
         final int remainderSameRankCards = getNumberOfRemainderCards(intel) - numberOfSameRankCards;
         return (1 - (Math.pow((double)
-                remainderSameRankCards /getNumberOfRemainderCards(intel),getNumberOfOpponentsCards(intel))));
+                numberOfSameRankCards /remainderSameRankCards,getNumberOfOpponentsCards(intel))));
     }
 
-    private List<Double> listProbDrawAllCards(GameIntel intel) {
+    private List<Double> listProbDrawAllCards(GameIntel intel ,List<TrucoCard> tempcards) {
         List<Double> listProbDrawAllCards = new ArrayList<>();
         for(int i=0; i<intel.getCards().size(); i++){
-            listProbDrawAllCards.add(probabilityOpponentCardDraws(intel.getCards().get(i),intel));
+            listProbDrawAllCards.add(probabilityOpponentCardDraws(tempcards.get(i),intel));
         }
         return listProbDrawAllCards;
     }
 
     private CardToPlay cardWithHighestChanceToDraw(List<Double> probabilities, List<TrucoCard> tempcards) {
-        final Double maxProbability = max(probabilities);
+        final Double maxProbability = min(probabilities);
         probabilities.indexOf(maxProbability);
         return CardToPlay.of(tempcards.get(probabilities.indexOf(maxProbability)));
     }
 
     private boolean chanceToDrawIsBetter(GameIntel intel, List<TrucoCard> tempcards) {
-        List<Double> chanceToDraw = listProbDrawAllCards(intel);
+        List<Double> chanceToDraw = listProbDrawAllCards(intel,tempcards);
         List<Double> chanceToHaveStrongerCard = listProbAllCards(intel);
-        return (max(chanceToDraw) < max(chanceToHaveStrongerCard));
+        final double maxDraw = max(chanceToDraw);
+        final double maxStronger = max(chanceToHaveStrongerCard);
+        return (maxDraw > maxStronger);
     }
 
     private Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
