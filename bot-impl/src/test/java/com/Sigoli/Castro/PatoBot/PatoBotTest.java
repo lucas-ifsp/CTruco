@@ -455,8 +455,22 @@ public class PatoBotTest {
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         assertTrue(patoBot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("Should Raise if holds middle cards and won first round ")
+    public void shouldRaiseIfHoldsMiddleCardsAndWonFirstRound(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        assertTrue(patoBot.decideIfRaises(intel));
 
     }
+
 
 
 
