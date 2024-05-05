@@ -31,7 +31,6 @@ public class PatoBot implements BotServiceProvider {
     }
 
 
-
     public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {
         return opponentCard.isPresent();
     }
@@ -42,16 +41,48 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
+        TrucoCard cardToPlay = null;
+        List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        TrucoCard cardToPlay = null;
-        for (TrucoCard card : intel.getCards()) {
+        for (TrucoCard card : hand) {
             if (card.compareValueTo(opponentCard.get(), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
                     cardToPlay = card;
                 }
             }
         }
-        return cardToPlay != null ? cardToPlay : intel.getCards().get(0);
+        if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.get(), vira) <= 0) {
+            cardToPlay = selectLowestCard(hand, vira);
+        }
+
+        return cardToPlay;
+    }
+
+
+    public TrucoCard selectLowestCard(List<TrucoCard> hand, TrucoCard vira) {
+        TrucoCard lowestCard = null;
+        for (TrucoCard card : hand) {
+            if (lowestCard == null || card.compareValueTo(lowestCard, vira) < 0) {
+                lowestCard = card;
+            }
+        }
+        return lowestCard;
+    }
+
+    public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        TrucoCard strongestCard = null;
+
+        for (TrucoCard card : hand) {
+            if (!card.isZap(vira) && !card.isCopas(vira)) {  // Exclui Zap e Copas
+                if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                    strongestCard = card;
+                }
+            }
+        }
+
+        return strongestCard;
     }
 }

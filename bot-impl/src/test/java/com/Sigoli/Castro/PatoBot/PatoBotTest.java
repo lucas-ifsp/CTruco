@@ -88,6 +88,41 @@ public void createPatoBot(){
 
     }
 
+    @Test
+    @DisplayName("Should play a weaker card if unable to defeat opponent's card")
+    public void shouldPlayWeakerCardIfCannotDefeatOpponent() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.SIX,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        TrucoCard expected = TrucoCard.of(CardRank.SIX,CardSuit.CLUBS);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Should play a strong card, excluding Zap")
+    public void shouldPlayStrongCardExcludingZap() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        TrucoCard expected = TrucoCard.of(CardRank.THREE,CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
+    }
+
 
 
 
