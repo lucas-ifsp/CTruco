@@ -34,7 +34,7 @@ public class TeitasBotFunctions {
         //we have manilha and 3.
         Boolean hasManilha = hasManilha(cards, vira);
         Boolean hasStrongCard = cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
-        return hasManilha || hasStrongCard;
+        return hasManilha & hasStrongCard;
     }
     static Boolean hasTrashHand(List<TrucoCard> cards,TrucoCard vira)
         //the worst.
@@ -60,6 +60,7 @@ public class TeitasBotFunctions {
     static boolean hasStrongHand(List<TrucoCard> cards,TrucoCard vira){
         boolean hasManilhaAlta =  hasManilhaAlta(cards,vira);
         boolean hasManilhaAndThree =  hasManilha(cards, vira) & hasThree(cards);
+
         if (hasManilhaAndThree)
             return true;
         else return hasManilhaAlta;
@@ -110,11 +111,27 @@ public class TeitasBotFunctions {
     }
 
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
-        Boolean nustHand = hasNutsHand(cards, vira);
-        Boolean hasStrongCard =  hasStrongHand(cards, vira);
-        Boolean weStart = firstToPlay(gameIntel);
+        //if some of these is true. pression to the opponent
 
-        return (nustHand && weStart) || (hasStrongCard && weStart);
+
+        Boolean first =  firstToPlay(gameIntel);
+        Boolean hasGoodHand =  hasGoodHand(cards, vira);
+        Boolean hasWeakHand =  hasTrashHand(cards, vira);
+
+        return (hasGoodHand & first | hasWeakHand & first);
+    }
+
+    static Boolean PlayGoodMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
+
+        Boolean hasGoodHand =  hasGoodHand(cards,vira);
+
+        return hasGoodHand(cards, vira);
+    }
+    static Boolean PlaySafeMood(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
+        Boolean hasWeakHand = hasTrashHand(cards, vira);
+
+
+        return hasGoodHand(cards, vira);
     }
 
 

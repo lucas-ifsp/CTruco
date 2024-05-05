@@ -73,6 +73,7 @@ class TeitasBotFunctionsTest {
         @Test
         @DisplayName("Should return true if we had a good hand")
         void shouldReturnTrueIfHandIsGood() {
+
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
@@ -168,31 +169,33 @@ class TeitasBotFunctionsTest {
     @Nested
     class PlayModes{
         @Test
-        @DisplayName("Should Play at agressive mode if")
-        void ShouldPlayAgressiveMode(){
+        @DisplayName("Should return true if !goodhand ")
+        //if we ha a good hand, press
+        //good hand = manilha and 3
+        void ShouldReturnTrueIFGoodHand(){
             TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.CLUBS);
 
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
 
             );
             assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
-
         }
+
         @Test
         @DisplayName("Should Play at safe mode if")
         void ShouldPlaySafeMode(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
 
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
 
             );
-            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
+            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isFalse();
 
         }
         @Test
