@@ -25,6 +25,7 @@ import com.Sigoli.Castro.PatoBot.PatoBot;
 
 module bot.impl {
     requires bot.spi;
+    requires java.compiler;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
