@@ -69,4 +69,6 @@ public class PatoBot implements BotServiceProvider {
         }
         return lowestCard;
     }
+
+
 }
