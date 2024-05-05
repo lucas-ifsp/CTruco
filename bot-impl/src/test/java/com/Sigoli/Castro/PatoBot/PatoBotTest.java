@@ -25,7 +25,6 @@ public class PatoBotTest {
     PatoBot patoBot;
     private GameIntel.StepBuilder stepBuilder;
 
-
     @BeforeEach
 public void createPatoBot(){
     patoBot = new PatoBot();
@@ -46,6 +45,7 @@ public void createPatoBot(){
        when(intel.getOpponentCard()).thenReturn(Optional.empty());
         assertThat(patoBot.checkIfOpponentIsFirstToPlay(intel.getOpponentCard())).isFalse();
     }
+
     @Test
     @DisplayName("Should Return three if got three cards in hand")
     void shouldReturnThreeIfGotThreeCardsInHand(){

@@ -30,6 +30,8 @@ public class PatoBot implements BotServiceProvider {
         return 0;
     }
 
+
+
     public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {
         return opponentCard.isPresent();
     }
@@ -43,10 +45,6 @@ public class PatoBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         TrucoCard cardToPlay = null;
-
-        if (!opponentCard.isPresent()) {
-            return null;
-        }
         for (TrucoCard card : intel.getCards()) {
             if (card.compareValueTo(opponentCard.get(), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
