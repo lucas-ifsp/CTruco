@@ -16,7 +16,11 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getScore() == 11|| intel.getOpponentScore()==11) return false;
-        if (checkIfRaiseGame(intel)) return true;
+        if(intel.getRoundResults().isEmpty()) {
+            if (checkIfRaiseGame(intel)) return true;
+        }else if(intel.getRoundResults().get(0)==GameIntel.RoundResult.WON){
+            if (checkIfRaiseGame(intel)) return true;
+        }
         return false;
     }
 
