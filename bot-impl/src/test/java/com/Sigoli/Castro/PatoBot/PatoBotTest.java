@@ -184,7 +184,7 @@ public class PatoBotTest {
     }
     @Test
     @DisplayName("Should play lowest winning card if can defeat opponent and is the second to Play on first Round")
-    public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSeccondToPLayonFirstRound(){
+    public void shouldPlayLowestWinningCardIfCanDefeatOpponentAndIsSecondToPLayonFirstRound(){
 
         GameIntel intel  = mock(GameIntel.class);
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
@@ -198,10 +198,24 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
-
-
-
     }
+
+    @Test
+    @DisplayName("Should play a weaker card if unable to defeat opponent's card and is second to Play First Round ")
+    public void shouldPlayWeakerCardIfCannotDefeatOpponentAndIsSecondToPLayFirstRound() {
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.SIX,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        CardToPlay expected = CardToPlay.of(card3);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
+    }
+
 
 }
 
