@@ -8,6 +8,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class PatriciaAparecida implements BotServiceProvider {
 
@@ -35,9 +36,7 @@ public class PatriciaAparecida implements BotServiceProvider {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
 
         List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
-
         TrucoCard vira = intel.getVira();
-
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
 
         if(intel.getOpponentCard().isPresent()){
@@ -62,6 +61,12 @@ public class PatriciaAparecida implements BotServiceProvider {
             }
             else return CardToPlay.of(tempcards.stream().findFirst().get());
 
+        }
+
+        List<Double> probCards = listProbAllCards(intel);
+        final List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.01).toList();
+        if(StrongestCards.size() == 2){
+            return CardToPlay.of(tempcards.get(1));
         }
 
         TrucoCard StrongestTrucoCard = tempcards.get(tempcards.size() - 1);
