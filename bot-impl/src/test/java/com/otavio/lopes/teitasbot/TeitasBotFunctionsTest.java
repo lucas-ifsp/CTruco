@@ -5,6 +5,7 @@ import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.otavio.lopes.teitasbot.TeitasBotFunctions;
+import com.rossi.lopes.trucoguru.TrucoGuruUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -116,6 +117,24 @@ class TeitasBotFunctionsTest {
         @DisplayName("should return true if we last round")
         void shouldReturTrueIfWeStart(){
             assertThat(TeitasBotFunctions.isOpponentThatStartTheRound(gameIntel)).isTrue()    ;
+        }
+    }
+
+    @Nested
+    class TypesOfCards{
+        //assert is different, we need to compare the card.
+
+        @Test
+        @DisplayName("Should return the weakest card of the hand")
+        void shouldReturnWeakestCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(CardRank.FOUR, TeitasBotFunctions.getWeakestCard(cards, vira).getRank());
+            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getWeakestCard(cards, vira).getSuit());
         }
     }
 

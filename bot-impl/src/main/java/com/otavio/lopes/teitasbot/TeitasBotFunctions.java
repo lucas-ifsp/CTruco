@@ -71,6 +71,22 @@ public class TeitasBotFunctions {
         else return hasManilhaAlta;
     }
 
+    static TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira){
+
+        TrucoCard wekeastCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(wekeastCard, vira) < 0) wekeastCard = card;
+        }
+        return wekeastCard;
+    }
+
+    
+
+
+
+
+
+
 
     //TODO indetify typefunciont
 
