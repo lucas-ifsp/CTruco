@@ -44,11 +44,7 @@ public class PatoBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-
-        if(intel.getCards().size() ==3){
-            return 1;
-        }
-        return 0;
+        return checkIfAcceptRaise(intel);
     }
 
 
@@ -134,6 +130,11 @@ public class PatoBot implements BotServiceProvider {
         return count >0;
     }
 
-
+    public int checkIfAcceptRaise(GameIntel intel){
+        if(intel.getCards().size() ==3){
+            return 1;
+        }
+        return 0;
+    }
 
 }
