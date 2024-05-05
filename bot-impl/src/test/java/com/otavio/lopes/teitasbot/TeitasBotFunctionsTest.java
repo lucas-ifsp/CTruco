@@ -122,6 +122,19 @@ class TeitasBotFunctionsTest {
 
     @Nested
     class TypesOfCards{
+        @Test
+        @DisplayName("Should return the weakest card of the hand")
+        void shouldReturnStrongestCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(CardRank.SIX, TeitasBotFunctions.getStrongestCard(cards, vira).getRank());
+            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getStrongestCard(cards, vira).getSuit());
+        }
+
         //assert is different, we need to compare the card.
 
         @Test
@@ -138,17 +151,20 @@ class TeitasBotFunctionsTest {
         }
 
         @Test
-        @DisplayName("Should return the weakest card of the hand")
-        void shouldReturnStrongestCard(){
-            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        @DisplayName("Should return the second strongest card of the hand")
+        void shouldReturnSecondStrongestCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(CardRank.SIX, TeitasBotFunctions.getStrongestCard(cards, vira).getRank());
-            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getStrongestCard(cards, vira).getSuit());
+            assertEquals(CardRank.TWO, TeitasBotFunctions.getWeakestCard(cards, vira).getRank());
+            assertEquals(CardSuit.SPADES, TeitasBotFunctions.getWeakestCard(cards, vira).getSuit());
+
         }
+
+
     }
 
 
