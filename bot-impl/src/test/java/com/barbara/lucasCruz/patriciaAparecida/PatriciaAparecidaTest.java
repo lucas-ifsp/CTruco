@@ -313,7 +313,7 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Plays weakest card if it has no stronger card")
             public void ChooseWeakestCardIfHasAllStrongest(){
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,DIAMONDS), //2
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,SPADES), //2
                         TrucoCard.of(FOUR,CLUBS), // 3
                         TrucoCard.of(FOUR,HEARTS)));
                 when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
