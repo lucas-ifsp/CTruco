@@ -151,8 +151,9 @@ class TeitasBotFunctionsTest {
         }
 
         @Test
-        @DisplayName("Should return the second strongest card of the hand")
-        void shouldReturnSecondStrongestCard(){
+        @DisplayName("Should return the miiddle level card of the hand")
+
+        void shouldReturnMiddleLevelCard(){
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
