@@ -82,7 +82,7 @@ class JakareDuMatuBotTest {
         }
 
         @Test
-        @DisplayName("Should raise request truco when you have two shackles") // Pedir truco quando tiver duas manilhas na mão na primeira rodada
+        @DisplayName("Should raise request truco when you have two shackles") // Pedir truco quando tiver duas manilhas na mão na primeira rodada com uma diferença de score maior que 3
         public void ShouldRaiseRequestTrucoWhenYouHaveTwoShackles(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
