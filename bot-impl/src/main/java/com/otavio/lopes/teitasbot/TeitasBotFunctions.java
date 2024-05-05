@@ -80,7 +80,7 @@ public class TeitasBotFunctions {
         return wekeastCard;
     }
 
-    
+
 
 
 

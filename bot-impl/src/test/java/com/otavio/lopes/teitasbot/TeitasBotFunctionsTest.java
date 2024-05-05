@@ -136,6 +136,19 @@ class TeitasBotFunctionsTest {
             assertEquals(CardRank.FOUR, TeitasBotFunctions.getWeakestCard(cards, vira).getRank());
             assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getWeakestCard(cards, vira).getSuit());
         }
+
+        @Test
+        @DisplayName("Should return the weakest card of the hand")
+        void shouldReturnStrongestCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(CardRank.SIX, TeitasBotFunctions.getStrongestCard(cards, vira).getRank());
+            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getStrongestCard(cards, vira).getSuit());
+        }
     }
 
 
