@@ -42,9 +42,9 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
+        TrucoCard cardToPlay = null;
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        TrucoCard cardToPlay = null;
         for (TrucoCard card : intel.getCards()) {
             if (card.compareValueTo(opponentCard.get(), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
