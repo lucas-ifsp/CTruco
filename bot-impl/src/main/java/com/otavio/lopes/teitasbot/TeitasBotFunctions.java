@@ -89,6 +89,20 @@ public class TeitasBotFunctions {
         return strongestCard;
     }
 
+    static TrucoCard getMiddleCardLevel(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard middleCard = cards.get(0);
+        TrucoCard strongCard = getStrongestCard(cards,vira);
+        TrucoCard weakestCard = getWeakestCard(cards, vira);
+
+        for (TrucoCard card : cards){
+            if (middleCard != strongCard & middleCard!= weakestCard){
+                return middleCard;
+            }
+        }
+
+        return middleCard;
+    }
+
 
 
 

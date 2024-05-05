@@ -159,8 +159,8 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(CardRank.TWO, TeitasBotFunctions.getWeakestCard(cards, vira).getRank());
-            assertEquals(CardSuit.SPADES, TeitasBotFunctions.getWeakestCard(cards, vira).getSuit());
+            assertEquals(CardRank.TWO, TeitasBotFunctions.getMiddleCardLevel(cards, vira).getRank());
+            assertEquals(CardSuit.SPADES, TeitasBotFunctions.getMiddleCardLevel(cards, vira).getSuit());
 
         }
 
