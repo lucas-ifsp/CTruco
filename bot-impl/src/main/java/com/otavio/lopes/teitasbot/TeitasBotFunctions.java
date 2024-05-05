@@ -71,6 +71,7 @@ public class TeitasBotFunctions {
         else return hasManilhaAlta;
     }
 
+
     //TODO indetify typefunciont
 
     static Boolean PlayAgressiveMode(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){

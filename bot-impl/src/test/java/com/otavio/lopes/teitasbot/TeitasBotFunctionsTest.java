@@ -120,7 +120,7 @@ class TeitasBotFunctionsTest {
     }
 
 
-/*
+
     @Nested
     class PlayModes{
         @Test
@@ -134,12 +134,12 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
 
             );
-            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira)).isTrue();
+            assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
 
         }
     }
 
- */
+
 
 
 }
