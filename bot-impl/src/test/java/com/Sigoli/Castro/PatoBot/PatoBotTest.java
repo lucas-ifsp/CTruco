@@ -387,7 +387,7 @@ public class PatoBotTest {
     public void shouldRaiseIfTrucoIsCalledInFirstRound(){
         GameIntel intel = mock(GameIntel.class);
         when(intel.getCards()).thenReturn(intel.getCards());
-        assertTrue(patoBot.checkIfRaiseGame(intel));
+        assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(1);
     }
 
 

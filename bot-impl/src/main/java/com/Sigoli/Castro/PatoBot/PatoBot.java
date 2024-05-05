@@ -15,6 +15,7 @@ public class PatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
         return false;
     }
 
