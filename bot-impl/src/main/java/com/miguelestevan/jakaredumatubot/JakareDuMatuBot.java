@@ -11,7 +11,12 @@ import java.util.List;
 public class JakareDuMatuBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(getManilhas(intel.getCards(), intel.getVira()).containsAll(List.of(CardSuit.CLUBS, CardSuit.HEARTS))){
+            // Hand contains zap and copas
+            return true;
+        }
         return false;
+
     }
 
     @Override
