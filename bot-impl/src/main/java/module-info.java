@@ -8,7 +8,7 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.newton.dolensi.sabotabot.SabotaBot;
-import com.soares.gibim.chatgptbot.Chatgptbot;
+import com.soares.gibim.chatgptbot.ChatGptBot;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.rossi.lopes.trucoguru.TrucoGuru;
@@ -70,5 +70,5 @@ module bot.impl {
             MarrecoBot,
             AddTheNewSoul,
             LazyBot,
-            Chatgptbot;
+            ChatGptBot;
 }
