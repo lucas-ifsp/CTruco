@@ -1,9 +1,6 @@
 package com.fabio.bruno.minepowerbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static com.fabio.bruno.minepowerbot.MinePowerBotIntelMockBuilder.create;
 
 class MinePowerBotTest {
 
@@ -28,17 +24,25 @@ class MinePowerBotTest {
     }
 
     @Test
+    @DisplayName("Given the game intel, hasHigher method should return false if don't have higher card than opponent")
+    void shouldReturnFalseIfCardsInHandAreLowerThanOpponents(){
+        TrucoCard playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        intel = create().cardsToBeAceTwoAndThreeOfSuit(CardSuit.SPADES)
+                .opponentCardToBe(TrucoCard.of(CardRank.KING, CardSuit.SPADES))
+                .viraToBeDiamondsOfRank(CardRank.KING)
+                .finish();
+
+        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
+    }
+
+    @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
     void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
-        vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-        cards = List.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+        intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
-        opponentCard = Optional.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
-
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(cards);
-        when(intel.getOpponentCard()).thenReturn(opponentCard);
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+        ).opponentCardToBe(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)).finish();
 
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
     }
