@@ -127,7 +127,7 @@ public class TeitasBotFunctions {
         Boolean isFirst = firstToPlay(gameIntel);
         Boolean hasStrongHand =  hasStrongHand(cards, vira);
 
-        return (!isFirst && hasNutsHand) || (!isFirst && hasStrongHand);
+        return (isFirst && hasNutsHand) || (isFirst && hasStrongHand);
 
 
     }
