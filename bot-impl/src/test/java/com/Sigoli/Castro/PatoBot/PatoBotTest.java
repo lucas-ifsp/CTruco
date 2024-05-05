@@ -141,6 +141,22 @@ public class PatoBotTest {
 
         assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("Should accept Mão de Onze when my cards are stronger")
+    public void shouldAcceptMaoDeOnzeWhenMyCardsAreStronger(){
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.ACE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
+    }
 }
 
 
