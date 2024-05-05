@@ -6,6 +6,8 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class PatoBot implements BotServiceProvider {
+
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return checkIfAcceptMaoDeOnze(intel);
@@ -105,5 +107,9 @@ public class PatoBot implements BotServiceProvider {
         if (opponentPoints >= 8) {threshold = 6;}
         return count >= threshold;
     }
+
+    public boolean checkBigHand(GameIntel intel){
+        return false;
+    };
 
 }

@@ -321,6 +321,21 @@ public class PatoBotTest {
 
         assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
     }
+    @Test
+    @DisplayName("Should raise when holding a three and a manilha as strong as or stronger than spade")
+    public void shouldRaiseIfGotThreeAndManilhaEqualsToOrStrongerThanSpade(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.SPADES);
+        TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+        assertTrue(patoBot.checkBigHand(intel));
+    }
+
+
+
 
 }
 
