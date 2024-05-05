@@ -1,6 +1,7 @@
 package com.barbara.lucasCruz.patriciaAparecida;
 
 import com.bueno.spi.model.*;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +16,7 @@ import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -283,21 +283,21 @@ class PatriciaAparecidaTest {
     @Nested
     @DisplayName("choose card tests ")
     class ChooseCard{
-        private List<TrucoCard> botCards;
-        private TrucoCard vira;
-
-
         @Nested
         @DisplayName("Unknown Opponent Card Tests")
         class UnknownOpponentClassTests{
-
+            private TrucoCard vira;
+            @BeforeEach
+            void setUpCardsUnknownOpponentCardCase(){
+                vira = TrucoCard.of(THREE,DIAMONDS);
+            }
             @Test
             @DisplayName("Plays if 0 probability of strongest card")
             public void PlayIfZeroProbabilityOfStrongerCard(){
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(KING, HEARTS), //2
                         TrucoCard.of(FOUR,CLUBS), // 3
                         TrucoCard.of(TWO,HEARTS)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                when(intel.getVira()).thenReturn(vira);
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
             }
 
@@ -307,7 +307,7 @@ class PatriciaAparecidaTest {
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE, HEARTS), //2
                         TrucoCard.of(FOUR,CLUBS), // 3
                         TrucoCard.of(FOUR,HEARTS)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                when(intel.getVira()).thenReturn(vira);
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,HEARTS)).value(),patricia.chooseCard(intel).value());
             }
             @Test
@@ -316,13 +316,34 @@ class PatriciaAparecidaTest {
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,CLUBS),
                         TrucoCard.of(FOUR,SPADES),// 3
                         TrucoCard.of(FOUR,HEARTS)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                when(intel.getVira()).thenReturn(vira);
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).value(),patricia.chooseCard(intel).value());
             }
+
+            @Test
+            @DisplayName("Play card that draws if probability is lower than card that wins")
+            public void ChooseCardThatDrawsIfHigherChance(){
+                when(intel.getRoundResults()).thenReturn(List.of(WON));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,DIAMONDS),
+                        TrucoCard.of(FIVE,DIAMONDS)));
+
+                when(intel.getVira()).thenReturn(TrucoCard.of(SEVEN,DIAMONDS));
+
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(SEVEN,DIAMONDS),
+                        TrucoCard.of(QUEEN,DIAMONDS),
+                        TrucoCard.of(QUEEN,CLUBS)));
+
+                assertEquals(CardToPlay.of(TrucoCard.of(FIVE, DIAMONDS)).value(), patricia.chooseCard(intel).value());
+                when(intel.getRoundResults()).thenReturn(List.of(DREW));
+                assertEquals(CardToPlay.of(TrucoCard.of(FIVE, DIAMONDS)).value(), patricia.chooseCard(intel).value());
+            }
         }
+
         @Nested
         @DisplayName("known Opponent Card Tests")
         class KnownOpponentClassTests{
+            private List<TrucoCard> botCards;
+            private TrucoCard vira;
             @BeforeEach
             void setUpCardsKnownOpponentCardCase(){
                 botCards = List.of(TrucoCard.of(KING, HEARTS), //2
@@ -364,8 +385,6 @@ class PatriciaAparecidaTest {
                 assertEquals(TrucoCard.closed(),patricia.chooseCard(intel).value());
             }
         }
-
-
     }
 
 
