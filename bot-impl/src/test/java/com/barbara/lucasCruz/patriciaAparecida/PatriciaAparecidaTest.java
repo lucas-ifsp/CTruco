@@ -17,7 +17,6 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +25,6 @@ class PatriciaAparecidaTest {
     @Mock
     GameIntel intel;
     private PatriciaAparecida patricia;
-    private GameIntel.StepBuilder stepBuilder;
 
     @BeforeEach
     void setUp() {
@@ -197,13 +195,13 @@ class PatriciaAparecidaTest {
 
             private TrucoCard vira;
             private List<TrucoCard> openCards;
-            private List<GameIntel.RoundResult> roundResults;
+
 
             @BeforeEach
             void setCards(){
                 vira = TrucoCard.of(FIVE, CLUBS);
                 openCards = List.of(vira, TrucoCard.of(SIX, SPADES));
-                roundResults = Collections.EMPTY_LIST;
+
             }
 
             @Test
@@ -217,7 +215,6 @@ class PatriciaAparecidaTest {
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getOpenCards()).thenReturn(openCards);
-                when(intel.getRoundResults()).thenReturn(roundResults);
 
                 List<Double> probList = patricia.listProbAllCards(intel);
 
@@ -235,7 +232,6 @@ class PatriciaAparecidaTest {
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(vira);
                 when(intel.getOpenCards()).thenReturn(openCards);
-                when(intel.getRoundResults()).thenReturn(roundResults);
 
                 List<Double> probList = patricia.listProbAllCards(intel);
 
@@ -251,19 +247,6 @@ class PatriciaAparecidaTest {
     @Nested
     @DisplayName("Exception Thrown by Methods Tests")
     class ExceptionThrownByMethodsTests{
-        private List<TrucoCard> botCards;
-        private TrucoCard vira;
-        private List<TrucoCard> openCards ;
-
-
-        @BeforeEach
-        void setCards(){
-            botCards = List.of(TrucoCard.of(SIX, SPADES),
-                    TrucoCard.of(FOUR,SPADES),
-                    TrucoCard.of(TWO,HEARTS));
-            vira = TrucoCard.of(FIVE,CLUBS);
-            openCards = List.of(vira);
-        }
         @Nested
         @DisplayName("Mão de Onze Exception Tests")
         class MaoDeOnzeExceptions{
@@ -277,6 +260,7 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("Decide if Raises Tests")
         class DecideIfRaisesExceptions{
+
             @Test
             @DisplayName("Should Throw exception if bot raises beyond 12 points")
             public void shouldThrowExceptionInDecideIfRaisesIfBotRaiseAfter12Points() {
@@ -287,10 +271,10 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("ChoiceCardExceptions")
         class chooseCardExceptions{
+
             @Test
             @DisplayName("Should Throw exception if bot chooses null as card")
             public void shouldThrowExceptionIfDecideToChooseNullCard() {
-                when(intel.getCards()).thenReturn(Collections.EMPTY_LIST);
                 assertThrows(IllegalStateException.class, () -> patricia.chooseCard(intel));
             }
         }
@@ -301,7 +285,6 @@ class PatriciaAparecidaTest {
     class ChooseCard{
         private List<TrucoCard> botCards;
         private TrucoCard vira;
-        private List<GameIntel.RoundResult> firstRound;
 
 
         @Nested
@@ -316,6 +299,16 @@ class PatriciaAparecidaTest {
                         TrucoCard.of(TWO,HEARTS)));
                 when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
+            }
+
+            @Test
+            @DisplayName("Plays weakest card if it has no stronger card")
+            public void ChooseWeakestCardOfStrongInHand(){
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE, HEARTS), //2
+                        TrucoCard.of(FOUR,CLUBS), // 3
+                        TrucoCard.of(FOUR,HEARTS)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(THREE,DIAMONDS));
+                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,HEARTS)).value(),patricia.chooseCard(intel).value());
             }
 
         }
