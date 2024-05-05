@@ -76,12 +76,5 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.32</version> <!-- Use a versão mais recente do Lombok -->
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 </project>
