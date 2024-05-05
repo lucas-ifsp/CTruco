@@ -64,7 +64,11 @@ public class PatriciaAparecida implements BotServiceProvider {
         }
 
         List<Double> probCards = listProbAllCards(intel);
-        final List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.01).toList();
+        final List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
+
+        if(StrongestCards.size() == 3){
+            return CardToPlay.of(tempcards.get(0));
+        }
         if(StrongestCards.size() == 2){
             return CardToPlay.of(tempcards.get(1));
         }
