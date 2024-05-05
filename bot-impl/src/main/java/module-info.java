@@ -8,6 +8,7 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.newton.dolensi.sabotabot.SabotaBot;
+import com.soares.gibim.chatgptbot.Chatgptbot;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.rossi.lopes.trucoguru.TrucoGuru;
@@ -43,6 +44,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.soares.gibim.chatgptbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -67,5 +69,6 @@ module bot.impl {
             PaulistaBot,
             MarrecoBot,
             AddTheNewSoul,
-            LazyBot;
+            LazyBot,
+            Chatgptbot;
 }
