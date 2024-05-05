@@ -15,7 +15,13 @@ public class PatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return intel.getScore() != 11 && intel.getOpponentScore() != 11;
+        if(intel.getScore() == 11|| intel.getOpponentScore()==11) return false;
+        if(intel.getRoundResults().isEmpty()) {
+            return checkIfRaiseGame(intel);
+        }else if(intel.getRoundResults().get(0)==GameIntel.RoundResult.WON){
+            return checkIfRaiseGame(intel);
+        }
+        return false;
     }
 
     @Override
@@ -109,7 +115,6 @@ public class PatoBot implements BotServiceProvider {
                 count++;
             }
         }
-
         int opponentPoints = intel.getOpponentScore();
         int threshold = 4;
         if (opponentPoints >= 8) {threshold = 6;}
@@ -127,7 +132,7 @@ public class PatoBot implements BotServiceProvider {
         if (cards.size() == 3) { return count >=2; }
         else if(!cards.isEmpty()){return count >=1;}
         return count >0;
-    };
+    }
 
 
 

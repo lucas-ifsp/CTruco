@@ -400,7 +400,7 @@ public class PatoBotTest {
         GameIntel intel = mock((GameIntel.class));
         TrucoCard card1 = TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1));
+        when(intel.getCards()).thenReturn(Collections.singletonList(card1));
         when(intel.getVira()).thenReturn(vira);
         assertTrue(patoBot.checkIfRaiseGame(intel));
     }
@@ -471,6 +471,35 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Shoul Raise if hold only good cards ")
+    public void shouldRaiseifholdsOnlyGoodcards(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        assertTrue(patoBot.decideIfRaises(intel));
+    }
+
+    @Test
+    @DisplayName("Should Raise if holds middle cards and won first round ")
+    public void shouldRaiseIfHoldsMiddleCardsAndWonFirstRound(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        assertTrue(patoBot.decideIfRaises(intel));
+
+    }
+
+
 
 
 }
