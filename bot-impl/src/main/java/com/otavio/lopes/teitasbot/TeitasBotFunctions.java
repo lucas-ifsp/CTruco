@@ -128,10 +128,11 @@ public class TeitasBotFunctions {
         return hasGoodHand(cards, vira);
     }
     static Boolean PlaySafeMood(List<TrucoCard> cards, TrucoCard vira, GameIntel gameIntel){
-        Boolean hasWeakHand = hasTrashHand(cards, vira);
+        Boolean hasNutsHand = hasNutsHand(cards, vira);
+        Boolean isFirst = firstToPlay(gameIntel);
+        Boolean hasStrongHand =  hasStrongHand(cards, vira);
 
-
-        return hasGoodHand(cards, vira);
+        return hasNutsHand & isFirst | hasStrongHand & isFirst;
     }
 
 
