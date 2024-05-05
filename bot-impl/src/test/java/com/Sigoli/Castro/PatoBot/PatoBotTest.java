@@ -192,7 +192,7 @@ public class PatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of (CardRank.SEVEN, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        TrucoCard expected = TrucoCard.of(CardRank.THREE,CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(card1);
 
         when(intel.getVira()).thenReturn(vira);
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
