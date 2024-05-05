@@ -170,7 +170,7 @@ class TeitasBotFunctionsTest {
         @Test
         @DisplayName("Should Play at agressive mode if")
         void ShouldPlayAgressiveMode(){
-            TrucoCard vira = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of(CardRank.KING,CardSuit.CLUBS);
 
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
