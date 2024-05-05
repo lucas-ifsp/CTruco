@@ -150,7 +150,6 @@ public class PatoBotTest {
         assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
     }
 
-
     @Test
     @DisplayName("Should discard the lowest card if my hand doesn't have a card that wins the second round")
     public void shouldDiscardTheLowestCardIfMyHandDoesntHaveACardThatWinsTheSecondRound() {
@@ -166,6 +165,23 @@ public class PatoBotTest {
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
 
         assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Should play the lowest card which winning the round in the second round")
+    public void shouldPlayTheLowestCardWhichWinsTheSecondRoundInTheSecondRound(){
+        GameIntel intel  = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        CardToPlay expected = CardToPlay.of(card1);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
 
