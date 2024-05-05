@@ -35,6 +35,19 @@ class MinePowerBotTest {
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
 
+    @Test @DisplayName("Check if has manilha")
+    void checkIfHasManilha(){
+        intel = create()
+                .viraToBe(CardRank.FOUR, CardSuit.SPADES)
+                .cards(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        TrucoCard vira = intel.getVira();
+
+        assertThat(sut.chooseCard(intel).content().isManilha(vira));
+    }
+
     @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
     void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
