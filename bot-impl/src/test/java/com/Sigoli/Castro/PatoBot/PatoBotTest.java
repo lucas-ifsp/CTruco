@@ -306,6 +306,22 @@ public class PatoBotTest {
 
         assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
     }
+    @Test
+    @DisplayName("Should Reject 'Mão de Onze' if stronger card is a three")
+    public void shouldRejectMaoDeOnzeIfStrongerCardIsThree(){
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of (CardRank.SIX, CardSuit.SPADES);
+        int opponentScore = 1;
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+    }
+
 }
 
 
