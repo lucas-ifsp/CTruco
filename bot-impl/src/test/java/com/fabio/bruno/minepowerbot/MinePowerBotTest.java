@@ -4,6 +4,8 @@ import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,4 +101,14 @@ class MinePowerBotTest {
 
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
     }
+
+    @ParameterizedTest
+    @CsvSource({"4", "5", "6"})
+    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
+    void shouldRaiseIfOpponentScoreIsEqualOrLessThanThreshold(int opponentScore) {
+        intel = create().scoreOponent(opponentScore).finish();
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
+
 }
