@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
+import java.util.List;
 
 
 public class MinePowerBot implements BotServiceProvider {
@@ -14,11 +15,11 @@ public class MinePowerBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        var manilha = getManilha(intel);
+        var manilhaFraca = getWeakerManilha(intel);
         var botScore = intel.getScore();
         var opponentScore = intel.getOpponentScore();
 
-        if (manilha != null) {
+        if (manilhaFraca != null) {
             if (botScore == opponentScore || botScore + 6 <= opponentScore || botScore > opponentScore) {
                 return true;
             }
@@ -45,12 +46,40 @@ public class MinePowerBot implements BotServiceProvider {
         return CardToPlay.of(intel.getCards().get(0));
     }
 
-    private TrucoCard getManilha(GameIntel intel) {
+    private List<TrucoCard> listManilhas(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
                 .filter(card -> card.isManilha(vira))
-                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                .orElse(null);
+                .toList();
+    }
+    private TrucoCard getWeakerManilha(GameIntel intel) {
+        // Lista das manilhas na mão do jogador
+        var manilhas = listManilhas(intel);
+
+        // Carta do oponente
+        var opponentCard = intel.getOpponentCard().orElse(null);
+
+        // Se o oponente tiver jogado uma manilha
+        if (opponentCard != null && opponentCard.isManilha(intel.getVira())) {
+            // Inicializa a manilha mais fraca como null
+            TrucoCard weakerManilha = null;
+
+            // Para cada manilha na mão do jogador
+            for (TrucoCard manilha : manilhas) {
+                // Verifica se a manilha é mais forte que a do oponente
+                if (manilha.compareValueTo(opponentCard, intel.getVira()) > 0) {
+                    // Se for mais forte, atualiza a manilha mais forte
+                    if (weakerManilha == null || manilha.relativeValue(intel.getVira()) < weakerManilha.relativeValue(intel.getVira())) {
+                        weakerManilha = manilha;
+                    }
+                }
+            }
+            // Retorna a manilha mais forte, ou null se não houver manilhas mais fortes que a do oponente
+            return weakerManilha;
+        } else {
+            // Se o oponente não tiver jogado uma manilha, retorna null
+            return null;
+        }
     }
 
     private boolean isTheFirstToPlay(GameIntel intel) {
