@@ -153,7 +153,7 @@ public class PatoBot implements BotServiceProvider {
                 if (card.isManilha(vira)) {
                     score += 3;
                 }
-                if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), vira) > 0) {
+                if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), vira) == 0) {
                     score++;
                 }
             }
@@ -165,8 +165,10 @@ public class PatoBot implements BotServiceProvider {
         else {
             if (roundResults.get(0) == GameIntel.RoundResult.WON) {
                 for (TrucoCard card : hand) {
-                    if (card.isZap(vira)) {
+                    if (card.isZap(vira) || card.isCopas(vira)) {
                         return 1;
+                    } else if (card.isEspadilha(vira) || card.isOuros(vira)) {
+                        return 0;
                     }
                 }
             }
