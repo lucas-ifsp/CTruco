@@ -1,9 +1,6 @@
 package com.miguelestevan.jakaredumatubot;
 
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
@@ -13,6 +10,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(getManilhas(intel.getCards(), intel.getVira()).containsAll(List.of(CardSuit.CLUBS, CardSuit.HEARTS))){
             // Hand contains zap and copas
+            return true;
+        } else if (getManilhas(intel.getCards(), intel.getVira()).size() >= 2) {
             return true;
         }
         return false;
