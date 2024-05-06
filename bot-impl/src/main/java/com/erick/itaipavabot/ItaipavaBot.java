@@ -20,6 +20,7 @@
 
 package com.erick.itaipavabot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -63,7 +64,7 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (findHowManyManilhas(intel) <= 3 && findHowManyManilhas(intel) >= 2) return 1;
-        if (findHowManyManilhas(intel) == 1 && hasZap(intel)) return 0;
+        if (hasZap(intel) && hasThree(intel)) return 0;
         return -1;
     }
 
@@ -136,6 +137,11 @@ public class ItaipavaBot implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    public boolean hasThree(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        return myCards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
 
