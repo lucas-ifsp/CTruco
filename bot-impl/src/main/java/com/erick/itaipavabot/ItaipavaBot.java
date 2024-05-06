@@ -72,6 +72,8 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (randomBluff()) return 1;
+        if (findHowManyManilhas(intel) == 3) return 1;
         return 0;
     }
 
