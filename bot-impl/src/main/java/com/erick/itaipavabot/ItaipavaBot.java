@@ -73,8 +73,9 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (randomBluff()) return 1;
-        if (findHowManyManilhas(intel) == 3) return 1;
-        return 0;
+        if (findHowManyManilhas(intel) <= 3 && findHowManyManilhas(intel) >= 2) return 1;
+        if (findHowManyManilhas(intel) == 1 && hasZap(intel)) return 0;
+        return -1;
     }
 
     private TrucoCard findLowestCardToWin(GameIntel gameIntel) {
