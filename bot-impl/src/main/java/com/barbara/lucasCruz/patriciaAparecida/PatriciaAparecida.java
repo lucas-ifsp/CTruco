@@ -81,6 +81,37 @@ public class PatriciaAparecida implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
+        List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
+        List<Double> listProb = listProbAllCards(intel);
+
+        int round = getNumberOfRounds(intel);
+
+        switch (round){
+            case 1: if(intel.getOpponentCard().isEmpty()){ //começamos
+                //prob baixa para 2
+            } if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
+                //prob baixa para 1, tirando a que vence
+            }
+            return -1;
+
+            case 2: if (intel.getOpponentCard().isEmpty()){ //ganhamos a primeira
+                //prob baixa para 1
+            }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){ //oponente ganha a primeira
+                //prob baixa para 1, tirando a que vence
+            }
+            return -1;
+
+            case 3: if(intel.getOpponentCard().isEmpty()){ //perdemos a primeira e ganhamos a segunda
+                //prob baixa da carta
+            }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()|| getCardThatDraws(intel.getCards(),intel).isPresent()){
+                //ganhamos a primeira e perdemos a segunda
+                //truco
+            }
+            return -1;
+        }
+
         return 0;
     }
 
