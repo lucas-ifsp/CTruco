@@ -45,7 +45,7 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (randomBluff()) return true;
-
+        if (findHowManyManilhas(intel) == 3) return true;
         return false;
     }
 
@@ -120,5 +120,16 @@ public class ItaipavaBot implements BotServiceProvider {
             }
         }
         return lowestCard;
+    }
+
+    private int findHowManyManilhas(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        int counter = 0;
+        for (TrucoCard card : myCards) {
+            if (card.isManilha(gameIntel.getVira())) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }
