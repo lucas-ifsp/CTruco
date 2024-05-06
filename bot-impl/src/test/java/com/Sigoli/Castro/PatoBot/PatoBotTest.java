@@ -285,7 +285,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertTrue(patoBot.getMaoDeOnzeResponse(intel));
     }
 
     @Test
@@ -301,7 +301,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertTrue(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertTrue(patoBot.getMaoDeOnzeResponse(intel));
     }
 
 
@@ -318,7 +318,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
 
     @Test
@@ -334,7 +334,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
     @Test
     @DisplayName("Should Reject 'Mão de Onze' if stronger card is a two")
@@ -349,7 +349,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
     @Test
     @DisplayName("Should Reject 'Mão de Onze' if stronger card is a three")
@@ -364,7 +364,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
         when(intel.getVira()).thenReturn(vira);
 
-        assertFalse(patoBot.checkIfAcceptMaoDeOnze(intel));
+        assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
     @Test
     @DisplayName("Should raise when holding a three and a manilha as strong as or stronger than spade")
