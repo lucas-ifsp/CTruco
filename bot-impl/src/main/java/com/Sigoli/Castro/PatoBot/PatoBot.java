@@ -139,12 +139,38 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public int checkIfAcceptRaise(GameIntel intel){
-        if(intel.getCards().size() ==3){
-            return 1;
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if(hand.size() == 3){
+            return 0;
         }
-        return 0;
+
+        if (roundResults.isEmpty()){
+            int score = 0;
+            for (TrucoCard card : hand) {
+                if (card.isManilha(vira)) {
+                    score += 3;
+                }
+                if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), vira) > 0) {
+                    score++;
+                }
+            }
+            if (score >= 4) {
+                return 0;
+            }
+            return -1;
+        }
+        else {
+            if (roundResults.get(0) == GameIntel.RoundResult.WON) {
+                for (TrucoCard card : hand) {
+                    if (card.isZap(vira)) {
+                        return 1;
+                    }
+                }
+            }
+        }
+        return -1;
     }
-
-
-
 }
