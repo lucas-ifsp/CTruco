@@ -93,11 +93,11 @@ public class PatoBot implements BotServiceProvider {
     public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
-        TrucoCard strongestCard = null;
+        TrucoCard strongestCard = intel.getCards().get(0);
 
         for (TrucoCard card : hand) {
             if (!card.isZap(vira) && !card.isCopas(vira)) {
-                if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                if ( card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
                     strongestCard = card;
                 }
             }
@@ -120,7 +120,16 @@ public class PatoBot implements BotServiceProvider {
         if (opponentPoints >= 8) {threshold = 6;}
         return count >= threshold;
     }
+/*
+    public  boolean checkIfStrongerCardIsThree(GameIntel intel){
+        TrucoCard ThreeToCompare = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        TrucoCard testCard = selectStrongerCardExcludingZapAndCopas(intel);
+        if(!testCard.isManilha(intel.getVira()) && testCard.compareValueTo(ThreeToCompare, intel.getVira()) == 0 ){
+            return true;
+        }
+        return false;
 
+    }*/
     public boolean checkIfRaiseGame(GameIntel intel){
         int count = 0;
         TrucoCard vira = intel.getVira();
@@ -129,10 +138,14 @@ public class PatoBot implements BotServiceProvider {
         for (TrucoCard card: cards){
             if(card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira) ){ count ++;}
         }
+
+
         if (cards.size() == 3) { return count >=2; }
         else if(!cards.isEmpty()){return count >=1;}
         return count >0;
     }
+
+
 
 
 
