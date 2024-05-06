@@ -98,7 +98,7 @@ public class ItaipavaBotTest {
                 .botInfo(myCards, 11)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
-        assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
+        assertTrue(bot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ItaipavaBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 11)
                 .opponentScore(0);
-        assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
+        assertTrue(bot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class ItaipavaBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(0);
-        assertEquals(true, bot.decideIfRaises(stepBuilder.build()));
+        assertTrue(bot.decideIfRaises(stepBuilder.build()));
     }
 
     @Test
