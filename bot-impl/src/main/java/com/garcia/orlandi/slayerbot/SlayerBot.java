@@ -39,9 +39,11 @@ public class SlayerBot implements BotServiceProvider {
                         .filter(card -> !card.isZap(vira))
                         .toList();
 
-                for(TrucoCard card : cardsWithoutZap){
-                    if(card.isCopas(vira)){
-                        return CardToPlay.of(card);
+                if(cardsWithoutZap.size() == 2){
+                    for(TrucoCard card : cardsWithoutZap){
+                        if(card.isCopas(vira) || card.isEspadilha(vira)){
+                            return CardToPlay.of(card);
+                        }
                     }
                 }
 
