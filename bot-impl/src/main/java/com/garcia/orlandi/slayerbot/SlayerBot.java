@@ -50,7 +50,7 @@ public class SlayerBot implements BotServiceProvider {
                     .orElse(CardToPlay.of(cards.get(0)));
         }
 
-
+        // Logica generica para outras situacoes
         return cards.stream()
                 .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
                 .map(CardToPlay::of)
