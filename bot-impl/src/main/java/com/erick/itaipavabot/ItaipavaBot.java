@@ -137,4 +137,7 @@ public class ItaipavaBot implements BotServiceProvider {
         }
         return false;
     }
+
+
 }
+

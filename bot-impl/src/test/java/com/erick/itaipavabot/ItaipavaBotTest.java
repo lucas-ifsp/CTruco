@@ -136,7 +136,7 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should raise if has 3 manilhas")
+    @DisplayName("Should raise truco if has 3 manilhas")
     void shouldRaiseIfHas3Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
@@ -153,7 +153,7 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should raise if has 2 manilhas")
+    @DisplayName("Should raise truco if has 2 manilhas")
     void shouldRaiseIfHas2Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
@@ -170,13 +170,13 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should accept if has 1 manilha zap")
+    @DisplayName("Should accept truco if has 1 zap and a three")
     void shouldAcceptIfHas1Manilha() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
         );
         stepBuilder = GameIntel.StepBuilder.with()
