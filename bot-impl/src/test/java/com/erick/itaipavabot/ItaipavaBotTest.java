@@ -117,4 +117,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should trucar if has 3 manilhas")
+    void shouldTrucarIfHas3Manilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(true, bot.decideIfRaises(stepBuilder.build()));
+    }
 }
