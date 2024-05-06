@@ -573,6 +573,22 @@ public class PatoBotTest {
 
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("Should refuse 'Truco' if my hand is weak and lost first round")
+    public void shouldRefuseTrucoIfMyHandIsWeakAndLostFirstRound() {
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
 }
 
 
