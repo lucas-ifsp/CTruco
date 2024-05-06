@@ -43,36 +43,65 @@ public class PatriciaAparecida implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
 
-        if(intel.getOpponentCard().isPresent()){
+        boolean opponentHasPlayedFirst = intel.getOpponentCard().isPresent();
+        if(opponentHasPlayedFirst) return getCardToReturn(intel, tempcards);
+        return getCardToPlayFirst(intel, tempcards);
+    }
 
-            Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards,intel);
-
-            if(getWeakestCardThatWins(tempcards,intel).isPresent()) return CardToPlay.of(weakestCardThatWins.get());
-
-            Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards,intel);
-
-            if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
-
-
-            if(!intel.getRoundResults().isEmpty()) {
-                 return CardToPlay.discard(tempcards.stream().findFirst().get());
-            }
-            else return CardToPlay.of(tempcards.stream().findFirst().get());
-
-        }
+    private CardToPlay getCardToPlayFirst(GameIntel intel, List<TrucoCard> tempcards) {
         List<Double> probCards = listProbAllCards(intel);
+        final CardToPlay strongestCard = getWeakestStrongestCard(tempcards, probCards);
+        if (strongestCard != null) return strongestCard;
+        else if( chanceToDrawIsBetter(intel, tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel, tempcards), tempcards);
+
+        //se a primeira jogada, torna a com maior prob de ganhar
+        //se é a segunda jogada, WIN -> jogar menor
+        else if(intel.getRoundResults().contains(GameIntel.RoundResult.WON)) return CardToPlay.of(intel.getCards().get(0));
+        //terceira só joga
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private CardToPlay getWeakestStrongestCard(List<TrucoCard> tempcards, List<Double> probCards) {
         List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
 
         if(!StrongestCards.isEmpty()){
             return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         }
+        return null;
+    }
 
-        if(intel.getRoundResults().contains(GameIntel.RoundResult.LOST)) return CardToPlay.of(intel.getCards().get(0));
+    private CardToPlay getCardToReturn(GameIntel intel, List<TrucoCard> tempcards) {
+        final CardToPlay weakestCardThatWins = returnWeakestThatWins(intel, tempcards);
+        if (weakestCardThatWins != null) return weakestCardThatWins;
 
-        if( chanceToDrawIsBetter(intel,tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel,tempcards),tempcards);
+        final CardToPlay cardThatDraws = returnCardThatDraws(intel, tempcards);
+        if (cardThatDraws != null) return cardThatDraws;
 
-        return CardToPlay.of(intel.getCards().get(0));
+        return returnWeakestCardThatLoses(intel, tempcards);
+    }
+
+    private CardToPlay returnWeakestCardThatLoses(GameIntel intel, List<TrucoCard> tempcards) {
+        //não é a primeira jogada
+        if(!intel.getRoundResults().isEmpty()) {
+            return CardToPlay.discard(tempcards.stream().findFirst().get());
         }
+        //é a primeira
+        else return CardToPlay.of(tempcards.stream().findFirst().get());
+    }
+
+    private CardToPlay returnCardThatDraws(GameIntel intel, List<TrucoCard> tempcards) {
+        //nao consegue fazer, tenta achar carta que empata
+        Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards, intel);
+
+        //se tiver carta que empata, empatar
+        return cardThatDraws.isPresent() ? CardToPlay.of(cardThatDraws.get()) : null;
+    }
+
+    private CardToPlay returnWeakestThatWins(GameIntel intel, List<TrucoCard> tempcards) {
+        Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards, intel); //pego a mais fraca q ganha
+        //retorna a mais fraca que ganha se existir
+        return getWeakestCardThatWins(tempcards, intel).isPresent() ? CardToPlay.of(weakestCardThatWins.get()) : null;
+    }
 
 
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
