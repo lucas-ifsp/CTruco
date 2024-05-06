@@ -55,4 +55,9 @@ public class MalasiaBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
     }
+
+    private boolean hasZapZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
 }
