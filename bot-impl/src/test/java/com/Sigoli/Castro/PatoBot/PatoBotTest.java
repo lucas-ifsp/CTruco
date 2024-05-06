@@ -541,6 +541,23 @@ public class PatoBotTest {
 
         assertFalse(patoBot.decideIfRaises(intel));
     }
+
+    @Test
+    @DisplayName("Should raise if opponents request 'Truco' and I've 'Zap' and win the first round")
+    public void shouldRaiseIfOpponentsRequestTrucoAndIveZapAndWinFirstRound() {
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+        TrucoCard card2 = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
 }
 
 
