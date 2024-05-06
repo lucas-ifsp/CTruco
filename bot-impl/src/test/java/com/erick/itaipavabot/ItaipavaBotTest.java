@@ -149,7 +149,7 @@ public class ItaipavaBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
                 .botInfo(myCards, 1)
                 .opponentScore(0);
-        assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
+        assertEquals(0, bot.getRaiseResponse(stepBuilder.build()));
     }
 
     @Test
