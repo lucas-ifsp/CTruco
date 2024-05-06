@@ -26,17 +26,19 @@ public class MinePowerBot implements BotServiceProvider {
         var botScore = intel.getScore();
         var opponentScore = intel.getOpponentScore();
         var countManilhas = listManilhas(intel).size();
-        if(intel.getScore() > opponentScore + 3)
-            return true;
-        if(opponentScore <= 5)
-            return true;
-        if (countManilhas >=2)
-            return true;
-        if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
-            return true;
-        if (manilhaFraca != null)
-            if (botScore == opponentScore || botScore > opponentScore) {
+        if(intel.getScore()<11) {
+            if (intel.getScore() > opponentScore + 3)
                 return true;
+            if (opponentScore <= 5)
+                return true;
+            if (countManilhas >= 2)
+                return true;
+            if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
+                return true;
+            if (manilhaFraca != null)
+                if (botScore == opponentScore || botScore > opponentScore) {
+                    return true;
+                }
         }
         return false;
     }
