@@ -33,17 +33,12 @@ public class ItaipavaBot implements BotServiceProvider {
 
     private CardToPlay firstRound(GameIntel gameIntel) {
         List<TrucoCard> myCards = gameIntel.getCards();
-        TrucoCard vira = gameIntel.getVira();
-        TrucoCard highestPlayedCard = getHighestCard(gameIntel);
-        TrucoCard highestHandCard = getHighestCard(myCards, gameIntel);
-        if(highestPlayedCard.relativeValue(vira) < highestHandCard.relativeValue(vira)) {
-            TrucoCard card = findLowestCardToWin(gameIntel);
-            if(card == null) {
-                return CardToPlay.of(getLowestCard(myCards, gameIntel));
-            }
+        TrucoCard card = findLowestCardToWin(gameIntel);
+        if(card == null) {
+            return CardToPlay.of(getLowestCard(myCards, gameIntel));
+        } else {
             return CardToPlay.of(findLowestCardToWin(gameIntel));
         }
-        return CardToPlay.of(myCards.get(0));
     }
 
     @Override
