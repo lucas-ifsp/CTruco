@@ -22,6 +22,7 @@ public class SlayerBotTest {
     List<TrucoCard> openCards;
     List<TrucoCard> cards;
     GameIntel.StepBuilder stepBuilder;
+    SlayerBotUtils utils;
 
     @Test
     @DisplayName("If first to play, should not play zap on first round")
@@ -42,7 +43,30 @@ public class SlayerBotTest {
 
         CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
         TrucoCard chosenCard = card.value();
-        assertFalse(chosenCard.isZap(stepBuilder.build().getVira()));
+        assertFalse(chosenCard.isZap(vira));
+    }
+
+    @Test
+    @DisplayName("If first to play and with two manilhas, play the weakest one first and the stronger afterwards")
+    void shouldPlayWeakerManilhaFirst(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FOUR, HEARTS);
+        cards = List.of(
+                TrucoCard.of(FIVE, CLUBS),
+                TrucoCard.of(SEVEN, CLUBS),
+                TrucoCard.of(FIVE, HEARTS));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertFalse(chosenCard.isZap(vira));
+        assertTrue(chosenCard.isCopas(vira));
+
     }
 
 }
