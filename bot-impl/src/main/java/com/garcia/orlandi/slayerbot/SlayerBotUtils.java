@@ -18,9 +18,12 @@ public class SlayerBotUtils {
     }
 
     public CardToPlay playWeakestManilha(List<TrucoCard> manilhas) {
+        if (manilhas.isEmpty()) {
+            throw new IllegalStateException("No manilhas found when expected.");
+        }
         return manilhas.stream()
                 .min(Comparator.comparing(TrucoCard::getRank))
                 .map(CardToPlay::of)
-                .orElse(CardToPlay.of(manilhas.get(0)));
+                .orElseThrow(() -> new IllegalStateException("Failed to find the weakest manilha"));
     }
 }
