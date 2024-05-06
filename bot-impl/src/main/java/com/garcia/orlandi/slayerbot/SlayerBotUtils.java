@@ -10,7 +10,7 @@ public class SlayerBotUtils {
         return cards.stream().filter(card -> card.isManilha(vira)).toList();
     }
 
-    private TrucoCard getStrongestCard( List<TrucoCard> cards, TrucoCard vira){
+    public TrucoCard getStrongestCard( List<TrucoCard> cards, TrucoCard vira){
         TrucoCard strongerCard = cards.get(0);
 
         for (TrucoCard card : cards) {
@@ -23,7 +23,7 @@ public class SlayerBotUtils {
         return strongerCard;
     }
 
-    private TrucoCard getWeakestCard( List<TrucoCard> cards, TrucoCard vira){
+    public TrucoCard getWeakestCard( List<TrucoCard> cards, TrucoCard vira){
         TrucoCard weakerCard = cards.get(0);
 
         for (TrucoCard card : cards) {
