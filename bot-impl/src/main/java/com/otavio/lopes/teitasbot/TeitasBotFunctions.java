@@ -91,7 +91,7 @@ public class TeitasBotFunctions {
                 return card;
             }
         }
-        
+
         return null;
     }
 

@@ -18,6 +18,7 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
+
 com.bueno.impl.dummybot.DummyBot
 com.hideki.araujo.wrkncacnterbot.WrkncacnterBot
 com.caueisa.destroyerbot.DestroyerBot
@@ -41,3 +42,4 @@ com.yuri.impl.BotMadeInDescalvado
 com.correacarini.impl.trucomachinebot.TrucoMachineBot
 com.gatti.casaque.caipirasbot.CaipirasBot
 com.gustavo.contiero.lazybot.LazyBot
+com.otavio.lopes.teitasbot.TeitasBot
