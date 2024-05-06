@@ -100,4 +100,21 @@ public class ItaipavaBotTest {
                 .opponentCard(opponentCard);
         assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should accept mão de onze if has 1 manilha and one zap")
+    void shouldAcceptMaoDeOnzeIfHas1ManilhaAndOneZap() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 11)
+                .opponentScore(0);
+        assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
 }
