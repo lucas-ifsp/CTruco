@@ -155,7 +155,7 @@ public class PatriciaAparecida implements BotServiceProvider {
                 }
 
                 Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
-                if (tempCardThatWins.isPresent()) { //oponente começa
+                if (tempCardThatWins.isPresent()) {
 
                     List<Integer> listResult = countProbs(intel);
 
@@ -182,8 +182,23 @@ public class PatriciaAparecida implements BotServiceProvider {
 
                 }
 
-                if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){
-                    //prob baixa para 1, tirando a que vence
+                Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
+                if (tCardThatWins.isPresent()) {
+
+                    List<Integer> listResult = countProbs(intel);
+
+                    TrucoCard cardThatWins = tCardThatWins.get();
+                    Double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
+
+                    if(probCardThatWins<0.21){
+                        listResult.set(1, listResult.get(1) -1);
+                        if(probCardThatWins<0.11){
+                            listResult.set(0, listResult.get(0) -1);
+                        }
+                    }
+
+                    if(listResult.get(0) >=1){ return 1; }
+                    if(listResult.get(1) >=1){ return 0; }
                 }
 
             case 3:
