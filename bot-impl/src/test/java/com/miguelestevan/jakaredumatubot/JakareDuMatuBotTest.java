@@ -77,8 +77,8 @@ class JakareDuMatuBotTest {
         }
 
         @Test
-        @DisplayName("Should accept mao de onze if have two three and any manilha")
-        public void ShouldAcceptMaoDeOnzeIfHaveTwoThreeAndAnyManilha(){
+        @DisplayName("Should accept mao de onze if have high card and any manilha")
+        public void ShouldAcceptMaoDeOnzeIfHaveHighCardAndAnyManilha(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
@@ -87,8 +87,8 @@ class JakareDuMatuBotTest {
 
             // Bot info
             List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES)
             );
 
