@@ -479,6 +479,19 @@ class PatriciaAparecidaTest {
 
                 assertEquals(1, patricia.getRaiseResponse(intel));
             }
+            @Test
+            @DisplayName("Should Return 0 If Prob < 2 To Min 2 Cards")
+            public void ShouldReturn0IfProbLower2ToMin2Cards(){
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE,CLUBS),
+                        TrucoCard.of(THREE,HEARTS));
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+                assertEquals(0, patricia.getRaiseResponse(intel));
+            }
         }
     }
 
