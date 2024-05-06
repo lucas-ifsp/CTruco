@@ -202,4 +202,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES), bot.chooseCard(stepBuilder.build()).content());
     }
+
+    @Test
+    @DisplayName("Should return 12 powerlevel when has zap copas e espada")
+    void shouldReturn12PowerLevelWhenHasZapCopasEspada() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(12, bot.handPowerLevel(stepBuilder.build()));
+    }
 }
