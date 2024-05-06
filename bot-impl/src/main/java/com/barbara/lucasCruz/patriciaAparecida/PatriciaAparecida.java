@@ -106,8 +106,7 @@ public class PatriciaAparecida implements BotServiceProvider {
             case 3: if(intel.getOpponentCard().isEmpty()){ //perdemos a primeira e ganhamos a segunda
                 //prob baixa da carta
             }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()|| getCardThatDraws(intel.getCards(),intel).isPresent()){
-                //ganhamos a primeira e perdemos a segunda
-                //truco
+                return 1;
             }
             return -1;
         }

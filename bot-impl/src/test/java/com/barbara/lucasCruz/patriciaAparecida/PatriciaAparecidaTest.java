@@ -412,11 +412,21 @@ class PatriciaAparecidaTest {
             public void ShouldReturn1IfWeSartAndCanWin(){
             PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
             when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
-            //when(patriciaSpy.getNumberOfRounds(intel)).thenReturn(3);
-            when(patriciaSpy.getCardThatDraws(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
+            when(patriciaSpy.getWeakestCardThatWins(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
 
             assertEquals(1, patriciaSpy.getRaiseResponse(intel));
             }
+
+            @Test
+            @DisplayName("Should Return 1 If We Sart And Can Draw")
+            public void ShouldReturn1IfWeSartAndCanDraw(){
+                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
+                when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
+                when(patriciaSpy.getCardThatDraws(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
+
+                assertEquals(1, patriciaSpy.getRaiseResponse(intel));
+            }
+
         }
     }
 
