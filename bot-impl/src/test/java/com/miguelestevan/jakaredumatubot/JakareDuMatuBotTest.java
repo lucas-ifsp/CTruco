@@ -27,8 +27,8 @@ class JakareDuMatuBotTest {
     @Nested
     class getMaoDeOnzeResponse {
         @Test
-        @DisplayName("Should accept mao de onze if have casal maior")
-        public void ShouldAcceptMaoDeOnzeIfHaveCasalMaior() {
+        @DisplayName("Should accept mao de onze if have an older couple")
+        public void ShouldAcceptMaoDeOnzeIfHaveAnOlderCouple() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
@@ -50,6 +50,8 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
         }
+
+
     }
 
     @Nested
