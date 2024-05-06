@@ -46,6 +46,8 @@ public class PlayCardUseCase {
     private final GameResultRepository gameResultRepository;
     private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
+    private final RemoteBotRepository remoteBotRepository;
+    private final RemoteBotApi remoteBotApi;
 
     public PlayCardUseCase(GameRepository gameRepository,
                            RemoteBotRepository remoteBotRepository,
@@ -63,6 +65,8 @@ public class PlayCardUseCase {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
+        this.remoteBotRepository = remoteBotRepository;
+        this.remoteBotApi = remoteBotApi;
         this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository);
     }
 
