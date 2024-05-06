@@ -118,33 +118,48 @@ public class PatriciaAparecida implements BotServiceProvider {
         int round = getNumberOfRounds(intel);
 
         switch (round){
-            case 1: if(intel.getOpponentCard().isEmpty()){
+            case 1:
+                if(intel.getOpponentCard().isEmpty()){
 
-                int countAccept = 0;
-                int countReRaise = 0;
-                for(int i=0; i<listProb.size(); i++){
-                    if(listProb.get(i)<0.2){
-                        countAccept++;
-                        if(listProb.get(i)<0.1){
-                            countReRaise++;
+                    int countAccept = 0;
+                    int countReRaise = 0;
+                    for(int i=0; i<listProb.size(); i++){
+                        if(listProb.get(i)<0.2){
+                            countAccept++;
+                            if(listProb.get(i)<0.1){
+                                countReRaise++;
+                            }
                         }
                     }
-                }
-                if(countReRaise >=2){ return 1; }
-                if(countAccept >=2){ return 0; }
+                    if(countReRaise >=2){ return 1; }
+                    if(countAccept >=2){ return 0; }
 
-                }
+                    }
 
                 if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
                 //prob baixa para 1, tirando a que vence
                 }
 
-            case 2: if (intel.getOpponentCard().isEmpty()){ //ganhamos a primeira
+            case 2:
+                if (intel.getOpponentCard().isEmpty()){ //ganhamos a primeira
+                    int countAccept = 0;
+                    int countReRaise = 0;
+                    for(int i=0; i<listProb.size(); i++){
+                        if(listProb.get(i)<0.2){
+                            countAccept++;
+                            if(listProb.get(i)<0.1){
+                                countReRaise++;
+                            }
+                        }
+                    }
+                    if(countReRaise >=1){ return 1; }
+                    if(countAccept >=1){ return 0; }
 
+                }
 
-            }else if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){ //oponente ganha a primeira
+                if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){ //oponente ganha a primeira
                 //prob baixa para 1, tirando a que vence
-            }
+                }
 
             case 3:
                 if(intel.getOpponentCard().isEmpty()){
