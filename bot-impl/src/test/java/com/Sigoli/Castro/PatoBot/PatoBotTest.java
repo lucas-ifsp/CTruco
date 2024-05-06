@@ -559,8 +559,8 @@ public class PatoBotTest {
     }
 
     @Test
-    @DisplayName("Should accept 'Truco' if i have a Three and 'Manilha' in hand")
-    public void shouldAcceptTrucoIfIHaveAThreeAndManilhaInHand() {
+    @DisplayName("Should accept 'Truco' if i have a Three and 'Manilha' in hand and win the first round")
+    public void shouldAcceptTrucoIfIHaveAThreeAndManilhaInHandAndWinTheFirstRound() {
         GameIntel intel = mock(GameIntel.class);
 
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
