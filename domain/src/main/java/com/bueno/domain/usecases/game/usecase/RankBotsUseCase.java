@@ -51,7 +51,7 @@ public class RankBotsUseCase {
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi);
-        return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, challengedBotName, TIMES);
+        return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName,UUID.randomUUID(), challengedBotName, TIMES);
     }
 
 }

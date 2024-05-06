@@ -26,9 +26,9 @@ public class SimulationService {
         this.remoteBotApi = botApi;
     }
 
-    public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate, String botToEvaluateName, String challengedBotName, int times ) {
+    public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate, String botToEvaluateName,UUID challengedBotuuid, String challengedBotName, int times ) {
         final Callable<PlayWithBotsDto> gameWaitingForBeCreatedAndPlayed =
-                () -> simulate(uuidBotToEvaluate, botToEvaluateName, UUID.randomUUID(), challengedBotName);
+                () -> simulate(uuidBotToEvaluate, botToEvaluateName,challengedBotuuid, challengedBotName);
 
         return Stream.generate(() -> gameWaitingForBeCreatedAndPlayed)
                 .limit(times)

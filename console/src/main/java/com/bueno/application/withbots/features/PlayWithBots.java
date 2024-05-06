@@ -78,7 +78,7 @@ public class PlayWithBots {
 
     private List<PlayWithBotsDto> playBotsStarter() {
         final var useCase = new PlayWithBotsUseCase(repository, botApi);
-        return useCase.playWithBots(uuidBot1, bot1Name, bot2Name, times);
+        return useCase.playWithBots(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
 
     private void printAvailableBots(List<String> botNames) {

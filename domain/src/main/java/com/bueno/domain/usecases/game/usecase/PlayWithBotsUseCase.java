@@ -40,8 +40,8 @@ public class PlayWithBotsUseCase {
         this.remoteBotApi = remoteBotApi;
     }
 
-    public List<PlayWithBotsDto> playWithBots(UUID uuidBot1, String bot1Name, String bot2Name, int times) {
+    public List<PlayWithBotsDto> playWithBots(UUID uuidBot1, String bot1Name,UUID uuidBot2, String bot2Name, int times) {
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi);
-        return simulator.runInParallel(uuidBot1, bot1Name, bot2Name, times);
+        return simulator.runInParallel(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
 }
