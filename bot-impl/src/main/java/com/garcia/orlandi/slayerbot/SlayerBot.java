@@ -33,21 +33,21 @@ public class SlayerBot implements BotServiceProvider {
             TrucoCard opponentCard = openCards.get(0);
             List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
 
-            // encontrar nao manilha que possa ganhar
+            if (manilhas.isEmpty()) {
+                throw new IllegalStateException("Expected manilhas but none found");
+            }
+
             Optional<TrucoCard> winningNonManilha = cards.stream()
                     .filter(card -> !card.isManilha(vira) && card.compareValueTo(opponentCard, vira) > 0)
                     .findFirst();
 
             if (winningNonManilha.isPresent()) {
-                // Se existe uma nao manilha que pode ganhar, joga ela
                 return CardToPlay.of(winningNonManilha.get());
             } else {
-                // Caso contrario, joga a manilha mais fraca
                 return utils.playWeakestManilha(manilhas);
             }
         }
-
-        return null;
+        throw new IllegalStateException("SlayerBot chooseCard called in an unexpected game state");
     }
 
     @Override
