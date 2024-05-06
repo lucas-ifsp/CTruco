@@ -3,17 +3,19 @@ package com.miguelestevan.jakaredumatubot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import javax.smartcardio.Card;
 import java.util.List;
 
 public class JakareDuMatuBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if(getManilhas(intel.getCards(), intel.getVira()).containsAll(List.of(CardSuit.CLUBS, CardSuit.HEARTS))){
-            // Hand contains zap and copas
-            return true;
-        } else if (getManilhas(intel.getCards(), intel.getVira()).size() >= 2) {
-            return true;
-        }
+        if(getManilhas(intel.getCards(), intel.getVira()).containsAll(List.of(CardSuit.CLUBS, CardSuit.HEARTS))) return true;
+
+        else if (getManilhas(intel.getCards(), intel.getVira()).size() >= 2) return true;
+
+        else if ((getManilhas(intel.getCards(), intel.getVira()).size() == 1) && hasCardHigherThan(intel, CardRank.KING)) return true;
+
+
         return false;
 
     }
@@ -71,6 +73,10 @@ public class JakareDuMatuBot implements BotServiceProvider {
     // This function returns a list of TrucoCards that are manilas
     private List<CardSuit> getManilhas(List<TrucoCard> botCards, TrucoCard vira) {
         return botCards.stream().filter(trucoCard -> trucoCard.isManilha(vira)).map(TrucoCard::getSuit).toList();
+    }
+
+    public boolean hasCardHigherThan(GameIntel intel, CardRank cardRank) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank().value() > cardRank.value());
     }
 
 }

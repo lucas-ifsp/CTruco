@@ -87,7 +87,7 @@ class JakareDuMatuBotTest {
 
             // Bot info
             List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES)
             );
@@ -100,6 +100,8 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
         }
+
+
     }
 
     @Nested

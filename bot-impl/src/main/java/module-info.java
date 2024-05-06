@@ -25,6 +25,7 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 
 module bot.impl {
     requires bot.spi;
+    requires java.smartcardio;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
