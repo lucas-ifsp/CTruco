@@ -88,4 +88,25 @@ public class SlayerBotTest {
         assertThat(chosenCard).isEqualTo(TrucoCard.of(THREE, SPADES));
     }
 
+    @Test
+    @DisplayName("If first to play and with two manilhas, but no zap, play weakest manilha first")
+    void shouldPlayWeakestManilhaInFirstRoundIfHaveTwoButNoZap(){
+        roundResults = List.of();
+        vira = TrucoCard.of(THREE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(THREE, SPADES),
+                TrucoCard.of(FOUR, HEARTS),
+                TrucoCard.of(FOUR, DIAMONDS));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(FOUR, DIAMONDS));
+    }
+
 }
