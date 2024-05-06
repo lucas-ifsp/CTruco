@@ -168,4 +168,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should accept if has 1 manilha zap")
+    void shouldAcceptIfHas1Manilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(0, bot.getRaiseResponse(stepBuilder.build()));
+    }
 }
