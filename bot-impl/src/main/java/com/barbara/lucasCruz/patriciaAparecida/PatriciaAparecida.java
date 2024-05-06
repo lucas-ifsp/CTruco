@@ -48,8 +48,6 @@ public class PatriciaAparecida implements BotServiceProvider {
             Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards,intel);
 
             if(getWeakestCardThatWins(tempcards,intel).isPresent()) return CardToPlay.of(weakestCardThatWins.get());
-            //aqui voce so esta pegando uma carta que ganha, como o oponente ja jogou uma é legal usar prob
-            //alem disso tem que ser a menor que ganha.
 
             Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards,intel);
             //tem que considerar a prob das cartas que voce nao vai jogar pra empatar
@@ -78,7 +76,6 @@ public class PatriciaAparecida implements BotServiceProvider {
         if( chanceToDrawIsBetter(intel,tempcards)) return cardWithHighestChanceToDraw(listProbDrawAllCards(intel,tempcards),tempcards);
 
         return CardToPlay.of(intel.getCards().get(0));
-        //aqui conversamos sobre ontem
         }
 
 
@@ -87,10 +84,13 @@ public class PatriciaAparecida implements BotServiceProvider {
     //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
     @Override
     public int getRaiseResponse(GameIntel intel) {
+
         return 0;
     }
 
-
+    public int getNumberOfRounds(GameIntel intel){
+        return -1;
+    }
 
     private Double probabilityOpponentCardDraws(TrucoCard trucoCard, GameIntel intel) {
 
