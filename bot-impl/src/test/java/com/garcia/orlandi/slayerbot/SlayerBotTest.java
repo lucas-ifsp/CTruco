@@ -23,12 +23,12 @@ public class SlayerBotTest {
     @Test
     @DisplayName("Should request point raise when holding zap and a winning card")
     void shouldRequestPointRaiseWhenHoldingZapAndWinningCard() {
-        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(FOUR, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(JACK, CardSuit.HEARTS);
         TrucoCard zap = TrucoCard.of(CardRank.FIVE, CLUBS);
         TrucoCard winningCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
 
         List<TrucoCard> cards = Arrays.asList(zap, winningCard);
-        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), Arrays.asList(opponentCard), vira, 1)

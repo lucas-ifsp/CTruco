@@ -1,8 +1,6 @@
 package com.garcia.orlandi.slayerbot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
@@ -19,7 +17,22 @@ public class SlayerBot implements BotServiceProvider {
     }
 
     @Override
-    public boolean decideIfRaises(GameIntel intel) {
+    public boolean decideIfRaises(GameIntel game) {
+        if (game.getOpenCards().size() == 1) {
+            TrucoCard opponentCard = game.getOpenCards().get(0);
+            TrucoCard vira = game.getVira();
+
+            CardRank zapRank = vira.getRank().next();
+
+            boolean hasZap = game.getCards().stream()
+                    .anyMatch(card -> card.getRank() == zapRank && card.getSuit() == CardSuit.CLUBS);
+
+            boolean hasWinningCard = game.getCards().stream()
+                    .filter(card -> card.getRank() != zapRank)
+                    .anyMatch(card -> card.compareValueTo(opponentCard, vira) > 0);
+
+            return hasZap && hasWinningCard;
+        }
         return false;
     }
 
