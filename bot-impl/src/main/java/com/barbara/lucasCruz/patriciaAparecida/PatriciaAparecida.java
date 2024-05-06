@@ -137,11 +137,14 @@ public class PatriciaAparecida implements BotServiceProvider {
                     if(listProb.get(0) < 0.1){
                         return 1;
                     }
+                    if(listProb.get(0) < 0.2){
+                        return 0;
+                    }
                 }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
                     getCardThatDraws(intel.getCards(),intel).isPresent()){
                 return 1;
-            }
-            return -1;
+                }
+                return -1;
         }
 
         return 0;
