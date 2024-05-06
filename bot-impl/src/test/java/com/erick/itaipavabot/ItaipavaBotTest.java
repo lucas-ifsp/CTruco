@@ -85,19 +85,19 @@ public class ItaipavaBotTest {
     @Test
     @DisplayName("Should accept mão de onze if has 3 manilhas")
     void shouldAcceptMaoDeOnzeIfHas3Manilhas() {
-        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
         );
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
-                .botInfo(myCards, 0)
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 11)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
-        assertEquals(TrucoCard.of(SEVEN, CLUBS), bot.chooseCard(stepBuilder.build()).content());
+        assertEquals(true, bot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 }
