@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
@@ -42,5 +43,37 @@ public class SlayerBotTest {
         boolean shouldRaise = bot.decideIfRaises(game);
 
         assertTrue(shouldRaise, "SlayerBot should request a point raise when holding zap and a winning card");
+    }
+
+    @Test
+    @DisplayName("Should not play a hidden card if second to play in the first round")
+    void shouldNotPlayHiddenCardIfSecondToPlayInFirstRound() {
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, Collections.singletonList(vira), vira, 1)
+                .botInfo(cards, 1)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        GameIntel game = stepBuilder.build();
+
+        SlayerBot bot = new SlayerBot();
+
+        CardToPlay cardToPlay = bot.chooseCard(game);
+        TrucoCard chosenCard = cardToPlay.value();
+
+        assertNotEquals(TrucoCard.closed(), chosenCard, "Chosen card should not be a hidden card if second to play in the first round");
+
     }
 }
