@@ -153,13 +153,13 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should raise truco if has 2 manilhas")
+    @DisplayName("Should accept truco if has casal maior")
     void shouldRaiseIfHas2Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
         );
         stepBuilder = GameIntel.StepBuilder.with()
