@@ -478,7 +478,7 @@ public class PatoBotTest {
     }
 
     @Test
-    @DisplayName("Shoul Raise if hold only good cards ")
+    @DisplayName("Should Raise if hold only good cards ")
     public void shouldRaiseifholdsOnlyGoodcards(){
         GameIntel intel = mock(GameIntel.class);
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
