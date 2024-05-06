@@ -6,6 +6,8 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 import com.garcia.orlandi.slayerbot.SlayerBotUtils.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,6 +54,12 @@ public class SlayerBot implements BotServiceProvider {
                     if(manilhas.size() == 2){
                         TrucoCard weakestManilha = utils.getWeakestCard(manilhas, vira);
                         return CardToPlay.of((weakestManilha));
+                    } else if (manilhas.size() == 1) {
+                        TrucoCard strongestIsManilha = utils.getStrongestCard(cards, vira);
+                        List<TrucoCard> cardsWithoutManilha = new ArrayList<>(cards);
+                        cardsWithoutManilha.remove(strongestIsManilha);
+                        TrucoCard strongestCardExceptManilha = utils.getStrongestCard(cardsWithoutManilha, vira);
+                        return CardToPlay.of(strongestCardExceptManilha);
                     }
                 }
 
