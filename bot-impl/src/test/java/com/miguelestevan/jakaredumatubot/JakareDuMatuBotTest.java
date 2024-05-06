@@ -126,6 +126,31 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
         }
 
+        @Test
+        @DisplayName("Should not accept mao de onze if don't have at least two high cards")
+        public void ShouldNotAcceptMaoDeOnzeIfDontHaveAtLeastTwoHighCards(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = List.of(vira);
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(false);
+        }
+
     }
 
     @Nested
