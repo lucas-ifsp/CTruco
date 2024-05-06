@@ -236,4 +236,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(1, bot.handPowerLevel(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should raise if has powerlevel more than 9")
+    void shouldRaiseIfHasPowerlevelMoreThan9() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertTrue(bot.decideIfRaises(stepBuilder.build()));
+    }
 }
