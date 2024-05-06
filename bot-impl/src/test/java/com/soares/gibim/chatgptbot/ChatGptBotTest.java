@@ -42,4 +42,28 @@ public class ChatGptBotTest {
 
         assertTrue(sut.decideIfRaises(intel.build()));
     }
+
+    @Test
+    @DisplayName("If we do the first round we order truco in the second")
+    void testIfWeDoTheFirstRoundAskForTricksInTheSecond() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> botCards = Collections.singletonList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertTrue(sut.decideIfRaises(intel.build()));
+
+    }
+
 }
+
