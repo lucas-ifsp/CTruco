@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
@@ -20,33 +21,26 @@ public class SlayerBotTest {
     SlayerBotUtils utils;
 
     @Test
-    @DisplayName("If second to play with 2 manilhas play non-manilha to win if possible, otherwise play the weakest manilha to guarantee the round")
-    void shouldPlayNonManilhaToWinOrWeakestManilhaIfCannotWin() {
-        List<GameIntel.RoundResult> roundResults = List.of();
-        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
-        List<TrucoCard> cards = List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
-        );
-        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-        List<TrucoCard> openCards = List.of(opponentCard);
+    @DisplayName("Should request point raise when holding zap and a winning card")
+    void shouldRequestPointRaiseWhenHoldingZapAndWinningCard() {
+        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard zap = TrucoCard.of(CardRank.FIVE, CLUBS);
+        TrucoCard winningCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
 
-        GameIntel gameIntel = GameIntel.StepBuilder.with()
-                .gameInfo(roundResults, openCards, vira, 1)
+        List<TrucoCard> cards = Arrays.asList(zap, winningCard);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), Arrays.asList(opponentCard), vira, 1)
                 .botInfo(cards, 0)
                 .opponentScore(0)
-                .build();
+                .opponentCard(opponentCard);
 
+        GameIntel game = stepBuilder.build();
         SlayerBot bot = new SlayerBot();
-        CardToPlay card = bot.chooseCard(gameIntel);
-        TrucoCard chosenCard = card.value();
 
-        if (chosenCard.compareValueTo(opponentCard, vira) > 0) {
-            assertNotEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), chosenCard, "Should not play the weakest manilha if non-manilha can win");
-            assertEquals(TrucoCard.of(CardRank.KING, CardSuit.HEARTS), chosenCard, "Should play the strong non-manilha to win");
-        } else {
-            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), chosenCard, "Should play the weakest manilha to guarantee the round");
-        }
+        boolean shouldRaise = bot.decideIfRaises(game);
+
+        assertTrue(shouldRaise, "SlayerBot should request a point raise when holding zap and a winning card");
     }
 }
