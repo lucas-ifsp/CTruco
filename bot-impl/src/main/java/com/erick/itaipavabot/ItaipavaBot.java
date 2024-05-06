@@ -20,10 +20,7 @@
 
 package com.erick.itaipavabot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
@@ -63,7 +60,8 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (findHowManyManilhas(intel) <= 3 && findHowManyManilhas(intel) >= 2) return 1;
+        if (findHowManyManilhas(intel) == 3) return 1;
+        if (hasCasalMaior(intel)) return 1;
         if (hasZap(intel) && hasThree(intel)) return 0;
         return -1;
     }
@@ -142,6 +140,16 @@ public class ItaipavaBot implements BotServiceProvider {
     public boolean hasThree(GameIntel gameIntel) {
         List<TrucoCard> myCards = gameIntel.getCards();
         return myCards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+    }
+
+    public boolean hasCasalMaior(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        boolean hasManilhaClubs = myCards.stream()
+                .anyMatch(card -> card.isManilha(gameIntel.getVira()) && card.getSuit() == CardSuit.CLUBS);
+        boolean hasManilhaHearts = myCards.stream()
+                .anyMatch(card -> card.isManilha(gameIntel.getVira()) && card.getSuit() == CardSuit.HEARTS);
+
+        return hasManilhaClubs && hasManilhaHearts;
     }
 
 
