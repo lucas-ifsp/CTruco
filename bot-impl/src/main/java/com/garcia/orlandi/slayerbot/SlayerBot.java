@@ -47,11 +47,16 @@ public class SlayerBot implements BotServiceProvider {
                             return CardToPlay.of(card);
                         }
                     }
-
                     TrucoCard secondStrongestCard = utils.getStrongestCard(cardsWithoutZap, vira);
                     return CardToPlay.of(secondStrongestCard);
                 } else if (cardsWithoutZap.size() == 3) {
-                    if(manilhas.size() == 2){
+                    if(manilhas.size() == 3){
+                        TrucoCard strongestManilha = utils.getStrongestCard(cards, vira);
+                        List<TrucoCard> cardsWithoutStrongestManilha = new ArrayList<>(cards);
+                        cardsWithoutStrongestManilha.remove(strongestManilha);
+                        TrucoCard strongestCardExceptManilha = utils.getStrongestCard(cardsWithoutStrongestManilha, vira);
+                        return CardToPlay.of(strongestCardExceptManilha);
+                    } else if(manilhas.size() == 2){
                         TrucoCard weakestManilha = utils.getWeakestCard(manilhas, vira);
                         return CardToPlay.of((weakestManilha));
                     } else if (manilhas.size() == 1) {
