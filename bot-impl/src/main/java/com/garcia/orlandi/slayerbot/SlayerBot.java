@@ -8,6 +8,7 @@ import com.garcia.orlandi.slayerbot.SlayerBotUtils.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SlayerBot implements BotServiceProvider {
 
@@ -34,10 +35,21 @@ public class SlayerBot implements BotServiceProvider {
 
         if(!manilhas.isEmpty()){
             if(openCards.size() == 1){
+                List<TrucoCard> cardsWithoutZap = cards.stream()
+                        .filter(card -> !card.isZap(vira))
+                        .toList();
+
+                for(TrucoCard card : cardsWithoutZap){
+                    if(card.isCopas(vira)){
+                        return CardToPlay.of(card);
+                    }
+                }
+
                 TrucoCard chosenCard = cards.stream()
                         .filter(card -> !card.isZap(vira))
                         .findFirst()
                         .orElse(null);
+
                 return CardToPlay.of(chosenCard);
             }
         }
