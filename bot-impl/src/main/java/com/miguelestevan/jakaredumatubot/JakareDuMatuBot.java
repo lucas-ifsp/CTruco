@@ -15,7 +15,6 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
         else if ((getManilhas(intel.getCards(), intel.getVira()).size() == 1) && hasCardHigherThan(intel, CardRank.KING)) return true;
 
-
         return false;
 
     }
