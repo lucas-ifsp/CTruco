@@ -13,7 +13,15 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return intel.getRoundResults().size() == 2 && haveZap(intel);
+        if(!CheckIfItsHandOfEleven(intel)){
+            if( !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON ){
+                return true;
+            }
+            if(intel.getRoundResults().size() == 2 && haveZap(intel)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -34,4 +42,9 @@ public class ChatGptBot implements BotServiceProvider {
         }
         return false;
     }
+
+    public boolean CheckIfItsHandOfEleven(GameIntel intel){
+        return intel.getHandPoints() == 11;
+    }
+
 }
