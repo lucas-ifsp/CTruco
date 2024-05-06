@@ -144,7 +144,7 @@ public class PatoBot implements BotServiceProvider {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
         if(hand.size() == 3){
-            return 0;
+            return 1;
         }
 
         if (roundResults.isEmpty()){
