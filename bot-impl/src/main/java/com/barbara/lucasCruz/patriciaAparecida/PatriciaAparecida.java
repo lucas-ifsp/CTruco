@@ -42,8 +42,8 @@ public class PatriciaAparecida implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
 
-        if(intel.getOpponentCard().isPresent()) return getCardToReturn(intel, tempcards);
-
+        boolean opponentHasPlayedFirst = intel.getOpponentCard().isPresent();
+        if(opponentHasPlayedFirst) return getCardToReturn(intel, tempcards);
         return getCardToPlayFirst(intel, tempcards);
     }
 
@@ -78,7 +78,7 @@ public class PatriciaAparecida implements BotServiceProvider {
         return returnWeakestCardThatLoses(intel, tempcards);
     }
 
-    private static CardToPlay returnWeakestCardThatLoses(GameIntel intel, List<TrucoCard> tempcards) {
+    private CardToPlay returnWeakestCardThatLoses(GameIntel intel, List<TrucoCard> tempcards) {
         //não é a primeira jogada
         if(!intel.getRoundResults().isEmpty()) {
             return CardToPlay.discard(tempcards.stream().findFirst().get());
