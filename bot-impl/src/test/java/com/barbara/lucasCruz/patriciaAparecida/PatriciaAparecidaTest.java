@@ -442,7 +442,6 @@ class PatriciaAparecidaTest {
                 when(intel.getRoundResults()).thenReturn(List.of(LOST,WON));
                 when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                System.out.println(patricia.listProbAllCards(intel));
 
                 assertEquals(1, patricia.getRaiseResponse(intel));
             }
@@ -508,7 +507,7 @@ class PatriciaAparecidaTest {
                             TrucoCard.of(THREE, HEARTS),
                             TrucoCard.of(FOUR,SPADES));
                     when(intel.getCards()).thenReturn(botCards);
-                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
                     when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
 
@@ -516,7 +515,7 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should Return 0 If Can Win And 1<Prob<2 To Another Card")
+                @DisplayName("Should Return 0 If Can Win And 1<Prob<21 To Another Card")
                 public void ShouldReturn0IfCanWinAndProbBetween1And2ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(THREE, CLUBS),
@@ -525,7 +524,7 @@ class PatriciaAparecidaTest {
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
-                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(ACE,SPADES)));
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
                 }

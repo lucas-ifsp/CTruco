@@ -103,6 +103,33 @@ public class PatriciaAparecida implements BotServiceProvider {
         return getWeakestCardThatWins(tempcards, intel).isPresent() ? CardToPlay.of(weakestCardThatWins.get()) : null;
     }
 
+    public List<Integer> countProbs (GameIntel intel){
+        List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
+        List<Double> listProb = listProbAllCards(intel);
+
+        Integer countAccept = 0;
+        Integer countReRaise = 0;
+
+        for(int i=0; i<listProb.size(); i++){
+            if(listProb.get(i)<0.21){
+                countAccept++;
+                if(listProb.get(i)<0.11){
+                    countReRaise++;
+                }
+            }
+        }
+
+        List<Integer> listResult = new ArrayList<>();
+        listResult.add(countReRaise);
+        listResult.add(countAccept);
+
+        return listResult;
+
+    }
+
+
 
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
     //O valor de retorno deve ser um dos seguintes:
@@ -121,39 +148,37 @@ public class PatriciaAparecida implements BotServiceProvider {
             case 1:
                 if(intel.getOpponentCard().isEmpty()){
 
-                    int countAccept = 0;
-                    int countReRaise = 0;
-                    for(int i=0; i<listProb.size(); i++){
-                        if(listProb.get(i)<0.2){
-                            countAccept++;
-                            if(listProb.get(i)<0.1){
-                                countReRaise++;
-                            }
+                    List<Integer> listResult = countProbs(intel);
+                    if(listResult.get(0) >=2){ return 1; }
+                    if(listResult.get(1) >=2){ return 0; }
+
+                }
+
+                Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
+                if (tempCardThatWins.isPresent()) { //oponente começa
+
+                    List<Integer> listResult = countProbs(intel);
+
+                    TrucoCard cardThatWins = tempCardThatWins.get();
+                    Double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
+
+                    if(probCardThatWins<0.21){
+                        listResult.set(1, listResult.get(1) -1);
+                        if(probCardThatWins<0.11){
+                            listResult.set(0, listResult.get(0) -1);
                         }
                     }
-                    if(countReRaise >=2){ return 1; }
-                    if(countAccept >=2){ return 0; }
 
-                    }
-
-                if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
-                    //prob baixa para 1, tirando a que vence
+                    if(listResult.get(0) >=1){ return 1; }
+                    if(listResult.get(1) >=1){ return 0; }
                 }
 
             case 2:
                 if (intel.getOpponentCard().isEmpty()){
-                    int countAccept = 0;
-                    int countReRaise = 0;
-                    for(int i=0; i<listProb.size(); i++){
-                        if(listProb.get(i)<0.2){
-                            countAccept++;
-                            if(listProb.get(i)<0.1){
-                                countReRaise++;
-                            }
-                        }
-                    }
-                    if(countReRaise >=1){ return 1; }
-                    if(countAccept >=1){ return 0; }
+
+                    List<Integer> listResult = countProbs(intel);
+                    if(listResult.get(0) >=1){ return 1; }
+                    if(listResult.get(1) >=1){ return 0; }
 
                 }
 
