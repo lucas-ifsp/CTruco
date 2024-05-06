@@ -1,5 +1,7 @@
 package com.garcia.orlandi.slayerbot;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Comparator;

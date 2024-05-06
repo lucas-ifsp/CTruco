@@ -38,8 +38,26 @@ public class SlayerBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> cards = intel.getCards();
+
+        TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+        // Escolhe uma carta que não seja fechada se for o segundo jogador na primeira rodada
+        if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 1) {
+            return cards.stream()
+                    .filter(card -> !card.equals(TrucoCard.closed()))
+                    .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
+                    .map(CardToPlay::of)
+                    .orElse(CardToPlay.of(cards.get(0)));
+        }
+
+
+        return cards.stream()
+                .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
+                .map(CardToPlay::of)
+                .orElse(CardToPlay.of(cards.get(0)));
     }
+
+
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
