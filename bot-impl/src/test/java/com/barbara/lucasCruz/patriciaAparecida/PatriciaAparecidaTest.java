@@ -462,6 +462,24 @@ class PatriciaAparecidaTest {
             }
 
         }
+
+        @Nested
+        @DisplayName("Raise Response Round 1")
+        class raiseResponseRound3{
+            @Test
+            @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
+            public void ShouldReturn1IfProbLower1ToMin2Cards(){
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN,DIAMONDS),
+                        TrucoCard.of(SEVEN,CLUBS));
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+                assertEquals(1, patricia.getRaiseResponse(intel));
+            }
+        }
     }
 
 

@@ -131,7 +131,7 @@ public class PatriciaAparecida implements BotServiceProvider {
             }
 
             case 3:
-                if(intel.getOpponentCard().isEmpty()){//perdemos a primeira e ganhamos a segunda
+                if(intel.getOpponentCard().isEmpty()){
                     if(listProb.get(0) < 0.1){
                         return 1;
                     }
