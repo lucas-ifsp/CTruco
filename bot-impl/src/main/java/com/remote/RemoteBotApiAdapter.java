@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Component
 public class RemoteBotApiAdapter implements RemoteBotApi {
 
     @Override
