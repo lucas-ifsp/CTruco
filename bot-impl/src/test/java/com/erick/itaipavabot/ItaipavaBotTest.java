@@ -136,7 +136,7 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should raise truco if has 3 manilhas")
+    @DisplayName("Should accept truco if has 2 manilhas")
     void shouldRaiseIfHas3Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
@@ -153,7 +153,7 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should accept truco if has casal maior")
+    @DisplayName("Should raise truco if has casal maior")
     void shouldRaiseIfHas2Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
