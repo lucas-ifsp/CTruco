@@ -102,6 +102,14 @@ class MinePowerBotTest {
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
     }
 
+    @Test
+    @DisplayName("Should not raise bet when is mao de onze.")
+    void shouldNotRaiseBetWhenIsMaoDeOnze(){
+        intel =create().finish();
+        when(intel.getScore()).thenReturn(11);
+        assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
     @ParameterizedTest
     @CsvSource({"4", "5", "6"}) // só 4 e 5 passam no teste
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
