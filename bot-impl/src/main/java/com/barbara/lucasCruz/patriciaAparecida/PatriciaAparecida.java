@@ -182,12 +182,12 @@ public class PatriciaAparecida implements BotServiceProvider {
 
                 }
 
-                Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
-                if (tCardThatWins.isPresent()) {
+                Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
+                if (tempCardThatWins.isPresent()) {
 
                     List<Integer> listResult = countProbs(intel);
 
-                    TrucoCard cardThatWins = tCardThatWins.get();
+                    TrucoCard cardThatWins = tempCardThatWins.get();
                     Double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
 
                     if(probCardThatWins<0.21){
