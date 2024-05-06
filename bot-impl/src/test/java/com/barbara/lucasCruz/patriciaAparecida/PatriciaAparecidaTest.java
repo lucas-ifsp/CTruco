@@ -400,9 +400,12 @@ class PatriciaAparecidaTest {
         @Test
         @DisplayName("Should quit raise response if we cant win")
         public void ShouldQuitRaiseResponseIfWeCantWin () {
-            PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
-            when(patriciaSpy.getWeakestCardThatWins(intel.getCards(), intel)).thenReturn(Optional.empty());
-            assertEquals(-1, patriciaSpy.getRaiseResponse(intel));
+            when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
+            when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FIVE,SPADES)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(TWO,SPADES));
+            when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,SPADES)));
+
+            assertEquals(-1, patricia.getRaiseResponse(intel));
         }
         @Nested
         @DisplayName("Raise Rsponse Round 3")
@@ -410,21 +413,24 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Should Return 1 If We Can Win")
             public void ShouldReturn1IfWeSartAndCanWin(){
-            PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
-            when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
-            when(patriciaSpy.getWeakestCardThatWins(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
 
-            assertEquals(1, patriciaSpy.getRaiseResponse(intel));
+                when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR,SPADES)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(TWO,SPADES));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE,SPADES)));
+
+                assertEquals(1, patricia.getRaiseResponse(intel));
             }
 
             @Test
             @DisplayName("Should Return 1 If We Can Draw")
             public void ShouldReturn1IfWeSartAndCanDraw(){
-                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
                 when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
-                when(patriciaSpy.getCardThatDraws(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
+                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR,SPADES)));
+                when(intel.getVira()).thenReturn(TrucoCard.of(FOUR,DIAMONDS));
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE,SPADES)));
 
-                assertEquals(1, patriciaSpy.getRaiseResponse(intel));
+                assertEquals(1, patricia.getRaiseResponse(intel));
             }
 
             @Test

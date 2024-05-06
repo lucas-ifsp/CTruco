@@ -133,21 +133,22 @@ public class PatriciaAparecida implements BotServiceProvider {
             return -1;
 
             case 3:
-                if(intel.getOpponentCard().isEmpty()){ //perdemos a primeira e ganhamos a segunda
+                if(intel.getOpponentCard().isEmpty()){//perdemos a primeira e ganhamos a segunda
                     if(listProb.get(0) < 0.1){
                         return 1;
                     }
                     if(listProb.get(0) < 0.2){
                         return 0;
                     }
-                }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
+                } else if (getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
                     getCardThatDraws(intel.getCards(),intel).isPresent()){
-                return 1;
+                    return 1;
                 }
+
                 return -1;
         }
 
-        return 0;
+        return -1;
     }
 
     public int getNumberOfRounds(GameIntel intel){
