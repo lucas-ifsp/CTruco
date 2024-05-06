@@ -39,7 +39,7 @@ public class ItaipavaBot implements BotServiceProvider {
         if(highestPlayedCard.relativeValue(vira) < highestHandCard.relativeValue(vira)) {
             TrucoCard card = findLowestCardToWin(gameIntel);
             if(card == null) {
-                return CardToPlay.of()
+                return CardToPlay.of(getLowestCard(myCards, gameIntel));
             }
             return CardToPlay.of(findLowestCardToWin(gameIntel));
         }

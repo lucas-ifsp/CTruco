@@ -27,9 +27,8 @@ import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
-import static com.bueno.spi.model.CardRank.FOUR;
-import static com.bueno.spi.model.CardRank.TWO;
-import static com.bueno.spi.model.CardSuit.HEARTS;
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -62,5 +61,24 @@ public class ItaipavaBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
         assertEquals(TrucoCard.of(TWO, HEARTS), bot.chooseCard(stepBuilder.build()).content());
+    }
+
+    @Test
+    @DisplayName("Should discard the least valuable card when you cant win")
+    void shouldDiscardTheLeastValuableCardWhenYouCantWin() {
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(myCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+        assertEquals(TrucoCard.of(SEVEN, CLUBS), bot.chooseCard(stepBuilder.build()).content());
     }
 }
