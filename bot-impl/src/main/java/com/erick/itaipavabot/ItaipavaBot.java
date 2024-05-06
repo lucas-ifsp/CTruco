@@ -37,7 +37,11 @@ public class ItaipavaBot implements BotServiceProvider {
         TrucoCard highestPlayedCard = getHighestCard(gameIntel);
         TrucoCard highestHandCard = getHighestCard(myCards, gameIntel);
         if(highestPlayedCard.relativeValue(vira) < highestHandCard.relativeValue(vira)) {
-            return CardToPlay.of(highestHandCard);
+            TrucoCard card = findLowestCardToWin(gameIntel);
+            if(card == null) {
+                return CardToPlay.of()
+            }
+            return CardToPlay.of(findLowestCardToWin(gameIntel));
         }
         return CardToPlay.of(myCards.get(0));
     }
@@ -61,6 +65,22 @@ public class ItaipavaBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+    private TrucoCard findLowestCardToWin(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        TrucoCard vira = gameIntel.getVira();
+        TrucoCard highestCard = getHighestCard(gameIntel);
+        TrucoCard lowestWinningCard = null;
+        for (TrucoCard card : myCards) {
+            if (card.relativeValue(vira) > highestCard.relativeValue(vira)) {
+                if (lowestWinningCard == null || card.relativeValue(vira) < lowestWinningCard.relativeValue(vira)) {
+                    lowestWinningCard = card;
+                }
+            }
+        }
+        return lowestWinningCard;
+    }
+
 
     private TrucoCard getHighestCard(GameIntel gameIntel) {
         TrucoCard highestCard = gameIntel.getOpenCards().get(0);
