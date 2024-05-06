@@ -15,6 +15,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
         else if ((getManilhas(intel.getCards(), intel.getVira()).size() == 1) && hasCardHigherThan(intel, CardRank.KING)) return true;
 
+        else if(countCardsHigherThan(intel, CardRank.KING) >= 2) return true;
+
         return false;
 
     }
@@ -77,5 +79,12 @@ public class JakareDuMatuBot implements BotServiceProvider {
     public boolean hasCardHigherThan(GameIntel intel, CardRank cardRank) {
         return intel.getCards().stream().anyMatch(card -> card.getRank().value() > cardRank.value());
     }
+
+    public int countCardsHigherThan(GameIntel intel, CardRank cardRank) {
+        return (int) intel.getCards().stream()
+                .filter(card -> card.getRank().value() > cardRank.value())
+                .count();
+    }
+
 
 }
