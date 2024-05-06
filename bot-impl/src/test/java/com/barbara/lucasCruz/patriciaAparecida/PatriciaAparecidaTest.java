@@ -470,8 +470,8 @@ class PatriciaAparecidaTest {
             @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
             public void ShouldReturn1IfProbLower1ToMin2Cards(){
                 List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(SEVEN,DIAMONDS),
-                        TrucoCard.of(SEVEN,CLUBS));
+                        TrucoCard.of(SEVEN,SPADES),
+                        TrucoCard.of(SEVEN,HEARTS));
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                 when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);

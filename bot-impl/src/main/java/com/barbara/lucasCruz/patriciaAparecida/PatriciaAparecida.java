@@ -119,7 +119,22 @@ public class PatriciaAparecida implements BotServiceProvider {
 
         switch (round){
             case 1: if(intel.getOpponentCard().isEmpty()){
-                //prob baixa para 2
+                int countAccept = 0;
+                int countReRaise = 0;
+                for(int i=0; i<listProb.size(); i++){
+                    if(listProb.get(i)<0.2){
+                        countAccept++;
+                        if(listProb.get(i)<0.1){
+                            countReRaise++;
+                        }
+                    }
+                }
+                if(countReRaise >=2){
+                    return 1;
+                }
+                if(countAccept >=2){
+                    return 0;
+                }
             } else if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
                 //prob baixa para 1, tirando a que vence
             }
