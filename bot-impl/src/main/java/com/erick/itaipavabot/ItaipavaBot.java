@@ -101,4 +101,19 @@ public class ItaipavaBot implements BotServiceProvider {
         }
         return highestCard;
     }
+
+    private TrucoCard getLowestCard(List<TrucoCard> myCards, GameIntel gameIntel) {
+        if (myCards == null || myCards.isEmpty()) {
+            throw new IllegalArgumentException("The card list cannot be null or empty.");
+        }
+
+        TrucoCard lowestCard = myCards.get(0);
+        for (TrucoCard card : myCards) {
+            if (card.relativeValue(gameIntel.getVira()) < lowestCard.relativeValue(gameIntel.getVira())) {
+                lowestCard = card;
+            }
+        }
+        return lowestCard;
+    }
+
 }
