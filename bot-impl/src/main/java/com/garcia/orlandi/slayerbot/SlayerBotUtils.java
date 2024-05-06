@@ -10,20 +10,13 @@ import java.util.stream.Collectors;
 
 public class SlayerBotUtils {
 
-    public List<TrucoCard> getManilhas(List<TrucoCard> cards, TrucoCard vira) {
-        CardRank nextRank = vira.getRank().next();
-        return cards.stream()
-                .filter(card -> card.getRank() == nextRank)
-                .collect(Collectors.toList());
+    public List<TrucoCard> getManilhas(List<TrucoCard> cards, TrucoCard vira){
+        return cards.stream().filter(card -> card.isManilha(vira)).toList();
     }
 
-    public CardToPlay playWeakestManilha(List<TrucoCard> manilhas) {
-        if (manilhas.isEmpty()) {
-            throw new IllegalStateException("No manilhas found when expected.");
-        }
+    public TrucoCard playWeakestManilha(List<TrucoCard> manilhas) {
         return manilhas.stream()
-                .min(Comparator.comparing(TrucoCard::getRank))
-                .map(CardToPlay::of)
-                .orElseThrow(() -> new IllegalStateException("Failed to find the weakest manilha"));
+                .min(Comparator.comparingInt(card -> card.relativeValue(null)))
+                .orElse(null);
     }
 }
