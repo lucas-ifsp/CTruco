@@ -158,5 +158,15 @@ public class ItaipavaBot implements BotServiceProvider {
     boolean findFirstPlayer(GameIntel intel){
         return intel.getOpponentCard().isEmpty();
     }
+
+    public double handPowerLevel(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        double powerLevel = 0;
+        for (TrucoCard card : myCards) {
+            powerLevel += card.relativeValue(gameIntel.getVira());
+        }
+        powerLevel = powerLevel/myCards.size();
+        return powerLevel;
+    }
 }
 
