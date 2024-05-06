@@ -45,6 +45,9 @@ public class SlayerBot implements BotServiceProvider {
                             return CardToPlay.of(card);
                         }
                     }
+
+                    TrucoCard secondStrongestCard = utils.getStrongestCard(cardsWithoutZap, vira);
+                    return CardToPlay.of(secondStrongestCard);
                 }
 
                 TrucoCard chosenCard = cards.stream()
