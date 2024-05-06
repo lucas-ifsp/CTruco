@@ -429,26 +429,15 @@ class PatriciaAparecidaTest {
 
             @Test
             @DisplayName("ShouldReturn0IfProb<1AndWeStart")
-            public void ShouldReturn0IfProbLower1(){
+            public void ShouldReturn1IfProbLowerThan1(){
 
-                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
-                List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(SIX, CLUBS),
-                        TrucoCard.of(FOUR, HEARTS),
-                        TrucoCard.of(THREE, CLUBS));
-
+                List<TrucoCard> botCards = List.of(TrucoCard.of(SEVEN,DIAMONDS));
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(FOUR, DIAMONDS)));
+                when(intel.getRoundResults()).thenReturn(List.of(LOST,WON));
                 when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                //List<Double> list = new ArrayList<>();
-                //list.add(0.09);
-
-                //when(patriciaSpy.listProbAllCards(intel)).thenReturn(list);
-
-               // System.out.println(patriciaSpy.listProbAllCards(intel));
-                assertEquals(0, patriciaSpy.getRaiseResponse(intel));
+                assertEquals(0, patricia.getRaiseResponse(intel));
             }
 
         }
