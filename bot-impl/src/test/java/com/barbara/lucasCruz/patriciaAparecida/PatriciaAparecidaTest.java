@@ -465,7 +465,7 @@ class PatriciaAparecidaTest {
 
         @Nested
         @DisplayName("Raise Response Round 1")
-        class raiseResponseRound3{
+        class raiseResponseRound1{
             @Test
             @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
             public void ShouldReturn1IfProbLower1ToMin2Cards(){
@@ -485,6 +485,35 @@ class PatriciaAparecidaTest {
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(THREE,CLUBS),
                         TrucoCard.of(THREE,HEARTS));
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+                assertEquals(0, patricia.getRaiseResponse(intel));
+            }
+        }
+
+        @Nested
+        @DisplayName("Raise Response Round 2")
+        class raiseResponseRound2{
+            @Test
+            @DisplayName("Should Return 1 If Prob < 1 To Min 1 Card")
+            public void ShouldReturn1IfProbLower1ToMin1Card(){
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN,CLUBS));
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+                assertEquals(1, patricia.getRaiseResponse(intel));
+            }
+            @Test
+            @DisplayName("Should Return 0 If Prob < 2 To Min 1 Card")
+            public void ShouldReturn0IfProbLower2ToMin1Card(){
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE,CLUBS));
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                 when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
