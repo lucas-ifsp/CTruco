@@ -394,8 +394,7 @@ class PatriciaAparecidaTest {
         @DisplayName("Should return the round even the list isEmpty")
         public void ShouldReturnTheNumberOfRoundsCaseListIsEmpty() {
             when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
-            assertEquals(patricia.getNumberOfRounds(intel),0);
-            //assertEquals(patricia.listProbAllCards(intel).size(),botCards.size());
+            assertEquals(patricia.getNumberOfRounds(intel),1);
         }
     }
 

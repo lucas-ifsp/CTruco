@@ -89,7 +89,10 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     public int getNumberOfRounds(GameIntel intel){
-        return -1;
+        if(intel.getRoundResults().isEmpty()){
+            return 1;
+        }
+        return intel.getRoundResults().size() + 1;
     }
 
     private Double probabilityOpponentCardDraws(TrucoCard trucoCard, GameIntel intel) {
