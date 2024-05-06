@@ -50,16 +50,12 @@ public class PatriciaAparecida implements BotServiceProvider {
             if(getWeakestCardThatWins(tempcards,intel).isPresent()) return CardToPlay.of(weakestCardThatWins.get());
 
             Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards,intel);
-            //tem que considerar a prob das cartas que voce nao vai jogar pra empatar
-            //empatar vem antes de ter carta que ganha na primiera rodada
-            //se fizemos a primeira vem antes na segunda tb
 
             if (cardThatDraws.isPresent()) return CardToPlay.of(cardThatDraws.get());
 
 
             if(!intel.getRoundResults().isEmpty()) {
                  return CardToPlay.discard(tempcards.stream().findFirst().get());
-                 //ta dizendo que no primeiro round a gente só torna pra cima?
             }
             else return CardToPlay.of(tempcards.stream().findFirst().get());
 
@@ -128,13 +124,13 @@ public class PatriciaAparecida implements BotServiceProvider {
         return (maxDraw > maxStronger);
     }
 
-    private Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
+    public Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
         for (TrucoCard card : cards)
             if(card.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) == 0) return Optional.of(card);
         return Optional.empty();
     }
 
-    private Optional<TrucoCard> getWeakestCardThatWins(List<TrucoCard> cards, GameIntel intel) {
+    public Optional<TrucoCard> getWeakestCardThatWins(List<TrucoCard> cards, GameIntel intel) {
         cards = cards.stream().filter(trucoCard -> trucoCard.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) > 0).toList();
         return cards.stream().findFirst();
     }

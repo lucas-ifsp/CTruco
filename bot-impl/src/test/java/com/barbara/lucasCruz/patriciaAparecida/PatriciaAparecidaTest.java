@@ -18,6 +18,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -395,6 +396,28 @@ class PatriciaAparecidaTest {
         public void ShouldReturnTheNumberOfRoundsCaseListIsEmpty() {
             when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
             assertEquals(patricia.getNumberOfRounds(intel),1);
+        }
+        @Nested
+        @DisplayName("Verify quit raise response")
+        class QuitRaiseResponse{
+            @Test
+            @DisplayName("Should quit raise response if we cant win")
+            public void ShouldQuitRaiseResponseIfWeCantWin () {
+                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
+                when(patriciaSpy.getWeakestCardThatWins(intel.getCards(), intel)).thenReturn(Optional.empty());
+                assertEquals(-1, patriciaSpy.getRaiseResponse(intel));
+            }
+            @Test
+            @DisplayName("Should quit raise response in round 3, case oponent starts and cant draw or win")
+            public void ShouldQuitRaiseResponseInRound3CaseOpponentStartsAndCantDrawANDWin(){
+                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
+
+                when(patriciaSpy.getWeakestCardThatWins(intel.getCards(),intel)).thenReturn(Optional.empty());
+                when(patriciaSpy.getCardThatDraws(intel.getCards(),intel)).thenReturn(Optional.empty());
+
+                assertEquals(patriciaSpy.getRaiseResponse(intel),-1);
+
+            }
         }
     }
 
