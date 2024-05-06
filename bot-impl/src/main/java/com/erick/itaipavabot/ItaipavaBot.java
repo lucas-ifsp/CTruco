@@ -44,23 +44,13 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (randomBluff()) return true;
         if (findHowManyManilhas(intel) == 3) return true;
         if (findHowManyManilhas(intel) == 2 && hasZap(intel)) return true;
         return false;
     }
 
-    private static boolean randomBluff() {
-        Random crazyBluff = new Random();
-        if (crazyBluff.nextInt(150) == 64) {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (randomBluff()) return true;
         if (findHowManyManilhas(intel) == 3) return true;
         return false;
     }
@@ -72,7 +62,6 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (randomBluff()) return 1;
         if (findHowManyManilhas(intel) <= 3 && findHowManyManilhas(intel) >= 2) return 1;
         if (findHowManyManilhas(intel) == 1 && hasZap(intel)) return 0;
         return -1;
