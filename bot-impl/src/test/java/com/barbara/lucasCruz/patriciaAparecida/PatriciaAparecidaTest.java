@@ -432,13 +432,22 @@ class PatriciaAparecidaTest {
             public void ShouldReturn0IfProbLower1(){
 
                 PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SIX, CLUBS),
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(THREE, CLUBS));
 
-                List<Double> list = new ArrayList<>();
-                list.add(0.09);
+                when(intel.getCards()).thenReturn(botCards);
+                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(FOUR, DIAMONDS)));
+                when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                when(patriciaSpy.listProbAllCards(intel)).thenReturn(list);
+                //List<Double> list = new ArrayList<>();
+                //list.add(0.09);
 
-                System.out.println(patriciaSpy.listProbAllCards(intel));
+                //when(patriciaSpy.listProbAllCards(intel)).thenReturn(list);
+
+               // System.out.println(patriciaSpy.listProbAllCards(intel));
                 assertEquals(0, patriciaSpy.getRaiseResponse(intel));
             }
 
