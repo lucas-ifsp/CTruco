@@ -1,7 +1,6 @@
 package com.barbara.lucasCruz.patriciaAparecida;
 
 import com.bueno.spi.model.*;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -465,32 +464,71 @@ class PatriciaAparecidaTest {
 
         @Nested
         @DisplayName("Raise Response Round 1")
-        class raiseResponseRound1{
-            @Test
-            @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
-            public void ShouldReturn1IfProbLower1ToMin2Cards(){
-                List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(SEVEN,SPADES),
-                        TrucoCard.of(SEVEN,HEARTS));
-                when(intel.getCards()).thenReturn(botCards);
-                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        class raiseResponseRound1 {
+            @Nested
+            @DisplayName("We Start")
+            class WeStart {
+                @Test
+                @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
+                public void ShouldReturn1IfProbLower1ToMin2Cards() {
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(SEVEN, SPADES),
+                            TrucoCard.of(SEVEN, HEARTS));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                assertEquals(1, patricia.getRaiseResponse(intel));
+                    assertEquals(1, patricia.getRaiseResponse(intel));
+                }
+
+                @Test
+                @DisplayName("Should Return 0 If Prob < 2 To Min 2 Cards")
+                public void ShouldReturn0IfProbLower2ToMin2Cards() {
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(THREE, CLUBS),
+                            TrucoCard.of(THREE, HEARTS));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+                    assertEquals(0, patricia.getRaiseResponse(intel));
+                }
             }
-            @Test
-            @DisplayName("Should Return 0 If Prob < 2 To Min 2 Cards")
-            public void ShouldReturn0IfProbLower2ToMin2Cards(){
-                List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(THREE,CLUBS),
-                        TrucoCard.of(THREE,HEARTS));
-                when(intel.getCards()).thenReturn(botCards);
-                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                assertEquals(0, patricia.getRaiseResponse(intel));
+            @Nested
+            @DisplayName("Opponent Starts")
+            class OpponentStarts {
+                @Test
+                @DisplayName("Should Return 1 If Can Win And Prob<1 To Another Card")
+                public void ShouldReturn1IfCanWinAndProbLowerThan1ToAnotherCard() {
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(SEVEN, CLUBS),
+                            TrucoCard.of(THREE, HEARTS),
+                            TrucoCard.of(FOUR,SPADES));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
+
+                    assertEquals(1, patricia.getRaiseResponse(intel));
+                }
+
+                @Test
+                @DisplayName("Should Return 0 If Can Win And 1<Prob<2 To Another Card")
+                public void ShouldReturn0IfCanWinAndProbBetween1And2ToAnotherCard() {
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(THREE, CLUBS),
+                            TrucoCard.of(THREE, HEARTS),
+                            TrucoCard.of(FOUR,SPADES));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
+
+                    assertEquals(0, patricia.getRaiseResponse(intel));
+                }
             }
         }
 
