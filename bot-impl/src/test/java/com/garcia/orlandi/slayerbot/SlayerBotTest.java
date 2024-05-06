@@ -12,8 +12,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SlayerBotTest {
 
@@ -66,7 +65,27 @@ public class SlayerBotTest {
         TrucoCard chosenCard = card.value();
         assertFalse(chosenCard.isZap(vira));
         assertTrue(chosenCard.isCopas(vira));
+    }
 
+    @Test
+    @DisplayName("If first to play and only have Zap, play second strongest card first to try to win the round")
+    void shouldPlaySecondStrongestCardIfOnlyHasZapInTheFirstRound(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FOUR, HEARTS);
+        cards = List.of(
+                TrucoCard.of(FIVE, CLUBS),
+                TrucoCard.of(SEVEN, CLUBS),
+                TrucoCard.of(THREE, SPADES));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(THREE, SPADES));
     }
 
 }
