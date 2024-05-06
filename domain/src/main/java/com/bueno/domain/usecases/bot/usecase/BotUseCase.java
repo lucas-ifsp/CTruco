@@ -68,7 +68,7 @@ public class BotUseCase {
                       RaiseRequestHandler request) {
 
         this.gameRepo = Objects.requireNonNull(gameRepo);
-        this.gameResultRepo = Objects.requireNonNull(gameResultRepo);
+        this.gameResultRepo = gameResultRepo;
         this.remoteBotRepo = Objects.requireNonNull(remoteBotRepo);
         this.remoteBotApi = remoteBotApi;
         this.handResultRepo = handResultRepo;

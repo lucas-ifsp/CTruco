@@ -49,7 +49,7 @@ public class EvaluateBotsUseCase {
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName) {
         final var playManyService = new SimulationService(remoteBotRepository, botApi);
-        return playManyService.runInParallel(uuidBotToEvaluate, botToEvaluateName, challengedBotName, TIMES);
+        return playManyService.runInParallel(uuidBotToEvaluate, botToEvaluateName,UUID.randomUUID(), challengedBotName, TIMES);
     }
 
     private Long resultAccumulator(List<PlayWithBotsDto> results) {
