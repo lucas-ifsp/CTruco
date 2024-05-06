@@ -2,6 +2,7 @@ package com.garcia.orlandi.slayerbot;
 
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class SlayerBotUtils {
@@ -10,6 +11,11 @@ public class SlayerBotUtils {
         return cards.stream().filter(card -> card.isManilha(vira)).toList();
     }
 
+    public TrucoCard playWeakestManilha(List<TrucoCard> manilhas) {
+        return manilhas.stream()
+                .min(Comparator.comparingInt(card -> card.relativeValue(null)))
+                .orElse(null);
+    }
     public TrucoCard getStrongestCard( List<TrucoCard> cards, TrucoCard vira){
         TrucoCard strongerCard = cards.get(0);
 
@@ -34,5 +40,6 @@ public class SlayerBotUtils {
         }
 
         return weakerCard;
+
     }
 }
