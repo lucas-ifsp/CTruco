@@ -10,6 +10,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SlayerBotTest {
     List<GameIntel.RoundResult> roundResults;
@@ -21,34 +22,32 @@ public class SlayerBotTest {
 
     @Test
     @DisplayName("If second to play with 2 manilhas play non-manilha to win if possible, otherwise play the weakest manilha to guarantee the round")
-    void shouldPlayNonManilhaToWinFirstRoundIfPossibleOtherwiseWeakestManilha() {
+    void shouldPlayNonManilhaToWinOrWeakestManilhaIfCannotWin() {
+        List<GameIntel.RoundResult> roundResults = List.of();
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
-        List<TrucoCard> botCards = List.of(
+        List<TrucoCard> cards = List.of(
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                 TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
         );
-
         TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(opponentCard);
 
         GameIntel gameIntel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(opponentCard), vira, 1)
-                .botInfo(botCards, 0)
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0)
                 .opponentScore(0)
                 .build();
 
         SlayerBot bot = new SlayerBot();
+        CardToPlay card = bot.chooseCard(gameIntel);
+        TrucoCard chosenCard = card.value();
 
-        CardToPlay cardToPlay = bot.chooseCard(gameIntel);
-
-        TrucoCard playedCard = cardToPlay.value();
-
-        if (TrucoCard.of(CardRank.KING, CardSuit.HEARTS).compareValueTo(opponentCard, vira) > 0) {
-            // se a nao manilha vencer, deve ser escolhida
-            assertThat(playedCard).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
+        if (chosenCard.compareValueTo(opponentCard, vira) > 0) {
+            assertNotEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), chosenCard, "Should not play the weakest manilha if non-manilha can win");
+            assertEquals(TrucoCard.of(CardRank.KING, CardSuit.HEARTS), chosenCard, "Should play the strong non-manilha to win");
         } else {
-            // caso constrario, joga a manilha mais fraca
-            assertThat(playedCard).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), chosenCard, "Should play the weakest manilha to guarantee the round");
         }
     }
 }

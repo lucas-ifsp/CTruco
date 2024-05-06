@@ -2,7 +2,12 @@ package com.garcia.orlandi.slayerbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 public class SlayerBot implements BotServiceProvider {
     @Override
