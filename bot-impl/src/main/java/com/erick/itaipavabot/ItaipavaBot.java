@@ -53,6 +53,7 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (findHowManyManilhas(intel) == 3) return true;
+        if (handPowerLevel(intel) >= 9) return true;
         return false;
     }
 
