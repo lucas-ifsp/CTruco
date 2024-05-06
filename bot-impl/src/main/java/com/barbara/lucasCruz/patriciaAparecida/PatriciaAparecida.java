@@ -89,7 +89,7 @@ public class PatriciaAparecida implements BotServiceProvider {
         int round = getNumberOfRounds(intel);
 
         switch (round){
-            case 1: if(intel.getOpponentCard().isEmpty()){ //começamos
+            case 1: if(intel.getOpponentCard().isEmpty()){
                 //prob baixa para 2
             } if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
                 //prob baixa para 1, tirando a que vence
@@ -105,6 +105,9 @@ public class PatriciaAparecida implements BotServiceProvider {
 
             case 3: if(intel.getOpponentCard().isEmpty()){ //perdemos a primeira e ganhamos a segunda
                 //prob baixa da carta
+                if(listProb.get(0) < 0.1){
+                    return -2;
+                }
             }if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()|| getCardThatDraws(intel.getCards(),intel).isPresent()){
                 return 1;
             }
@@ -233,8 +236,6 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     public double probabilityOpponentCardIsBetter (TrucoCard card, GameIntel intel){
         return (1 - (Math.pow(probabilityONEOpponentCardIsBetter(card,intel), getNumberOfOpponentsCards(intel))));
-        //robabilidadeOponenteTerCartaMaior =
-        //                ( 1 - (Math.pow(probabilidadeOponenteNaoTerUMACartaMaior, cartasNaMaoDoAdversario))) * 100;
     }
 
     public List<Double> listProbAllCards(GameIntel intel){

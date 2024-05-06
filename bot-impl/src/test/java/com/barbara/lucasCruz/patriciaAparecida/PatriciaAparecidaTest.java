@@ -408,7 +408,7 @@ class PatriciaAparecidaTest {
         @DisplayName("Raise Rsponse Round 3")
         class RaiseRespondeRound3{
             @Test
-            @DisplayName("Should Return 1 If We Sart And Can Win")
+            @DisplayName("Should Return 1 If We Can Win")
             public void ShouldReturn1IfWeSartAndCanWin(){
             PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
             when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
@@ -418,13 +418,28 @@ class PatriciaAparecidaTest {
             }
 
             @Test
-            @DisplayName("Should Return 1 If We Sart And Can Draw")
+            @DisplayName("Should Return 1 If We Can Draw")
             public void ShouldReturn1IfWeSartAndCanDraw(){
                 PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
                 when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
                 when(patriciaSpy.getCardThatDraws(intel.getCards(),intel)).thenReturn(Optional.of(generateRandomCardToPlay()));
 
                 assertEquals(1, patriciaSpy.getRaiseResponse(intel));
+            }
+
+            @Test
+            @DisplayName("ShouldReturn0IfProb<1AndWeStart")
+            public void ShouldReturn0IfProbLower1(){
+
+                PatriciaAparecida patriciaSpy = spy(new PatriciaAparecida());
+
+                List<Double> list = new ArrayList<>();
+                list.add(0.09);
+
+                when(patriciaSpy.listProbAllCards(intel)).thenReturn(list);
+
+                System.out.println(patriciaSpy.listProbAllCards(intel));
+                assertEquals(0, patriciaSpy.getRaiseResponse(intel));
             }
 
         }
