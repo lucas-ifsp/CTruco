@@ -33,21 +33,26 @@ public class SlayerBot implements BotServiceProvider {
 
         List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
 
-        if(!manilhas.isEmpty()){
-            if(openCards.size() == 1){
+        if(openCards.size() == 1){
+            if(!manilhas.isEmpty()){
                 List<TrucoCard> cardsWithoutZap = cards.stream()
                         .filter(card -> !card.isZap(vira))
                         .toList();
 
                 if(cardsWithoutZap.size() == 2){
                     for(TrucoCard card : cardsWithoutZap){
-                        if(card.isCopas(vira) || card.isEspadilha(vira)){
+                        if(card.isCopas(vira) || card.isEspadilha(vira) || card.isOuros(vira)){
                             return CardToPlay.of(card);
                         }
                     }
 
                     TrucoCard secondStrongestCard = utils.getStrongestCard(cardsWithoutZap, vira);
                     return CardToPlay.of(secondStrongestCard);
+                } else if (cardsWithoutZap.size() == 3) {
+                    if(manilhas.size() == 2){
+                        TrucoCard weakestManilha = utils.getWeakestCard(manilhas, vira);
+                        return CardToPlay.of((weakestManilha));
+                    }
                 }
 
                 TrucoCard chosenCard = cards.stream()
