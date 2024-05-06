@@ -219,4 +219,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(12, bot.handPowerLevel(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should return 1 if has 3 fours when vira is five")
+    void shouldReturn1IfHas3FoursWhenViraIsFive() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(1, bot.handPowerLevel(stepBuilder.build()));
+    }
 }
