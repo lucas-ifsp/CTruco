@@ -137,13 +137,13 @@ public class ItaipavaBotTest {
 
     @Test
     @DisplayName("Should accept truco if has 2 manilhas")
-    void shouldRaiseIfHas3Manilhas() {
+    void shouldAcceptTrucoIfHas2Manilhas() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
         );
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
@@ -154,7 +154,7 @@ public class ItaipavaBotTest {
 
     @Test
     @DisplayName("Should raise truco if has casal maior")
-    void shouldRaiseIfHas2Manilhas() {
+    void shouldRaiseTrucoIfHasCasalMaior() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
@@ -170,8 +170,8 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should accept truco if has 1 zap and a three")
-    void shouldAcceptIfHas1Manilha() {
+    @DisplayName("Should accept truco if has zap and a three")
+    void shouldAcceptTrucoIfHasZapAndAThree() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
@@ -184,5 +184,22 @@ public class ItaipavaBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(0);
         assertEquals(0, bot.getRaiseResponse(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should start with manilha")
+    void shouldStartWithManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES), bot.chooseCard(stepBuilder.build()).content());
     }
 }
