@@ -75,6 +75,31 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
         }
+
+        @Test
+        @DisplayName("Should accept mao de onze if have two three and any manilha")
+        public void ShouldAcceptMaoDeOnzeIfHaveTwoThreeAndAnyManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = List.of(vira);
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.getMaoDeOnzeResponse(intel)).isEqualTo(true);
+        }
     }
 
     @Nested
