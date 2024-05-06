@@ -516,7 +516,8 @@ class PatriciaAparecidaTest {
                         TrucoCard.of(THREE,CLUBS));
                 when(intel.getCards()).thenReturn(botCards);
                 when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getRoundResults()).thenReturn(List.of(WON));
+                when(intel.getRoundResults()).thenReturn(List.of(WON
+                ));
                 when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
                 assertEquals(0, patricia.getRaiseResponse(intel));

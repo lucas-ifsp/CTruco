@@ -137,11 +137,11 @@ public class PatriciaAparecida implements BotServiceProvider {
                     }
 
                 if (getWeakestCardThatWins(intel.getCards(),intel).isPresent()) { //oponente começa
-                //prob baixa para 1, tirando a que vence
+                    //prob baixa para 1, tirando a que vence
                 }
 
             case 2:
-                if (intel.getOpponentCard().isEmpty()){ //ganhamos a primeira
+                if (intel.getOpponentCard().isEmpty()){
                     int countAccept = 0;
                     int countReRaise = 0;
                     for(int i=0; i<listProb.size(); i++){
@@ -157,8 +157,8 @@ public class PatriciaAparecida implements BotServiceProvider {
 
                 }
 
-                if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){ //oponente ganha a primeira
-                //prob baixa para 1, tirando a que vence
+                if(getWeakestCardThatWins(intel.getCards(),intel).isPresent()){
+                    //prob baixa para 1, tirando a que vence
                 }
 
             case 3:
@@ -169,7 +169,8 @@ public class PatriciaAparecida implements BotServiceProvider {
                     if(listProb.get(0) < 0.2){
                         return 0;
                     }
-                } else if (getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
+                }
+                if (getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
                     getCardThatDraws(intel.getCards(),intel).isPresent()){
                     return 1;
                 }
