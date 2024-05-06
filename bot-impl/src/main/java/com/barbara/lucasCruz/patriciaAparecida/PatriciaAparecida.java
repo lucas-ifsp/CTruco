@@ -154,7 +154,7 @@ public class PatriciaAparecida implements BotServiceProvider {
 
                 }
 
-                Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
+                Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tempCardThatWins.isPresent()) {
 
                     List<Integer> listResult = countProbs(intel);
@@ -182,7 +182,7 @@ public class PatriciaAparecida implements BotServiceProvider {
 
                 }
 
-                Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(intel.getCards(),intel);
+                Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tCardThatWins.isPresent()) {
 
                     List<Integer> listResult = countProbs(intel);
@@ -210,8 +210,10 @@ public class PatriciaAparecida implements BotServiceProvider {
                         return 0;
                     }
                 }
-                if (getWeakestCardThatWins(intel.getCards(),intel).isPresent() ||
-                    getCardThatDraws(intel.getCards(),intel).isPresent()){
+                final boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
+                final boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
+                if (WeakestCardThatWinsExists ||
+                        CardDrawsExists){
                     return 1;
                 }
         }
@@ -260,14 +262,19 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     public Optional<TrucoCard> getCardThatDraws(List<TrucoCard> cards, GameIntel intel) {
+        if(!cards.isEmpty() && intel.getOpponentCard().isPresent()){
         for (TrucoCard card : cards)
             if(card.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) == 0) return Optional.of(card);
+        }
         return Optional.empty();
     }
 
     public Optional<TrucoCard> getWeakestCardThatWins(List<TrucoCard> cards, GameIntel intel) {
+        if(!cards.isEmpty() && intel.getOpponentCard().isPresent()){
         cards = cards.stream().filter(trucoCard -> trucoCard.compareValueTo(intel.getOpponentCard().get(),intel.getVira()) > 0).toList();
         return cards.stream().findFirst();
+        }
+        return Optional.empty();
     }
 
 
