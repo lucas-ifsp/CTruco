@@ -1,5 +1,6 @@
 package com.garcia.orlandi.slayerbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.TrucoCard;
 
@@ -10,11 +11,10 @@ import java.util.stream.Collectors;
 public class SlayerBotUtils {
 
     public List<TrucoCard> getManilhas(List<TrucoCard> cards, TrucoCard vira) {
-        List<TrucoCard> manilhas = cards.stream()
-                .filter(card -> card.isManilha(vira))
+        CardRank nextRank = vira.getRank().next();
+        return cards.stream()
+                .filter(card -> card.getRank() == nextRank)
                 .collect(Collectors.toList());
-        System.out.println("Manilhas encontradas: " + manilhas);
-        return manilhas;
     }
 
     public CardToPlay playWeakestManilha(List<TrucoCard> manilhas) {
