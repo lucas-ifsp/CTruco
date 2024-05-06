@@ -28,6 +28,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class ItaipavaBot implements BotServiceProvider {
 
@@ -43,6 +44,16 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if (randomBluff()) return true;
+
+        return false;
+    }
+
+    private static boolean randomBluff() {
+        Random crazyBluff = new Random();
+        if (crazyBluff.nextInt(150) == 64) {
+            return true;
+        }
         return false;
     }
 
@@ -110,5 +121,4 @@ public class ItaipavaBot implements BotServiceProvider {
         }
         return lowestCard;
     }
-
 }
