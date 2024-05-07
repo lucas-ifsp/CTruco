@@ -21,9 +21,11 @@ public class SlayerBot implements BotServiceProvider {
 
         if(manilhas.isEmpty()){
             return false;
+        }else if(manilhas.size() == 2){
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
