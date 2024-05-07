@@ -63,8 +63,10 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (findHowManyManilhas(intel) == 3) return true;
-        if (findHowManyManilhas(intel) == 2 && hasCard(intel, true)) return true;
+        if (findHowManyManilhas(intel) > 1 && hasCard(intel, true)) return true;
+        if (handPowerLevel(intel) >= 9) return true;
+        if (handPowerLevel(intel) < 9 && intel.getOpponentScore() < 11) return false;
+        if (hasCasalMaior(intel)) return true;
         return false;
     }
 
@@ -87,7 +89,9 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (handPowerLevel(intel) >= 9) return 1;
+        if (hasCard(intel, true) && findHowManyManilhas(intel) >= 2 && intel.getHandPoints() < 9) return 1;
         if (handPowerLevel(intel) < 5) return -1;
+        if (findHowManyManilhas(intel) >= 2) return 0;
         return 0;
     }
 
