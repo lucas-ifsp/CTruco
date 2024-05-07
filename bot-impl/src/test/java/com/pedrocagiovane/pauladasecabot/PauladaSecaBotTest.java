@@ -449,4 +449,16 @@ public class PauladaSecaBotTest {
         assertThat(resultado).isZero();
     }
 
+    @Test
+    @DisplayName("Pede truco na segunda se amarrar primeira e conseguir matar a manilha do oponente")
+    void trucoSegundaSeAmarrarPrimeiraEMatarSegunda() {
+        maoPlayer = List.of(TrucoCard.of(KING, HEARTS), TrucoCard.of(SEVEN, DIAMONDS));
+        vira = TrucoCard.of(JACK, SPADES);
+        roundResult = List.of(GameIntel.RoundResult.DREW);
+        cartas = List.of();
+        TrucoCard maoOponente = TrucoCard.of(KING, DIAMONDS);
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(maoOponente);
+        boolean result = pauladaSecaBot.decideIfRaises(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
 }
