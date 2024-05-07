@@ -38,12 +38,12 @@ class MinePowerBotTest {
     }
 
     @Test
-    @DisplayName("Check if has manilha")
-    void checkIfHasManilha() {
+    @DisplayName("Should return false if does not have manilha")
+    void shouldReturnFalseIfDoNotHaveManilha() {
         intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
         TrucoCard vira = intel.getVira();
 
-        assertThat(sut.chooseCard(intel).content().isManilha(vira));
+        assertThat(sut.chooseCard(intel).content().isManilha(vira)).isFalse();
     }
 
     @Test
@@ -76,7 +76,11 @@ class MinePowerBotTest {
     @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
     void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
-        intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(TrucoCard.of(CardRank.KING, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).opponentCardToBe(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)).finish();
+        intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS))
+                .opponentCardToBe(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)).finish();
 
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
     }
@@ -129,9 +133,9 @@ class MinePowerBotTest {
     @DisplayName("Should raise if bot score and opponent score are both 9 and our bot has a special card.")
     void shouldRaiseIfBothBotsScoresAre9AndOurBotHasSpecialCard() {
         intel = create().scoreMine(9).scoreOponent(9).cards(
-                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                 .viraToBeDiamondsOfRank(CardRank.FOUR)
                 .finish();
 
@@ -149,5 +153,19 @@ class MinePowerBotTest {
                 .finish();
 
         assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should play the highest card when tied")
+    void shouldPlayTheHighestCardWhenTied() {
+        intel = create().scoreMine(6).scoreOponent(6).cards(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .opponentCardToBe(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
     }
 }
