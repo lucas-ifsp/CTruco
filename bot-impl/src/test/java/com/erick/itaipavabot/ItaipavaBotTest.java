@@ -304,4 +304,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(stepBuilder.build()).content());
     }
+
+    @Test
+    @DisplayName("Should not raise if opponent has more than 9 points")
+    void shouldNotRaiseIfOpponentHasMoreThan7PointsAndHasLessThan9PowerLevel() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(10);
+        assertFalse(bot.decideIfRaises(stepBuilder.build()));
+    }
 }
