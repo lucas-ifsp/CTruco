@@ -28,7 +28,6 @@ public class MalasiaBot implements BotServiceProvider {
                 return intel.getRoundResults().isEmpty() ? CardToPlay.of(DeMenor(intel)) : CardToPlay.discard(DeMenor(intel));
             else
                 return CardToPlay.of(DeMenor(intel));
-
         return CardToPlay.of(DeMenorQuePodeGanhar);
 
     }
@@ -80,5 +79,7 @@ public class MalasiaBot implements BotServiceProvider {
         }
         return DeMenorQuePodeGanhar;
     }
+
+
 
 }
