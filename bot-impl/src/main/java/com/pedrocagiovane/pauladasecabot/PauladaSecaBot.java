@@ -265,8 +265,8 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         int quantDois = contDois(intel);
 
-        // PRIMEIRA: verifica se a mão esta na primeira e se tem casal menor
-        if (intel.getRoundResults().isEmpty() && temCasalMenor(intel)){
+        // SEGUNDA: verifica se a mão esta na primeira e se tem casal menor
+        if (!intel.getRoundResults().isEmpty() && temCasalMenor(intel)){
             System.out.println("truco se tiver casal menor primeira");
             return true;
         }
@@ -329,9 +329,21 @@ public class PauladaSecaBot implements BotServiceProvider {
         // JOGA DEPOIS
         else if (intel.getOpponentCard().isPresent()) {
 
+            //SEGUNDA: pede truco se amarrou a primeira e consegue matar a manilha do oponente na segunda
+            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW) {
+                TrucoCard opponentCard = intel.getOpponentCard().get();
+                if(opponentCard.isManilha(intel.getVira())){
+                    for (TrucoCard carta : intel.getCards()) {
+                        if (carta.relativeValue(intel.getVira()) > opponentCard.relativeValue(intel.getVira())) {
+                            System.out.println("truco se amarrou a primeira e consegue matar a manilha do oponente na segunda");
+                            return true;
+                        }
+                    }
+                }
+            }
+
             //TERCEIRA: pede truco se consegue amarrar a terceira
             if (intel.getRoundResults().size() == 2 && intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) {
-                if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     if(!opponentCard.isManilha(intel.getVira())) {
                         for (TrucoCard carta : intel.getCards()) {
@@ -340,7 +352,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                                 return true;
                             }
                         }
-                    }
+
                 }
             }
             //TERCEIRA: BLEFE se a carta do oponente for um valete ou menor(sem ser manilha) e se tiver ganho a primeira, TRUCA no safado!!
