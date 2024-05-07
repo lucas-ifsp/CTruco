@@ -39,25 +39,37 @@ public class SlayerBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-
+        TrucoCard vira = intel.getVira();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
-        // Escolhe uma carta que não seja fechada se for o segundo jogador na primeira rodada
-        //gica falou pra mudar pra 2, quando mudei o teste deu errado, se fica 1 da certo
-        //o teste é Should not play a hidden card if second
+
         if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 1) {
-            return cards.stream()
+            TrucoCard selectedCard = cards.stream()
                     .filter(card -> !card.equals(TrucoCard.closed()))
-                    .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
-                    .map(CardToPlay::of)
-                    .orElse(CardToPlay.of(cards.get(0)));
+                    .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
+                    .orElse(cards.get(0));
+
+            System.out.println("Bot playing (second in first round): " + selectedCard);
+            return CardToPlay.of(selectedCard);
         }
 
-        // Logica generica para outras situacoes
-//        return cards.stream()
-//                .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
-//                .map(CardToPlay::of)
-//                .orElse(CardToPlay.of(cards.get(0)));
-        return null;
+        boolean opponentIsManilha = opponentCard != null && opponentCard.isManilha(vira);
+        List<TrucoCard> botManilhas = cards.stream()
+                .filter(card -> card.isManilha(vira))
+                .toList();
+
+        if (opponentIsManilha && botManilhas.isEmpty()) {
+            TrucoCard weakestCard = utils.getWeakestCard(cards, vira);
+
+            System.out.println("Bot playing weakest card (no manilhas): " + weakestCard);
+            return CardToPlay.of(weakestCard);
+        }
+
+        TrucoCard genericCard = cards.stream()
+                .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
+                .orElse(cards.get(0));
+
+        System.out.println("Bot playing (generic): " + genericCard);
+        return CardToPlay.of(genericCard);
     }
 
 
