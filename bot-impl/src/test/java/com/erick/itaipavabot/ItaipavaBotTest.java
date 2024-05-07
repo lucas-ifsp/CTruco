@@ -371,4 +371,39 @@ public class ItaipavaBotTest {
             assertEquals(1, bot.handPowerLevel(stepBuilder.build()));
         }
     }
+    @Nested
+    @DisplayName("Number of round method test")
+    class NumberOfRoundMethodTest {
+        @Test
+        @DisplayName("Should return number 3 for third round")
+        void shouldReturn3ForThirdRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(3, bot.numberOfRound(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return number 1 for first round")
+        void shouldReturn1ForFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(1, bot.numberOfRound(stepBuilder.build()));
+        }
+    }
 }

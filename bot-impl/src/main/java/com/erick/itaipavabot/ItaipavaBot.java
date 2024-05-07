@@ -207,7 +207,7 @@ public class ItaipavaBot implements BotServiceProvider {
         return secondLowestCard;
     }
 
-    private int numberOfRound (GameIntel intel) {
+    public int numberOfRound (GameIntel intel) {
         if (intel.getCards().size() == 3) {
             return 1;
         } else if (intel.getCards().size() == 2) {
