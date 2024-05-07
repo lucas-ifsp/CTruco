@@ -315,7 +315,7 @@ class PatriciaAparecidaTest {
             @DisplayName("Plays weakest card if it has no stronger card")
             public void ChooseWeakestCardIfHasAllStrongest(){
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,CLUBS),
-                        TrucoCard.of(FOUR,SPADES),// 3
+                        TrucoCard.of(FOUR,SPADES),
                         TrucoCard.of(FOUR,HEARTS)));
                 when(intel.getVira()).thenReturn(vira);
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,SPADES)).value(),patricia.chooseCard(intel).value());
@@ -324,16 +324,17 @@ class PatriciaAparecidaTest {
             @Test
             @DisplayName("Play card that draws if probability is lower than card that wins")
             public void ChooseCardThatDrawsIfHigherChance(){
-                when(intel.getRoundResults()).thenReturn(List.of(WON));
+
                 when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FOUR,CLUBS),
                         TrucoCard.of(FIVE,DIAMONDS)));
 
-                when(intel.getVira()).thenReturn(TrucoCard.of(SEVEN,DIAMONDS));
+                when(intel.getVira()).thenReturn(TrucoCard.of(FIVE,HEARTS));
 
-                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(SEVEN,DIAMONDS),
+                when(intel.getOpenCards()).thenReturn(List.of(TrucoCard.of(FIVE,HEARTS),
                         TrucoCard.of(FIVE,CLUBS),
                         TrucoCard.of(FIVE,SPADES)));
 
+                when(intel.getRoundResults()).thenReturn(List.of(WON));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(), patricia.chooseCard(intel).value());
                 when(intel.getRoundResults()).thenReturn(List.of(DREW));
                 assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(), patricia.chooseCard(intel).value());
