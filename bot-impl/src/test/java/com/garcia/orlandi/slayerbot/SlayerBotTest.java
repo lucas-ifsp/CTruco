@@ -125,7 +125,7 @@ public class SlayerBotTest {
         SlayerBot bot = new SlayerBot();
 
         CardToPlay firstPlay = bot.chooseCard(stepBuilder.build());
-        TrucoCard expectedTieCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard expectedTieCard = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         assertThat(firstPlay.value()).isEqualTo(expectedTieCard);
 
         List<TrucoCard> remainingCards = List.of(

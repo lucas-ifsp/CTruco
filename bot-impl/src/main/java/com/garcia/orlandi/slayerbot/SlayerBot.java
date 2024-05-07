@@ -48,27 +48,38 @@ public class SlayerBot implements BotServiceProvider {
                     .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
                     .orElse(cards.get(0));
 
-            //System.out.println("Bot playing (second in first round): " + selectedCard);
             return CardToPlay.of(selectedCard);
         }
-
-        boolean opponentIsManilha = opponentCard != null && opponentCard.isManilha(vira);
         List<TrucoCard> botManilhas = cards.stream()
                 .filter(card -> card.isManilha(vira))
                 .toList();
 
-        if (opponentIsManilha && botManilhas.isEmpty()) {
-            TrucoCard weakestCard = utils.getWeakestCard(cards, vira);
+        boolean hasTied = intel.getRoundResults().contains(GameIntel.RoundResult.DREW);
 
-            //System.out.println("Bot playing weakest card (no manilhas): " + weakestCard);
-            return CardToPlay.of(weakestCard);
+        if (opponentCard != null && !hasTied) {
+            TrucoCard tieCard = cards.stream()
+                    .filter(card -> !card.isManilha(vira) && card.getRank() == opponentCard.getRank())
+                    .findFirst()
+                    .orElse(null);
+
+            if (tieCard != null) {
+                return CardToPlay.of(tieCard);
+            }
+        }
+
+        // Jogar a manilha mais forte apos o empate
+        if (hasTied && !botManilhas.isEmpty()) {
+            TrucoCard strongestManilha = botManilhas.stream()
+                    .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                    .orElse(botManilhas.get(0));
+
+            return CardToPlay.of(strongestManilha);
         }
 
         TrucoCard genericCard = cards.stream()
                 .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
                 .orElse(cards.get(0));
 
-        //System.out.println("Bot playing (generic): " + genericCard);
         return CardToPlay.of(genericCard);
     }
 
