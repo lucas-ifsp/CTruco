@@ -1,5 +1,6 @@
 package com.soares.gibim.chatgptbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -26,6 +27,9 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        if (intel.getRoundResults().isEmpty()) {
+            return CardToPlay.of(weakestCard(intel));
+        }
         return null;
     }
 
@@ -47,4 +51,17 @@ public class ChatGptBot implements BotServiceProvider {
         return intel.getHandPoints() == 11;
     }
 
+
+
+    private TrucoCard weakestCard(GameIntel intel){
+        TrucoCard weakestCard = null;
+        int strength = 15;
+        for (TrucoCard card : intel.getCards()){
+            if (card.getRank().value() < strength){
+                weakestCard = card;
+                strength = card.getRank().value();
+            }
+        }
+        return weakestCard;
+    }
 }
