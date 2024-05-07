@@ -2,12 +2,10 @@ package com.contiero.lemes.newbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
-import com.contiero.lemes.newbot.services.analise.AnaliseWhileTied;
-import com.contiero.lemes.newbot.services.analise.AnaliseWhileWinning;
+import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
 
 public class NewBot implements BotServiceProvider {
     private static Analise.HandStatus status = Analise.HandStatus.BAD;
@@ -32,6 +30,8 @@ public class NewBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        Analise analise = createAnaliseInstance(intel);
+        status = analise.myHand();
         return 0;
     }
 
@@ -40,13 +40,11 @@ public class NewBot implements BotServiceProvider {
         int oppScore = intel.getOpponentScore();
         int scoreDistance = myScore - oppScore;
 
-        if (scoreDistance <= 3 && scoreDistance >= -3){
-            return new AnaliseWhileTied(intel);
-        } else if (myScore>oppScore) {
-            return new AnaliseWhileWinning(intel);
+        if (oppScore>myScore && scoreDistance < -6) {
+            return new AnaliseWhileLosing(intel);
         }
         else {
-            return new AnaliseWhileLosing(intel);
+            return new DefaultAnalise(intel);
         }
 
     }
