@@ -27,13 +27,13 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         CardToPlay cardToPlay = CardToPlay.of(intel.getCards().get(0));
-        if (getNumberOfCardsInHand(intel) == 3 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+        if (checkIfOpponentIsFirstToPlay(intel.getOpponentCard()) && getNumberOfCardsInHand(intel) == 3 ) {
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
-        } else if (getNumberOfCardsInHand(intel) == 3 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+        } else if (!checkIfOpponentIsFirstToPlay(intel.getOpponentCard()) && getNumberOfCardsInHand(intel) == 3) {
             cardToPlay = CardToPlay.of(selectStrongerCardExcludingZapAndCopas(intel));
-        } else if (getNumberOfCardsInHand(intel) == 2 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+        } else if (!checkIfOpponentIsFirstToPlay(intel.getOpponentCard()) && getNumberOfCardsInHand(intel) == 2) {
             cardToPlay = CardToPlay.of(selectLowestCard(intel.getCards(), intel.getVira()));
-        } else if (getNumberOfCardsInHand(intel) == 2 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+        } else if (checkIfOpponentIsFirstToPlay(intel.getOpponentCard()) && getNumberOfCardsInHand(intel) == 2) {
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
         }
 
@@ -62,13 +62,13 @@ public class PatoBot implements BotServiceProvider {
         List<TrucoCard> hand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         for (TrucoCard card : hand) {
-            if (card.compareValueTo(opponentCard.get(), vira) > 0) {
+            if (card.compareValueTo(opponentCard.orElse(null), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
                     cardToPlay = card;
                 }
             }
         }
-        if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.get(), vira) <= 0) {
+        if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.orElse(null), vira) <= 0) {
             cardToPlay = selectLowestCard(hand, vira);
         }
         return cardToPlay;
@@ -86,8 +86,6 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
-//        System.out.println(intel);
-//        System.out.println(intel.getCards());
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCard = intel.getCards().get(0);
@@ -133,7 +131,7 @@ public class PatoBot implements BotServiceProvider {
         TrucoCard CardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<TrucoCard> cards = intel.getCards();
         for (TrucoCard card : cards) {
-            if (card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira)) {
+            if (card.isManilha(vira) || card.compareValueTo(CardToCompare, vira) >= 0)  {
                 count++;
             }
         }
@@ -204,15 +202,6 @@ public class PatoBot implements BotServiceProvider {
     public boolean checkIfHasCopas(List<TrucoCard> hand, TrucoCard vira) {
         for (TrucoCard card : hand) {
             if (card.isCopas(vira)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkIfHasManilha(List<TrucoCard> hand, TrucoCard vira) {
-        for (TrucoCard card : hand) {
-            if (card.isManilha(vira)) {
                 return true;
             }
         }
