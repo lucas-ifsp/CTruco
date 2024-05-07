@@ -263,6 +263,11 @@ public class PauladaSecaBot implements BotServiceProvider {
             return true;
         }
 
+        //ACEITA SE TIVER DOIS TRES OU MAIS
+        if(contTres(intel) >= 2){
+            return true;
+        }
+
         return false;
     }
 
