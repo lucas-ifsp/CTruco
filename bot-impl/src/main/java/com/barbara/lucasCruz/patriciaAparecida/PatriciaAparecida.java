@@ -1,8 +1,6 @@
 package com.barbara.lucasCruz.patriciaAparecida;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
             if(intel.getScore() != 11) throw new IllegalArgumentException("Hand of Eleven can't be called without 11 Points");
 
-        return false;
+            return true;
 
     }
 
@@ -31,7 +29,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getHandPoints() > 12) throw new IllegalArgumentException("Cant Increase Points indefinitely");
-        return false;
+        return (getRaiseResponse(intel)==1 || getRaiseResponse(intel)==0);
     }
 
     //fornece o cartão a ser jogado ou descartado na rodada atual.
@@ -103,32 +101,34 @@ public class PatriciaAparecida implements BotServiceProvider {
         return getWeakestCardThatWins(tempcards, intel).isPresent() ? CardToPlay.of(weakestCardThatWins.get()) : null;
     }
 
-    public List<Integer> countProbs (GameIntel intel){
-        List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
-        TrucoCard vira = intel.getVira();
-        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
+    public int countProbs (double prob, GameIntel intel){
         List<Double> listProb = listProbAllCards(intel);
-
-        Integer countAccept = 0;
-        Integer countReRaise = 0;
+        int count = 0;
 
         for(int i=0; i<listProb.size(); i++){
-            if(listProb.get(i)<0.21){
-                countAccept++;
-                if(listProb.get(i)<0.11){
-                    countReRaise++;
-                }
+            if(listProb.get(i)< prob){;
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int countProb (double prob, GameIntel intel){
+        int verifyHight = 0;
+        int verifyLower = 0;
+
+        if(prob < 0.21){
+            verifyHight = 1;
+            if(prob<0.1){
+                verifyLower = 1;
             }
         }
 
-        List<Integer> listResult = new ArrayList<>();
-        listResult.add(countReRaise);
-        listResult.add(countAccept);
+        if(countProbs(0.1, intel) - verifyLower >= 1){ return 1; }
+        if(countProbs(0.21, intel) - verifyHight >= 1){ return 0; }
 
-        return listResult;
-
+        return -1;
     }
-
 
 
     //responde a uma solicitação de aumento de ponto em uma mão de truco.
@@ -148,57 +148,38 @@ public class PatriciaAparecida implements BotServiceProvider {
             case 1:
                 if(intel.getOpponentCard().isEmpty()){
 
-                    List<Integer> listResult = countProbs(intel);
-                    if(listResult.get(0) >=2){ return 1; }
-                    if(listResult.get(1) >=2){ return 0; }
+                    if(countProbs(0.11, intel) >= 2){ return 1; }
+                    if(countProbs(0.21, intel) >= 2){ return 0; }
 
                 }
 
                 Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tempCardThatWins.isPresent()) {
-
-                    List<Integer> listResult = countProbs(intel);
-
                     TrucoCard cardThatWins = tempCardThatWins.get();
-                    Double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
 
-                    if(probCardThatWins<0.21){
-                        listResult.set(1, listResult.get(1) -1);
-                        if(probCardThatWins<0.11){
-                            listResult.set(0, listResult.get(0) -1);
-                        }
-                    }
+                    double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
+                    //aqui retorna a menor prob
 
-                    if(listResult.get(0) >=1){ return 1; }
-                    if(listResult.get(1) >=1){ return 0; }
+                    return countProb(probCardThatWins,intel);
                 }
 
             case 2:
                 if (intel.getOpponentCard().isEmpty()){
 
-                    List<Integer> listResult = countProbs(intel);
-                    if(listResult.get(0) >=1){ return 1; }
-                    if(listResult.get(1) >=1){ return 0; }
+                    if(countProbs(0.11, intel) >= 2){ return 1; }
+                    if(countProbs(0.21, intel) >= 2){ return 0; }
 
                 }
 
                 Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tCardThatWins.isPresent()) {
 
-                    List<Integer> listResult = countProbs(intel);
-
                     TrucoCard cardThatWins = tCardThatWins.get();
-                    Double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
 
-                    if(probCardThatWins<0.21){
-                        listResult.set(1, listResult.get(1) -1);
-                        if(probCardThatWins<0.11){
-                            listResult.set(0, listResult.get(0) -1);
-                        }
-                    }
+                    double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
+                    //aqui tambem (retorna a menor prob)
 
-                    if(listResult.get(0) >=1){ return 1; }
-                    if(listResult.get(1) >=1){ return 0; }
+                    return countProb(probCardThatWins,intel);
                 }
 
             case 3:
@@ -212,8 +193,7 @@ public class PatriciaAparecida implements BotServiceProvider {
                 }
                 final boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
                 final boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
-                if (WeakestCardThatWinsExists ||
-                        CardDrawsExists){
+                if (WeakestCardThatWinsExists || CardDrawsExists){
                     return 1;
                 }
         }
@@ -340,11 +320,10 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     public double probabilityONEOpponentCardIsBetter (TrucoCard card, GameIntel intel){
         return (double) (getNumberOfRemainderCards(intel) - getNumberOfBestCardsUnknown(card, intel)) /getNumberOfRemainderCards(intel);
-        //probabilidadeOponenteNaoTerUMACartaMaior = ((qntCartasNaoVistas-qntCartasMaioresDesconhecidas)/qntCartasNaoVistas);
     }
 
     public double probabilityOpponentCardIsBetter (TrucoCard card, GameIntel intel){
-        return (1 - (Math.pow(probabilityONEOpponentCardIsBetter(card,intel), getNumberOfOpponentsCards(intel))));
+        return( 1 - (Math.pow(probabilityONEOpponentCardIsBetter(card,intel), getNumberOfOpponentsCards(intel))));
     }
 
     public List<Double> listProbAllCards(GameIntel intel){

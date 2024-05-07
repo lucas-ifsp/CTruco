@@ -500,8 +500,8 @@ class PatriciaAparecidaTest {
             @DisplayName("Opponent Starts")
             class OpponentStarts {
                 @Test
-                @DisplayName("Should Return 1 If Can Win And Prob<1 To Another Card")
-                public void ShouldReturn1IfCanWinAndProbLowerThan1ToAnotherCard() {
+                @DisplayName("Should Return 1 If Can Win And Prob< 11 To Another Card")
+                public void ShouldReturn1IfCanWinAndProbLowerThan11ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(THREE, HEARTS),
@@ -515,7 +515,7 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should Return 0 If Can Win And 1<Prob<21 To Another Card")
+                @DisplayName("Should Return 0 If Can Win And 11 < Prob < 21 To Another Card")
                 public void ShouldReturn0IfCanWinAndProbBetween1And2ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(THREE, CLUBS),
@@ -571,28 +571,28 @@ class PatriciaAparecidaTest {
             @DisplayName("Opponent Start")
             class OpponentStart{
                 @Test
-                @DisplayName("Should Return 1 If Can Win And Prob<11 To Another Card")
+                @DisplayName("Should Return 1 If Can Win And Prob < 11 To Another Card")
                 public void ShouldReturn1IfCanWinAndProbLowerThan11ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(THREE, HEARTS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
-                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getRoundResults()).thenReturn(List.of(LOST));
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
 
                     assertEquals(1, patricia.getRaiseResponse(intel));
                 }
 
                 @Test
-                @DisplayName("Should Return 0 If Can Win And 11<Prob<21 To Another Card")
-                public void ShouldReturn0IfCanWinAndProbBetween1And2ToAnotherCard() {
+                @DisplayName("Should Return 0 If Can Win And 11 < Prob < 21 To Another Card")
+                public void ShouldReturn0IfCanWinAndProbBetween11And21ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(THREE, CLUBS),
                             TrucoCard.of(THREE, HEARTS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                    when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
+                    when(intel.getRoundResults()).thenReturn(List.of(LOST));
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(ACE,SPADES)));
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
