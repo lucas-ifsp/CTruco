@@ -24,31 +24,23 @@ class MinePowerBotTest {
     private Optional<TrucoCard> opponentCard;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         sut = new MinePowerBot();
     }
 
-    @Test @DisplayName("When winning and playing the first card, should play a weak one")
-    void playingFirstCard(){
-        intel = create()
-                .scoreMine(1)
-                .viraToBe(CardRank.KING, CardSuit.SPADES)
-                .cards(
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+    @Test
+    @DisplayName("When winning and playing the first card, should play a weak one")
+    void playingFirstCard() {
+        intel = create().scoreMine(1).viraToBe(CardRank.KING, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
         assertThat(sut.getLowerCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
     }
 
-    @Test @DisplayName("Check if has manilha")
-    void checkIfHasManilha(){
-        intel = create()
-                .viraToBe(CardRank.FOUR, CardSuit.SPADES)
-                .cards(
-                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+    @Test
+    @DisplayName("Check if has manilha")
+    void checkIfHasManilha() {
+        intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
         TrucoCard vira = intel.getVira();
 
         assertThat(sut.chooseCard(intel).content().isManilha(vira));
@@ -57,10 +49,7 @@ class MinePowerBotTest {
     @Test
     @DisplayName("Should play the lowest rank manilha if it has at least two of them in hand")
     void shouldPlayLowestRankManilhaIfItHasAtLeastTwoOfThemInHandInTheFirstRoundAndItIsTheFirstToPlay() {
-        intel = create()
-                .viraToBe(CardRank.KING, CardSuit.DIAMONDS)
-                .cards(
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), // Manilha
+        intel = create().viraToBe(CardRank.KING, CardSuit.DIAMONDS).cards(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), // Manilha
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), // Manilha
                 TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)).finish();
 
@@ -70,25 +59,16 @@ class MinePowerBotTest {
     @Test
     @DisplayName("Should raise bet if has manilha in hand")
     void raiseIfHasManilha() {
-        intel = create()
-                .viraToBe(CardRank.KING, CardSuit.DIAMONDS)
-                .cards(
-                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)).finish();
+        intel = create().viraToBe(CardRank.KING, CardSuit.DIAMONDS).cards(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)).finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
 
     @Test
     @DisplayName("Should raise if bot has two cards above rank two")
-    void shouldRaiseIfHasTwoCardsAboveRankTwo(){
-        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
-        .cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
-                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS))
-                .opponentCardToBe(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS))
-                .finish();
+    void shouldRaiseIfHasTwoCardsAboveRankTwo() {
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS).cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)).opponentCardToBe(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
@@ -96,19 +76,15 @@ class MinePowerBotTest {
     @Test
     @DisplayName("Should play the lowest card that is stronger than the opponent card")
     void shouldPlayTheLowestCardThatIsStrongerThanOpponentCard() {
-        intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(
-                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
-        ).opponentCardToBe(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)).finish();
+        intel = create().viraToBe(CardRank.ACE, CardSuit.SPADES).cards(TrucoCard.of(CardRank.KING, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).opponentCardToBe(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)).finish();
 
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
     }
 
     @Test
     @DisplayName("Should not raise bet when is mao de onze.")
-    void shouldNotRaiseBetWhenIsMaoDeOnze(){
-        intel =create().finish();
+    void shouldNotRaiseBetWhenIsMaoDeOnze() {
+        intel = create().finish();
         when(intel.getScore()).thenReturn(11);
         assertThat(sut.decideIfRaises(intel)).isFalse();
     }
@@ -134,7 +110,7 @@ class MinePowerBotTest {
     @ParameterizedTest
     @CsvSource({"4, 0", "9, 5", "10, 6"})
     @DisplayName("Will raise bet when winning by 3+ points difference.")
-    void shouldRaiseIfIsWinningByThreePoints(int botScore, int opponentScore){
+    void shouldRaiseIfIsWinningByThreePoints(int botScore, int opponentScore) {
         intel = create().scoreOponent(opponentScore).scoreMine(botScore).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
@@ -143,9 +119,22 @@ class MinePowerBotTest {
     @ParameterizedTest
     @CsvSource({"8, 6", "9, 7", "7, 8"})
     @DisplayName("Will not raise bet when not winning by 3+ points difference.")
-    void shouldNotRaiseIfIsWinningByThreePoints(int botScore, int opponentScore){
+    void shouldNotRaiseIfIsWinningByThreePoints(int botScore, int opponentScore) {
         intel = create().scoreOponent(opponentScore).scoreMine(botScore).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should raise if bot score and opponent score are both 9 and our bot has a special card.")
+    void shouldRaiseIfBothBotsScoresAre9AndOurBotHasSpecialCard() {
+        intel = create().scoreMine(9).scoreOponent(9).cards(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .finish();
+
+        assertThat(sut.decideIfRaises(intel)).isTrue();
     }
 }
