@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class MinePowerBot implements BotServiceProvider {
@@ -46,6 +47,14 @@ public class MinePowerBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         int roundNumber = getRoundNumber(intel);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if (isTheFirstToPlay(intel)){
+            List<TrucoCard> qtdManilhas = listManilhas(intel);
+            if(qtdManilhas.size() == 1){
+                TrucoCard manilha = qtdManilhas.get(0);
+                return CardToPlay.of(manilha);
+            }
+        }
         if (!isTheFirstToPlay(intel)) {
             switch(roundNumber) {
                 case 1 -> {
