@@ -70,11 +70,17 @@ public class SlayerBot implements BotServiceProvider {
             }else{
                 List<TrucoCard> threes = utils.getThreesAtHand(cards);
                 List<TrucoCard> twoAndAce = utils.getTwosAndAce(cards);
+                if(!threes.isEmpty()){
+                    if(threes.size() == 2){
+                        return CardToPlay.of(threes.get(0));
+                    }else if(threes.size() == 1) {
+                        TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, threes.get(0), vira);
+                        return CardToPlay.of(secondStrongestCard);
 
-                if(threes.size() == 2){
-                    return CardToPlay.of(threes.get(0));
-                }else if(threes.size() == 1){
-                    TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, threes.get(0), vira);
+                    }
+                }else{
+                    TrucoCard strongestCard = utils.getStrongestCard(cards, vira);
+                    TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, strongestCard, vira);
                     return CardToPlay.of(secondStrongestCard);
                 }
             }
