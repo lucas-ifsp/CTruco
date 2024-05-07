@@ -499,4 +499,16 @@ public class PauladaSecaBotTest {
         boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
         assertThat(result).isTrue();
     }
+
+    @Test
+    @DisplayName("Mao de onze: aceita se tiver dois tres ou mais")
+    void MaoOnzeAceitaSeTiverDoisTres() {
+        maoPlayer = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(THREE, DIAMONDS), TrucoCard.of(FOUR, SPADES));
+        vira = TrucoCard.of(FIVE, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+        boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
 }
