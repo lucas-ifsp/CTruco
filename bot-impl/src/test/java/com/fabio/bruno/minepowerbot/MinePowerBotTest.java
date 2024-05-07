@@ -45,7 +45,6 @@ class MinePowerBotTest {
                 .viraToBe(CardRank.KING, CardSuit.SPADES)
                 .cards(
                         TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
                         TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
