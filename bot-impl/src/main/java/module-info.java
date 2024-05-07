@@ -26,6 +26,7 @@ import com.contiero.lemes.newbot.NewBot;
 
 module bot.impl {
     requires bot.spi;
+    requires jdk.jfr;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
