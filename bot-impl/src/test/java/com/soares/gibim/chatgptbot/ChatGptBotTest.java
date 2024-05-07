@@ -110,7 +110,7 @@ public class ChatGptBotTest {
 
     @Test
     @DisplayName("Decide if you accept 'truco' in the second round with a 'manilha")
-    void TestAcceptTrucoSecondRoundWithValue() {
+    void TestAcceptTrucoSecondRoundWithManilha() {
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
 
         List<TrucoCard> botCards = Collections.singletonList(
