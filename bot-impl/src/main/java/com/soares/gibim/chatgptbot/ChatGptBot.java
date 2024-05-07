@@ -47,4 +47,15 @@ public class ChatGptBot implements BotServiceProvider {
         return intel.getHandPoints() == 11;
     }
 
+    int getSumOfCardValues(GameIntel intel) {
+        int sum = 0;
+
+        for (TrucoCard card : intel.getCards()) {
+            sum += card.relativeValue(intel.getVira());
+        }
+
+        return sum;
+    }
+
+
 }
