@@ -6,8 +6,6 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.jar.JarOutputStream;
-import java.util.stream.Stream;
 
 import static java.util.Collections.max;
 import static java.util.Collections.min;
@@ -15,6 +13,8 @@ import static java.util.Collections.min;
 
 public class PatriciaAparecida implements BotServiceProvider {
 
+    static final double LOWER_PROB_RAISE_RESPONSE = 0.11;
+    static final double UPPER_PROB_RAISE_RESPONSE = 0.22;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -24,9 +24,6 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     }
 
-    //decide se o bot inicia uma solicitação de aumento de ponto.
-    //Retornar false significa não fazer nada.
-    //Retornar true significa solicitar um aumento de ponto;
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getHandPoints() > 12) throw new IllegalArgumentException("Cant Increase Points indefinitely");
@@ -107,99 +104,89 @@ public class PatriciaAparecida implements BotServiceProvider {
         int count = 0;
 
         for(int i=0; i<listProb.size(); i++){
-            if(listProb.get(i)< prob){;
+            if(listProb.get(i)< prob){
                 count++;
             }
         }
         return count;
     }
 
-    public int countProb (double prob, GameIntel intel){
+    public int getRaiseResponseWithRemoveProbCardThatWin(double prob, GameIntel intel){
         int verifyHight = 0;
         int verifyLower = 0;
 
-        if(prob < 0.21){
+        if(prob < UPPER_PROB_RAISE_RESPONSE){
             verifyHight = 1;
-            if(prob<0.1){
+            if(prob < LOWER_PROB_RAISE_RESPONSE){
                 verifyLower = 1;
             }
         }
 
-        if(countProbs(0.1, intel) - verifyLower >= 1){ return 1; }
-        if(countProbs(0.21, intel) - verifyHight >= 1){ return 0; }
+        if(countProbs(LOWER_PROB_RAISE_RESPONSE, intel) - verifyLower >= 1){ return 1; }
+        if((countProbs(UPPER_PROB_RAISE_RESPONSE, intel) - verifyHight) >= 1){ return 0; }
+        return -1;
+    }
+
+    int getRaiseResponseIfOpponentStarts (GameIntel intel){
+        List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+        tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
+
+        Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
+        if (tempCardThatWins.isPresent()) {
+            TrucoCard cardThatWins = tempCardThatWins.get();
+            double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
+            return getRaiseResponseWithRemoveProbCardThatWin(probCardThatWins,intel);
+        }
 
         return -1;
     }
 
+    int getRaiseResponse1Round (GameIntel intel){
 
-    //responde a uma solicitação de aumento de ponto em uma mão de truco.
-    //O valor de retorno deve ser um dos seguintes:
-    //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
+        if(intel.getOpponentCard().isEmpty()){
+            if(countProbs(LOWER_PROB_RAISE_RESPONSE, intel) >= 2){ return 1; }
+            if(countProbs(UPPER_PROB_RAISE_RESPONSE, intel) >= 2){ return 0; }
+        }
+        return getRaiseResponseIfOpponentStarts(intel);
+    }
 
+    int getRaiseResponse2Round (GameIntel intel){
+
+        if(intel.getOpponentCard().isEmpty()){
+            if(countProbs(LOWER_PROB_RAISE_RESPONSE, intel) >= 1){ return 1; }
+            if(countProbs(UPPER_PROB_RAISE_RESPONSE, intel) >= 1){ return 0; }
+        }
+
+        return getRaiseResponseIfOpponentStarts(intel);
+    }
+
+    int getRaiseResponse3Round(GameIntel intel){
         List<TrucoCard> tempcards = new ArrayList<>(intel.getCards());
         TrucoCard vira = intel.getVira();
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
         List<Double> listProb = listProbAllCards(intel);
+        if(intel.getOpponentCard().isEmpty()){
+            if(listProb.get(0) < 0.1){ return 1; }
+            if(listProb.get(0) < 0.2){ return 0; }
+        }
+        boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
+        boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
+        if (WeakestCardThatWinsExists || CardDrawsExists){
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
 
         int round = getNumberOfRounds(intel);
 
         switch (round){
-            case 1:
-                if(intel.getOpponentCard().isEmpty()){
-
-                    if(countProbs(0.11, intel) >= 2){ return 1; }
-                    if(countProbs(0.21, intel) >= 2){ return 0; }
-
-                }
-
-                Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
-                if (tempCardThatWins.isPresent()) {
-                    TrucoCard cardThatWins = tempCardThatWins.get();
-
-                    double prob3inthiscontext = probabilityOpponentCardIsBetter(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),intel);
-                    System.out.println("prob 3 in case 1");
-                    System.out.println(prob3inthiscontext);
-                    double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
-                    //aqui retorna a menor prob
-
-                    return countProb(probCardThatWins,intel);
-                }
-
-            case 2:
-                if (intel.getOpponentCard().isEmpty()){
-
-                    if(countProbs(0.11, intel) >= 2){ return 1; }
-                    if(countProbs(0.21, intel) >= 2){ return 0; }
-
-                }
-
-                Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(tempcards,intel);
-                if (tCardThatWins.isPresent()) {
-
-                    TrucoCard cardThatWins = tCardThatWins.get();
-
-                    double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
-                    //aqui tambem (retorna a menor prob)
-
-                    return countProb(probCardThatWins,intel);
-                }
-
-            case 3:
-                if(intel.getOpponentCard().isEmpty()){
-                    if(listProb.get(0) < 0.1){
-                        return 1;
-                    }
-                    if(listProb.get(0) < 0.2){
-                        return 0;
-                    }
-                }
-                final boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
-                final boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
-                if (WeakestCardThatWinsExists || CardDrawsExists){
-                    return 1;
-                }
+            case 1: return getRaiseResponse1Round(intel);
+            case 2: return getRaiseResponse2Round(intel);
+            case 3: return getRaiseResponse3Round(intel);
         }
 
         return -1;

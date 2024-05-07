@@ -540,10 +540,11 @@ class PatriciaAparecidaTest {
             class WeStart {
 
                 @Test
-                @DisplayName("Should Return 1 If Prob < 1 To Min 1 Card")
+                @DisplayName("Should Return 1 If Prob < 11 To Min 1 Card")
                 public void ShouldReturn1IfProbLower1ToMin1Card() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(SEVEN, CLUBS));
+                            TrucoCard.of(SEVEN, CLUBS),
+                            TrucoCard.of(FOUR,SPADES));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(WON));
@@ -553,10 +554,11 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should Return 0 If Prob < 2 To Min 1 Card")
+                @DisplayName("Should Return 0 If 11 < Prob < 21 To Min 1 Card")
                 public void ShouldReturn0IfProbLower2ToMin1Card() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(THREE, CLUBS));
+                            TrucoCard.of(THREE, CLUBS),
+                            TrucoCard.of(FOUR,SPADES));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(WON));
@@ -587,8 +589,8 @@ class PatriciaAparecidaTest {
                 @DisplayName("Should Return 0 If Can Win And 11 < Prob < 21 To Another Card")
                 public void ShouldReturn0IfCanWinAndProbBetween11And21ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(THREE, CLUBS),
-                            TrucoCard.of(THREE, HEARTS));
+                            TrucoCard.of(TWO, CLUBS),
+                            TrucoCard.of(TWO, HEARTS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(LOST));
