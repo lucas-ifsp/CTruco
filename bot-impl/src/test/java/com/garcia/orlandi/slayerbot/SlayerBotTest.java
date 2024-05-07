@@ -180,7 +180,7 @@ public class SlayerBotTest {
         List<TrucoCard> cards = List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
                 TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
         );
 
         TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);

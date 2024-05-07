@@ -6,6 +6,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class SlayerBot implements BotServiceProvider {
 
@@ -93,6 +94,18 @@ public class SlayerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        Set<CardRank> strongRanks = Set.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
+
+        boolean hasManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
+        boolean hasStrongCards = cards.stream().anyMatch(card -> strongRanks.contains(card.getRank()));
+
+        if (hasManilha || hasStrongCards) {
+            return 0;
+        } else {
+            return -1;
+        }
     }
 }
