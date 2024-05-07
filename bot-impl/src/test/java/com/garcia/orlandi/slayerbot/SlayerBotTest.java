@@ -172,4 +172,25 @@ public class SlayerBotTest {
         assertThat(chosenCard).isNotEqualTo(TrucoCard.of(SEVEN, SPADES));
     }
 
+    @Test
+    @DisplayName("If first to play with no manilha and only one three, play strongest card first except the three")
+    void shouldPlaySecondStrongestCardIfHasOnlyOneThreeAndNoManilha(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(TWO, HEARTS),
+                TrucoCard.of(SEVEN, SPADES));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(TWO, HEARTS));
+    }
+
 }
