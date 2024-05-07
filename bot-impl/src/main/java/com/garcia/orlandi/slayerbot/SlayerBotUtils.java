@@ -50,8 +50,4 @@ public class SlayerBotUtils {
     public List<TrucoCard> getThreesAtHand(List<TrucoCard> cards) {
         return cards.stream().filter(card -> card.getRank() == CardRank.THREE).toList();
     }
-
-    public List<TrucoCard> getTwosAndAce(List<TrucoCard> cards) {
-        return null;
-    }
 }
