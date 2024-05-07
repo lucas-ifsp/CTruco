@@ -15,4 +15,11 @@ public class BarDoAlexBot {
         return manilhasCount >= 3;
     }
 
+    public CardToPlay chooseCard(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+        return cards.get(cards.size() - 1);
+    }
+
+
 }
