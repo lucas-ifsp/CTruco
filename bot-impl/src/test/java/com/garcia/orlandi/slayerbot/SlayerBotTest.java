@@ -151,4 +151,25 @@ public class SlayerBotTest {
         assertThat(chosenCard).isEqualTo(TrucoCard.of(SEVEN, SPADES));
     }
 
+    @Test
+    @DisplayName("If first to play and with no manilha but has two 3s at hand, play one of them")
+    void shouldPlayThreeIfFirstToPlayWithNoManilhaButHasTwoThrees(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(THREE, HEARTS),
+                TrucoCard.of(SEVEN, SPADES));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isNotEqualTo(TrucoCard.of(SEVEN, SPADES));
+    }
+
 }
