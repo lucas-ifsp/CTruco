@@ -15,6 +15,8 @@ public class MalasiaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(intel.getHandPoints() == 12)
+            return -1;
         return 0;
     }
 
@@ -39,6 +41,17 @@ public class MalasiaBot implements BotServiceProvider {
 
     private boolean TamoGiga(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) || card.isCopas(intel.getVira()));
+    }
+
+    //retorna a menor carta da mão
+    private TrucoCard DeMenor(GameIntel intel) {
+        TrucoCard deMenor = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (deMenor == null || card.relativeValue(intel.getVira()) < deMenor.relativeValue(intel.getVira())) {
+                deMenor = card;
+            }
+        }
+        return deMenor;
     }
 
 }
