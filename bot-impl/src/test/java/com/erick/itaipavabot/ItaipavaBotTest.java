@@ -143,7 +143,7 @@ public class ItaipavaBotTest {
         List <TrucoCard> myCards = Arrays.asList(
                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
         );
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
@@ -320,5 +320,23 @@ public class ItaipavaBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(10);
         assertFalse(bot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should play highest card if lost first round")
+    void shouldPlayHighestCardIfLostFirstRound() {
+        TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard, TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(myCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+        assertEquals(TrucoCard.of(THREE, SPADES), bot.chooseCard(stepBuilder.build()).content());
     }
 }
