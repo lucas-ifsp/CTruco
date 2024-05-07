@@ -260,11 +260,19 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         //ACEITA SE TIVER DUAS MANILHAS
         if(contManilha(intel.getCards(), intel.getVira()) >= 2){
+            System.out.println("mao de onze: duas manilhas ou maias");
             return true;
         }
 
         //ACEITA SE TIVER DOIS TRES OU MAIS
         if(contTres(intel) >= 2){
+            System.out.println("mao de onze: dois tres ou mais");
+            return true;
+        }
+
+        //ACEITA SE TIVER TRES E MANILHA
+        if(contManilha(intel.getCards(), intel.getVira()) >= 1 && temTres(intel)){
+            System.out.println("mao de onze: tres e manilha");
             return true;
         }
 
