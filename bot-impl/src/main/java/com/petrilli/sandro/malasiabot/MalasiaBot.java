@@ -21,11 +21,17 @@ public class MalasiaBot implements BotServiceProvider {
 
         int response = -1;
 
-        if(MaoGiga(intel) || MaoZapOuCopasEasAtres(intel) || MaoZapOuCopasEfiguras(intel)) {
+        if (MaoGiga(intel) || MaoZapOuCopasEasAtres(intel) || MaoZapOuCopasEfiguras(intel)) {
+            if (intel.getScore() + intel.getHandPoints() >= 12) {
+                return 0;
+            }
             return 1;
         }
 
-        if(MaoEspadasOuOurosEasAtres(intel)|| MaoEspadasOuOurosEfiguras(intel) || MaoMediaComUmaBoaCarta(intel) || MaoComDuasBoasSemManilha(intel)) {
+        if (MaoEspadasOuOurosEasAtres(intel) || MaoEspadasOuOurosEfiguras(intel) || MaoMediaComUmaBoaCarta(intel) || MaoComDuasBoasSemManilha(intel)) {
+            if (intel.getOpponentScore() + intel.getHandPoints() >= 12) {
+                return 1;
+            }
             return 0;
         }
         return response;
@@ -34,16 +40,15 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
-        CardToPlay cardToPlay = null;
+        CardToPlay cardToPlay = CardToPlay.of(DeMaior(intel));
 
         List<GameIntel.RoundResult> round = intel.getRoundResults();
 
         if (intel.getOpponentCard().isPresent()) {
             cardToPlay = CardToPlay.of(DeMenorQuePodeGanhar(intel));
-        }
-        else {
-            if (round.isEmpty()){
-                if (MaoGiga(intel)){
+        } else {
+            if (round.isEmpty()) {
+                if (MaoGiga(intel)) {
                     cardToPlay = CardToPlay.of(DeMenor(intel));
                 }
             }
@@ -55,12 +60,18 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
 
-        List<GameIntel.RoundResult> round = intel.getRoundResults();
+        if (intel.getOpponentScore() == 11 || intel.getScore() == 11) {
+            return false;
+        }
+        else{
+            List<GameIntel.RoundResult> round = intel.getRoundResults();
 
-        if (MaoGiga(intel)) {
-            if (round.get(0) == (GameIntel.RoundResult.LOST) || round.get(0) == GameIntel.RoundResult.DREW ) {
-                return true;
+            if (MaoGiga(intel)) {
+                if (round.get(0) == (GameIntel.RoundResult.LOST) || round.get(0) == GameIntel.RoundResult.DREW) {
+                    return true;
+                }
             }
+
         }
         return false;
     }
@@ -68,7 +79,7 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
 
-        if (MaoGiga(intel)){
+        if (MaoGiga(intel)) {
             return true;
         }
 
@@ -119,19 +130,19 @@ public class MalasiaBot implements BotServiceProvider {
 
     private boolean MaoGiga(GameIntel intel) {
 
-            TrucoCard vira = intel.getVira();
-            List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
 
-            int manilhasCount = 0;
-            for (TrucoCard card : cards) {
-                if (card.relativeValue(vira) > 9) {
-                    manilhasCount++;
-                    if(manilhasCount >= 2) {
-                        return true;
-                    }
+        int manilhasCount = 0;
+        for (TrucoCard card : cards) {
+            if (card.relativeValue(vira) > 9) {
+                manilhasCount++;
+                if (manilhasCount >= 2) {
+                    return true;
                 }
             }
-            return false;
+        }
+        return false;
     }
 
     private boolean MaoZapOuCopasEfiguras(GameIntel intel) {
@@ -142,14 +153,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if(cardValue == 13 || cardValue == 12) {
+            if (cardValue == 13 || cardValue == 12) {
                 manilhasCount++;
             }
-            if(cardValue >= 4 && cardValue <= 6) {
+            if (cardValue >= 4 && cardValue <= 6) {
                 figurasCount++;
             }
         }
-        if(manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && figurasCount == 1) {
             return true;
         }
         return false;
@@ -163,14 +174,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if(cardValue == 11 || cardValue == 10) {
+            if (cardValue == 11 || cardValue == 10) {
                 manilhasCount++;
             }
-            if(cardValue >= 4 && cardValue <= 6) {
+            if (cardValue >= 4 && cardValue <= 6) {
                 figurasCount++;
             }
         }
-        if(manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && figurasCount == 1) {
             return true;
         }
         return false;
@@ -184,14 +195,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if(cardValue == 13 || cardValue == 12) {
+            if (cardValue == 13 || cardValue == 12) {
                 manilhasCount++;
             }
-            if(cardValue >= 7 && cardValue <= 9) {
+            if (cardValue >= 7 && cardValue <= 9) {
                 figurasCount++;
             }
         }
-        if(manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && figurasCount == 1) {
             return true;
         }
         return false;
@@ -205,14 +216,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if(cardValue == 11 || cardValue == 10) {
+            if (cardValue == 11 || cardValue == 10) {
                 manilhasCount++;
             }
-            if(cardValue >= 7 && cardValue <= 9) {
+            if (cardValue >= 7 && cardValue <= 9) {
                 figurasCount++;
             }
         }
-        if(manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && figurasCount == 1) {
             return true;
         }
         return false;
@@ -225,10 +236,10 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue < 4 ){
+            if (cardValue < 4) {
                 return false;
             }
-            if (cardValue > 7){
+            if (cardValue > 7) {
                 return false;
             }
         }
@@ -243,10 +254,10 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue < 4 ){
+            if (cardValue < 4) {
                 return false;
             }
-            if (cardValue > 7){
+            if (cardValue > 7) {
                 boaCartaCount++;
             }
         }
@@ -261,7 +272,7 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue >= 7 && cardValue < 10){
+            if (cardValue >= 7 && cardValue < 10) {
                 boaCartaCount++;
             }
         }
@@ -276,10 +287,10 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue > 4 && cardValue < 10){
+            if (cardValue > 4 && cardValue < 10) {
                 return false;
             }
-            if (cardValue >= 10){
+            if (cardValue >= 10) {
                 manilhaCount++;
             }
         }
@@ -293,7 +304,7 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue > 5){
+            if (cardValue > 5) {
                 return false;
             }
         }
