@@ -143,4 +143,31 @@ public class SlayerBotTest {
         TrucoCard expectedManilha = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
         assertThat(secondPlay.value()).isEqualTo(expectedManilha);
     }
+
+    @Test
+    @DisplayName("Should request truco if tied in first round and holding a manilha")
+    void shouldRequestTrucoAfterTieIfHoldingManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRequestTruco).isTrue();
+    }
 }
+
