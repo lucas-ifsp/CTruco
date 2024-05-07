@@ -187,20 +187,20 @@ public class ItaipavaBotTest {
     }
 
     @Test
-    @DisplayName("Should start with manilha")
-    void shouldStartWithManilha() {
+    @DisplayName("Should start with second best card")
+    void shouldStartWithSecondBestCard() {
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
         List<TrucoCard> openCards = List.of(vira);
         List <TrucoCard> myCards = Arrays.asList(
                 TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
         );
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(0);
-        assertEquals(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES), bot.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), bot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test

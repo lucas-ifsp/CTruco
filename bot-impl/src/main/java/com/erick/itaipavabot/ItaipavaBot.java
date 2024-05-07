@@ -34,10 +34,10 @@ public class ItaipavaBot implements BotServiceProvider {
         List<TrucoCard> myCards = gameIntel.getCards();
         TrucoCard card = findLowestCardToWin(gameIntel);
         if (findFirstPlayer(gameIntel)) {
-            if (handPowerLevel(gameIntel) > 9) {
+            if (handPowerLevel(gameIntel) >= 9) {
                 return CardToPlay.of(getLowestCard(myCards, gameIntel));
             } else {
-                return CardToPlay.of(getHighestCard(myCards, gameIntel));
+                return CardToPlay.of(secondBestCard(gameIntel));
             }
         }
         if(card == null) {
@@ -56,6 +56,7 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getOpponentScore() > 9) return false;
         if (handPowerLevel(intel) >= 9) return true;
         return false;
     }
@@ -172,6 +173,17 @@ public class ItaipavaBot implements BotServiceProvider {
         }
         powerLevel = powerLevel/myCards.size();
         return powerLevel;
+    }
+
+    public TrucoCard secondBestCard(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        TrucoCard secondLowestCard = myCards.get(0);
+        for (TrucoCard card : myCards) {
+            if (card != getLowestCard(myCards, gameIntel) && card != getHighestCard(myCards, gameIntel)) {
+                secondLowestCard = card;
+            }
+        }
+        return secondLowestCard;
     }
 }
 
