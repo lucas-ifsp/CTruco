@@ -76,4 +76,32 @@ public class SlayerBotTest {
         assertNotEquals(TrucoCard.closed(), chosenCard, "Chosen card should not be a hidden card if second to play in the first round");
 
     }
+    @Test
+    @DisplayName("Should play the weakest card when second to play and not holding any manilha")
+    void shouldPlayWeakestCardWhenSecondToPlayWithoutManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard opponentManilha = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+
+        List<TrucoCard> openCards = List.of(vira, opponentManilha);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(Collections.emptyList(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentManilha);
+
+        GameIntel game = stepBuilder.build();
+        SlayerBot bot = new SlayerBot();
+
+        // O bot deve jogar a 7 de paus que é a mais fraca
+        CardToPlay cardToPlay = bot.chooseCard(game);
+        assertEquals(cards.get(0), cardToPlay.value(), "Bot should play the weakest card when not holding any manilha");
+    }
 }
