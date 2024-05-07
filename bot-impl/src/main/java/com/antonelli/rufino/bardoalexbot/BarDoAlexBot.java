@@ -16,21 +16,20 @@ public class BarDoAlexBot implements BotServiceProvider {
     }
 
     public CardToPlay chooseCard(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-        return cards.get(cards.size() - 1);
+        return new CardToPlay(cards.get(cards.size() - 1));
     }
 
     public int getRaiseResponse(GameIntel intel) {
-        int botScore = intel.getBotScore();
+        int botScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
+
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
 
         if (botScore == 11) {
             return -1;
         }
-
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> cards = intel.getCards();
 
         if (botScore == 0 && opponentScore == 11) {
             if (!hasStrongHandCards(cards)) {
@@ -45,12 +44,19 @@ public class BarDoAlexBot implements BotServiceProvider {
         }
 
         return -1;
+    }
 
-
-}
+    private boolean hasStrongHandCards(List<TrucoCard> cards) {
+        for (TrucoCard card : cards) {
+            if (card.getRank().value() >= 10) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        int botScore = intel.getBotScore();
+        int botScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
 
         if (botScore == 0 && opponentScore == 11) {
@@ -59,18 +65,4 @@ public class BarDoAlexBot implements BotServiceProvider {
 
         return false;
     }
-
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        int botScore = intel.getBotScore();
-        int opponentScore = intel.getOpponentScore();
-
-        if (botScore == 0 && opponentScore == 11) {
-            return !hasStrongHandCards(intel.getCards());
-        }
-
-        return false;
-    }
-
-
-
 }
