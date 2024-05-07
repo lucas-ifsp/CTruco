@@ -222,6 +222,32 @@ public class ChatGptBotTest {
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("When has good cards and manilha should try to kill opponent card with a weak card")
+                void WhenHasGoodCardsAndManilhaShouldTryToKillOpponentCardWithAWeakCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+                    List<TrucoCard> openCards = Arrays.asList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
