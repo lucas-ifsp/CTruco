@@ -36,9 +36,7 @@ public class MinePowerBot implements BotServiceProvider {
             if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
                 return true;
             if (manilhaFraca != null)
-                if (botScore == opponentScore || botScore > opponentScore) {
-                    return true;
-                }
+                return botScore == opponentScore || botScore > opponentScore;
         }
         return false;
     }

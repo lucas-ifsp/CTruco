@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static com.fabio.bruno.minepowerbot.MinePowerBotIntelMockBuilder.create;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class MinePowerBotTest {
@@ -133,7 +134,7 @@ class MinePowerBotTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"6", "7", "8"}) // só 4 e 5 passam no teste
+    @CsvSource({"6", "7", "8"})
     @DisplayName("Should not ask for a point raise if opponent score is greater than the threshold.")
     void shouldNotRaiseIfOpponentScoreIsGreaterThanThreshold(int opponentScore) {
         intel = create().scoreOponent(opponentScore).finish();
@@ -142,12 +143,22 @@ class MinePowerBotTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"4, 0", "8, 6", "10,10"}) // só o primeiro passa no teste
-    @DisplayName("Will raise bet when winning by 3+ points difference (only the first should pass)")
+    @CsvSource({"4, 0", "9, 5", "10, 6"})
+    @DisplayName("Will raise bet when winning by 3+ points difference.")
     void shouldRaiseIfIsWinningByThreePoints(int botScore, int opponentScore){
         intel = create().scoreOponent(opponentScore).scoreMine(botScore).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
+
+    @ParameterizedTest
+    @CsvSource({"8, 6", "9, 7", "7, 8"})
+    @DisplayName("Will not raise bet when not winning by 3+ points difference.")
+    void shouldNotRaiseIfIsWinningByThreePoints(int botScore, int opponentScore){
+        intel = create().scoreOponent(opponentScore).scoreMine(botScore).finish();
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
 
 }
