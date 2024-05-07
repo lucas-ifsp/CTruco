@@ -197,5 +197,31 @@ public class SlayerBotTest {
 
         assertThat(raiseResponse).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("Should not request truco if either bot or opponent has 11 points")
+    void shouldNotRequestTrucoIfInMaoDeOnze() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(cards, 11)
+                .opponentScore(11)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRequestTruco).isFalse();
+    }
 }
 
