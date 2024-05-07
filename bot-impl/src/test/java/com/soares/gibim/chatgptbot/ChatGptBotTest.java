@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChatGptBotTest {
@@ -45,7 +47,7 @@ public class ChatGptBotTest {
 
     @Test
     @DisplayName("If we do the first round we order truco in the second")
-    void testIfWeDoTheFirstRoundAskForTricksInTheSecond() {
+    void testIfWeDoTheFirstRoundAskForTrucoInTheSecond() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
         List<TrucoCard> openCards = Collections.singletonList(
@@ -63,6 +65,25 @@ public class ChatGptBotTest {
 
         assertTrue(sut.decideIfRaises(intel.build()));
 
+    }
+    @Test
+    @DisplayName("Decide if you accept 'truco' in the first round with a 'manilha.")
+    void TestAcceptTrucoFirstRoundWithManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Collections.singletonList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(0, sut.getRaiseResponse(intel.build()));
     }
 
 }
