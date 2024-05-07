@@ -49,6 +49,9 @@ public class MalasiaBot implements BotServiceProvider {
         if (MaoRuimComManilha(intel)){
             return -1;
         }
+        if (MaoComDuasBoasSemManilha(intel)){
+            return 0;
+        }
 
         return 0;
     }
@@ -73,14 +76,6 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
-    }
-
-    private boolean hasZapZap(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
-    }
-
-    private boolean TamoGiga(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) || card.isCopas(intel.getVira()));
     }
 
     //retorna a menor carta da mão
@@ -227,6 +222,21 @@ public class MalasiaBot implements BotServiceProvider {
             }
         }
         return boaCartaCount == 1;
+    }
+
+    private boolean MaoComDuasBoasSemManilha(GameIntel intel) {
+
+        int boaCartaCount = 0;
+
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(vira);
+            if (cardValue > 7 && cardValue < 10){
+                boaCartaCount++;
+            }
+        }
+        return boaCartaCount == 2;
     }
 
     private boolean MaoRuimComManilha(GameIntel intel) {
