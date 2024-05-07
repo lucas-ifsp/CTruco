@@ -57,7 +57,7 @@ public class ChatGptBotTest {
                 }
 
                 @Test
-                @DisplayName("If only have middle cards then use the one with highest value")
+                @DisplayName("If only as middle cards then use the one with highest value")
                 void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue() {
                     TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
@@ -65,6 +65,28 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                            CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
+
+                @Test
+                @DisplayName("If only have high cards then use the one with highest value")
+                void IfOnlyHaveHighCardsThenUseTheOneWithHighestValue() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
                     );
 
                     List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
