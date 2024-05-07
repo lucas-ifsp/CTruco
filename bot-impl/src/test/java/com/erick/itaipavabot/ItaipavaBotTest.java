@@ -287,4 +287,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertTrue(bot.hasCard(stepBuilder.build(), true));
     }
+
+    @Test
+    @DisplayName("Should play lowest card if has hand power level > 9")
+    void shouldPlayLowestCardIfHasHandPowerLevelGreaterThan9() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(stepBuilder.build()).content());
+    }
 }
