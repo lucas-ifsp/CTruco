@@ -92,7 +92,7 @@ public class MalasiaBot implements BotServiceProvider {
 
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
-            if (cardValue > 6){
+            if (cardValue > 5){
                 return false;
             }
         }

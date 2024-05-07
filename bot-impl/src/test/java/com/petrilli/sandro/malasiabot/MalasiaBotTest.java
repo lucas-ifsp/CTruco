@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class MalasiaBotTest {
@@ -67,7 +68,7 @@ public class MalasiaBotTest {
         @Test
         @DisplayName("Should play the lowest winning card against opponent")
         void shouldPlayTheLowestWinningCardAgainstOpponentTest() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
             List<TrucoCard> Mao = Arrays.asList(
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
@@ -84,9 +85,10 @@ public class MalasiaBotTest {
         }
 
 
-        @Test        @DisplayName("Should play the lowest manilha card against opponent")
+        @Test
+        @DisplayName("Should play the lowest manilha card against opponent")
         void shouldPlayTheLowestManilhaCardAgainstOpponentTest() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
             List<TrucoCard> Mao = Arrays.asList(
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
@@ -101,6 +103,24 @@ public class MalasiaBotTest {
 
             assertEquals(CardRank.TWO, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
             assertEquals(CardSuit.SPADES, malasiaBot.chooseCard(stepBuilder.build()).content().getSuit());
+        }
+
+        @Test
+        @DisplayName("Should refuse raise if have MaoLixo")
+        void shouldRefuseRaiseIfHaveMaoLixo() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
         }
 
     }
