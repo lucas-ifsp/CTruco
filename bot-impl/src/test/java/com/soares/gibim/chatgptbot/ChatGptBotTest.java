@@ -117,7 +117,7 @@ public class ChatGptBotTest {
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
-                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
             }
         }
