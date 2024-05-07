@@ -292,13 +292,14 @@ class PatriciaAparecidaTest {
                 vira = TrucoCard.of(THREE,DIAMONDS);
             }
             @Test
-            @DisplayName("Plays if 0 probability of strongest card")
-            public void PlayIfZeroProbabilityOfStrongerCard(){
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(KING, HEARTS), //2
-                        TrucoCard.of(FOUR,CLUBS), // 3
-                        TrucoCard.of(TWO,HEARTS)));
+            @DisplayName("Choose Card With Highest Chance of Winning")
+            public void ChooseHighestProbCard(){
+                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(TWO,SPADES),
+                        TrucoCard.of(ACE, HEARTS),
+                        TrucoCard.of(TWO,CLUBS)));
                 when(intel.getVira()).thenReturn(vira);
-                assertEquals(CardToPlay.of(TrucoCard.of(FOUR,CLUBS)).value(),patricia.chooseCard(intel).value());
+                assertEquals(CardToPlay.of(TrucoCard.of(TWO,CLUBS)).value(),patricia.chooseCard(intel).value());
+
             }
 
             @Test
