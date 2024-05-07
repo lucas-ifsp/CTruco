@@ -18,10 +18,10 @@ public class SlayerBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel game) {
+        TrucoCard vira = game.getVira();
+
         if (game.getOpenCards().size() == 1) {
             TrucoCard opponentCard = game.getOpenCards().get(0);
-            TrucoCard vira = game.getVira();
-
             CardRank zapRank = vira.getRank().next();
 
             boolean hasZap = game.getCards().stream()
@@ -33,7 +33,13 @@ public class SlayerBot implements BotServiceProvider {
 
             return hasZap && hasWinningCard;
         }
-        return false;
+
+        boolean hasTiedInFirstRound = game.getRoundResults().contains(GameIntel.RoundResult.DREW);
+
+        boolean hasManilha = game.getCards().stream()
+                .anyMatch(card -> card.isManilha(vira));
+
+        return hasTiedInFirstRound && hasManilha;
     }
 
     @Override

@@ -157,9 +157,11 @@ public class SlayerBotTest {
 
         TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
         List<TrucoCard> openCards = List.of(vira, opponentCard);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), openCards, vira, 1)
+                .gameInfo(roundResults, openCards, vira, 1)
                 .botInfo(cards, 0)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
