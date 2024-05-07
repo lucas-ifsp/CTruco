@@ -8,11 +8,11 @@ import com.contiero.lemes.newbot.services.utils.PowerCalculator;
 import java.util.List;
 import java.util.Optional;
 
-public class AnaliseWhileLosing implements Analise {
+public class DefaultAnalise implements Analise {
 
     private final GameIntel intel;
 
-    public AnaliseWhileLosing(GameIntel intel) {
+    public DefaultAnalise(GameIntel intel) {
         this.intel = intel;
     }
 
@@ -44,14 +44,15 @@ public class AnaliseWhileLosing implements Analise {
                     return HandStatus.GOD;
                 }
             }
-            if (PowerCalculator.powerOfCard(intel,1) >= 3) return HandStatus.GOOD;
+
+            if (PowerCalculator.powerOfCard(intel,1) >= 5) return HandStatus.GOOD;
             return HandStatus.MEDIUM;
         }
         long handPower = powerOfTheTwoBestCards();
-        if (handPower >= 13){
+        if (handPower >= 17){
             return HandStatus.GOOD;
         }
-        if (handPower >= 8) {
+        if (handPower >= 10) {
             return HandStatus.MEDIUM;
         }
         return HandStatus.BAD;
@@ -59,13 +60,10 @@ public class AnaliseWhileLosing implements Analise {
 
     private HandStatus twoCardsHandler(List<TrucoCard> myCards){
         if (wonFirstRound()){
-            if(PowerCalculator.powerOfCard(intel,0) >= 9){
-                return HandStatus.GOD;
-            }
-            if (PowerCalculator.powerOfCard(intel,0) >= 5){
-                return HandStatus.GOOD;
-            }
-            return HandStatus.MEDIUM;
+            if (haveAtLeastOneManilha()) return HandStatus.GOD;
+            if(PowerCalculator.powerOfCard(intel,0) >= 8) return HandStatus.GOOD ;
+            if (PowerCalculator.powerOfCard(intel,0) >= 4) return HandStatus.MEDIUM;
+            return HandStatus.BAD;
         }
         if (lostFirstRound()){
 
@@ -75,26 +73,26 @@ public class AnaliseWhileLosing implements Analise {
                         .stream()
                         .filter(card -> card.compareValueTo(oppCard,intel.getVira()) > 0)
                         .count() == 2){
-                    return HandStatus.GOOD;
+                    return HandStatus.MEDIUM;
                 }
-                return HandStatus.MEDIUM;
+                return HandStatus.BAD;
             }
 
             if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
 
             if (haveAtLeastOneManilha()){
-                if (PowerCalculator.powerOfCard(intel,1) >= 7) return HandStatus.GOD;
-                if (PowerCalculator.powerOfCard(intel,1) >= 4) return HandStatus.GOOD;
+                if (PowerCalculator.powerOfCard(intel,1) >= 8) return HandStatus.GOD;
+                if (PowerCalculator.powerOfCard(intel,1) >= 6) return HandStatus.GOOD;
                 return HandStatus.MEDIUM;
             }
-            if (powerOfTheTwoBestCards() >= 13) return HandStatus.GOOD;
-            if (powerOfTheTwoBestCards() >= 10) return HandStatus.MEDIUM;
+            if (powerOfTheTwoBestCards() >= 17) return HandStatus.GOOD;
+            if (powerOfTheTwoBestCards() >= 14) return HandStatus.MEDIUM;
             return HandStatus.BAD;
         }
 
         if (haveAtLeastOneManilha()) return HandStatus.GOD;
-        if (PowerCalculator.powerOfCard(intel,0) >= 8) return HandStatus.GOOD;
-        if (PowerCalculator.powerOfCard(intel,0) >= 5) return HandStatus.MEDIUM;
+        if (PowerCalculator.powerOfCard(intel,0) == 9) return HandStatus.GOOD;
+        if (PowerCalculator.powerOfCard(intel,0) >= 6) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
@@ -104,26 +102,40 @@ public class AnaliseWhileLosing implements Analise {
 
         if (wonFirstRound()){
             if (oppCard.isPresent()){
+                if (intel.getHandPoints() <= 3){
+                    return HandStatus.GOD;
+                }
                 if (myCard.compareValueTo(oppCard.get(),intel.getVira()) > 0){
                     return HandStatus.GOD;
                 }
-                if (intel.getHandPoints() <= 6){
-                    return HandStatus.GOOD;
-                }
-                return HandStatus.MEDIUM;
+                return HandStatus.BAD;
             }
         }
 
         if (lostFirstRound()){
-            if (PowerCalculator.powerOfCard(intel,0) >= 9) return HandStatus.GOD;
-            if (PowerCalculator.powerOfCard(intel,0) >= 7) return HandStatus.GOOD;
-            if (PowerCalculator.powerOfCard(intel,0) >= 3) return HandStatus.MEDIUM;
+            if (haveAtLeastOneManilha()){
+                return HandStatus.GOD;
+            }
+            if (PowerCalculator.powerOfCard(intel,0) == 9){
+                long numberOfCardsBetterThanThree = intel.getOpenCards().stream()
+                        .filter(card-> card.isManilha(intel.getVira()) || card.relativeValue(intel.getVira()) == 9)
+                        .count();
+                if (numberOfCardsBetterThanThree >= 2){
+                    return HandStatus.GOD;
+                }
+                return HandStatus.GOOD;
+            }
+            if (PowerCalculator.powerOfCard(intel,0) == 8){
+                return HandStatus.GOOD;
+            }
+            if (PowerCalculator.powerOfCard(intel,0) >= 6){
+                return HandStatus.MEDIUM;
+            }
             return HandStatus.BAD;
         }
 
         if (intel.getHandPoints() <= 3) return HandStatus.GOD;
         if (PowerCalculator.powerOfCard(intel,0) >= 5) return HandStatus.GOOD;
-        if (PowerCalculator.powerOfCard(intel,0) >= 3) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
