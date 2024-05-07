@@ -42,6 +42,8 @@ public class SlayerBot implements BotServiceProvider {
 
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
         // Escolhe uma carta que não seja fechada se for o segundo jogador na primeira rodada
+        //gica falou pra mudar pra 2, quando mudei o teste deu errado, se fica 1 da certo
+        //o teste é Should not play a hidden card if second
         if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 1) {
             return cards.stream()
                     .filter(card -> !card.equals(TrucoCard.closed()))
@@ -51,10 +53,11 @@ public class SlayerBot implements BotServiceProvider {
         }
 
         // Logica generica para outras situacoes
-        return cards.stream()
-                .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
-                .map(CardToPlay::of)
-                .orElse(CardToPlay.of(cards.get(0)));
+//        return cards.stream()
+//                .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, intel.getVira())))
+//                .map(CardToPlay::of)
+//                .orElse(CardToPlay.of(cards.get(0)));
+        return null;
     }
 
 
