@@ -32,13 +32,17 @@ public class ChatGptBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (intel.getRoundResults().isEmpty()) {
-            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 24){
+            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 24) {
+                return 0;
+            }
+        } else if (intel.getRoundResults().size() == 1) {
+            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 16) {
                 return 0;
             }
         }
         return -1;
-
     }
+
 
     private boolean haveZap(GameIntel intel){
         for (TrucoCard card : intel.getCards()){
