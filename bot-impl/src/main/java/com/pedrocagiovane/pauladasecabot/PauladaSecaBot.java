@@ -537,10 +537,18 @@ public class PauladaSecaBot implements BotServiceProvider {
             return 0;
         }
 
-        // aceita truco na primeira se tem manilha e valor da mão maior que 25
+        // aceita truco na primeira se tem manilha e valor da mão maior que 24
         if (intel.getRoundResults().isEmpty() && contManilha(intel.getCards(), intel.getVira()) > 0) {
             if(valorMao(intel) >= 24) {
-                System.out.println("aceitou truco na primeira com manilha e valor da mao maior do que 25");
+                System.out.println("aceitou truco na primeira com manilha e valor da mao maior do que 24");
+                return 0;
+            }
+        }
+
+        // aceita truco na primeira se tem manilha e valor da mão maior que 25
+        if (intel.getRoundResults().isEmpty() && contManilha(intel.getCards(), intel.getVira()) == 0) {
+            if(valorMao(intel) >= 28) {
+                System.out.println("aceitou truco na primeira sem manilha e valor da mao maior do que 28");
                 return 0;
             }
         }
