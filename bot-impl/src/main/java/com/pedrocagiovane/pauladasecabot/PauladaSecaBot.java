@@ -257,6 +257,12 @@ public class PauladaSecaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+
+        //ACEITA SE TIVER DUAS MANILHAS
+        if(contManilha(intel.getCards(), intel.getVira()) >= 2){
+            return true;
+        }
+
         return false;
     }
 
