@@ -56,6 +56,14 @@ public class ChatGptBot implements BotServiceProvider {
 
         return sum;
     }
-
+    int countManilhas(GameIntel intel) {
+        int count = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                count += 1;
+            }
+        }
+        return count;
+    }
 
 }
