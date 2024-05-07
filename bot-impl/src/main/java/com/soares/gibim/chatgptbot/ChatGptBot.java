@@ -49,8 +49,7 @@ public class ChatGptBot implements BotServiceProvider {
                 return CardToPlay.of(killOpponentCardWithTheWeakest(intel));
             }
         }
-
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
