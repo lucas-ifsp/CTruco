@@ -215,6 +215,44 @@ class JakareDuMatuBotTest {
     class chooseCard {
         // First Hand (Estevan)
 
+        //Adversario primeiro
+        //Se consigo matar a primeira carta do adversario, matar com a mais fraca possivel
+        @Test
+        @DisplayName("Should play the weakest card if can win opponent")
+        public void ShouldPlayTheWeakestCardIfCanWinOpponent(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES) //oponent card
+                    );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+        }
+
+        //Se adversario jogou uma carta muito forte e não da pra matar, então jogar a mais fraca
+
+
+
+        //Nos primeiro
+        //Se tiver
+
         // Second Hand (Miguel)
         // Se a carta mais fraca das duas mata a segunda carta do adversário jogar a mais fraca
         @Test

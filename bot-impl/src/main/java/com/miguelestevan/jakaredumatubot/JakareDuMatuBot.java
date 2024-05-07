@@ -3,7 +3,6 @@ package com.miguelestevan.jakaredumatubot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
 import java.util.*;
 
 public class JakareDuMatuBot implements BotServiceProvider {
@@ -13,7 +12,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
         else if (getManilhas(intel.getCards(), intel.getVira()).size() >= 2) return true;
 
-        else if ((getManilhas(intel.getCards(), intel.getVira()).size() == 1) && hasCardHigherThan(intel, CardRank.KING)) return true;
+        else if ((getManilhas(intel.getCards(), intel.getVira()).size() == 1) && hasCardHigherThan(intel, TrucoCard.of(CardRank.KING, CardSuit.SPADES))) return true;
 
         else if(countCardsHigherThan(intel, CardRank.KING) >= 2) return true;
 
@@ -59,6 +58,20 @@ public class JakareDuMatuBot implements BotServiceProvider {
         switch (intel.getRoundResults().size()) {
             case 0 -> {
                 // First Hand
+                if (intel.getOpponentCard().isPresent()){
+                    if (hasCardHigherThan(intel, intel.getOpponentCard().get())){
+                        List<TrucoCard> list = sortedListCards(intel, intel.getVira());
+                        if (list.get(2).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
+                            return CardToPlay.of(list.get(2));
+                        } else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0) {
+                            return CardToPlay.of(list.get(1));
+                        }else{
+                            return CardToPlay.of(list.get(0));
+                        }
+                    }
+                }else {
+
+                }
                 return null;
             }
             case 1->{
@@ -90,8 +103,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
         return botCards.stream().filter(trucoCard -> trucoCard.isManilha(vira)).map(TrucoCard::getSuit).toList();
     }
 
-    public boolean hasCardHigherThan(GameIntel intel, CardRank cardRank) {
-        return intel.getCards().stream().anyMatch(card -> card.getRank().value() > cardRank.value());
+    public boolean hasCardHigherThan(GameIntel intel, TrucoCard trucoCard) {
+        return intel.getCards().stream().anyMatch(card -> card.compareValueTo(trucoCard, intel.getVira()) > 0);
     }
 
     public int countCardsHigherThan(GameIntel intel, CardRank cardRank) {
