@@ -162,5 +162,23 @@ public class MalasiaBotTest {
             assertEquals(1,malasiaBot.getRaiseResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should accept raise if have MaoEspadasOuOurosEfiguras")
+        void shouldAcceptRaiseIfHaveMaoEspadasOuOurosEfiguras() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(0,malasiaBot.getRaiseResponse(stepBuilder.build()));
+        }
+
     }
 }
