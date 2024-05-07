@@ -276,6 +276,12 @@ public class PauladaSecaBot implements BotServiceProvider {
             return true;
         }
 
+        //ACEITA SE VALOR DA MAO FOR MAIOR OU IGUAL A 28
+        if(valorMao(intel) >= 28){
+            System.out.println("mao de onze: valor da mao maior igual 28");
+            return true;
+        }
+
         return false;
     }
 
