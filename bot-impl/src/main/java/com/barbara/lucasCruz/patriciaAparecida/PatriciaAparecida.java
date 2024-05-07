@@ -6,6 +6,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.jar.JarOutputStream;
 import java.util.stream.Stream;
 
 import static java.util.Collections.max;
@@ -157,6 +158,9 @@ public class PatriciaAparecida implements BotServiceProvider {
                 if (tempCardThatWins.isPresent()) {
                     TrucoCard cardThatWins = tempCardThatWins.get();
 
+                    double prob3inthiscontext = probabilityOpponentCardIsBetter(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),intel);
+                    System.out.println("prob 3 in case 1");
+                    System.out.println(prob3inthiscontext);
                     double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
                     //aqui retorna a menor prob
 

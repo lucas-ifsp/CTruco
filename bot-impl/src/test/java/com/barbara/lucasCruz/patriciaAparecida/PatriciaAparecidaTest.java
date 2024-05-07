@@ -507,7 +507,7 @@ class PatriciaAparecidaTest {
                             TrucoCard.of(THREE, HEARTS),
                             TrucoCard.of(FOUR,SPADES));
                     when(intel.getCards()).thenReturn(botCards);
-                    when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
 
@@ -559,8 +559,7 @@ class PatriciaAparecidaTest {
                             TrucoCard.of(THREE, CLUBS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                    when(intel.getRoundResults()).thenReturn(List.of(WON
-                    ));
+                    when(intel.getRoundResults()).thenReturn(List.of(WON));
                     when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
@@ -577,7 +576,7 @@ class PatriciaAparecidaTest {
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(THREE, HEARTS));
                     when(intel.getCards()).thenReturn(botCards);
-                    when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(LOST));
                     when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(TWO,SPADES)));
 
