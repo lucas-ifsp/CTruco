@@ -20,6 +20,12 @@ public class SlayerBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel game) {
         TrucoCard vira = game.getVira();
+        int botScore = game.getScore();
+        int opponentScore = game.getOpponentScore();
+
+        if (botScore == 11 || opponentScore == 11) {
+            return false;
+        }
 
         if (game.getOpenCards().size() == 1) {
             TrucoCard opponentCard = game.getOpenCards().get(0);
