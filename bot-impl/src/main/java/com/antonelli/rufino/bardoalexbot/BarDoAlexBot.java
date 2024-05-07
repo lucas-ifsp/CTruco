@@ -49,4 +49,16 @@ public class BarDoAlexBot {
 
 }
 
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int botScore = intel.getBotScore();
+        int opponentScore = intel.getOpponentScore();
+
+        if (botScore == 0 && opponentScore == 11) {
+            return !hasStrongHandCards(intel.getCards());
+        }
+
+        return false;
+    }
+
+
 }
