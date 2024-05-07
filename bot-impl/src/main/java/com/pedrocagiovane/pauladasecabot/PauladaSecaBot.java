@@ -288,11 +288,23 @@ public class PauladaSecaBot implements BotServiceProvider {
             return true;
         }
 
+        //ACEITA SE OPONENTE TIVER POUCOS PONTOS E A MAO FOR RELATIVAMENTE BOA
+        if(valorMao(intel) >= 26 && intel.getOpponentScore() < 5){
+            System.out.println("mao de onze: oponente com poucos pontos e mao relativamente boa");
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        // se oponente tiver na mao de onze, nao pede truco
+        if(intel.getOpponentScore() == 11){
+            System.out.println("oponente na mao de onze, nao pede truco");
+            return false;
+        }
 
         int quantDois = contDois(intel);
 
