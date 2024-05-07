@@ -187,4 +187,31 @@ public class PatoBot implements BotServiceProvider {
         }
         return -1;
     }
+
+    public boolean checkIfHasZap(List<TrucoCard> hand, TrucoCard vira) {
+        for (TrucoCard card : hand) {
+            if (card.isZap(vira)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIfHasCopas(List<TrucoCard> hand, TrucoCard vira) {
+        for (TrucoCard card : hand) {
+            if (card.isCopas(vira)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIfHasManilha(List<TrucoCard> hand, TrucoCard vira) {
+        for (TrucoCard card : hand) {
+            if (card.isManilha(vira)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
