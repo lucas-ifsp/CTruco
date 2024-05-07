@@ -13,29 +13,6 @@ import java.util.Optional;
 
 public class MalasiaBot implements BotServiceProvider {
 
-    private boolean podeMatar(GameIntel intel) {
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        TrucoCard opponentCardValue = opponentCard.get();
-        TrucoCard vira = intel.getVira();
-
-        List<Integer> List = null;
-
-        for (TrucoCard card : intel.getCards()) {
-            int value = card.compareValueTo(opponentCardValue, vira);
-            List.add(value);
-        }
-
-        for (int i: List) {
-            if (i > 0) {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
-
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
@@ -43,8 +20,8 @@ public class MalasiaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
         return null;
+
     }
     @Override
     public boolean decideIfRaises(GameIntel intel) {
@@ -58,6 +35,10 @@ public class MalasiaBot implements BotServiceProvider {
 
     private boolean hasZapZap(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
+    private boolean TamoGiga(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) || card.isCopas(intel.getVira()));
     }
 
 }
