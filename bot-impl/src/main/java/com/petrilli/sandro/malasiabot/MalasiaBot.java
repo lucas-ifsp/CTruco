@@ -15,22 +15,23 @@ public class MalasiaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(intel.getHandPoints() == 12)
+        if (intel.getHandPoints() == 12)
             return -1;
         return 0;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        TrucoCard DeMenorQuePodeGanhar = DeMenorQuePodeGanhar(intel);
-        if(DeMenorQuePodeGanhar == null)
-            if(intel.getOpponentCard().isPresent())
-                return intel.getRoundResults().isEmpty() ? CardToPlay.of(DeMenor(intel)) : CardToPlay.discard(DeMenor(intel));
-            else
-                return CardToPlay.of(DeMenor(intel));
-        return CardToPlay.of(DeMenorQuePodeGanhar);
 
+        CardToPlay cardToPlay = null;
+
+        if (intel.getOpponentCard().isPresent()) {
+            cardToPlay = CardToPlay.of(DeMenorQuePodeGanhar(intel));
+        }
+
+        return cardToPlay;
     }
+
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         return false;
@@ -79,7 +80,6 @@ public class MalasiaBot implements BotServiceProvider {
         }
         return DeMenorQuePodeGanhar;
     }
-
 
 
 }
