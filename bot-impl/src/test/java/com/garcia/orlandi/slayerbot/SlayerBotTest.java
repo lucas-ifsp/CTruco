@@ -101,4 +101,46 @@ public class SlayerBotTest {
         TrucoCard expectedCard = TrucoCard.of(CardRank.SEVEN, SPADES);
         assertThat(card.value()).isEqualTo(expectedCard);
     }
+
+    @Test
+    @DisplayName("Should play the matching card to tie, then play the strongest card next round")
+    void shouldPlayMatchingThenStrongestCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        CardToPlay firstPlay = bot.chooseCard(stepBuilder.build());
+        TrucoCard expectedTieCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        assertThat(firstPlay.value()).isEqualTo(expectedTieCard);
+
+        List<TrucoCard> remainingCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+        );
+        List<TrucoCard> updatedOpenCards = List.of(vira, opponentCard, expectedTieCard);
+        GameIntel updatedGame = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), updatedOpenCards, vira, 1)
+                .botInfo(remainingCards, 0)
+                .opponentScore(0)
+                .build();
+
+        CardToPlay secondPlay = bot.chooseCard(updatedGame);
+        TrucoCard expectedManilha = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+        assertThat(secondPlay.value()).isEqualTo(expectedManilha);
+    }
 }
