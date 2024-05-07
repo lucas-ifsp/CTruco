@@ -29,11 +29,9 @@ public class ChatGptBotTest {
         @Nested
         @DisplayName("When is the first Round")
         class FirstRound {
-
             @Nested
             @DisplayName("When bot is the first to play")
             class FirstToPlay {
-
                 @Test
                 @DisplayName("If only have bad cards then discard the one with lower value")
                 void IfOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
@@ -98,6 +96,28 @@ public class ChatGptBotTest {
                             .opponentScore(0);
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
+
+                @Test
+                @DisplayName("If has manilha and good cards use the highest card except the manilha")
+                void IfHasManilhaAndGoodCardsUseTheHighestCardExceptTheManilha() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                            CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
             }
         }
