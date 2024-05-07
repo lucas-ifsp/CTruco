@@ -294,6 +294,7 @@ public class PauladaSecaBot implements BotServiceProvider {
             return true;
         }
 
+        System.out.println("nao aceitou mao de onze");
         return false;
     }
 
@@ -403,7 +404,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 TrucoCard opponentCard = intel.getOpponentCard().get();
                 if(!opponentCard.isManilha(intel.getVira())){
                     if(opponentCard.getRank().value() <= 7){
-                        System.out.println("BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 7");
+                        System.out.println("BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 8");
                         return true;
                     }
                 }
@@ -427,7 +428,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     if(!opponentCard.isManilha(intel.getVira())){
-                        if(opponentCard.getRank().value() <= 6){
+                        if(opponentCard.getRank().value() <= 7){
                             System.out.println("blefe");
                             return true;
                         }
