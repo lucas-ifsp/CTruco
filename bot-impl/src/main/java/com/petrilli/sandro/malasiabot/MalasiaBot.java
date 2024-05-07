@@ -42,6 +42,14 @@ public class MalasiaBot implements BotServiceProvider {
             return -1;
         }
 
+        if (MaoMediaComUmaBoaCarta(intel)){
+            return 0;
+        }
+
+        if (MaoRuimComManilha(intel)){
+            return -1;
+        }
+
         return 0;
     }
 
@@ -202,6 +210,43 @@ public class MalasiaBot implements BotServiceProvider {
         }
         return true;
     }
+
+    private boolean MaoMediaComUmaBoaCarta(GameIntel intel) {
+
+        int boaCartaCount = 0;
+
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(vira);
+            if (cardValue < 4 ){
+                return false;
+            }
+            if (cardValue > 7){
+                boaCartaCount++;
+            }
+        }
+        return boaCartaCount == 1;
+    }
+
+    private boolean MaoRuimComManilha(GameIntel intel) {
+
+        int manilhaCount = 0;
+
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(vira);
+            if (cardValue > 4 && cardValue < 10){
+                return false;
+            }
+            if (cardValue >= 10){
+                manilhaCount++;
+            }
+        }
+        return manilhaCount == 1;
+    }
+
 
     private boolean MaoLixo(GameIntel intel) {
 
