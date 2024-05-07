@@ -171,5 +171,31 @@ public class SlayerBotTest {
         boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
         assertThat(shouldRequestTruco).isTrue();
     }
+
+    @Test
+    @DisplayName("Should refuse truco if only holding weak cards as the second player in the first round")
+    void shouldRefuseTrucoIfOnlyHoldingWeakCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        int raiseResponse = bot.getRaiseResponse(stepBuilder.build());
+
+        assertThat(raiseResponse).isEqualTo(-1);
+    }
 }
 
