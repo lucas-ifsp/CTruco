@@ -182,7 +182,7 @@ public class MalasiaBotTest {
 
         @Test
         @DisplayName("Should reraise if have MaoZapOuCopasEasAtres")
-        void shouldAcceptRaiseIfHaveMaoZapOuCopasEasAtres() {
+        void shouldReRaiseIfHaveMaoZapOuCopasEasAtres() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
 
             List<TrucoCard> Mao = Arrays.asList(
@@ -199,7 +199,7 @@ public class MalasiaBotTest {
         }
 
         @Test
-        @DisplayName("Should reraise if have MaoEspadasOuOurosEasAtres")
+        @DisplayName("Should accept raise if have MaoEspadasOuOurosEasAtres")
         void shouldAcceptRaiseIfHaveMaoEspadasOuOurosEasAtres() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
 
