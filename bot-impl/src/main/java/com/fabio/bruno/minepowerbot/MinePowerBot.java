@@ -37,6 +37,8 @@ public class MinePowerBot implements BotServiceProvider {
                 return true;
             if (manilhaFraca != null)
                 return botScore == opponentScore || botScore > opponentScore;
+            if (botScore == 9 && opponentScore == 9 && countManilhas == 1)
+                return true;
         }
         return false;
     }
