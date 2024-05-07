@@ -3,7 +3,6 @@ package com.fabio.bruno.minepowerbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -58,6 +57,9 @@ public class MinePowerBot implements BotServiceProvider {
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
                 }
+            }
+            if (intel.getOpponentScore() == intel.getScore()){
+                return CardToPlay.of(higherCard(intel));
             }
         } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
             var lowCard = getLowerCard(intel);
@@ -125,5 +127,16 @@ public class MinePowerBot implements BotServiceProvider {
     @Override
     public String getName() {
         return BotServiceProvider.super.getName();
+    }
+
+    private TrucoCard higherCard(GameIntel intel) {
+        var vira = intel.getVira();
+        TrucoCard higherCard = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (higherCard == null || card.relativeValue(vira) > higherCard.relativeValue(vira)) {
+                higherCard = card;
+            }
+        }
+        return higherCard;
     }
 }
