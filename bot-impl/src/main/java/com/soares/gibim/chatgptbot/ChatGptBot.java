@@ -1,10 +1,10 @@
 package com.soares.gibim.chatgptbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ChatGptBot implements BotServiceProvider {
     @Override
@@ -27,7 +27,7 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty()){
+        if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isEmpty()){
             if (handStrength(intel) <= 9){
                 return CardToPlay.of(weakestCard(intel));
             }
@@ -44,6 +44,12 @@ public class ChatGptBot implements BotServiceProvider {
                 return CardToPlay.of(strongestCard(intel));
             }
         }
+        if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
+            if (handStrength(intel) <= 9){
+                return CardToPlay.of(killOpponentCardWithTheWeakest(intel));
+            }
+        }
+
         return null;
     }
 
@@ -116,5 +122,24 @@ public class ChatGptBot implements BotServiceProvider {
             }
         }
         return weakestCard;
+    }
+
+    private TrucoCard killOpponentCardWithTheWeakest(GameIntel intel){
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        int highestValue = 14;
+        TrucoCard bestCard = null;
+
+        for (TrucoCard card : intel.getCards()){
+            if (card.getRank().value() > opponentCard.get().getRank().value() && card.getRank().value() < highestValue){
+                bestCard = card;
+                highestValue = card.getRank().value();
+            }
+        }
+        if (bestCard == null){
+            return weakestCard(intel);
+        } else {
+            return bestCard;
+        }
     }
 }
