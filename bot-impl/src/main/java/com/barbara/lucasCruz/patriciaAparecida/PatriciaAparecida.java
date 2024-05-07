@@ -6,8 +6,6 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.max;
 import static java.util.Collections.min;
 
 
@@ -22,16 +20,12 @@ public class PatriciaAparecida implements BotServiceProvider {
 
     }
 
-    //decide se o bot inicia uma solicitação de aumento de ponto.
-    //Retornar false significa não fazer nada.
-    //Retornar true significa solicitar um aumento de ponto;
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getHandPoints() > 12) throw new IllegalArgumentException("Cant Increase Points indefinitely");
         return (getRaiseResponse(intel)==1 || getRaiseResponse(intel)==0);
     }
 
-    //fornece o cartão a ser jogado ou descartado na rodada atual.
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
@@ -123,10 +117,6 @@ public class PatriciaAparecida implements BotServiceProvider {
         return -1;
     }
 
-
-    //responde a uma solicitação de aumento de ponto em uma mão de truco.
-    //O valor de retorno deve ser um dos seguintes:
-    //-1 (sair), 0 (aceitar), 1 (re-aumentar/chamar);
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
@@ -149,10 +139,6 @@ public class PatriciaAparecida implements BotServiceProvider {
                 Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tempCardThatWins.isPresent()) {
                     TrucoCard cardThatWins = tempCardThatWins.get();
-
-                    double prob3inthiscontext = probabilityOpponentCardIsBetter(TrucoCard.of(CardRank.THREE,CardSuit.HEARTS),intel);
-                    System.out.println("prob 3 in case 1");
-                    System.out.println(prob3inthiscontext);
                     double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
                     //aqui retorna a menor prob
 
