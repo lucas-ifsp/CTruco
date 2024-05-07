@@ -4,7 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import javax.smartcardio.Card;
-import java.util.List;
+import java.util.*;
 
 public class JakareDuMatuBot implements BotServiceProvider {
     @Override
@@ -63,7 +63,10 @@ public class JakareDuMatuBot implements BotServiceProvider {
             }
             case 1->{
                 // Second Hand
-                System.out.println("SECOND HAND");
+                // Responder a carta do oponente
+                if(intel.getOpponentCard().isPresent()){
+
+                }
                 return null;
             }
         }
@@ -97,5 +100,18 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 .count();
     }
 
+    public List<TrucoCard> sortedListCards(GameIntel intel, TrucoCard vira){
+//        intel.getCards().sort((o1, o2) -> o1.compareValueTo(o2, vira));
+        List<TrucoCard> cards = new ArrayList<>(intel.getCards());
+        cards.sort(new Comparator<TrucoCard>() {
+            @Override
+            public int compare(TrucoCard o1, TrucoCard o2) {
+                return o1.compareValueTo(o2, vira);
+            }
+        });
+        Collections.reverse(cards);
+        return cards;
+
+    }
 
 }

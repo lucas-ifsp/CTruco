@@ -294,7 +294,7 @@ class JakareDuMatuBotTest {
                     .build();
 
             assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(0).getRank().value(), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS).getRank().value());
-            assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(2).getRank().value(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS).getRank().value());
+            assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(2).getRank().value(), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS).getRank().value());
 
         }
     }
