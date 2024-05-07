@@ -88,16 +88,17 @@ public class ItaipavaBot implements BotServiceProvider {
 
     private TrucoCard getHighestCard(GameIntel gameIntel) {
         TrucoCard highestCard = gameIntel.getOpenCards().get(0);
-        for(TrucoCard card : gameIntel.getOpenCards()) {
-            if (card.relativeValue(gameIntel.getVira()) > highestCard.relativeValue(gameIntel.getVira())) {
-                highestCard = card;
-            }
-        }
+        highestCard = getTrucoCard(gameIntel.getOpenCards(), gameIntel, highestCard);
         return highestCard;
     }
 
     private TrucoCard getHighestCard(List<TrucoCard> myCards, GameIntel gameIntel) {
         TrucoCard highestCard = myCards.get(0);
+        highestCard = getTrucoCard(myCards, gameIntel, highestCard);
+        return highestCard;
+    }
+
+    private static TrucoCard getTrucoCard(List<TrucoCard> myCards, GameIntel gameIntel, TrucoCard highestCard) {
         for(TrucoCard card : myCards) {
             if (card.relativeValue(gameIntel.getVira()) > highestCard.relativeValue(gameIntel.getVira())) {
                 highestCard = card;
