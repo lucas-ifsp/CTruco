@@ -132,13 +132,13 @@ public class SlayerBotTest {
 
     @Test
     @DisplayName("If first to play and with three manilhas at hand, play the second strongest and save best card for last")
-    void shouldPlaySecondStrongestIfFirstToPlayAndWithThreeManilhas(){
+    void shouldPlaySecondStrongestIfFirstToPlayAndWithThreeManilhasExceptZap(){
         roundResults = List.of();
         vira = TrucoCard.of(SIX, HEARTS);
         cards = List.of(
-                TrucoCard.of(THREE, DIAMONDS),
+                TrucoCard.of(SEVEN, DIAMONDS),
                 TrucoCard.of(SEVEN, HEARTS),
-                TrucoCard.of(SEVEN, CLUBS));
+                TrucoCard.of(SEVEN, SPADES));
         openCards = List.of(vira);
 
         stepBuilder = GameIntel.StepBuilder
@@ -148,7 +148,7 @@ public class SlayerBotTest {
 
         CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
         TrucoCard chosenCard = card.value();
-        assertThat(chosenCard).isEqualTo(TrucoCard.of(SEVEN, HEARTS));
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(SEVEN, SPADES));
     }
 
 }
