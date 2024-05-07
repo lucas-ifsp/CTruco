@@ -38,6 +38,20 @@ class MinePowerBotTest {
         assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
 
+    @Test @DisplayName("When winning and playing the first card, should play a weak one")
+    void playingFirstCard(){
+        intel = create()
+                .scoreMine(1)
+                .viraToBe(CardRank.KING, CardSuit.SPADES)
+                .cards(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.getLowerCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+    }
+
     @Test @DisplayName("Check if has manilha")
     void checkIfHasManilha(){
         intel = create()
