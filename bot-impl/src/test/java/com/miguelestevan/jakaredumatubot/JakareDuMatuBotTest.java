@@ -285,14 +285,16 @@ class JakareDuMatuBotTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
             );
             List<GameIntel.RoundResult> roundResults = List.of();
-            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(roundResults, List.of(), vira, 1)
                     .botInfo(botCards, 5)
                     .opponentScore(2)
                     .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                     .build();
-            System.out.println(jakareDuMatuBot.sortedListCards(intel, vira));
+
+            assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(0).getRank().value(), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS).getRank().value());
+            assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(2).getRank().value(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS).getRank().value());
 
         }
     }
