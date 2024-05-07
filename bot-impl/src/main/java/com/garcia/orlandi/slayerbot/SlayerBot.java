@@ -1,17 +1,12 @@
 package com.garcia.orlandi.slayerbot;
 
-import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-import com.garcia.orlandi.slayerbot.SlayerBotUtils.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 public class SlayerBot implements BotServiceProvider {
 
