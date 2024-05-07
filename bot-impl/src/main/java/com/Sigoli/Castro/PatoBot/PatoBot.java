@@ -168,26 +168,18 @@ public class PatoBot implements BotServiceProvider {
             }
         }
 
-        if (!roundResults.isEmpty()) {
-            if (roundResults.contains(GameIntel.RoundResult.WON)) {
-                if (score >= 3 && checkIfHasZap(hand, vira)) {
+        if (roundResults.contains(GameIntel.RoundResult.WON)) {
+            if (score >= 3 && checkIfHasZap(hand, vira)) return 1;
+            else if (score >= 4) return 0;
+            else if (score >= 1) return 0;
+            else return -1;
+        } else {
+            if (checkIfHasZap(hand, vira) || checkIfHasCopas(hand, vira))
+                if (score >= 4) {
                     return 1;
-                } else if (score >= 4 && checkIfHasManilha(hand, vira)) {
-                    return 0;
-                } else if (score == 3) {
-                    return 0;
-                } else {
-                    return -1;
                 }
-            } else {
-                if (score >= 4 && (checkIfHasZap(hand, vira) || checkIfHasCopas(hand, vira))) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            }
+            return -1;
         }
-        return -1;
     }
 
     public boolean checkIfHasZap(List<TrucoCard> hand, TrucoCard vira) {
