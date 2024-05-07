@@ -523,4 +523,16 @@ public class PauladaSecaBotTest {
         boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
         assertThat(result).isTrue();
     }
+
+    @Test
+    @DisplayName("Mao de onze: aceita se valor da mão for maior ou igual a 28")
+    void MaoOnzeAceitaSeMaoForte() {
+        maoPlayer = List.of(TrucoCard.of(THREE, DIAMONDS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(TWO, SPADES));
+        vira = TrucoCard.of(FIVE, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+        boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(result).isTrue();
+    }
 }
