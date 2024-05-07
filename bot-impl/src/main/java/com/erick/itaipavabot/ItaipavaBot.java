@@ -46,6 +46,20 @@ public class ItaipavaBot implements BotServiceProvider {
             return CardToPlay.of(findLowestCardToWin(gameIntel));
         }
     }
+    
+    private CardToPlay secondRound(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+        if (lastRound(intel).equals(GameIntel.RoundResult.LOST)){
+            return CardToPlay.of(getHighestCard(myCards, intel));
+        } else if (lastRound(intel).equals(GameIntel.RoundResult.WON)) {
+            return CardToPlay.of(getLowestCard(myCards, intel));
+        }
+        return CardToPlay.of(secondBestCard(intel));
+    }
+
+    private static GameIntel.RoundResult lastRound(GameIntel intel) {
+        return intel.getRoundResults().get(intel.getRoundResults().size() - 1);
+    }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -63,15 +77,18 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return firstRound(intel);
+        if (numberOfRound(intel) == 1) {
+            return firstRound(intel);
+        } else {
+            return secondRound(intel);
+        }
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (hasCasalMaior(intel)) return 1;
-        if (findHowManyManilhas(intel) == 2) return 0;
-        if (hasCard(intel, true) && hasCard(intel, TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))) return 0;
-        return -1;
+        if (handPowerLevel(intel) >= 9) return 1;
+        if (handPowerLevel(intel) < 5) return -1;
+        return 0;
     }
 
     private TrucoCard findLowestCardToWin(GameIntel gameIntel) {
@@ -184,6 +201,16 @@ public class ItaipavaBot implements BotServiceProvider {
             }
         }
         return secondLowestCard;
+    }
+
+    private int numberOfRound (GameIntel intel) {
+        if (intel.getCards().size() == 3) {
+            return 1;
+        } else if (intel.getCards().size() == 2) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }
 
