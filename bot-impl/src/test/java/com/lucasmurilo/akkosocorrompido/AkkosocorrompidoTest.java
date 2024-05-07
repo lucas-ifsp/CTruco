@@ -1,30 +1,16 @@
 package com.lucasmurilo.akkosocorrompido;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+
+
+import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 
 public class AkkosocorrompidoTest {
+    private Akkosocorrompido bot;
 
-    @Test
-    public void testGetMaoDeOnzeResponse_ShouldCallUnsupportedOperationException() {
-        BotServiceProvider bot = new Akkosocorrompido();
-        assertThrows(UnsupportedOperationException.class, () -> bot.getMaoDeOnzeResponse(null));
-    }
-
-    @Test
-    public void testDecideIfRaises_ShouldCallUnsupportedOperationException() {
-        BotServiceProvider bot = new Akkosocorrompido();
-        assertThrows(UnsupportedOperationException.class, () -> bot.decideIfRaises(null));
-    }
-
-    @Test
-    public void testChooseCard_ShouldCallUnsupportedOperationException() {
-        BotServiceProvider bot = new Akkosocorrompido();
-        assertThrows(UnsupportedOperationException.class, () -> bot.chooseCard(null));
-    }
-
-    @Test
-    public void testGetRaiseResponse_ShouldCallUnsupportedOperationException() {
-        BotServiceProvider bot = new Akkosocorrompido();
-        assertThrows(UnsupportedOperationException.class, () -> bot.getRaiseResponse(null));
+    @BeforeEach
+    public void setup() {
+        bot = new Akkosocorrompido();
     }
 }
