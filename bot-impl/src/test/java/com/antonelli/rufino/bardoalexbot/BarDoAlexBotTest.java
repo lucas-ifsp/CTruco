@@ -67,4 +67,23 @@ public class BarDoAlexBotTest {
         ));
         assertEquals(1, bot.getRaiseResponse(intel));
     }
+
+    public class BarDoAlexBotTest {
+
+        @Test
+        public void testGetMaoDeOnzeResponse() {
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel();
+            intel.setBotScore(0);
+            intel.setOpponentScore(11);
+            intel.setCards(Arrays.asList(
+                    new TrucoCard(7, COPAS),
+                    new TrucoCard(7, ESPADA),
+                    new TrucoCard(3, ESPADA),
+                    new TrucoCard(4, ESPADA)
+            ));
+            assertTrue(bot.getMaoDeOnzeResponse(intel));
+        }
+    }
+
 }
