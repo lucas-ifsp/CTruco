@@ -124,13 +124,31 @@ public class MalasiaBotTest {
         }
 
         @Test
-        @DisplayName("Should accept raise if have MaoGiga")
-        void shouldAcceptRaiseIfHaveMaoGiga() {
+        @DisplayName("Should reraise if have MaoGiga")
+        void shouldRaiseIfHaveMaoGiga() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
 
             List<TrucoCard> Mao = Arrays.asList(
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
                     TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(1,malasiaBot.getRaiseResponse(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should reraise if have MaoZapOuCopasEfiguras")
+        void shouldRaiseIfHaveMaoZapOuCopasEfiguras() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
 
             stepBuilder = GameIntel.StepBuilder.with()
