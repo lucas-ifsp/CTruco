@@ -86,6 +86,8 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
+//        System.out.println(intel);
+//        System.out.println(intel.getCards());
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCard = intel.getCards().get(0);
@@ -155,15 +157,17 @@ public class PatoBot implements BotServiceProvider {
         if (hand.size() == 3) {
             return 1;
         }
-        for (TrucoCard card : hand) {
-            if (card.isManilha(vira)) {
-                score += 3;
-            } else if (card.compareValueTo(CardToCompare, vira) >= 0) {
-                score++;
+        if (!hand.isEmpty()) {
+            for (TrucoCard card : hand) {
+                if (card.isManilha(vira)) {
+                    score += 3;
+                } else if (card.compareValueTo(CardToCompare, vira) >= 0) {
+                    score++;
+                }
             }
-        }
-        if (checkIfStrongerCardIsThree(intel)) {
-            score--;
+            if (checkIfStrongerCardIsThree(intel)) {
+                score--;
+            }
         }
 
         if (!roundResults.isEmpty()) {
