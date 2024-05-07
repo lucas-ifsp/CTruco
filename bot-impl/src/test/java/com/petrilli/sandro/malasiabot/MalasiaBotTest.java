@@ -124,6 +124,24 @@ public class MalasiaBotTest {
         }
 
         @Test
+        @DisplayName("Should refuse raise if have MaoMediaSemBoasCartas")
+        void shouldRefuseRaiseIfHaveMaoMediaSemBoasCartas() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
+        }
+
+        @Test
         @DisplayName("Should accept raise if have MaoGiga")
         void shouldAcceptRaiseIfHaveMaoGiga() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
