@@ -562,6 +562,18 @@ public class PatoBotTest {
     }
 
     @Test
+    @DisplayName("Should decline 'Truco' if my cards are weak and i won the first round")
+    public void shouldRefuseTrucoIfMyHandIsWeakAndIWinFirstRound() {
+        TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
+        when(intel.getVira()).thenReturn(vira);
+        assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
     @DisplayName("Should decline 'Truco' if i have middle cards and lost the first round")
     public void shouldAcceptTrucoIfIHaveOurosAndLostTheFirstRound() {
         TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
