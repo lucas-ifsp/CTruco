@@ -3,6 +3,7 @@ package com.soares.gibim.chatgptbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,20 +123,23 @@ public class ChatGptBot implements BotServiceProvider {
     }
 
     private TrucoCard whenRespondingOpponentCard(GameIntel intel){
+
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         int highestValue = 14;
         TrucoCard bestCard = null;
 
-        for (TrucoCard card : intel.getCards()){
+        List<TrucoCard> cards = intel.getCards();
+
+        for (TrucoCard card :cards){
             if (card.getRank().value() > opponentCard.get().getRank().value() && card.getRank().value() < highestValue){
                 bestCard = card;
                 highestValue = card.getRank().value();
             }
         }
-        if (bestCard == null){
-            for (TrucoCard card : intel.getCards()){
-                if (card.getRank().value() == opponentCard.get().getRank().value()) {
+        if (bestCard == null && !hasManilha(intel)){
+            for (TrucoCard card : cards){
+                if (card.getRank().value() == opponentCard.get().relativeValue(intel.getVira())) {
                     return card;
                 }
             }
