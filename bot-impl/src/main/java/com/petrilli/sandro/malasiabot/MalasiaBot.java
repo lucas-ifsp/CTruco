@@ -43,4 +43,15 @@ public class MalasiaBot implements BotServiceProvider {
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) || card.isCopas(intel.getVira()));
     }
 
+    //retorna a menor carta da mão
+    private TrucoCard DeMenor(GameIntel intel) {
+        TrucoCard deMenor = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (deMenor == null || card.relativeValue(intel.getVira()) < deMenor.relativeValue(intel.getVira())) {
+                deMenor = card;
+            }
+        }
+        return deMenor;
+    }
+
 }
