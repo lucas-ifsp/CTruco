@@ -132,12 +132,13 @@ public class ChatGptBot implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
 
         for (TrucoCard card :cards){
-            if (card.getRank().value() > opponentCard.get().getRank().value() && card.getRank().value() < highestValue){
+            if (card.relativeValue(intel.getVira()) > opponentCard.get().relativeValue(intel.getVira())
+                    && card.relativeValue(intel.getVira()) < highestValue){
                 bestCard = card;
-                highestValue = card.getRank().value();
+                highestValue = card.relativeValue(intel.getVira());
             }
         }
-        if (bestCard == null && !hasManilha(intel)){
+        if (bestCard == null){
             for (TrucoCard card : cards){
                 if (card.getRank().value() == opponentCard.get().relativeValue(intel.getVira())) {
                     return card;
@@ -148,5 +149,4 @@ public class ChatGptBot implements BotServiceProvider {
             return bestCard;
         }
     }
-
 }
