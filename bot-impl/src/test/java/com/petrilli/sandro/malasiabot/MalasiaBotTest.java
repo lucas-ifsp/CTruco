@@ -63,7 +63,7 @@ public class MalasiaBotTest {
     }
 
     @Nested
-    @DisplayName("choose card tests")
+    @DisplayName("Choose card tests")
     class ChooseCardTests {
         @Test
         @DisplayName("Should play the lowest winning card against opponent")

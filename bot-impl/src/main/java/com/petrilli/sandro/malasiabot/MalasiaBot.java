@@ -1,13 +1,8 @@
 package com.petrilli.sandro.malasiabot;
-
-import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +16,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         int response = -1;
 
-        if (MaoGiga(intel) || MaoZapOuCopasEasAtres(intel) || MaoZapOuCopasEfiguras(intel)) {
+        if (MaoGiga(intel) || MaoZapOuCopasEAsAtres(intel) || MaoZapOuCopasEFiguras(intel)) {
             if (intel.getScore() + intel.getHandPoints() >= 12) {
                 return 0;
             }
             return 1;
         }
 
-        if (MaoEspadasOuOurosEasAtres(intel) || MaoEspadasOuOurosEfiguras(intel) || MaoMediaComUmaBoaCarta(intel) || MaoComDuasBoasSemManilha(intel)) {
+        if (MaoEspadaOuOuroEAsATres(intel) || MaoEspadasOuOurosEFiguras(intel) || MaoMediaComUmaBoaCarta(intel) || MaoComDuasBoasSemManilha(intel)) {
             if (intel.getOpponentScore() + intel.getHandPoints() >= 12) {
                 return 1;
             }
@@ -62,16 +57,14 @@ public class MalasiaBot implements BotServiceProvider {
 
         if (intel.getOpponentScore() == 11 || intel.getScore() == 11) {
             return false;
-        }
-        else{
+        } else {
             List<GameIntel.RoundResult> round = intel.getRoundResults();
 
-            if (MaoGiga(intel)) {
-                if (round.get(0) == (GameIntel.RoundResult.LOST) || round.get(0) == GameIntel.RoundResult.DREW) {
+            if (!round.isEmpty()) {
+                if (MaoGiga(intel) && (round.get(0) == GameIntel.RoundResult.LOST || round.get(0) == GameIntel.RoundResult.DREW)) {
                     return true;
                 }
             }
-
         }
         return false;
     }
@@ -86,7 +79,6 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
-    //retorna a menor carta da mão
     private TrucoCard DeMenor(GameIntel intel) {
         TrucoCard deMenor = null;
         for (TrucoCard card : intel.getCards()) {
@@ -94,10 +86,10 @@ public class MalasiaBot implements BotServiceProvider {
                 deMenor = card;
             }
         }
+
         return deMenor;
     }
 
-    //retorna a maior carta da mão
     private TrucoCard DeMaior(GameIntel intel) {
         TrucoCard deMaior = null;
         for (TrucoCard card : intel.getCards()) {
@@ -108,9 +100,8 @@ public class MalasiaBot implements BotServiceProvider {
         return deMaior;
     }
 
-    //retorna menor carta na mão que ganha da carta que o oponente jogou
     private TrucoCard DeMenorQuePodeGanhar(GameIntel intel) {
-        TrucoCard DeMenorQuePodeGanhar = null;
+        TrucoCard deMenorQuePodeGanhar = null;
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
@@ -120,12 +111,17 @@ public class MalasiaBot implements BotServiceProvider {
                 int cardValue = card.relativeValue(vira);
                 int opponentCardValueRelative = opponentCardValue.relativeValue(vira);
                 if (cardValue > opponentCardValueRelative &&
-                        (DeMenorQuePodeGanhar == null || cardValue < DeMenorQuePodeGanhar.relativeValue(vira))) {
-                    DeMenorQuePodeGanhar = card;
+                        (deMenorQuePodeGanhar == null || cardValue < deMenorQuePodeGanhar.relativeValue(vira))) {
+                    deMenorQuePodeGanhar = card;
                 }
             }
         }
-        return DeMenorQuePodeGanhar;
+
+        if (deMenorQuePodeGanhar == null) {
+            deMenorQuePodeGanhar = DeMenor(intel);
+        }
+
+        return deMenorQuePodeGanhar;
     }
 
     private boolean MaoGiga(GameIntel intel) {
@@ -145,7 +141,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean MaoZapOuCopasEfiguras(GameIntel intel) {
+    private boolean MaoZapOuCopasEFiguras(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
         int figurasCount = 0;
@@ -166,7 +162,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean MaoEspadasOuOurosEfiguras(GameIntel intel) {
+    private boolean MaoEspadasOuOurosEFiguras(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
         int figurasCount = 0;
@@ -187,7 +183,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean MaoZapOuCopasEasAtres(GameIntel intel) {
+    private boolean MaoZapOuCopasEAsAtres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
         int boasCartasCount = 0;
@@ -208,7 +204,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean MaoEspadasOuOurosEasAtres(GameIntel intel) {
+    private boolean MaoEspadaOuOuroEAsATres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
         int boasCartasCount = 0;
