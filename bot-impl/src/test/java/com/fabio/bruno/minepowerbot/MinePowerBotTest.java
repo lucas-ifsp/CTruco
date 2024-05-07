@@ -124,12 +124,21 @@ class MinePowerBotTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"4", "5", "6"}) // só 4 e 5 passam no teste
-    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold. (only the first and second should pass)")
+    @CsvSource({"3", "4", "5"})
+    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
     void shouldRaiseIfOpponentScoreIsEqualOrLessThanThreshold(int opponentScore) {
         intel = create().scoreOponent(opponentScore).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"6", "7", "8"}) // só 4 e 5 passam no teste
+    @DisplayName("Should not ask for a point raise if opponent score is greater than the threshold.")
+    void shouldNotRaiseIfOpponentScoreIsGreaterThanThreshold(int opponentScore) {
+        intel = create().scoreOponent(opponentScore).finish();
+        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        assertThat(sut.decideIfRaises(intel)).isFalse();
     }
 
     @ParameterizedTest
