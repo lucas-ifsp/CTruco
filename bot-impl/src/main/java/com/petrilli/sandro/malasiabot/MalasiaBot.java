@@ -190,7 +190,7 @@ public class MalasiaBot implements BotServiceProvider {
     private boolean MaoZapOuCopasEasAtres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
-        int figurasCount = 0;
+        int boasCartasCount = 0;
         int manilhasCount = 0;
 
         for (TrucoCard card : intel.getCards()) {
@@ -199,10 +199,10 @@ public class MalasiaBot implements BotServiceProvider {
                 manilhasCount++;
             }
             if (cardValue >= 7 && cardValue <= 9) {
-                figurasCount++;
+                boasCartasCount++;
             }
         }
-        if (manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && boasCartasCount >= 1) {
             return true;
         }
         return false;
@@ -211,7 +211,7 @@ public class MalasiaBot implements BotServiceProvider {
     private boolean MaoEspadasOuOurosEasAtres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
-        int figurasCount = 0;
+        int boasCartasCount = 0;
         int manilhasCount = 0;
 
         for (TrucoCard card : intel.getCards()) {
@@ -220,10 +220,10 @@ public class MalasiaBot implements BotServiceProvider {
                 manilhasCount++;
             }
             if (cardValue >= 7 && cardValue <= 9) {
-                figurasCount++;
+                boasCartasCount++;
             }
         }
-        if (manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && boasCartasCount == 1) {
             return true;
         }
         return false;
