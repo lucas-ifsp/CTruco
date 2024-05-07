@@ -18,10 +18,11 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
 
         List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
+        List<TrucoCard> threes = utils.getThreesAtHand(cards);
 
         if(manilhas.isEmpty()){
             return false;
-        }else if(manilhas.size() == 2){
+        }else if(manilhas.size() == 2 || !threes.isEmpty()){
             return true;
         }
 
