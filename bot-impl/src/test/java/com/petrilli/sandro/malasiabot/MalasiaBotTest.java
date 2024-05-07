@@ -145,8 +145,8 @@ public class MalasiaBotTest {
         }
 
         @Test
-        @DisplayName("Should accept raise if have MaoGiga")
-        void shouldAcceptRaiseIfHaveMaoGiga() {
+        @DisplayName("Should reraise if have MaoGiga")
+        void shouldReraiseIfHaveMaoGiga() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
 
             List<TrucoCard> Mao = Arrays.asList(
