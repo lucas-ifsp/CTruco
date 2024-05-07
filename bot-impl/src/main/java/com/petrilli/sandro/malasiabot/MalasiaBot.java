@@ -26,7 +26,7 @@ public class MalasiaBot implements BotServiceProvider {
             return 1;
         }
 
-        if(MaoZapOuCopasEasAtres(intel)) {
+        if(MaoEspadasOuOurosEasAtres(intel)) {
             return 0;
         }
 
