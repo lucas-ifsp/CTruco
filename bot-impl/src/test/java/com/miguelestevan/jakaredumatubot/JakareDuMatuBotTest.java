@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -212,7 +213,47 @@ class JakareDuMatuBotTest {
 
     @Nested
     class chooseCard {
+        // First Hand (Estevan)
 
+        // Second Hand (Miguel)
+        // Se a carta mais fraca das duas mata a segunda carta do adversário jogar a mais fraca
+        @Test
+        @DisplayName("Should play the weakest card if it kills the opponent's second card")
+        public void ShouldPlayTheWeakestCardIfItKillsTheOpponentsCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST); // Perdeu a primeira rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES), //bot card
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES), //oponent card
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)); //oponent card
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        }
+        // Se não tiver feito a primeira jogar a carta mais forte caso seja o primeiro a jogar
+        // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
+        @Test
+        @DisplayName("Decide that you will ask for tricks in the first round with an older couple")//Se tiver feito a primeira
+        public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
+
+        }
+
+        // Third Hand (Estevan)
     }
 
     @Nested

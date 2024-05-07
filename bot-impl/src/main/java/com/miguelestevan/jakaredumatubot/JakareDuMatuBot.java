@@ -39,7 +39,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 }
             }
             case 1 -> {
-                // First Hand
+                // Second Hand
                 System.out.println("SECOND HAND");
             }
             case 2 -> {
@@ -56,6 +56,17 @@ public class JakareDuMatuBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
+        switch (intel.getRoundResults().size()) {
+            case 0 -> {
+                // First Hand
+                return null;
+            }
+            case 1->{
+                // Second Hand
+                System.out.println("SECOND HAND");
+                return null;
+            }
+        }
         return null;
     }
 
