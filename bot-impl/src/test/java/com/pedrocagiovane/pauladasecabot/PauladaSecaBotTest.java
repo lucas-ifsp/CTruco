@@ -427,7 +427,7 @@ public class PauladaSecaBotTest {
 
     @Test
     @DisplayName("Aceita o truco na primeira se tem manilha e o valor da mão for maior que 24")
-    void aceitaTrucoPrimeiraSeTemManilhaEAMaoValeMais25() {
+    void aceitaTrucoPrimeiraSeTemManilhaEAMaoValeMais24() {
         maoPlayer = List.of(TrucoCard.of(ACE,CLUBS), TrucoCard.of(SEVEN, DIAMONDS), TrucoCard.of(JACK, SPADES));
         vira = TrucoCard.of(SIX, SPADES);
         roundResult = List.of();
@@ -436,4 +436,17 @@ public class PauladaSecaBotTest {
         int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
         assertThat(resultado).isZero();
     }
+
+    @Test
+    @DisplayName("Aceita o truco na primeira se nao tem manilha e o valor da mão for maior que 28")
+    void aceitaTrucoPrimeiraSeNaoTemManilhaEAMaoValeMais28() {
+        maoPlayer = List.of(TrucoCard.of(TWO,CLUBS), TrucoCard.of(TWO, DIAMONDS), TrucoCard.of(THREE, SPADES));
+        vira = TrucoCard.of(SIX, SPADES);
+        roundResult = List.of();
+        cartas = List.of();
+        stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+        int resultado = pauladaSecaBot.getRaiseResponse(stepBuilder.build());
+        assertThat(resultado).isZero();
+    }
+
 }
