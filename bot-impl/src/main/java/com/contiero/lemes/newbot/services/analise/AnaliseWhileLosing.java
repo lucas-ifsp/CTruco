@@ -65,7 +65,21 @@ public class AnaliseWhileLosing implements Analise {
     }
 
     private HandStatus oneCardHandler(){
-        return HandStatus.MEDIUM;
+        TrucoCard myCard = intel.getCards().get(0);
+        if(haveAtLeastOneManilha()){
+            if(thrownBiggerCardsThen(myCard)){
+                return HandStatus.GOD;
+            }
+            return HandStatus.GOOD;
+        }
+        if (myCard.relativeValue(intel.getVira()) >= 5){
+            return HandStatus.MEDIUM;
+        }
+        return HandStatus.BAD;
+    }
+
+    private boolean thrownBiggerCardsThen(TrucoCard myCard) {
+        return intel.getOpenCards().stream().anyMatch(card -> card.compareValueTo(myCard, intel.getVira()) >= 1);
     }
 
     private boolean haveAtLeastTwoManilhas(){
