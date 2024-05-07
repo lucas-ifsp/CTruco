@@ -104,7 +104,10 @@ public class MalasiaBotTest {
             assertEquals(CardRank.TWO, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
             assertEquals(CardSuit.SPADES, malasiaBot.chooseCard(stepBuilder.build()).content().getSuit());
         }
-
+    }
+    @Nested
+    @DisplayName("Raise Response Tests")
+    class raiseResponseTests {
         @Test
         @DisplayName("Should refuse raise if have MaoLixo")
         void shouldRefuseRaiseIfHaveMaoLixo() {
