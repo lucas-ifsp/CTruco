@@ -137,6 +137,16 @@ public class ItaipavaBot implements BotServiceProvider {
         return myCards.stream().anyMatch(cards -> cards.getRank() == card.getRank());
     }
 
+    public boolean hasCard(GameIntel gameIntel, boolean hasZap) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        for (TrucoCard card : myCards) {
+            if (card.isZap(gameIntel.getVira())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasCasalMaior(GameIntel gameIntel) {
         List<TrucoCard> myCards = gameIntel.getCards();
         boolean hasManilhaClubs = myCards.stream()
