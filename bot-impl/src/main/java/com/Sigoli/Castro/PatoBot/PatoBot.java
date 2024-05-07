@@ -148,38 +148,43 @@ public class PatoBot implements BotServiceProvider {
     public int checkIfAcceptRaise(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
+        TrucoCard CardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        int score = 0;
 
         if (hand.size() == 3) {
             return 1;
         }
+        for (TrucoCard card : hand) {
+            if (card.isManilha(vira)) {
+                score += 3;
+            } else if (card.compareValueTo(CardToCompare, vira) >= 0) {
+                score++;
+            }
+        }
+        if (checkIfStrongerCardIsThree(intel)) {
+            score--;
+        }
 
         if (!roundResults.isEmpty()) {
-            if (roundResults.get(0) == GameIntel.RoundResult.WON) {
-                for (TrucoCard card : hand) {
-                    if (card.isZap(vira) || card.isCopas(vira)) {
-                        return 1;
-                    } else if (card.isEspadilha(vira) || card.isOuros(vira)) {
-                        return 0;
-                    }
+            if (roundResults.contains(GameIntel.RoundResult.WON)) {
+                if (score >= 3 && checkIfHasZap(hand, vira)) {
+                    return 1;
+                } else if (score >= 4 && checkIfHasManilha(hand, vira)) {
+                    return 0;
+                } else if (score == 3) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (score >= 4 && (checkIfHasZap(hand, vira) || checkIfHasCopas(hand, vira))) {
+                    return 0;
+                } else {
+                    return -1;
                 }
             }
         }
-//        else {
-//            int score = 0;
-//            for (TrucoCard card : hand) {
-//                if (card.isManilha(vira)) {
-//                    score += 3;
-//                }
-//                if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), vira) == 0) {
-//                    score++;
-//                }
-//            }
-//            if (score >= 4) {
-//                return 0;
-//            }
-//            return -1;
-//        }
         return -1;
     }
 }
