@@ -2,11 +2,14 @@ package com.contiero.lemes.newbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
 import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
 import com.contiero.lemes.newbot.services.utils.PowerCalculator;
+
+import java.util.List;
 
 import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
 
@@ -28,7 +31,11 @@ public class NewBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        List<TrucoCard> myCards = intel.getCards();
+        Analise analise = createAnaliseInstance(intel);
+        status = analise.myHand();
+        if (status == GOD && myCards.size() <= 2) return true;
+        return status == GOOD && myCards.size() == 2 && PowerCalculator.powerOfCard(intel, 1) >= 8;
     }
 
     @Override
