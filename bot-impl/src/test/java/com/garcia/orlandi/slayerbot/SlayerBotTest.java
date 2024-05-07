@@ -254,4 +254,24 @@ public class SlayerBotTest {
         assertThat(maoDeOnzeResponse).isTrue();
     }
 
+    @Test
+    @DisplayName("Should accept maoDeOnze if has manilha and three at hand")
+    void shouldPlayMaoDeOnzeIfHasManilhaAndThree(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(THREE, HEARTS),
+                TrucoCard.of(SEVEN, SPADES));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        Boolean maoDeOnzeResponse = new SlayerBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(maoDeOnzeResponse).isTrue();
+    }
+
 }
