@@ -46,7 +46,7 @@ public class ItaipavaBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (findHowManyManilhas(intel) == 3) return true;
-        if (findHowManyManilhas(intel) == 2 && hasZap(intel)) return true;
+        if (findHowManyManilhas(intel) == 2 && hasCard(intel, true)) return true;
         return false;
     }
 
@@ -66,7 +66,7 @@ public class ItaipavaBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         if (hasCasalMaior(intel)) return 1;
         if (findHowManyManilhas(intel) == 2) return 0;
-        if (hasZap(intel) && hasThree(intel)) return 0;
+        if (hasCard(intel, true) && hasCard(intel, TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))) return 0;
         return -1;
     }
 
@@ -132,19 +132,9 @@ public class ItaipavaBot implements BotServiceProvider {
         return counter;
     }
 
-    private boolean hasZap(GameIntel gameIntel) {
+    public boolean hasCard(GameIntel gameIntel, TrucoCard card) {
         List<TrucoCard> myCards = gameIntel.getCards();
-        for (TrucoCard card : myCards) {
-            if (card.isZap(gameIntel.getVira())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasThree(GameIntel gameIntel) {
-        List<TrucoCard> myCards = gameIntel.getCards();
-        return myCards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+        return myCards.stream().anyMatch(cards -> cards.getRank() == card.getRank());
     }
 
     public boolean hasCasalMaior(GameIntel gameIntel) {
