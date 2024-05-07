@@ -54,7 +54,6 @@ public class MalasiaBotTest {
 
     List<TrucoCard> openCardsEmpty = List.of();
 
-
     private GameIntel.StepBuilder stepBuilder;
 
     @BeforeEach
@@ -85,8 +84,7 @@ public class MalasiaBotTest {
         }
 
 
-        @Test
-        @DisplayName("Should play the lowest manilha card against opponent")
+        @Test        @DisplayName("Should play the lowest manilha card against opponent")
         void shouldPlayTheLowestManilhaCardAgainstOpponentTest() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
