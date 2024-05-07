@@ -211,7 +211,7 @@ public class SlayerBotTest {
 
         CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
         TrucoCard chosenCard = card.value();
-        assertThat(chosenCard).isEqualTo(TrucoCard.of(TWO, HEARTS));
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(KING, DIAMONDS));
     }
 
 }
