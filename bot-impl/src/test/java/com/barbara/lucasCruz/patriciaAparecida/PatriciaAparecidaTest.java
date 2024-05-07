@@ -17,7 +17,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -282,7 +282,7 @@ class PatriciaAparecidaTest {
 
     @Nested
     @DisplayName("choose card tests ")
-    class ChooseCard{
+    class ChooseCardTest{
         @Nested
         @DisplayName("Unknown Opponent Card Tests")
         class UnknownOpponentClassTests{
