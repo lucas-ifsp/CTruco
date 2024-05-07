@@ -342,6 +342,19 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
 
+            //SEGUNDA: pede truco se amarrou a primeira e consegue matar a carta(nao manilha) do oponente na segunda
+            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW) {
+                TrucoCard opponentCard = intel.getOpponentCard().get();
+                if(!opponentCard.isManilha(intel.getVira())){
+                    for (TrucoCard carta : intel.getCards()) {
+                        if (carta.getRank().value() > opponentCard.getRank().value()) {
+                            System.out.println("truco se amarrou a primeira e consegue matar a carta(nao manilha) do oponente na segunda");
+                            return true;
+                        }
+                    }
+                }
+            }
+
             //TERCEIRA: pede truco se consegue amarrar a terceira
             if (intel.getRoundResults().size() == 2 && intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
