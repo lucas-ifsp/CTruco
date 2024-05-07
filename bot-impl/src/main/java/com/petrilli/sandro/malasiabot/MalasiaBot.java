@@ -86,6 +86,17 @@ public class MalasiaBot implements BotServiceProvider {
         return deMenor;
     }
 
+    //retorna a maior carta da mão
+    private TrucoCard DeMaior(GameIntel intel) {
+        TrucoCard deMaior = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (deMaior == null || card.relativeValue(intel.getVira()) > deMaior.relativeValue(intel.getVira())) {
+                deMaior = card;
+            }
+        }
+        return deMaior;
+    }
+
     //retorna menor carta na mão que ganha da carta que o oponente jogou
     private TrucoCard DeMenorQuePodeGanhar(GameIntel intel) {
         TrucoCard DeMenorQuePodeGanhar = null;
