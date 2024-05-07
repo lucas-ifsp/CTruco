@@ -214,4 +214,24 @@ public class SlayerBotTest {
         assertThat(chosenCard).isEqualTo(TrucoCard.of(KING, DIAMONDS));
     }
 
+    @Test
+    @DisplayName("Should not play maoDeOnze if has no manilhas at hand")
+    void shouldNotPlayMaoDeOnzeIfHasNoManilhas(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(KING, DIAMONDS),
+                TrucoCard.of(TWO, HEARTS),
+                TrucoCard.of(SEVEN, SPADES));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        Boolean maoDeOnzeResponse = new SlayerBot().getMaoDeOnzeResponse(stepBuilder.build());
+        assertThat(maoDeOnzeResponse).isFalse();
+    }
+
 }
