@@ -1,5 +1,6 @@
 package com.garcia.orlandi.slayerbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
@@ -34,5 +35,13 @@ public class SlayerBotUtils {
         }
 
         return weakerCard;
+    }
+
+    public List<TrucoCard> getThreesAtHand(List<TrucoCard> cards) {
+        return cards.stream().filter(card -> card.getRank() == CardRank.THREE).toList();
+    }
+
+    public List<TrucoCard> getTwosAndAce(List<TrucoCard> cards) {
+        return null;
     }
 }
