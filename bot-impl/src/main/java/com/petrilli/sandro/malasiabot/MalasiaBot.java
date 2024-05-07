@@ -54,4 +54,24 @@ public class MalasiaBot implements BotServiceProvider {
         return deMenor;
     }
 
+    //retorna menor carta na mão que ganha da carta que o oponente jogou
+    private TrucoCard DeMenorQuePodeGanhar(GameIntel intel) {
+        TrucoCard DeMenorQuePodeGanhar = null;
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        if (opponentCard.isPresent()) {
+            TrucoCard opponentCardValue = opponentCard.get();
+            for (TrucoCard card : intel.getCards()) {
+                int cardValue = card.relativeValue(vira);
+                int opponentCardValueRelative = opponentCardValue.relativeValue(vira);
+                if (cardValue > opponentCardValueRelative &&
+                        (DeMenorQuePodeGanhar == null || cardValue < DeMenorQuePodeGanhar.relativeValue(vira))) {
+                    DeMenorQuePodeGanhar = card;
+                }
+            }
+        }
+        return DeMenorQuePodeGanhar;
+    }
+
 }
