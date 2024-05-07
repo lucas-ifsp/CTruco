@@ -27,10 +27,11 @@ public class SlayerBot implements BotServiceProvider {
             return false;
         }
 
-        if (game.getOpenCards().size() == 1) {
-            TrucoCard opponentCard = game.getOpenCards().get(0);
+        if (game.getOpenCards().size() == 2) {
+            TrucoCard opponentCard = game.getOpenCards().get(1);
             CardRank zapRank = vira.getRank().next();
 
+            //usar isZap
             boolean hasZap = game.getCards().stream()
                     .anyMatch(card -> card.getRank() == zapRank && card.getSuit() == CardSuit.CLUBS);
 
@@ -55,7 +56,7 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
 
-        if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 1) {
+        if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 2) {
             TrucoCard selectedCard = cards.stream()
                     .filter(card -> !card.equals(TrucoCard.closed()))
                     .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
@@ -63,9 +64,7 @@ public class SlayerBot implements BotServiceProvider {
 
             return CardToPlay.of(selectedCard);
         }
-        List<TrucoCard> botManilhas = cards.stream()
-                .filter(card -> card.isManilha(vira))
-                .toList();
+        List<TrucoCard> botManilhas = utils.getManilhas(cards, vira);
 
         boolean hasTied = intel.getRoundResults().contains(GameIntel.RoundResult.DREW);
 
@@ -103,12 +102,17 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
 
-        Set<CardRank> strongRanks = Set.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
+        Set<CardRank> strongRanks = Set.of(CardRank.TWO, CardRank.THREE);
 
-        boolean hasManilha = cards.stream().anyMatch(card -> card.isManilha(vira));
+        boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
+        boolean hasCopas = cards.stream().anyMatch(card -> card.isCopas(vira));
         boolean hasStrongCards = cards.stream().anyMatch(card -> strongRanks.contains(card.getRank()));
 
-        if (hasManilha || hasStrongCards) {
+        if (hasCopas && hasStrongCards) {
+            return 0;
+        } else if (hasCopas && hasZap) {
+            return 0;
+        } else if (hasZap && hasStrongCards) {
             return 0;
         } else {
             return -1;

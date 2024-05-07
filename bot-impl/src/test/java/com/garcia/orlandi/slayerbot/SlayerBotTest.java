@@ -28,11 +28,11 @@ public class SlayerBotTest {
         TrucoCard opponentCard = TrucoCard.of(JACK, CardSuit.HEARTS);
         TrucoCard zap = TrucoCard.of(CardRank.FIVE, CLUBS);
         TrucoCard winningCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
-
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
         List<TrucoCard> cards = Arrays.asList(zap, winningCard);
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), Arrays.asList(opponentCard), vira, 1)
+                .gameInfo(List.of(), openCards, vira, 1)
                 .botInfo(cards, 0)
                 .opponentScore(0)
                 .opponentCard(opponentCard);
@@ -222,6 +222,33 @@ public class SlayerBotTest {
 
         boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
         assertThat(shouldRequestTruco).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should play the zap to win against the opponent's manilha of hearts")
+    void shouldPlayZapToWinAgainstOpponentManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+
+        TrucoCard opponentManilha = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira, opponentManilha);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentManilha);
+
+        SlayerBot bot = new SlayerBot();
+
+        CardToPlay cardToPlay = bot.chooseCard(stepBuilder.build());
+        TrucoCard expectedZap = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+        assertThat(cardToPlay.value()).isEqualTo(expectedZap);
     }
 }
 
