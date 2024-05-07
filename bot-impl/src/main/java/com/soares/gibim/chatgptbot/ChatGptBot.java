@@ -34,6 +34,9 @@ public class ChatGptBot implements BotServiceProvider {
             if (handStrength(intel) <= 21){
                 return CardToPlay.of(strongestCard(intel));
             }
+            if (handStrength(intel) > 21){
+                return CardToPlay.of(strongestCard(intel));
+            }
         }
         return null;
     }
