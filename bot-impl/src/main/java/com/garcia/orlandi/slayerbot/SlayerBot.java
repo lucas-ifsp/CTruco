@@ -14,7 +14,16 @@ public class SlayerBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
+
+        if(manilhas.isEmpty()){
+            return false;
+        }
+
+        return true;
     }
 
     @Override
