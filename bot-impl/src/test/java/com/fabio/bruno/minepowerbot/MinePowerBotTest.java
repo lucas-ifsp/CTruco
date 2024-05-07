@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -58,6 +59,19 @@ class MinePowerBotTest {
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should play the manilha in the first round if it has only one and if it is the first to play")
+    void shouldPlayTheManilhaInTheFirstRoundIfItIsTheOnlyOneAndIfItIsTheFirstToPlay(){
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)).finish();
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+    }
+
 
     @Test
     @DisplayName("Should raise if bot has two cards above rank two")
