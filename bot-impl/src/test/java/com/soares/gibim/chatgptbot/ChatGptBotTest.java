@@ -24,55 +24,59 @@ public class ChatGptBotTest {
     void setUp(){sut = new ChatGptBot(); }
 
     @Nested
-    @DisplayName("When is the first Round")
-    class FirstRound{
-
+    @DisplayName("Testing chooseCard")
+    class chooseCardTest {
         @Nested
-        @DisplayName("When bot is the first to play")
-        class FirstToPlay{
+        @DisplayName("When is the first Round")
+        class FirstRound {
 
-            @Test
-            @DisplayName("If only have bad cards then discard the one with lower value")
-            void IfOnlyHaveBadCardsThenDiscardTheOneWithLowerValue (){
-                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            @Nested
+            @DisplayName("When bot is the first to play")
+            class FirstToPlay {
 
-                List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
-                );
+                @Test
+                @DisplayName("If only have bad cards then discard the one with lower value")
+                void IfOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-                List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                        CardRank.ACE, CardSuit.DIAMONDS)
-                );
-                intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), openCards, vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(0);
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                    );
 
-                assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
-            }
+                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                            CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
 
-            @Test
-            @DisplayName("If only have middle cards then use the one with highest value")
-            void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue(){
-                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
 
-                List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
-                );
+                @Test
+                @DisplayName("If only have middle cards then use the one with highest value")
+                void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-                List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                        CardRank.ACE, CardSuit.DIAMONDS)
-                );
-                intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), openCards, vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(0);
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                    );
 
-                assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                            CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
             }
         }
     }
