@@ -26,6 +26,10 @@ public class MalasiaBot implements BotServiceProvider {
             return -1;
         }
 
+        if (MaoMediaSemBoasCartas(intel)){
+            return -1;
+        }
+
         return 0;
     }
 
@@ -105,6 +109,23 @@ public class MalasiaBot implements BotServiceProvider {
                 }
             }
             return false;
+    }
+
+
+    private boolean MaoMediaSemBoasCartas(GameIntel intel) {
+
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(vira);
+            if (cardValue < 4 ){
+                return false;
+            }
+            if (cardValue > 7){
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean MaoLixo(GameIntel intel) {
