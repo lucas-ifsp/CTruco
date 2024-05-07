@@ -27,10 +27,9 @@ public class PatriciaAparecida implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(intel.getHandPoints() > 12) throw new IllegalArgumentException("Cant Increase Points indefinitely");
-        return (getRaiseResponse(intel)==1 || getRaiseResponse(intel)==0);
+        return (getRaiseResponse(intel) == 1 || getRaiseResponse(intel) == 0);
     }
 
-    //fornece o cartão a ser jogado ou descartado na rodada atual.
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(intel.getCards().isEmpty()) throw new IllegalStateException("Cannot choose a card without cards");
@@ -247,7 +246,6 @@ public class PatriciaAparecida implements BotServiceProvider {
         }
         return Optional.empty();
     }
-
 
     public int getNumberOfCardsInHand(GameIntel intel) {
         return intel.getCards().size();

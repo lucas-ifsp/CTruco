@@ -409,54 +409,67 @@ class PatriciaAparecidaTest {
         @Nested
         @DisplayName("Raise Rsponse Round 3")
         class RaiseRespondeRound3{
-            @Test
-            @DisplayName("Should Return 1 If We Can Win")
-            public void ShouldReturn1IfWeSartAndCanWin(){
+            @Nested
+            @DisplayName("Opponent Start")
+            class OpponentStart {
+                @Test
+                @DisplayName("Should Return 1 If We Can Win")
+                public void ShouldReturn1IfWeSartAndCanWin() {
 
-                when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
-                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR,SPADES)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(TWO,SPADES));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE,SPADES)));
+                    when(intel.getRoundResults()).thenReturn(List.of(WON, LOST));
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR, SPADES)));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
+                    when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE, SPADES)));
 
-                assertEquals(1, patricia.getRaiseResponse(intel));
+                    assertEquals(1, patricia.getRaiseResponse(intel));
+                }
+
+                @Test
+                @DisplayName("Should Return 1 If We Can Draw")
+                public void ShouldReturn1IfWeSartAndCanDraw() {
+                    when(intel.getRoundResults()).thenReturn(List.of(WON, LOST));
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR, SPADES)));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(FOUR, DIAMONDS));
+                    when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE, SPADES)));
+
+                    assertEquals(1, patricia.getRaiseResponse(intel));
+                }
+
+                //retorna -1 se nao empata nem ganha
             }
 
-            @Test
-            @DisplayName("Should Return 1 If We Can Draw")
-            public void ShouldReturn1IfWeSartAndCanDraw(){
-                when(intel.getRoundResults()).thenReturn(List.of(WON,LOST));
-                when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FOUR,SPADES)));
-                when(intel.getVira()).thenReturn(TrucoCard.of(FOUR,DIAMONDS));
-                when(intel.getCards()).thenReturn(List.of(TrucoCard.of(FIVE,SPADES)));
+            @Nested
+            @DisplayName("We start")
+            class WeStart {
 
-                assertEquals(1, patricia.getRaiseResponse(intel));
-            }
+                @Test
+                @DisplayName("Should Return 1 If Prob < 11 And We Start")
+                public void ShouldReturn1IfProbLowerThan1() {
 
-            @Test
-            @DisplayName("Should Return 1 If Prob < 1 And We Start")
-            public void ShouldReturn1IfProbLowerThan1(){
-
-                List<TrucoCard> botCards = List.of(TrucoCard.of(SEVEN,DIAMONDS));
-                when(intel.getCards()).thenReturn(botCards);
-                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getRoundResults()).thenReturn(List.of(LOST,WON));
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                    List<TrucoCard> botCards = List.of(TrucoCard.of(SEVEN, DIAMONDS));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(List.of(LOST, WON));
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
 
-                assertEquals(1, patricia.getRaiseResponse(intel));
-            }
+                    assertEquals(1, patricia.getRaiseResponse(intel));
+                }
 
-            @Test
-            @DisplayName("Should Return 0 If Prob < 2 And We Start")
-            public void ShouldReturn0IfProbLowerThan2(){
+                @Test
+                @DisplayName("Should Return 0 If Prob < 22 And We Start")
+                public void ShouldReturn0IfProbLowerThan2() {
 
-                List<TrucoCard> botCards = List.of(TrucoCard.of(THREE,DIAMONDS));
-                when(intel.getCards()).thenReturn(botCards);
-                when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
-                when(intel.getRoundResults()).thenReturn(List.of(LOST,WON));
-                when(intel.getOpponentCard()).thenReturn(Optional.empty());
+                    List<TrucoCard> botCards = List.of(TrucoCard.of(THREE, DIAMONDS));
+                    when(intel.getCards()).thenReturn(botCards);
+                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getRoundResults()).thenReturn(List.of(LOST, WON));
+                    when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
-                assertEquals(0, patricia.getRaiseResponse(intel));
+                    assertEquals(0, patricia.getRaiseResponse(intel));
+                }
+
+                //retorna -1 quando prob > 22
             }
 
         }
@@ -468,7 +481,7 @@ class PatriciaAparecidaTest {
             @DisplayName("We Start")
             class WeStart {
                 @Test
-                @DisplayName("Should Return 1 If Prob < 1 To Min 2 Cards")
+                @DisplayName("Should Return 1 If Prob < 11 To Min 2 Cards")
                 public void ShouldReturn1IfProbLower1ToMin2Cards() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, SPADES),
@@ -482,7 +495,7 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should Return 0 If Prob < 2 To Min 2 Cards")
+                @DisplayName("Should Return 0 If Prob < 22 To Min 2 Cards")
                 public void ShouldReturn0IfProbLower2ToMin2Cards() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(THREE, CLUBS),
@@ -494,13 +507,15 @@ class PatriciaAparecidaTest {
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
                 }
+
+                //retorna -1 quando prob > 22
             }
 
             @Nested
-            @DisplayName("Opponent Starts")
-            class OpponentStarts {
+            @DisplayName("Opponent Start")
+            class OpponentStart {
                 @Test
-                @DisplayName("Should Return 1 If Can Win And Prob< 11 To Another Card")
+                @DisplayName("Should Return 1 If Can Win And Prob < 11 To Another Card")
                 public void ShouldReturn1IfCanWinAndProbLowerThan11ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
@@ -513,6 +528,8 @@ class PatriciaAparecidaTest {
 
                     assertEquals(1, patricia.getRaiseResponse(intel));
                 }
+
+                //Retorna -1 quando nao pode ganhar
 
                 @Test
                 @DisplayName("Should Return 0 If Can Win And 11 < Prob < 21 To Another Card")
@@ -566,6 +583,8 @@ class PatriciaAparecidaTest {
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
                 }
+
+                //retorna -1 quando a prob > 22
             }
 
             @Nested
@@ -584,6 +603,8 @@ class PatriciaAparecidaTest {
 
                     assertEquals(1, patricia.getRaiseResponse(intel));
                 }
+
+                //retorna -1 quando nao ganha
 
                 @Test
                 @DisplayName("Should Return 0 If Can Win And 11 < Prob < 21 To Another Card")
