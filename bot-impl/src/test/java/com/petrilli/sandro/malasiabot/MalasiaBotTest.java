@@ -104,6 +104,26 @@ public class MalasiaBotTest {
             assertEquals(CardRank.TWO, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
             assertEquals(CardSuit.SPADES, malasiaBot.chooseCard(stepBuilder.build()).content().getSuit());
         }
+
+        @Test
+        @DisplayName("Should play the lowest card if have MaoGiga")
+        void shouldPlayTheLowestCardIfHaveMaoGiga() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardRank.FIVE, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
+        }
+
+
     }
     @Nested
     @DisplayName("Raise Response Tests")

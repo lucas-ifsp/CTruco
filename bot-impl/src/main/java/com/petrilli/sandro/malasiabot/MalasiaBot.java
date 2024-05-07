@@ -21,7 +21,6 @@ public class MalasiaBot implements BotServiceProvider {
 
         int response = -1;
 
-
         if(MaoGiga(intel) || MaoZapOuCopasEasAtres(intel) || MaoZapOuCopasEfiguras(intel)) {
             return 1;
         }
@@ -37,8 +36,17 @@ public class MalasiaBot implements BotServiceProvider {
 
         CardToPlay cardToPlay = null;
 
+        List<GameIntel.RoundResult> round = intel.getRoundResults();
+
         if (intel.getOpponentCard().isPresent()) {
             cardToPlay = CardToPlay.of(DeMenorQuePodeGanhar(intel));
+        }
+        else {
+            if (round.isEmpty()){
+                if (MaoGiga(intel)){
+                    cardToPlay = CardToPlay.of(DeMenor(intel));
+                }
+            }
         }
 
         return cardToPlay;
@@ -46,11 +54,24 @@ public class MalasiaBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        List<GameIntel.RoundResult> round = intel.getRoundResults();
+
+        if (MaoGiga(intel)) {
+            if (round.get(0) == (GameIntel.RoundResult.LOST) || round.get(0) == GameIntel.RoundResult.DREW ) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+
+        if (MaoGiga(intel)){
+            return true;
+        }
+
         return false;
     }
 
