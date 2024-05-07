@@ -282,6 +282,12 @@ public class PauladaSecaBot implements BotServiceProvider {
             return true;
         }
 
+        //ACEITA SE VALOR DA MAO FOR MAIOR OU IGUAL A 24 E TEM MANILHA
+        if(valorMao(intel) >= 24 && contManilha(intel.getCards(), intel.getVira()) > 0){
+            System.out.println("mao de onze: valor da mao maior igual 24 e tem manilha");
+            return true;
+        }
+
         return false;
     }
 
