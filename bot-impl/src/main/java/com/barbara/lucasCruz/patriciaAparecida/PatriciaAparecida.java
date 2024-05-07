@@ -49,9 +49,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     private CardToPlay getCardWithBestProbability(List<TrucoCard> tempcards, List<Double> probCards) {
         List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
 
-        if(!StrongestCards.isEmpty()){
-            return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
-        }
+        if(!StrongestCards.isEmpty()) return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         return CardToPlay.of(tempcards.get(tempcards.size()-1));
     }
 
@@ -66,53 +64,35 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     private CardToPlay returnWeakestCardThatLoses(GameIntel intel, List<TrucoCard> tempcards) {
-        //não é a primeira jogada
-        if(!intel.getRoundResults().isEmpty()) {
-            return CardToPlay.discard(tempcards.stream().findFirst().get());
-        }
-        //é a primeira
+        if(!intel.getRoundResults().isEmpty())  return CardToPlay.discard(tempcards.stream().findFirst().get());
         else return CardToPlay.of(tempcards.stream().findFirst().get());
     }
 
     private CardToPlay returnCardThatDraws(GameIntel intel, List<TrucoCard> tempcards) {
-        //nao consegue fazer, tenta achar carta que empata
         Optional<TrucoCard> cardThatDraws = getCardThatDraws(tempcards, intel);
-
-        //se tiver carta que empata, empatar
         return cardThatDraws.isPresent() ? CardToPlay.of(cardThatDraws.get()) : null;
     }
 
     private CardToPlay returnWeakestThatWins(GameIntel intel, List<TrucoCard> tempcards) {
-        Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards, intel); //pego a mais fraca q ganha
-        //retorna a mais fraca que ganha se existir
+        Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards, intel);
         return getWeakestCardThatWins(tempcards, intel).isPresent() ? CardToPlay.of(weakestCardThatWins.get()) : null;
     }
 
     public int countProbs (double prob, GameIntel intel){
         List<Double> listProb = listProbAllCards(intel);
-        int count = 0;
-
-        for(int i=0; i<listProb.size(); i++){
-            if(listProb.get(i)< prob){;
-                count++;
-            }
-        }
-        return count;
+        return (int) listProb.stream().filter(aDouble -> aDouble < prob).count();
     }
 
     public int countProb (double prob, GameIntel intel){
         int verifyHight = 0;
         int verifyLower = 0;
-
         if(prob < 0.21){
             verifyHight = 1;
-            if(prob<0.1){
-                verifyLower = 1;
-            }
+            if(prob<0.1) verifyLower = 1;
         }
 
-        if(countProbs(0.1, intel) - verifyLower >= 1){ return 1; }
-        if(countProbs(0.21, intel) - verifyHight >= 1){ return 0; }
+        if(countProbs(0.1, intel) - verifyLower >= 1)  return 1;
+        if(countProbs(0.21, intel) - verifyHight >= 1) return 0;
 
         return -1;
     }
@@ -130,54 +110,40 @@ public class PatriciaAparecida implements BotServiceProvider {
         switch (round){
             case 1:
                 if(intel.getOpponentCard().isEmpty()){
-
-                    if(countProbs(0.11, intel) >= 2){ return 1; }
-                    if(countProbs(0.21, intel) >= 2){ return 0; }
-
+                    if(countProbs(0.11, intel) >= 2) return 1;
+                    if(countProbs(0.21, intel) >= 2) return 0;
                 }
 
                 Optional<TrucoCard> tempCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tempCardThatWins.isPresent()) {
                     TrucoCard cardThatWins = tempCardThatWins.get();
                     double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
-                    //aqui retorna a menor prob
-
                     return countProb(probCardThatWins,intel);
                 }
 
             case 2:
                 if (intel.getOpponentCard().isEmpty()){
-
-                    if(countProbs(0.11, intel) >= 2){ return 1; }
-                    if(countProbs(0.21, intel) >= 2){ return 0; }
-
+                    if(countProbs(0.11, intel) >= 2) return 1;
+                    if(countProbs(0.21, intel) >= 2) return 0;
                 }
 
                 Optional<TrucoCard> tCardThatWins = getWeakestCardThatWins(tempcards,intel);
                 if (tCardThatWins.isPresent()) {
-
                     TrucoCard cardThatWins = tCardThatWins.get();
-
                     double probCardThatWins = probabilityOpponentCardIsBetter(cardThatWins,intel);
-                    //aqui tambem (retorna a menor prob)
-
                     return countProb(probCardThatWins,intel);
                 }
 
             case 3:
                 if(intel.getOpponentCard().isEmpty()){
-                    if(listProb.get(0) < 0.1){
-                        return 1;
-                    }
-                    if(listProb.get(0) < 0.2){
-                        return 0;
-                    }
+                    if(listProb.get(0) < 0.1) return 1;
+                    if(listProb.get(0) < 0.2) return 0;
                 }
+
                 final boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
                 final boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
-                if (WeakestCardThatWinsExists || CardDrawsExists){
-                    return 1;
-                }
+
+                if (WeakestCardThatWinsExists || CardDrawsExists) return 1;
         }
 
         return -1;
