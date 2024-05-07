@@ -76,6 +76,13 @@ public class SlayerBot implements BotServiceProvider {
                         .orElse(null);
 
                 return CardToPlay.of(chosenCard);
+            }else{
+                List<TrucoCard> threes = utils.getThreesAtHand(cards);
+                List<TrucoCard> twoAndAce = utils.getTwosAndAce(cards);
+
+                if(threes.size() == 2){
+                    return CardToPlay.of(threes.get(0));
+                }
             }
         }
         return null;
