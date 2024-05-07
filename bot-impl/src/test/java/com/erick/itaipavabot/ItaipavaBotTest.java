@@ -253,4 +253,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertTrue(bot.decideIfRaises(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should return true if has 3 in hand")
+    void shouldReturnTrueIfHas3InHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List <TrucoCard> myCards = Arrays.asList(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertTrue(bot.hasCard(stepBuilder.build(), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+    }
 }
