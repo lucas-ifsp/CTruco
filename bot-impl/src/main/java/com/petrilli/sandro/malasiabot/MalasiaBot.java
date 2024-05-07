@@ -26,6 +26,10 @@ public class MalasiaBot implements BotServiceProvider {
             return 1;
         }
 
+        if(MaoEspadasOuOurosEfiguras(intel)) {
+            return 0;
+        }
+
         if(MaoLixo(intel)){
             return -1;
         }
@@ -124,6 +128,27 @@ public class MalasiaBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards()) {
             int cardValue = card.relativeValue(vira);
             if(cardValue == 13 || cardValue == 12) {
+                manilhasCount++;
+            }
+            if(cardValue >= 4 && cardValue <= 6) {
+                figurasCount++;
+            }
+        }
+        if(manilhasCount == 1 && figurasCount == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean MaoEspadasOuOurosEfiguras(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+
+        int figurasCount = 0;
+        int manilhasCount = 0;
+
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(vira);
+            if(cardValue == 11 || cardValue == 10) {
                 manilhasCount++;
             }
             if(cardValue >= 4 && cardValue <= 6) {
