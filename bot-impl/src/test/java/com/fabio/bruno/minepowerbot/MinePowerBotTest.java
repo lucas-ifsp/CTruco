@@ -137,4 +137,17 @@ class MinePowerBotTest {
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should not raise if bot score and opponent score are both 9 and our bot has no special card.")
+    void shouldNotRaiseIfBothBotsScoresAre9AndOurBotHasNoSpecialCard() {
+        intel = create().scoreMine(9).scoreOponent(9).cards(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .finish();
+
+        assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
 }
