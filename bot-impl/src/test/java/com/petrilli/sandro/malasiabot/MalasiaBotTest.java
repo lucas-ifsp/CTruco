@@ -218,21 +218,21 @@ public class MalasiaBotTest {
         }
 
         @Test
-        @DisplayName("Should accept raise if have MaoZapOuCopasEasAtres")
-        void shouldAcceptRaiseIfHaveMaoZapOuCopasEasAtres() {
+        @DisplayName("Should accept raise if duas boas sem manilha")
+        void shouldAcceptRaiseIfDuasBoasSemManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
 
             List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
                     .botInfo(Mao, 0)
                     .opponentScore(0);
 
-            assertEquals(1,malasiaBot.getRaiseResponse(stepBuilder.build()));
+            assertEquals(0,malasiaBot.getRaiseResponse(stepBuilder.build()));
         }
 
 
