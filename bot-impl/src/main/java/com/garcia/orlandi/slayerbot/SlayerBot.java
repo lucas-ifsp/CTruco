@@ -48,7 +48,7 @@ public class SlayerBot implements BotServiceProvider {
                     .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
                     .orElse(cards.get(0));
 
-            System.out.println("Bot playing (second in first round): " + selectedCard);
+            //System.out.println("Bot playing (second in first round): " + selectedCard);
             return CardToPlay.of(selectedCard);
         }
 
@@ -60,7 +60,7 @@ public class SlayerBot implements BotServiceProvider {
         if (opponentIsManilha && botManilhas.isEmpty()) {
             TrucoCard weakestCard = utils.getWeakestCard(cards, vira);
 
-            System.out.println("Bot playing weakest card (no manilhas): " + weakestCard);
+            //System.out.println("Bot playing weakest card (no manilhas): " + weakestCard);
             return CardToPlay.of(weakestCard);
         }
 
@@ -68,7 +68,7 @@ public class SlayerBot implements BotServiceProvider {
                 .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
                 .orElse(cards.get(0));
 
-        System.out.println("Bot playing (generic): " + genericCard);
+        //System.out.println("Bot playing (generic): " + genericCard);
         return CardToPlay.of(genericCard);
     }
 
