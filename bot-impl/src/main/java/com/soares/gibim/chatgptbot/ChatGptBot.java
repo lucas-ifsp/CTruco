@@ -46,7 +46,7 @@ public class ChatGptBot implements BotServiceProvider {
         }
         if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
             if (handStrength(intel) <= 9){
-                return CardToPlay.of(killOpponentCardWithTheWeakest(intel));
+                return CardToPlay.of(whenRespondingOpponentCard(intel));
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
@@ -123,7 +123,7 @@ public class ChatGptBot implements BotServiceProvider {
         return weakestCard;
     }
 
-    private TrucoCard killOpponentCardWithTheWeakest(GameIntel intel){
+    private TrucoCard whenRespondingOpponentCard(GameIntel intel){
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         int highestValue = 14;
