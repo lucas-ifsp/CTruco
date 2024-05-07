@@ -51,22 +51,13 @@ public class SlayerBot implements BotServiceProvider {
                     TrucoCard secondStrongestCard = utils.getStrongestCard(cardsWithoutZap, vira);
                     return CardToPlay.of(secondStrongestCard);
                 } else if (cardsWithoutZap.size() == 3) {
-                    if(manilhas.size() == 3){
+                    if(manilhas.size() == 3 || manilhas.size() ==1){
                         TrucoCard strongestManilha = utils.getStrongestCard(cards, vira);
-                        List<TrucoCard> cardsWithoutStrongestManilha = new ArrayList<>(cards);
-                        cardsWithoutStrongestManilha.remove(strongestManilha);
-                        TrucoCard weakestManilha = utils.getWeakestCard(manilhas, vira);
-                        cardsWithoutStrongestManilha.remove(weakestManilha);
-                        return CardToPlay.of(cardsWithoutStrongestManilha.get(0));
+                        TrucoCard secondStrongestManilha = utils.getSecondStrongestCard(cards, strongestManilha, vira);
+                        return CardToPlay.of(secondStrongestManilha);
                     } else if(manilhas.size() == 2){
                         TrucoCard weakestManilha = utils.getWeakestCard(manilhas, vira);
                         return CardToPlay.of((weakestManilha));
-                    } else if (manilhas.size() == 1) {
-                        TrucoCard strongestIsManilha = utils.getStrongestCard(cards, vira);
-                        List<TrucoCard> cardsWithoutManilha = new ArrayList<>(cards);
-                        cardsWithoutManilha.remove(strongestIsManilha);
-                        TrucoCard strongestCardExceptManilha = utils.getStrongestCard(cardsWithoutManilha, vira);
-                        return CardToPlay.of(strongestCardExceptManilha);
                     }
                 }
 
@@ -82,6 +73,9 @@ public class SlayerBot implements BotServiceProvider {
 
                 if(threes.size() == 2){
                     return CardToPlay.of(threes.get(0));
+                }else if(threes.size() == 1){
+                    TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, threes.get(0), vira);
+                    return CardToPlay.of(secondStrongestCard);
                 }
             }
         }
