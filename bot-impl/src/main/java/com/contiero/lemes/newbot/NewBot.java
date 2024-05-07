@@ -6,12 +6,23 @@ import com.bueno.spi.service.BotServiceProvider;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
 import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
+import com.contiero.lemes.newbot.services.utils.PowerCalculator;
+
+import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
 
 public class NewBot implements BotServiceProvider {
     private static Analise.HandStatus status = Analise.HandStatus.BAD;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        Analise analise = createAnaliseInstance(intel);
+        status = analise.myHand();
+        if (status == GOD) return true;
+        if (status == GOOD) {
+            int scoreDistance = intel.getScore() - intel.getOpponentScore();
+            if (scoreDistance >= 4) return true;
+            return PowerCalculator.powerOfCard(intel, 0) >= 9;
+        }
         return false;
     }
 

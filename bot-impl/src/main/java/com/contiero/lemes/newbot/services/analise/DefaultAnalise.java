@@ -3,6 +3,7 @@ package com.contiero.lemes.newbot.services.analise;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
+import com.contiero.lemes.newbot.services.utils.PowerCalculator;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,8 @@ public class DefaultAnalise implements Analise {
                     return HandStatus.GOD;
                 }
             }
-            if (powerOfCard(1) >= 5) return HandStatus.GOOD;
+
+            if (PowerCalculator.powerOfCard(intel,1) >= 5) return HandStatus.GOOD;
             return HandStatus.MEDIUM;
         }
         long handPower = powerOfTheTwoBestCards();
@@ -59,8 +61,8 @@ public class DefaultAnalise implements Analise {
     private HandStatus twoCardsHandler(List<TrucoCard> myCards){
         if (wonFirstRound()){
             if (haveAtLeastOneManilha()) return HandStatus.GOD;
-            if(powerOfCard(0) >= 8) return HandStatus.GOOD ;
-            if (powerOfCard(0) >= 4) return HandStatus.MEDIUM;
+            if(PowerCalculator.powerOfCard(intel,0) >= 8) return HandStatus.GOOD ;
+            if (PowerCalculator.powerOfCard(intel,0) >= 4) return HandStatus.MEDIUM;
             return HandStatus.BAD;
         }
         if (lostFirstRound()){
@@ -79,8 +81,8 @@ public class DefaultAnalise implements Analise {
             if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
 
             if (haveAtLeastOneManilha()){
-                if (powerOfCard(1) >= 8) return HandStatus.GOD;
-                if (powerOfCard(1) >= 6) return HandStatus.GOOD;
+                if (PowerCalculator.powerOfCard(intel,1) >= 8) return HandStatus.GOD;
+                if (PowerCalculator.powerOfCard(intel,1) >= 6) return HandStatus.GOOD;
                 return HandStatus.MEDIUM;
             }
             if (powerOfTheTwoBestCards() >= 17) return HandStatus.GOOD;
@@ -89,8 +91,8 @@ public class DefaultAnalise implements Analise {
         }
 
         if (haveAtLeastOneManilha()) return HandStatus.GOD;
-        if (powerOfCard(0) == 9) return HandStatus.GOOD;
-        if (powerOfCard(0) >= 6) return HandStatus.MEDIUM;
+        if (PowerCalculator.powerOfCard(intel,0) == 9) return HandStatus.GOOD;
+        if (PowerCalculator.powerOfCard(intel,0) >= 6) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
@@ -114,7 +116,7 @@ public class DefaultAnalise implements Analise {
             if (haveAtLeastOneManilha()){
                 return HandStatus.GOD;
             }
-            if (powerOfCard(0) == 9){
+            if (PowerCalculator.powerOfCard(intel,0) == 9){
                 long numberOfCardsBetterThanThree = intel.getOpenCards().stream()
                         .filter(card-> card.isManilha(intel.getVira()) || card.relativeValue(intel.getVira()) == 9)
                         .count();
@@ -123,17 +125,17 @@ public class DefaultAnalise implements Analise {
                 }
                 return HandStatus.GOOD;
             }
-            if (powerOfCard(0) == 8){
+            if (PowerCalculator.powerOfCard(intel,0) == 8){
                 return HandStatus.GOOD;
             }
-            if (powerOfCard(0) >= 6){
+            if (PowerCalculator.powerOfCard(intel,0) >= 6){
                 return HandStatus.MEDIUM;
             }
             return HandStatus.BAD;
         }
 
         if (intel.getHandPoints() <= 3) return HandStatus.GOD;
-        if (powerOfCard(0) >= 5) return HandStatus.GOOD;
+        if (PowerCalculator.powerOfCard(intel,0) >= 5) return HandStatus.GOOD;
         return HandStatus.BAD;
     }
 
@@ -160,15 +162,6 @@ public class DefaultAnalise implements Analise {
                 .sorted()
                 .limit(2)
                 .sum();
-    }
-
-    private long powerOfCard(int index){
-        List<TrucoCard> myCards = intel.getCards();
-        return myCards.stream()
-                .map(card -> card.relativeValue(intel.getVira()))
-                .sorted()
-                .toList()
-                .get(index);
     }
 
     private boolean wonFirstRound(){
