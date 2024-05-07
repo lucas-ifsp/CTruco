@@ -241,6 +241,7 @@ class JakareDuMatuBotTest {
                     .gameInfo(roundResults, openCards, vira, 1)
                     .botInfo(botCards, 5)
                     .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                     .build();
 
             assertThat(jakareDuMatuBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
@@ -269,6 +270,31 @@ class JakareDuMatuBotTest {
             assertEquals(jakareDuMatuBot.getName(), "JakaréDuMatuBóty");
         }
 
+    }
+
+    @Nested
+    @DisplayName("sortedListCards Tests")
+    class sortedListCards{
+        @Test
+        @DisplayName("Should ordering list of cards")
+        public void shouldOrderingListOfCards(){
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+            List<GameIntel.RoundResult> roundResults = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                    .build();
+            System.out.println(jakareDuMatuBot.sortedListCards(intel, vira));
+
+        }
     }
 
 }
