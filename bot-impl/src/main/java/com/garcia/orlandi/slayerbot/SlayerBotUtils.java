@@ -1,8 +1,10 @@
 package com.garcia.orlandi.slayerbot;
 
 import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlayerBotUtils {
@@ -22,6 +24,14 @@ public class SlayerBotUtils {
         }
 
         return strongerCard;
+    }
+
+    public TrucoCard getSecondStrongestCard(List<TrucoCard> cards, TrucoCard strongestCard, TrucoCard vira){
+        List<TrucoCard> cardsWithoutStrongest = new ArrayList<>(cards);
+        cardsWithoutStrongest.remove(strongestCard);
+        TrucoCard weakestCard = getWeakestCard(cardsWithoutStrongest, vira);
+        cardsWithoutStrongest.remove(weakestCard);
+        return cardsWithoutStrongest.get(0);
     }
 
     public TrucoCard getWeakestCard( List<TrucoCard> cards, TrucoCard vira){
