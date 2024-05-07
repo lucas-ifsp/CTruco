@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,6 +75,27 @@ public class ChatGptBotTest {
         List<TrucoCard> botCards = Collections.singletonList(
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         );
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(0, sut.getRaiseResponse(intel.build()));
+    }
+    @Test
+    @DisplayName("Accept 'truco' in the first round if the sum of the card values is greater than 24.")
+    void TestAcceptTrucoFirstRoundWithValue() {
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO,CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE,CardSuit.HEARTS));
+
         List<TrucoCard> openCards = Collections.singletonList(
                 TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
         );
