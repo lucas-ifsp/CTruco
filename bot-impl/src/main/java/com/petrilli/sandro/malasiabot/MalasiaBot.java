@@ -18,6 +18,10 @@ public class MalasiaBot implements BotServiceProvider {
         if (intel.getHandPoints() == 12)
             return -1;
 
+        if(MaoGiga(intel)) {
+            return 1;
+        }
+
         if(MaoLixo(intel)){
             return -1;
         }
@@ -84,6 +88,23 @@ public class MalasiaBot implements BotServiceProvider {
             }
         }
         return DeMenorQuePodeGanhar;
+    }
+
+    private boolean MaoGiga(GameIntel intel) {
+
+            TrucoCard vira = intel.getVira();
+            List<TrucoCard> cards = intel.getCards();
+
+            int manilhasCount = 0;
+            for (TrucoCard card : cards) {
+                if (card.relativeValue(vira) > 9) {
+                    manilhasCount++;
+                    if(manilhasCount >= 2) {
+                        return true;
+                    }
+                }
+            }
+            return false;
     }
 
     private boolean MaoLixo(GameIntel intel) {
