@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
@@ -83,6 +83,15 @@ public class BarDoAlexBotTest {
                     new TrucoCard(4, ESPADA)
             ));
             assertTrue(bot.getMaoDeOnzeResponse(intel));
+        }
+
+        @Test
+        public void testMaoDeOnzeResponseNotTriggered() {
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel();
+            intel.setBotScore(4);
+            intel.setOpponentScore(6);
+            assertFalse(bot.getMaoDeOnzeResponse(intel));
         }
     }
 
