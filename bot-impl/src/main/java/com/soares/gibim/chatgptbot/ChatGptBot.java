@@ -37,6 +37,9 @@ public class ChatGptBot implements BotServiceProvider {
             if (handStrength(intel) > 21){
                 return CardToPlay.of(strongestCard(intel));
             }
+            if (hasManilha(intel) && (handStrength(intel) > 21)){
+                return CardToPlay.of(strongestCardExceptManilha(intel));
+            }
         }
         return null;
     }
@@ -66,6 +69,16 @@ public class ChatGptBot implements BotServiceProvider {
         }
         return handStrength;
     }
+
+    private boolean hasManilha(GameIntel intel){
+        for (TrucoCard card : intel.getCards()){
+            if (card.isManilha(intel.getVira())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private TrucoCard strongestCard(GameIntel intel){
         TrucoCard strongestCard = null;
         int strength = 0;
@@ -78,6 +91,17 @@ public class ChatGptBot implements BotServiceProvider {
         return strongestCard;
     }
 
+    private TrucoCard strongestCardExceptManilha(GameIntel intel){
+        TrucoCard strongestCard = null;
+        int strength = 0;
+        for (TrucoCard card : intel.getCards()){
+            if (card.getRank().value() > strength && !card.isManilha(card)){
+                strongestCard = card;
+                strength = card.getRank().value();
+            }
+        }
+        return strongestCard;
+    }
 
     private TrucoCard weakestCard(GameIntel intel){
         TrucoCard weakestCard = null;
