@@ -136,9 +136,15 @@ public class ChatGptBot implements BotServiceProvider {
             }
         }
         if (bestCard == null){
+            for (TrucoCard card : intel.getCards()){
+                if (card.getRank().value() == opponentCard.get().getRank().value()) {
+                    return card;
+                }
+            }
             return weakestCard(intel);
         } else {
             return bestCard;
         }
     }
+
 }
