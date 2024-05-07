@@ -355,6 +355,17 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
 
+            //SEGUNDA: BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 7
+            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW) {
+                TrucoCard opponentCard = intel.getOpponentCard().get();
+                if(!opponentCard.isManilha(intel.getVira())){
+                    if(opponentCard.getRank().value() <= 7){
+                        System.out.println("BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 7");
+                        return true;
+                    }
+                }
+            }
+
             //TERCEIRA: pede truco se consegue amarrar a terceira
             if (intel.getRoundResults().size() == 2 && intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
