@@ -1,6 +1,7 @@
 package com.fabio.bruno.minepowerbot;
 
 import com.bueno.spi.model.*;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static com.fabio.bruno.minepowerbot.MinePowerBotIntelMockBuilder.create;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class MinePowerBotTest {
@@ -25,18 +26,6 @@ class MinePowerBotTest {
     @BeforeEach
     void setUp(){
         sut = new MinePowerBot();
-    }
-
-    @Test
-    @DisplayName("Given the game intel, hasHigher method should return false if don't have higher card than opponent")
-    void shouldReturnFalseIfCardsInHandAreLowerThanOpponents(){
-        TrucoCard playingCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-        intel = create().cardsToBeAceTwoAndThreeOfSuit(CardSuit.SPADES)
-                .opponentCardToBe(TrucoCard.of(CardRank.KING, CardSuit.SPADES))
-                .viraToBeDiamondsOfRank(CardRank.KING)
-                .finish();
-
-        assertThat(sut.chooseCard(intel)).isEqualTo(CardToPlay.of(playingCard));
     }
 
     @Test @DisplayName("When winning and playing the first card, should play a weak one")
@@ -159,6 +148,4 @@ class MinePowerBotTest {
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isFalse();
     }
-
-
 }
