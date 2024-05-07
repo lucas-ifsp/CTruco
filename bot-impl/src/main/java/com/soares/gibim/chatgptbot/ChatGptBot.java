@@ -27,8 +27,13 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty() && handStrength(intel) <= 9) {
-            return CardToPlay.of(weakestCard(intel));
+        if (intel.getRoundResults().isEmpty()){
+            if (handStrength(intel) <= 9){
+                return CardToPlay.of(weakestCard(intel));
+            }
+            if (handStrength(intel) <= 21){
+                return CardToPlay.of(strongestCard(intel));
+            }
         }
         return null;
     }
@@ -58,6 +63,18 @@ public class ChatGptBot implements BotServiceProvider {
         }
         return handStrength;
     }
+    private TrucoCard strongestCard(GameIntel intel){
+        TrucoCard strongestCard = null;
+        int strength = 0;
+        for (TrucoCard card : intel.getCards()){
+            if (card.getRank().value() > strength){
+                strongestCard = card;
+                strength = card.getRank().value();
+            }
+        }
+        return strongestCard;
+    }
+
 
     private TrucoCard weakestCard(GameIntel intel){
         TrucoCard weakestCard = null;
