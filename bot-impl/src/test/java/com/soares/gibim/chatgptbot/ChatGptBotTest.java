@@ -1,16 +1,17 @@
 package com.soares.gibim.chatgptbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Nested;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChatGptBotTest {
@@ -21,6 +22,38 @@ public class ChatGptBotTest {
 
     @BeforeEach
     void setUp(){sut = new ChatGptBot(); }
+
+    @Nested
+    @DisplayName("When is the first Round")
+    class FirstRound{
+
+        @Nested
+        @DisplayName("When bot is the first to play")
+        class FirstToPlay{
+
+            @Test
+            @DisplayName("If only have bad cards then discard the one with lower value")
+            void IfOnlyHaveBadCardsThenDiscardTheOneWithLowerValue (){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                );
+
+                List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                        CardRank.ACE, CardSuit.DIAMONDS)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+            }
+        }
+    }
 
     @Test
     @DisplayName("If its the last hand and have zap then ask truco")
