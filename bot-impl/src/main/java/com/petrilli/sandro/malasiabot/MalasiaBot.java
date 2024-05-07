@@ -22,7 +22,14 @@ public class MalasiaBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        TrucoCard DeMenorQuePodeGanhar = DeMenorQuePodeGanhar(intel);
+        if(DeMenorQuePodeGanhar == null)
+            if(intel.getOpponentCard().isPresent())
+                return intel.getRoundResults().isEmpty() ? CardToPlay.of(DeMenor(intel)) : CardToPlay.discard(DeMenor(intel));
+            else
+                return CardToPlay.of(DeMenor(intel));
+
+        return CardToPlay.of(DeMenorQuePodeGanhar);
 
     }
     @Override
