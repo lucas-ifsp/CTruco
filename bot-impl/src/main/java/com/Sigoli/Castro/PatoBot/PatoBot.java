@@ -1,12 +1,12 @@
 package com.Sigoli.Castro.PatoBot;
 
-import java.util.List;
-import java.util.Optional;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class PatoBot implements BotServiceProvider {
+import java.util.List;
+import java.util.Optional;
 
+public class PatoBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -15,10 +15,10 @@ public class PatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(intel.getScore() == 11|| intel.getOpponentScore()==11) return false;
-        if(intel.getRoundResults().isEmpty()) {
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        if (intel.getRoundResults().isEmpty()) {
             return checkIfRaiseGame(intel);
-        }else if(intel.getRoundResults().get(0)==GameIntel.RoundResult.WON){
+        } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             return checkIfRaiseGame(intel);
         }
         return false;
@@ -27,13 +27,12 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         CardToPlay cardToPlay = CardToPlay.of(intel.getCards().get(0));
-        if(getNumberOfCardsInHand(intel) == 3 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())){
+        if (getNumberOfCardsInHand(intel) == 3 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
-        }
-        else if(getNumberOfCardsInHand(intel)== 3 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+        } else if (getNumberOfCardsInHand(intel) == 3 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
             cardToPlay = CardToPlay.of(selectStrongerCardExcludingZapAndCopas(intel));
-        } else if (getNumberOfCardsInHand(intel)==2 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
-            cardToPlay = CardToPlay.of(selectLowestCard(intel.getCards(),intel.getVira()));
+        } else if (getNumberOfCardsInHand(intel) == 2 && !checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
+            cardToPlay = CardToPlay.of(selectLowestCard(intel.getCards(), intel.getVira()));
         } else if (getNumberOfCardsInHand(intel) == 2 && checkIfOpponentIsFirstToPlay(intel.getOpponentCard())) {
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
         }
@@ -93,7 +92,7 @@ public class PatoBot implements BotServiceProvider {
 
         for (TrucoCard card : hand) {
             if (!card.isZap(vira) && !card.isCopas(vira)) {
-                if ( card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                if (card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
                     strongestCard = card;
                 }
             }
@@ -113,36 +112,45 @@ public class PatoBot implements BotServiceProvider {
         }
         int opponentPoints = intel.getOpponentScore();
         int threshold = 4;
-        if (opponentPoints >= 8) {threshold = 6;}
+        if (opponentPoints >= 8) {
+            threshold = 6;
+        }
         return count >= threshold;
     }
 
-    public  boolean checkIfStrongerCardIsThree(GameIntel intel){
+    public boolean checkIfStrongerCardIsThree(GameIntel intel) {
         TrucoCard ThreeToCompare = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
         TrucoCard testCard = selectStrongerCardExcludingZapAndCopas(intel);
         return !testCard.isManilha(intel.getVira()) && testCard.compareValueTo(ThreeToCompare, intel.getVira()) == 0;
 
     }
-    public boolean checkIfRaiseGame(GameIntel intel){
+
+    public boolean checkIfRaiseGame(GameIntel intel) {
         int count = 0;
         TrucoCard vira = intel.getVira();
         TrucoCard CardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<TrucoCard> cards = intel.getCards();
-        for (TrucoCard card: cards){
-            if(card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira) ){ count ++;}
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(CardToCompare, vira) >= 0 || card.isManilha(vira)) {
+                count++;
+            }
         }
-        if(checkIfStrongerCardIsThree(intel)){count--;}
+        if (checkIfStrongerCardIsThree(intel)) {
+            count--;
+        }
 
-        if (cards.size() == 3) { return count >=2; }
-        return count >=1;
+        if (cards.size() == 3) {
+            return count >= 2;
+        }
+        return count >= 1;
     }
 
-    public int checkIfAcceptRaise(GameIntel intel){
+    public int checkIfAcceptRaise(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
-        if(hand.size() == 3){
+        if (hand.size() == 3) {
             return 1;
         }
 
