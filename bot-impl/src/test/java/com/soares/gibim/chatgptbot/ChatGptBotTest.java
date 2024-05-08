@@ -823,7 +823,7 @@ public class ChatGptBotTest {
             TrucoCard vira = TrucoCard.of(QUEEN, CLUBS);
 
             List<TrucoCard> botCards = Collections.singletonList(
-                    TrucoCard.of(JACK, CardSuit.SPADES)
+                    TrucoCard.of(JACK, SPADES)
             );
             List<TrucoCard> openCards = Collections.singletonList(
                     TrucoCard.of(QUEEN, CLUBS)
@@ -862,13 +862,13 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Accept 'truco' in the third round with a card higher than ACE.")
         void TestAcceptTrucoThirdRoundWithCardHigherThanAce() {
-            TrucoCard vira = TrucoCard.of(FIVE, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(FIVE, SPADES);
 
             List<TrucoCard> botCards = Collections.singletonList(
                     TrucoCard.of(ACE, HEARTS)
             );
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(FIVE, CardSuit.SPADES)
+                    TrucoCard.of(FIVE, SPADES)
             );
 
 
@@ -886,7 +886,7 @@ public class ChatGptBotTest {
             TrucoCard vira = TrucoCard.of(FOUR, DIAMONDS);
 
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(FIVE, CardSuit.SPADES),
+                    TrucoCard.of(FIVE, SPADES),
                     TrucoCard.of(FIVE, CLUBS));
 
             List<TrucoCard> openCards = Collections.singletonList(
@@ -904,14 +904,14 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Increase truco request in the Second round with two manilhas.")
         void testTrucoRequestSecondRoundWithTwoManilhas() {
-            TrucoCard vira = TrucoCard.of(TWO, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(TWO, SPADES);
 
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(THREE, DIAMONDS),
                     TrucoCard.of(THREE, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(TWO, CardSuit.SPADES)
+                    TrucoCard.of(TWO, SPADES)
             );
 
             intel = GameIntel.StepBuilder.with()
@@ -925,14 +925,14 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Increases 'truco' in the first round if you have a 'manilha' of Spades or higher and a 2 or higher in hand.")
         void TestIncreasesTrucoFirstRoundHaveManilhaSpadesOrHigherAndTwoOrHigher() {
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(QUEEN, SPADES);
 
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(JACK, CardSuit.SPADES),
+                    TrucoCard.of(JACK, SPADES),
                     TrucoCard.of(TWO, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(QUEEN, CardSuit.SPADES)
+                    TrucoCard.of(QUEEN, SPADES)
             );
 
             intel = GameIntel.StepBuilder.with()
@@ -946,14 +946,14 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Increases 'truco' in the second round if you have a 'manilha' of Spades or higher and a 2 or higher in hand.")
         void TestIncreasesTrucoSecondRoundHaveManilhaSpadesOrHigherAndTwoOrHigher() {
-            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of(JACK, CLUBS);
 
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+                    TrucoCard.of(KING, CLUBS),
+                    TrucoCard.of(TWO, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+                    TrucoCard.of(QUEEN, SPADES)
             );
 
             intel = GameIntel.StepBuilder.with()
@@ -967,13 +967,13 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Increase the 'truco' in the third round with a 'manilha'.")
         void TestIncreasesTrucoThirdRoundHaveManilha() {
-            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+            TrucoCard vira = TrucoCard.of(FOUR, HEARTS);
 
             List<TrucoCard> botCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+                    TrucoCard.of(FIVE, SPADES));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                    TrucoCard.of(FOUR, HEARTS)
             );
 
             intel = GameIntel.StepBuilder.with()
@@ -987,13 +987,13 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Add test to verify the increase of 'truco' in the third round, having won the first round and having a card higher than 3.")
         void TestincreaseTrucoThirdRoundWinningFirstAndCardHigherThanThree() {
-            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(KING, SPADES);
 
             List<TrucoCard> botCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+                    TrucoCard.of(THREE, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                    TrucoCard.of(KING, SPADES)
             );
 
             intel = GameIntel.StepBuilder.with()
@@ -1007,7 +1007,7 @@ public class ChatGptBotTest {
         @Test
         @DisplayName("Should raise to 9 if has 2 manilhas in the first round")
         void ShouldRaiseTo9IfHas2ManilhasInTheFirstRound() {
-            TrucoCard vira = TrucoCard.of(ACE, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(ACE, SPADES);
 
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(TWO, DIAMONDS),
@@ -1015,7 +1015,29 @@ public class ChatGptBotTest {
                     TrucoCard.of(KING, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+                    TrucoCard.of(KING, SPADES)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 6)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(1, sut.getRaiseResponse(intel.build()));
+        }
+
+        @Test
+        @DisplayName("Should raise to 9 if has 1 manilhas higher or equal to spades and a two or higher in the first round")
+        void ShouldRaiseTo9IfHas1ManilhaHigherOrEqualToSpadesAndATwoOrHigherInTheFirstRound() {
+            TrucoCard vira = TrucoCard.of(KING, SPADES);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(TWO, HEARTS),
+                    TrucoCard.of(KING, HEARTS));
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.KING, SPADES)
             );
 
             intel = GameIntel.StepBuilder.with()
