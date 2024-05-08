@@ -44,6 +44,8 @@ public class MinePowerBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         int roundNumber = getRoundNumber(intel);
+        TrucoCard vira = intel.getVira();
+
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
         if (isTheFirstToPlay(intel)) {
@@ -54,10 +56,9 @@ public class MinePowerBot implements BotServiceProvider {
             }
         }
         if (!isTheFirstToPlay(intel)) {
+            var opponentCard = intel.getOpponentCard().get();
             switch (roundNumber) {
                 case 1 -> {
-                    TrucoCard opponentCard = intel.getOpponentCard().get();
-                    TrucoCard vira = intel.getVira();
                     var lowestCardStrongerThanOpponentCard = intel.getCards().stream()
                             .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                             .min((card1, card2) -> card1.compareValueTo(card2, vira));
