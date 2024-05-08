@@ -58,11 +58,10 @@ public class PatoBot implements BotServiceProvider {
         }
     }
 
-
     @Override
     public int getRaiseResponse(GameIntel intel) {return checkIfAcceptRaise(intel);}
 
-    public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {return opponentCard.isPresent();}
+    private Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {return opponentCard.isPresent();}
 
     private int getNumberOfCardsInHand(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
