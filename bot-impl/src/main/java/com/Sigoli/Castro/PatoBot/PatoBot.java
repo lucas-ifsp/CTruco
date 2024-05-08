@@ -60,20 +60,16 @@ public class PatoBot implements BotServiceProvider {
 
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return checkIfAcceptRaise(intel);
-    }
+    public int getRaiseResponse(GameIntel intel) {return checkIfAcceptRaise(intel);}
 
-    public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {
-        return opponentCard.isPresent();
-    }
+    public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {return opponentCard.isPresent();}
 
-    public int getNumberOfCardsInHand(GameIntel intel) {
+    private int getNumberOfCardsInHand(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         return cards.size();
     }
 
-    public TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
+    private TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> hand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
@@ -108,7 +104,7 @@ public class PatoBot implements BotServiceProvider {
         return lowestCard;
     }
 
-    public TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
+    private TrucoCard selectStrongerCardExcludingZapAndCopas(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCard = intel.getCards().get(0);
@@ -157,7 +153,7 @@ public class PatoBot implements BotServiceProvider {
 
     }
 
-    public boolean checkIfRaiseGame(GameIntel intel) {
+    private boolean checkIfRaiseGame(GameIntel intel) {
         int count = calculateValidCardsCount(intel);
         if (checkIfStrongerCardIsThree(intel)) count--;
 

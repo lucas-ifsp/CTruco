@@ -40,23 +40,18 @@ public class PatoBotTest {
     }
 
     @Test
-    @DisplayName("Should Return three if got three cards in hand")
-    void shouldReturnThreeIfGotThreeCardsInHand() {
-        int numberOfCards = 3;
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
-        TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+    @DisplayName("Should choose correct card when opponent is first to play and 3 cards are in hand")
+    void shouldChooseCorrectCardWhenOpponentIsFirstToPlay() {
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(card1);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
-    }
-
-    @Test
-    @DisplayName("Should Return one if got one card in hand")
-    void shouldReturnOneIfGotOneCardInHand() {
-        int numberOfCards = 1;
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-        when(intel.getCards()).thenReturn(Collections.singletonList(card1));
-        assertThat(patoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        assertThat( patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -67,11 +62,11 @@ public class PatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
+        assertThat( patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -96,11 +91,11 @@ public class PatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        TrucoCard expected = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        CardToPlay expected = CardToPlay.of(card3);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -111,11 +106,11 @@ public class PatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(card1);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-        assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -126,11 +121,11 @@ public class PatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        CardToPlay expected = CardToPlay.of(card1);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-        assertThat(patoBot.selectStrongerCardExcludingZapAndCopas(intel)).isEqualTo(expected);
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -140,11 +135,11 @@ public class PatoBotTest {
         TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        TrucoCard expected = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+       CardToPlay expected = CardToPlay.of(card2);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-        assertThat(patoBot.attemptToBeatOpponentCard(intel)).isEqualTo(expected);
+        assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
     @Test
@@ -350,7 +345,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
-        assertTrue(patoBot.checkIfRaiseGame(intel));
+        assertTrue(patoBot.decideIfRaises(intel));
     }
 
     @Test
@@ -363,7 +358,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
-        assertTrue(patoBot.checkIfRaiseGame(intel));
+        assertTrue(patoBot.decideIfRaises(intel));
     }
 
     @Test
@@ -374,7 +369,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Collections.singletonList(card1));
         when(intel.getVira()).thenReturn(vira);
-        assertTrue(patoBot.checkIfRaiseGame(intel));
+        assertTrue(patoBot.decideIfRaises(intel));
     }
 
     @Test
@@ -387,7 +382,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
         when(intel.getVira()).thenReturn(vira);
-        assertFalse(patoBot.checkIfRaiseGame(intel));
+        assertFalse(patoBot.decideIfRaises(intel));
     }
 
     @Test
@@ -399,7 +394,7 @@ public class PatoBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
         when(intel.getVira()).thenReturn(vira);
-        assertFalse(patoBot.checkIfRaiseGame(intel));
+        assertFalse(patoBot.decideIfRaises(intel));
     }
 
     @Test
@@ -411,7 +406,7 @@ public class PatoBotTest {
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
         when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
         when(intel.getVira()).thenReturn(vira);
-        assertTrue(patoBot.checkIfRaiseGame(intel));
+        assertTrue(patoBot.decideIfRaises(intel));
     }
 
     @Test
