@@ -75,6 +75,28 @@ public class AkkosocorrompidoTest {
         assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), bot.chooseCard(intel).value().toString());
     }
 
+    @Test
+    @DisplayName("should return worst card that CAN beat opponent")
+    public void shouldReturnWorstCardThatCanBeatOpponent (){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 2)
+            .opponentScore(3)
+            .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
+            .build();
+
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.chooseCard(intel).value().toString());
+    }
+
     
     
 }
