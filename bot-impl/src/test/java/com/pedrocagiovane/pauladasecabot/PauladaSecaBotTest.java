@@ -101,7 +101,7 @@ public class PauladaSecaBotTest {
         }
 
         @Test
-        @DisplayName("Se fez a primeira joga a mais fraca na segunda")
+        @DisplayName("Se fez a primeira joga a mais forte na segunda")
         void seFezPrimeiraJogaAMaisFracaSegunda() {
             maoPlayer = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(ACE, HEARTS));
             vira = TrucoCard.of(SEVEN, SPADES);
@@ -109,7 +109,7 @@ public class PauladaSecaBotTest {
             cartas = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
             CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
-            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE, HEARTS));
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
         }
 
         @Test
