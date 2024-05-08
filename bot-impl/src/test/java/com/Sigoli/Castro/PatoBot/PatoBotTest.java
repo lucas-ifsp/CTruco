@@ -542,12 +542,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should refuse 'Truco' if my hand is weak and lost first round")
     public void shouldRefuseTrucoIfMyHandIsWeakAndLostFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
-        TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        card2 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        setupCardsViraAndRoundResult(Arrays.asList(card1, card2), vira, List.of(GameIntel.RoundResult.LOST));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
