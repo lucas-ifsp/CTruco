@@ -408,9 +408,10 @@ class JormungandrBotTest {
     @Nested
     @DisplayName("Testing getHighestNonManilhaCardInHand() function")
     class GetHighestNonManilhaCardInHandTest {
+
         @Test
-        @DisplayName("When player has 1 manilha and 1 non manilha on hand, should return the manilha")
-        void shouldReturnManilhaWhenOneManilhaAndOneNonManilhaOnHand() {
+        @DisplayName("When player has 1 manilha and 1 non manilha on hand, should return the non manilha")
+        void shouldReturnNonManilhaWhenOneManilhaAndOneNonManilhaOnHand() {
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
             List<TrucoCard> currentCards = List.of(
@@ -426,7 +427,7 @@ class JormungandrBotTest {
             Optional<TrucoCard> result = jormungandrBot.getHighestNonManilhaCardInHand(stepBuilder.build());
 
             assertTrue(result.isPresent());
-            assertEquals(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), result.orElseThrow());
+            assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), result.orElseThrow());
         }
     }
 }
