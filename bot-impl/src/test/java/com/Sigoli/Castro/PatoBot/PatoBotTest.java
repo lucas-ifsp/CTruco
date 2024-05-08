@@ -424,7 +424,8 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should not raise if I lost the first round")
     public void shouldNotRaiseIfIsFirstRound() {
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+        roundResult = GameIntel.RoundResult.LOST;
+        setupRoundResults(Collections.singletonList(roundResult));
         assertFalse(patoBot.decideIfRaises(intel));
     }
 
