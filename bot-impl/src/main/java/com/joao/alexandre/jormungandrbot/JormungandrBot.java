@@ -150,4 +150,6 @@ public class JormungandrBot implements BotServiceProvider {
                 return false;
         }
     }
+
+    Optional<TrucoCard> getSelfCardPlayed(GameIntel intel){return Optional.empty();}
 }

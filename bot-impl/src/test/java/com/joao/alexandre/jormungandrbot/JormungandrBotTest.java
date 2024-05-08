@@ -618,4 +618,27 @@ class JormungandrBotTest {
             assertEquals("Jörmungandr", jormungandrBot.getName());
         }
     }
+
+    @Nested
+    @DisplayName("Testing getSelfCardPlayed() function")
+    class GetSelfCardPlayedTest{
+        @Test
+        @DisplayName("Should return empty if hasnt played a card")
+        void shouldReturnEmptyIfHasntPlayedACard(){
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.getSelfCardPlayed(stepBuilder.build()).isEmpty());
+        }
+    }
 }
