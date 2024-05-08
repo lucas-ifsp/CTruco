@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2024 Pedro Vitor Petrilli Volante and Sandro Ferreira Junior - IFSP/SCL
- *  Contact: pedro <dot> petrilli <at> aluno <dot> ifsp <dot> edu <dot> br, pedro <dot> petrilli <at> aluno <dot> ifsp <dot> edu <dot> br
+ *  Contact: pedro <dot> petrilli <at> aluno <dot> ifsp <dot> edu <dot> br, sandro <dot> ferreira <at> aluno <dot> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
  *
