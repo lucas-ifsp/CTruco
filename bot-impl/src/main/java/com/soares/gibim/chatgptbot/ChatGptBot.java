@@ -71,6 +71,9 @@ public class ChatGptBot implements BotServiceProvider {
             if (countManilhas(intel) == 2) {
                 return 1;
             }
+            if (verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)){
+                return 1;
+            }
 
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
                 return 0;
@@ -239,6 +242,22 @@ public class ChatGptBot implements BotServiceProvider {
             }
         }
         return highestManilha;
+    }
+    private boolean verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(GameIntel intel){
+        int manilhaValue = 0;
+        int cardValue = 0;
+        for (TrucoCard card : intel.getCards()){
+            if (card.isManilha(intel.getVira())){
+                manilhaValue = card.relativeValue(intel.getVira());
+            } else {
+                cardValue = card.relativeValue(intel.getVira());
+            }
+        }
+        if (manilhaValue >= 11 && cardValue >= 8){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
