@@ -168,8 +168,8 @@ public class PatriciaAparecida implements BotServiceProvider {
         tempcards.sort((myCard,otherCard) -> myCard.compareValueTo(otherCard, vira));
         List<Double> listProb = listProbAllCards(intel);
         if(intel.getOpponentCard().isEmpty()){
-            if(listProb.get(0) < 0.1){ return 1; }
-            if(listProb.get(0) < 0.2){ return 0; }
+            if(listProb.get(0) < 0.60){ return 1; }
+            if(listProb.get(0) < 0.70){ return 0; }
         }
         boolean WeakestCardThatWinsExists = getWeakestCardThatWins(tempcards, intel).isPresent();
         boolean CardDrawsExists = getCardThatDraws(tempcards, intel).isPresent();
