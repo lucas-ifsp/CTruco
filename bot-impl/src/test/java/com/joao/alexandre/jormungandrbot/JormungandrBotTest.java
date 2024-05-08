@@ -774,5 +774,25 @@ class JormungandrBotTest {
                             stepBuilder.build(), 12));
         }
 
+        @Test
+        @DisplayName("With vira is Four, should count five as high card")
+        void shouldCountFiveAsHighCardIfViraIsFour() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(2,
+                    jormungandrBot.getCardCountInHandHigherThanRelativeValue(
+                            stepBuilder.build(), 9));
+        }
+
     }
 }
