@@ -1,5 +1,24 @@
-package com.petrilli.sandro.malasiabot;
+/*
+ *  Copyright (C) 2024 Pedro Vitor Petrilli Volante and Sandro Ferreira Junior - IFSP/SCL
+ *  Contact: pedro <dot> petrilli <at> aluno <dot> ifsp <dot> edu <dot> br, pedro <dot> petrilli <at> aluno <dot> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
 
+package com.petrilli.sandro.malasiabot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -142,6 +161,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
+    //retorna menor carta da mão
     private TrucoCard DeMenor(GameIntel intel) {
         TrucoCard deMenor = null;
         for (TrucoCard card : intel.getCards()) {
@@ -153,6 +173,7 @@ public class MalasiaBot implements BotServiceProvider {
         return deMenor;
     }
 
+    //retorna maior carta da mão
     private TrucoCard DeMaior(GameIntel intel) {
         TrucoCard deMaior = null;
         for (TrucoCard card : intel.getCards()) {
@@ -163,6 +184,7 @@ public class MalasiaBot implements BotServiceProvider {
         return deMaior;
     }
 
+    //retorna menor carta da mão que ganha da carta do adversário
     private TrucoCard DeMenorQuePodeGanhar(GameIntel intel) {
         TrucoCard deMenorQuePodeGanhar = null;
         TrucoCard vira = intel.getVira();
@@ -186,6 +208,7 @@ public class MalasiaBot implements BotServiceProvider {
         return deMenorQuePodeGanhar;
     }
 
+    //retorna true se tiver 2 ou mais manilhas na mão
     private boolean MaoGiga(GameIntel intel) {
 
         TrucoCard vira = intel.getVira();
@@ -203,6 +226,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
+    //retorna true se tiver zap ou copas e alguma figura(dama,valete e rei) na mão
     private boolean MaoZapOuCopasEFiguras(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
@@ -224,6 +248,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
+    //retorna true se tiver espadas ou ouros e alguma figura(dama,valete e rei) na mão
     private boolean MaoEspadasOuOurosEFiguras(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
@@ -245,6 +270,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
+    //retorna true se tiver zap ou copas e as, dois ou três na mão
     private boolean MaoZapOuCopasEAsAtres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
@@ -266,6 +292,7 @@ public class MalasiaBot implements BotServiceProvider {
         return false;
     }
 
+    //retorna true se tiver espadas ou ouros e as, dois ou três na mão
     private boolean MaoEspadaOuOuroEAsATres(GameIntel intel) {
         TrucoCard vira = intel.getVira();
 
