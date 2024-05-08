@@ -640,5 +640,31 @@ class JormungandrBotTest {
 
             assertTrue(jormungandrBot.getSelfCardPlayed(stepBuilder.build()).isEmpty());
         }
+
+        @Test
+        @DisplayName("Should return Card if has played a card")
+        void shouldReturnCardIfHasPlayedACard(){
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            Optional<TrucoCard> response = jormungandrBot.getSelfCardPlayed(stepBuilder.build());
+            assertTrue(response.isPresent());
+            assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), response.orElseThrow());
+        }
+
     }
 }
