@@ -58,8 +58,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
         switch (intel.getRoundResults().size()) {
             case 0 -> {
                 // First Hand
+                List<TrucoCard> list = sortedListCards(intel, intel.getVira());
                 if (intel.getOpponentCard().isPresent()){
-                    List<TrucoCard> list = sortedListCards(intel, intel.getVira());
                     if (hasCardHigherThan(intel, intel.getOpponentCard().get())){
                         if (list.get(2).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
                             return CardToPlay.of(list.get(2));
@@ -77,10 +77,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
                             return CardToPlay.of(list.get(2));
                         }
                     }
-                }else {
-
                 }
-                return null;
+                return CardToPlay.of(list.get(0));
             }
             case 1->{
                 // Second Hand
