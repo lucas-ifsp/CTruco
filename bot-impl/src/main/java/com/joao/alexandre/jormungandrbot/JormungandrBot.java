@@ -109,4 +109,8 @@ public class JormungandrBot implements BotServiceProvider {
     boolean isSecondToPlay(GameIntel intel){
         return intel.getOpponentCard().isPresent();
     }
+
+    int getCurrentRoundNumber(GameIntel intel) {
+        return 0;
+    }
 }

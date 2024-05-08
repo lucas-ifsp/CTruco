@@ -504,4 +504,23 @@ class JormungandrBotTest {
             assertFalse(jormungandrBot.isSecondToPlay(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getCurrentRoundNumber() function")
+    class GetCurrentRoundNumberTest {
+
+        @Test
+        @DisplayName("Should return 1 if First round")
+        void shouldReturnOneIfFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
+
+            assertEquals(1, jormungandrBot.getCurrentRoundNumber(stepBuilder.build()));
+        }
+    }
 }
