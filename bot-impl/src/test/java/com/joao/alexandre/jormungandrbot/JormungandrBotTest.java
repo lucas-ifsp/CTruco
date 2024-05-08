@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -285,5 +286,27 @@ class JormungandrBotTest {
             assertTrue(result.isPresent());
             assertEquals(TrucoCard.of(CardRank.JACK, CardSuit.SPADES), result.orElseThrow());
         }
+
+        @Test
+        @DisplayName("Should throw a NoSuchElementException if opponent hasn't played a card yet")
+        void shouldThrowExceptionIfOpponentHasntPlayedACard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertThrows(NoSuchElementException.class,
+                    () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
+            );
+        }
+
     }
 }
