@@ -15,9 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 
-import static com.bueno.spi.model.CardRank.THREE;
-import static com.bueno.spi.model.CardSuit.HEARTS;
-import static com.bueno.spi.model.CardSuit.SPADES;
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -56,7 +55,7 @@ class TeitasBotFunctionsTest {
             assertThat(TeitasBotFunctions.hasManilha(cards, vira)).isFalse();
         }
     }
-    
+
     @Nested
     @DisplayName("TypesOfHand")
     class TypesOfHands{
@@ -134,8 +133,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(CardRank.SIX, TeitasBotFunctions.getStrongestCard(cards, vira).getRank());
-            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getStrongestCard(cards, vira).getSuit());
+            assertEquals(TrucoCard.of(SIX, DIAMONDS), TeitasBotFunctions.getMiddleCardLevel(cards,vira).content());
         }
 
         //assert is different, we need to compare the card.
@@ -149,8 +147,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(CardRank.FOUR, TeitasBotFunctions.getWeakestCard(cards, vira).getRank());
-            assertEquals(CardSuit.DIAMONDS, TeitasBotFunctions.getWeakestCard(cards, vira).getSuit());
+            assertEquals(TrucoCard.of(FOUR, DIAMONDS), TeitasBotFunctions.getWeakestCard(cards,vira).content());
         }
 
         @Test
@@ -163,9 +160,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(CardRank.TWO, TeitasBotFunctions.getMiddleCardLevel(cards, vira).getRank());
-            assertEquals(CardSuit.SPADES, TeitasBotFunctions.getMiddleCardLevel(cards, vira).getSuit());
-
+            assertEquals(TrucoCard.of(TWO, SPADES), TeitasBotFunctions.getMiddleCardLevel(cards,vira).content());
         }
     }
 

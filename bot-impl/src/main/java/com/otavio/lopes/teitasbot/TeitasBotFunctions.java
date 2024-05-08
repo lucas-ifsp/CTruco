@@ -62,32 +62,34 @@ public class TeitasBotFunctions {
         else return hasManilhaAlta;
     }
 
-    static TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira){
+    static CardToPlay getWeakestCard(List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard weakestCard = cards.get(0);
 
-        TrucoCard wekeastCard = cards.get(0);
         for (TrucoCard card : cards) {
-            if (card.compareValueTo(wekeastCard, vira) < 0) wekeastCard = card;
+            if (card.compareValueTo(weakestCard, vira) < 0) {
+                weakestCard = card;
+            }
         }
-        return wekeastCard;
+        return CardToPlay.of(weakestCard);
     }
 
-    static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira){
+
+
+    static CardToPlay getStrongestCard(List<TrucoCard> cards, TrucoCard vira){
+
         TrucoCard strongestCard = cards.get(0);
         for (TrucoCard card : cards) {
             if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
         }
-
-        return strongestCard;
+        return CardToPlay.of(strongestCard);
     }
 
-    static TrucoCard getMiddleCardLevel(List<TrucoCard> cards, TrucoCard vira){
-        TrucoCard strongCard = getStrongestCard(cards,vira);
-        TrucoCard weakestCard = getWeakestCard(cards, vira);
+    static CardToPlay getMiddleCardLevel(List<TrucoCard> cards, TrucoCard vira){
+        CardToPlay strongCard = getStrongestCard(cards,vira);
+        CardToPlay weakestCard = getWeakestCard(cards, vira);
 
         for (TrucoCard card : cards){
-            if (card != strongCard & card != weakestCard){
-                return card;
-            }
+            return CardToPlay.of(card);
         }
 
         return strongCard;
