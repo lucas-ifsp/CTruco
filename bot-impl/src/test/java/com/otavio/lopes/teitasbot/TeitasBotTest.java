@@ -5,6 +5,7 @@ import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,6 +29,8 @@ public class TeitasBotTest {
     @Nested
     @DisplayName("if we need to raise")
     class ShouldRaiseForAll{
+
+    }
         @Test
         @DisplayName("Should raise if we have nuts or strong hand")
         void shouldRaiseWithNutsOrStrong(){
@@ -46,11 +49,9 @@ public class TeitasBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(1, TeitasBot.getRaiseResponse(builder.build()));
+        assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
 
     }
-    class GetRaiseResponse {
-        @Nested
-        DisplayName("")
     }
-}
+
+

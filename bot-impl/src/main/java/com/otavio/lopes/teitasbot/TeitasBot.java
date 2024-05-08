@@ -86,10 +86,6 @@ public class TeitasBot implements BotServiceProvider {
             else
                 return -1;
         }
-
-
-
-
         return 0;
     }
 }
