@@ -16,11 +16,28 @@ public class BarDoAlexBot implements BotServiceProvider {
     }
 
     public CardToPlay chooseCard(GameIntel intel) {
+        int roundResults = intel.getRoundResults().lastIndexOf(GameIntel.RoundResult.DREW);
         List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        if (roundResults == 0 || roundResults == 1){
+            return CardToPlay.of(getStrongestCard(cards, vira));
+        }
+
         TrucoCard chosenCard = cards.get(cards.size() - 1);
         return CardToPlay.of(chosenCard);
     }
 
+
+    public TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard strongest = cards.get(0);
+
+        for (TrucoCard card : cards){
+            if (card.compareValueTo(strongest,vira) > 0)
+                strongest = card;
+        }
+        return strongest;
+    }
     public int getRaiseResponse(GameIntel intel) {
         int botScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
