@@ -444,13 +444,29 @@ public class ItaipavaBotTest {
 
         @Test
         @DisplayName("Should return 9 when have 3 threes on hand")
-        void shouldReturn9WhenHasThreeOnHand() {
+        void shouldReturn9WhenHas3ThreesOnHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
             List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(THREE, CardSuit.CLUBS),
                     TrucoCard.of(THREE, CardSuit.HEARTS),
                     TrucoCard.of(THREE, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(9, bot.handPowerLevel(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return 9 when have 2 threes on second round hand")
+        void shouldReturn9WhenHas2ThreesOnSecondRoundHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(THREE, CardSuit.CLUBS),
+                    TrucoCard.of(THREE, CardSuit.HEARTS)
             );
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
