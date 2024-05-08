@@ -603,6 +603,32 @@ public class ChatGptBotTest {
 
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
+
+            @Test
+            @DisplayName("Should ask for raise if has 1 manilha and other card equal or higher than Two")
+            void ShouldAskForRaiseIfHas1ManilhaAndOtherCardEqualOrHigherThanTwo(){
+                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+                List<TrucoCard> openCards = Arrays.asList(
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
         }
 
 
