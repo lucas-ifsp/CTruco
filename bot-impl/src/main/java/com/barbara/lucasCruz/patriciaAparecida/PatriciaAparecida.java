@@ -51,9 +51,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     private CardToPlay getCardWithBestProbability(List<TrucoCard> tempcards, List<Double> probCards) {
         List<Double> StrongestCards = probCards.stream().filter(probability -> probability < 0.05).toList();
 
-        if(!StrongestCards.isEmpty()){
-            return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
-        }
+        if(!StrongestCards.isEmpty()) return CardToPlay.of(tempcards.get(tempcards.size() - StrongestCards.size()));
         return CardToPlay.of(tempcards.get(tempcards.size()-1));
     }
 
@@ -68,11 +66,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     private CardToPlay returnWeakestCardThatLoses(GameIntel intel, List<TrucoCard> tempcards) {
-        //não é a primeira jogada
-        if(!intel.getRoundResults().isEmpty()) {
-            return CardToPlay.discard(tempcards.stream().findFirst().get());
-        }
-        //é a primeira
+        if(!intel.getRoundResults().isEmpty())  return CardToPlay.discard(tempcards.stream().findFirst().get());
         else return CardToPlay.of(tempcards.stream().findFirst().get());
     }
 
@@ -85,8 +79,7 @@ public class PatriciaAparecida implements BotServiceProvider {
     }
 
     private CardToPlay returnWeakestThatWins(GameIntel intel, List<TrucoCard> tempcards) {
-        Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards, intel); //pego a mais fraca q ganha
-        //retorna a mais fraca que ganha se existir
+        Optional<TrucoCard> weakestCardThatWins = getWeakestCardThatWins(tempcards, intel);
         return getWeakestCardThatWins(tempcards, intel).isPresent() ? CardToPlay.of(weakestCardThatWins.get()) : null;
     }
 
