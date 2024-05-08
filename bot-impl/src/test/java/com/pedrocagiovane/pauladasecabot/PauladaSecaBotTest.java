@@ -15,6 +15,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.CardSuit.HEARTS;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class PauladaSecaBotTest {
     PauladaSecaBot pauladaSecaBot;
@@ -536,7 +537,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -548,7 +549,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -560,7 +561,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -572,7 +573,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -584,7 +585,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -596,7 +597,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(4);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(4);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
@@ -608,7 +609,7 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(0);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isFalse();
         }
@@ -619,10 +620,24 @@ public class PauladaSecaBotTest {
             vira = TrucoCard.of(FIVE, SPADES);
             roundResult = List.of();
             cartas = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(6);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(6);
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isFalse();
         }
+
+
+        @Test
+        @DisplayName("Mao de onze: nao aceita com uma manilha as outras cartas fracas")
+        void MaoOnzeNaoAceitaSeComUmaManilhaMaisOutrasCartasFracas(){
+            maoPlayer = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(FOUR, DIAMONDS), TrucoCard.of(FOUR, CLUBS));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            roundResult = List.of();
+            cartas = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 11).opponentScore(2);
+            boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertThat(result).isFalse();
+        }
+
     }
 
 
