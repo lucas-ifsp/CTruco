@@ -403,21 +403,49 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
 
-        // Se fez a primeira e não te uma manilha jogar a carta mais forte
-
-
-        // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
-        @Test
-        @DisplayName("Decide ")//Se tiver feito a primeira
-        public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
-
-        }
 
         // Third Hand (Estevan)
     }
 
     @Nested
     class getRaiseResponse {
+        // First Hand (Miguel)
+
+        // Pediu truco para sair Se tiver 1 manilha e uma outra carta boa aceita (a,2,3)
+        @Test
+        @DisplayName("ShouldAcceptRaisesIfWasOneManilhaAndAnotherGoodHand")
+        public void ShouldAcceptRaisesIfWasOneManilhaAndAnotherGoodHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON); // Ganhou a primeira rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 1);
+        }
+        // Pediu truco para sair Aceita se tiver 2 cartas boas (a,2,3)
+
+        // Se
+
+        // Second Hand (Estevan)
+
+        // Third Hand (Miguel)
     }
 
     @Nested
