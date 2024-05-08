@@ -339,7 +339,7 @@ class JakareDuMatuBotTest {
                     .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                     .build();
 
-            assertThat(jakareDuMatuBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
 
         // Se não tiver feito a primeira jogar a carta mais forte caso seja o primeiro a jogar
