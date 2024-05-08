@@ -268,14 +268,29 @@ class MinePowerBotTest {
 
     @Test
     @DisplayName("Should play the highest card if it is not the first round and the scores are equal and bot it's not the first to play")
-    void shouldPlaytheHighestCardInNotFirstRoundWithScoreEqual(){
+    void shouldPlayTheHighestCardInNotFirstRoundWithScoreEqual(){
         intel = create().scoreMine(4).scoreOponent(4).cards(
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
                 .viraToBeDiamondsOfRank(CardRank.FOUR)
                 .opponentCardToBe(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
-                .roundToBeSecond()
+                .roundToBeSecond(GameIntel.RoundResult.DREW)
+                .finish();
+
+        assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should play the lowest card if won the last round")
+    void shouldPlayTheLowestCardIfWonTheLastRound(){
+        intel = create().scoreMine(4).scoreOponent(4).cards(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .opponentCardToBe(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .roundToBeSecond(GameIntel.RoundResult.WON)
                 .finish();
 
         assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
