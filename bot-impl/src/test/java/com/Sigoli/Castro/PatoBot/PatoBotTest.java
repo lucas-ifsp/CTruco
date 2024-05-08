@@ -448,10 +448,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Raise if 'Truco' is called in first round")
     public void shouldRaiseIfTrucoIsCalledInFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+        card1 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        setupCards(Arrays.asList(card1, card2, card3));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(1);
     }
 
