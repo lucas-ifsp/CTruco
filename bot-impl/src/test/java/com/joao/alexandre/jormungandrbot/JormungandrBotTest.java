@@ -40,9 +40,31 @@ class JormungandrBotTest {
                     .gameInfo(List.of(), List.of(), vira, 1)
                     .botInfo(currentCards, 0)
                     .opponentScore(0);
-            
+
             assertEquals(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    jormungandrBot.getLowestCardInHand(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("With 3 cards in hand, should return the lowest card")
+        void shouldReturnLowestCardInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                     jormungandrBot.getLowestCardInHand(stepBuilder.build())
             );
         }
