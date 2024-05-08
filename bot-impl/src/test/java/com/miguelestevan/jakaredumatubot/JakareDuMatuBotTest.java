@@ -246,8 +246,35 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
         }
 
-        //Se nao conseguir matar mas empatar, entao empata
+        //Se nao conseguir matar mas conseguir empatar, entao empata
+        @Test
+        @DisplayName("Should drew if possible if can't win in the first hand")
+        public void ShouldDrewIfPossibleIfCantWinInTheFirstHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES) //oponent card
+            );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+        }
 
 
 
