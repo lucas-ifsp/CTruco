@@ -162,7 +162,8 @@ public class BarDoAlexBotTest {
             List<TrucoCard> openCards = List.of(
                     vira,
                     botCards.get(0),
-                    TrucoCard.of(ACE,DIAMONDS)
+                    TrucoCard.of(ACE,DIAMONDS),
+                    botCards.get(2)
             );
             intel = GameIntel.StepBuilder.with().gameInfo(round_results,List.of(),vira,1).botInfo(botCards,0)
                     .opponentScore(0);

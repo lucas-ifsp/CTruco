@@ -44,6 +44,9 @@ public class BarDoAlexBot implements BotServiceProvider {
             return 1;
         }
 
+        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON || manilhasCount >= 1)
+            return 0;
+
         return -1;
     }
 
