@@ -551,4 +551,15 @@ class JormungandrBotTest {
             assertEquals(1, jormungandrBot.getCurrentRoundNumber(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getName()")
+    class GetNameTest {
+
+        @Test
+        @DisplayName("Should display the accurate name when asking for name")
+        void shouldDisplayAccurateName() {
+            assertEquals("Jörmungandr", jormungandrBot.getName());
+        }
+    }
 }
