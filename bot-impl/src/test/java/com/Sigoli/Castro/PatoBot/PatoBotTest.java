@@ -126,14 +126,12 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should play lowest winning card if can defeat opponent in second round")
     public void shouldPlayLowestWinningCardIfCanDefeatOpponentInSecondRound() {
-        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        CardToPlay expected = CardToPlay.of(card2);
-        when(intel.getCards()).thenReturn(Arrays.asList(card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        expected = CardToPlay.of(card2);
+        setupCardsViraAndOpponentCard(Arrays.asList(card2, card3), vira, Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
