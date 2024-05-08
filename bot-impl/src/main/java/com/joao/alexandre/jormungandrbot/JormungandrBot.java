@@ -92,7 +92,18 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     Optional<TrucoCard> getHighestNonManilhaCardInHand(GameIntel intel) {
-        return Optional.empty();
+        TrucoCard currentHighestCard = getLowestCardInHand(intel);
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> cardToReturn = Optional.empty();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(currentHighestCard, vira) >= 0 && !card.isManilha(vira)){
+                currentHighestCard = card;
+                cardToReturn = Optional.of(card);
+            }
+        }
+
+        return cardToReturn;
     }
 
 }
