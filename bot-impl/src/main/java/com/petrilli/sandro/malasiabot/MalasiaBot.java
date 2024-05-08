@@ -1,8 +1,10 @@
 package com.petrilli.sandro.malasiabot;
+
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +41,22 @@ public class MalasiaBot implements BotServiceProvider {
 
         List<GameIntel.RoundResult> round = intel.getRoundResults();
 
+        TrucoCard vira = intel.getVira();
+
         if (intel.getOpponentCard().isPresent()) {
             cardToPlay = CardToPlay.of(DeMenorQuePodeGanhar(intel));
         } else {
             if (round.isEmpty()) {
                 if (MaoGiga(intel)) {
                     cardToPlay = CardToPlay.of(DeMenor(intel));
+                }
+                if (MaoZapOuCopasEAsAtres(intel)) {
+                    for (TrucoCard card : intel.getCards()) {
+                        int cardValue = card.relativeValue(vira);
+                        if (cardValue == 7 || cardValue == 8 || cardValue == 9) {
+                            return CardToPlay.of(card);
+                        }
+                    }
                 }
             }
         }
@@ -219,7 +231,7 @@ public class MalasiaBot implements BotServiceProvider {
                 boasCartasCount++;
             }
         }
-        if (manilhasCount == 1 && boasCartasCount == 1) {
+        if (manilhasCount == 1 && boasCartasCount >= 1) {
             return true;
         }
         return false;
