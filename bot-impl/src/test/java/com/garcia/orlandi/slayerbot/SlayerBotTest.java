@@ -53,6 +53,27 @@ public class SlayerBotTest {
     }
 
     @Test
+    @DisplayName("Should request point raise if has casal maior")
+    void shouldRequestPointRaiseIfHasCasalMaior(){
+        roundResults = List.of();
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(SIX, CLUBS),
+                TrucoCard.of(SEVEN, SPADES));
+
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0).opponentScore(0);
+
+        Boolean raiseRequest = new SlayerBot().decideIfRaises(stepBuilder.build());
+        assertThat(raiseRequest).isTrue();
+    }
+
+    @Test
     @DisplayName("Should not play a hidden card if second to play in the first round")
     void shouldNotPlayHiddenCardIfSecondToPlayInFirstRound() {
         List<GameIntel.RoundResult> roundResults = Collections.emptyList();
