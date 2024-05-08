@@ -218,8 +218,8 @@ class JakareDuMatuBotTest {
         //Adversario primeiro
         //Se consigo matar a primeira carta do adversario, matar com a mais fraca possivel
         @Test
-        @DisplayName("Should play the weakest card if can win opponent")
-        public void ShouldPlayTheWeakestCardIfCanWinOpponentInFirstHand(){
+        @DisplayName("Should play the weakest card if can win opponent first card in first hand")
+        public void ShouldPlayTheWeakestCardIfCanWinOpponentFirstCardInFirstHand(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
@@ -275,6 +275,8 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
         }
+
+        //Se nao conseguir ganhar nem empatar
 
 
 
