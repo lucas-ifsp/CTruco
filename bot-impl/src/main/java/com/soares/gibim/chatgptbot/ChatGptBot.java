@@ -90,6 +90,11 @@ public class ChatGptBot implements BotServiceProvider {
             }
         } else if (intel.getRoundResults().size() == 2) {
 
+            if( (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
+                    && getSumOfCardValues(intel) > 8 ) {
+                return 1;
+            }
+
             if (countManilhas(intel) > 0) {
                 return 1;
             }
