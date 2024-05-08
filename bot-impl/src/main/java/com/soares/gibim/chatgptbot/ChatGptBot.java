@@ -10,7 +10,7 @@ import java.util.Optional;
 public class ChatGptBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return handStrength(intel) > 21;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ChatGptBot implements BotServiceProvider {
     private int handStrength (GameIntel intel){
         int handStrength = 0;
         for (TrucoCard card : intel.getCards()){
-            handStrength = handStrength + card.getRank().value();
+            handStrength = handStrength + card.relativeValue(intel.getVira());
         }
         return handStrength;
     }
