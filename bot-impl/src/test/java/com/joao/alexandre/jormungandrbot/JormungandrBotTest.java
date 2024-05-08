@@ -573,8 +573,8 @@ class JormungandrBotTest {
             );
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), trucoCards, vira, 1)
-                    .botInfo(List.of(), 0)
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(trucoCards, 0)
                     .opponentScore(0);
 
             assertEquals(
