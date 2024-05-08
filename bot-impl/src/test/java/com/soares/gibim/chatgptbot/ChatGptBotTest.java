@@ -129,5 +129,26 @@ public class ChatGptBotTest {
         assertEquals(0, sut.getRaiseResponse(intel.build()));
     }
 
+    @Test
+    @DisplayName("Accept 'truco' in the second round if the sum of the card values is greater than 16.")
+    void TestAcceptTrucoSecondRoundWithValue() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO,CardSuit.CLUBS));
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(0, sut.getRaiseResponse(intel.build()));
+    }
+
 }
 
