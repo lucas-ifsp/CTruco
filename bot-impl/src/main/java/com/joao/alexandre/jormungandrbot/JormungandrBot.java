@@ -5,7 +5,6 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class JormungandrBot implements BotServiceProvider {
