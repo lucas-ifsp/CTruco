@@ -23,24 +23,16 @@ package com.erick.itaipavabot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 public class ItaipavaBot implements BotServiceProvider {
 
     private CardToPlay firstRound(GameIntel gameIntel) {
         List<TrucoCard> myCards = gameIntel.getCards();
         TrucoCard card = findLowestCardToWin(gameIntel);
-        if (findFirstPlayer(gameIntel)) {
-            return CardToPlay.of(getHighestCard(myCards, gameIntel));
-        }
-        if(card == null) {
-            return CardToPlay.of(getLowestCard(myCards, gameIntel));
-        } else {
-            return CardToPlay.of(findLowestCardToWin(gameIntel));
-        }
+        if (findFirstPlayer(gameIntel)) return CardToPlay.of(getHighestCard(myCards, gameIntel));
+        if(card == null) return CardToPlay.of(getLowestCard(myCards, gameIntel));
+        else return CardToPlay.of(findLowestCardToWin(gameIntel));
     }
     
     private CardToPlay secondRound(GameIntel intel) {
@@ -63,7 +55,7 @@ public class ItaipavaBot implements BotServiceProvider {
         if ((findHowManyManilhas(intel) > 1 && hasCard(intel, true)) ||
         findHowManyManilhas(intel) == 3) return true;
         if (handPowerLevel(intel) >= 7.5) return true;
-        if (handPowerLevel(intel) < 7.5 && intel.getOpponentScore() < 11) return false;
+        handPowerLevel(intel);
         return false;
     }
 
@@ -71,8 +63,7 @@ public class ItaipavaBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if (hasCasalMaior(intel)) return true;
         if (intel.getOpponentScore() > 9) return false;
-        if (handPowerLevel(intel) >= 7.5) return true;
-        return false;
+        return handPowerLevel(intel) >= 7.5;
     }
 
     @Override
