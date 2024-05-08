@@ -811,6 +811,25 @@ public class ChatGptBotTest {
 
         assertEquals(1, sut.getRaiseResponse(intel.build()));
     }
+    @Test
+    @DisplayName("Increase the 'truco' in the third round with a 'manilha'.")
+    void TestIncreasesTrucoThirdRoundHaveManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> botCards = Collections.singletonList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(1, sut.getRaiseResponse(intel.build()));
+    }
 
 }
 
