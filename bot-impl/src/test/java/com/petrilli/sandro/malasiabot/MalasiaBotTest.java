@@ -342,44 +342,8 @@ public class MalasiaBotTest {
     @DisplayName("Raise Response Tests")
     class raiseResponseTests {
         @Nested
-        @DisplayName("Sould refuse raise if have")
-        class raiseResponse {
-            @Test
-            @DisplayName("MaoLixo")
-            void shouldRefuseRaiseIfHaveMaoLixo() {
-                TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-
-                List<TrucoCard> Mao = Arrays.asList(
-                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
-
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                        .botInfo(Mao, 0)
-                        .opponentScore(0);
-
-                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
-            }
-
-            @Test
-            @DisplayName("mao media sem boas cartas")
-            void shouldRefuseRaiseIfHaveMaoMediaSemBoasCartas() {
-                TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-
-                List<TrucoCard> Mao = Arrays.asList(
-                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
-
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                        .botInfo(Mao, 0)
-                        .opponentScore(0);
-
-                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
-            }
-
+        @DisplayName("Should accept raise if has")
+        class raiseResponseAccept {
             @Test
             @DisplayName("MaoGiga")
             void shouldReraiseIfHaveMaoGiga() {
@@ -453,25 +417,6 @@ public class MalasiaBotTest {
             }
 
             @Test
-            @DisplayName("manilha e mao ruim")
-            void shouldRefuseRaiseIfHaveManilhaAndMaoRuim() {
-                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
-
-                List<TrucoCard> Mao = Arrays.asList(
-                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
-
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                        .botInfo(Mao, 0)
-                        .opponentScore(0);
-
-                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
-            }
-
-
-            @Test
             @DisplayName("mao media com uma boa carta")
             void shouldRefuseRaiseIfHaveMaoMediaComUmaBoaCarta() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
@@ -505,6 +450,64 @@ public class MalasiaBotTest {
                         .opponentScore(0);
 
                 assertEquals(0,malasiaBot.getRaiseResponse(stepBuilder.build()));
+            }
+        }
+
+        @Nested
+        @DisplayName("Should reject raise if has")
+        class RaiseResponseReject {
+            @Test
+            @DisplayName("manilha e mao ruim")
+            void shouldRefuseRaiseIfHaveManilhaAndMaoRuim() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 0)
+                        .opponentScore(0);
+
+                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
+            }
+
+            @Test
+            @DisplayName("mao media sem boas cartas")
+            void shouldRefuseRaiseIfHaveMaoMediaSemBoasCartas() {
+                TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 0)
+                        .opponentScore(0);
+
+                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
+            }
+
+            @Test
+            @DisplayName("MaoLixo")
+            void shouldRefuseRaiseIfHaveMaoLixo() {
+                TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 0)
+                        .opponentScore(0);
+
+                assertEquals(-1,malasiaBot.getRaiseResponse(stepBuilder.build()));
             }
         }
     }
