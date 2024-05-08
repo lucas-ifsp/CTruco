@@ -522,6 +522,12 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
 
+            //SEGUNDA:
+            if(build.getRoundResults().get(0) == GameIntel.RoundResult.WON){
+                //SEGUNDA: se fez a primeira não joga a mais forte na segunda
+                return CardToPlay.of(piorCarta(build));
+            }
+
         }
 
         // JOGA DEPOIS DO PATO
