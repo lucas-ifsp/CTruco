@@ -23,7 +23,7 @@ public class ChatGptBot implements BotServiceProvider {
                 if (countManilhas(intel) == 2) return true;
                 if (verifyIfHasManilhaAndOtherCardEqualOrHigherThanTwo(intel)) return true;
             }
-            if(intel.getRoundResults().size() == 2 && haveZap(intel)){
+            if(intel.getRoundResults().size() == 2 && hasManilha(intel) && intel.getOpponentCard().isPresent()){
                 return true;
             }
         }
