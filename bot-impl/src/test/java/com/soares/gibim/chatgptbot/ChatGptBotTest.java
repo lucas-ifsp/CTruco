@@ -450,6 +450,27 @@ public class ChatGptBotTest {
                 }
             }
         }
+
+        @Nested
+        @DisplayName("When is the third Round")
+        class ThirdRound {
+            @Test
+            @DisplayName("Just play with the last card whe is the first to play")
+            void JustPlayTheLastCard(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+            }
+        }
     }
 
     @Test
