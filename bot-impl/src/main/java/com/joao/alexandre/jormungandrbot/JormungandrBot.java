@@ -2,6 +2,7 @@ package com.joao.alexandre.jormungandrbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class JormungandrBot implements BotServiceProvider {
@@ -28,5 +29,9 @@ public class JormungandrBot implements BotServiceProvider {
     @Override
     public String getName() {
         return "Jörmungandr";
+    }
+
+    TrucoCard getLowestCardInHand(GameIntel intel) {
+        return null;
     }
 }
