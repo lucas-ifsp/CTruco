@@ -6,8 +6,10 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.GameIntel.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,6 +57,11 @@ public class MinePowerBotIntelMockBuilder {
 
     MinePowerBotIntelMockBuilder viraToBe(CardRank viraRank, CardSuit viraSuit){
         when(intel.getVira()).thenReturn(TrucoCard.of(viraRank, viraSuit));
+        return this;
+    }
+
+    MinePowerBotIntelMockBuilder roundToBeSecond(RoundResult roundResult){
+        when(intel.getRoundResults()).thenReturn(List.of(roundResult));
         return this;
     }
 
