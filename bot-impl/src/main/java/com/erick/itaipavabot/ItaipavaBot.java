@@ -34,11 +34,7 @@ public class ItaipavaBot implements BotServiceProvider {
         List<TrucoCard> myCards = gameIntel.getCards();
         TrucoCard card = findLowestCardToWin(gameIntel);
         if (findFirstPlayer(gameIntel)) {
-            if (handPowerLevel(gameIntel) >= 9) {
-                return CardToPlay.of(getLowestCard(myCards, gameIntel));
-            } else {
-                return CardToPlay.of(secondBestCard(gameIntel));
-            }
+            return CardToPlay.of(getHighestCard(myCards, gameIntel));
         }
         if(card == null) {
             return CardToPlay.of(getLowestCard(myCards, gameIntel));
@@ -54,7 +50,7 @@ public class ItaipavaBot implements BotServiceProvider {
         } else if (lastRound(intel).equals(GameIntel.RoundResult.WON)) {
             return CardToPlay.of(getLowestCard(myCards, intel));
         }
-        return CardToPlay.of(secondBestCard(intel));
+        return CardToPlay.of(getHighestCard(myCards, intel));
     }
 
     private static GameIntel.RoundResult lastRound(GameIntel intel) {
@@ -63,17 +59,19 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (findHowManyManilhas(intel) > 1 && hasCard(intel, true)) return true;
-        if (handPowerLevel(intel) >= 9) return true;
-        if (handPowerLevel(intel) < 9 && intel.getOpponentScore() < 11) return false;
         if (hasCasalMaior(intel)) return true;
+        if ((findHowManyManilhas(intel) > 1 && hasCard(intel, true)) ||
+        findHowManyManilhas(intel) == 3) return true;
+        if (handPowerLevel(intel) >= 7.5) return true;
+        if (handPowerLevel(intel) < 7.5 && intel.getOpponentScore() < 11) return false;
         return false;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (hasCasalMaior(intel)) return true;
         if (intel.getOpponentScore() > 9) return false;
-        if (handPowerLevel(intel) >= 9) return true;
+        if (handPowerLevel(intel) >= 7.5) return true;
         return false;
     }
 
@@ -88,10 +86,12 @@ public class ItaipavaBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (handPowerLevel(intel) >= 9) return 1;
-        if (hasCard(intel, true) && findHowManyManilhas(intel) >= 2 && intel.getHandPoints() < 9) return 1;
-        if (handPowerLevel(intel) < 5) return -1;
-        if (findHowManyManilhas(intel) >= 2) return 0;
+        if (intel.getHandPoints() == 12) return -1;
+        if (hasCasalMaior(intel)) return 1;
+        if (hasCard(intel, true) && hasCard(intel, TrucoCard.of(CardRank.THREE, CardSuit.SPADES))) return 1;
+        if (findHowManyManilhas(intel) == 2) return 0;
+        if (handPowerLevel(intel) >= 7.5) return 1;
+        if (handPowerLevel(intel) <= 3.5) return -1;
         return 0;
     }
 
