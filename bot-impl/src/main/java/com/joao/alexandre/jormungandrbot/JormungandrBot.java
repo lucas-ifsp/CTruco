@@ -106,4 +106,7 @@ public class JormungandrBot implements BotServiceProvider {
         return cardToReturn;
     }
 
+    boolean isSecondToPlay(GameIntel intel){
+        return false;
+    }
 }

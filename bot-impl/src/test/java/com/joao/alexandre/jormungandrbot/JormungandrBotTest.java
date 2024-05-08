@@ -471,4 +471,24 @@ class JormungandrBotTest {
             assertTrue(jormungandrBot.getHighestNonManilhaCardInHand(stepBuilder.build()).isEmpty());
         }
     }
+
+    @Nested
+    @DisplayName("Testing isSecondToPlay() function")
+    class IsSecondToPlayTest{
+
+        @Test
+        @DisplayName("Should return true if is second to play")
+        void shouldReturnTrueIfIsSecondToPlay() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertTrue(jormungandrBot.isSecondToPlay(stepBuilder.build()));
+        }
+    }
 }
