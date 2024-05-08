@@ -48,8 +48,12 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        // dividir em funçoes para cada round
-        throw new UnsupportedOperationException("Unimplemented method 'chooseCard'");
+        return switch (getCurrentRoundNumber(intel)) {
+            case 1 -> chooseCardFirstRound(intel);
+            case 2 -> chooseCardSecondRound(intel);
+            case 3 -> chooseCardThirdRound(intel);
+            default -> null;
+        };
     }
 
     @Override
@@ -109,5 +113,9 @@ public class Akkosocorrompido implements BotServiceProvider {
             }
         }
         return lowestCardToWin;
+    }
+
+    public CardToPlay chooseCardThirdRound(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
     }
 }
