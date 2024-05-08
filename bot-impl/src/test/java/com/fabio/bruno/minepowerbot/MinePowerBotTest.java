@@ -265,4 +265,19 @@ class MinePowerBotTest {
 
         assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
     }
+
+    @Test
+    @DisplayName("Should play the highest card if it is not the first round and the scores are equal and bot it's not the first to play")
+    void shouldPlaytheHighestCardInNotFirstRoundWithScoreEqual(){
+        intel = create().scoreMine(4).scoreOponent(4).cards(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .opponentCardToBe(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .roundToBeSecond()
+                .finish();
+
+        assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
+    }
 }
