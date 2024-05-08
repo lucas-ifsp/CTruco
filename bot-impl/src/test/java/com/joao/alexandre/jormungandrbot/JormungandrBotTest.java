@@ -1,9 +1,6 @@
 package com.joao.alexandre.jormungandrbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -560,6 +557,30 @@ class JormungandrBotTest {
         @DisplayName("Should display the accurate name when asking for name")
         void shouldDisplayAccurateName() {
             assertEquals("Jörmungandr", jormungandrBot.getName());
+        }
+    }
+
+    @Nested
+    @DisplayName("Testing chooseCardThirdRound()")
+    class ChooseCardThirdRoundTest {
+
+        @Test
+        @DisplayName("Should return CardToPlay of the one card in hand")
+        void shouldReturnCardToPlayOfTheOneCardInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), trucoCards, vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)),
+                    jormungandrBot.chooseCardThirdRound(stepBuilder.build())
+            );
         }
     }
 }
