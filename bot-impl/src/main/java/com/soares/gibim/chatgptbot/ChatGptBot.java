@@ -68,6 +68,10 @@ public class ChatGptBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (intel.getRoundResults().isEmpty()) {
+            if (countManilhas(intel) == 2) {
+                return 1;
+            }
+
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
                 return 0;
             }
