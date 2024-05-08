@@ -572,8 +572,8 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should decline 'Truco' if i don't have cards in hand and opponent win one round")
     public void shouldDeclineTrucoIfIDontHaveCardsInHandAndOpponentWinOneRound() {
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-        when(intel.getCards()).thenReturn(List.of());
+        vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        setupCardsViraAndRoundResult(List.of(), vira, List.of(GameIntel.RoundResult.LOST));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
