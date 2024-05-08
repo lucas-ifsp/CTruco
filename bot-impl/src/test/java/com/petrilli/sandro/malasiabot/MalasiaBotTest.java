@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class MalasiaBotTest {
@@ -159,6 +158,23 @@ public class MalasiaBotTest {
             assertEquals(CardRank.FIVE, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
         }
 
+        @Test
+        @DisplayName("Should raise if MaoGiga and lost first round")
+        void shouldRaiseIfMaoGigaAndLostFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults1Lose, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertTrue(malasiaBot.decideIfRaises(stepBuilder.build()));
+        }
 
     }
     @Nested
