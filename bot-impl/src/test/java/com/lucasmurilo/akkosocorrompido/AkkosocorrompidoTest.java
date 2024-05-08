@@ -1,5 +1,7 @@
 package com.lucasmurilo.akkosocorrompido;
 
+import static com.bueno.spi.model.CardRank.SIX;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -227,6 +229,28 @@ public class AkkosocorrompidoTest {
             .build();
 
         assertFalse(bot.getMaoDeOnzeResponse(intel));
+    }
+
+    @Test
+    @DisplayName("should make sure lowrank function returns lowest rank")
+    public void shouldMakeSureLowrankFunctionReturnsLowestRank(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(10)
+            .build();
+
+        
+        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestRankInHand(intel));
     }
     
 }

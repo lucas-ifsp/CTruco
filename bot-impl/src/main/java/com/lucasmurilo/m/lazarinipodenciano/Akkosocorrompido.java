@@ -61,9 +61,13 @@ public class Akkosocorrompido implements BotServiceProvider {
     //low card
     public TrucoCard getLowestRankInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
 
         TrucoCard lowestCard = botCards.get(0);
         for (TrucoCard card : botCards) {
+            if(card.isManilha(vira)){
+                continue;
+            }
           if (card.getRank().value()< lowestCard.getRank().value()) {
             lowestCard = card;
           }
