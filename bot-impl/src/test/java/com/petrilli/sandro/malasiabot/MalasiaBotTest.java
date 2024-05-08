@@ -64,8 +64,23 @@ public class MalasiaBotTest {
     @Nested
     @DisplayName("Accept Mao de onze tests")
     class AcceptMaoDeOnze {
+        @Test
+        @DisplayName("Should accept mao de onze with MaoGiga hand")
+        void shouldAcceptMaoDeOnzeWithMaoGigaHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
 
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 11)
+                    .opponentScore(5);
+
+            assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
     }
 
     @Nested
@@ -391,8 +406,6 @@ public class MalasiaBotTest {
 
             assertEquals(0,malasiaBot.getRaiseResponse(stepBuilder.build()));
         }
-
-
     }
 
     @Nested
@@ -415,6 +428,7 @@ public class MalasiaBotTest {
 
             assertTrue(malasiaBot.decideIfRaises(stepBuilder.build()));
         }
+
         @Test
         @DisplayName("Should raise if have better card than opponent in last hand")
         void shouldRaiseIfHaveBetterCardThanOpponentInLastHand() {
