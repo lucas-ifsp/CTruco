@@ -15,48 +15,31 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(!CheckIfItsHandOfEleven(intel)){
-            if( !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON ){
+        if (!intel.getRoundResults().isEmpty()) {
+            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
                 return true;
             }
-            if(intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-                if (countManilhas(intel) == 2) return true;
-                if (verifyIfHasManilhaAndOtherCardEqualOrHigherThanTwo(intel)) return true;
+            if (intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
+                return countManilhas(intel) == 2 || verifyIfHasManilhaAndOtherCardEqualOrHigherThanTwo(intel);
             }
-            if(intel.getRoundResults().size() == 2 && hasManilha(intel) && intel.getOpponentCard().isPresent()){
-                return true;
+            if (intel.getRoundResults().size() == 2 && hasManilha(intel) && intel.getOpponentCard().isPresent()) {
+                return botCardWinsAgainstOpponentCard(intel);
             }
             if (intel.getRoundResults().size() == 2 &&
                     intel.getOpponentCard().isPresent() &&
-                    intel.getCards().get(0) == intel.getOpponentCard().get() &&
-                    intel.getRoundResults().get(0) == GameIntel.RoundResult.WON
-            )
+                    (intel.getCards().get(0) == intel.getOpponentCard().get() ||
+                            intel.getOpponentCard().get().relativeValue(intel.getVira()) < CardRank.QUEEN.value() ||
+                            intel.getOpponentCard().get().relativeValue(intel.getVira()) < intel.getCards().get(0).getRank().value())) {
                 return true;
-            if (intel.getRoundResults().size() == 2 &&
-                    intel.getOpponentCard().isPresent() &&
-                    intel.getRoundResults().get(0) == GameIntel.RoundResult.WON &&
-                    intel.getOpponentCard().get().relativeValue(intel.getVira()) < CardRank.QUEEN.value()
-            )
-                return true;
-            if (intel.getRoundResults().size() == 2 &&
-                    intel.getOpponentCard().isPresent() &&
-                    intel.getRoundResults().get(0) == GameIntel.RoundResult.WON &&
-                    intel.getOpponentCard().get().relativeValue(intel.getVira()) < intel.getCards().get(0).getRank().value()
-            )
-                return true;
-            if (intel.getRoundResults().size() == 2 &&
+            }
+            return intel.getRoundResults().size() == 2 &&
                     intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST &&
-                    intel.getCards().get(0).relativeValue(intel.getVira()) >= 12
-            )
-                return true;
-            if (intel.getRoundResults().size() == 2 &&
-                    intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST &&
-                    intel.getCards().get(0).relativeValue(intel.getVira()) == 9
-            )
-                return true;
+                    (intel.getCards().get(0).relativeValue(intel.getVira()) >= 12 ||
+                            intel.getCards().get(0).relativeValue(intel.getVira()) == 9);
         }
         return false;
     }
+
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -170,6 +153,13 @@ public class ChatGptBot implements BotServiceProvider {
                 return true;
             }
         }
+        return false;
+    }
+
+    private boolean botCardWinsAgainstOpponentCard(GameIntel intel){
+        if (intel.getCards().get(0).relativeValue(intel.getVira()) >
+                intel.getOpponentCard().get().relativeValue(intel.getVira()))
+            return true;
         return false;
     }
 
