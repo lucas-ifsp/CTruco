@@ -227,13 +227,30 @@ public class BarDoAlexBotTest {
             TrucoCard vira = TrucoCard.of(ACE,HEARTS);
 
 
-            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,11)
+            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,0)
                     .opponentScore(0).opponentCard(TrucoCard.of(SIX,DIAMONDS));
 
             TrucoCard result = sut.chooseCard(intel.build()).content();
             assertThat(result).isEqualTo(botCards.get(0));
         }
 
+        @Test
+        @DisplayName("Should start with the strongest card if that card are higier than an ACE")
+        void ShouldStartWithTheStrongestCardIfThatCardAreHigierThanAnAce(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(SEVEN, DIAMONDS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(ACE, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(TWO,HEARTS);
+
+
+            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,0)
+                    .opponentScore(0).opponentCard(TrucoCard.of(SIX,DIAMONDS));
+
+            TrucoCard result = sut.chooseCard(intel.build()).content();
+            assertThat(result).isEqualTo(botCards.get(1));
+        }
     }
 
 
