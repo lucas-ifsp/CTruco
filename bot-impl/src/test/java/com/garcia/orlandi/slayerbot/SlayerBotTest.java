@@ -276,5 +276,32 @@ public class SlayerBotTest {
         boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
         assertThat(shouldRequestTruco).isTrue();
     }
+
+    @Test
+    @DisplayName("Should request truco in the third round if second to play and last card wins against opponent")
+    void shouldRequestTrucoInThirdRoundIfSecondToPlayWithWinningCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        TrucoCard winningCard = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.WON,
+                GameIntel.RoundResult.LOST
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(List.of(winningCard), 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRequestTruco).isTrue();
+    }
 }
 
