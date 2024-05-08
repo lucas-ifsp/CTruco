@@ -59,13 +59,21 @@ public class JakareDuMatuBot implements BotServiceProvider {
             case 0 -> {
                 // First Hand
                 if (intel.getOpponentCard().isPresent()){
+                    List<TrucoCard> list = sortedListCards(intel, intel.getVira());
                     if (hasCardHigherThan(intel, intel.getOpponentCard().get())){
-                        List<TrucoCard> list = sortedListCards(intel, intel.getVira());
                         if (list.get(2).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
                             return CardToPlay.of(list.get(2));
                         } else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0) {
                             return CardToPlay.of(list.get(1));
                         }else{
+                            return CardToPlay.of(list.get(0));
+                        }
+                    }else {
+                        if (list.get(2).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0){
+                            return CardToPlay.of(list.get(2));
+                        } else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0) {
+                            return CardToPlay.of(list.get(1));
+                        } else if (list.get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0) {
                             return CardToPlay.of(list.get(0));
                         }
                     }
