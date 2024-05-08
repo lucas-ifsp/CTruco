@@ -13,6 +13,8 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -292,7 +294,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
@@ -314,7 +316,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
@@ -336,7 +338,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
@@ -358,7 +360,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
@@ -386,7 +388,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0)
                             .opponentCard(opponentCard);
@@ -411,7 +413,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0)
                             .opponentCard(opponentCard);
@@ -436,7 +438,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .gameInfo(List.of(WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0)
                             .opponentCard(opponentCard);
@@ -459,7 +461,7 @@ public class ChatGptBotTest {
                 List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(ACE, DIAMONDS));
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
 
@@ -481,7 +483,7 @@ public class ChatGptBotTest {
 
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0).
                         opponentCard(opponentCard);
@@ -556,7 +558,7 @@ public class ChatGptBotTest {
                 List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(ACE, DIAMONDS));
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
 
@@ -585,7 +587,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -611,7 +613,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -640,7 +642,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(WON, LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -665,7 +667,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(WON, LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -690,7 +692,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(WON, LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -715,7 +717,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .gameInfo(List.of(WON, LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
@@ -741,7 +743,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(LOST, WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
 
@@ -762,7 +764,7 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(LOST, WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
 
@@ -831,7 +833,7 @@ public class ChatGptBotTest {
 
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .gameInfo(List.of(LOST), openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -852,7 +854,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .gameInfo(List.of(LOST), openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -873,7 +875,7 @@ public class ChatGptBotTest {
 
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .gameInfo(List.of(LOST, WON), openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -957,7 +959,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 3)
+                    .gameInfo(List.of(LOST), openCards, vira, 3)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -977,7 +979,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 3)
+                    .gameInfo(List.of(LOST, WON), openCards, vira, 3)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -997,7 +999,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 3)
+                    .gameInfo(List.of(WON, LOST), openCards, vira, 3)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1063,7 +1065,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                    .gameInfo(List.of(WON), openCards, vira, 6)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1085,7 +1087,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                    .gameInfo(List.of(WON), openCards, vira, 6)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1106,7 +1108,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                    .gameInfo(List.of(WON), openCards, vira, 6)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1126,7 +1128,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 6)
+                    .gameInfo(List.of(WON, LOST), openCards, vira, 6)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1146,7 +1148,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 6)
+                    .gameInfo(List.of(WON, LOST), openCards, vira, 6)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
@@ -1190,7 +1192,7 @@ public class ChatGptBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 9)
+                    .gameInfo(List.of(WON, LOST), openCards, vira, 9)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
