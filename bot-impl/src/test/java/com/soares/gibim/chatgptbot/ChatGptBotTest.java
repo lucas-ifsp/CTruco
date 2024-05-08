@@ -423,6 +423,31 @@ public class ChatGptBotTest {
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
+
+                @Test
+                @DisplayName("If has manilha and is unable to kill opponent card with the weakest should use the manilha")
+                void IfHasManilhaAndIsUnableToKillOpponentCardWithTheWeakestShouldUseTheManilha(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                    );
+
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+                    List<TrucoCard> openCards = Arrays.asList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
