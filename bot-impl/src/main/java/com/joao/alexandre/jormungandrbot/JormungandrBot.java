@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class JormungandrBot implements BotServiceProvider {
@@ -34,6 +35,15 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     Optional<TrucoCard> getCardToTieOpponentsCard(GameIntel intel) {
+        TrucoCard opponentsCard = intel.getOpponentCard()
+                .orElseThrow(() -> new NoSuchElementException("Opponent doesn't have a card to tie"));
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(opponentsCard, vira) == 0)
+                return Optional.of(card);
+        }
+
         return Optional.empty();
     }
 
