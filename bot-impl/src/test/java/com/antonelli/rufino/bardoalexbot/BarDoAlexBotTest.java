@@ -117,8 +117,24 @@ public class BarDoAlexBotTest {
 //            assertThat(bot.decideIfRaises(intel)).isFalse();
         }
         @Test
-        @DisplayName("Should not run with was 2 or more manilhias")
-        void ShouldNorRunWithWasTwoOrMoreManihas(){
+        @DisplayName("Should not run with has 2 or more manilhias")
+        void ShouldNotRunWithWasTwoOrMoreManihas(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(TWO, DIAMONDS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, CLUBS)
+            );
+
+            TrucoCard vira = TrucoCard.of(ACE,DIAMONDS);
+            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,0)
+                    .opponentScore(0);
+
+            int result = sut.getRaiseResponse(intel.build());
+            assertThat(result).isEqualTo(0);
+        }
+        @Test
+        @DisplayName("Should raise if has two or more manilhias")
+        void ShouldRaiseIfHasTwoOrMoreManilhias(){
             List<TrucoCard> botCards = List.of(
                     TrucoCard.of(TWO, DIAMONDS),
                     TrucoCard.of(THREE, HEARTS),
@@ -132,7 +148,6 @@ public class BarDoAlexBotTest {
             boolean result = sut.decideIfRaises(intel.build());
             assertThat(result).isTrue();
         }
-
     }
 
 

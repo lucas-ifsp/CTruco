@@ -12,7 +12,7 @@ public class BarDoAlexBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
         long manilhasCount = cards.stream().filter(card -> card.isManilha(vira)).count();
-        return manilhasCount >= 3;
+        return manilhasCount >= 2;
     }
 
     public CardToPlay chooseCard(GameIntel intel) {
