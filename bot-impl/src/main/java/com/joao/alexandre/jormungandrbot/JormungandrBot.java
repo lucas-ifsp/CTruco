@@ -178,4 +178,7 @@ public class JormungandrBot implements BotServiceProvider {
 
         return manilhaCount;
     }
+
+    int getCardCountInHandHigherThanRelativeValue(GameIntel intel, int relativeValue) {return 0;}
+
 }

@@ -729,4 +729,31 @@ class JormungandrBotTest {
             assertEquals(0, jormungandrBot.getManilhaCountInHand(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getCardCountInHandHigherThanRelativeValue() function")
+    class GetCardCountInHandHigherThanRelativeValueTest {
+
+        @Test
+        @DisplayName("with one card above, one on the value and one below, return should be 1")
+        void shouldReturnOneWhenOnlyOneCardIsAboveRelativeValueInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(1,
+                    jormungandrBot.getCardCountInHandHigherThanRelativeValue(
+                            stepBuilder.build(), 7));
+        }
+
+
+    }
 }
