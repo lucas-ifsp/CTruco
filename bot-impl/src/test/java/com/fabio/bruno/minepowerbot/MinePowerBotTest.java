@@ -127,6 +127,19 @@ class MinePowerBotTest {
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("Should respond raise if has zap or two manilhas")
+    void shouldRespondRaiseIfHasZapOrTwoManilhas() {
+        intel = create()
+                .viraToBe(CardRank.THREE, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
