@@ -581,7 +581,7 @@ class JormungandrBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(results,List.of(), vira, 1)
