@@ -54,7 +54,7 @@ public class TeitasBotTest {
 
     }
         @Test
-       @DisplayName("Should raise if we have good hand and empty round with hidden opponent")
+        @DisplayName("Should raise if we have good hand and empty round with hidden opponent")
         void shouldRaiseIfEmptyRoundAndGoodHand(){
             TrucoCard vira =  TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
             List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
@@ -63,6 +63,23 @@ public class TeitasBotTest {
 
             builder =  GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.WON),List.of(),vira,1).botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
+
+        }
+        @Test
+        @DisplayName("Should raise if we drew at past.")
+        void shouldRaiseIfDrewAtPast(){
+        //the hand isn't relevant
+            TrucoCard vira =  TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
+            TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
+
+            builder =  GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1).botInfo(botCards, 0)
                     .opponentScore(0)
                     .opponentCard(opponentCard);
 
