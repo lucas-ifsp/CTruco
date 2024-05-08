@@ -733,6 +733,27 @@ class JormungandrBotTest {
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("If has a manilha and other cards with relative value >7, should play non-manilha highest card")
+        void shouldPlayNonManilhaIfCardsAreHigh() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
     }
 
     @Nested
