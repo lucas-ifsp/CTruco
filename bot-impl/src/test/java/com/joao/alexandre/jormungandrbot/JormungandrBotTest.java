@@ -710,5 +710,23 @@ class JormungandrBotTest {
 
             assertEquals(3, jormungandrBot.getManilhaCountInHand(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Check if 3 high cards in hand, return should be 0")
+        void shouldReturnZeroWhenThreeHighCardsInHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0, jormungandrBot.getManilhaCountInHand(stepBuilder.build()));
+        }
     }
 }
