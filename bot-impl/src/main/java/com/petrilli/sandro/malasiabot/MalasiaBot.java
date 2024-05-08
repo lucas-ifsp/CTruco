@@ -13,8 +13,7 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
-        if (intel.getHandPoints() == 12)
-            return -1;
+        if (intel.getHandPoints() == 12) return -1;
 
         int response = -1;
 
@@ -77,6 +76,11 @@ public class MalasiaBot implements BotServiceProvider {
                     return true;
                 }
             }
+            if (round.isEmpty()) {
+                if (MaoLixo(intel) || MaoZapOuCopasEFiguras(intel) || MaoZapOuCopasEAsAtres(intel) ||
+                        MaoEspadaOuOuroEAsATres(intel) || MaoEspadasOuOurosEFiguras(intel)||MaoComDuasBoasSemManilha(intel))
+                    return true;
+            }
         }
         return false;
     }
@@ -84,7 +88,9 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
 
-        if (MaoGiga(intel)) {
+        if (MaoGiga(intel) || MaoZapOuCopasEFiguras(intel) || MaoEspadasOuOurosEFiguras(intel)
+                || MaoZapOuCopasEAsAtres(intel) || MaoEspadaOuOuroEAsATres(intel) ||
+                MaoComDuasBoasSemManilha(intel)) {
             return true;
         }
 
@@ -122,8 +128,7 @@ public class MalasiaBot implements BotServiceProvider {
             for (TrucoCard card : intel.getCards()) {
                 int cardValue = card.relativeValue(vira);
                 int opponentCardValueRelative = opponentCardValue.relativeValue(vira);
-                if (cardValue > opponentCardValueRelative &&
-                        (deMenorQuePodeGanhar == null || cardValue < deMenorQuePodeGanhar.relativeValue(vira))) {
+                if (cardValue > opponentCardValueRelative && (deMenorQuePodeGanhar == null || cardValue < deMenorQuePodeGanhar.relativeValue(vira))) {
                     deMenorQuePodeGanhar = card;
                 }
             }
@@ -284,7 +289,7 @@ public class MalasiaBot implements BotServiceProvider {
                 boaCartaCount++;
             }
         }
-        return boaCartaCount == 2;
+        return boaCartaCount >= 2;
     }
 
     private boolean MaoRuimComManilha(GameIntel intel) {
