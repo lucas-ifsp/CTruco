@@ -115,6 +115,8 @@ public class SlayerBot implements BotServiceProvider {
         List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
 
+        List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
+
         if(roundResult.contains(GameIntel.RoundResult.DREW)){
             TrucoCard strongest = utils.getStrongestCard(cards, vira);
             return CardToPlay.of(strongest);
@@ -124,6 +126,11 @@ public class SlayerBot implements BotServiceProvider {
             //Play second strongest card if in first round or if lost first round
             if (roundResult.isEmpty()) {
                 TrucoCard strongestCard = utils.getStrongestCard(cards, vira);
+
+                if(manilhas.size() >= 2){
+                    return CardToPlay.of(strongestCard);
+                }
+
                 TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, strongestCard, vira);
                 return CardToPlay.of(secondStrongestCard);
             } else  {
