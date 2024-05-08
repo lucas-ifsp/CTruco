@@ -2,6 +2,8 @@ package com.antonelli.rufino.bardoalexbot;
 
 import com.bueno.spi.model.*;
 import java.util.List;
+import java.util.Optional;
+
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
@@ -16,16 +18,27 @@ public class BarDoAlexBot implements BotServiceProvider {
     }
 
     public CardToPlay chooseCard(GameIntel intel) {
-        int roundResults = intel.getRoundResults().lastIndexOf(GameIntel.RoundResult.DREW);
+        int drew_index = intel.getRoundResults().lastIndexOf(GameIntel.RoundResult.DREW);
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        if (roundResults == 0 || roundResults == 1){
+        if (drew_index == 0 || drew_index == 1){
             return CardToPlay.of(getStrongestCard(cards, vira));
         }
-
-        TrucoCard chosenCard = cards.get(cards.size() - 1);
-        return CardToPlay.of(chosenCard);
+        Optional<TrucoCard> oponnentCard = intel.getOpponentCard();
+        if (oponnentCard.isPresent()){
+            List<TrucoCard> cards_that_can_win = new java.util.ArrayList<>(List.of());
+            for (TrucoCard card :cards){
+                if (card.compareValueTo(oponnentCard.get(),vira) > 0)
+                    cards_that_can_win.add(card);
+            }
+            if (!cards_that_can_win.isEmpty()){
+                return CardToPlay.of(getWeakestCard(cards_that_can_win,vira));
+            }else {
+                return CardToPlay.of(getWeakestCard(cards,vira));
+            }
+        }
+        return CardToPlay.of(getStrongestCard(cards,vira));
     }
 
 
@@ -37,6 +50,16 @@ public class BarDoAlexBot implements BotServiceProvider {
                 strongest = card;
         }
         return strongest;
+    }
+
+    public TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard weakest = cards.get(0);
+
+        for (TrucoCard card : cards){
+            if (card.compareValueTo(weakest,vira) < 0)
+                weakest = card;
+        }
+        return weakest;
     }
     public int getRaiseResponse(GameIntel intel) {
         int botScore = intel.getScore();
