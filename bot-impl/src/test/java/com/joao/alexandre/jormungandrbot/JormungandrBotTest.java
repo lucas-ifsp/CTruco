@@ -588,7 +588,23 @@ class JormungandrBotTest {
                     .botInfo(myCards, 1)
                     .opponentScore(0);
 
-            assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+            assertTrue(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
+        @Test
+        @DisplayName("Should return true if has 0 cards on hand and is last round")
+        void shouldReturnTrueIfWithZeroCardOnLastRound(){
+            List<GameIntel.RoundResult> results = List.of(
+                    GameIntel.RoundResult.DREW, GameIntel.RoundResult.LOST);
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.hasPlayedACard(stepBuilder.build()));
         }
     }
 }
