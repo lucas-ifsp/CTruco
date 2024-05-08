@@ -676,4 +676,31 @@ public class SlayerBotTest {
         assertThat(shouldRequestTruco).isTrue();
     }
 
+    @Test
+    @DisplayName("Should accept truco if the opponent requests truco after bot played a strong card and won the previous round")
+    void shouldAcceptTrucoAfterPlayingStrongCardAndWinningPreviousRound() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        int raiseResponse = bot.getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isEqualTo(0);
+    }
+
 }
