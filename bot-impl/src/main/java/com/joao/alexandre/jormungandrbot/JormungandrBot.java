@@ -35,7 +35,23 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     Optional<TrucoCard> getLowestCardToBeatOpponentsCard(GameIntel intel) {
-        return Optional.empty();
+        TrucoCard currentLowestCard = getHighestCardInHand(intel);
+        TrucoCard opponentsCard = intel.getOpponentCard()
+                .orElseThrow(() -> new NoSuchElementException("Opponent doesn't have a card to beat"));
+        TrucoCard vira = intel.getVira();
+
+        Optional<TrucoCard> optionalTrucoCard = Optional.empty();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(currentLowestCard, vira) <= 0 &&
+                    card.compareValueTo(opponentsCard, vira) > 0) {
+
+                optionalTrucoCard = Optional.of(card);
+                currentLowestCard = card;
+            }
+        }
+
+        return optionalTrucoCard;
     }
 
     Optional<TrucoCard> getCardToTieOpponentsCard(GameIntel intel) {
