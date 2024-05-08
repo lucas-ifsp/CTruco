@@ -551,25 +551,31 @@ public class ChatGptBotTest {
     @Nested
     @DisplayName("Testing decideIfRaises")
     class decideIfRaisesTest {
-        @Test
-        @DisplayName("Should ask for raise if won the first round")
-        void ShouldAskForRaiseIfWonTheFirstRound(){
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        @Nested
+        @DisplayName("If Won First Round")
+        class WonFirstRound {
+            @Test
+            @DisplayName("Should ask for raise")
+            void ShouldAskForRaiseIfWonTheFirstRound(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-            List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
-            );
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                );
 
-            List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
 
-            intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
-                    .botInfo(botCards, 0)
-                    .opponentScore(0);
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
 
-            assertTrue(sut.decideIfRaises(intel.build()));
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
         }
+
+
     }
     @Test
     @DisplayName("If its the last hand and have zap then ask truco")
