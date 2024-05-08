@@ -272,7 +272,7 @@ public class AkkosocorrompidoTest {
             .build();
 
         
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getLowestRankInHand(intel));
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getHighestRankInHand(intel));
     }
     
 }
