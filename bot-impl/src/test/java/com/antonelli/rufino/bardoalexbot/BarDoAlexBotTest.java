@@ -197,6 +197,25 @@ public class BarDoAlexBotTest {
 
         }
 
+        @Test
+        @DisplayName("Should choose the weakest card if doesn't win ")
+        void ShouldChooseTheWeakestCardIfDoesntWin(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(FIVE, DIAMONDS),
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(QUEEN, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(ACE,HEARTS);
+
+
+            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,11)
+                    .opponentScore(0).opponentCard(TrucoCard.of(ACE,DIAMONDS));
+
+            TrucoCard result = sut.chooseCard(intel.build()).content();
+            assertThat(result).isEqualTo(botCards.get(1));
+
+        }
+
     }
 
 
