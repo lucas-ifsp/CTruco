@@ -31,6 +31,7 @@ import com.bueno.spi.service.BotServiceProvider;
 public class Akkosocorrompido implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        
         return false;
     }
 
@@ -67,7 +68,7 @@ public class Akkosocorrompido implements BotServiceProvider {
     //high card
     public TrucoCard getHighestRankInHand(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        
+
         TrucoCard highestCard = cards.get(0);
         for (TrucoCard card : cards) {
           if (card.getRank().value() > highestCard.getRank().value()) {
@@ -77,5 +78,17 @@ public class Akkosocorrompido implements BotServiceProvider {
         return highestCard;
       }
     //manilha
+    private boolean haveHighCardInHand(GameIntel intel) {
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                return true;
+            }
+            if (card.getRank().toString() == "THREE") {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //lowtowin
 }
