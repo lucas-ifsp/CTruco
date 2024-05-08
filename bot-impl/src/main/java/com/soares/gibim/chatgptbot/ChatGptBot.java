@@ -38,6 +38,12 @@ public class ChatGptBot implements BotServiceProvider {
                     intel.getOpponentCard().get().relativeValue(intel.getVira()) < CardRank.QUEEN.value()
             )
                 return true;
+            if (intel.getRoundResults().size() == 2 &&
+                    intel.getOpponentCard().isPresent() &&
+                    intel.getRoundResults().get(0) == GameIntel.RoundResult.WON &&
+                    intel.getOpponentCard().get().relativeValue(intel.getVira()) < intel.getCards().get(0).getRank().value()
+            )
+                return true;
         }
         return false;
     }
