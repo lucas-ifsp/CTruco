@@ -119,10 +119,9 @@ public class AkkosocorrompidoTest {
         assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel).value().toString());
     }
     
-    //se tiver carta boa truca ao inves 
     @Test
-    @DisplayName("should Return Best Card If Lost And No High Cards")
-    public void shouldReturnBestCardIfLostAndNoHighCards (){
+    @DisplayName("should Return Best Card If Lost")
+    public void shouldReturnBestCardIfLost (){
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -141,5 +140,31 @@ public class AkkosocorrompidoTest {
         assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), bot.chooseCard(intel).value().toString());
     }
     
+    //truco/blefe instead
+    @Test
+    @DisplayName("should Use Best card If Won before")
+    public void shouldUseHighCardIfWonbefore(){
+    }
+ 
+    @Test
+    @DisplayName("should use last card if lost then won")
+    public void shoulduselastcardiflostAndWon (){
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+            .botInfo(botCards, 3)
+            .opponentScore(3)
+            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
+            .build();
+
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel).value().toString());
+    }
+
     
 }
