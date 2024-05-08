@@ -46,6 +46,22 @@ public class SlayerBot implements BotServiceProvider {
             return true;
         }
 
+        List<GameIntel.RoundResult> roundResults = game.getRoundResults();
+        boolean inThirdRound = roundResults.size() == 2 && (
+                (roundResults.get(0) == GameIntel.RoundResult.WON && roundResults.get(1) == GameIntel.RoundResult.LOST) ||
+                        (roundResults.get(0) == GameIntel.RoundResult.LOST && roundResults.get(1) == GameIntel.RoundResult.WON)
+        );
+
+        // Verifica se a ultima carta do bot pode vencer a do oponente
+        if (inThirdRound && cards.size() == 1 && game.getOpenCards().size() == 2) {
+            TrucoCard opponentCard = game.getOpenCards().get(1);
+            TrucoCard lastCard = cards.get(0);
+
+            if (lastCard.compareValueTo(opponentCard, vira) > 0) {
+                return true;
+            }
+        }
+
         if (game.getOpenCards().size() == 2) {
             TrucoCard opponentCard = game.getOpenCards().get(1);
 
