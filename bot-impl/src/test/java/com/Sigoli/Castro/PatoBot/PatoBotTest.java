@@ -610,18 +610,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should respond cautiously to an opponent's Truco with weak cards in hand")
     public void shouldRespondCautiouslyToTrucoWithWeakCards() {
-        TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
-        TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
-
-        when(intel.getCards()).thenReturn(Arrays.asList(
-                card1, card2
-        ));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
-        when(intel.getRoundResults()).thenReturn(Collections.singletonList(GameIntel.RoundResult.LOST));
-
-        int response = patoBot.getRaiseResponse(intel);
+        card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        card2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        setupCardsViraOpponentCardAndRoundResult(Arrays.asList(card1, card2), vira, Optional.empty(), Collections.singletonList(GameIntel.RoundResult.LOST));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
