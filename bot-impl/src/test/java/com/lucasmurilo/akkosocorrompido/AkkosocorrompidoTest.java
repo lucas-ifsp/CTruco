@@ -53,7 +53,7 @@ public class AkkosocorrompidoTest {
         assertEquals(TrucoCard.of(THREE, HEARTS), bot.chooseCard(intel).value().toString());
     }
 
-    //truco depois dessa
+    //truca depois dessa, ou agora tbm
     @Test
     @DisplayName("should start with best card if no manilha in hand")
     public void shouldStartWithBestCardifNotManilha (){
@@ -97,6 +97,27 @@ public class AkkosocorrompidoTest {
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.chooseCard(intel).value().toString());
     }
 
+    @Test
+    @DisplayName("should return worst card on hand if can NOT beat opponent")
+    public void shouldReturnWorstCardOnHandIfCantBeatOpponent (){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+            TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 3)
+            .opponentScore(3)
+            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
+            .build();
+
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel).value().toString());
+    }
     
     
 }
