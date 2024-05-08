@@ -48,8 +48,16 @@ public class NewBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        int myScore = intel.getScore();
+        int oppScore = intel.getOpponentScore();
+        int scoreDistance = myScore - oppScore;
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand();
+        if (status == GOD) return 1;
+        if (status == GOOD && scoreDistance <= -6){
+            return 1;
+        }
+        if (status == BAD || (status == MEDIUM && scoreDistance <= -4)) return -1;
         return 0;
     }
 
