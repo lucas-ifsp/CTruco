@@ -667,6 +667,30 @@ class JormungandrBotTest {
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("If self can't beat opponent nor tie, then they should discard worst card")
+        void shouldDiscardLowestCardIfCantBeatOrTie() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
     }
 
     @Nested
