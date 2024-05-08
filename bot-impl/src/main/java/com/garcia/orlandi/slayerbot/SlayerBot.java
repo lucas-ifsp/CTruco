@@ -22,32 +22,35 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = game.getVira();
         int botScore = game.getScore();
         int opponentScore = game.getOpponentScore();
+        List<TrucoCard> cards = game.getCards();
 
         if (botScore == 11 || opponentScore == 11) {
             return false;
         }
 
-        if (game.getOpenCards().size() == 2) {
-            TrucoCard opponentCard = game.getOpenCards().get(1);
-            CardRank zapRank = vira.getRank().next();
-
-            //usar isZap
-            boolean hasZap = game.getCards().stream()
-                    .anyMatch(card -> card.getRank() == zapRank && card.getSuit() == CardSuit.CLUBS);
-
-            boolean hasWinningCard = game.getCards().stream()
-                    .filter(card -> card.getRank() != zapRank)
-                    .anyMatch(card -> card.compareValueTo(opponentCard, vira) > 0);
-
-            return hasZap && hasWinningCard;
-        }
-
         boolean hasTiedInFirstRound = game.getRoundResults().contains(GameIntel.RoundResult.DREW);
 
-        boolean hasManilha = game.getCards().stream()
+        boolean hasManilha = cards.stream()
                 .anyMatch(card -> card.isManilha(vira));
 
-        return hasTiedInFirstRound && hasManilha;
+        // Se  rodada anterior resultou em empate e o bot tem uma manilha deve pedir truco
+        if (hasTiedInFirstRound && hasManilha) {
+            return true;
+        }
+
+        if (game.getOpenCards().size() == 2) {
+            TrucoCard opponentCard = game.getOpenCards().get(1);
+
+            boolean hasZap = cards.stream()
+                    .anyMatch(card -> card.isZap(vira));
+
+            boolean hasWinningCard = cards.stream()
+                    .anyMatch(card -> card.compareValueTo(opponentCard, vira) > 0);
+
+            // Pede truco se tiver  zap e uma carta que vence
+            return hasZap && hasWinningCard;
+        }
+        return false;
     }
 
     @Override
@@ -56,15 +59,27 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
 
-        if (intel.getRoundResults().isEmpty() && intel.getOpenCards().size() == 2) {
-            TrucoCard selectedCard = cards.stream()
-                    .filter(card -> !card.equals(TrucoCard.closed()))
-                    .max(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
-                    .orElse(cards.get(0));
-
-            return CardToPlay.of(selectedCard);
-        }
         List<TrucoCard> botManilhas = utils.getManilhas(cards, vira);
+
+        boolean opponentIsCopas = opponentCard != null && opponentCard.isCopas(vira);
+
+        TrucoCard zap = botManilhas.stream()
+                .filter(card -> card.isZap(vira))
+                .findFirst()
+                .orElse(null);
+
+        // Se o oponente jogou uma manilha de copas e o bot tem o zap, joga o zap
+        if (opponentIsCopas && zap != null && zap.compareValueTo(opponentCard, vira) > 0) {
+            return CardToPlay.of(zap);
+        }
+
+        // Se o bot não tem manilhas, joga a carta mais fraca
+        if (botManilhas.isEmpty()) {
+            TrucoCard weakestCard = cards.stream()
+                    .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                    .orElse(cards.get(0));
+            return CardToPlay.of(weakestCard);
+        }
 
         boolean hasTied = intel.getRoundResults().contains(GameIntel.RoundResult.DREW);
 
@@ -79,12 +94,10 @@ public class SlayerBot implements BotServiceProvider {
             }
         }
 
-        // Jogar a manilha mais forte apos o empate
         if (hasTied && !botManilhas.isEmpty()) {
             TrucoCard strongestManilha = botManilhas.stream()
                     .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
                     .orElse(botManilhas.get(0));
-
             return CardToPlay.of(strongestManilha);
         }
 
