@@ -48,7 +48,7 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     CardToPlay chooseCardThirdRound(GameIntel intel) {
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     TrucoCard getHighestCardInHand(GameIntel intel) {
