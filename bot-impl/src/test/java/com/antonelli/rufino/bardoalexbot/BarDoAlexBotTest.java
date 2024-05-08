@@ -97,7 +97,7 @@ public class BarDoAlexBotTest {
                     TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR, CLUBS),
                     TrucoCard.of(THREE, HEARTS),
-                    TrucoCard.of(ACE, DIAMONDS)
+                    TrucoCard.of(ACE, DIAMONDS) //
             );
 
             BarDoAlexBot bot = new BarDoAlexBot();
