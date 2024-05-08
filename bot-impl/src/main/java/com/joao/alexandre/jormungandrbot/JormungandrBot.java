@@ -162,4 +162,20 @@ public class JormungandrBot implements BotServiceProvider {
 
         return Optional.empty();
     }
+
+    int getManilhaCountInHand(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        int manilhaCount = 0;
+
+        for(TrucoCard card : intel.getCards()) {
+            if(card.isManilha(vira))
+                manilhaCount++;
+        }
+
+        if(hasPlayedACard(intel) &&
+                intel.getOpenCards().get(intel.getOpenCards().size()-1).isManilha(vira))
+            manilhaCount++;
+
+        return manilhaCount;
+    }
 }
