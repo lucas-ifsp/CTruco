@@ -715,7 +715,7 @@ class JormungandrBotTest {
 
         @Test
         @DisplayName("If has a manilha but no other cards with relative value >7, should play highest card")
-        void shouldPlayOnlyManilhaWhenCardsAreLow() {
+        void shouldPlayOnlyManilhaIfCardsAreLow() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
             List<TrucoCard> currentCards = List.of(
