@@ -757,6 +757,30 @@ class JormungandrBotTest {
     }
 
     @Nested
+    @DisplayName("Testing chooseCardThirdRound()")
+    class ChooseCardThirdRoundTest {
+
+        @Test
+        @DisplayName("Should return CardToPlay of the one card in hand")
+        void shouldReturnCardToPlayOfTheOneCardInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(trucoCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)),
+                    jormungandrBot.chooseCardThirdRound(stepBuilder.build())
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Testing getSelfCardPlayed() function")
     class GetSelfCardPlayedTest{
         @Test
@@ -803,30 +827,6 @@ class JormungandrBotTest {
             assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), response.orElseThrow());
         }
 
-    }
-
-    @Nested
-    @DisplayName("Testing chooseCardThirdRound()")
-    class ChooseCardThirdRoundTest {
-
-        @Test
-        @DisplayName("Should return CardToPlay of the one card in hand")
-        void shouldReturnCardToPlayOfTheOneCardInHand() {
-            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
-            List<TrucoCard> trucoCards = List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
-            );
-
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(trucoCards, 0)
-                    .opponentScore(0);
-
-            assertEquals(
-                    CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)),
-                    jormungandrBot.chooseCardThirdRound(stepBuilder.build())
-            );
-        }
     }
 
     @Nested
