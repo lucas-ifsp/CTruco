@@ -305,6 +305,29 @@ public class ChatGptBotTest {
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("If only has middle cards should use the strongest")
+                void IfOnlyHasMiddleCardsShouldUseTheStrongest(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }
