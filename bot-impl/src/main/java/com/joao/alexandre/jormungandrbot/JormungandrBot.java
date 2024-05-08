@@ -1,8 +1,6 @@
 package com.joao.alexandre.jormungandrbot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.NoSuchElementException;
@@ -179,6 +177,21 @@ public class JormungandrBot implements BotServiceProvider {
         return manilhaCount;
     }
 
-    int getCardCountInHandHigherThanRelativeValue(GameIntel intel, int relativeValue) {return 0;}
+    int getCardCountInHandHigherThanRelativeValue(GameIntel intel, int relativeValue) {
+        TrucoCard vira = intel.getVira();
+        int cardCount = 0;
 
+        for(TrucoCard card : intel.getCards()) {
+            if(card.relativeValue(vira) > relativeValue)
+                cardCount++;
+        }
+
+        // if bot has already played a card, account for the card played
+        if(getSelfCardPlayed(intel)
+                .orElse(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
+                .relativeValue(vira) > relativeValue)
+            cardCount++;
+
+        return cardCount;
+    }
 }
