@@ -70,48 +70,37 @@ public class ChatGptBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (intel.getRoundResults().isEmpty()) {
-            if (countManilhas(intel) == 2) {
-                return 1;
-            }
-            if (verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)){
+            if (countManilhas(intel) == 2 || verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)) {
                 return 1;
             }
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
                 return 0;
             }
         } else if (intel.getRoundResults().size() == 1) {
-            if (countManilhas(intel) == 2) {
-                return 1;
-            }
-            if (verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)){
+            if (countManilhas(intel) == 2 || verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)) {
                 return 1;
             }
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
                 return 0;
             }
-            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && (hasManilha(intel) || hasThree(intel))) return 1;
-        } else if (intel.getRoundResults().size() == 2) {
-
-            if( (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
-                    && getSumOfCardValues(intel) > 8 ) {
+            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && (hasManilha(intel) || hasThree(intel))) {
                 return 1;
             }
-
+        } else if (intel.getRoundResults().size() == 2) {
+            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && getSumOfCardValues(intel) > 8) {
+                return 1;
+            }
             if (countManilhas(intel) > 0) {
                 return 1;
             }
-            if (getSumOfCardValues(intel) >= 7){
+            if (getSumOfCardValues(intel) >= 7) {
                 return 0;
             }
         }
         return -1;
     }
 
-    public boolean CheckIfItsHandOfEleven(GameIntel intel){
-        return intel.getHandPoints() == 11;
-    }
-
-    int getSumOfCardValues(GameIntel intel) {
+    private int getSumOfCardValues(GameIntel intel) {
         int sum = 0;
 
         for (TrucoCard card : intel.getCards()) {
@@ -121,7 +110,7 @@ public class ChatGptBot implements BotServiceProvider {
         return sum;
     }
 
-    int countManilhas(GameIntel intel) {
+    private int countManilhas(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
             if (card.isManilha(intel.getVira())) {
