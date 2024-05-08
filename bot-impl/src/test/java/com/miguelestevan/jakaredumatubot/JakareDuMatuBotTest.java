@@ -368,7 +368,6 @@ class JakareDuMatuBotTest {
                     .gameInfo(roundResults, openCards, vira, 3)
                     .botInfo(botCards, 5)
                     .opponentScore(2)
-                    .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                     .build();
 
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
