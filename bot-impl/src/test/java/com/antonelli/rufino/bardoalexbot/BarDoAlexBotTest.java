@@ -165,11 +165,35 @@ public class BarDoAlexBotTest {
                     TrucoCard.of(ACE,DIAMONDS),
                     botCards.get(2)
             );
-            intel = GameIntel.StepBuilder.with().gameInfo(round_results,List.of(),vira,1).botInfo(botCards,0)
+            intel = GameIntel.StepBuilder.with().gameInfo(round_results,openCards,vira,1).botInfo(botCards,0)
                     .opponentScore(0);
 
             int result = sut.getRaiseResponse(intel.build());
             assertThat(result).isEqualTo(0);
+
+        }
+
+        @Test
+        @DisplayName("Should show the strongest card , if draw in the last round")
+        void ShouldShowTheStrongestCardIfDrawOnTheLastRoud(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(TWO, DIAMONDS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(TWO,HEARTS);
+            List<GameIntel.RoundResult> round_results = List.of(DREW);
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    botCards.get(0),
+                    TrucoCard.of(TWO, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with().gameInfo(round_results,openCards,vira,1).botInfo(botCards,0)
+                    .opponentScore(0);
+
+            TrucoCard strongest = sut.chooseCard(intel.build()).content();
+
+            assertThat(strongest).isEqualTo(botCards.get(1));
 
         }
 
