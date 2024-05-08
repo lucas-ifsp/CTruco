@@ -508,14 +508,14 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should accept when 11 < prob < 22 To Min 2 Cards")
-                public void ShouldAcceptWhenProbBetween11and22ToMin2Cards() {
+                @DisplayName("Should accept when (60 < prob < 70) To Min 2 Cards")
+                public void ShouldAcceptWhenProbBetween60and70ToMin2Cards() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(THREE, CLUBS),
-                            TrucoCard.of(THREE, HEARTS),
-                            TrucoCard.of(FOUR, SPADES));
+                            TrucoCard.of(SEVEN, DIAMONDS),
+                            TrucoCard.of(KING, CLUBS),
+                            TrucoCard.of(KING, SPADES));
                     when(intel.getCards()).thenReturn(botCards);
-                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(FIVE, SPADES));
                     when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
                     when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
@@ -557,12 +557,12 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should accept when can win and 11 < prob < 21 to another card")
-                public void ShouldAcceptWhenCanWinAndProbBetween1And2ToAnotherCard() {
+                @DisplayName("Should accept when can win and (70 < prob < 60) to another card")
+                public void ShouldAcceptWhenCanWinAndProbBetween70And60ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(THREE, CLUBS),
-                            TrucoCard.of(THREE, HEARTS),
-                            TrucoCard.of(FOUR,SPADES));
+                            TrucoCard.of(KING, HEARTS),
+                            TrucoCard.of(KING,SPADES),
+                            TrucoCard.of(TWO, CLUBS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(Collections.EMPTY_LIST);
@@ -626,11 +626,11 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should accept when 11 < prob < 21 to min 1 card")
+                @DisplayName("Should accept when (60 < prob < 70) to min 1 card")
                 public void ShouldAcceptWhenProbBetween11and22ToMin1Card() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(THREE, CLUBS),
-                            TrucoCard.of(THREE,SPADES));
+                            TrucoCard.of(KING, CLUBS),
+                            TrucoCard.of(KING,SPADES));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(WON));
@@ -674,15 +674,15 @@ class PatriciaAparecidaTest {
 
 
                 @Test
-                @DisplayName("Should accept when can win and 11 < prob < 21 to another card")
+                @DisplayName("Should accept when can win and (60 < prob < 70) to another card")
                 public void ShouldAcceptWhenCanWinAndProbBetween11And21ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
-                            TrucoCard.of(TWO, CLUBS),
-                            TrucoCard.of(TWO, HEARTS));
+                            TrucoCard.of(SIX, DIAMONDS),
+                            TrucoCard.of(SEVEN, CLUBS));
                     when(intel.getCards()).thenReturn(botCards);
-                    when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
+                    when(intel.getVira()).thenReturn(TrucoCard.of(TWO, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(LOST));
-                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(ACE,SPADES)));
+                    when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(FIVE,SPADES)));
 
                     assertEquals(0, patricia.getRaiseResponse(intel));
                 }
