@@ -40,7 +40,7 @@ public class BarDoAlexBot implements BotServiceProvider {
 
         long manilhasCount = cards.stream().filter(card -> card.isManilha(vira)).count();
 
-        if (manilhasCount >= 3) {
+        if (manilhasCount >= 2) {
             return 1;
         }
 
