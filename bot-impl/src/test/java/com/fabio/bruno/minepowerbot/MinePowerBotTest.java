@@ -27,16 +27,42 @@ class MinePowerBotTest {
     @Test
     @DisplayName("When winning and playing the first card, should play a weak one")
     void playingFirstCard() {
-        intel = create().scoreMine(1).viraToBe(CardRank.KING, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        intel = create()
+                .scoreMine(1)
+                .viraToBe(CardRank.KING, CardSuit.SPADES)
+                .cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
         assertThat(sut.getLowerCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
     }
 
     @Test
+    @DisplayName("Test when the bot has the lowest possible score (0)")
+    void testBotWithLowestScore() {
+        // Given
+        intel = MinePowerBotIntelMockBuilder.create()
+                .scoreMine(0) // Bot's score is 0
+                .scoreOponent(0) // Opponent's score is also 0
+                .cards(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), // Example hand
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .opponentCardToBe(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .finish();
+
+        // When
+        boolean botRaises = sut.decideIfRaises(intel);
+
+        // Then
+        assertThat(botRaises).isFalse(); // Bot should not raise with the lowest score
+    }
+
+
+    @Test
     @DisplayName("Should return false if does not have manilha")
     void shouldReturnFalseIfDoNotHaveManilha() {
-        intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)).finish();
         TrucoCard vira = intel.getVira();
 
         assertThat(sut.chooseCard(intel).content().isManilha(vira)).isFalse();
