@@ -46,7 +46,6 @@ public class SlayerBot implements BotServiceProvider {
             return CardToPlay.of(strongest);
         }
 
-//        List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
         if(openCards.size() == 1) {
             //Play second strongest card if in first round or if lost first round
             if (roundResult.isEmpty()) {
@@ -64,6 +63,9 @@ public class SlayerBot implements BotServiceProvider {
                 return CardToPlay.of(utils.getStrongestCard(cards, vira));
             }
         }
+
+        TrucoCard strongest = utils.getStrongestCard(cards, vira);
+        return CardToPlay.of(strongest);
     }
 
     @Override
