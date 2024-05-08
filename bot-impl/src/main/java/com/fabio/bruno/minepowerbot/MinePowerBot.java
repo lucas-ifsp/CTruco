@@ -54,8 +54,7 @@ public class MinePowerBot implements BotServiceProvider {
                 TrucoCard manilha = qtdManilhas.get(0);
                 return CardToPlay.of(manilha);
             }
-        }
-        else {
+        } else {
             var opponentCard = intel.getOpponentCard().get();
             switch (roundNumber) {
                 case 1 -> {
@@ -64,6 +63,11 @@ public class MinePowerBot implements BotServiceProvider {
                             .min((card1, card2) -> card1.compareValueTo(card2, vira));
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
+                }
+                default -> {
+                    if (intel.getOpponentScore() == intel.getScore()){
+                        return CardToPlay.of(higherCard(intel));
+                    }
                 }
             }
             if (intel.getOpponentScore() == intel.getScore()) {
