@@ -413,12 +413,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should raise game if I've won the first round and have strong cards")
     public void shouldRaiseGameIfIveWonTheFirstRoundAndHaveStrongCards() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        roundResult = GameIntel.RoundResult.WON;
+        setupCardsViraAndRoundResult(Arrays.asList(card1, card2), vira, Collections.singletonList(roundResult));
         assertTrue(patoBot.decideIfRaises(intel));
     }
 
