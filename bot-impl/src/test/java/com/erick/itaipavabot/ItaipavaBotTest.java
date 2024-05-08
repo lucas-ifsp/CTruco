@@ -522,4 +522,21 @@ public class ItaipavaBotTest {
                 .opponentScore(0);
         assertEquals(GameIntel.RoundResult.WON, bot.lastRound(stepBuilder.build()));
     }
+
+    @Test
+    @DisplayName("Should return LOST if last round was LOST")
+    void shouldReturnLOSTIfLastRoundWasLOST() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List<TrucoCard> myCards = Arrays.asList(TrucoCard.of(
+                        CardRank.QUEEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+        );
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(GameIntel.RoundResult.LOST, bot.lastRound(stepBuilder.build()));
+    }
+
 }
