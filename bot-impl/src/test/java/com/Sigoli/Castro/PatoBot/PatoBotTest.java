@@ -383,11 +383,9 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Raise when holds manilha on last hand")
     public void shouldRaiseWhenHoldsManilhaonLastHand() {
-        GameIntel intel = mock((GameIntel.class));
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Collections.singletonList(card1));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        setupCardsAndVira(Collections.singletonList(card1), vira);
         assertTrue(patoBot.decideIfRaises(intel));
     }
 
