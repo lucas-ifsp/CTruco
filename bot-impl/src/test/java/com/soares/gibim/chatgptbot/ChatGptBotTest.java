@@ -299,7 +299,7 @@ public class ChatGptBotTest {
                     );
 
                     intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(), openCards, vira, 1)
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
