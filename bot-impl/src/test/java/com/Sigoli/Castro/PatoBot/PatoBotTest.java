@@ -441,7 +441,7 @@ public class PatoBotTest {
     @DisplayName("Should not Raise if opponent is playing Mao de Onze")
     public void shouldNotRaiseIfOpponentIsPlayingMaoDeOnze() {
         int opponentScore = 11;
-        when(intel.getOpponentScore()).thenReturn(opponentScore);
+        setupOpponentScore(opponentScore);
         assertFalse(patoBot.decideIfRaises(intel));
     }
 
