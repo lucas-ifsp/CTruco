@@ -96,6 +96,16 @@ public class JakareDuMatuBot implements BotServiceProvider {
                     return CardToPlay.of(sortedListCards(intel, intel.getVira()).get(1));
 
                 }
+
+                if(intel.getHandPoints() > 1){
+                    // Está trucado
+                    List<TrucoCard> sorted = sortedListCards(intel, intel.getVira());
+                    if(getManilhas(intel.getCards(), intel.getVira()).size() > 0){
+                        return CardToPlay.of(sorted.get(0));
+                    }
+                    return CardToPlay.of(sorted.get(1));
+                }
+
                 return null;
             }
         }

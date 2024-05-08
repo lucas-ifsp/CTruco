@@ -368,9 +368,44 @@ class JakareDuMatuBotTest {
         }
 
 
+        // Se fez a primeira e tem uma manilha para jogar e está trucado jogar a manilha para fechar
+        @Test
+        @DisplayName("Should Play The Manilha If Was Raises")
+        public void ShouldPlayTheManilhaIfWasRaises(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON); // Perdeu a primeira rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES), //bot card
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES) //oponent card
+                    );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 3)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+        }
+
+        // Se fez a primeira e tem uma manilha para jogar mas não está trucado jogar a outra carta
+
+        // Se fez a primeira e não te uma manilha jogar a carta mais forte
+
+
         // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
         @Test
-        @DisplayName("Decide that you will ask for tricks in the first round with an older couple")//Se tiver feito a primeira
+        @DisplayName("Decide ")//Se tiver feito a primeira
         public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
 
         }
