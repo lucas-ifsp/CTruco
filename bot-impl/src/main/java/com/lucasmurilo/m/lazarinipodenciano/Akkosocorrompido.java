@@ -21,15 +21,17 @@
 
 package com.lucasmurilo.m.lazarinipodenciano;
 
+import java.util.List;
+
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class Akkosocorrompido implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaoDeOnzeResponse'");
+        return false;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        // TODO Auto-generated method stub
+        // dividir em funçoes para cada round
         throw new UnsupportedOperationException("Unimplemented method 'chooseCard'");
     }
 
@@ -49,4 +51,20 @@ public class Akkosocorrompido implements BotServiceProvider {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
     }
+
+    //low card
+    public TrucoCard getLowestRankInHand(GameIntel intel) {
+        List<TrucoCard> botCards = intel.getCards();
+
+        TrucoCard lowestCard = botCards.get(0);
+        for (TrucoCard card : botCards) {
+          if (card.getRank().value()< lowestCard.getRank().value()) {
+            lowestCard = card;
+          }
+        }
+        return lowestCard;
+      }
+    //high card
+    //manilha
+    //lowtowin
 }
