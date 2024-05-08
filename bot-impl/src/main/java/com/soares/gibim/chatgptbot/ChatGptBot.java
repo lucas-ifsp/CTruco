@@ -164,18 +164,6 @@ public class ChatGptBot implements BotServiceProvider {
         return strongestCard;
     }
 
-    private TrucoCard strongestCardExceptManilha(GameIntel intel){
-        TrucoCard strongestCard = null;
-        int strength = 0;
-        for (TrucoCard card : intel.getCards()){
-            if (card.getRank().value() > strength && !card.isManilha(card)){
-                strongestCard = card;
-                strength = card.getRank().value();
-            }
-        }
-        return strongestCard;
-    }
-
     private TrucoCard weakestCard(GameIntel intel){
         TrucoCard weakestCard = null;
         int strength = 15;
