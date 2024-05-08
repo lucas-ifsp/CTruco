@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ChatGptBotTest {
 
     private ChatGptBot sut;
+    private TrucoCard vira;
+    private List<TrucoCard> openCards;
 
     GameIntel.StepBuilder intel;
 
@@ -34,13 +36,23 @@ public class ChatGptBotTest {
         @Nested
         @DisplayName("When is the first Round")
         class FirstRound {
+
+            @BeforeEach
+            void setUp(){
+                vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            }
+
             @Nested
             @DisplayName("When bot is the first to play")
             class FirstToPlay {
+
+                @BeforeEach
+                void setUp(){
+                    openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+                }
                 @Test
                 @DisplayName("If only have bad cards then discard the one with lower value")
                 void IfOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
@@ -48,9 +60,6 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
                     );
 
-                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                            CardRank.ACE, CardSuit.DIAMONDS)
-                    );
                     intel = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(), openCards, vira, 1)
                             .botInfo(botCards, 0)
@@ -62,7 +71,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("If only as middle cards then use the one with highest value")
                 void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue() {
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
@@ -70,9 +78,6 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
                     );
 
-                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                            CardRank.ACE, CardSuit.DIAMONDS)
-                    );
                     intel = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(), openCards, vira, 1)
                             .botInfo(botCards, 0)
@@ -84,7 +89,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("If only have high cards then use the one with highest value")
                 void IfOnlyHaveHighCardsThenUseTheOneWithHighestValue() {
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
@@ -92,9 +96,6 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
                     );
 
-                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                            CardRank.ACE, CardSuit.DIAMONDS)
-                    );
                     intel = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(), openCards, vira, 1)
                             .botInfo(botCards, 0)
@@ -106,7 +107,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("If has manilha and good cards use the highest card except the manilha")
                 void IfHasManilhaAndGoodCardsUseTheHighestCardExceptTheManilha() {
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
@@ -114,9 +114,6 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
                     );
 
-                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                            CardRank.ACE, CardSuit.DIAMONDS)
-                    );
                     intel = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(), openCards, vira, 1)
                             .botInfo(botCards, 0)
@@ -128,7 +125,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("If has manilha and bad cards use the manilha")
                 void IfHasManilhaAndBadCardsUseTheManilha() {
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
@@ -136,9 +132,6 @@ public class ChatGptBotTest {
                             TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
                     );
 
-                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
-                            CardRank.ACE, CardSuit.DIAMONDS)
-                    );
                     intel = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(), openCards, vira, 1)
                             .botInfo(botCards, 0)
@@ -153,7 +146,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("Try to kill opponent card with the weakest card")
                 void TryToKillOpponentCardWithTheWeakestCard(){
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -179,7 +171,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("Discard weakest card when has bad cards and cant kill opponent card")
                 void DiscardWeakestCardWhenHasBadCardsAndCantKillOpponentCard(){
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -205,7 +196,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("Should try to draw round if unable to opponent card")
                 void ShouldTryToDrawRoundIfUnableToOpponentCard(){
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
@@ -231,7 +221,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("When has good cards and manilha should try to kill opponent card with a weak card")
                 void WhenHasGoodCardsAndManilhaShouldTryToKillOpponentCardWithAWeakCard(){
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
@@ -257,7 +246,6 @@ public class ChatGptBotTest {
                 @Test
                 @DisplayName("When has bad cards and manilha should try to kill opponent card with manilha")
                 void WhenHasBadCardsAndManilhaShouldTryToKillOpponentCardWithManilha(){
-                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
