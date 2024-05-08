@@ -86,20 +86,16 @@ public class PatoBotTest {
         when(intel.getOpponentScore()).thenReturn(opponentScore);
     }
 
-
-
     @Test
     @DisplayName("Should choose correct card when opponent is first to play and 3 cards are in hand")
     void shouldChooseCorrectCardWhenOpponentIsFirstToPlayAndGotThreeCardsInHand() {
-        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
-        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-        CardToPlay expected = CardToPlay.of(card1);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        expected = CardToPlay.of(card1);
+        setupCardsViraAndOpponentCard(Arrays.asList(card1, card2, card3), vira, Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
