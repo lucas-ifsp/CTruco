@@ -643,6 +643,30 @@ class JormungandrBotTest {
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("If self can't beat opponent but can tie, then they should force a tie")
+        void shouldForceTieIfCantBeatOpponentsCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
     }
 
     @Nested
