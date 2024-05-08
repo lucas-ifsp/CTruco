@@ -455,8 +455,8 @@ public class ChatGptBotTest {
         @DisplayName("When is the third Round")
         class ThirdRound {
             @Test
-            @DisplayName("Just play with the last card whe is the first to play")
-            void JustPlayTheLastCard(){
+            @DisplayName("Just play with the last card when is the first to play")
+            void JustPlayTheLastCardIfFirstToPlay(){
                 TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                 List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
@@ -467,6 +467,29 @@ public class ChatGptBotTest {
                         .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
+
+                assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+            }
+
+            @Test
+            @DisplayName("Just play with the last card when is the second to play")
+            void JustPlayTheLastCardIfSecondToPlay(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+                List<TrucoCard> openCards = Arrays.asList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                );
+
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0).
+                        opponentCard(opponentCard);
 
                 assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
             }
