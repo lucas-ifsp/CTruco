@@ -33,6 +33,63 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        final int maoDeOnze = 11;
+        final int maxHandPoints = 12;
+
+        List<GameIntel.RoundResult> roundsAteAgora = intel.getRoundResults();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        Boolean myHandNuts = TeitasBotFunctions.hasNutsHand(cards,vira);
+        Boolean myHandGood = TeitasBotFunctions.hasGoodHand(cards,vira);
+        Boolean myHandStrong= TeitasBotFunctions.hasStrongHand(cards,vira);
+        Boolean myHandsTrash= TeitasBotFunctions.hasTrashHand(cards,vira);
+
+        if (intel.getScore() == maoDeOnze ||
+                intel.getOpponentScore() == maoDeOnze ||
+                intel.getHandPoints() == maxHandPoints) {
+            return -1;
+        }
+
+        if (roundsAteAgora.isEmpty()) {
+
+            if (myHandGood || myHandStrong) {
+                //bota pra forcar e foda se.
+                return 1;
+
+            } else if (myHandNuts) {
+                return 0;
+            }
+        }
+
+        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.WON)){
+
+            Boolean ourHandAtSecond =  TeitasBotFunctions.hasStrongHand(cards,vira);
+            Boolean ourHandAtSeconds =  TeitasBotFunctions.hasNutsHand(cards,vira);
+            if (ourHandAtSecond || ourHandAtSeconds) {
+                return 1;
+            }
+        }
+
+        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.DREW)){
+            //FODA SE
+            return 1;
+        }
+
+        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.LOST)) {
+            if(myHandStrong | myHandNuts){
+                return 1;
+            }
+            else if (myHandGood) {
+                return 0;
+            }
+            else
+                return -1;
+        }
+
+
+
+
         return 0;
     }
 }
