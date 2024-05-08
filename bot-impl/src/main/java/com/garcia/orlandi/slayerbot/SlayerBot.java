@@ -164,6 +164,13 @@ public class SlayerBot implements BotServiceProvider {
         boolean hasCopas = cards.stream().anyMatch(card -> card.isCopas(vira));
         boolean hasStrongCards = cards.stream().anyMatch(card -> strongRanks.contains(card.getRank()));
 
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        boolean wonPreviousRound = !roundResults.isEmpty() && roundResults.get(roundResults.size() - 1) == GameIntel.RoundResult.WON;
+        //aceitar truco se ganhou a rodada anterior e jogou uma carta forte
+        if (wonPreviousRound && (hasZap || hasCopas || hasStrongCards)) {
+            return 0;
+        }
+
         if (hasCopas && hasStrongCards) {
             return 0;
         } else if (hasCopas && hasZap) {
