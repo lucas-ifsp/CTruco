@@ -281,41 +281,41 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         //ACEITA SE TIVER DUAS MANILHAS
         if(contManilha(intel.getCards(), intel.getVira()) >= 2){
-            System.out.println("mao de onze: duas manilhas ou maias");
+
             return true;
         }
 
         //ACEITA SE TIVER DOIS TRES OU MAIS
         if(contTres(intel) >= 2){
-            System.out.println("mao de onze: dois tres ou mais");
+
             return true;
         }
 
         //ACEITA SE TIVER TRES E MANILHA
         if(contManilha(intel.getCards(), intel.getVira()) >= 1 && temTres(intel)){
-            System.out.println("mao de onze: tres e manilha");
+
             return true;
         }
 
         //ACEITA SE VALOR DA MAO FOR MAIOR OU IGUAL A 28
         if(valorMao(intel) >= 28){
-            System.out.println("mao de onze: valor da mao maior igual 28");
+
             return true;
         }
 
         //ACEITA SE VALOR DA MAO FOR MAIOR OU IGUAL A 23 E TEM MANILHA
         if(valorMao(intel) >= 23 && contManilha(intel.getCards(), intel.getVira()) > 0){
-            System.out.println("mao de onze: valor da mao maior igual 23 e tem manilha");
+
             return true;
         }
 
         //ACEITA SE OPONENTE TIVER POUCOS PONTOS E A MAO FOR RELATIVAMENTE BOA
         if(valorMao(intel) >= 26 && intel.getOpponentScore() < 5){
-            System.out.println("mao de onze: oponente com poucos pontos e mao relativamente boa");
+
             return true;
         }
 
-        System.out.println("nao aceitou mao de onze");
+
         return false;
     }
 
@@ -324,7 +324,7 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         // se oponente tiver na mao de onze, nao pede truco
         if(intel.getOpponentScore() == 11){
-            System.out.println("oponente na mao de onze, nao pede truco");
+
             return false;
         }
 
@@ -335,31 +335,31 @@ public class PauladaSecaBot implements BotServiceProvider {
 
             // SEGUNDA: verifica se a mão esta na primeira e se tem casal menor
             if (temCasalMenor(intel)){
-                System.out.println("truco se tiver casal menor primeira");
+
                 return true;
             }
 
             // SEGUNDA: se tiver casal maior pede truco
             if (temCasalMaior(intel)) {
-                System.out.println("truco se tiver casal maior segunda");
+
                 return true;
             }
 
             // SEGUNDA: se tiver casal menor pede truco
             if (temCasalMenor(intel)) {
-                System.out.println("truco se tiver casal menor segunda");
+
                 return true;
             }
 
             // SEGUNDA: se tiver casal preto pede truco
             if (temCasalPreto(intel)) {
-                System.out.println("truco se tiver casal preto na segunda");
+
                 return true;
             }
 
             // SEGUNDA: se tiver casal preto pede truco
             if (temCasalVermelho(intel)) {
-                System.out.println("truco se tiver casal vermelho na segunda");
+
                 return true;
             }
         }
@@ -370,7 +370,7 @@ public class PauladaSecaBot implements BotServiceProvider {
             //TERCEIRA: pede truco se tiver três ou manilha
             if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() == 2){
                 if( temTres(intel) || contManilha(intel.getCards(), intel.getVira()) > 0) {
-                    System.out.println("terceira tem manilha ou 3");
+
                     return true;
                 }
             }
@@ -380,19 +380,19 @@ public class PauladaSecaBot implements BotServiceProvider {
 
                 //SEGUNDA: se tiver ganhado a primeira e tem manilha pra segunda, pede truco
                 if( contManilha(intel.getCards(), intel.getVira()) > 0) {
-                    System.out.println("segunda, truco se ganhando primeira e tem manilha pra segunda");
+
                     return true;
                 }
 
                 // SEGUNDA: se tiver feito a primeira e tem 3 pra segunda
                 if(temTres(intel)) {
-                    System.out.println("truco se fez a primeira e tem 3 pra segunda");
+
                     return true;
                 }
 
                 //SEGUNDA: se a mão não esta na primeira , se tem mais de um 2 e se eu ganhei a primeira mão
                 if (quantDois > 1 ) {
-                    System.out.println("aceitou truco se ganhou a primeira e ainda tem dois 2");
+
                     return true;
                 }
             }
@@ -409,7 +409,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 if(opponentCard.isManilha(intel.getVira())){
                     for (TrucoCard carta : intel.getCards()) {
                         if (carta.relativeValue(intel.getVira()) > opponentCard.relativeValue(intel.getVira())) {
-                            System.out.println("truco se amarrou a primeira e consegue matar a manilha do oponente na segunda");
+
                             return true;
                         }
                     }
@@ -419,7 +419,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 if(!opponentCard.isManilha(intel.getVira())){
                     for (TrucoCard carta : intel.getCards()) {
                         if (carta.getRank().value() > opponentCard.getRank().value()) {
-                            System.out.println("truco se amarrou a primeira e consegue matar a carta(nao manilha) do oponente na segunda");
+
                             return true;
                         }
                     }
@@ -428,7 +428,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 //SEGUNDA: BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 7
                 if(!opponentCard.isManilha(intel.getVira())){
                     if(opponentCard.getRank().value() <= 7){
-                        System.out.println("BLEFE: pede truco se amarrou a primeira e carta do oponente tem valor menor igual a 8");
+
                         return true;
                     }
                 }
@@ -440,7 +440,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 if(!opponentCard.isManilha(intel.getVira())) {
                     for (TrucoCard carta : intel.getCards()) {
                         if (carta.getRank().equals(opponentCard.getRank())) {
-                            System.out.println("truco se amarra terceira e ganhou primeira");
+
                             return true;
                         }
                     }
@@ -456,7 +456,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     if(!opponentCard.isManilha(intel.getVira())){
                         if(opponentCard.getRank().value() <= 7){
-                            System.out.println("blefe");
+
                             return true;
                         }
                     }
@@ -468,7 +468,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                     if(!opponentCard.isManilha(intel.getVira())){
                         for (TrucoCard carta : intel.getCards()) {
                             if(opponentCard.getRank().value() < carta.getRank().value()){
-                                System.out.println("terceira truco se carta for maior e nao for manilha");
+
                                 return true;
                             }
                         }
@@ -483,7 +483,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                     if(opponentCard.isManilha(intel.getVira())){
                         for (TrucoCard carta : intel.getCards()) {
                             if(matarManilha(intel).getSuit().ordinal() > opponentCard.getSuit().ordinal()){
-                                System.out.println("terceira truco se carta for maior e for manilha");
+
                                 return true;
                             }
                         }
@@ -491,7 +491,7 @@ public class PauladaSecaBot implements BotServiceProvider {
                 }
             }
         }
-        System.out.println("não trucamo");
+
         return false;
     }
 
@@ -504,25 +504,25 @@ public class PauladaSecaBot implements BotServiceProvider {
 
             // PRIMEIRA: joga pior carta se tiver casal maior
             if (temCasalMaior(build)){
-                System.out.printf("temos casal maior e jogamos %s", piorCarta(build));
+
                 return CardToPlay.of(piorCarta(build));
             }
 
             // PRIMEIRA: joga pior carta se tiver casal menor
             if (temCasalMenor(build)){
-                System.out.printf("temos casal menor e jogamos %s", piorCarta(build));
+
                 return CardToPlay.of(piorCarta(build));
             }
 
             // PRIMEIRA: joga pior carta se tiver casal preto
             if (temCasalPreto(build)){
-                System.out.printf("temos casal preto e jogamos %s", piorCarta(build));
+
                 return CardToPlay.of(piorCarta(build));
             }
 
             // PRIMEIRA: joga pior carta se tiver casal vermelho
             if (temCasalVermelho(build)){
-                System.out.printf("temos casal vermelho e jogamos: %s", piorCarta(build));
+
                 return CardToPlay.of(piorCarta(build));
             }
 
@@ -601,76 +601,76 @@ public class PauladaSecaBot implements BotServiceProvider {
 
         //verifica se a mão não esta na primeira , se tem zap e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            System.out.println("aceitou truco se ganhou a primeira e tem zap");
+
             return 1;
         }
         //verifica se a mão não esta na primeira , se tem copas e se eu ganhei a primeira mão
         if (!intel.getRoundResults().isEmpty() && temCopas(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            System.out.println("aceitou truco se ganhou a primeira e tem copas");
+
             return 1;
         }
 
         //verifica se a mão não esta na primeira , se tem casal vermelho e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalVermelho(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            System.out.println("aceitou truco se perdeu mas tem casal vermelho");
+
             return 1;
         }
 
         //verifica se a mão não esta na primeira , se tem casal preto e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalPreto(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            System.out.println("aceitou truco se perdeu mas tem casal preto");
+
             return 1;
         }
 
         //verifica se a mão não esta na primeira , se tem casal maior e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalMaior(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            System.out.println("aceitou truco se perdeu mas tem casal maior");
+
             return 1;
         }
 
         //verifica se a mão não esta na primeira , se tem casal menor e perdeu a primeira
         if (!intel.getRoundResults().isEmpty() && temCasalMenor(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            System.out.println("aceitou truco se perdeu mas tem casal menor");
+
             return 1;
         }
 
         //se tivermos mais de uma, independente do nipe, desce
         if (manilha > 1) {
-            System.out.println("aceitou truco com mais de uma manilha");
+
             return 0;
         }
         //se tivermos manilha e tres
         if (manilha >= 1 && temTres(intel)) {
-            System.out.println("aceitou trucco com manilha e tres de uma manilha");
+
             return 0;
         }
 
         if (temDois(intel) && temTres(intel)) {
-            System.out.println("aceitou trucco com dois e tres");
+
             return 0;
         }
 
         //se tivermos mais de um tres
         if (quantTres > 1) {
-            System.out.println("aceitou truco com mais de um tres");
+
             return 0;
         }
         // se tiver feito a primeira e tem tres pra segunda
         if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && temTres(intel)) {
-            System.out.println("fez a primeira e aceitou truco com tres na segunda");
+
             return 0;
         }
 
         //se temos um tres na terceira e ganhamos a primeira
         if (!intel.getRoundResults().isEmpty() && temTres(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            System.out.println("aceitou truco com tres na terceira");
+
             return 0;
         }
 
         // aceita truco na primeira se tem manilha e valor da mão maior que 24
         if (intel.getRoundResults().isEmpty() && contManilha(intel.getCards(), intel.getVira()) > 0) {
             if(valorMao(intel) >= 24) {
-                System.out.println("aceitou truco na primeira com manilha e valor da mao maior do que 24");
+
                 return 0;
             }
         }
@@ -678,12 +678,12 @@ public class PauladaSecaBot implements BotServiceProvider {
         // aceita truco na primeira se tem manilha e valor da mão maior que 25
         if (intel.getRoundResults().isEmpty() && contManilha(intel.getCards(), intel.getVira()) == 0) {
             if(valorMao(intel) >= 28) {
-                System.out.println("aceitou truco na primeira sem manilha e valor da mao maior do que 28");
+
                 return 0;
             }
         }
 
-        System.out.println("corremo");
+
         return -1;
     }
 }
