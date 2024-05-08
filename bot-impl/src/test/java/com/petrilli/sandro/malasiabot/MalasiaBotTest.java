@@ -201,6 +201,24 @@ public class MalasiaBotTest {
         }
 
         @Test
+        @DisplayName("Should play lowest card if have MaoGiga")
+        void shouldPlayLowestCardIfHaveMaoGiga() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardRank.FIVE, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
+        }
+
+        @Test
         @DisplayName("Should accept raise if have MaoEspadasOuOurosEfiguras")
         void shouldAcceptRaiseIfHaveMaoEspadasOuOurosEfiguras() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
