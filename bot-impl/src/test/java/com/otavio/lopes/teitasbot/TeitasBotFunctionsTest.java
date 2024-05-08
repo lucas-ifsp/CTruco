@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 
+import static com.bueno.spi.model.CardRank.THREE;
+import static com.bueno.spi.model.CardSuit.HEARTS;
+import static com.bueno.spi.model.CardSuit.SPADES;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -51,6 +54,22 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
             assertThat(TeitasBotFunctions.hasManilha(cards, vira)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("Card that will be return")
+    class CardThatWillBeReturnTest {
+        @Test
+        @DisplayName("Should return the second strong card for first round")
+        void shouldReturnSecondStrongCard() {
+            TrucoCard vira  =  TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoCard.of(THREE, SPADES), TeitasBotFunctions.chooseCardToPlayFirst(cards,vira).content());
         }
     }
 

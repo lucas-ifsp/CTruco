@@ -1,9 +1,6 @@
 package com.otavio.lopes.teitasbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 
 
 import java.util.List;
@@ -20,6 +17,18 @@ public class TeitasBotFunctions {
     static Boolean hasThree(List<TrucoCard> cards) {
         return cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
+
+    static CardToPlay chooseCardToPlayFirst(List<TrucoCard> cards, TrucoCard vira) {
+
+    }
+
+    static CardToPlay cbooseCardToPlaySecond(List<TrucoCard> cards, TrucoCard vira) {
+
+    }
+    static CardToPlay chooseCardToPlayThird(List<TrucoCard> cards, TrucoCard vira) {
+
+    }
+
 
     static Boolean hasNutsHand(List<TrucoCard> cards, TrucoCard vira) {
         //we have the best one. manilha + zap + 3.

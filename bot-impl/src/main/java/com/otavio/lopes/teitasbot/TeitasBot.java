@@ -33,7 +33,9 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        //choose card to first round and second implemetantion
+
+        //choose card to first round and second implementation
+
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
 
