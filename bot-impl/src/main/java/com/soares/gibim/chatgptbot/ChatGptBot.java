@@ -46,8 +46,15 @@ public class ChatGptBot implements BotServiceProvider {
             }
         }
         if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
-                return CardToPlay.of(whenRespondingOpponentCard(intel));
+            return CardToPlay.of(whenRespondingOpponentCard(intel));
         }
+        if ((intel.getRoundResults().size() == 1) && intel.getOpponentCard().isEmpty()){
+            if (handStrength(intel) <= 9){
+                return CardToPlay.of(strongestCard(intel));
+            }
+        }
+
+
         return CardToPlay.of(intel.getCards().get(0));
     }
 
