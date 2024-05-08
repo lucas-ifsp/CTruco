@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2024 Bárbara Branc oGasques - IFSP/SCL and Lucas da Silva Cruz - IFSP/SCL
+ *  Copyright (C) 2024 Bárbara Branco Gasques - IFSP/SCL and Lucas da Silva Cruz - IFSP/SCL
  *  Contact: barbara <dot> branco <at> aluno <dot> ifsp <dot> edu <dot> br
  *  Contact: a <dot> strapasson <at> aluno <dot> ifsp <dot> edu <dot> br
  *
