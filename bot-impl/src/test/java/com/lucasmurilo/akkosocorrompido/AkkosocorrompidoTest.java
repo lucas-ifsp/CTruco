@@ -1,9 +1,7 @@
 package com.lucasmurilo.akkosocorrompido;
 
-
-import static com.bueno.spi.model.CardRank.THREE;
-import static com.bueno.spi.model.CardSuit.HEARTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +48,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(3)
             .build();
 
-        assertEquals(TrucoCard.of(THREE, HEARTS), bot.chooseCard(intel).value().toString());
+        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), bot.chooseCard(intel).value().toString());
     }
 
     //truca depois dessa, ou agora tbm
@@ -188,5 +186,25 @@ public class AkkosocorrompidoTest {
         //giveup
     }
     
+    @Test
+    @DisplayName("should accept mão de onze if good hand")
+    public void shouldAcceptMaoDeOnzeifGoodHand () {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(10)
+            .build();
+
+        assertTrue(bot.getMaoDeOnzeResponse(intel));
+    }
     
 }
