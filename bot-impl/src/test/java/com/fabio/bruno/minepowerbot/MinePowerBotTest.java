@@ -39,23 +39,20 @@ class MinePowerBotTest {
 
     @Test
     @DisplayName("Test when the bot has the lowest possible score (0)")
-    void testBotWithLowestScore() {
+    void shouldNotRaiseIfTheScoreIsZero() {
         // Given
         intel = MinePowerBotIntelMockBuilder.create()
-                .scoreMine(0) // Bot's score is 0
-                .scoreOponent(0) // Opponent's score is also 0
-                .cards(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), // Example hand
+                .scoreMine(0)
+                .scoreOponent(0)
+                .cards(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                 .viraToBeDiamondsOfRank(CardRank.FOUR)
                 .opponentCardToBe(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
                 .finish();
-
-        // When
         boolean botRaises = sut.decideIfRaises(intel);
 
-        // Then
-        assertThat(botRaises).isFalse(); // Bot should not raise with the lowest score
+        assertThat(botRaises).isFalse();
     }
 
 
