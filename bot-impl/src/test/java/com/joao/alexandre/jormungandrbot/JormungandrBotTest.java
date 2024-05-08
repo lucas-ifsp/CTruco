@@ -378,5 +378,30 @@ class JormungandrBotTest {
             assertTrue(result.isPresent());
             assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), result.orElseThrow());
         }
+
+        @Test
+        @DisplayName("When player has cards close to opponent's, should return the lowest one")
+        void shouldReturnLowestCardWhenCardsAreCloseToValue() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            Optional<TrucoCard> result = jormungandrBot.getLowestCardToBeatOpponentsCard(stepBuilder.build());
+
+            assertTrue(result.isPresent());
+            assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.SPADES), result.orElseThrow());
+        }
     }
 }
