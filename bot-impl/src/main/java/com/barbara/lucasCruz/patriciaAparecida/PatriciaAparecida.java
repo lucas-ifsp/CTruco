@@ -33,15 +33,13 @@ import static java.util.Collections.min;
 
 public class PatriciaAparecida implements BotServiceProvider {
 
-    static final double LOWER_PROB_RAISE_RESPONSE = 0.11;
-    static final double UPPER_PROB_RAISE_RESPONSE = 0.22;
+    static final double LOWER_PROB_RAISE_RESPONSE = 0.6;
+    static final double UPPER_PROB_RAISE_RESPONSE = 0.7;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
             if(intel.getScore() != 11) throw new IllegalArgumentException("Hand of Eleven can't be called without 11 Points");
-
-            return true;
-
+        return true;
     }
 
     @Override
