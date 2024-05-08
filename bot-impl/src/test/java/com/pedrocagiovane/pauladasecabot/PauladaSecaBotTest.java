@@ -86,6 +86,20 @@ public class PauladaSecaBotTest {
             CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
         }
+
+        @Test
+        @DisplayName("Se tiver zap ou copas tenta fazer a primeira sem utilizar as manilhas")
+        void fazerPrimeiraCartaMediaSeTiverZapOuCopas() {
+            maoPlayer = List.of( TrucoCard.of(SIX, SPADES),TrucoCard.of(TWO, SPADES), TrucoCard.of(ACE, HEARTS));
+            vira = TrucoCard.of(KING, SPADES);
+            roundResult = List.of();
+            cartas = List.of();
+            TrucoCard opponentCard = TrucoCard.of(KING, CLUBS);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0).opponentCard(opponentCard);
+            CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
+        }
+
         @Test
         @DisplayName("Jogar melhor carta se não tiver manilha")
         void jogarMelhorCartaPrimeiraSeNaoTiverManilha() {
