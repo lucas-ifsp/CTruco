@@ -156,7 +156,7 @@ class JormungandrBotTest {
 
             assertEquals(
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                    jormungandrBot.getLowestCardInHand(stepBuilder.build())
+                    jormungandrBot.getHighestCardInHand(stepBuilder.build())
             );
         }
     }
