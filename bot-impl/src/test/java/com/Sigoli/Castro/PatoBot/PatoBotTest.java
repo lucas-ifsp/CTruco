@@ -403,12 +403,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should not raise if holds only bad cards")
     public void shouldNotRaiseIfHoldsOnlyBadCards() {
-        GameIntel intel = mock((GameIntel.class));
-        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        setupCardsAndVira(Arrays.asList(card1, card2), vira);
         assertFalse(patoBot.decideIfRaises(intel));
     }
 
