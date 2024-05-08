@@ -226,4 +226,16 @@ public class ChatGptBot implements BotServiceProvider {
             return bestCard;
         }
     }
+    private CardSuit getHighestManilha(GameIntel intel) {
+        CardSuit highestManilha = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(intel.getVira())) {
+                if (highestManilha == null || card.getSuit().ordinal() > highestManilha.ordinal()) {
+                    highestManilha = card.getSuit();
+                }
+            }
+        }
+        return highestManilha;
+    }
+
 }
