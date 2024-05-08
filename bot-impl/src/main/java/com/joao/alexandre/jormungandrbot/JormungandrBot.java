@@ -38,7 +38,23 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     CardToPlay chooseCardFirstRound(GameIntel intel) {
-        return null;
+        if(isSecondToPlay(intel))
+            return CardToPlay.of(
+                    getLowestCardToBeatOpponentsCard(intel)
+                            .orElse(getCardToTieOpponentsCard(intel)
+                                    .orElse(getLowestCardInHand(intel)))
+            );
+
+        if(getManilhaCountInHand(intel) == 1 &&
+                getCardCountInHandHigherThanRelativeValue(intel, 7) >= 2) {
+
+            return CardToPlay.of(
+                    getHighestNonManilhaCardInHand(intel)
+                            .orElse(getLowestCardInHand(intel))
+            );
+        }
+
+        return CardToPlay.of(getHighestCardInHand(intel));
     }
 
     CardToPlay chooseCardSecondRound(GameIntel intel) {
