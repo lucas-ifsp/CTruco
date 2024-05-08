@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -109,9 +108,9 @@ class MinePowerBotTest {
 
 
     @Test
-    @DisplayName("Should raise if bot has two cards above rank two")
-    void shouldRaiseIfHasTwoCardsAboveRankTwo() {
-        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS).cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
+    @DisplayName("Should raise if bot has two cards above rank two and score is not zero")
+    void shouldRaiseIfHasTwoCardsAboveRankTwoAndBotScoreIsNotZero() {
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS).scoreMine(1).cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
                 TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)).opponentCardToBe(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
@@ -193,9 +192,9 @@ class MinePowerBotTest {
 
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
-    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
-    void shouldRaiseIfOpponentScoreIsEqualOrLessThanThreshold(int opponentScore) {
-        intel = create().scoreOponent(opponentScore).finish();
+    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold and botScore is different than zero.")
+    void shouldRaiseIfOpponentScoreIsEqualOrLessThanThresholdAndBotScoreIsNotZero(int opponentScore) {
+        intel = create().scoreOponent(opponentScore).scoreMine(1).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }

@@ -4,7 +4,6 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public class MinePowerBot implements BotServiceProvider {
@@ -14,7 +13,6 @@ public class MinePowerBot implements BotServiceProvider {
     }
 
     private List<TrucoCard> getCardAboveRank(GameIntel intel, CardRank rank) {
-        TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
                 .filter(card -> card.getRank().compareTo(rank) >= 0)
                 .toList();
@@ -29,10 +27,10 @@ public class MinePowerBot implements BotServiceProvider {
         if (intel.getScore() < 11) {
             if (intel.getScore() > opponentScore + 3)
                 return true;
+            if (countManilhas >= 1)
+                return true;
             if (botScore != 0) {
                 if (opponentScore <= 5)
-                    return true;
-                if (countManilhas >= 2)
                     return true;
                 if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
                     return true;
