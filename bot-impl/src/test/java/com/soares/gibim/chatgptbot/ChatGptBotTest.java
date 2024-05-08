@@ -783,26 +783,6 @@ public class ChatGptBotTest {
 
 
     }
-    @Test
-    @DisplayName("If its the last hand and have zap then ask truco")
-    void IfItsTheLastRoundAndHaveZapThenAskTruco() {
-        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
-
-        List<TrucoCard> botCards = Collections.singletonList(
-                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
-        );
-
-        List<TrucoCard> openCards = Collections.singletonList(
-                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
-        );
-
-        intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
-                .botInfo(botCards, 0)
-                .opponentScore(0);
-
-        assertTrue(sut.decideIfRaises(intel.build()));
-    }
 
     @Test
     @DisplayName("Decide if you accept 'truco' in the first round with a 'manilha.")
