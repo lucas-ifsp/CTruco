@@ -564,7 +564,7 @@ public class ChatGptBotTest {
             List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), openCards, vira, 1)
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0);
 
