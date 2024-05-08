@@ -158,17 +158,27 @@ public class SlayerBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
 
+        List<TrucoCard> manilhasInHand = utils.getManilhas(cards, vira);
+
         Set<CardRank> strongRanks = Set.of(CardRank.TWO, CardRank.THREE);
 
-        boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
-        boolean hasCopas = cards.stream().anyMatch(card -> card.isCopas(vira));
+        int numManilhas = manilhasInHand.size();
+
+        boolean hasZap = manilhasInHand.stream().anyMatch(card -> card.isZap(vira));
+        boolean hasCopas = manilhasInHand.stream().anyMatch(card -> card.isCopas(vira));
         boolean hasStrongCards = cards.stream().anyMatch(card -> strongRanks.contains(card.getRank()));
 
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         boolean wonPreviousRound = !roundResults.isEmpty() && roundResults.get(roundResults.size() - 1) == GameIntel.RoundResult.WON;
-        //aceitar truco se ganhou a rodada anterior e jogou uma carta forte
+
+        // Aceitar truco se ganhou a rodada anterior e jogou uma carta forte
         if (wonPreviousRound && (hasZap || hasCopas || hasStrongCards)) {
             return 0;
+        }
+
+        // Pede re raise se o bot tem duas ou mais manilhas
+        if (numManilhas >= 2) {
+            return 1;
         }
 
         if (hasCopas && hasStrongCards) {
