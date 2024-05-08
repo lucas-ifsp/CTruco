@@ -49,7 +49,7 @@ public class ChatGptBot implements BotServiceProvider {
             return CardToPlay.of(whenRespondingOpponentCard(intel));
         }
         if ((intel.getRoundResults().size() == 1) && intel.getOpponentCard().isEmpty()){
-            if (handStrength(intel) <= 9){
+            if (handStrength(intel) <= 21){
                 return CardToPlay.of(strongestCard(intel));
             }
         }
