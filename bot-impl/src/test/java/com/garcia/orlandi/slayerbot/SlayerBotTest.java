@@ -9,8 +9,6 @@ import java.util.Collections;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
