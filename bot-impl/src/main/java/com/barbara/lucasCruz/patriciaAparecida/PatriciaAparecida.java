@@ -107,11 +107,8 @@ public class PatriciaAparecida implements BotServiceProvider {
         List<Double> listProb = listProbAllCards(intel);
         int count = 0;
 
-        for(int i=0; i<listProb.size(); i++){
-            if(listProb.get(i)< prob){
-                count++;
-            }
-        }
+        for (Double aDouble : listProb) if (aDouble < prob) count++;
+
         return count;
     }
 
