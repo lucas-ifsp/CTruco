@@ -102,13 +102,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should choose correct card when opponent is second to play and 2 cards are in hand")
     void shouldChooseCorrectCardWhenOpponentIsSecondToPlayandGotTwoCardsInHand() {
-        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
         CardToPlay expected = CardToPlay.of(card2);
-        when(intel.getCards()).thenReturn(Arrays.asList(card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        setupCardsViraAndOpponentCard(Arrays.asList(card2, card3), vira, Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
