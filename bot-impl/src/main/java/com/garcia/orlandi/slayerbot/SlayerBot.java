@@ -1,7 +1,13 @@
 package com.garcia.orlandi.slayerbot;
 
 import com.bueno.spi.model.*;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
+
 
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +20,18 @@ public class SlayerBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> manilhas = utils.getManilhas(cards, vira);
+        List<TrucoCard> threes = utils.getThreesAtHand(cards);
+
+        if(manilhas.isEmpty()){
+            return false;
+        }else if(manilhas.size() == 2 || !threes.isEmpty()){
+            return true;
+        }
+
         return false;
     }
 
@@ -81,39 +99,55 @@ public class SlayerBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
+        List<TrucoCard> openCards = intel.getOpenCards();
+        List<GameIntel.RoundResult> roundResult = intel.getRoundResults();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
 
-        List<TrucoCard> botManilhas = utils.getManilhas(cards, vira);
-
-
-        // Se o bot não tem manilhas, joga a carta mais fraca
-        if (botManilhas.isEmpty()) {
-            TrucoCard weakestCard = utils.getWeakestCard(cards, vira);
-            return CardToPlay.of(weakestCard);
+        if(roundResult.contains(GameIntel.RoundResult.DREW)){
+            TrucoCard strongest = utils.getStrongestCard(cards, vira);
+            return CardToPlay.of(strongest);
         }
 
-        boolean hasTied = intel.getRoundResults().contains(GameIntel.RoundResult.DREW);
+        if(openCards.size() == 1) {
+            //Play second strongest card if in first round or if lost first round
+            if (roundResult.isEmpty()) {
+                TrucoCard strongestCard = utils.getStrongestCard(cards, vira);
+                TrucoCard secondStrongestCard = utils.getSecondStrongestCard(cards, strongestCard, vira);
+                return CardToPlay.of(secondStrongestCard);
+            } else  {
+                for (TrucoCard card : cards) {
+                    //Testing in order to play best manilha first, if found
+                    if (card.isZap(vira) || card.isCopas(vira) || card.isEspadilha(vira) || card.isOuros(vira)) {
+                        return CardToPlay.of(card);
+                    }
+                }
+                //If has no manilha, returns the strongest card
+                return CardToPlay.of(utils.getStrongestCard(cards, vira));
+            }
+        }else if(openCards.size() > 1 && opponentCard!=null){
 
-        if (opponentCard != null && !hasTied) {
             TrucoCard tieCard = cards.stream()
-                    .filter(card -> !card.isManilha(vira) && card.getRank() == opponentCard.getRank())
+                    .filter(card -> !card.isManilha(vira) && card.compareValueTo(opponentCard, vira) == 0)
                     .findFirst()
                     .orElse(null);
 
             if (tieCard != null) {
                 return CardToPlay.of(tieCard);
             }
+
+
+            TrucoCard genericCard = cards.stream()
+                    .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
+                    .orElse(utils.getWeakestCard(cards, vira));
+
+            return CardToPlay.of(genericCard);
         }
-
-
         TrucoCard genericCard = cards.stream()
                 .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
                 .orElse(utils.getWeakestCard(cards, vira));
 
         return CardToPlay.of(genericCard);
     }
-
-
 
     @Override
     public int getRaiseResponse(GameIntel intel) {

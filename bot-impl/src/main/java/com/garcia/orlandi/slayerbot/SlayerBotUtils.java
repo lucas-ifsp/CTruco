@@ -5,6 +5,10 @@ import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Comparator;
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.TrucoCard;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlayerBotUtils {
@@ -18,6 +22,7 @@ public class SlayerBotUtils {
                 .min(Comparator.comparingInt(card -> card.relativeValue(null)))
                 .orElse(null);
     }
+
     public TrucoCard getStrongestCard( List<TrucoCard> cards, TrucoCard vira){
         TrucoCard strongerCard = cards.get(0);
 
@@ -29,6 +34,14 @@ public class SlayerBotUtils {
         }
 
         return strongerCard;
+    }
+
+    public TrucoCard getSecondStrongestCard(List<TrucoCard> cards, TrucoCard strongestCard, TrucoCard vira){
+        List<TrucoCard> cardsWithoutStrongest = new ArrayList<>(cards);
+        cardsWithoutStrongest.remove(strongestCard);
+        TrucoCard weakestCard = getWeakestCard(cardsWithoutStrongest, vira);
+        cardsWithoutStrongest.remove(weakestCard);
+        return cardsWithoutStrongest.get(0);
     }
 
     public TrucoCard getWeakestCard( List<TrucoCard> cards, TrucoCard vira){
@@ -43,5 +56,12 @@ public class SlayerBotUtils {
 
         return weakerCard;
 
+
     }
+
+    public List<TrucoCard> getThreesAtHand(List<TrucoCard> cards) {
+        return cards.stream().filter(card -> card.getRank() == CardRank.THREE).toList();
+    }
+
+
 }
