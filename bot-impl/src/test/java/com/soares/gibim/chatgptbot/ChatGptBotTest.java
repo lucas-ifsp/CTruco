@@ -791,6 +791,26 @@ public class ChatGptBotTest {
 
         assertEquals(1, sut.getRaiseResponse(intel.build()));
     }
+    @Test
+    @DisplayName("Increases 'truco' in the second round if you have a 'manilha' of Spades or higher and a 2 or higher in hand.")
+    void TestIncreasesTrucoSecondRoundHaveManilhaSpadesOrHigherAndTwoOrHigher() {
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+        List<TrucoCard> openCards = Collections.singletonList(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 3)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertEquals(1, sut.getRaiseResponse(intel.build()));
+    }
 
 }
 
