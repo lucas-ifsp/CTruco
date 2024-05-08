@@ -556,10 +556,9 @@ class JormungandrBotTest {
     @DisplayName("Testing hasPlayedACard() function")
     class HasPlayedACardTest{
         @Test
-        @DisplayName("Should return return false if has 3 cards on hand")
+        @DisplayName("Should return false if has 3 cards on hand and is first round")
         void shouldReturnFalseIfWithThreeCardsOnFirstRound(){
             List<GameIntel.RoundResult> results = List.of();
-            List<TrucoCard> openCards = List.of();
             TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
@@ -568,10 +567,9 @@ class JormungandrBotTest {
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(results,openCards, vira, 1)
+                    .gameInfo(results,List.of(), vira, 1)
                     .botInfo(myCards, 1)
-                    .opponentScore(0)
-                    .opponentCard(TrucoCard.closed());
+                    .opponentScore(0);
 
             assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
         }
