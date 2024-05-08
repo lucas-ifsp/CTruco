@@ -127,7 +127,7 @@ public class SlayerBot implements BotServiceProvider {
             if (roundResult.isEmpty()) {
                 TrucoCard strongestCard = utils.getStrongestCard(cards, vira);
 
-                if(manilhas.size() >= 2){
+                if(manilhas.size() == 2){
                     return CardToPlay.of(strongestCard);
                 }
 
