@@ -242,7 +242,24 @@ public class ItaipavaBotTest {
                     .opponentScore(0);
             assertTrue(bot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should raise if has casal maior")
+        void shouldRaiseIfHasCasalMaior() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(10);
+            assertTrue(bot.decideIfRaises(stepBuilder.build()));
+        }
     }
+
     @Nested
     @DisplayName("Choose card response test")
     class ChooseCardResponseTest {
