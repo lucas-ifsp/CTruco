@@ -617,6 +617,35 @@ class JormungandrBotTest {
     }
 
     @Nested
+    @DisplayName("Testing chooseCardFirstRound()")
+    class ChooseCardFirstRoundTest {
+
+        @Test
+        @DisplayName("If self has a card that beats the opponent's, should use the lowest one possible to do so")
+        void shouldBeatOpponentsCardWithLowestPossible() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Testing chooseCardThirdRound()")
     class ChooseCardThirdRoundTest {
 
