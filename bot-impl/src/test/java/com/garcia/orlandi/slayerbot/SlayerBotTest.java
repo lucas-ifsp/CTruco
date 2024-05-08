@@ -732,4 +732,30 @@ public class SlayerBotTest {
         boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
         assertThat(shouldRequestTruco).isTrue();
     }
+
+    @Test
+    @DisplayName("Should request re raise if holding at least 2 manilhas")
+    void shouldRequestSixIfHoldingTwoManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(Collections.emptyList(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        int raiseResponse = bot.getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isEqualTo(1);
+    }
 }
