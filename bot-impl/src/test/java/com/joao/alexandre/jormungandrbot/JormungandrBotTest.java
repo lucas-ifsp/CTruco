@@ -331,5 +331,27 @@ class JormungandrBotTest {
                     () -> jormungandrBot.getLowestCardToBeatOpponentsCard(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("When player only has lower cards than opponent, should return empty")
+        void shouldReturnEmptyWhenSelfOnlyHasLowerCardThanOpponent() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertTrue(jormungandrBot.getLowestCardToBeatOpponentsCard(stepBuilder.build()).isEmpty());
+        }
     }
 }
