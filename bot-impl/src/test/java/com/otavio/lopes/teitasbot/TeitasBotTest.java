@@ -1,9 +1,6 @@
 package com.otavio.lopes.teitasbot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +12,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.bueno.spi.model.CardSuit.HIDDEN;
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,6 +26,7 @@ public class TeitasBotTest {
     }
 
     GameIntel.StepBuilder builder;
+    GameIntel gameIntel;
 
     @Nested
     @DisplayName("if we need to raise")
@@ -95,18 +94,56 @@ public class TeitasBotTest {
     @DisplayName("if we need the strongest card and is first round")
     class  ShouldChooseStrongestCard{
         @Test
-        @DisplayName("Should get strongest card if is first round and can make")
-        void shouldGetStrongestCardIfIsFirstRound() {
-            //if is nuts. just get the of the left, whatever
+        @DisplayName("Should get strongest card if is second round and made the first")
+        void shouldGetStrongestCardIfIsWewinthefirstRound() {
+            //opponent card doesnt matter.
+
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            );
+            List<TrucoCard> tableCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN);
 
-            List<TrucoCard> Tablecards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), tableCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
 
-
+            assertEquals(TrucoCard.of(THREE, HEARTS), teitasBot.chooseCard(builder.build()).content());
         }
     }
+    @Test
+    @DisplayName("Should get the weakest card if is first round and opponent card is hidden.")
+    void shouldGetTheWeakestCardIfIsFirstRoundAndOpponentCardIsHidden() {
+        List<GameIntel.RoundResult> rounds = List.of(GameIntel.RoundResult.WON);
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CLUBS));
+
+        List<TrucoCard> tableCards = Collections.singletonList(
+                TrucoCard.of(CardRank.HIDDEN,CardSuit.HIDDEN)
+        );
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, DIAMONDS);
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(rounds, List.of(), vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        assertEquals(TrucoCard.of(FOUR,CLUBS), teitasBot.chooseCard(stepBuilder.build()).content());
+    }
+
+
 }
+
 
 

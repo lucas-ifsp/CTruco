@@ -21,7 +21,10 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
 
+        boolean HasNutsHand = TeitasBotFunctions.hasNutsHand(cads,vira);
 
 
 
@@ -36,6 +39,14 @@ public class TeitasBot implements BotServiceProvider {
         Boolean NutsHand =  TeitasBotFunctions.hasNutsHand(cards,vira);
         Boolean StrongHand =  TeitasBotFunctions.hasStrongHand(cards,vira);
         Boolean TrashHand =  TeitasBotFunctions.hasTrashHand(cards,vira);
+
+        TrucoCard bestCard = null;
+        TrucoCard secondBestCard = null;
+        TrucoCard worstCard = null;
+
+        for (TrucoCard card : cards) {
+
+        }
 
         CardToPlay card = CardToPlay.of(cards.get(0));
 
