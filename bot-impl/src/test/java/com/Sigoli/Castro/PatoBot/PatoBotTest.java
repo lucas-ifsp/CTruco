@@ -325,14 +325,12 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should reject 'Mão de Onze' if own cards are weak and opponent's points >= 8")
     public void shouldRejectMaoDeOnzeIfOwnCardsWeakAndOpponentPointsAtLeastEight() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         int opponentScore = 8;
-        when(intel.getOpponentScore()).thenReturn(opponentScore);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        setupCardsViraAndOpponentScore(Arrays.asList(card1, card2, card3), vira, opponentScore);
         assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
 
