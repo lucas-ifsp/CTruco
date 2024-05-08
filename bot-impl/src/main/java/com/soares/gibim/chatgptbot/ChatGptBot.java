@@ -116,6 +116,7 @@ public class ChatGptBot implements BotServiceProvider {
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
                 return 0;
             }
+            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && (hasManilha(intel) || hasThree(intel))) return 1;
         } else if (intel.getRoundResults().size() == 2) {
 
             if( (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
@@ -176,6 +177,15 @@ public class ChatGptBot implements BotServiceProvider {
     private boolean hasManilha(GameIntel intel){
         for (TrucoCard card : intel.getCards()){
             if (card.isManilha(intel.getVira())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasThree(GameIntel intel){
+        for (TrucoCard card : intel.getCards()){
+            if (card.relativeValue(intel.getVira()) >= 9){
                 return true;
             }
         }
@@ -294,7 +304,6 @@ public class ChatGptBot implements BotServiceProvider {
                 }
             }
         }
-        System.out.println(manilhaValue +  " " + cardValue);
         if (manilhaValue >= 11 && cardValue >= 8){
             return true;
         } else {
