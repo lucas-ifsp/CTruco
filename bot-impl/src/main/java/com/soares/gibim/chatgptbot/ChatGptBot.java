@@ -75,6 +75,10 @@ public class ChatGptBot implements BotServiceProvider {
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
                 return 0;
             }
+        } else if (intel.getRoundResults().size() == 2) {
+            if (getSumOfCardValues(intel) >= 7){
+                return 0;
+            }
         }
         return -1;
     }
