@@ -281,7 +281,7 @@ public class ChatGptBotTest {
         @DisplayName("When is the second Round")
         class SecondRound {
             @Nested
-            @DisplayName("When won first round")
+            @DisplayName("When won first Round")
             class WonFirstRound {
                 @Test
                 @DisplayName("If only has bad cards should use the strongest")
@@ -369,6 +369,35 @@ public class ChatGptBotTest {
                             .opponentScore(0);
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+            }
+
+            @Nested
+            @DisplayName("When lost first Round")
+            class LostFirstRound {
+                @Test
+                @DisplayName("If only has bad cards should try ot kill opponent card with the weakest")
+                void IfOnlyHasBadCardsShouldTryToKillOpponentCardWithTheWeakest(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+                    );
+
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+                    List<TrucoCard> openCards = Arrays.asList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
             }
         }
