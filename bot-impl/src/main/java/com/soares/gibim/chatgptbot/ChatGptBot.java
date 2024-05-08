@@ -122,7 +122,6 @@ public class ChatGptBot implements BotServiceProvider {
         return -1;
     }
 
-
     private boolean haveZap(GameIntel intel){
         for (TrucoCard card : intel.getCards()){
             if (card.isZap(intel.getVira())) {
@@ -136,7 +135,6 @@ public class ChatGptBot implements BotServiceProvider {
         return intel.getHandPoints() == 11;
     }
 
-
     int getSumOfCardValues(GameIntel intel) {
         int sum = 0;
 
@@ -146,6 +144,7 @@ public class ChatGptBot implements BotServiceProvider {
 
         return sum;
     }
+
     int countManilhas(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
@@ -155,8 +154,6 @@ public class ChatGptBot implements BotServiceProvider {
         }
         return count;
     }
-
-
     private int handStrength (GameIntel intel){
         int handStrength = 0;
         for (TrucoCard card : intel.getCards()){
@@ -261,6 +258,7 @@ public class ChatGptBot implements BotServiceProvider {
             return bestCard;
         }
     }
+
     private CardSuit getHighestManilha(GameIntel intel) {
         CardSuit highestManilha = null;
         for (TrucoCard card : intel.getCards()) {
@@ -272,6 +270,7 @@ public class ChatGptBot implements BotServiceProvider {
         }
         return highestManilha;
     }
+
     private boolean verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(GameIntel intel){
         int manilhaValue = 0;
         int cardValue = 0;
