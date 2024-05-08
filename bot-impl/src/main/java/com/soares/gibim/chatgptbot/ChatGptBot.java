@@ -103,7 +103,6 @@ public class ChatGptBot implements BotServiceProvider {
             if (verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)){
                 return 1;
             }
-
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
                 return 0;
             }
@@ -290,9 +289,12 @@ public class ChatGptBot implements BotServiceProvider {
             if (card.isManilha(intel.getVira())){
                 manilhaValue = card.relativeValue(intel.getVira());
             } else {
-                cardValue = card.relativeValue(intel.getVira());
+                if (cardValue < card.relativeValue(intel.getVira())) {
+                    cardValue = card.relativeValue(intel.getVira());
+                }
             }
         }
+        System.out.println(manilhaValue +  " " + cardValue);
         if (manilhaValue >= 11 && cardValue >= 8){
             return true;
         } else {
