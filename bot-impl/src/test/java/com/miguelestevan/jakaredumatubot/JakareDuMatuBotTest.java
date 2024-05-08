@@ -305,7 +305,6 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
         }
 
-
         //Nos primeiro
         //Jogar a maior carta na mão
         @Test

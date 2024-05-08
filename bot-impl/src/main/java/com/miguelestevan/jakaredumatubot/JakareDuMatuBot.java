@@ -68,15 +68,15 @@ public class JakareDuMatuBot implements BotServiceProvider {
                         }else{
                             return CardToPlay.of(list.get(0));
                         }
-                    }else {
-                        if (list.get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0){
-                            return CardToPlay.of(list.get(0));
-                        } else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0) {
-                            return CardToPlay.of(list.get(1));
-                        } else  {
-                            return CardToPlay.of(list.get(2));
-                        }
                     }
+                    if (list.get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0){
+                        return CardToPlay.of(list.get(0));
+                    }
+                    else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0) {
+                        return CardToPlay.of(list.get(1));
+                    }
+                    else  return CardToPlay.of(list.get(2));
+
                 }
                 return CardToPlay.of(list.get(0));
             }
