@@ -700,7 +700,7 @@ class JormungandrBotTest {
 
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
 
             stepBuilder = GameIntel.StepBuilder.with()
