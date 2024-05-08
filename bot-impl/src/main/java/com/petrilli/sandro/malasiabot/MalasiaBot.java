@@ -58,12 +58,6 @@ public class MalasiaBot implements BotServiceProvider {
                         }
                     }
                 }
-                if (MaoZapOuCopasEFiguras(intel)) {
-                    cardToPlay = CardToPlay.of(DeMaior(intel));
-                }
-                if (MaoEspadaOuOuroEAsATres(intel)) {
-                    cardToPlay = CardToPlay.of(DeMaior(intel));
-                }
             }
         }
 
