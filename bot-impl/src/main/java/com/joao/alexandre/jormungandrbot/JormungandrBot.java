@@ -21,7 +21,12 @@ public class JormungandrBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        return switch (getCurrentRoundNumber(intel)) {
+            case 1 -> chooseCardFirstRound(intel);
+            case 2 -> chooseCardSecondRound(intel);
+            case 3 -> chooseCardThirdRound(intel);
+            default -> null;
+        };
     }
 
     @Override
@@ -32,6 +37,18 @@ public class JormungandrBot implements BotServiceProvider {
     @Override
     public String getName() {
         return "Jörmungandr";
+    }
+
+    CardToPlay chooseCardFirstRound(GameIntel intel) {
+        return null;
+    }
+
+    CardToPlay chooseCardSecondRound(GameIntel intel) {
+        return null;
+    }
+
+    CardToPlay chooseCardThirdRound(GameIntel intel) {
+        return null;
     }
 
     TrucoCard getHighestCardInHand(GameIntel intel) {
