@@ -138,6 +138,9 @@ public class MinePowerBot implements BotServiceProvider {
         var qtdManilhas = listManilhas(intel).size();
         if (hasZap && qtdManilhas >= 2){
             return 1;
+        } else if (hasZap || qtdManilhas >= 2) {
+            return 0;
+        }
         return -1;
     }
 
