@@ -81,6 +81,24 @@ public class MalasiaBotTest {
 
             assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should accept mao de onze with MaoZapOuCopasEFiguras hand")
+        void shouldAcceptMaoDeOnzeWithMaoZapOuCopasEFigurasHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
     }
 
     @Nested
