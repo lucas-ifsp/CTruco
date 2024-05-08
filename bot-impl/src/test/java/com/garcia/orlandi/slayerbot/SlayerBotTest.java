@@ -355,7 +355,7 @@ public class SlayerBotTest {
     }
 
     @Test
-    @DisplayName("If first to play and with two manilhas, play the weakest one first and the stronger afterwards")
+    @DisplayName("If first to play and with two manilhas or more, play the strongest first and the weakest afterwards")
     void shouldPlayWeakerManilhaFirst(){
         roundResults = List.of();
         vira = TrucoCard.of(FOUR, HEARTS);
@@ -372,8 +372,8 @@ public class SlayerBotTest {
 
         CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
         TrucoCard chosenCard = card.value();
-        assertFalse(chosenCard.isZap(vira));
-        assertTrue(chosenCard.isCopas(vira));
+        assertFalse(chosenCard.isCopas(vira));
+        assertTrue(chosenCard.isZap(vira));
     }
 
     @Test
