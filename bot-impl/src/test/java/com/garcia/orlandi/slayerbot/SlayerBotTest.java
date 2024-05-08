@@ -235,6 +235,26 @@ public class SlayerBotTest {
     }
 
     @Test
+    @DisplayName("If won one round and lost the other, should play the strongest card")
+    void shouldPlayStrongestIfWonOneAndLostOne(){
+        roundResults = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(KING, DIAMONDS),
+                TrucoCard.of(TWO, HEARTS));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 1).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(TWO, HEARTS));
+    }
+
+    @Test
     @DisplayName("Should not play maoDeOnze if has no manilhas at hand")
     void shouldNotPlayMaoDeOnzeIfHasNoManilhas(){
         roundResults = List.of();
