@@ -490,5 +490,18 @@ class JormungandrBotTest {
 
             assertTrue(jormungandrBot.isSecondToPlay(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return false if is first to play")
+        void shouldReturnFalseIfIsFirstToPlay() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
+
+            assertFalse(jormungandrBot.isSecondToPlay(stepBuilder.build()));
+        }
     }
 }
