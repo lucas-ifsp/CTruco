@@ -42,8 +42,8 @@ public class GameIntel {
     private final int opponentScore;
     private final int handPoints;
 
-    private GameIntel(List<TrucoCard> cards, List<TrucoCard> openCards, TrucoCard vira, TrucoCard opponentCard,
-                      List<RoundResult> roundResults, int score, int opponentScore, int handPoints) {
+    public GameIntel(List<TrucoCard> cards, List<TrucoCard> openCards, TrucoCard vira, TrucoCard opponentCard,
+                     List<RoundResult> roundResults, int score, int opponentScore, int handPoints) {
         this.cards = cards;
         this.openCards = openCards;
         this.vira = vira;
