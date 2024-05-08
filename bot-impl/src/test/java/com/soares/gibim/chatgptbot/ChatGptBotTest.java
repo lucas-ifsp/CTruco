@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChatGptBotTest {
@@ -496,6 +497,32 @@ public class ChatGptBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("Testing getMaoDeOnzeResponse")
+    class getMaoDeOnzeResponseTest {
+        @Test
+        @DisplayName("Should refuse mao de onze if hand strengh is lower than 21")
+        void ShouldRefuseMaoDeOnzeIfHandStrengthIsLowerThan21(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(0);
+
+            assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+    }
     @Test
     @DisplayName("If its the last hand and have zap then ask truco")
     void IfItsTheLastRoundAndHaveZapThenAskTruco() {
