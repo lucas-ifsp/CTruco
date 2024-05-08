@@ -31,7 +31,12 @@ import com.bueno.spi.service.BotServiceProvider;
 public class Akkosocorrompido implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        
+        if (haveHighCardInHand(intel)) {
+            return true;   
+        }
+        if(intel.getOpponentScore()<7){
+            return true;
+        }
         return false;
     }
 
