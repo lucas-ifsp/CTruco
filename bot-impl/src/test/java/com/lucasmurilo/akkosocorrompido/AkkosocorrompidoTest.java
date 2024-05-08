@@ -165,6 +165,28 @@ public class AkkosocorrompidoTest {
 
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel).value().toString());
     }
+        
+    @Test
+    @DisplayName("should give up if best card can NOT beat opponents first card")
+    public void shouldGiveUpIfBestCardCanNotBeatOpponentsFirstCard (){
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
 
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 3)
+            .opponentScore(3)
+            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
+            .build();
+
+        //giveup
+    }
+    
     
 }
