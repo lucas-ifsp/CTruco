@@ -84,6 +84,10 @@ public class MinePowerBot implements BotServiceProvider {
                 .get();
     }
 
+    public boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+
     private List<TrucoCard> listManilhas(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
