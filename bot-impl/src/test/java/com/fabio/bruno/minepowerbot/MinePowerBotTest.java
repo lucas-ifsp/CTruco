@@ -137,6 +137,19 @@ class MinePowerBotTest {
     }
 
     @Test
+    @DisplayName("Should respond raise with quit")
+    void shouldRespondRaiseWithQuit() {
+        intel = create()
+                .viraToBe(CardRank.FIVE, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
     @DisplayName("Should respond raise if has strong cards")
     void shouldRespondRaiseIfHasStrongCards() {
         intel = create()
@@ -160,19 +173,6 @@ class MinePowerBotTest {
                 .finish();
 
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
-    }
-
-    @Test
-    @DisplayName("Should respond raise with quit")
-    void shouldRespondRaiseWithQuit() {
-        intel = create()
-                .viraToBe(CardRank.FIVE, CardSuit.CLUBS)
-                .cards(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
-                .finish();
-
-        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
     @Test
