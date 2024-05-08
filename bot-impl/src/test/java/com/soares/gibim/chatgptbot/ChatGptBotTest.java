@@ -290,7 +290,6 @@ public class ChatGptBotTest {
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
                     );
 
@@ -303,7 +302,7 @@ public class ChatGptBotTest {
                             .botInfo(botCards, 0)
                             .opponentScore(0);
 
-                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
 
                 @Test
@@ -313,8 +312,7 @@ public class ChatGptBotTest {
 
                     List<TrucoCard> botCards = Arrays.asList(
                             TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
                     );
 
                     List<TrucoCard> openCards = Collections.singletonList(
