@@ -134,7 +134,11 @@ public class MinePowerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        var hasZap = hasZap(intel);
+        var qtdManilhas = listManilhas(intel).size();
+        if (hasZap && qtdManilhas >= 2){
+            return 1;
+        return -1;
     }
 
     @Override
