@@ -65,10 +65,7 @@ public class Akkosocorrompido implements BotServiceProvider {
 
         TrucoCard lowestCard = botCards.get(0);
         for (TrucoCard card : botCards) {
-            if(card.isManilha(vira)){
-                continue;
-            }
-          if (card.getRank().value()< lowestCard.getRank().value()) {
+          if (card.relativeValue(vira)< lowestCard.relativeValue(vira)) {
             lowestCard = card;
           }
         }

@@ -252,5 +252,27 @@ public class AkkosocorrompidoTest {
         
         assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestRankInHand(intel));
     }
+
+    @Test
+    @DisplayName("should make sure highrank function returns highest rank")
+    public void shouldMakeSureHighrankFunctionReturnsHighestrank(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(10)
+            .build();
+
+        
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getLowestRankInHand(intel));
+    }
     
 }
