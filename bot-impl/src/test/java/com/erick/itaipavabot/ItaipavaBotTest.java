@@ -139,6 +139,54 @@ public class ItaipavaBotTest {
                     .opponentScore(0);
             assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should raise truco if has powerlevel greater or equal to 7.5")
+        void shouldRaiseTrucoIfHasPowerlevelGreaterOrEqualThan75() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
+        }
+        @Test
+        @DisplayName("Should decline raise if has powerlevel less or equal to 3.5")
+        void shouldDeclineRaiseIfHasPowerlevelLessOrEqualThan35() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(-1, bot.getRaiseResponse(stepBuilder.build()));
+        }
+        @Test
+        @DisplayName("Should decline raise if hand points already at 12")
+        void shouldDeclineRaiseIfHandPointsAlreadyAt12() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> myCards = Arrays.asList(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 12)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+            assertEquals(-1, bot.getRaiseResponse(stepBuilder.build()));
+        }
     }
 
     @Nested
