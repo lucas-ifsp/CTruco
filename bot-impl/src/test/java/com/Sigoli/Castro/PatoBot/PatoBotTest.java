@@ -302,17 +302,14 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Accept Mao de Onze when Cards are okay and opponent score is <= 7")
     public void shouldAcceptMaoDeOnzeWhenCardsAreOkayAndOpponentScoreIsLessThanOrEqualToSeven() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         int opponentScore = 6;
-        when(intel.getOpponentScore()).thenReturn(opponentScore);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        setupCardsViraAndOpponentScore(Arrays.asList(card1, card2, card3), vira, opponentScore);
         assertTrue(patoBot.getMaoDeOnzeResponse(intel));
     }
-
 
     @Test
     @DisplayName("Should not accept Mão de Onze when my cards are weak")
