@@ -3,6 +3,7 @@ package com.otavio.lopes.teitasbot;
 import com.bueno.spi.model.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeitasBotFunctions {
@@ -33,11 +34,12 @@ public class TeitasBotFunctions {
     };
 
     static CardToPlay chooseCardToPlaySecondIfWonFirst(List<TrucoCard> cards, TrucoCard vira) {
-        //segundo round
 
-        cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+        List<TrucoCard> mutableCards = new ArrayList<>(cards);
+        mutableCards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+        return CardToPlay.of(mutableCards.get(0));
 
-        return CardToPlay.of(cards.get(0));}
+    }
 
 
     static CardToPlay cbooseCardToPlaySecondIfLooseFirst(List<TrucoCard> cards, TrucoCard vira) {
