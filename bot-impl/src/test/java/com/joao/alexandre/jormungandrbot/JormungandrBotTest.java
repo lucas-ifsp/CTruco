@@ -550,6 +550,62 @@ class JormungandrBotTest {
     }
 
     @Nested
+    @DisplayName("Testing hasPlayedACard() function")
+    class HasPlayedACardTest{
+        @Test
+        @DisplayName("Should return false if has 3 cards on hand and is first round")
+        void shouldReturnFalseIfWithThreeCardsOnFirstRound(){
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Should return true if has 1 cards on hand and is second round")
+        void shouldReturnTrueIfWithOneCardOnSecondRound(){
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.DREW);
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
+        @Test
+        @DisplayName("Should return true if has 0 cards on hand and is last round")
+        void shouldReturnTrueIfWithZeroCardOnLastRound(){
+            List<GameIntel.RoundResult> results = List.of(
+                    GameIntel.RoundResult.DREW, GameIntel.RoundResult.LOST);
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
+    }
+
+    @Nested
     @DisplayName("Testing getName()")
     class GetNameTest {
 
