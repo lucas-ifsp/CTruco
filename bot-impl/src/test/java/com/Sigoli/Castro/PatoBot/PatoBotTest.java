@@ -254,14 +254,13 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should play stronger card in hand if first to play first round")
     public void shouldPlayStrongerCardInHandIfFirstToPlayFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
-        TrucoCard card2 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        CardToPlay expected = CardToPlay.of(card2);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+        card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+        card2 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        expected = CardToPlay.of(card2);
+        Optional<TrucoCard> opponentCard = Optional.empty();
+        setupCardsViraAndOpponentCard(Arrays.asList(card1, card2, card3), vira, opponentCard);
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
