@@ -85,23 +85,10 @@ public class SlayerBot implements BotServiceProvider {
 
         List<TrucoCard> botManilhas = utils.getManilhas(cards, vira);
 
-        boolean opponentIsCopas = opponentCard != null && opponentCard.isCopas(vira);
-
-        TrucoCard zap = botManilhas.stream()
-                .filter(card -> card.isZap(vira))
-                .findFirst()
-                .orElse(null);
-
-        // Se o oponente jogou uma manilha de copas e o bot tem o zap, joga o zap
-        if (opponentIsCopas && zap != null && zap.compareValueTo(opponentCard, vira) > 0) {
-            return CardToPlay.of(zap);
-        }
 
         // Se o bot não tem manilhas, joga a carta mais fraca
         if (botManilhas.isEmpty()) {
-            TrucoCard weakestCard = cards.stream()
-                    .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                    .orElse(cards.get(0));
+            TrucoCard weakestCard = utils.getWeakestCard(cards, vira);
             return CardToPlay.of(weakestCard);
         }
 
@@ -118,16 +105,10 @@ public class SlayerBot implements BotServiceProvider {
             }
         }
 
-        if (hasTied && !botManilhas.isEmpty()) {
-            TrucoCard strongestManilha = botManilhas.stream()
-                    .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                    .orElse(botManilhas.get(0));
-            return CardToPlay.of(strongestManilha);
-        }
 
         TrucoCard genericCard = cards.stream()
                 .min(Comparator.comparingInt(card -> card.compareValueTo(opponentCard, vira)))
-                .orElse(cards.get(0));
+                .orElse(utils.getWeakestCard(cards, vira));
 
         return CardToPlay.of(genericCard);
     }

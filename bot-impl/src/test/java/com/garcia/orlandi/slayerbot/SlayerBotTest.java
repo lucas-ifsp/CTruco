@@ -77,8 +77,8 @@ public class SlayerBotTest {
 
     }
     @Test
-    @DisplayName("Should play the weakest card when second to play and not holding any manilha")
-    void shouldPlayWeakestCardWhenSecondToPlayWithoutManilha() {
+    @DisplayName("Should play the weakest card when second to play and dont win against opponent card")
+    void shouldPlayWeakestCardWhenSecondToPlayAndDontWinOpponentCard() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
         List<TrucoCard> cards = List.of(
