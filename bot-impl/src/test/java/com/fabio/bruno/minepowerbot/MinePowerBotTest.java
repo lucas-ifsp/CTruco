@@ -72,6 +72,18 @@ class MinePowerBotTest {
         assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
     }
 
+    @Test
+    @DisplayName("Check if has Zap")
+    void testHasZap(){
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES)).finish();
+
+
+        assertThat(sut.hasZap(intel)).isTrue();
+    }
+
 
     @Test
     @DisplayName("Should raise if bot has two cards above rank two")
