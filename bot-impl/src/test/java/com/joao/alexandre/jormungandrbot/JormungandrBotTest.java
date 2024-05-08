@@ -735,7 +735,7 @@ class JormungandrBotTest {
     class GetCardCountInHandHigherThanRelativeValueTest {
 
         @Test
-        @DisplayName("with one card above, one on the value and one below, return should be 1")
+        @DisplayName("With one card above, one on the value and one below, return should be 1")
         void shouldReturnOneWhenOnlyOneCardIsAboveRelativeValueInHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
@@ -754,6 +754,25 @@ class JormungandrBotTest {
                             stepBuilder.build(), 7));
         }
 
+        @Test
+        @DisplayName("With three cards below zap, and relative value is copas, return should be 0")
+        void shouldReturnZeroWhenNoCardGreaterThanRelativeValue() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0,
+                    jormungandrBot.getCardCountInHandHigherThanRelativeValue(
+                            stepBuilder.build(), 12));
+        }
 
     }
 }
