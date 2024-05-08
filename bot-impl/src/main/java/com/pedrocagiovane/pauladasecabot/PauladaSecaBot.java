@@ -472,61 +472,83 @@ public class PauladaSecaBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel build) {
         Integer qtdManilha = contManilha(build.getCards(),build.getVira());
 
-        // PRIMEIRA: joga pior carta se tiver casal maior
-        if (temCasalMaior(build) && build.getRoundResults().isEmpty()){
-            System.out.printf("temos casal maior e jogamos %s", piorCarta(build));
-            return CardToPlay.of(piorCarta(build));
-        }
+        //PRIMEIRA:
+        if(build.getRoundResults().isEmpty()){
 
-        // PRIMEIRA: joga pior carta se tiver casal menor
-        if (temCasalMenor(build) && build.getRoundResults().isEmpty()){
-            System.out.printf("temos casal menor e jogamos %s", piorCarta(build));
-            return CardToPlay.of(piorCarta(build));
-        }
+            // PRIMEIRA: joga pior carta se tiver casal maior
+            if (temCasalMaior(build)){
+                System.out.printf("temos casal maior e jogamos %s", piorCarta(build));
+                return CardToPlay.of(piorCarta(build));
+            }
 
-        // PRIMEIRA: joga pior carta se tiver casal preto
-        if (temCasalPreto(build) && build.getRoundResults().isEmpty()){
-            System.out.printf("temos casal preto e jogamos %s", piorCarta(build));
-            return CardToPlay.of(piorCarta(build));
-        }
+            // PRIMEIRA: joga pior carta se tiver casal menor
+            if (temCasalMenor(build)){
+                System.out.printf("temos casal menor e jogamos %s", piorCarta(build));
+                return CardToPlay.of(piorCarta(build));
+            }
 
-        // PRIMEIRA: joga pior carta se tiver casal vermelho
-        if (temCasalVermelho(build) && build.getRoundResults().isEmpty()){
-            System.out.printf("temos casal vermelho e jogamos: %s", piorCarta(build));
-            return CardToPlay.of(piorCarta(build));
+            // PRIMEIRA: joga pior carta se tiver casal preto
+            if (temCasalPreto(build)){
+                System.out.printf("temos casal preto e jogamos %s", piorCarta(build));
+                return CardToPlay.of(piorCarta(build));
+            }
+
+            // PRIMEIRA: joga pior carta se tiver casal vermelho
+            if (temCasalVermelho(build)){
+                System.out.printf("temos casal vermelho e jogamos: %s", piorCarta(build));
+                return CardToPlay.of(piorCarta(build));
+            }
+
         }
 
         // JOGA PRIMEIRO
         if (!build.getOpponentCard().isPresent()) {
 
-            // PRIMEIRA: joga melhor carta se não tiver manilha
-            if(qtdManilha == 0){
-                return CardToPlay.of(melhorCarta(build));
-            }
+            // PRIMEIRA:
+            if(build.getRoundResults().isEmpty()){
 
-            // PRIMEIRA: joga ouros ou espadas se tiver
-            if(temOuros(build) || temEspada(build)){
-                for (TrucoCard card : build.getCards()) {
-                    if (card.isOuros(build.getVira()) || card.isEspadilha(build.getVira())) {
-                        return CardToPlay.of(card);
+                // PRIMEIRA: joga melhor carta se não tiver manilha
+                if(qtdManilha == 0){
+                    return CardToPlay.of(melhorCarta(build));
+                }
+
+                // PRIMEIRA: joga ouros ou espadas se tiver
+                if(temOuros(build) || temEspada(build)){
+                    for (TrucoCard card : build.getCards()) {
+                        if (card.isOuros(build.getVira()) || card.isEspadilha(build.getVira())) {
+                            return CardToPlay.of(card);
+                        }
                     }
                 }
             }
+
         }
 
         // JOGA DEPOIS DO PATO
         if (build.getOpponentCard().isPresent()) {
 
-            // PRIMEIRA: tenta amarrar se tiver zap ou copas
-            if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
-                if (build.getRoundResults().isEmpty()) {
+            //PRIMEIRA:
+            if(build.getRoundResults().isEmpty()){
+                // PRIMEIRA: tenta amarrar se tiver zap ou copas
+                if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
                     for (TrucoCard card : build.getCards()) {
                         if (card.getRank() == build.getOpponentCard().get().getRank() && !card.isManilha(build.getVira())) {
                             return CardToPlay.of(card);
                         }
                     }
                 }
+
+                // PRIMEIRA: se tiver zap ou copas, tenta fazer a primeira sem utilizar a manilha
+                if (qtdManilha == 1 && temZap(build) || qtdManilha == 1 && temCopas(build)) {
+                    for (TrucoCard card : build.getCards()) {
+                        if (card.getRank().value() > build.getOpponentCard().get().getRank().value() && !card.isManilha(build.getVira())
+                                && !build.getOpponentCard().get().isManilha(build.getVira())) {
+                            return CardToPlay.of(card);
+                        }
+                    }
+                }
             }
+
 
             // mata a manilha oponente com uma manilha maior
             if (build.getOpponentCard().get().isManilha(build.getVira())) {
@@ -537,6 +559,7 @@ public class PauladaSecaBot implements BotServiceProvider {
             if(!build.getOpponentCard().get().isManilha(build.getVira())){
                 return CardToPlay.of(matarCartaComMenor(build));
             }
+
         }
         return CardToPlay.of(melhorCarta(build));
     }
