@@ -34,6 +34,10 @@ public class JormungandrBot implements BotServiceProvider {
         return "Jörmungandr";
     }
 
+    Optional<TrucoCard> getHighestNonManilhaCardInHand(GameIntel intel) {
+        return Optional.empty();
+    }
+
     Optional<TrucoCard> getLowestCardToBeatOpponentsCard(GameIntel intel) {
         TrucoCard currentLowestCard = getHighestCardInHand(intel);
         TrucoCard opponentsCard = intel.getOpponentCard()
