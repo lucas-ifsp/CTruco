@@ -15,7 +15,7 @@ public class MalasiaBot implements BotServiceProvider {
 
         if (intel.getHandPoints() == 12) return -1;
 
-        int response = -1;
+        List<GameIntel.RoundResult> round = intel.getRoundResults();
 
         if (MaoGiga(intel) || MaoZapOuCopasEAsAtres(intel) || MaoZapOuCopasEFiguras(intel)) {
             if (intel.getScore() + intel.getHandPoints() >= 12) {
@@ -30,7 +30,8 @@ public class MalasiaBot implements BotServiceProvider {
             }
             return 0;
         }
-        return response;
+
+        return -1;
     }
 
     @Override
@@ -66,10 +67,11 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
 
+        List<GameIntel.RoundResult> round = intel.getRoundResults();
+
         if (intel.getOpponentScore() == 11 || intel.getScore() == 11) {
             return false;
         } else {
-            List<GameIntel.RoundResult> round = intel.getRoundResults();
 
             if (!round.isEmpty()) {
                 if (MaoGiga(intel) && (round.get(0) == GameIntel.RoundResult.LOST || round.get(0) == GameIntel.RoundResult.DREW)) {
@@ -80,6 +82,28 @@ public class MalasiaBot implements BotServiceProvider {
                 if (MaoLixo(intel) || MaoZapOuCopasEFiguras(intel) || MaoZapOuCopasEAsAtres(intel) ||
                         MaoEspadaOuOuroEAsATres(intel) || MaoEspadasOuOurosEFiguras(intel)||MaoComDuasBoasSemManilha(intel))
                     return true;
+            }
+        }
+
+        if (!round.isEmpty()){
+            if (round.get(0) == GameIntel.RoundResult.LOST){
+                if (MaoLixo(intel)||MaoComDuasBoasSemManilha(intel)||MaoEspadasOuOurosEFiguras(intel)||
+                        MaoEspadaOuOuroEAsATres(intel)||MaoZapOuCopasEAsAtres(intel)||MaoZapOuCopasEFiguras(intel)){
+                return true;
+                }
+            }
+            if (round.get(0) == GameIntel.RoundResult.WON){
+                if (MaoLixo(intel)||MaoComDuasBoasSemManilha(intel)||MaoEspadasOuOurosEFiguras(intel)||
+                        MaoEspadaOuOuroEAsATres(intel)||MaoZapOuCopasEAsAtres(intel)||MaoZapOuCopasEFiguras(intel)||
+                        MaoRuimComManilha(intel)||MaoMediaComUmaBoaCarta(intel)){
+                    return true;
+                }
+            }
+            if (round.get(0) == GameIntel.RoundResult.DREW){
+                if (MaoMediaComUmaBoaCarta(intel)||MaoComDuasBoasSemManilha(intel)||MaoRuimComManilha(intel)||
+                        MaoEspadasOuOurosEFiguras(intel)||MaoEspadaOuOuroEAsATres(intel)){
+                    return true;
+                }
             }
         }
         return false;
