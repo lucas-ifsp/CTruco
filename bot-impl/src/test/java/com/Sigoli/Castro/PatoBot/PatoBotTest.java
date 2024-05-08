@@ -458,12 +458,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Raise if hold only good cards ")
     public void shouldRaiseifholdsOnlyGoodcards() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+        setupCardsAndVira(Arrays.asList(card1, card2, card3), vira);
         assertTrue(patoBot.decideIfRaises(intel));
     }
 
