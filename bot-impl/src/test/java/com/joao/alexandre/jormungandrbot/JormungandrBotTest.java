@@ -551,4 +551,30 @@ class JormungandrBotTest {
             assertEquals(1, jormungandrBot.getCurrentRoundNumber(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing hasPlayedACard() function")
+    class HasPlayedACardTest{
+        @Test
+        @DisplayName("Should return return false if has 3 cards on hand")
+        void shouldReturnFalseIfWithThreeCardsOnFirstRound(){
+            List<GameIntel.RoundResult> results = List.of();
+            List<TrucoCard> openCards = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,openCards, vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.closed());
+
+            assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
+
+    }
 }

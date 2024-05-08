@@ -113,4 +113,6 @@ public class JormungandrBot implements BotServiceProvider {
     int getCurrentRoundNumber(GameIntel intel) {
         return intel.getRoundResults().size() + 1;
     }
+
+    boolean hasPlayedACard(GameIntel intel){return false;}
 }
