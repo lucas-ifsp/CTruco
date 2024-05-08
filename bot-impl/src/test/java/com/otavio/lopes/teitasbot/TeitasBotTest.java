@@ -94,7 +94,6 @@ public class TeitasBotTest {
         @DisplayName("Should get strongest card if is second round and made the first")
         void shouldGetStrongestCardIfIsWewinthefirstRound() {
             //opponent card doesnt matter.
-
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> botCards = Arrays.asList(

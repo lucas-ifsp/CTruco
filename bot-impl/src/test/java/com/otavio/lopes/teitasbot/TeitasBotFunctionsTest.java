@@ -162,6 +162,47 @@ class TeitasBotFunctionsTest {
             );
             assertEquals(TrucoCard.of(TWO, SPADES), TeitasBotFunctions.getMiddleCardLevel(cards,vira).content());
         }
+
+        @Test
+        @DisplayName("Should return TrucoCardType strongest in hand")
+        void shouldReturnStrongestCardTrucoType(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoCard.of(TWO, SPADES), TeitasBotFunctions.getStrongestTrucoCard(cards,vira).content());
+        }
+        @Test
+        @DisplayName("Should return TrucoCardType strongest in hand")
+        void shouldReturnMiddleCardTrucoType(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoCard.of(TWO, SPADES), TeitasBotFunctions.getMiddleTrucoCard(cards,vira).content());
+        }
+        @Test
+        @DisplayName("Should return TrucoCardType strongest in hand")
+        void shouldReturnWorstCardTrucoType(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            assertEquals(TrucoCard.of(TWO, SPADES), TeitasBotFunctions.getWeakestTrucoCard(cards,vira).content());
+        }
+
+
+
+
+
+
+
     }
 
     @Nested
