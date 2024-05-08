@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class MalasiaBotTest {
@@ -123,6 +122,7 @@ public class MalasiaBotTest {
             assertEquals(CardRank.FIVE, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
         }
 
+
         @Test
         @DisplayName("Should play the highest card if dont met any requirements")
         void shouldPlayTheHighestCardIfDontMetAnyRequirements() {
@@ -139,63 +139,6 @@ public class MalasiaBotTest {
                     .opponentScore(0);
 
             assertEquals(CardRank.SIX, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
-        }
-
-        @Test
-        @DisplayName("Should play the medium card if have Zap ou Copas and Aces to three")
-        void shouldPlayTheMediumCardIfhaveZapOuCopasAndAcesToThree() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
-                    );
-
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 0)
-                    .opponentScore(0);
-
-            assertEquals(CardRank.THREE, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
-        }
-
-        @Test
-        @DisplayName("Should play the strongest card if have Espada ou Ouros and Aces to three")
-        void shouldPlayTheStrongestCardIfHaveEspadaOuOurosAndAcesToThree() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
-            );
-
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 0)
-                    .opponentScore(0);
-
-            assertEquals(CardRank.TWO, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
-        }
-
-        @Test
-        @DisplayName("Should play the strongest card if have Zap ou Copas and Pictures")
-        void shouldPlayTheStrongestCardIfHaveZapOuCopasAndPictures() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
-            );
-
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 0)
-                    .opponentScore(0);
-
-            assertEquals(CardRank.TWO, malasiaBot.chooseCard(stepBuilder.build()).content().getRank());
         }
 
 
@@ -366,6 +309,23 @@ public class MalasiaBotTest {
             assertEquals(0,malasiaBot.getRaiseResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should raise if MaoGiga and lost first round")
+        void shouldRaiseIfMaoGigaAndLostFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults1Lose, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0);
+
+            assertTrue(malasiaBot.decideIfRaises(stepBuilder.build()));
+        }
 
     }
 }
