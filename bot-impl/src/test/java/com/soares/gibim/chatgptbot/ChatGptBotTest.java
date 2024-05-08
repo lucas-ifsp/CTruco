@@ -709,6 +709,31 @@ public class ChatGptBotTest {
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
 
+            @Test
+            @DisplayName("Should ask for raise if has any card higher than opponent's card")
+            void ShouldAskForRaiseIfHasAnyCardHigherThanOpponentsCard(){
+                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Collections.singletonList(
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+                List<TrucoCard> openCards = Arrays.asList(
+                        TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
 
         }
 
