@@ -257,7 +257,7 @@ public class BarDoAlexBotTest {
         void ShouldRefuseRaiseIfHasSixOrMorePointsOfAdvantageAndNoManilhia(){
             List<TrucoCard> botCards = List.of(
                     TrucoCard.of(SEVEN, DIAMONDS),
-                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(FOUR, HEARTS),
                     TrucoCard.of(ACE, CLUBS)
             );
             TrucoCard vira = TrucoCard.of(TWO,HEARTS);

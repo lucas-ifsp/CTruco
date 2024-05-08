@@ -68,6 +68,9 @@ public class BarDoAlexBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
 
+        if (Math.abs(botScore - opponentScore) >= 6 && botScore > opponentScore)
+            return -1;
+
         if (botScore == 11) {
             return -1;
         }
@@ -85,7 +88,7 @@ public class BarDoAlexBot implements BotServiceProvider {
         }
         try {
             GameIntel.RoundResult firstRound = intel.getRoundResults().get(0);
-            if (firstRound == GameIntel.RoundResult.WON || manilhasCount >= 1)
+            if (firstRound == GameIntel.RoundResult.WON && manilhasCount >= 1)
                 return 0;
         }catch (Exception e){
 
