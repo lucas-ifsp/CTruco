@@ -54,24 +54,23 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public TrucoCard attemptToBeatOpponentCard(GameIntel intel) {
-        TrucoCard cardToPlay = null;
         TrucoCard vira = intel.getVira();
         List<TrucoCard> hand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        cardToPlay = selectBetterCardToPlay(hand, opponentCard, vira, cardToPlay);
+        TrucoCard cardToPlay = selectBetterCardToPlay(hand, opponentCard, vira);
 
         if (isCardIneffective(cardToPlay, opponentCard, vira)) { cardToPlay = selectLowestCard(hand, vira);}
 
         return cardToPlay;
-
     }
 
     private static boolean isCardIneffective(TrucoCard cardToPlay, Optional<TrucoCard> opponentCard, TrucoCard vira) {
         return cardToPlay == null || cardToPlay.compareValueTo(opponentCard.orElse(null), vira) <= 0;
     }
 
-    private static TrucoCard selectBetterCardToPlay(List<TrucoCard> hand, Optional<TrucoCard> opponentCard, TrucoCard vira, TrucoCard cardToPlay) {
+    private static TrucoCard selectBetterCardToPlay(List<TrucoCard> hand, Optional<TrucoCard> opponentCard, TrucoCard vira) {
+        TrucoCard cardToPlay = null;
         for (TrucoCard card : hand) {
             if (card.compareValueTo(opponentCard.orElse(null), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) { cardToPlay = card; }
@@ -81,7 +80,7 @@ public class PatoBot implements BotServiceProvider {
     }
 
 
-    public TrucoCard selectLowestCard(List<TrucoCard> hand, TrucoCard vira) {
+    private TrucoCard selectLowestCard(List<TrucoCard> hand, TrucoCard vira) {
         TrucoCard lowestCard = null;
         for (TrucoCard card : hand) {
             if (lowestCard == null || card.compareValueTo(lowestCard, vira) < 0) {
@@ -107,6 +106,16 @@ public class PatoBot implements BotServiceProvider {
     }
 
     public boolean checkIfAcceptMaoDeOnze(GameIntel intel) {
+        int count = calculateCardScore(intel);
+        int opponentPoints = intel.getOpponentScore();
+        int threshold = 4;
+        if (opponentPoints >= 8) {
+            threshold = 6;
+        }
+        return count >= threshold;
+    }
+
+    private int calculateCardScore(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
             if (card.isManilha(intel.getVira())) {
@@ -116,12 +125,7 @@ public class PatoBot implements BotServiceProvider {
                 count++;
             }
         }
-        int opponentPoints = intel.getOpponentScore();
-        int threshold = 4;
-        if (opponentPoints >= 8) {
-            threshold = 6;
-        }
-        return count >= threshold;
+        return count;
     }
 
     public boolean checkIfStrongerCardIsThree(GameIntel intel) {
