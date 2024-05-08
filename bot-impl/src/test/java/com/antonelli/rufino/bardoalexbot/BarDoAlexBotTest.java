@@ -251,6 +251,24 @@ public class BarDoAlexBotTest {
             TrucoCard result = sut.chooseCard(intel.build()).content();
             assertThat(result).isEqualTo(botCards.get(1));
         }
+
+        @Test
+        @DisplayName("Should refuse raise if has 6 or more points of advantage and no manilhia ")
+        void ShouldRefuseRaiseIfHasSixOrMorePointsOfAdvantageAndNoManilhia(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(SEVEN, DIAMONDS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(ACE, CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(TWO,HEARTS);
+
+
+            intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,6)
+                    .opponentScore(0);
+
+            int result = sut.getRaiseResponse(intel.build());
+            assertThat(result).isEqualTo(-1);
+        }
     }
 
 
