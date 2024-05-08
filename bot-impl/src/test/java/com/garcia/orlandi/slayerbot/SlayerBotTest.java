@@ -622,4 +622,32 @@ public class SlayerBotTest {
         assertThat(maoDeOnzeResponse).isTrue();
     }
 
+    @Test
+    @DisplayName("Should request truco in the second round if second to play and holding a Three or any manilha")
+    void shouldRequestTrucoInSecondRoundWithThreeOrManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        );
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRequestTruco).isTrue();
+    }
+
 }
