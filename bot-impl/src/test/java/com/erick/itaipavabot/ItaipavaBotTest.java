@@ -484,9 +484,7 @@ public class ItaipavaBotTest {
         void shouldReturn3ForThirdRound() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List<TrucoCard> myCards = Arrays.asList(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
-            );
+            List<TrucoCard> myCards = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                     .botInfo(myCards, 1)
@@ -512,4 +510,16 @@ public class ItaipavaBotTest {
         }
     }
 
+    @Test
+    @DisplayName("Should return WON if last round was WON")
+    void shouldReturnWONIfLastRoundWasWON() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> openCards = List.of(vira);
+        List<TrucoCard> myCards = Arrays.asList(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+        assertEquals(GameIntel.RoundResult.WON, bot.lastRound(stepBuilder.build()));
+    }
 }

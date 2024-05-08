@@ -27,28 +27,6 @@ import java.util.List;
 
 public class ItaipavaBot implements BotServiceProvider {
 
-    private CardToPlay firstRound(GameIntel gameIntel) {
-        List<TrucoCard> myCards = gameIntel.getCards();
-        TrucoCard card = findLowestCardToWin(gameIntel);
-        if (findFirstPlayer(gameIntel)) return CardToPlay.of(getHighestCard(myCards, gameIntel));
-        if(card == null) return CardToPlay.of(getLowestCard(myCards, gameIntel));
-        else return CardToPlay.of(findLowestCardToWin(gameIntel));
-    }
-    
-    private CardToPlay secondRound(GameIntel intel) {
-        List<TrucoCard> myCards = intel.getCards();
-        if (lastRound(intel).equals(GameIntel.RoundResult.LOST)){
-            return CardToPlay.of(getHighestCard(myCards, intel));
-        } else if (lastRound(intel).equals(GameIntel.RoundResult.WON)) {
-            return CardToPlay.of(getLowestCard(myCards, intel));
-        }
-        return CardToPlay.of(getHighestCard(myCards, intel));
-    }
-
-    private static GameIntel.RoundResult lastRound(GameIntel intel) {
-        return intel.getRoundResults().get(intel.getRoundResults().size() - 1);
-    }
-
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (hasCasalMaior(intel)) return true;
@@ -84,6 +62,28 @@ public class ItaipavaBot implements BotServiceProvider {
         if (handPowerLevel(intel) >= 7.5) return 1;
         if (handPowerLevel(intel) <= 3.5) return -1;
         return 0;
+    }
+
+    private CardToPlay firstRound(GameIntel gameIntel) {
+        List<TrucoCard> myCards = gameIntel.getCards();
+        TrucoCard card = findLowestCardToWin(gameIntel);
+        if (findFirstPlayer(gameIntel)) return CardToPlay.of(getHighestCard(myCards, gameIntel));
+        if(card == null) return CardToPlay.of(getLowestCard(myCards, gameIntel));
+        else return CardToPlay.of(findLowestCardToWin(gameIntel));
+    }
+
+    private CardToPlay secondRound(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+        if (lastRound(intel).equals(GameIntel.RoundResult.LOST)){
+            return CardToPlay.of(getHighestCard(myCards, intel));
+        } else if (lastRound(intel).equals(GameIntel.RoundResult.WON)) {
+            return CardToPlay.of(getLowestCard(myCards, intel));
+        }
+        return CardToPlay.of(getHighestCard(myCards, intel));
+    }
+
+    public GameIntel.RoundResult lastRound(GameIntel intel) {
+        return intel.getRoundResults().get(intel.getRoundResults().size() - 1);
     }
 
     private TrucoCard findLowestCardToWin(GameIntel gameIntel) {
