@@ -1055,8 +1055,8 @@ public class ChatGptBotTest {
 
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(ACE, SPADES),
-                    TrucoCard.of(ACE, HEARTS),
-                    TrucoCard.of(KING, HEARTS));
+                    TrucoCard.of(ACE, HEARTS)
+            );
 
             List<TrucoCard> openCards = Collections.singletonList(
                     TrucoCard.of(CardRank.KING, SPADES)
@@ -1077,7 +1077,29 @@ public class ChatGptBotTest {
 
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(ACE, SPADES),
-                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(ACE, HEARTS)
+            );
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.KING, SPADES)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 6)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(1, sut.getRaiseResponse(intel.build()));
+        }
+
+        @Test
+        @DisplayName("Should raise to 9 has won the first round and has a three or higher in the second round")
+        void ShouldRaiseTo9HasWonTheFirstRoundAndHasAThreeOrHigher() {
+            TrucoCard vira = TrucoCard.of(KING, SPADES);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(SIX, HEARTS),
                     TrucoCard.of(KING, HEARTS));
 
             List<TrucoCard> openCards = Collections.singletonList(
