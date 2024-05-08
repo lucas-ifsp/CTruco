@@ -58,8 +58,13 @@ public class JakareDuMatuBot implements BotServiceProvider {
         switch (intel.getRoundResults().size()) {
             case 0 -> {
                 // First Hand
+
+                //faz a lista ordenada das cartas
                 List<TrucoCard> list = sortedListCards(intel, intel.getVira());
+
+                //se o adversario for o primeiro a jogar
                 if (intel.getOpponentCard().isPresent()){
+                    //se tiver carta mais forte do que a que ele
                     if (hasCardHigherThan(intel, intel.getOpponentCard().get())){
                         if (list.get(2).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
                             return CardToPlay.of(list.get(2));
@@ -69,15 +74,18 @@ public class JakareDuMatuBot implements BotServiceProvider {
                             return CardToPlay.of(list.get(0));
                         }
                     }
+                    //se conseguir empatar
                     if (list.get(0).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0){
                         return CardToPlay.of(list.get(0));
                     }
                     else if (list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) == 0) {
                         return CardToPlay.of(list.get(1));
                     }
+                    //se não conseguir empatar, jogar a mais fraca
                     else  return CardToPlay.of(list.get(2));
 
                 }
+                // jogar sempre a mais forte na primeira
                 return CardToPlay.of(list.get(0));
             }
             case 1->{
