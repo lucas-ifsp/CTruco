@@ -469,14 +469,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Raise if holds middle cards and won first round ")
     public void shouldRaiseIfHoldsMiddleCardsAndWonFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+        setupCardsViraAndRoundResult(Arrays.asList(card1, card2), vira, List.of(GameIntel.RoundResult.WON));
         assertTrue(patoBot.decideIfRaises(intel));
-
     }
 
     @Test
