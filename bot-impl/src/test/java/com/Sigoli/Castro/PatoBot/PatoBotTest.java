@@ -1,21 +1,18 @@
 package com.Sigoli.Castro.PatoBot;
 
+import java.util.List;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Collections;
 import com.bueno.spi.model.*;
+import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class PatoBotTest {
     PatoBot patoBot;
@@ -493,7 +490,7 @@ public class PatoBotTest {
         TrucoCard card2 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        CardToPlay expected = CardToPlay.of(card2);
+         CardToPlay expected = CardToPlay.of(card2);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));

@@ -15,13 +15,17 @@ public class PatoBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        if (isMaoDeOnze(intel)) return false;
         if (intel.getRoundResults().isEmpty()) {
             return checkIfRaiseGame(intel);
         } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             return checkIfRaiseGame(intel);
         }
         return false;
+    }
+
+    private static boolean isMaoDeOnze(GameIntel intel) {
+        return intel.getScore() == 11 || intel.getOpponentScore() == 11;
     }
 
     @Override
@@ -36,8 +40,6 @@ public class PatoBot implements BotServiceProvider {
         } else if (checkIfOpponentIsFirstToPlay(intel.getOpponentCard()) && getNumberOfCardsInHand(intel) == 2) {
             cardToPlay = CardToPlay.of(attemptToBeatOpponentCard(intel));
         }
-
-
         return cardToPlay;
     }
 
@@ -138,8 +140,7 @@ public class PatoBot implements BotServiceProvider {
         if (checkIfStrongerCardIsThree(intel)) {
             count--;
         }
-
-        if (cards.size() == 3) {
+        if (getNumberOfCardsInHand(intel) == 3) {
             return count >= 2;
         }
         return count >= 1;
@@ -151,8 +152,7 @@ public class PatoBot implements BotServiceProvider {
         TrucoCard CardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int score = 0;
-
-        if (hand.size() == 3) {
+        if (hand.size() == 3 ) {
             return 1;
         }
         if (!hand.isEmpty()) {
