@@ -551,7 +551,25 @@ public class ChatGptBotTest {
     @Nested
     @DisplayName("Testing decideIfRaises")
     class decideIfRaisesTest {
+        @Test
+        @DisplayName("Should ask for raise if won the first round")
+        void ShouldAskForRaiseIfWonTheFirstRound(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            assertTrue(sut.decideIfRaises(intel.build()));
+        }
     }
     @Test
     @DisplayName("If its the last hand and have zap then ask truco")
