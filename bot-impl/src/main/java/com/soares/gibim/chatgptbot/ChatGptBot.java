@@ -61,7 +61,7 @@ public class ChatGptBot implements BotServiceProvider {
                     return CardToPlay.of(weakestCard(intel));
                 }
             } else {
-                return CardToPlay.of(whenRespondingOpponentCardInTheSecondRound(intel));
+                return CardToPlay.of(whenRespondingOpponentCard(intel));
             }
         }
         return CardToPlay.of(intel.getCards().get(0));
@@ -192,36 +192,15 @@ public class ChatGptBot implements BotServiceProvider {
                 highestValue = card.relativeValue(intel.getVira());
             }
         }
-        if (bestCard == null){
-            for (TrucoCard card : cards){
+        if (bestCard == null && intel.getRoundResults().isEmpty()) {
+            for (TrucoCard card : cards) {
                 if (card.getRank().value() == opponentCard.get().relativeValue(intel.getVira())) {
                     return card;
                 }
             }
             return weakestCard(intel);
-        } else {
-            return bestCard;
         }
-    }
-
-    private TrucoCard whenRespondingOpponentCardInTheSecondRound(GameIntel intel){
-
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-
-        int highestValue = 14;
-        TrucoCard bestCard = null;
-
-        List<TrucoCard> cards = intel.getCards();
-
-        for (TrucoCard card :cards){
-            if (card.relativeValue(intel.getVira()) > opponentCard.get().relativeValue(intel.getVira())
-                    && card.relativeValue(intel.getVira()) < highestValue){
-                bestCard = card;
-                highestValue = card.relativeValue(intel.getVira());
-            }
-        }
-
-        if (bestCard == null){
+        if (bestCard == null && intel.getRoundResults().size() == 2){
             return strongestCard(intel);
         } else {
             return bestCard;
