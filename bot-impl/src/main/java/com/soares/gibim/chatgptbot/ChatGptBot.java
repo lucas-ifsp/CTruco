@@ -26,6 +26,12 @@ public class ChatGptBot implements BotServiceProvider {
             if(intel.getRoundResults().size() == 2 && hasManilha(intel) && intel.getOpponentCard().isPresent()){
                 return true;
             }
+            if (intel.getRoundResults().size() == 2 &&
+                    intel.getOpponentCard().isPresent() &&
+                    intel.getCards().get(0) == intel.getOpponentCard().get() &&
+                    intel.getRoundResults().get(0) == GameIntel.RoundResult.WON
+            )
+                return true;
         }
         return false;
     }
