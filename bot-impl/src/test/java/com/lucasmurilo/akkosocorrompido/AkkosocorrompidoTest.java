@@ -1,6 +1,7 @@
 package com.lucasmurilo.akkosocorrompido;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -201,10 +202,31 @@ public class AkkosocorrompidoTest {
         GameIntel intel = GameIntel.StepBuilder.with()
             .gameInfo(List.of(), openCards, vira, 1)
             .botInfo(botCards, 11)
-            .opponentScore(10)
+            .opponentScore(5)
             .build();
 
         assertTrue(bot.getMaoDeOnzeResponse(intel));
+    }
+
+    @Test
+    @DisplayName("should not accept mao de onze if opponent score is too high")
+    public void shouldNotAcceptMaoDeOnzeIfOpponentScoreIsTooHigh () {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(10)
+            .build();
+
+        assertFalse(bot.getMaoDeOnzeResponse(intel));
     }
     
 }
