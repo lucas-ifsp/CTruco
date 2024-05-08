@@ -277,7 +277,34 @@ class JakareDuMatuBotTest {
         }
 
         //Se nao conseguir ganhar nem empatar
+        @Test
+        @DisplayName("Should choose the weakest card if impossible drew or win the first opponent card")
+        public void ShouldChooseTheWeakestCardIfImpossibleDrewOrWinTheFirstOpponentCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES) //oponent card
+            );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+        }
 
 
         //Nos primeiro
