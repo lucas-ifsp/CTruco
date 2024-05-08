@@ -32,11 +32,11 @@ public class ChatGptBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (intel.getRoundResults().isEmpty()) {
-            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 24) {
+            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
                 return 0;
             }
         } else if (intel.getRoundResults().size() == 1) {
-            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 16) {
+            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
                 return 0;
             }
         }
@@ -61,7 +61,7 @@ public class ChatGptBot implements BotServiceProvider {
         int sum = 0;
 
         for (TrucoCard card : intel.getCards()) {
-            sum += card.relativeValue(intel.getVira());
+            sum +=  card.relativeValue(intel.getVira());
         }
 
         return sum;
