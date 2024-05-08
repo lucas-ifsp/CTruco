@@ -1,6 +1,7 @@
 package com.garcia.orlandi.slayerbot;
 
 import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Comparator;
@@ -17,10 +18,8 @@ public class SlayerBotUtils {
         TrucoCard strongerCard = cards.get(0);
 
         for (TrucoCard card : cards) {
-            int comparison = card.compareValueTo(strongerCard, vira);
-            if (comparison > 0) {
+            if(card.relativeValue(vira) > strongerCard.relativeValue(vira))
                 strongerCard = card;
-            }
         }
 
         return strongerCard;
