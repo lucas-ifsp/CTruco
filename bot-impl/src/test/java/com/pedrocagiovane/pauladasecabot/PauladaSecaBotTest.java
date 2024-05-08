@@ -600,6 +600,18 @@ public class PauladaSecaBotTest {
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isTrue();
         }
+
+        @Test
+        @DisplayName("Mao de onze: nao aceita com mao menor que 23")
+        void MaoOnzeNaoAceitaMaoFraca() {
+            maoPlayer = List.of(TrucoCard.of(SIX, DIAMONDS), TrucoCard.of(KING, DIAMONDS), TrucoCard.of(QUEEN, SPADES));
+            vira = TrucoCard.of(FIVE, SPADES);
+            roundResult = List.of();
+            cartas = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertThat(result).isFalse();
+        }
     }
 
 
