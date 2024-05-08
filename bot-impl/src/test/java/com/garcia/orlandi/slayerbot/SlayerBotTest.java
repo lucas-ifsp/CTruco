@@ -650,4 +650,30 @@ public class SlayerBotTest {
         assertThat(shouldRequestTruco).isTrue();
     }
 
+    @Test
+    @DisplayName("Should request truco if second to play and holding 3 Three cards")
+    void shouldRequestTrucoIfSecondToPlayWithThreeThrees() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+        );
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(Collections.emptyList(), openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        boolean shouldRequestTruco = bot.decideIfRaises(stepBuilder.build());
+        assertThat(shouldRequestTruco).isTrue();
+    }
+
 }
