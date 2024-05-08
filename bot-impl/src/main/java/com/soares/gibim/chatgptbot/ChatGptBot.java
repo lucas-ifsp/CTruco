@@ -111,10 +111,22 @@ public class ChatGptBot implements BotServiceProvider {
             if (countManilhas(intel) == 2) {
                 return 1;
             }
+            if (verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)){
+                return 1;
+            }
             if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
                 return 0;
             }
         } else if (intel.getRoundResults().size() == 2) {
+
+            if( (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
+                    && getSumOfCardValues(intel) > 8 ) {
+                return 1;
+            }
+
+            if (countManilhas(intel) > 0) {
+                return 1;
+            }
             if (getSumOfCardValues(intel) >= 7){
                 return 0;
             }
