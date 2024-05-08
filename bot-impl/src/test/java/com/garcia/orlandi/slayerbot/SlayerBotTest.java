@@ -255,6 +255,26 @@ public class SlayerBotTest {
     }
 
     @Test
+    @DisplayName("If a drew happens, the bot should play the strongest card")
+    void shouldPlayStrongestCardInCaseOfDrew(){
+        roundResults = List.of(GameIntel.RoundResult.DREW);
+        vira = TrucoCard.of(FIVE, HEARTS);
+        cards = List.of(
+                TrucoCard.of(KING, DIAMONDS),
+                TrucoCard.of(SIX, HEARTS));
+        openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 1).opponentScore(0);
+
+        CardToPlay card = new SlayerBot().chooseCard(stepBuilder.build());
+        TrucoCard chosenCard = card.value();
+        assertThat(chosenCard).isEqualTo(TrucoCard.of(SIX, HEARTS));
+    }
+
+    @Test
     @DisplayName("Should not play maoDeOnze if has no manilhas at hand")
     void shouldNotPlayMaoDeOnzeIfHasNoManilhas(){
         roundResults = List.of();
