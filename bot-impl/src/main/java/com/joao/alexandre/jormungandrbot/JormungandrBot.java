@@ -151,7 +151,7 @@ public class JormungandrBot implements BotServiceProvider {
         }
     }
 
-    private Optional<TrucoCard> getSelfCardPlayed(GameIntel intel) {
+    Optional<TrucoCard> getSelfCardPlayed(GameIntel intel) {
         if (hasPlayedACard(intel)){
             TrucoCard card = intel.getOpenCards().get(
                     (getCurrentRoundNumber(intel) * 2) - 1
