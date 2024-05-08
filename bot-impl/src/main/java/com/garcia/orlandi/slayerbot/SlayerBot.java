@@ -44,6 +44,15 @@ public class SlayerBot implements BotServiceProvider {
             return false;
         }
 
+        // Checar 3 tres na mao
+        List<TrucoCard> threesInHand = cards.stream()
+                .filter(card -> card.getRank() == CardRank.THREE)
+                .toList();
+
+        if (threesInHand.size() == 3) {
+            return true;
+        }
+
         List<TrucoCard> manilhasInHand = cards.stream()
                 .filter(card -> card.isManilha(vira))
                 .toList();
