@@ -133,7 +133,7 @@ class TeitasBotFunctionsTest {
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
             );
-            assertEquals(TrucoCard.of(SIX, DIAMONDS), TeitasBotFunctions.getMiddleCardLevel(cards,vira).content());
+            assertEquals(TrucoCard.of(SIX, DIAMONDS), TeitasBotFunctions.getStrongestCard(cards,vira).content());
         }
 
         //assert is different, we need to compare the card.

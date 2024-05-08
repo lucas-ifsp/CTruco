@@ -33,9 +33,6 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
-        //choose card to first round and second implementation
-
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
         Boolean handNuts = TeitasBotFunctions.hasNutsHand(cards,vira);
@@ -43,18 +40,21 @@ public class TeitasBot implements BotServiceProvider {
         Boolean handGood = TeitasBotFunctions.hasGoodHand(cards,vira);
         Boolean handTrash = TeitasBotFunctions.hasTrashHand(cards,vira);
 
-
         CardToPlay strongestCard = TeitasBotFunctions.getStrongestCard(cards,vira);
         CardToPlay secondBestCard = TeitasBotFunctions.getMiddleCardLevel(cards,vira);
         CardToPlay worstCard = TeitasBotFunctions.getWeakestCard(cards,vira);
 
-
         if(TeitasBotFunctions.firstToPlay(intel) & handNuts) {
             return secondBestCard;
-
         } else if (TeitasBotFunctions.firstToPlay(intel) & handStrong) {
-            return worstCard;
-        }
+            return worstCard;}
+        else if(TeitasBotFunctions.firstToPlay(intel) & handGood) {
+            return secondBestCard;
+        } else if (TeitasBotFunctions.firstToPlay(intel) & handTrash) {
+            return strongestCard;}
+
+
+
 
 
         return null;
@@ -81,11 +81,9 @@ public class TeitasBot implements BotServiceProvider {
         }
 
         if (roundsAteAgora.isEmpty()) {
-
             if (myHandGood || myHandStrong) {
                 //bota pra forcar e foda se.
                 return 1;
-
             } else if (myHandNuts) {
                 return 0;
             }

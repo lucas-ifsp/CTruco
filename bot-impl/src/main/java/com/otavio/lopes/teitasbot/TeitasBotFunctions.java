@@ -64,7 +64,6 @@ public class TeitasBotFunctions {
 
     static CardToPlay getWeakestCard(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard weakestCard = cards.get(0);
-
         for (TrucoCard card : cards) {
             if (card.compareValueTo(weakestCard, vira) < 0) {
                 weakestCard = card;
