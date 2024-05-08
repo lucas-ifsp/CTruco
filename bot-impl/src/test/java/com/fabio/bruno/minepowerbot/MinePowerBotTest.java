@@ -176,6 +176,21 @@ class MinePowerBotTest {
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
+    @Test
+    @DisplayName("Should not accept raise if do not have manilha")
+    void shouldNotAcceptRaiseIfDoNotHaveManilha() {
+        intel = MinePowerBotIntelMockBuilder.create()
+                .viraToBe(CardRank.FOUR, CardSuit.SPADES)
+                .cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
+                .finish();
+        int raiseResponse = sut.getRaiseResponse(intel);
+
+        assertThat(raiseResponse).isEqualTo(-1);
+    }
+
+
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
