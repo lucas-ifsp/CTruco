@@ -105,6 +105,7 @@ public class BarDoAlexBotTest {
 
             assertThat(bot.decideIfRaises(intel)).isFalse();
         }
+
     }
 
 
