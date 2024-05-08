@@ -246,7 +246,7 @@ public class BarDoAlexBotTest {
 
 
             intel = GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1).botInfo(botCards,0)
-                    .opponentScore(0).opponentCard(TrucoCard.of(SIX,DIAMONDS));
+                    .opponentScore(0);
 
             TrucoCard result = sut.chooseCard(intel.build()).content();
             assertThat(result).isEqualTo(botCards.get(1));
