@@ -688,4 +688,27 @@ class JormungandrBotTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("Testing getManilhaCountInHand() function")
+    class GetManilhaCountInHandTest{
+
+        @Test
+        @DisplayName("Check if 3 manilhas in hand, return should be 3")
+        void shouldReturnThreeWhenThreeManilhasInHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(3, jormungandrBot.getManilhaCountInHand(stepBuilder.build()));
+        }
+    }
 }

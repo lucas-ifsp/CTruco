@@ -162,4 +162,6 @@ public class JormungandrBot implements BotServiceProvider {
 
         return Optional.empty();
     }
+
+    int getManilhaCountInHand(GameIntel intel){return 0;}
 }
