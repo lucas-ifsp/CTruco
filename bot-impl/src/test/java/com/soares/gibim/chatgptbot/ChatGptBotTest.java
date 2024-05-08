@@ -328,6 +328,28 @@ public class ChatGptBotTest {
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+
+                @Test
+                @DisplayName("If only has good cards should use the second strongest")
+                void IfOnlyHasGoodCardsShouldUseTheSecondStrongest(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }
