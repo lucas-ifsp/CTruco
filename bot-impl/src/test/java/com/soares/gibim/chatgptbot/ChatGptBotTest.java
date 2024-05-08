@@ -276,6 +276,37 @@ public class ChatGptBotTest {
                 }
             }
         }
+
+        @Nested
+        @DisplayName("When is the second Round")
+        class SecondRound {
+            @Nested
+            @DisplayName("When won first round")
+            class WonFirstRound {
+                @Test
+                @DisplayName("If only has bad cards should use the strongest")
+                void IfOnlyHasBadCardsShouldUseTheStrongest(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
+            }
+        }
     }
 
     @Test
