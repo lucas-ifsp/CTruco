@@ -13,9 +13,13 @@ public class MalasiaBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
-        if (intel.getHandPoints() == 12) return -1;
+        if (intel.getHandPoints() == 12) return 0;
 
         List<GameIntel.RoundResult> round = intel.getRoundResults();
+
+        if (intel.getOpponentScore() + intel.getHandPoints() >= 12) {
+            return 1;
+        }
 
         if (MaoGiga(intel) || MaoZapOuCopasEAsAtres(intel) || MaoZapOuCopasEFiguras(intel)) {
             if (intel.getScore() + intel.getHandPoints() >= 12) {
@@ -80,29 +84,46 @@ public class MalasiaBot implements BotServiceProvider {
             }
             if (round.isEmpty()) {
                 if (MaoLixo(intel) || MaoZapOuCopasEFiguras(intel) || MaoZapOuCopasEAsAtres(intel) ||
-                        MaoEspadaOuOuroEAsATres(intel) || MaoEspadasOuOurosEFiguras(intel)||MaoComDuasBoasSemManilha(intel))
+                        MaoEspadaOuOuroEAsATres(intel) || MaoEspadasOuOurosEFiguras(intel) || MaoComDuasBoasSemManilha(intel))
                     return true;
             }
         }
 
-        if (!round.isEmpty()){
-            if (round.get(0) == GameIntel.RoundResult.LOST){
-                if (MaoLixo(intel)||MaoComDuasBoasSemManilha(intel)||MaoEspadasOuOurosEFiguras(intel)||
-                        MaoEspadaOuOuroEAsATres(intel)||MaoZapOuCopasEAsAtres(intel)||MaoZapOuCopasEFiguras(intel)){
-                return true;
-                }
-            }
-            if (round.get(0) == GameIntel.RoundResult.WON){
-                if (MaoLixo(intel)||MaoComDuasBoasSemManilha(intel)||MaoEspadasOuOurosEFiguras(intel)||
-                        MaoEspadaOuOuroEAsATres(intel)||MaoZapOuCopasEAsAtres(intel)||MaoZapOuCopasEFiguras(intel)||
-                        MaoRuimComManilha(intel)||MaoMediaComUmaBoaCarta(intel)){
+        if (!round.isEmpty()) {
+            if (round.get(0) == GameIntel.RoundResult.LOST) {
+                if (MaoLixo(intel) || MaoComDuasBoasSemManilha(intel) || MaoEspadasOuOurosEFiguras(intel) ||
+                        MaoEspadaOuOuroEAsATres(intel) || MaoZapOuCopasEAsAtres(intel) || MaoZapOuCopasEFiguras(intel)) {
                     return true;
                 }
             }
-            if (round.get(0) == GameIntel.RoundResult.DREW){
-                if (MaoMediaComUmaBoaCarta(intel)||MaoComDuasBoasSemManilha(intel)||MaoRuimComManilha(intel)||
-                        MaoEspadasOuOurosEFiguras(intel)||MaoEspadaOuOuroEAsATres(intel)){
+            if (round.get(0) == GameIntel.RoundResult.WON) {
+                if (MaoLixo(intel) || MaoComDuasBoasSemManilha(intel) || MaoEspadasOuOurosEFiguras(intel) ||
+                        MaoEspadaOuOuroEAsATres(intel) || MaoZapOuCopasEAsAtres(intel) || MaoZapOuCopasEFiguras(intel) ||
+                        MaoRuimComManilha(intel) || MaoMediaComUmaBoaCarta(intel)) {
                     return true;
+                }
+            }
+            if (round.get(0) == GameIntel.RoundResult.DREW) {
+                if (MaoMediaComUmaBoaCarta(intel) || MaoComDuasBoasSemManilha(intel) || MaoRuimComManilha(intel) ||
+                        MaoEspadasOuOurosEFiguras(intel) || MaoEspadaOuOuroEAsATres(intel)) {
+                    return true;
+                }
+            }
+        }
+
+        if (intel.getOpponentCard().isPresent()) {
+            int opponentCardValue = intel.getOpponentCard().get().relativeValue(intel.getVira());
+
+            if (round.size() == 2 && intel.getOpponentCard().isPresent()) {
+                if (round.get(0) == GameIntel.RoundResult.WON && round.get(1) == GameIntel.RoundResult.LOST) {
+                    if (intel.getCards().get(0).relativeValue(intel.getVira()) > opponentCardValue) {
+                        return true;
+                    }
+                }
+                if (round.get(0) == GameIntel.RoundResult.LOST && round.get(1) == GameIntel.RoundResult.WON) {
+                    if (intel.getCards().get(0).relativeValue(intel.getVira()) > opponentCardValue) {
+                        return true;
+                    }
                 }
             }
         }

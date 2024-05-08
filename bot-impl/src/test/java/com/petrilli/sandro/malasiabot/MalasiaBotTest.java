@@ -415,5 +415,20 @@ public class MalasiaBotTest {
 
             assertTrue(malasiaBot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should raise if have better card than opponent in last hand")
+        void shouldRaiseIfHaveBetterCardThanOpponentInLastHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> Mao = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResultsWinLose, openCardsEmpty, vira, 1)
+                    .botInfo(Mao, 0)
+                    .opponentScore(0).opponentCard(QueenOfDiamonds);
+
+            assertTrue(malasiaBot.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
