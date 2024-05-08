@@ -445,10 +445,10 @@ class PatriciaAparecidaTest {
             class WeStart {
 
                 @Test
-                @DisplayName("Should re-raise when prob < 11 ")
-                public void ShouldReRaiseWhenProbLowerThan11() {
+                @DisplayName("Should re-raise when prob < 60 ")
+                public void ShouldReRaiseWhenProbLowerThan60() {
 
-                    List<TrucoCard> botCards = List.of(TrucoCard.of(SEVEN, DIAMONDS));
+                    List<TrucoCard> botCards = List.of(TrucoCard.of(JACK, DIAMONDS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(LOST, WON));
@@ -459,10 +459,10 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should accept when 11 < prob < 22 ")
-                public void ShouldAcceptWhenProbBetween11and22() {
+                @DisplayName("Should accept when 60 < prob < 70 ")
+                public void ShouldAcceptWhenProbBetween60and70() {
 
-                    List<TrucoCard> botCards = List.of(TrucoCard.of(THREE, DIAMONDS));
+                    List<TrucoCard> botCards = List.of(TrucoCard.of(QUEEN, SPADES));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX, SPADES));
                     when(intel.getRoundResults()).thenReturn(List.of(LOST, WON));
@@ -472,8 +472,8 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should quit if prob > 22 ")
-                public void ShouldQuitWhenProbBigger22(){
+                @DisplayName("Should quit if prob > 70 ")
+                public void ShouldQuitWhenProbBigger70(){
                     List<TrucoCard> botCards = List.of(TrucoCard.of(SIX,HEARTS));
                     when(intel.getCards()).thenReturn(botCards);
                     when(intel.getVira()).thenReturn(TrucoCard.of(SIX,SPADES));
@@ -493,8 +493,8 @@ class PatriciaAparecidaTest {
             @DisplayName("We Start")
             class WeStart {
                 @Test
-                @DisplayName("Should re-raise when prob < 11 to min 2 Cards")
-                public void ShouldReRaisetWhenProbLower11ToMin2Cards() {
+                @DisplayName("Should re-raise when prob < 60 to min 2 Cards")
+                public void ShouldReRaisetWhenProbLower60ToMin2Cards() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, SPADES),
                             TrucoCard.of(SEVEN, HEARTS),
@@ -523,8 +523,8 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should quit when prob > 22 to min 2 cards")
-                public void ShouldQuitWhenProbBiggerThan22(){
+                @DisplayName("Should quit when prob > 70 to min 2 cards")
+                public void ShouldQuitWhenProbBiggerThan70(){
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(FOUR,HEARTS),
                             TrucoCard.of(FOUR,SPADES),
@@ -542,8 +542,8 @@ class PatriciaAparecidaTest {
             @DisplayName("Opponent Start")
             class OpponentStart {
                 @Test
-                @DisplayName("Should re-raise when can win and prob < 11 to another card")
-                public void ShouldReRaiseWhenCanWinAndProbLowerThan11ToAnotherCard() {
+                @DisplayName("Should re-raise when can win and prob < 60 to another card")
+                public void ShouldReRaiseWhenCanWinAndProbLowerThan60ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(THREE, HEARTS),
@@ -587,8 +587,8 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should quit when can win and prob > 22 to another card")
-                public void ShouldQuitWhenCanWinAndProbBiggerThan22ToAnotherCard(){
+                @DisplayName("Should quit when can win and prob > 70 to another card")
+                public void ShouldQuitWhenCanWinAndProbBiggerThan70ToAnotherCard(){
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(FOUR, HEARTS),
@@ -612,8 +612,8 @@ class PatriciaAparecidaTest {
             class WeStart {
 
                 @Test
-                @DisplayName("Should re-raise when prob < 11 to min 1 card")
-                public void ShouldReRaiseWhenProbLowerThan11ToMin1Card() {
+                @DisplayName("Should re-raise when prob < 60 to min 1 card")
+                public void ShouldReRaiseWhenProbLowerThan60ToMin1Card() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(FOUR,SPADES));
@@ -627,7 +627,7 @@ class PatriciaAparecidaTest {
 
                 @Test
                 @DisplayName("Should accept when (60 < prob < 70) to min 1 card")
-                public void ShouldAcceptWhenProbBetween11and22ToMin1Card() {
+                public void ShouldAcceptWhenProbBetween60and70ToMin1Card() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(KING, CLUBS),
                             TrucoCard.of(KING,SPADES));
@@ -640,8 +640,8 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should quit when prob > 22 to all cards")
-                public void ShouldQuitWhenProbLowerThan22ToAllCArds() {
+                @DisplayName("Should quit when prob > 70 to all cards")
+                public void ShouldQuitWhenProbLowerThan70ToAllCArds() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(FOUR, CLUBS),
                             TrucoCard.of(FOUR,SPADES));
@@ -659,8 +659,8 @@ class PatriciaAparecidaTest {
             @DisplayName("Opponent Start")
             class OpponentStart{
                 @Test
-                @DisplayName("Should re-raise when can win and prob < 11 to another card")
-                public void ShouldReRaiseWhenCanWinAndProbLowerThan11ToAnotherCard() {
+                @DisplayName("Should re-raise when can win and prob < 60 to another card")
+                public void ShouldReRaiseWhenCanWinAndProbLowerThan60ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SEVEN, CLUBS),
                             TrucoCard.of(THREE, HEARTS));
@@ -675,7 +675,7 @@ class PatriciaAparecidaTest {
 
                 @Test
                 @DisplayName("Should accept when can win and (60 < prob < 70) to another card")
-                public void ShouldAcceptWhenCanWinAndProbBetween11And21ToAnotherCard() {
+                public void ShouldAcceptWhenCanWinAndProbBetween60And70ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(SIX, DIAMONDS),
                             TrucoCard.of(SEVEN, CLUBS));
@@ -702,8 +702,8 @@ class PatriciaAparecidaTest {
                 }
 
                 @Test
-                @DisplayName("Should quit when can win and prob > 22")
-                public void ShouldQuitWhenCanWinAndProbBiggerThan22ToAnotherCard() {
+                @DisplayName("Should quit when can win and prob > 70")
+                public void ShouldQuitWhenCanWinAndProbBiggerThan70ToAnotherCard() {
                     List<TrucoCard> botCards = List.of(
                             TrucoCard.of(TWO, CLUBS),
                             TrucoCard.of(FOUR, HEARTS));
