@@ -68,5 +68,27 @@ class JormungandrBotTest {
                     jormungandrBot.getLowestCardInHand(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("Should return lowest card even accounting for manilha value")
+        void shouldReturnLowestCardInHandEvenWhenManilhaIsLow() {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    jormungandrBot.getLowestCardInHand(stepBuilder.build())
+            );
+        }
     }
 }
