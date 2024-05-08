@@ -338,10 +338,10 @@ class JakareDuMatuBotTest {
                     .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
                     .build();
 
-            assertThat(jakareDuMatuBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
 
-        // Se não tiver feito a primeira jogar a carta mais forte caso seja o primeiro a jogar
+
         // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
         @Test
         @DisplayName("Decide that you will ask for tricks in the first round with an older couple")//Se tiver feito a primeira
@@ -391,6 +391,32 @@ class JakareDuMatuBotTest {
             assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(0).getRank().value(), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS).getRank().value());
             assertEquals(jakareDuMatuBot.sortedListCards(intel, vira).get(2).getRank().value(), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS).getRank().value());
 
+        }
+    }
+
+    @Nested
+    @DisplayName("hasCardHigherThan")
+    class hasCardHigherThan{
+
+        @Test
+        @DisplayName("Should returns if some card of list can win")
+        public void ShouldReturnsIfHasCardHighterThanSomeCard(){
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+            List<GameIntel.RoundResult> roundResults = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                    .build();
+
+            assertEquals(jakareDuMatuBot.hasCardHigherThan(intel, intel.getOpponentCard().get()), true);
         }
     }
 

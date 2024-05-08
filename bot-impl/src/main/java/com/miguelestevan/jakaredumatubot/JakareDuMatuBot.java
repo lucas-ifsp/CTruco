@@ -86,6 +86,16 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 // Second Hand
                 // Responder a carta do oponente
                 if(intel.getOpponentCard().isPresent()){
+                    // Se tiver carta que mata
+                    if (hasCardHigherThan(intel, intel.getOpponentCard().get())){
+                        List<TrucoCard> list = sortedListCards(intel, intel.getVira());
+                        if(list.get(1).compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0){
+                            return CardToPlay.of(list.get(1));
+                        }
+                        return CardToPlay.of(list.get(0));
+                    }
+                    // Se não tiver carta -> retornar a carta mais fraca
+                    return CardToPlay.of(sortedListCards(intel, intel.getVira()).get(1));
 
                 }
                 return null;
