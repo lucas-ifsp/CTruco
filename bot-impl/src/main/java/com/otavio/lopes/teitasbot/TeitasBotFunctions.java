@@ -19,40 +19,6 @@ public class TeitasBotFunctions {
         return cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
-    static CardToPlay chooseCardToPlayAtFirstStrongHand(List<TrucoCard> cards, TrucoCard vira) {
-        //primeiro round e temos a ma forte.
-
-        cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-
-        boolean isStrong =hasStrongHand(cards, vira);
-
-        if (isStrong && cards.size() >= 2) {
-            return CardToPlay.of(cards.get(1));
-        }
-
-        return CardToPlay.of(cards.get(0));
-    };
-
-    static CardToPlay chooseCardToPlaySecondIfWonFirst(List<TrucoCard> cards, TrucoCard vira) {
-
-        List<TrucoCard> mutableCards = new ArrayList<>(cards);
-        mutableCards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
-        return CardToPlay.of(mutableCards.get(0));
-
-    }
-
-
-    static CardToPlay cbooseCardToPlaySecondIfLooseFirst(List<TrucoCard> cards, TrucoCard vira) {
-        //segundo round e temos a mao forte
-
-        return chooseCardToPlaySecondIfWonFirst(cards, vira);
-
-    }
-    static CardToPlay chooseCardToPlayThird(List<TrucoCard> cards, TrucoCard vira) {
-        return cbooseCardToPlaySecondIfLooseFirst(cards, vira);
-    }
-
-
     static Boolean hasNutsHand(List<TrucoCard> cards, TrucoCard vira) {
         //we have the best one. manilha + zap + 3.
         boolean hasZap = hasZap(cards, vira);

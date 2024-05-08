@@ -38,17 +38,22 @@ public class TeitasBot implements BotServiceProvider {
 
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
+        Boolean handNuts = TeitasBotFunctions.hasNutsHand(cards,vira);
+        Boolean handStrong = TeitasBotFunctions.hasStrongHand(cards,vira);
+        Boolean handGood = TeitasBotFunctions.hasGoodHand(cards,vira);
+        Boolean handTrash = TeitasBotFunctions.hasTrashHand(cards,vira);
 
-        TrucoCard bestCard = null;
-        TrucoCard secondBestCard = null;
-        TrucoCard worstCard = null;
+
+        TrucoCard bestCard = TeitasBotFunctions.getStrongestCard(cards,vira);
+        TrucoCard secondBestCard = TeitasBotFunctions.getMiddleCardLevel(cards,vira);
+        TrucoCard worstCard = TeitasBotFunctions.getWeakestCard(cards,vira);
 
 
-        /*
-        if(TeitasBotFunctions.firstToPlay(intel)) {
+
+        if(TeitasBotFunctions.firstToPlay(intel) & ) {
             return secondBestCard;
         }
-        */
+
         return null;
     }
 
