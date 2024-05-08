@@ -500,13 +500,12 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should not Raise on first round if highest card is a Three")
     void shouldNotRaiseOnFirstRoundIfHighestCardIsThree() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
-        TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getScore()).thenReturn(0);  // O score inicial do jogo
+        int playerScore = 0;
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+        card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        setupCardsViraAndScore(Arrays.asList(card1, card2, card3), vira, playerScore);
         assertFalse(patoBot.decideIfRaises(intel));
     }
 
