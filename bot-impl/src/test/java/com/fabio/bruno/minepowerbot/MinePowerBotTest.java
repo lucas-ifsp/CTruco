@@ -140,6 +140,19 @@ class MinePowerBotTest {
         assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should respond raise with quit")
+    void shouldRespondRaiseWithQuit() {
+        intel = create()
+                .viraToBe(CardRank.FIVE, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
