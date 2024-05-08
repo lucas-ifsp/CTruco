@@ -214,15 +214,13 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should play a weaker card if unable to defeat opponent's card and is second to Play First Round ")
     public void shouldPlayWeakerCardIfCannotDefeatOpponentAndIsSecondToPLayFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-        TrucoCard card3 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        CardToPlay expected = CardToPlay.of(card3);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        card3 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        expected = CardToPlay.of(card3);
+        setupCardsViraAndOpponentCard(Arrays.asList(card1, card2, card3), vira, Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
