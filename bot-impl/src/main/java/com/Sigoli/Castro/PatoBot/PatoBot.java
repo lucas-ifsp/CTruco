@@ -16,16 +16,16 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (isMaoDeOnze(intel)) return false;
-        if (intel.getRoundResults().isEmpty()) {
-            return checkIfRaiseGame(intel);
-        } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            return checkIfRaiseGame(intel);
-        }
+        if (getGameResults(intel)) {return checkIfRaiseGame(intel);}
         return false;
     }
 
     private static boolean isMaoDeOnze(GameIntel intel) {
         return intel.getScore() == 11 || intel.getOpponentScore() == 11;
+    }
+
+    private static boolean getGameResults(GameIntel intel){
+        return intel.getRoundResults().isEmpty() || intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
     }
 
     @Override
