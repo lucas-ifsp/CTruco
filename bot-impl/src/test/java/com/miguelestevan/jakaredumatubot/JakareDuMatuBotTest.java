@@ -80,7 +80,7 @@ class JakareDuMatuBotTest {
         @Test
         @DisplayName("Should accept mao de onze if have high card and any manilha")
         public void ShouldAcceptMaoDeOnzeIfHaveHighCardAndAnyManilha(){
-            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
             // Game info
             List<GameIntel.RoundResult> roundResults = List.of();
@@ -89,7 +89,7 @@ class JakareDuMatuBotTest {
             // Bot info
             List<TrucoCard> botCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES)
             );
 
@@ -341,6 +341,7 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.chooseCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
+
         // Se não tiver feito a primeira jogar a carta mais forte caso seja o primeiro a jogar
         // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
         @Test
