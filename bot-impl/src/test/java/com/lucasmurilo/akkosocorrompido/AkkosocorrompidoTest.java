@@ -250,7 +250,7 @@ public class AkkosocorrompidoTest {
             .build();
 
         
-        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestRankInHand(intel));
+        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestCardInHand(intel));
     }
 
     @Test
@@ -272,6 +272,6 @@ public class AkkosocorrompidoTest {
             .build();
 
         
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getHighestRankInHand(intel));
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getHighestCardInHand(intel));
     }
 }

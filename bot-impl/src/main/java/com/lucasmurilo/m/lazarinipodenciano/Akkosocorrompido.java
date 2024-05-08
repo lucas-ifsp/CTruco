@@ -63,7 +63,7 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     //low card
-    public TrucoCard getLowestRankInHand(GameIntel intel) {
+    public TrucoCard getLowestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
@@ -76,7 +76,7 @@ public class Akkosocorrompido implements BotServiceProvider {
         return lowestCard;
       }
     //high card
-    public TrucoCard getHighestRankInHand(GameIntel intel) {
+    public TrucoCard getHighestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
@@ -102,8 +102,9 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     //lowtowin
-    public TrucoCard getLowestCardToWin(List<TrucoCard> botCards, TrucoCard opponentCard, TrucoCard vira){
+    public TrucoCard getLowestCardToWin(List<TrucoCard> botCards, GameIntel intel){
         TrucoCard lowestCardToWin = botCards.get(0);
+        TrucoCard vira = intel.getVira();
 
         for (TrucoCard trucoCard : botCards) {
             if (trucoCard.relativeValue(vira) > opponentCard.relativeValue(vira)) {
@@ -117,7 +118,7 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     public CardToPlay chooseCardFirstRound(GameIntel intel){
         if (haveHighCardInHand(intel)) {
-            return CardToPlay.of(getHighestRankInHand(intel));
+            return CardToPlay.of(getHighestCardInHand(intel));
         }
         //se o oponente jogou primeiro
         //return CardToPlay.of(getLowestCardToWin(intel.getCards(), intel.getOpponentCard(), intel.getVira()));        
@@ -125,14 +126,14 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){
-
+        
         return CardToPlay.of(intel.getCards().get(0));
     }
 
     public CardToPlay chooseCardThirdRound(GameIntel intel){
         return CardToPlay.of(intel.getCards().get(0));
     }
-    
+
     public int getCurrentRoundNumber(GameIntel intel){
         return intel.getRoundResults().size()+ 1;
     }
