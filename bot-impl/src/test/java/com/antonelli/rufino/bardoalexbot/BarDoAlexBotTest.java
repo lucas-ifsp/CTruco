@@ -117,8 +117,8 @@ public class BarDoAlexBotTest {
 //            assertThat(bot.decideIfRaises(intel)).isFalse();
         }
         @Test
-        @DisplayName("Should not run with has 2 or more manilhias")
-        void ShouldNotRunWithWasTwoOrMoreManihas(){
+        @DisplayName("Should re raise with has 2 or more manilhias")
+        void ShouldReRaiseWithWasTwoOrMoreManihas(){
             List<TrucoCard> botCards = List.of(
                     TrucoCard.of(TWO, DIAMONDS),
                     TrucoCard.of(THREE, HEARTS),
@@ -130,7 +130,7 @@ public class BarDoAlexBotTest {
                     .opponentScore(0);
 
             int result = sut.getRaiseResponse(intel.build());
-            assertThat(result).isEqualTo(0);
+            assertThat(result).isEqualTo(1);
         }
         @Test
         @DisplayName("Should raise if has two or more manilhias")
