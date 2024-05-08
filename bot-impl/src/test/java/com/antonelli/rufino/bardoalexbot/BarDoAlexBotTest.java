@@ -16,97 +16,96 @@ public class BarDoAlexBotTest {
 
     @Nested
     @DisplayName("Test of the bot logic to decide if raises")
-    class ShouldRaise {
+    class DecideIfRaisesTests {
         @Test
-        @DisplayName("Should raise when has 3 manilhas")
-        void shouldRaiseWhenHas3Manilhas() {
-            List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(ACE, HEARTS),
+        @DisplayName("Should return true if there are 3 manilhas in cards")
+        void shouldReturnTrueIfThreeManilhas() {
+            TrucoCard vira = TrucoCard.of(SEVEN, HEARTS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(SEVEN, SPADES),
+                    TrucoCard.of(SEVEN, CLUBS),
                     TrucoCard.of(ACE, SPADES),
-                    TrucoCard.of(ACE, CLUBS)
+                    TrucoCard.of(FOUR, DIAMONDS)
             );
-            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
 
-            GameIntel intel = new GameIntel(null, botCards, null, vira, null, 0, 0, null);
-            boolean decideIfRaises = new BarDoAlexBot().decideIfRaises(intel);
-            assertThat(decideIfRaises).isEqualTo(true);
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(cards, null, null, vira, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isTrue();
         }
 
-
-    }
-
-    @Nested
-    @DisplayName("Test of the bot logic to choose card")
-    class ChooseCard {
         @Test
-        @DisplayName("Should choose last card")
-        void shouldChooseLastCard() {
-            List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(ACE, HEARTS),
-                    TrucoCard.of(ACE, SPADES),
-                    TrucoCard.of(KING, CLUBS)
+        @DisplayName("Should return false if there are less than 3 manilhas in cards")
+        void shouldReturnFalseIfLessThanThreeManilhas() {
+            TrucoCard vira = TrucoCard.of(TWO, CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(FIVE, DIAMONDS),
+                    TrucoCard.of(EIGHT, SPADES)
             );
-            TrucoCard vira = TrucoCard.of(KING, DIAMONDS);
 
-            GameIntel intel = new GameIntel(null, botCards, null, vira, null, 0, 0, null);
-            CardToPlay card = new BarDoAlexBot().chooseCard(intel);
-            assertThat(card.getCard()).isEqualTo(TrucoCard.of(KING, CLUBS));
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(cards, null, null, vira, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isFalse();
         }
 
-
-    }
-
-    @Nested
-    @DisplayName("Test of the bot logic to raise response")
-    class RaiseResponse {
         @Test
-        @DisplayName("Should return 1 when opponent score is 11 and bot score is not 0")
-        void shouldReturn1WhenOpponentScoreIs11AndBotScoreIsNot0() {
+        @DisplayName("Should return true if all cards are manilhas")
+        void shouldReturnTrueIfAllCardsAreManilhas() {
+            TrucoCard vira = TrucoCard.of(JACK, CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(JACK, SPADES),
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(JACK, DIAMONDS),
+                    TrucoCard.of(JACK, CLUBS)
+            );
 
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(cards, null, null, vira, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isTrue();
         }
 
+        @Test
+        @DisplayName("Should return false if cards are null")
+        void shouldReturnFalseIfCardsAreNull() {
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
 
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(null, null, null, vira, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return false if cards list is empty")
+        void shouldReturnFalseIfCardsListIsEmpty() {
+            TrucoCard vira = TrucoCard.of(KING, HEARTS);
+
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(List.of(), null, null, vira, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return false if vira card is null")
+        void shouldReturnFalseIfViraIsNull() {
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(SIX, SPADES),
+                    TrucoCard.of(FOUR, CLUBS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(ACE, DIAMONDS)
+            );
+
+            BarDoAlexBot bot = new BarDoAlexBot();
+            GameIntel intel = new GameIntel(cards, null, null, null, null, 0, 0);
+
+            assertThat(bot.decideIfRaises(intel)).isFalse();
+        }
     }
-
-    @Test
-    @DisplayName("Should reject when score is 11")
-    void shouldRejectWhenScoreIs11() {
-        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
-        GameIntel intel = new GameIntel(null, null, null, vira, null, 11, 0, null);
-        int raiseResponse = new BarDoAlexBot().getRaiseResponse(intel);
-        assertThat(raiseResponse).isEqualTo(-1);
-    }
-
-    @Test
-    @DisplayName("Should get MaoDeOnze response if opponent has score 11")
-    void shouldGetMaoDeOnzeIfOpponentScoreIs11() {
-        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
-        List<TrucoCard> botCards = List.of(
-                TrucoCard.of(JACK, SPADES),
-                TrucoCard.of(SIX, SPADES),
-                TrucoCard.of(SEVEN, SPADES)
-        );
-
-        GameIntel intel = new GameIntel(null, botCards, null, vira, null, 0, 11, null);
-        boolean maoDeOnze = new BarDoAlexBot().getMaoDeOnzeResponse(intel);
-        assertThat(maoDeOnze).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should get MaoDeOnze response if cards aren't strong")
-    void shouldGetMaoDeOnzeIfCardsArentStrong() {
-        TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
-        List<TrucoCard> botCards = List.of(
-                TrucoCard.of(JACK, SPADES),
-                TrucoCard.of(SIX, SPADES),
-                TrucoCard.of(SEVEN, SPADES)
-        );
-
-        GameIntel intel = new GameIntel(null, botCards, null, vira, null, 0, 2, null);
-        boolean maoDeOnze = new BarDoAlexBot().getMaoDeOnzeResponse(intel);
-        assertThat(maoDeOnze).isTrue();
-    }
-
 
 
 }

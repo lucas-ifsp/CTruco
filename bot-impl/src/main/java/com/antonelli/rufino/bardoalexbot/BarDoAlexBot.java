@@ -18,7 +18,7 @@ public class BarDoAlexBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard chosenCard = cards.get(cards.size() - 1);
-        return new CardToPlay(chosenCard, true);
+        return CardToPlay.of(chosenCard);
     }
 
     public int getRaiseResponse(GameIntel intel) {
