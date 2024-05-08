@@ -58,7 +58,7 @@ public class SlayerBotTest {
         roundResults = List.of();
         vira = TrucoCard.of(FIVE, HEARTS);
         cards = List.of(
-                TrucoCard.of(SIX, DIAMONDS),
+                TrucoCard.of(SIX, HEARTS),
                 TrucoCard.of(SIX, CLUBS),
                 TrucoCard.of(SEVEN, SPADES));
 

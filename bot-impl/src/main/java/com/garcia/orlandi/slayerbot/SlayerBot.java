@@ -84,11 +84,14 @@ public class SlayerBot implements BotServiceProvider {
             }
         }
 
+        boolean hasZap = cards.stream()
+                .anyMatch(card -> card.isZap(vira));
+
+        boolean hasCopas = cards.stream()
+                .anyMatch(card -> card.isCopas(vira));
+
         if (opponentCard.isPresent()) {
             TrucoCard opponent = TrucoCard.of(opponentCard.get().getRank(), opponentCard.get().getSuit());
-
-            boolean hasZap = cards.stream()
-                    .anyMatch(card -> card.isZap(vira));
 
             boolean hasWinningCard = cards.stream()
                     .anyMatch(card -> card.compareValueTo(opponent, vira) > 0);
@@ -96,6 +99,11 @@ public class SlayerBot implements BotServiceProvider {
             // Pede truco se tiver  zap e uma carta que vence
             return hasZap && hasWinningCard;
         }
+
+        if(hasZap && hasCopas){
+            return true;
+        }
+
         return false;
     }
 
