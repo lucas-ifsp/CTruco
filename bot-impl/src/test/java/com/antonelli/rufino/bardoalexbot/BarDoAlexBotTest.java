@@ -148,6 +148,30 @@ public class BarDoAlexBotTest {
             boolean result = sut.decideIfRaises(intel.build());
             assertThat(result).isTrue();
         }
+        @Test
+        @DisplayName("Should accept raise, winning the first round with 1 or more manilhias")
+        void ShouldAcceptRaiseWinningTheFirstRoundWithOneOrMoreManilhias(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(TWO, DIAMONDS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, CLUBS)
+            );
+
+            TrucoCard vira = TrucoCard.of(TWO,HEARTS);
+            List<GameIntel.RoundResult> round_results = List.of(WON);
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    botCards.get(0),
+                    TrucoCard.of(ACE,DIAMONDS)
+            );
+            intel = GameIntel.StepBuilder.with().gameInfo(round_results,List.of(),vira,1).botInfo(botCards,0)
+                    .opponentScore(0);
+
+            int result = sut.getRaiseResponse(intel.build());
+            assertThat(result).isEqualTo(0);
+
+        }
+
     }
 
 
