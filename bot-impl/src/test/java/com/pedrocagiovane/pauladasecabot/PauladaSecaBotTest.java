@@ -612,6 +612,17 @@ public class PauladaSecaBotTest {
             boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertThat(result).isFalse();
         }
+        @Test
+        @DisplayName("Mao de onze: nao aceita se oponente tiver mais que 5 pontos e tiver uma mao levemente boa")
+        void MaoOnzeNaoAceitaSeOponenteTiver5PontosEMaoNaoForForte() {
+            maoPlayer = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(ACE, SPADES));
+            vira = TrucoCard.of(FIVE, SPADES);
+            roundResult = List.of();
+            cartas = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(6);
+            boolean result = pauladaSecaBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertThat(result).isFalse();
+        }
     }
 
 
