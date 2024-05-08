@@ -114,6 +114,19 @@ class MinePowerBotTest {
         assertThat(sut.decideIfRaises(intel)).isFalse();
     }
 
+    @Test
+    @DisplayName("Should respond raise if has strong cards")
+    void shouldRespondRaiseIfHasStrongCards() {
+        intel = create()
+                .viraToBe(CardRank.TWO, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
     @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
