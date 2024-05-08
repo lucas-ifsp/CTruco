@@ -27,7 +27,7 @@ public class NewBot implements BotServiceProvider {
         return decideStrategyToPlay(getRound(intel)).getRaiseResponse(intel);
     }
 
-    private StrategyByRound decideStrategyToPlay(int round) {
+    private BotServiceProvider decideStrategyToPlay(int round) {
         return switch (round) {
             case 0 -> new FirstRoundStrategy();
             case 1 -> new SecondRoundStrategy();

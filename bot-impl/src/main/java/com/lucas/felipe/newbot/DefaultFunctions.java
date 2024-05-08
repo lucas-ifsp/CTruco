@@ -26,6 +26,22 @@ public class DefaultFunctions {
     }
 
     protected boolean isPowerfull(List<TrucoCard> ordenedCards){
-        return ordenedCards.get(2).relativeValue(vira) >= 9 && ordenedCards.get(1).relativeValue(vira) >= 9;
+        if (ordenedCards.size() == 3) {
+            return ordenedCards.get(2).relativeValue(vira) >= 9 && ordenedCards.get(1).relativeValue(vira) >= 9;
+        } else if (ordenedCards.size() == 2) {
+            return ordenedCards.get(1).relativeValue(vira) >= 9 && ordenedCards.get(0).relativeValue(vira) >= 9;
+        } else {
+            return ordenedCards.get(0).relativeValue(vira) >= 9;
+        }
+    }
+
+    protected boolean isMedium(List<TrucoCard> ordenedCards){
+        if (ordenedCards.size() == 3) {
+            return ordenedCards.get(2).relativeValue(vira) >= 7 && ordenedCards.get(1).relativeValue(vira) >= 7;
+        } else if (ordenedCards.size() == 2) {
+            return ordenedCards.get(1).relativeValue(vira) >= 7 && ordenedCards.get(0).relativeValue(vira) >= 7;
+        } else {
+            return ordenedCards.get(0).relativeValue(vira) >= 7;
+        }
     }
 }

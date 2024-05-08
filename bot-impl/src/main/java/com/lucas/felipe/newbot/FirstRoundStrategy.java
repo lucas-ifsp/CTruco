@@ -3,13 +3,14 @@ package com.lucas.felipe.newbot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class FirstRoundStrategy implements StrategyByRound{
+public class FirstRoundStrategy implements BotServiceProvider {
     private List<TrucoCard> roundCards;
     private List<TrucoCard> ordendedCards; // ascending order
     private TrucoCard vira;
@@ -30,7 +31,7 @@ public class FirstRoundStrategy implements StrategyByRound{
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         if (hasCasalMaior(ordendedCards)) return 1;
-        if (hasThreeOrBetter(ordendedCards)) return 0;
+        if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
         if (opponentCard.isPresent()){
             if (ordendedCards.size() == 3){
                 if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0){
@@ -52,9 +53,9 @@ public class FirstRoundStrategy implements StrategyByRound{
         setCards(intel);
         int opponentScore = intel.getOpponentScore();
         boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
-        if (opponentScore <= 6){
-            return isPowerfull;
-        } else return hasThreeOrBetter(ordendedCards);
+        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
+        if (opponentScore <= 6) return isMedium;
+        return isPowerfull;
     }
 
     @Override
@@ -92,11 +93,6 @@ public class FirstRoundStrategy implements StrategyByRound{
 
     private int getNumberOfManilhas(List<TrucoCard> ordendedCards) {
         return (int) ordendedCards.stream().filter(c -> c.isManilha(vira)).count();
-    }
-
-    private boolean hasThreeOrBetter(List<TrucoCard> ordendedCards){
-        if (ordendedCards.size() == 3) return ordendedCards.get(1).relativeValue(vira) >= 9 && ordendedCards.get(2).relativeValue(vira) >= 9;
-        else return ordendedCards.get(0).relativeValue(vira) >= 9 && ordendedCards.get(1).relativeValue(vira) >= 9;
     }
 
     private boolean hasCasalMaior(List<TrucoCard> ordendedCards){
