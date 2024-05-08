@@ -532,12 +532,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should decline 'Truco' if i have a Three and 'Manilha' in hand and lost the first round")
     public void shouldDeclineTrucoIfIHaveAThreeAndManilhaInHandAndLostTheFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
-        TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        card2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        setupCardsViraAndRoundResult(Arrays.asList(card1, card2), vira, List.of(GameIntel.RoundResult.LOST));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(-1);
     }
 
