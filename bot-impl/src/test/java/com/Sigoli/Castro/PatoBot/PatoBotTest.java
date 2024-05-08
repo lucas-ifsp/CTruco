@@ -580,12 +580,10 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should accept 'Truco' if i have strong cards in hand and win the first round")
     public void shouldAcceptTrucoIfIHaveStrongCardsInHandAndWinTheFirstRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
-        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
-        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        card2 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        setupCardsViraAndRoundResult(Arrays.asList(card1, card2), vira, List.of(GameIntel.RoundResult.WON));
         assertThat(patoBot.getRaiseResponse(intel)).isEqualTo(0);
     }
 
