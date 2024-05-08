@@ -1153,6 +1153,29 @@ public class ChatGptBotTest {
             assertEquals(1, sut.getRaiseResponse(intel.build()));
         }
 
+        @Test
+        @DisplayName("Should raise to 12 if has 2 manilhas in the first round")
+        void ShouldRaiseTo12IfHas2ManilhasInTheFirstRound() {
+            TrucoCard vira = TrucoCard.of(KING, SPADES);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(KING, HEARTS)
+            );
+
+            List<TrucoCard> openCards = Collections.singletonList(
+                    TrucoCard.of(CardRank.KING, SPADES)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 9)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(1, sut.getRaiseResponse(intel.build()));
+        }
+
 
     }
 
