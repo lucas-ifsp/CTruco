@@ -361,12 +361,11 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should raise when holding a three and a manilha as strong as or stronger than spade")
     public void shouldRaiseIfGotThreeAndManilhaEqualsToOrStrongerThanSpade() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        setupCardsAndVira(Arrays.asList(card1, card2, card3), vira);
         assertTrue(patoBot.decideIfRaises(intel));
     }
 
