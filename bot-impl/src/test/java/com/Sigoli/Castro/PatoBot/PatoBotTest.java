@@ -337,14 +337,12 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should Reject 'Mão de Onze' if stronger card is a two")
     public void shouldRejectMaoDeOnzeIfStrongerCardIsTwo() {
-        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
         int opponentScore = 5;
-        when(intel.getOpponentScore()).thenReturn(opponentScore);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-        when(intel.getVira()).thenReturn(vira);
+        card1 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+        setupCardsViraAndOpponentScore(Arrays.asList(card1, card2, card3), vira, opponentScore);
         assertFalse(patoBot.getMaoDeOnzeResponse(intel));
     }
 
