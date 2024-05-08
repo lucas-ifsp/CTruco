@@ -60,37 +60,27 @@ public class ChatGptBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isEmpty()){
-            if (handStrength(intel) <= 9){
-                return CardToPlay.of(weakestCard(intel));
-            }
-            if (handStrength(intel) <= 21){
-                return CardToPlay.of(strongestCard(intel));
-            }
-            if (handStrength(intel) > 21){
-                return CardToPlay.of(strongestCard(intel));
-            }
-            if (hasManilha(intel) && (handStrength(intel) > 21)){
-                return CardToPlay.of(strongestCardExceptManilha(intel));
-            }
-            if (hasManilha(intel) && (handStrength(intel) <= 21)){
-                return CardToPlay.of(strongestCard(intel));
-            }
-        }
-        if (intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()){
-            return CardToPlay.of(whenRespondingOpponentCard(intel));
-        }
-        if ((intel.getRoundResults().size() == 1) && intel.getOpponentCard().isEmpty()){
-            if (handStrength(intel) <= 14 && !hasManilha(intel)){
-                return CardToPlay.of(strongestCard(intel));
+        if (intel.getRoundResults().isEmpty()) {
+            if (intel.getOpponentCard().isEmpty()) {
+                if (handStrength(intel) <= 9) {
+                    return CardToPlay.of(weakestCard(intel));
+                } else {
+                    return CardToPlay.of(strongestCard(intel));
+                }
             } else {
-                return CardToPlay.of(weakestCard(intel));
+                return CardToPlay.of(whenRespondingOpponentCard(intel));
+            }
+        } else if (intel.getRoundResults().size() == 1) {
+            if (intel.getOpponentCard().isEmpty()) {
+                if (handStrength(intel) <= 14 && !hasManilha(intel)) {
+                    return CardToPlay.of(strongestCard(intel));
+                } else {
+                    return CardToPlay.of(weakestCard(intel));
+                }
+            } else {
+                return CardToPlay.of(whenRespondingOpponentCardInTheSecondRound(intel));
             }
         }
-        if (intel.getRoundResults().size() == 1 && intel.getOpponentCard().isPresent()){
-            return CardToPlay.of(whenRespondingOpponentCardInTheSecondRound(intel));
-        }
-
         return CardToPlay.of(intel.getCards().get(0));
     }
 
