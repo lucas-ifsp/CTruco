@@ -5,6 +5,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 public class JormungandrBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -29,6 +32,10 @@ public class JormungandrBot implements BotServiceProvider {
     @Override
     public String getName() {
         return "Jörmungandr";
+    }
+
+    Optional<TrucoCard> getCardToTieOpponentsCard(GameIntel intel) {
+        return Optional.empty();
     }
 
     TrucoCard getLowestCardInHand(GameIntel intel) {

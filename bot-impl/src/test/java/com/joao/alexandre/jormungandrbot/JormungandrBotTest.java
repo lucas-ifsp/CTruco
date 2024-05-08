@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -158,6 +159,33 @@ class JormungandrBotTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                     jormungandrBot.getHighestCardInHand(stepBuilder.build())
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("Testing getCardToTieOpponentsCard() function")
+    class GetCardToTieOpponentsCardTest {
+
+        @Test
+        @DisplayName("When player only has higher cards than opponent, should return empty")
+        void shouldReturnEmptyWhenSelfOnlyHasHigherCardThanOpponent() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertTrue(jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build()).isEmpty());
         }
     }
 }
