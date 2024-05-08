@@ -177,14 +177,12 @@ public class PatoBotTest {
     @Test
     @DisplayName("Should discard the lowest card if my hand doesn't have a card that wins the second round")
     public void shouldDiscardTheLowestCardIfMyHandDoesntHaveACardThatWinsTheSecondRound() {
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        CardToPlay expected = CardToPlay.of(card2);
-        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-        when(intel.getVira()).thenReturn(vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+        card1 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        expected = CardToPlay.of(card2);
+        setupCardsViraAndOpponentCard(Arrays.asList(card1, card2), vira, Optional.ofNullable(opponentCard));
         assertThat(patoBot.chooseCard(intel)).isEqualTo(expected);
     }
 
