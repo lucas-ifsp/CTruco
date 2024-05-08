@@ -536,4 +536,20 @@ class JakareDuMatuBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("hasGoodCards") // Good cards are a,2,3 not been a manilha
+    class hasGoodCards{
+        @Test
+        @DisplayName("Should returns true if has a good card and not been a manilha")
+        public void ShouldReturnsTrueIfHasAGoodCardNotBeenAManilha(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+            assertEquals(jakareDuMatuBot.hasGoodCards(botCards, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).size(), 1);
+
+        }
+    }
+
 }
