@@ -123,7 +123,17 @@ public class Akkosocorrompido implements BotServiceProvider {
         //return CardToPlay.of(getLowestCardToWin(intel.getCards(), intel.getOpponentCard(), intel.getVira()));        
         return CardToPlay.of(intel.getCards().get(0));
     }
+
+    public CardToPlay chooseCardSecondRound(GameIntel intel){
+
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
     public CardToPlay chooseCardThirdRound(GameIntel intel){
         return CardToPlay.of(intel.getCards().get(0));
+    }
+    
+    public int getCurrentRoundNumber(GameIntel intel){
+        return intel.getRoundResults().size()+ 1;
     }
 }

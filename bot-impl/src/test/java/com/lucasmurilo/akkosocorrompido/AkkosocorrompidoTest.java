@@ -164,7 +164,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel).value().toString());
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel));
     }
         
     @Test
