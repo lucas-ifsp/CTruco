@@ -733,8 +733,31 @@ public class ChatGptBotTest {
 
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
+        }
 
+        @Nested
+        @DisplayName("If Lost first round but won the second")
+        class LostFirstRoundButWonSecond {
+            @Test
+            @DisplayName("Should ask for raise if has manilha equal or higher than hearts")
+            void ShouldAskForRaiseIfHasManilhaEqualToOrHigherThanHearts(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+                List<TrucoCard> botCards = Collections.singletonList(
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+                );
+
+                List<TrucoCard> openCards = Collections.singletonList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
         }
 
 
