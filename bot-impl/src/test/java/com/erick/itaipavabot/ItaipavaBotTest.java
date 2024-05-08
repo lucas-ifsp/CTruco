@@ -40,6 +40,7 @@ import java.util.List;
 public class ItaipavaBotTest {
     private ItaipavaBot bot;
     private GameIntel.StepBuilder stepBuilder;
+
     @BeforeEach
     public void setUp() {
         bot = new ItaipavaBot();
@@ -47,7 +48,6 @@ public class ItaipavaBotTest {
 
     @Nested
     @DisplayName("Mão de onze response test")
-
     class MaoDeOnzeTest {
         @Test
         @DisplayName("Should accept mão de onze if has 3 manilhas")
@@ -55,7 +55,7 @@ public class ItaipavaBotTest {
             TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
                     TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
@@ -67,12 +67,13 @@ public class ItaipavaBotTest {
                     .opponentCard(opponentCard);
             assertTrue(bot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
+
         @Test
         @DisplayName("Should accept mão de onze if has 1 manilha and one zap")
         void shouldAcceptMaoDeOnzeIfHas1ManilhaAndOneZap() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
@@ -93,7 +94,7 @@ public class ItaipavaBotTest {
         void shouldAcceptTrucoIfHas2ManilhasAndNotZap() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.QUEEN, HEARTS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
@@ -104,12 +105,13 @@ public class ItaipavaBotTest {
                     .opponentScore(0);
             assertEquals(0, bot.getRaiseResponse(stepBuilder.build()));
         }
+
         @Test
         @DisplayName("Should raise truco if has casal maior")
         void shouldRaiseTrucoIfHasCasalMaior() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
@@ -120,12 +122,13 @@ public class ItaipavaBotTest {
                     .opponentScore(0);
             assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
         }
+
         @Test
-        @DisplayName("Should accept truco if has zap and a three")
-        void shouldAcceptTrucoIfHasZapAndAThree() {
+        @DisplayName("Should raise truco if has zap and a three")
+        void shouldRaiseTrucoIfHasZapAndAThree() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
@@ -134,7 +137,7 @@ public class ItaipavaBotTest {
                     .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 3)
                     .botInfo(myCards, 1)
                     .opponentScore(0);
-            assertEquals(0, bot.getRaiseResponse(stepBuilder.build()));
+            assertEquals(1, bot.getRaiseResponse(stepBuilder.build()));
         }
     }
 
@@ -146,7 +149,7 @@ public class ItaipavaBotTest {
         void shouldTrucarIfHas3Manilhas() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
@@ -157,15 +160,16 @@ public class ItaipavaBotTest {
                     .opponentScore(0);
             assertTrue(bot.decideIfRaises(stepBuilder.build()));
         }
+
         @Test
         @DisplayName("Should not raise if opponent has more than 9 points")
         void shouldNotRaiseIfOpponentHasMoreThan7PointsAndHasLessThan9PowerLevel() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
             );
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
@@ -173,12 +177,13 @@ public class ItaipavaBotTest {
                     .opponentScore(10);
             assertFalse(bot.decideIfRaises(stepBuilder.build()));
         }
+
         @Test
-        @DisplayName("Should raise if has powerlevel more than 9")
-        void shouldRaiseIfHasPowerlevelMoreThan9() {
+        @DisplayName("Should raise if has powerlevel more than 7.5")
+        void shouldRaiseIfHasPowerlevelMoreThan75() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
+            List<TrucoCard> myCards = Arrays.asList(
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
@@ -190,7 +195,6 @@ public class ItaipavaBotTest {
             assertTrue(bot.decideIfRaises(stepBuilder.build()));
         }
     }
-
     @Nested
     @DisplayName("Choose card response test")
     class ChooseCardResponseTest {
@@ -231,8 +235,8 @@ public class ItaipavaBotTest {
             assertEquals(TrucoCard.of(SEVEN, CLUBS), bot.chooseCard(stepBuilder.build()).content());
         }
         @Test
-        @DisplayName("Should start with second best card")
-        void shouldStartWithSecondBestCard() {
+        @DisplayName("Should start with highest card")
+        void shouldStartWithHighestCard() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> openCards = List.of(vira);
             List<TrucoCard> myCards = Arrays.asList(
@@ -244,23 +248,7 @@ public class ItaipavaBotTest {
                     .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(0);
-            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.SPADES), bot.chooseCard(stepBuilder.build()).content());
-        }
-        @Test
-        @DisplayName("Should play lowest card if has hand power level > 9")
-        void shouldPlayLowestCardIfHasHandPowerLevelGreaterThan9() {
-            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-            List<TrucoCard> openCards = List.of(vira);
-            List <TrucoCard> myCards = Arrays.asList(
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
-            );
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
-                    .botInfo(myCards, 1)
-                    .opponentScore(0);
-            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(stepBuilder.build()).content());
+            assertEquals(TrucoCard.of(QUEEN, SPADES), bot.chooseCard(stepBuilder.build()).content());
         }
         @Test
         @DisplayName("Should play highest card if lost first round")
@@ -297,6 +285,7 @@ public class ItaipavaBotTest {
             assertEquals(TrucoCard.of(FOUR, CLUBS), bot.chooseCard(stepBuilder.build()).content());
         }
     }
+
     @Nested
     @DisplayName("HasCard method test")
     class HasCardMethodTest {
@@ -334,6 +323,7 @@ public class ItaipavaBotTest {
             assertTrue(bot.hasCard(stepBuilder.build(), true));
         }
     }
+
     @Nested
     @DisplayName("Hand power level test")
     class HandPowerLevelTest {
@@ -388,6 +378,7 @@ public class ItaipavaBotTest {
             assertEquals(9, bot.handPowerLevel(stepBuilder.build()));
         }
     }
+
     @Nested
     @DisplayName("Number of round method test")
     class NumberOfRoundMethodTest {
@@ -423,4 +414,5 @@ public class ItaipavaBotTest {
             assertEquals(1, bot.numberOfRound(stepBuilder.build()));
         }
     }
+
 }
