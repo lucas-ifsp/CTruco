@@ -107,11 +107,7 @@ public class PatoBot implements BotServiceProvider {
 
     public boolean checkIfAcceptMaoDeOnze(GameIntel intel) {
         int count = calculateCardScore(intel);
-        int opponentPoints = intel.getOpponentScore();
-        int threshold = 4;
-        if (opponentPoints >= 8) {
-            threshold = 6;
-        }
+        int threshold = determineThreshold(intel.getOpponentScore());
         return count >= threshold;
     }
 
@@ -126,6 +122,9 @@ public class PatoBot implements BotServiceProvider {
             }
         }
         return count;
+    }
+    private int determineThreshold(int opponentPoints) {
+        return opponentPoints >= 8 ? 6 : 4;
     }
 
     public boolean checkIfStrongerCardIsThree(GameIntel intel) {
