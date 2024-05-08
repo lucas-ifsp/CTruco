@@ -98,4 +98,16 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     //lowtowin
+    public TrucoCard getLowestCardToWin(List<TrucoCard> botCards, TrucoCard opponentCard, TrucoCard vira){
+        TrucoCard lowestCardToWin = botCards.get(0);
+
+        for (TrucoCard trucoCard : botCards) {
+            if (trucoCard.relativeValue(vira) > opponentCard.relativeValue(vira)) {
+                if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
+                    lowestCardToWin = trucoCard;
+                }
+            }
+        }
+        return lowestCardToWin;
+    }
 }
