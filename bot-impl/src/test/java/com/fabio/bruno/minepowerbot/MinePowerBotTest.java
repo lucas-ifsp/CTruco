@@ -287,12 +287,12 @@ class MinePowerBotTest {
         intel = create().scoreMine(4).scoreOponent(4).cards(
                         TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                         TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))
+                        TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS))
                 .viraToBeDiamondsOfRank(CardRank.FOUR)
                 .opponentCardToBe(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
                 .roundToBeSecond(GameIntel.RoundResult.WON)
                 .finish();
 
-        assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS))).isTrue();
+        assertThat(sut.chooseCard(intel).content().equals(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))).isTrue();
     }
 }
