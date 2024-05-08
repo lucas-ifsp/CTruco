@@ -574,5 +574,21 @@ class JormungandrBotTest {
             assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return true if has 1 cards on hand and is second round")
+        void shouldReturnTrueIfWithOneCardOnSecondRound(){
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.DREW);
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertFalse(jormungandrBot.hasPlayedACard(stepBuilder.build()));
+        }
     }
 }
