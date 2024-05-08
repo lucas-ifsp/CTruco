@@ -242,7 +242,7 @@ public class MalasiaBot implements BotServiceProvider {
                 figurasCount++;
             }
         }
-        if (manilhasCount == 1 && figurasCount == 1) {
+        if (manilhasCount == 1 && figurasCount >= 1) {
             return true;
         }
         return false;
