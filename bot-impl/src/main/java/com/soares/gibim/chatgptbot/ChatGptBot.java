@@ -56,7 +56,7 @@ public class ChatGptBot implements BotServiceProvider {
             }
         }
         if (intel.getRoundResults().size() == 1 && intel.getOpponentCard().isPresent()){
-            return CardToPlay.of(whenRespondingOpponentCard(intel));
+            return CardToPlay.of(whenRespondingOpponentCardInTheSecondRound(intel));
         }
 
         return CardToPlay.of(intel.getCards().get(0));
@@ -156,6 +156,30 @@ public class ChatGptBot implements BotServiceProvider {
                 }
             }
             return weakestCard(intel);
+        } else {
+            return bestCard;
+        }
+    }
+
+    private TrucoCard whenRespondingOpponentCardInTheSecondRound(GameIntel intel){
+
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        int highestValue = 14;
+        TrucoCard bestCard = null;
+
+        List<TrucoCard> cards = intel.getCards();
+
+        for (TrucoCard card :cards){
+            if (card.relativeValue(intel.getVira()) > opponentCard.get().relativeValue(intel.getVira())
+                    && card.relativeValue(intel.getVira()) < highestValue){
+                bestCard = card;
+                highestValue = card.relativeValue(intel.getVira());
+            }
+        }
+
+        if (bestCard == null){
+            return strongestCard(intel);
         } else {
             return bestCard;
         }
