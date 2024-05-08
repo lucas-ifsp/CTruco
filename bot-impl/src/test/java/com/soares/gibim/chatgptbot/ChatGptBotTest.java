@@ -575,6 +575,36 @@ public class ChatGptBotTest {
             }
         }
 
+        @Nested
+        @DisplayName("If Lost First Round")
+        class LostFirstRound {
+            @Test
+            @DisplayName("Should ask for raise if has 2 manilhas")
+            void ShouldAskForRaiseIfHas2Manilhas(){
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+                List<TrucoCard> openCards = Arrays.asList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+        }
+
 
     }
     @Test
