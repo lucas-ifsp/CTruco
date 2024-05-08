@@ -196,17 +196,6 @@ public class ItaipavaBot implements BotServiceProvider {
         return powerLevel;
     }
 
-    public TrucoCard secondBestCard(GameIntel gameIntel) {
-        List<TrucoCard> myCards = gameIntel.getCards();
-        TrucoCard secondLowestCard = myCards.get(0);
-        for (TrucoCard card : myCards) {
-            if (card != getLowestCard(myCards, gameIntel) && card != getHighestCard(myCards, gameIntel)) {
-                secondLowestCard = card;
-            }
-        }
-        return secondLowestCard;
-    }
-
     public int numberOfRound (GameIntel intel) {
         if (intel.getCards().size() == 3) {
             return 1;
