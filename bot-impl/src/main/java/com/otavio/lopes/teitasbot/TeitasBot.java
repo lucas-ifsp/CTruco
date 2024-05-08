@@ -23,12 +23,23 @@ public class TeitasBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
 
 
+
+
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        Boolean NutsHand =  TeitasBotFunctions.hasNutsHand(cards,vira);
+        Boolean StrongHand =  TeitasBotFunctions.hasStrongHand(cards,vira);
+        Boolean TrashHand =  TeitasBotFunctions.hasTrashHand(cards,vira);
+
+        CardToPlay card = CardToPlay.of(cards.get(0));
+
+        return card;
     }
 
     @Override

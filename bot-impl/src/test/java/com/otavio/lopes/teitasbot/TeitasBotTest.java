@@ -21,71 +21,92 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TeitasBotTest {
     private TeitasBot teitasBot;
+
     @BeforeEach
     void setUp() {
         teitasBot = new TeitasBot();
     }
+
     GameIntel.StepBuilder builder;
 
     @Nested
     @DisplayName("if we need to raise")
-    class ShouldRaiseForAll{
+    class ShouldRaiseForAll {
 
-    }
+
         @Test
         @DisplayName("Should raise if we have nuts or strong hand")
-        void shouldRaiseWithNutsOrStrong(){
+        void shouldRaiseWithNutsOrStrong() {
 
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-        List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
 
-        List<TrucoCard> Tablecards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            List<TrucoCard> Tablecards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
-        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
 
-        builder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON), Tablecards, vira, 1)
-                .botInfo(botCards, 0)
-                .opponentScore(0)
-                .opponentCard(opponentCard);
+            builder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), Tablecards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
 
-        assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
+            assertEquals(1, teitasBot.getRaiseResponse(builder.build()));
+        }
 
-    }
         @Test
         @DisplayName("Should raise if we have good hand and empty round with hidden opponent")
-        void shouldRaiseIfEmptyRoundAndGoodHand(){
-            TrucoCard vira =  TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        void shouldRaiseIfEmptyRoundAndGoodHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
             List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
             TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
 
-            builder =  GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.WON),List.of(),vira,1).botInfo(botCards, 0)
+            builder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1).botInfo(botCards, 0)
                     .opponentScore(0)
                     .opponentCard(opponentCard);
 
-            assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
+            assertEquals(1, teitasBot.getRaiseResponse(builder.build()));
 
         }
+
         @Test
         @DisplayName("Should raise if we drew at past.")
-        void shouldRaiseIfDrewAtPast(){
-        //the hand isn't relevant
-            TrucoCard vira =  TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        void shouldRaiseIfDrewAtPast() {
+            //the hand isn't relevant
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
             List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS));
             TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
 
-            builder =  GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1).botInfo(botCards, 0)
+            builder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), List.of(), vira, 1).botInfo(botCards, 0)
                     .opponentScore(0)
                     .opponentCard(opponentCard);
 
-            assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
+            assertEquals(1, teitasBot.getRaiseResponse(builder.build()));
+
+        }
+
+    }
+    @Nested
+    @DisplayName("if we need the strongest card and is first round")
+    class  ShouldChooseStrongestCard{
+        @Test
+        @DisplayName("Should get strongest card if is first round and can make")
+        void shouldGetStrongestCardIfIsFirstRound() {
+            //if is nuts. just get the of the left, whatever
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+            List<TrucoCard> Tablecards = Collections.singletonList(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
 
         }
     }
+}
 
 
