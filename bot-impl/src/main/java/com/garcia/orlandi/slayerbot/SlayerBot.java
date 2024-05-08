@@ -176,6 +176,14 @@ public class SlayerBot implements BotServiceProvider {
             return 0;
         }
 
+        boolean isLastCardStrong = cards.size() == 1 &&
+                (cards.get(0).isManilha(vira) || cards.get(0).getRank() == CardRank.THREE);
+
+        // Aceitar truco se for a última carta do bot e for um 3 ou manilha
+        if (isLastCardStrong) {
+            return 0;
+        }
+
         // Pede re raise se o bot tem duas ou mais manilhas
         if (numManilhas >= 2) {
             return 1;
