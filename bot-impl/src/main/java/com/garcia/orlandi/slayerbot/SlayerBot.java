@@ -28,6 +28,14 @@ public class SlayerBot implements BotServiceProvider {
             return false;
         }
 
+        List<TrucoCard> manilhasInHand = cards.stream()
+                .filter(card -> card.isManilha(vira))
+                .toList();
+
+        if (manilhasInHand.size() == 3) {
+            return true;
+        }
+
         boolean hasTiedInFirstRound = game.getRoundResults().contains(GameIntel.RoundResult.DREW);
 
         boolean hasManilha = cards.stream()
