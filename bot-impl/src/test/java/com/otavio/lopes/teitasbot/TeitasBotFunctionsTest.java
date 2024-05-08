@@ -61,15 +61,29 @@ class TeitasBotFunctionsTest {
     @DisplayName("Card that will be return")
     class CardThatWillBeReturnTest {
         @Test
-        @DisplayName("Should return the second strong card for first round")
-        void shouldReturnSecondStrongCard() {
+        @DisplayName("Should return the second strong card for first round and nuts or strong hand")
+        void shouldReturnSecondStrongCardIfFirstRoundAndStrongHand() {
+            //the treatment of first round is at main
             TrucoCard vira  =  TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
             );
-            assertEquals(TrucoCard.of(THREE, SPADES), TeitasBotFunctions.chooseCardToPlayFirst(cards,vira).content());
+            assertEquals(TrucoCard.of(THREE, SPADES), TeitasBotFunctions.chooseCardToPlayAtFirstStrongHand(cards,vira).content());
+        }
+        @Test
+        @DisplayName("Should return the strongest card if we won the first and strong hand")
+        void shouldReturnStrongestCardIfFirstRound() {
+
+            //the treatment of first round is at main
+            TrucoCard vira  =  TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            assertEquals(TrucoCard.of(THREE, SPADES), TeitasBotFunctions.chooseCardToPlaySecondIfWonFirst(cards,vira).content());
         }
     }
 
@@ -134,7 +148,7 @@ class TeitasBotFunctionsTest {
     class WeStart{
         @Test
         @DisplayName("should return true if we last round")
-        void shouldReturTrueIfWeStart(){
+        void shouldReturnTrueIfWeStart(){
             assertThat(TeitasBotFunctions.firstToPlay(gameIntel)).isTrue()    ;
         }
     }
@@ -197,9 +211,8 @@ class TeitasBotFunctionsTest {
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
-
-            );
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+            
             assertThat(TeitasBotFunctions.PlayAgressiveMode(cards,vira, gameIntel)).isTrue();
         }
 

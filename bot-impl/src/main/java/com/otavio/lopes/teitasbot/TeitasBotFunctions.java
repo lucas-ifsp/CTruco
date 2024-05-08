@@ -18,15 +18,36 @@ public class TeitasBotFunctions {
         return cards.stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
-    static CardToPlay chooseCardToPlayFirst(List<TrucoCard> cards, TrucoCard vira) {
+    static CardToPlay chooseCardToPlayAtFirstStrongHand(List<TrucoCard> cards, TrucoCard vira) {
+        //primeiro round e temos a ma forte.
 
-    }
+        cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
 
-    static CardToPlay cbooseCardToPlaySecond(List<TrucoCard> cards, TrucoCard vira) {
+        boolean isStrong =hasStrongHand(cards, vira);
+
+        if (isStrong && cards.size() >= 2) {
+            return CardToPlay.of(cards.get(1));
+        }
+
+        return CardToPlay.of(cards.get(0));
+    };
+
+    static CardToPlay chooseCardToPlaySecondIfWonFirst(List<TrucoCard> cards, TrucoCard vira) {
+        //segundo round
+
+        cards.sort((c1, c2) -> c2.compareValueTo(c1, vira));
+
+        return CardToPlay.of(cards.get(0));}
+
+
+    static CardToPlay cbooseCardToPlaySecondIfLooseFirst(List<TrucoCard> cards, TrucoCard vira) {
+        //segundo round e temos a mao forte
+
+        return chooseCardToPlaySecondIfWonFirst(cards, vira);
 
     }
     static CardToPlay chooseCardToPlayThird(List<TrucoCard> cards, TrucoCard vira) {
-
+        return cbooseCardToPlaySecondIfLooseFirst(cards, vira);
     }
 
 
@@ -101,7 +122,7 @@ public class TeitasBotFunctions {
             }
         }
 
-        return null;
+        return strongCard;
     }
 
     boolean firstRound(GameIntel intel){
