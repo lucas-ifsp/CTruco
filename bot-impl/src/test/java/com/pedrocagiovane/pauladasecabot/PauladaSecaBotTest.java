@@ -101,6 +101,18 @@ public class PauladaSecaBotTest {
         }
 
         @Test
+        @DisplayName("Se fez a primeira joga a mais fraca na segunda")
+        void seFezPrimeiraJogaAMaisFracaSegunda() {
+            maoPlayer = List.of(TrucoCard.of(TWO, SPADES), TrucoCard.of(ACE, HEARTS));
+            vira = TrucoCard.of(SEVEN, SPADES);
+            roundResult = List.of(GameIntel.RoundResult.WON);
+            cartas = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(roundResult, cartas, vira, 1).botInfo(maoPlayer, 1).opponentScore(0);
+            CardToPlay cardToPlay = pauladaSecaBot.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE, HEARTS));
+        }
+
+        @Test
         @DisplayName("Jogar melhor carta se não tiver manilha")
         void jogarMelhorCartaPrimeiraSeNaoTiverManilha() {
             maoPlayer = List.of( TrucoCard.of(FIVE, SPADES),TrucoCard.of(THREE, CLUBS), TrucoCard.of(ACE, HEARTS));
