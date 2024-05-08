@@ -248,8 +248,8 @@ class JakareDuMatuBotTest {
 
         //Se nao conseguir matar mas conseguir empatar, entao empata
         @Test
-        @DisplayName("Should drew if possible if can't win in the first hand")
-        public void ShouldDrewIfPossibleIfCantWinInTheFirstHand(){
+        @DisplayName("Should drew if possible if can't win opponent first card in the first hand")
+        public void ShouldDrewIfPossibleIfCantWinOpponentFirstCardInTheFirstHand(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
