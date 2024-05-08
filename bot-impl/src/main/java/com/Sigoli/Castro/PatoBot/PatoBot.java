@@ -44,14 +44,10 @@ public class PatoBot implements BotServiceProvider {
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return checkIfAcceptRaise(intel);
-    }
+    public int getRaiseResponse(GameIntel intel) {return checkIfAcceptRaise(intel);}
 
 
-    public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {
-        return opponentCard.isPresent();
-    }
+    public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {return opponentCard.isPresent();}
 
     public int getNumberOfCardsInHand(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
@@ -63,15 +59,20 @@ public class PatoBot implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> hand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        for (TrucoCard card : hand) {
-            if (card.compareValueTo(opponentCard.orElse(null), vira) > 0) {
-                if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
-                    cardToPlay = card;
-                }
-            }
-        }
+
+        cardToPlay = selectBetterCardToPlay(hand, opponentCard, vira, cardToPlay);
+
         if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.orElse(null), vira) <= 0) {
             cardToPlay = selectLowestCard(hand, vira);
+        }
+        return cardToPlay;
+    }
+
+    private static TrucoCard selectBetterCardToPlay(List<TrucoCard> hand, Optional<TrucoCard> opponentCard, TrucoCard vira, TrucoCard cardToPlay) {
+        for (TrucoCard card : hand) {
+            if (card.compareValueTo(opponentCard.orElse(null), vira) > 0) {
+                if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) { cardToPlay = card; }
+            }
         }
         return cardToPlay;
     }
