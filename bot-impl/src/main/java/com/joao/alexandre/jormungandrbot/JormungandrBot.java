@@ -32,6 +32,14 @@ public class JormungandrBot implements BotServiceProvider {
     }
 
     TrucoCard getLowestCardInHand(GameIntel intel) {
-        return null;
+        TrucoCard currentLowestCard = intel.getCards().get(0);
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(currentLowestCard, vira) < 0)
+                currentLowestCard = card;
+        }
+
+        return currentLowestCard;
     }
 }
