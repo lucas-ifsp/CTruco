@@ -63,59 +63,81 @@ public class MalasiaBotTest {
 
     @Nested
     @DisplayName("Accept Mao de onze tests")
-    class AcceptMaoDeOnze {
-        @Test
-        @DisplayName("Should accept mao de onze with MaoGiga hand")
-        void shouldAcceptMaoDeOnzeWithMaoGigaHand() {
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+    class MaoDeOnzeTests {
+        @Nested
+        @DisplayName("Should accept mao de onze with")
+        class MaoDeOnze{
+            @Test
+            @DisplayName("MaoGiga hand")
+            void MaoGigaHand() {
+                TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 11)
-                    .opponentScore(5);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 11)
+                        .opponentScore(5);
 
-            assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
-        }
+                assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
 
-        @Test
-        @DisplayName("Should accept mao de onze with MaoZapOuCopasEFiguras hand")
-        void shouldAcceptMaoDeOnzeWithMaoZapOuCopasEFigurasHand() {
-            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+            @Test
+            @DisplayName("MaoZapOuCopasEFiguras hand")
+            void MaoZapOuCopasEFigurasHand() {
+                TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
 
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 0)
-                    .opponentScore(0);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 11)
+                        .opponentScore(0);
 
-            assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
-        }
+                assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
 
-        @Test
-        @DisplayName("Should accept mao de onze with MaoEspadasOuOurosEFiguras hand")
-        void shouldAcceptMaoDeOnzeWithMaoEspadasOuOurosEFigurasHand() {
-            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            @Test
+            @DisplayName("MaoEspadasOuOurosEFiguras hand")
+            void MaoEspadasOuOurosEFigurasHand() {
+                TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
 
-            List<TrucoCard> Mao = Arrays.asList(
-                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
-                    .botInfo(Mao, 0)
-                    .opponentScore(0);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 11)
+                        .opponentScore(0);
 
-            assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+                assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
+
+            @Test
+            @DisplayName("MaoZapOuCopasEAsAtres hand")
+            void MaoZapOuCopasEAsAtresHand() {
+                TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+
+                List<TrucoCard> Mao = Arrays.asList(
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(roundResultsFirstHand, openCardsEmpty, vira, 1)
+                        .botInfo(Mao, 11)
+                        .opponentScore(0);
+
+                assertTrue(malasiaBot.getMaoDeOnzeResponse(stepBuilder.build()));
+            }
         }
     }
 
