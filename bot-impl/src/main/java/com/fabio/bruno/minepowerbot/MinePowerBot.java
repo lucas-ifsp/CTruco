@@ -12,8 +12,7 @@ public class MinePowerBot implements BotServiceProvider {
         return false;
     }
 
-    private List<TrucoCard> getCardAboveRank(GameIntel intel, CardRank rank){
-        TrucoCard vira = intel.getVira();
+    private List<TrucoCard> getCardAboveRank(GameIntel intel, CardRank rank) {
         return intel.getCards().stream()
                 .filter(card -> card.getRank().compareTo(rank) >= 0)
                 .toList();
@@ -25,17 +24,19 @@ public class MinePowerBot implements BotServiceProvider {
         var botScore = intel.getScore();
         var opponentScore = intel.getOpponentScore();
         var countManilhas = listManilhas(intel).size();
-        if(intel.getScore()<11) {
+        if (intel.getScore() < 11) {
             if (intel.getScore() > opponentScore + 3)
                 return true;
-            if (opponentScore <= 5)
+            if (countManilhas >= 1)
                 return true;
-            if (countManilhas >= 2)
-                return true;
-            if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
-                return true;
-            if (manilhaFraca != null)
-                return botScore == opponentScore || botScore > opponentScore;
+            if (botScore != 0) {
+                if (opponentScore <= 5)
+                    return true;
+                if (getCardAboveRank(intel, CardRank.TWO).size() >= 2)
+                    return true;
+                if (manilhaFraca != null)
+                    return botScore == opponentScore || botScore > opponentScore;
+            }
             if (botScore == 9 && opponentScore == 9 && countManilhas == 1)
                 return true;
         }
@@ -46,19 +47,27 @@ public class MinePowerBot implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         int roundNumber = getRoundNumber(intel);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if (isTheFirstToPlay(intel)) {
+            List<TrucoCard> qtdManilhas = listManilhas(intel);
+            if (qtdManilhas.size() == 1) {
+                TrucoCard manilha = qtdManilhas.get(0);
+                return CardToPlay.of(manilha);
+            }
+        }
         if (!isTheFirstToPlay(intel)) {
-            switch(roundNumber) {
+            switch (roundNumber) {
                 case 1 -> {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     TrucoCard vira = intel.getVira();
-                    var lowestCardStrongerThanOpponentCard =  intel.getCards().stream()
+                    var lowestCardStrongerThanOpponentCard = intel.getCards().stream()
                             .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
-                            .min( (card1, card2) -> card1.compareValueTo(card2, vira));
+                            .min((card1, card2) -> card1.compareValueTo(card2, vira));
                     if (lowestCardStrongerThanOpponentCard.isPresent())
                         return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
                 }
             }
-            if (intel.getOpponentScore() == intel.getScore()){
+            if (intel.getOpponentScore() == intel.getScore()) {
                 return CardToPlay.of(higherCard(intel));
             }
         } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
@@ -68,11 +77,15 @@ public class MinePowerBot implements BotServiceProvider {
         return CardToPlay.of(intel.getCards().get(0));
     }
 
-    public TrucoCard getLowerCard(GameIntel intel){
+    public TrucoCard getLowerCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
-                .min( (card1, card2) -> card1.compareValueTo(card2, vira))
+                .min((card1, card2) -> card1.compareValueTo(card2, vira))
                 .get();
+    }
+
+    public boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
 
     private List<TrucoCard> listManilhas(GameIntel intel) {
@@ -81,6 +94,7 @@ public class MinePowerBot implements BotServiceProvider {
                 .filter(card -> card.isManilha(vira))
                 .toList();
     }
+
     private TrucoCard getWeakerManilha(GameIntel intel) {
         // Lista das manilhas na mão do jogador
         var manilhas = listManilhas(intel);
@@ -121,7 +135,14 @@ public class MinePowerBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        var hasZap = hasZap(intel);
+        var qtdManilhas = listManilhas(intel).size();
+        if (hasZap && qtdManilhas >= 2) {
+            return 1;
+        } else if (hasZap || qtdManilhas >= 2) {
+            return 0;
+        }
+        return -1;
     }
 
     @Override

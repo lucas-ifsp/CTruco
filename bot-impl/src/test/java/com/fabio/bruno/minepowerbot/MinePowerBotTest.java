@@ -26,16 +26,39 @@ class MinePowerBotTest {
     @Test
     @DisplayName("When winning and playing the first card, should play a weak one")
     void playingFirstCard() {
-        intel = create().scoreMine(1).viraToBe(CardRank.KING, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        intel = create()
+                .scoreMine(1)
+                .viraToBe(CardRank.KING, CardSuit.SPADES)
+                .cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
         when(intel.getOpponentCard()).thenReturn(Optional.empty());
 
         assertThat(sut.getLowerCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
     }
 
     @Test
+    @DisplayName("Test when the bot has the lowest possible score (0)")
+    void shouldNotRaiseIfTheScoreIsZero() {
+        // Given
+        intel = MinePowerBotIntelMockBuilder.create()
+                .scoreMine(0)
+                .scoreOponent(0)
+                .cards(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS))
+                .viraToBeDiamondsOfRank(CardRank.FOUR)
+                .opponentCardToBe(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS))
+                .finish();
+        boolean botRaises = sut.decideIfRaises(intel);
+
+        assertThat(botRaises).isFalse();
+    }
+
+
+    @Test
     @DisplayName("Should return false if does not have manilha")
     void shouldReturnFalseIfDoNotHaveManilha() {
-        intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+        intel = create().viraToBe(CardRank.FOUR, CardSuit.SPADES).cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)).finish();
         TrucoCard vira = intel.getVira();
 
         assertThat(sut.chooseCard(intel).content().isManilha(vira)).isFalse();
@@ -60,9 +83,34 @@ class MinePowerBotTest {
     }
 
     @Test
-    @DisplayName("Should raise if bot has two cards above rank two")
-    void shouldRaiseIfHasTwoCardsAboveRankTwo() {
-        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS).cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
+    @DisplayName("Should play the manilha in the first round if it has only one and if it is the first to play")
+    void shouldPlayTheManilhaInTheFirstRoundIfItIsTheOnlyOneAndIfItIsTheFirstToPlay(){
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)).finish();
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        assertThat(sut.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+    }
+
+    @Test
+    @DisplayName("Check if has Zap")
+    void testHasZap(){
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES)).finish();
+
+
+        assertThat(sut.hasZap(intel)).isTrue();
+    }
+
+
+    @Test
+    @DisplayName("Should raise if bot has two cards above rank two and score is not zero")
+    void shouldRaiseIfHasTwoCardsAboveRankTwoAndBotScoreIsNotZero() {
+        intel = create().viraToBe(CardRank.QUEEN, CardSuit.CLUBS).scoreMine(1).cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.JACK, CardSuit.SPADES), // manilha
                 TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)).opponentCardToBe(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).finish();
 
         assertThat(sut.decideIfRaises(intel)).isTrue();
@@ -88,11 +136,65 @@ class MinePowerBotTest {
         assertThat(sut.decideIfRaises(intel)).isFalse();
     }
 
+    @Test
+    @DisplayName("Should respond raise if has strong cards")
+    void shouldRespondRaiseIfHasStrongCards() {
+        intel = create()
+                .viraToBe(CardRank.TWO, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should respond raise if has zap or two manilhas")
+    void shouldRespondRaiseIfHasZapOrTwoManilhas() {
+        intel = create()
+                .viraToBe(CardRank.THREE, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should respond raise with quit")
+    void shouldRespondRaiseWithQuit() {
+        intel = create()
+                .viraToBe(CardRank.FIVE, CardSuit.CLUBS)
+                .cards(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                .finish();
+
+        assertThat(sut.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should not accept raise if do not have manilha")
+    void shouldNotAcceptRaiseIfDoNotHaveManilha() {
+        intel = MinePowerBotIntelMockBuilder.create()
+                .viraToBe(CardRank.FOUR, CardSuit.SPADES)
+                .cards(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
+                .finish();
+        int raiseResponse = sut.getRaiseResponse(intel);
+
+        assertThat(raiseResponse).isEqualTo(-1);
+    }
+
+
     @ParameterizedTest
     @CsvSource({"3", "4", "5"})
-    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold.")
-    void shouldRaiseIfOpponentScoreIsEqualOrLessThanThreshold(int opponentScore) {
-        intel = create().scoreOponent(opponentScore).finish();
+    @DisplayName("Should ask for a point raise if opponent score is equal or less than the threshold and botScore is different than zero.")
+    void shouldRaiseIfOpponentScoreIsEqualOrLessThanThresholdAndBotScoreIsNotZero(int opponentScore) {
+        intel = create().scoreOponent(opponentScore).scoreMine(1).finish();
         when(intel.getOpponentScore()).thenReturn(opponentScore);
         assertThat(sut.decideIfRaises(intel)).isTrue();
     }
