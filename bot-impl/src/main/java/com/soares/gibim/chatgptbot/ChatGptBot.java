@@ -134,15 +134,6 @@ public class ChatGptBot implements BotServiceProvider {
         return -1;
     }
 
-    private boolean haveZap(GameIntel intel){
-        for (TrucoCard card : intel.getCards()){
-            if (card.isZap(intel.getVira())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean CheckIfItsHandOfEleven(GameIntel intel){
         return intel.getHandPoints() == 11;
     }
@@ -278,18 +269,6 @@ public class ChatGptBot implements BotServiceProvider {
         } else {
             return bestCard;
         }
-    }
-
-    private CardSuit getHighestManilha(GameIntel intel) {
-        CardSuit highestManilha = null;
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isManilha(intel.getVira())) {
-                if (highestManilha == null || card.getSuit().ordinal() > highestManilha.ordinal()) {
-                    highestManilha = card.getSuit();
-                }
-            }
-        }
-        return highestManilha;
     }
 
     private boolean verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(GameIntel intel){
