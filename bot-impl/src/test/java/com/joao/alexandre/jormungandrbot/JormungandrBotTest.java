@@ -211,7 +211,7 @@ class JormungandrBotTest {
         }
 
         @Test
-        @DisplayName("When player only has LOWER cards than opponent, should return empty")
+        @DisplayName("When player only has lower cards than opponent, should return empty")
         void shouldReturnEmptyWhenSelfOnlyHasLowerCardThanOpponent() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
