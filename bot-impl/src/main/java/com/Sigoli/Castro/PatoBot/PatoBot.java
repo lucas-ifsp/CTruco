@@ -46,7 +46,6 @@ public class PatoBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {return checkIfAcceptRaise(intel);}
 
-
     public Boolean checkIfOpponentIsFirstToPlay(Optional<TrucoCard> opponentCard) {return opponentCard.isPresent();}
 
     public int getNumberOfCardsInHand(GameIntel intel) {
@@ -62,10 +61,14 @@ public class PatoBot implements BotServiceProvider {
 
         cardToPlay = selectBetterCardToPlay(hand, opponentCard, vira, cardToPlay);
 
-        if (cardToPlay == null || cardToPlay.compareValueTo(opponentCard.orElse(null), vira) <= 0) {
-            cardToPlay = selectLowestCard(hand, vira);
-        }
+        if (isCardIneffective(cardToPlay, opponentCard, vira)) { cardToPlay = selectLowestCard(hand, vira);}
+
         return cardToPlay;
+
+    }
+
+    private static boolean isCardIneffective(TrucoCard cardToPlay, Optional<TrucoCard> opponentCard, TrucoCard vira) {
+        return cardToPlay == null || cardToPlay.compareValueTo(opponentCard.orElse(null), vira) <= 0;
     }
 
     private static TrucoCard selectBetterCardToPlay(List<TrucoCard> hand, Optional<TrucoCard> opponentCard, TrucoCard vira, TrucoCard cardToPlay) {
