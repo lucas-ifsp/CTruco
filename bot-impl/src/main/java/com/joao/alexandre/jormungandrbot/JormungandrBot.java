@@ -42,4 +42,8 @@ public class JormungandrBot implements BotServiceProvider {
 
         return currentLowestCard;
     }
+
+    TrucoCard getHighestCardInHand(GameIntel intel) {
+        return null;
+    }
 }

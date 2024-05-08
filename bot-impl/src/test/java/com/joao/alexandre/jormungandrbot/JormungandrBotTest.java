@@ -91,4 +91,29 @@ class JormungandrBotTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("Testing getHighestCardInHand() function")
+    class GetHighestCardInHandTest {
+
+        @Test
+        @DisplayName("When player has one card in hand, should return that one card as highest card")
+        void shouldReturnCardInHandIfHandOnlyHasOneCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    jormungandrBot.getHighestCardInHand(stepBuilder.build())
+            );
+        }
+    }
 }
