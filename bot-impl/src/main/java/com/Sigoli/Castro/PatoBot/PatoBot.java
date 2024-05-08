@@ -114,15 +114,15 @@ public class PatoBot implements BotServiceProvider {
     private int calculateCardScore(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
-            if (card.isManilha(intel.getVira())) {
-                count += 3;
-            }
-            if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), intel.getVira()) >= 0) {
-                count++;
-            }
-        }
+            if (card.isManilha(intel.getVira())) { count += 3;}
+            if (isCardThree(intel, card)) {count++;}}
         return count;
     }
+
+    private static boolean isCardThree(GameIntel intel, TrucoCard card) {
+        return card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), intel.getVira()) == 0;
+    }
+
     private int determineThreshold(int opponentPoints) {
         return opponentPoints >= 8 ? 6 : 4;
     }
