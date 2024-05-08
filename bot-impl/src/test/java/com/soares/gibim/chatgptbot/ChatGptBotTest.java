@@ -651,7 +651,32 @@ public class ChatGptBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Should ask for raise if able to draw")
+            void ShouldAskForRaiseIfAbleToDraw(){
+                TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+                List<TrucoCard> botCards = Collections.singletonList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+                List<TrucoCard> openCards = Arrays.asList(
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .opponentCard(opponentCard);
