@@ -73,11 +73,11 @@ public class Akkosocorrompido implements BotServiceProvider {
       }
     //high card
     public TrucoCard getHighestRankInHand(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
+        List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        TrucoCard highestCard = cards.get(0);
-        for (TrucoCard card : cards) {
+        TrucoCard highestCard = botCards.get(0);
+        for (TrucoCard card : botCards) {
           if (card.relativeValue(vira) > highestCard.relativeValue(vira)) {
             highestCard = card;
           }
