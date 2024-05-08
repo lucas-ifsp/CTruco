@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.bueno.spi.model.CardSuit.HIDDEN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,6 +53,22 @@ public class TeitasBotTest {
         assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
 
     }
+        @Test
+       @DisplayName("Should raise if we have good hand and empty round with hidden opponent")
+        void shouldRaiseIfEmptyRoundAndGoodHand(){
+            TrucoCard vira =  TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+            TrucoCard opponentCard = TrucoCard.of(CardRank.HIDDEN, HIDDEN);
+
+            builder =  GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON),List.of(),vira,1).botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(1,teitasBot.getRaiseResponse(builder.build()));
+
+        }
     }
 
 

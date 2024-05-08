@@ -63,12 +63,14 @@ public class TeitasBot implements BotServiceProvider {
         }
 
         if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.WON)){
-
-            Boolean ourHandAtSecond =  TeitasBotFunctions.hasStrongHand(cards,vira);
-            Boolean ourHandAtSeconds =  TeitasBotFunctions.hasNutsHand(cards,vira);
-            if (ourHandAtSecond || ourHandAtSeconds) {
+            if (myHandNuts || myHandStrong) {
                 return 1;
             }
+            else if (myHandGood) {
+                return 1;
+            }
+            else
+                return -1;
         }
 
         if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.DREW)){
