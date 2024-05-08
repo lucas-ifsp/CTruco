@@ -758,4 +758,28 @@ public class SlayerBotTest {
         int raiseResponse = bot.getRaiseResponse(stepBuilder.build());
         assertThat(raiseResponse).isEqualTo(1);
     }
+    @Test
+    @DisplayName("Should accept truco if the bot last card is a 3 or a manilha")
+    void shouldAcceptTrucoIfLastCardIsThreeOrManilha() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> cards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+
+        List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(cards, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard);
+
+        SlayerBot bot = new SlayerBot();
+
+        int raiseResponse = bot.getRaiseResponse(stepBuilder.build());
+        assertThat(raiseResponse).isEqualTo(0);
+    }
 }
