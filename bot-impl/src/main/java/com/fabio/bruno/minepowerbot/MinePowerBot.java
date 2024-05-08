@@ -67,6 +67,8 @@ public class MinePowerBot implements BotServiceProvider {
                 default -> {
                     if (intel.getOpponentScore() == intel.getScore()){
                         return CardToPlay.of(higherCard(intel));
+                    } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
+                        return CardToPlay.of(getLowerCard(intel));
                     }
                 }
             }

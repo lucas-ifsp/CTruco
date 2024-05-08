@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.GameIntel.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,8 +60,8 @@ public class MinePowerBotIntelMockBuilder {
         return this;
     }
 
-    MinePowerBotIntelMockBuilder roundToBeSecond(){
-        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+    MinePowerBotIntelMockBuilder roundToBeSecond(RoundResult roundResult){
+        when(intel.getRoundResults()).thenReturn(List.of(roundResult));
         return this;
     }
 
