@@ -261,7 +261,6 @@ class JormungandrBotTest {
             );
         }
 
-
         @Test
         @DisplayName("Should return right card to tie when hand contains many close cards")
         void shouldReturnRightCardWhenManyCloseCards() {
@@ -307,6 +306,30 @@ class JormungandrBotTest {
                     () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
             );
         }
+    }
 
+    @Nested
+    @DisplayName("Testing getLowestCardToBeatOpponentsCard() function")
+    class GetLowestCardToBeatOpponentsCardTest {
+        @Test
+        @DisplayName("Should throw a NoSuchElementException if opponent hasn't played a card yet")
+        void shouldThrowExceptionIfOpponentHasntPlayedACard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertThrows(NoSuchElementException.class,
+                    () -> jormungandrBot.getLowestCardToBeatOpponentsCard(stepBuilder.build())
+            );
+        }
     }
 }

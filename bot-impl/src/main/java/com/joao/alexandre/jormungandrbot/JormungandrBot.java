@@ -34,6 +34,10 @@ public class JormungandrBot implements BotServiceProvider {
         return "Jörmungandr";
     }
 
+    Optional<TrucoCard> getLowestCardToBeatOpponentsCard(GameIntel intel) {
+        return Optional.empty();
+    }
+
     Optional<TrucoCard> getCardToTieOpponentsCard(GameIntel intel) {
         TrucoCard opponentsCard = intel.getOpponentCard()
                 .orElseThrow(() -> new NoSuchElementException("Opponent doesn't have a card to tie"));
