@@ -34,8 +34,28 @@ public class JormungandrBot implements BotServiceProvider {
         return "Jörmungandr";
     }
 
-    Optional<TrucoCard> getHighestNonManilhaCardInHand(GameIntel intel) {
-        return Optional.empty();
+    TrucoCard getHighestCardInHand(GameIntel intel) {
+        TrucoCard currentHighestCard = intel.getCards().get(0);
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(currentHighestCard, vira) > 0)
+                currentHighestCard = card;
+        }
+
+        return currentHighestCard;
+    }
+
+    TrucoCard getLowestCardInHand(GameIntel intel) {
+        TrucoCard currentLowestCard = intel.getCards().get(0);
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : intel.getCards()) {
+            if(card.compareValueTo(currentLowestCard, vira) < 0)
+                currentLowestCard = card;
+        }
+
+        return currentLowestCard;
     }
 
     Optional<TrucoCard> getLowestCardToBeatOpponentsCard(GameIntel intel) {
@@ -71,27 +91,8 @@ public class JormungandrBot implements BotServiceProvider {
         return Optional.empty();
     }
 
-    TrucoCard getLowestCardInHand(GameIntel intel) {
-        TrucoCard currentLowestCard = intel.getCards().get(0);
-        TrucoCard vira = intel.getVira();
-
-        for (TrucoCard card : intel.getCards()) {
-            if(card.compareValueTo(currentLowestCard, vira) < 0)
-                currentLowestCard = card;
-        }
-
-        return currentLowestCard;
+    Optional<TrucoCard> getHighestNonManilhaCardInHand(GameIntel intel) {
+        return Optional.empty();
     }
 
-    TrucoCard getHighestCardInHand(GameIntel intel) {
-        TrucoCard currentHighestCard = intel.getCards().get(0);
-        TrucoCard vira = intel.getVira();
-
-        for (TrucoCard card : intel.getCards()) {
-            if(card.compareValueTo(currentHighestCard, vira) > 0)
-                currentHighestCard = card;
-        }
-
-        return currentHighestCard;
-    }
 }

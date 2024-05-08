@@ -418,7 +418,6 @@ class JormungandrBotTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
             );
 
-
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
                     .botInfo(currentCards, 0)
