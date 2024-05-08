@@ -33,12 +33,9 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        //choose card to first round and second implemetantion
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-
-        Boolean NutsHand =  TeitasBotFunctions.hasNutsHand(cards,vira);
-        Boolean StrongHand =  TeitasBotFunctions.hasStrongHand(cards,vira);
-        Boolean TrashHand =  TeitasBotFunctions.hasTrashHand(cards,vira);
 
         TrucoCard bestCard = null;
         TrucoCard secondBestCard = null;
