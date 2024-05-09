@@ -64,13 +64,13 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        if((intel.getRoundResults().size() >= 1) && intel.getRoundResults().get(0) != GameIntel.RoundResult.DREW && valueOfTheHand(intel) >= 15){
+        if((!intel.getRoundResults().isEmpty()) && intel.getRoundResults().get(0) != GameIntel.RoundResult.DREW && valueOfTheHand(intel) >= 15){
             return true;
         }if((intel.getRoundResults().size() == 2) &&  valueOfTheHand(intel) >= 10){
             return true;
         }if((intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && valueOfTheHand(intel) >= 10)){
             return true;
-        }if((manilhaCount(cards, intel.getVira()) > 0) && (intel.getRoundResults().size() > 0) && intel.getRoundResults().get(0).equals(DREW)){
+        }if((manilhaCount(cards, intel.getVira()) > 0) && (!intel.getRoundResults().isEmpty()) && intel.getRoundResults().get(0).equals(DREW)){
             if(strongManilha(intel).relativeValue(intel.getVira()) > 11){
                 return true;
             }
@@ -194,8 +194,8 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
 
     private TrucoCard strongCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        Integer maior = 0;
-        Integer indexMaior = -1;
+        int maior = 0;
+        int indexMaior = -1;
         for (TrucoCard card : intel.getCards()) {
             if (card.getRank().value() > maior) {
                 maior = card.getRank().value();
@@ -296,11 +296,5 @@ public class TecoNoMarrecoBot implements BotServiceProvider {
         }
         return false;
     }
-
-
-
-
-
-
 
 }

@@ -20,7 +20,6 @@
         <module>bot-spi</module>
         <module>bot-impl</module>
         <module>web</module>
-<!--        <module>bot-made-in-descalvado</module>-->
     </modules>
 
     <parent>
@@ -75,5 +74,6 @@
             <version>5.4.0</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
