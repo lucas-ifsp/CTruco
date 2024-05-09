@@ -520,7 +520,7 @@ class JakareDuMatuBotTest {
 
             // Bot info
             List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
 
@@ -530,7 +530,7 @@ class JakareDuMatuBotTest {
                     .opponentScore(1)
                     .build();
 
-            assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 1);
+            assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
 
         }
 
