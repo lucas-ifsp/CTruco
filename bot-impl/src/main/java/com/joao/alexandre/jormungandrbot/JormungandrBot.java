@@ -317,5 +317,18 @@ public class JormungandrBot implements BotServiceProvider {
         return (double) sum / valores.size();
     }
 
-    boolean hasCopasAndZapInHand(GameIntel intel) {return false;}
+    boolean hasCopasAndZapInHand(GameIntel intel) {
+        boolean copasFlag = false;
+        boolean zapFlag = false;
+
+        for(TrucoCard card : intel.getCards()){
+            if (card.isCopas(intel.getVira()))
+                copasFlag = true;
+
+            if (card.isZap(intel.getVira()))
+                zapFlag = true;
+        }
+
+        return copasFlag && zapFlag;
+    }
 }
