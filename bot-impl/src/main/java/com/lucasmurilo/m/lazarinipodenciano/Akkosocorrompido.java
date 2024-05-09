@@ -43,13 +43,34 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        //can raise
+        //cannot raise
         if (intel.getHandPoints() == 12) {
 
         }
-        //cannot raise
+        //can raise
         else {
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+            )
+                return true;
 
+            
         }
     }
 
@@ -65,11 +86,11 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        //can raise
+        //cannot raise
         if (intel.getHandPoints() == 12) {
 
         }
-        //cannot raise
+        //can raise
         else {
 
         }
