@@ -108,9 +108,9 @@ public class Akkosocorrompido implements BotServiceProvider {
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         
         if(intel.getOpponentCard().isPresent()){
-            TrucoCard opponentCardFrFR = opponentCard.orElseThrow();
+            TrucoCard presentOpponentCard = opponentCard.orElseThrow();
             for (TrucoCard trucoCard : botCards) {
-                if (trucoCard.relativeValue(vira) > opponentCardFrFR.relativeValue(vira)) {
+                if (trucoCard.relativeValue(vira) > presentOpponentCard.relativeValue(vira)) {
                     if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
                         lowestCardToWin = trucoCard;
                     }
