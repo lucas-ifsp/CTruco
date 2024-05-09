@@ -549,6 +549,13 @@ class JakareDuMatuBotTest {
             );
             assertEquals(jakareDuMatuBot.hasGoodCards(botCards, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).size(), 1);
 
+            List<TrucoCard> botCards2 = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+            );
+            assertEquals(jakareDuMatuBot.hasGoodCards(botCards2, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).size(), 2);
+
         }
     }
 
