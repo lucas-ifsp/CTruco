@@ -799,7 +799,7 @@ class JormungandrBotTest {
                     .botInfo(currentCards, 0)
                     .opponentScore(0);
 
-            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)),
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)),
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
         }
