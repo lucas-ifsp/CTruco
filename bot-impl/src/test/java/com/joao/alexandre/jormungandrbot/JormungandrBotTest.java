@@ -844,8 +844,29 @@ class JormungandrBotTest {
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)),
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
-
         }
+
+        @Test
+        @DisplayName("Should play the lowest card if self has no manilhas and won the first round")
+        void shouldPlayLowestCardIfHasNoManilhasAndWonFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
     }
 
     @Nested
