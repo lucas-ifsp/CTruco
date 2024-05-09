@@ -61,7 +61,6 @@ public class Akkosocorrompido implements BotServiceProvider {
         return 0;
     }
 
-    //low card
     public TrucoCard getLowestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
@@ -74,8 +73,8 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         return lowestCard;
       }
-    //high card
-    public TrucoCard getHighestCardInHand(GameIntel intel) {
+
+      public TrucoCard getHighestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
@@ -87,8 +86,8 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         return highestCard;
       }
-    //manilha
-    private boolean haveHighCardInHand(GameIntel intel) {
+
+      private boolean haveHighCardInHand(GameIntel intel) {
         for (TrucoCard card : intel.getCards()) {
             if (card.isManilha(intel.getVira())) {
                 return true;
@@ -100,7 +99,6 @@ public class Akkosocorrompido implements BotServiceProvider {
         return false;
     }
 
-    //lowtowin
     public TrucoCard getLowestCardToWin(GameIntel intel){
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard lowestCardToWin = botCards.get(0);
@@ -123,12 +121,16 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     public CardToPlay chooseCardFirstRound(GameIntel intel){
-        if (haveHighCardInHand(intel)) {
-            return CardToPlay.of(getHighestCardInHand(intel));
+        if(intel.getOpponentCard().isPresent()){
+            return CardToPlay.of(getLowestCardToWin(intel));        
+        }else{
+            if (haveHighCardInHand(intel)) {
+                //truco
+                return CardToPlay.of(intel.getCards().get(0));
+            }else{
+                return CardToPlay.of(getHighestCardInHand(intel));
+            }
         }
-        //se o oponente jogou primeiro
-        //return CardToPlay.of(getLowestCardToWin(intel));        
-        return CardToPlay.of(intel.getCards().get(0));
     }
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){

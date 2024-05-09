@@ -102,7 +102,7 @@ public class AkkosocorrompidoTest {
 
         List<TrucoCard> botCards = Arrays.asList(
             TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
             TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
         );
         List<TrucoCard> openCards = List.of(vira);
@@ -111,7 +111,7 @@ public class AkkosocorrompidoTest {
             .gameInfo(List.of(), openCards, vira, 1)
             .botInfo(botCards, 3)
             .opponentScore(3)
-            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
+            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS))
             .build();
 
         assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel).value());
