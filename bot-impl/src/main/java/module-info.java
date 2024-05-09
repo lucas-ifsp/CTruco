@@ -73,7 +73,8 @@ module bot.impl {
     exports com.renato.DarthVader;
 
     provides com.bueno.spi.service.BotServiceProvider with
-            DummyBot, 
+            DummyBot,
+            LazyBot,
             Carlsen, 
             DestroyerBot, 
             WrkncacnterBot, 
@@ -96,12 +97,8 @@ module bot.impl {
             SabotaBot,
             CaipirasBot,
             PauladaSecaBot,
-            MarrecoBot,
-            AddTheNewSoul,
-            LazyBot,
             MinePowerBot,
             JormungandrBot,
-            LazyBot,
             Akkosocorrompido,
             JakareDuMatuBot,
             ChatGptBot,
