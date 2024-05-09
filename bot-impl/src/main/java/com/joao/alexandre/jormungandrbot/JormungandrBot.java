@@ -260,5 +260,24 @@ public class JormungandrBot implements BotServiceProvider {
         );
     }
 
-    double getAverageValueOfHand(GameIntel intel) { return 0.0;}
+    double getAverageValueOfHand(GameIntel intel) {
+        List<Integer> valores = new ArrayList<>();
+        TrucoCard vira = intel.getVira();
+
+        for(TrucoCard card : intel.getCards()) {
+            valores.add(card.relativeValue(vira));
+        }
+
+        valores.add(
+                getSelfCardPlayed(intel)
+                        .orElse(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
+                        .relativeValue(vira)
+        );
+
+        int sum = valores.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        return (double) sum / valores.size();
+    }
 }
