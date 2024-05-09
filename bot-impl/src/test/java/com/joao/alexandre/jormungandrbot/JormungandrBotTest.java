@@ -1461,5 +1461,20 @@ class JormungandrBotTest {
 
             assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("If opponent has less than 5 points, raise")
+        void shouldRaiseIfOpponentHasLessThanFivePoints() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(), 1)
+                    .opponentScore(3);
+
+            assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
+        }
+
+
     }
 }
