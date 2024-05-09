@@ -8,7 +8,13 @@ import java.util.*;
 public class JormungandrBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        if(getManilhaCountInHand(intel) > 0)
+            return true;
+
+        if(intel.getOpponentScore() <= 5)
+            return getCardCountInHandHigherThanRelativeValue(intel, 6) >= 2;
+
+        return getCardCountInHandHigherThanRelativeValue(intel, 7) >= 2;
     }
 
     @Override
