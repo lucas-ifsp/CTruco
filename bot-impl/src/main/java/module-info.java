@@ -4,6 +4,7 @@ import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
+import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
@@ -46,6 +47,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.garcia.orlandi.slayerbot;
     exports com.erick.itaipavabot;
     exports com.renato.DarthVader;
 
@@ -82,5 +84,6 @@ module bot.impl {
             LazyBot,
             ItaipavaBot,
             DarthVader,
+            SlayerBot,
             MalasiaBot;
 }
