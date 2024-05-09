@@ -1282,6 +1282,25 @@ class JormungandrBotTest {
 
             assertEquals(-1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("With Manilha on hand, Raises")
+        void shouldRaiseIfHasManilhaOnHand() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
     }
 
 }
