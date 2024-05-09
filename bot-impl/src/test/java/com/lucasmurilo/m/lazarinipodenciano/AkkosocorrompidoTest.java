@@ -393,7 +393,7 @@ public class AkkosocorrompidoTest {
     }
 
     @Test
-    @DisplayName("Should Raise if the hand has two good cards")
+    @DisplayName("Should raise if the hand has two good cards")
     public void ShouldRaiseIfHandHasTwoGoodCards() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
 
@@ -408,6 +408,28 @@ public class AkkosocorrompidoTest {
         GameIntel intel = GameIntel.StepBuilder.with()
             .gameInfo(List.of(), openCards, vira, 1)
             .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.getRaiseResponse(intel)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should raise if the hand has two cards greatter than King")
+    public void ShouldRaiseIfHandHasTwoCardsGratterThanKing() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
             .opponentScore(0)
             .build();
 
