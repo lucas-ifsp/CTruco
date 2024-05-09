@@ -397,7 +397,7 @@ public class AkkosocorrompidoTest {
 
     @Test
     @DisplayName("Should raise if the hand has two good cards")
-    public void ShouldRaiseIfHandHasTwoGoodCards() {
+    public void ShouldRaiseIfHandHasTwoGoodCardsWhenOpponent() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -419,7 +419,7 @@ public class AkkosocorrompidoTest {
 
     @Test
     @DisplayName("Should raise if the hand has two cards greatter than King")
-    public void ShouldRaiseIfHandHasTwoCardsGratterThanKing() {
+    public void ShouldRaiseIfHandHasTwoCardsGratterThanKingWhenOpponent() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -441,7 +441,7 @@ public class AkkosocorrompidoTest {
 
     @Test
     @DisplayName("Should not raise if the hand has two cards less than vira")
-    public void ShouldNotRaiseIfHandHasTwoCardsLessThanVira() {
+    public void ShouldNotRaiseIfHandHasTwoCardsLessThanViraWhenOpponent() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -463,7 +463,7 @@ public class AkkosocorrompidoTest {
 
     @Test
     @DisplayName("Should not raise if the hand has two cards less than king")
-    public void ShouldNotRaiseIfHandHasTwoCardsLessThanKing() {
+    public void ShouldNotRaiseIfHandHasTwoCardsLessThanKingWhenOpponent() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -485,7 +485,7 @@ public class AkkosocorrompidoTest {
 
     @Test
     @DisplayName("Should not accept a raise if has worse cards")
-    public void ShouldNotAcceptIfHasWorseCards() {
+    public void ShouldNotAcceptIfHasWorseCardsWhenOpponent() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
 
         List<TrucoCard> botCards = Arrays.asList(
@@ -503,5 +503,115 @@ public class AkkosocorrompidoTest {
             .build();
 
         assertThat(bot.getRaiseResponse(intel)).isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Should raise if the hand has two good cards")
+    public void ShouldRaiseIfHandHasTwoGoodCardsWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should raise if the hand has two cards greatter than King")
+    public void ShouldRaiseIfHandHasTwoCardsGratterThanKingWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should not raise if the hand has two cards less than vira")
+    public void ShouldNotRaiseIfHandHasTwoCardsLessThanViraWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should not raise if the hand has two cards less than king")
+    public void ShouldNotRaiseIfHandHasTwoCardsLessThanKingWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should not accept a raise if has worse cards")
+    public void ShouldNotAcceptIfHasWorseCardsWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isFalse();
     }
 }
