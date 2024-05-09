@@ -194,4 +194,6 @@ public class JormungandrBot implements BotServiceProvider {
 
         return cardCount;
     }
+
+    double getAverageValueOfTwoHighestCards(GameIntel intel) {return 0.0;}
 }

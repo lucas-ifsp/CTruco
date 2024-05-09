@@ -760,9 +760,9 @@ class JormungandrBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), //below
-                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS), //above
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)); //on
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
@@ -792,6 +792,32 @@ class JormungandrBotTest {
             assertEquals(2,
                     jormungandrBot.getCardCountInHandHigherThanRelativeValue(
                             stepBuilder.build(), 9));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Testing getAverageValueOfTwoHighestCards() function")
+    class GetAverageValueOfTwoHighestCardsTest {
+
+        @Test
+        @DisplayName("With 3 cards in hand, X Y and Z, Z is the weakest card in hand, average should be X+Y/2")
+        void makeSureAverageIsIgnoringTheWeakestCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //8
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals((double) (TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS).relativeValue(vira) +
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS).relativeValue(vira)) /2,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
 
     }
