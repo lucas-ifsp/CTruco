@@ -32,12 +32,11 @@ public class FernasFirstHand implements FernasStrategy {
         if (intel.getOpponentScore() <= 6){
             return getAmountBetween(intel, 13, 7) >= 2;
         }
-            return getAmountManilhas(intel) >= 2 || getAmountBetween(intel, 13, 9) >= 2;
+        return getAmountManilhas(intel) >= 2 || getAmountBetween(intel, 13, 9) >= 2;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        int handValue = getHandValue(intel);
         if (getAmountBetween(intel, 7, 3) >= 2) return true;
         if (getAmountBetween(intel, 13, 8) >= 2) return true;
         return getAmountBetween(intel, 9, 5) >= 1 && getAmountManilhas(intel) >= 1;
@@ -57,11 +56,10 @@ public class FernasFirstHand implements FernasStrategy {
         }
         if (hasCasalMaior(intel) || hasCasalPreto(intel) || hasPausOuros(intel) || hasCopasEspadilha(intel)){
             return CardToPlay.of(cards.get(0));
-        } else if (hasCasalMenor(intel)) {
-            return CardToPlay.of(cards.get(1));
-        } else if (hasCasalVermelho(intel)) {
+        } else if (hasCasalMenor(intel) || hasCasalVermelho(intel)) {
             return CardToPlay.of(cards.get(1));
         }
+
         List<TrucoCard> cartasTres = getTres(cards);
         if (cartasTres.isEmpty()) return CardToPlay.of(cards.get(0));
         else if (getAmountManilhas(intel) == 1){

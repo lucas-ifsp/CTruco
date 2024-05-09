@@ -56,15 +56,11 @@ public class FernasSecondHand implements FernasStrategy {
         if (roundResult == RoundResult.DREW) return CardToPlay.of(cards.get(1));
 
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-
         if (opponentCard.isPresent()) {
             Optional<TrucoCard> menorCarta = getMenorCarta(intel);
             return menorCarta.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(cards.get(0)));
         }
 
-        if (getAmountManilhas(intel) >= 1){
-            return CardToPlay.of(cards.get(1));
-        }
         List<TrucoCard> cartasTres = getTres(cards);
         if (cartasTres.isEmpty()) return CardToPlay.of(cards.get(0));
         else if (getAmountManilhas(intel) == 1){
