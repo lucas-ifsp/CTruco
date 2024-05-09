@@ -122,7 +122,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 return CardToPlay.of(sorted.get(0));
             }
         }
-        return null;
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override

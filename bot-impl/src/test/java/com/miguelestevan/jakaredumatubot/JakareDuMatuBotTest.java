@@ -441,6 +441,35 @@ class JakareDuMatuBotTest {
         //--------------------------------------------------------------------------------------------------------------
 
         // Third Hand (Estevan)
+        @Test
+        @DisplayName("Should play the last card in third hand")
+        public void ShouldPlayTheLastCardInThirdHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON); // Ganhou a segunda rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES), //first bot card
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES), //second bot card
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS), //first opponent card
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS) //second opponent card
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        }
     }
 
     @Nested
