@@ -842,7 +842,7 @@ class JormungandrBotTest {
                     .opponentScore(0);
 
             assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)),
-                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+                    jormungandrBot.chooseCardSecondRound(stepBuilder.build())
             );
         }
 
