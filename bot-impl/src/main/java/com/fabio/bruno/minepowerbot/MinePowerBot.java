@@ -1,14 +1,41 @@
+/*
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
+// Authors: Bruno Cobuci & Fábio Seyiji
+
 package com.fabio.bruno.minepowerbot;
 
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class MinePowerBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(getCardAboveRank(intel, CardRank.ACE).size() == 3 && intel.getOpponentScore() <= 9)
+            return true;
+        if (listManilhas(intel).size()>=1)
+            return true;
         return false;
     }
 
@@ -24,8 +51,8 @@ public class MinePowerBot implements BotServiceProvider {
         var botScore = intel.getScore();
         var opponentScore = intel.getOpponentScore();
         var countManilhas = listManilhas(intel).size();
-        if (intel.getScore() < 11) {
-            if (intel.getScore() > opponentScore + 3)
+        if (botScore < 11) {
+            if (botScore > opponentScore + 3)
                 return true;
             if (countManilhas >= 1)
                 return true;
@@ -53,32 +80,24 @@ public class MinePowerBot implements BotServiceProvider {
             if (qtdManilhas.size() == 1) {
                 TrucoCard manilha = qtdManilhas.get(0);
                 return CardToPlay.of(manilha);
-            }
-        } else {
-            var opponentCard = intel.getOpponentCard().get();
-            switch (roundNumber) {
-                case 1 -> {
-                    var lowestCardStrongerThanOpponentCard = intel.getCards().stream()
-                            .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
-                            .min((card1, card2) -> card1.compareValueTo(card2, vira));
-                    if (lowestCardStrongerThanOpponentCard.isPresent())
-                        return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
-                }
-                default -> {
-                    if (intel.getOpponentScore() == intel.getScore()){
-                        return CardToPlay.of(higherCard(intel));
-                    } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
-                        return CardToPlay.of(getLowerCard(intel));
-                    }
-                }
-            }
-            if (intel.getOpponentScore() == intel.getScore()) {
+            } else {
                 return CardToPlay.of(higherCard(intel));
             }
-        }
-        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
+        }else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
             var lowCard = getLowerCard(intel);
             return CardToPlay.of(lowCard);
+        } else {
+            var opponentCard = intel.getOpponentCard().get();
+            Optional<TrucoCard> lowestCardStrongerThanOpponentCard = intel.getCards().stream()
+                    .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                    .min((card1, card2) -> card1.compareValueTo(card2, vira));
+            if (lowestCardStrongerThanOpponentCard.isPresent())
+                return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
+            if (intel.getOpponentScore() == intel.getScore()){
+                return CardToPlay.of(higherCard(intel));
+            } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
+                return CardToPlay.of(getLowerCard(intel));
+            }
         }
         return CardToPlay.of(intel.getCards().get(0));
     }

@@ -1,3 +1,25 @@
+/*
+ *  Copyright (C) 2021 Lucas B. R. de Oliveira - IFSP/SCL
+ *  Contact: lucas <dot> oliveira <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
+// Authors: Bruno Cobuci & Fábio Seyiji
+
 package com.fabio.bruno.minepowerbot;
 
 import com.bueno.spi.model.*;
@@ -142,9 +164,21 @@ class MinePowerBotTest {
     void playMaoDeOnzeWithThreeCardsAboveAceAndOpponentsScoreIsLessThanNine() {
         intel = create()
                 .viraToBe(CardRank.SEVEN, CardSuit.HEARTS)
-                .cards(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                .cards(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)).finish();
+
+        assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should play Mão de Onze if the player at least 1 manilha.")
+    void playMaoDeOnzeWithManilhas() {
+        intel = create()
+                .viraToBe(CardRank.SEVEN, CardSuit.HEARTS)
+                .cards(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
 
         assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
     }
