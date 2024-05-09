@@ -43,7 +43,14 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        //can raise
+        if (intel.getHandPoints() == 12) {
+
+        }
+        //cannot raise
+        else {
+
+        }
     }
 
     @Override
@@ -59,10 +66,13 @@ public class Akkosocorrompido implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         //can raise
+        if (intel.getHandPoints() == 12) {
 
-
+        }
         //cannot raise
-        
+        else {
+
+        }
     }
 
     //low card
