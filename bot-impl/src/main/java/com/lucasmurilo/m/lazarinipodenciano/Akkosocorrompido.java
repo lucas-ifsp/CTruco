@@ -430,6 +430,6 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     public static boolean randomBooleanByIntSeed(int seed) {
-        return seed < 5;
+        return seed >= 5;
     }
 }
