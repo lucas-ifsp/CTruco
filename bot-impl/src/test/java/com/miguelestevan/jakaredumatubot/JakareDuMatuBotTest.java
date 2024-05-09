@@ -336,8 +336,8 @@ class JakareDuMatuBotTest {
 
         //Se tiver zap e um tres ou dois, guardar o zap pra dar na testa do caquinho
         @Test
-        @DisplayName("Should play the second strongest card if play first and have zap and other strong card in first hand")
-        public void ShouldPlayTheSecondStrongestCardIfPlayFirstAndHaveZapAndOtherStrongCardInFirstHand() {
+        @DisplayName("Should play the second strongest card if play first and have zap in first hand")
+        public void ShouldPlayTheSecondStrongestCardIfPlayFirstAndHaveZapInFirstHand() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
