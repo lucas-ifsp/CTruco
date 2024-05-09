@@ -16,19 +16,37 @@ public class TeitasBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+        Boolean hasNuts =  TeitasBotFunctions.hasNutsHand(cards,vira);
+        Boolean hasStrong = TeitasBotFunctions.hasStrongHand(cards,vira);
+
+
+        return hasNuts || hasStrong;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        final int elevenHandPoints = 11;
+        final int maxHandPoints = 12;
+
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
 
+
         boolean HasNutsHand = TeitasBotFunctions.hasNutsHand(cards,vira);
+        boolean HasTrashHand = TeitasBotFunctions.hasTrashHand(cards,vira);
+        boolean HasGoodHand = TeitasBotFunctions.hasGoodHand(cards,vira);
+        boolean HasStrongHand = TeitasBotFunctions.hasStrongHand(cards,vira);
 
+        if (intel.getScore() == elevenHandPoints ||
+                intel.getOpponentScore() == elevenHandPoints ||
+                intel.getHandPoints() == maxHandPoints) {
+            return false;
+        }
 
+        return HasNutsHand || HasStrongHand;
 
-        return false;
     }
 
     @Override
@@ -39,7 +57,6 @@ public class TeitasBot implements BotServiceProvider {
         Boolean handStrong = TeitasBotFunctions.hasStrongHand(cards,vira);
         Boolean handGood = TeitasBotFunctions.hasGoodHand(cards,vira);
         Boolean handTrash = TeitasBotFunctions.hasTrashHand(cards,vira);
-
 
         CardToPlay strongestCard = TeitasBotFunctions.getStrongestCard(cards,vira);
         CardToPlay secondBestCard = TeitasBotFunctions.getMiddleCardLevel(cards,vira);
@@ -54,27 +71,24 @@ public class TeitasBot implements BotServiceProvider {
         } else if (TeitasBotFunctions.firstToPlay(intel) & handTrash) {
             return strongestCard;}
 
+        TrucoCard strongCardTruco = TeitasBotFunctions.getStrongestCardTrucoCardType(cards,vira);
+        TrucoCard middleCardTruco = TeitasBotFunctions.getMiddleCardTrucoCardType(cards,vira);
+        TrucoCard weakestCardTruco = TeitasBotFunctions.getWeakestCardTrucoCardType(cards,vira);
+
 
         if (intel.getOpponentCard().isPresent()) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
 
-            if (TrucoCard.of().compareValueTo(opponentCard, vira) > 0) {
+            if (strongCardTruco.compareValueTo(opponentCard, vira) > 0) {
                 if (opponentCard.relativeValue(vira) < 8) {
-                    return CardToPlay.of(weakestCapableOfWin(opponentCard, vira, hand));
+                    return worstCard;
                 }
-                return CardToPlay.of(strongestCardInHand);
+                return secondBestCard;
             } else {
-                return CardToPlay.of(worstCard);
-            }
-        }
+                return worstCard;
+            }}
 
-
-
-
-
-
-
-        return null;
+        return secondBestCard;
     }
 
     @Override
@@ -99,14 +113,15 @@ public class TeitasBot implements BotServiceProvider {
 
         if (roundsAteAgora.isEmpty()) {
             if (myHandGood || myHandStrong) {
-                //bota pra forcar e foda se.
-                return 1;
+
+                return 0;
             } else if (myHandNuts) {
                 return 0;
             }
         }
 
-        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.WON)){
+
+        if(!roundsAteAgora.isEmpty() && roundsAteAgora.get(0).equals(GameIntel.RoundResult.WON)){
             if (myHandNuts || myHandStrong) {
                 return 1;
             }
@@ -117,12 +132,12 @@ public class TeitasBot implements BotServiceProvider {
                 return -1;
         }
 
-        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.DREW)){
+        if(!roundsAteAgora.isEmpty() && roundsAteAgora.get(0).equals(GameIntel.RoundResult.DREW)){
             //FODA SE
             return 1;
         }
 
-        if(roundsAteAgora.get(0).equals(GameIntel.RoundResult.LOST)) {
+        if(!roundsAteAgora.isEmpty() && roundsAteAgora.get(0).equals(GameIntel.RoundResult.LOST)) {
             if(myHandStrong | myHandNuts){
                 return 1;
             }

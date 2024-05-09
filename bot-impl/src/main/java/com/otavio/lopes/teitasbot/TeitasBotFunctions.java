@@ -72,7 +72,36 @@ public class TeitasBotFunctions {
         return CardToPlay.of(weakestCard);
     }
 
+    static TrucoCard getStrongestCardTrucoCardType(List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard strongestCard = cards.get(0);
 
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
+        }
+
+        return strongestCard;
+
+    };
+
+    static TrucoCard getMiddleCardTrucoCardType(List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard strongCard = getStrongestCardTrucoCardType(cards,vira);
+        TrucoCard weakestCard = getWeakestCardTrucoCardType(cards, vira);
+
+        for (TrucoCard card : cards){
+            return card;
+        }
+        return strongCard;
+    };
+
+    static TrucoCard getWeakestCardTrucoCardType(List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard worstCard = cards.get(0);
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(worstCard, vira) < 0) {
+                worstCard = card;
+            }
+        }
+        return worstCard;
+    };
 
     static CardToPlay getStrongestCard(List<TrucoCard> cards, TrucoCard vira){
 
