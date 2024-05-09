@@ -1180,4 +1180,27 @@ class JormungandrBotTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("Testing getAverageValueOfHand() function")
+    class GetAverageValueOfHandTest{
+        @Test
+        @DisplayName("with 3 card in hand, return should be (a+b+c)/3 ")
+        void makeSureToReturnSumOfAllCardsInHandDevidedByThreeWhenHandFull(){
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),//1
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),//10
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));//2
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals((double) 13 /3,jormungandrBot.getAverageValueOfHand(stepBuilder.build()));
+        }
+    }
 }

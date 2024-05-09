@@ -259,4 +259,6 @@ public class JormungandrBot implements BotServiceProvider {
                 intel.getRoundResults().size() - 1
         );
     }
+
+    double getAverageValueOfHand(GameIntel intel) { return 0.0;}
 }
