@@ -127,7 +127,7 @@ public class Akkosocorrompido implements BotServiceProvider {
             return CardToPlay.of(getHighestCardInHand(intel));
         }
         //se o oponente jogou primeiro
-        //return CardToPlay.of(getLowestCardToWin(intel.getCards(), intel.getOpponentCard(), intel.getVira()));        
+        //return CardToPlay.of(getLowestCardToWin(intel));        
         return CardToPlay.of(intel.getCards().get(0));
     }
 

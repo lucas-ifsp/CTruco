@@ -48,7 +48,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(3)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), bot.chooseCard(intel).value());
     }
 
     //truca depois dessa, ou agora tbm
@@ -70,7 +70,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(0)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), bot.chooseCard(intel).value());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel).value());
     }
     
     @Test
@@ -135,7 +135,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), bot.chooseCard(intel).value());
     }
     
     //truco/blefe instead
@@ -161,7 +161,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel).value());
     }
         
     @Test
