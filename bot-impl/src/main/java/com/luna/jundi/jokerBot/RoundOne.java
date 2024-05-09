@@ -5,9 +5,7 @@ import static com.luna.jundi.jokerBot.JokerBotUtils.*;
 
 public class RoundOne implements HandState {
 
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+    public RoundOne(GameIntel intel) {
     }
 
     @Override

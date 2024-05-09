@@ -5,9 +5,7 @@ import com.bueno.spi.model.GameIntel;
 
 public class RoundThree implements HandState{
 
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+    public RoundThree(GameIntel intel) {
     }
 
     @Override

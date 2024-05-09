@@ -9,10 +9,7 @@ import static com.luna.jundi.jokerBot.JokerBotUtils.jokerBotWonFirstRound;
 public class RoundTwo implements HandState {
 
 
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-
-        return false;
+    public RoundTwo(GameIntel intel) {
     }
 
     @Override
