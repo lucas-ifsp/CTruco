@@ -11,6 +11,8 @@ public class MinePowerBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(getCardAboveRank(intel, CardRank.ACE).size() == 3 && intel.getOpponentScore() <= 9)
             return true;
+        if (listManilhas(intel).size()>=1)
+            return true;
         return false;
     }
 
