@@ -1396,4 +1396,29 @@ class JormungandrBotTest {
             assertTrue(jormungandrBot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing decideIfRaises() function")
+    class DecideIfRaisesTest {
+        @Test
+        @DisplayName("If LastRound DREW, isSecondToPlay, Raise")
+        void shouldRaiseIfLasRoundDrewAndIsSecondToPlay() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.DREW);
+
+            TrucoCard opCard = TrucoCard.of(CardRank.FOUR,CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0)
+                    .opponentCard(opCard);
+
+            assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
+        }
+    }
 }
