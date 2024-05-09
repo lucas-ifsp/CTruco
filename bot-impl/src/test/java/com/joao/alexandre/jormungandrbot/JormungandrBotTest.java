@@ -1496,5 +1496,22 @@ class JormungandrBotTest {
 
             assertTrue(jormungandrBot.hasCopasAndZapInHand(stepBuilder.build()));
         }
+        @Test
+        @DisplayName("Should return false if hand has two random non zap&copas manilhas")
+        void shouldReturnFalseIfHandHasTwoLowManilhas(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertFalse(jormungandrBot.hasCopasAndZapInHand(stepBuilder.build()));
+        }
     }
 }
