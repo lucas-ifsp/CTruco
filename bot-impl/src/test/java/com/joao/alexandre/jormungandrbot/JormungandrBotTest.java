@@ -1014,4 +1014,30 @@ class JormungandrBotTest {
                     jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getLastRoundResult() function")
+    class GetLastRoundResultTest {
+
+        @Test
+        @DisplayName("If asking on First Round should Throw exception")
+        void shouldReturnExceptionOnFisrtRound() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertThrows(ArrayIndexOutOfBoundsException.class,
+                    () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
+            );
+        }
+    }
 }

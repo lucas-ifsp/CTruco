@@ -233,4 +233,8 @@ public class JormungandrBot implements BotServiceProvider {
 
         return (double) sum / valores.size();
     }
+
+    GameIntel.RoundResult getLastRoundResult(GameIntel intel) {
+        return GameIntel.RoundResult.DREW;
+    }
 }
