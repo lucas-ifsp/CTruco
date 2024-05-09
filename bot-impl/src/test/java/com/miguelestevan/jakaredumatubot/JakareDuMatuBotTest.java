@@ -738,6 +738,66 @@ class JakareDuMatuBotTest {
             assertEquals(0, jakareDuMatuBot.getRaiseResponse(intel));
         }
 
+        @Test
+        @DisplayName("Should re raises if have two manilha")
+        public void ShouldReRaisesIfHaveTwoManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
+        }
+
+        @Test
+        @DisplayName("Should accept raise if have two good cards")
+        public void ShouldAcceptRaiseIfHaveTwoGoodCards(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(0, jakareDuMatuBot.getRaiseResponse(intel));
+        }
+
+
+
         //                                   Third Hand
     }
 
