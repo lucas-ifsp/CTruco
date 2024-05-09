@@ -22,6 +22,7 @@
 package com.lucasmurilo.m.lazarinipodenciano;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
@@ -103,15 +104,21 @@ public class Akkosocorrompido implements BotServiceProvider {
     public TrucoCard getLowestCardToWin(List<TrucoCard> botCards, GameIntel intel){
         TrucoCard lowestCardToWin = botCards.get(0);
         TrucoCard vira = intel.getVira();
-
-        for (TrucoCard trucoCard : botCards) {
-            if (trucoCard.relativeValue(vira) > opponentCard.relativeValue(vira)) {
-                if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
-                    lowestCardToWin = trucoCard;
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        
+        if(intel.getOpponentCard().isPresent()){
+            TrucoCard opponentCardFrFR = opponentCard.orElseThrow();
+            for (TrucoCard trucoCard : botCards) {
+                if (trucoCard.relativeValue(vira) > opponentCardFrFR.relativeValue(vira)) {
+                    if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
+                        lowestCardToWin = trucoCard;
+                    }
                 }
             }
+            return lowestCardToWin;
+        }else{
+            return lowestCardToWin;
         }
-        return lowestCardToWin;
     }
 
     public CardToPlay chooseCardFirstRound(GameIntel intel){
@@ -124,7 +131,6 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){
-        
         return CardToPlay.of(intel.getCards().get(0));
     }
 
