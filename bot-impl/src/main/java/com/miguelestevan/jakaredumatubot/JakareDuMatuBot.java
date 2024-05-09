@@ -179,6 +179,12 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 //se o bot tiver duas cartas boas ele aceita o truco
                 if(!(hasGoodCards(intel.getCards(), intel.getVira()).size() > 1)) return 0;
             }
+            case 2 ->{
+                //se o bot tiver uma manilha na mão AINDA ele aumenta
+                if(!getManilhas(intel.getCards(), intel.getVira()).isEmpty()) return 1;
+                //se o bot tiver uma carta boa na mão AINDA ele aceita o truco
+                if (!hasGoodCards(intel.getCards(), intel.getVira()).isEmpty()) return 0;
+            }
         }
 
         return 0;
