@@ -559,7 +559,35 @@ class JakareDuMatuBotTest {
             assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 0);
         }
 
-        // Se
+        // Pediu truco na carta do bote, só aumenta se tiver duas manilhas ou a diferença de pontos for maior que 5 e tiver apenas uma carta boa
+        @Test
+        @DisplayName("Should Re Raises After Bot Plays If Was TwoManilhasOrDifferenceWasMoreThanFivePoints")
+        public void ShouldReRaisesAfterBotPlaysIfWasTwoManilhasOrDifferenceWasMoreThanFivePoints(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS) //bot card
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
+
+        }
 
         // Second Hand (Estevan)
 
