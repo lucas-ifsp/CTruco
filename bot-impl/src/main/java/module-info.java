@@ -27,6 +27,7 @@ import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
+import com.otavio.lopes.teitasbot.TeitasBot;
 import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
@@ -35,6 +36,7 @@ module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
+  
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -55,6 +57,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.otavio.lopes.teitasbot;
     exports com.miguelestevan.jakaredumatubot;
     exports com.soares.gibim.chatgptbot;
     exports com.barbara.lucasCruz.patriciaAparecida;
@@ -102,5 +105,6 @@ module bot.impl {
             ItaipavaBot,
             DarthVader,
             SlayerBot,
+            TeitasBot,
             MalasiaBot;
 }
