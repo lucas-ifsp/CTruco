@@ -101,7 +101,8 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     //lowtowin
-    public TrucoCard getLowestCardToWin(List<TrucoCard> botCards, GameIntel intel){
+    public TrucoCard getLowestCardToWin(GameIntel intel){
+        List<TrucoCard> botCards = intel.getCards();
         TrucoCard lowestCardToWin = botCards.get(0);
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();

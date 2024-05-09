@@ -4,6 +4,7 @@ import static com.bueno.spi.model.CardRank.SIX;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -95,7 +96,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.getLowestCardToWin(botCards, intel));
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.getLowestCardToWin(intel));
     }
 
     @Test
@@ -276,5 +277,23 @@ public class AkkosocorrompidoTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("Should check if lowest card to win returns exception")
+    public void ShouldCheckIfLowestCardToWinReturnsException(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestCardToWin(intel));
+    }
 }
