@@ -856,5 +856,22 @@ class JormungandrBotTest {
             assertEquals(7.0,
                     jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("With 1 cards in hand, average should be that card relative value")
+        void makeSureWithOneCardInHandAverageShouldBeThatCardRelativeValue() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)); //13
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS).relativeValue(vira),
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
     }
 }
