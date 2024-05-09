@@ -839,5 +839,22 @@ class JormungandrBotTest {
                     jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("With 2 cards with wildly diferent values in hand, average should be accurate")
+        void makeSureAverageIsBeenAccurateWhenTwoWildlyDifferentCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)); //1
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(7.0,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
     }
 }
