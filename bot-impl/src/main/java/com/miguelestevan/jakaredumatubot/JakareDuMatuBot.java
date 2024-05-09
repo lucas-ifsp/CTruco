@@ -153,7 +153,7 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 if(intel.getOpenCards().size() == 1){
 
                     // Truco para sair -> Só tem a vira na mesa
-                    if(getManilhas(intel.getCards(), intel.getVira()).size() == 1 && hasGoodCards(intel.getCards(), intel.getVira()).size() > 0){
+                    if(getManilhas(intel.getCards(), intel.getVira()).size() == 1 && !hasGoodCards(intel.getCards(), intel.getVira()).isEmpty()){
                         return 1;
                     }
 
@@ -166,6 +166,16 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 if(Math.abs(intel.getScore() - intel.getOpponentScore()) >= 5 && hasGoodCards(intel.getCards(), intel.getVira()).size() == 1){
                     return 1;
                 }
+
+                return -1;
+            }
+            case 1 ->{
+                //se o bot tiver uma manilha na mão ele aceita o truco
+                if(getManilhas(intel.getCards(), intel.getVira()).size() == 1)return 0;
+                //se o bot tiver duas manilhas na mão ele aumenta
+                if(getManilhas(intel.getCards(), intel.getVira()).size() == 2) return 1;
+                //se o bot tiver duas cartas boas ele aceita o truco
+                if(!(hasGoodCards(intel.getCards(), intel.getVira()).size() > 1)) return 0;
             }
         }
 
