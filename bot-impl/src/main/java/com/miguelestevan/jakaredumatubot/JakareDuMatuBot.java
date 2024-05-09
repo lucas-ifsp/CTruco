@@ -132,8 +132,8 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 // First Hand
                 if(intel.getOpenCards().size() == 1){
                     // Truco para sair -> Só tem a vira na mesa
-                    if(getManilhas(intel.getCards(), intel.getVira()).size() == 1){
-
+                    if(getManilhas(intel.getCards(), intel.getVira()).size() == 1 && hasGoodCards(intel.getCards(), intel.getVira()).size() > 0){
+                        return 1;
                     }
                 }
                 // Pediu truco na carta do bot
