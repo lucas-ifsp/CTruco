@@ -789,8 +789,34 @@ class JakareDuMatuBotTest {
         }
 
 
-
         //                                   Third Hand
+        @Test
+        @DisplayName("Should re raise if still have manilha in third hand")
+        public void ShouldReRaiseIfStillHaveManilhaInThirdHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
+        }
     }
 
     @Nested
