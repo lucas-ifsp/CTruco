@@ -73,41 +73,32 @@ public class ChatGptBot implements BotServiceProvider {
             if (countManilhas(intel) == 2 || verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)) {
                 return 1;
             }
-            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 22) {
+            if (countManilhas(intel) > 0 || handStrength(intel) > 22) {
                 return 0;
             }
         } else if (intel.getRoundResults().size() == 1) {
             if (countManilhas(intel) == 2 || verifyIfHasManilhaHigherThanSpadesAndOtherCardHigherThanTwo(intel)) {
                 return 1;
             }
-            if (countManilhas(intel) > 0 || getSumOfCardValues(intel) > 14) {
+            if (countManilhas(intel) > 0 || handStrength(intel) > 14) {
                 return 0;
             }
             if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && (hasManilha(intel) || hasThree(intel))) {
                 return 1;
             }
         } else if (intel.getRoundResults().size() == 2) {
-            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && getSumOfCardValues(intel) > 8) {
+            if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON &&
+                    handStrength(intel) > 8) {
                 return 1;
             }
             if (countManilhas(intel) > 0) {
                 return 1;
             }
-            if (getSumOfCardValues(intel) >= 7) {
+            if (handStrength(intel) >= 7) {
                 return 0;
             }
         }
         return -1;
-    }
-
-    private int getSumOfCardValues(GameIntel intel) {
-        int sum = 0;
-
-        for (TrucoCard card : intel.getCards()) {
-            sum +=  card.relativeValue(intel.getVira());
-        }
-
-        return sum;
     }
 
     private int countManilhas(GameIntel intel) {
@@ -122,7 +113,7 @@ public class ChatGptBot implements BotServiceProvider {
     private int handStrength (GameIntel intel){
         int handStrength = 0;
         for (TrucoCard card : intel.getCards()){
-            handStrength = handStrength + card.relativeValue(intel.getVira());
+            handStrength += card.relativeValue(intel.getVira());
         }
         return handStrength;
     }
