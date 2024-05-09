@@ -40,6 +40,12 @@ public class JakareDuMatuBot implements BotServiceProvider {
             case 1 -> {
                 // Second Hand (Estevan)
                 System.out.println("SECOND HAND");
+                //Se tiver feito a primeira e tiver uma manilha
+                if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON) && !getManilhas(intel.getCards(), intel.getVira()).isEmpty()){
+                    return true;
+                }
+                //Se tiver feito a primeira e tiver uma carta forte
+                //Se tiver duas cartas fortes
             }
             case 2 -> {
                 // Third Hand (Miguel)
