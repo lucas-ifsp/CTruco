@@ -1320,5 +1320,23 @@ class JormungandrBotTest {
 
             assertFalse(jormungandrBot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return true if player has more than five points and hand has two cards worth more than 7")
+        void shouldReturnTrueIfPlayerHasMoreThanFivePointsAndHandHasTwoCardsWorthMoreThanSeven(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(6);
+
+            assertTrue(jormungandrBot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
     }
 }
