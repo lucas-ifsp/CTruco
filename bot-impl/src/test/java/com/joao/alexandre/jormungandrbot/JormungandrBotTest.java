@@ -1077,13 +1077,14 @@ class JormungandrBotTest {
         @DisplayName("With 2 cards in hand, average should be average of them")
         void makeSureAverageIsDoingAverageOfTwoCardsWhenOnlyTwoCardsInHand() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.LOST);
 
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //7
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .gameInfo(results, List.of(), vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(0);
 
@@ -1096,13 +1097,15 @@ class JormungandrBotTest {
         @DisplayName("With 2 cards with wildly diferent values in hand, average should be accurate")
         void makeSureAverageIsBeenAccurateWhenTwoWildlyDifferentCards() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.LOST);
+
 
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), //13
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)); //1
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .gameInfo(results, List.of(), vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(0);
 
@@ -1114,12 +1117,14 @@ class JormungandrBotTest {
         @DisplayName("With 1 cards in hand, average should be that card relative value")
         void makeSureWithOneCardInHandAverageShouldBeThatCardRelativeValue() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+            List<GameIntel.RoundResult> results = List.of(
+                    GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
 
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)); //13
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .gameInfo(results, List.of(), vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(0);
 
@@ -1134,7 +1139,7 @@ class JormungandrBotTest {
 
         @Test
         @DisplayName("If asking on First Round should Throw exception")
-        void shouldReturnExceptionOnFisrtRound() {
+        void shouldReturnExceptionOnFirstRound() {
             List<GameIntel.RoundResult> results = List.of();
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
@@ -1149,7 +1154,7 @@ class JormungandrBotTest {
                     .opponentScore(0);
 
             assertThrows(ArrayIndexOutOfBoundsException.class,
-                    () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
+                    () -> jormungandrBot.getLastRoundResult(stepBuilder.build())
             );
         }
 
