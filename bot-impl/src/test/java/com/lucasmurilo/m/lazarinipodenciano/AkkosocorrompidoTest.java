@@ -457,4 +457,26 @@ public class AkkosocorrompidoTest {
 
         assertThat(bot.getRaiseResponse(intel)).isLessThan(1);
     }
+
+    @Test
+    @DisplayName("Should not raise if the hand has two cards less than king")
+    public void ShouldNotRaiseIfHandHasTwoCardsLessThanKing() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 1)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.getRaiseResponse(intel)).isLessThan(1);
+    }
 }
