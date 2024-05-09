@@ -1221,4 +1221,29 @@ class JormungandrBotTest {
             assertEquals(10.0,jormungandrBot.getAverageValueOfHand(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getRaiseResponse() function")
+    class GetRaiseRespone{
+
+        @Test
+        @DisplayName("2 cards with RelativeValue >8, Raises")
+        void shouldRaiseIfTwoCardsWithRelativeValueHigherThanEigth() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
+    }
+
 }
