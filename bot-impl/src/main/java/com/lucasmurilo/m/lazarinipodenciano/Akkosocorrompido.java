@@ -45,12 +45,23 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getCards().size() == 0)
+            return false;
+
         //cannot raise
         if (intel.getHandPoints() == 12) {
             return false;
         }
         //can raise
         else {
+            if (intel.getCards().size() == 1)
+                return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10));
+
+            if (intel.getCards().size() == 2)
+                return intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                &&
+                intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0;
+
             if (
                 (
                     intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
@@ -151,8 +162,19 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (intel.getCards().size() == 0)
+            return -1;
+
         //cannot raise
         if (intel.getHandPoints() == 12) {
+            if (intel.getCards().size() == 1)
+                return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10)) ? 0 : -1;
+
+            if (intel.getCards().size() == 2)
+                return (intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                &&
+                intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0) ? 0 : -1;
+
             if (
                 (
                     intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
@@ -241,6 +263,14 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         //can raise
         else {
+            if (intel.getCards().size() == 1)
+                return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10)) ? 0 : -1;
+
+            if (intel.getCards().size() == 2)
+                return (intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                &&
+                intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0) ? 0 : -1;
+            
             if (
                 (
                     intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
