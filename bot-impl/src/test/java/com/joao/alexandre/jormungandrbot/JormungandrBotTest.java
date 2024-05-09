@@ -1224,11 +1224,11 @@ class JormungandrBotTest {
 
     @Nested
     @DisplayName("Testing getRaiseResponse() function")
-    class GetRaiseRespone{
+    class GetRaiseResponeTest{
 
         @Test
-        @DisplayName("2 cards with RelativeValue >8, Raises")
-        void shouldRaiseIfTwoCardsWithRelativeValueHigherThanEigth() {
+        @DisplayName("2 cards with RelativeValue == 8, Raises")
+        void shouldRaiseIfTwoCardsWithRelativeValueEight() {
             List<GameIntel.RoundResult> results = List.of();
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
@@ -1244,6 +1244,8 @@ class JormungandrBotTest {
 
             assertEquals(1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
         }
+
+
     }
 
 }
