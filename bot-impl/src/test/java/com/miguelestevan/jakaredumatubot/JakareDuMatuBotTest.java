@@ -483,7 +483,7 @@ class JakareDuMatuBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
-            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON); // Ganhou a primeira rodada
+            List<GameIntel.RoundResult> roundResults = List.of(); // Ganhou a primeira rodada
             List<TrucoCard> openCards = Arrays.asList(
                     vira
             );
@@ -505,6 +505,33 @@ class JakareDuMatuBotTest {
             assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 1);
         }
         // Pediu truco para sair Aceita se tiver 2 cartas boas (a,2,3)
+        @Test
+        @DisplayName("ShouldAcceptRaisesIfWasTwoGoodHand")
+        public void ShouldAcceptRaisesIfWasTwoGoodHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(); // Ganhou a primeira rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 0);
+        }
 
         // Se
 
@@ -574,6 +601,29 @@ class JakareDuMatuBotTest {
                     .build();
 
             assertEquals(jakareDuMatuBot.hasCardHigherThan(intel, intel.getOpponentCard().get()), true);
+        }
+    }
+
+    @Nested
+    @DisplayName("hasGoodCards") // Good cards are a,2,3 not been a manilha
+    class hasGoodCards{
+        @Test
+        @DisplayName("Should returns true if has a good card and not been a manilha")
+        public void ShouldReturnsTrueIfHasAGoodCardNotBeenAManilha(){
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+            assertEquals(jakareDuMatuBot.hasGoodCards(botCards, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).size(), 1);
+
+            List<TrucoCard> botCards2 = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+            );
+            assertEquals(jakareDuMatuBot.hasGoodCards(botCards2, TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)).size(), 2);
+
         }
     }
 
