@@ -316,4 +316,6 @@ public class JormungandrBot implements BotServiceProvider {
 
         return (double) sum / valores.size();
     }
+
+    boolean hasCopasAndZapInHand(GameIntel intel) {return false;}
 }

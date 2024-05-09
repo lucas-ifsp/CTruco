@@ -1475,4 +1475,26 @@ class JormungandrBotTest {
             assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing hasCopasAndZapInHand() function")
+    class HasCopasAndZapInHandTest {
+        @Test
+        @DisplayName("Should return true if hand has both copas and zap")
+        void shouldReturnTrueIfHasBothCopasAndZap(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.hasCopasAndZapInHand(stepBuilder.build()));
+        }
+    }
 }
