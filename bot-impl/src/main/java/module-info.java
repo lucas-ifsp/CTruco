@@ -7,6 +7,7 @@ import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.renato.DarthVader.DarthVader;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
@@ -47,6 +48,13 @@ module bot.impl {
     exports com.renato.DarthVader;
 
     provides com.bueno.spi.service.BotServiceProvider with
+            DummyBot, 
+            Carlsen, 
+            DestroyerBot, 
+            WrkncacnterBot, 
+            PaulistaBot, 
+            MarrecoBot, 
+            AddTheNewSoul, 
             ArrebentaBot,
             TecoNoMarrecoBot,
             SilvaBrufatoBot,
@@ -70,5 +78,6 @@ module bot.impl {
             MarrecoBot,
             AddTheNewSoul,
             LazyBot,
-            DarthVader;
+            DarthVader,
+            MalasiaBot;
 }
