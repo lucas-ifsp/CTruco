@@ -58,7 +58,11 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        //can raise
+
+
+        //cannot raise
+        
     }
 
     //low card
@@ -141,5 +145,9 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     public int getCurrentRoundNumber(GameIntel intel){
         return intel.getRoundResults().size()+ 1;
+    }
+
+    public static boolean randomBooleanByIntSeed(int seed) {
+        return seed < 5;
     }
 }
