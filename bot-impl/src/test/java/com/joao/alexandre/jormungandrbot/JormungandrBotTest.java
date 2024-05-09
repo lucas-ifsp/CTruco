@@ -825,6 +825,26 @@ class JormungandrBotTest {
             );
         }
 
+        @Test
+        @DisplayName("Should play the lowest manilha if there's two in hand and won first round")
+        void shouldPlayLowestManilhaIfHasTwoAndWonFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+
     }
 
     @Nested
