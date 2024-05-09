@@ -212,9 +212,9 @@ class JakareDuMatuBotTest {
 
     @Nested
     class chooseCard {
-        // First Hand (Estevan)
+        //                                  First Hand (Estevan)
 
-        //Adversario primeiro
+        //                                  Adversario primeiro
         //Se consigo matar a primeira carta do adversario, matar com a mais fraca possivel
         @Test
         @DisplayName("Should play the more weakest card possible if can win opponent first card in first hand")
@@ -305,7 +305,7 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
         }
 
-        //Nos primeiro
+        //                                     Nos primeiro
         //Jogar a maior carta na mão
         @Test
         @DisplayName("Should play the strongest card if play first in first hand")
@@ -334,7 +334,10 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
         }
 
-        // Second Hand (Miguel)
+       //---------------------------------------------------------------------------------------------------------------
+
+
+        //                                     Second Hand (Miguel)
         // Se a carta mais fraca das duas mata a segunda carta do adversário jogar a mais fraca
         @Test
         @DisplayName("Should play the weakest card if it kills the opponent's second card")
@@ -365,7 +368,6 @@ class JakareDuMatuBotTest {
 
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
-
 
         // Se fez a primeira e tem uma manilha para jogar e está trucado jogar a manilha para fechar
         @Test
@@ -427,6 +429,16 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
 
+        // Se fez a primeira e não te uma manilha jogar a carta mais forte
+
+        // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
+        @Test
+        @DisplayName("Decide ")//Se tiver feito a primeira
+        public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
+
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
 
         // Third Hand (Estevan)
     }
