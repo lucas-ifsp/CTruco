@@ -10,6 +10,7 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
+import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -59,6 +60,7 @@ module bot.impl {
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
     exports com.joao.alexandre.jormungandrbot;
+    exports com.lucasmurilo.m.lazarinipodenciano;
     exports com.otavio.lopes.teitasbot;
     exports com.miguelestevan.jakaredumatubot;
     exports com.soares.gibim.chatgptbot;
@@ -91,18 +93,14 @@ module bot.impl {
             VapoBot,
             SabotaBot,
             CaipirasBot,
-            DummyBot,
-            Carlsen,
-            DestroyerBot,
-            WrkncacnterBot,
-            PaulistaBot,
             PauladaSecaBot,
             MarrecoBot,
             AddTheNewSoul,
             JormungandrBot,
             LazyBot,
-            JakareDuMatuBot;
-            ChatGptBot;
+            Akkosocorrompido,
+            JakareDuMatuBot,
+            ChatGptBot,
             PatriciaAparecida,
             PatoBot,
             ItaipavaBot,
