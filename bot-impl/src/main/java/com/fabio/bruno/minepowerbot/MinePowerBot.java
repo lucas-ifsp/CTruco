@@ -9,6 +9,8 @@ import java.util.List;
 public class MinePowerBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(getCardAboveRank(intel, CardRank.ACE).size() == 3 && intel.getOpponentScore() <= 9)
+            return true;
         return false;
     }
 

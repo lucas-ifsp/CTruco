@@ -142,7 +142,7 @@ class MinePowerBotTest {
     void playMaoDeOnzeWithThreeCardsAboveAceAndOpponentsScoreIsLessThanNine() {
         intel = create()
                 .viraToBe(CardRank.SEVEN, CardSuit.HEARTS)
-                .cards(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                .cards(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)).finish();
 
