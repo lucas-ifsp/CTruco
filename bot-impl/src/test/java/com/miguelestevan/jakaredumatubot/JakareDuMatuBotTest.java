@@ -547,14 +547,6 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
         }
 
-        // Se fez a primeira e não te uma manilha jogar a carta mais forte
-
-        // Se fez a primeira e tem o zap segurar para a última (mais chance de pedir um truco)
-        @Test
-        @DisplayName("Decide ")//Se tiver feito a primeira
-        public void DecideThatYouWillAskForTricksInTheFirstRoundWithAnOlderCouple(){
-
-        }
 
         //--------------------------------------------------------------------------------------------------------------
 
