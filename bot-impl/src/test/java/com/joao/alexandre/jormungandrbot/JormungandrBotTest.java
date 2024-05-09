@@ -1041,7 +1041,7 @@ class JormungandrBotTest {
                     .opponentScore(0);
 
             assertThrows(ArrayIndexOutOfBoundsException.class,
-                    () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
+                    () -> jormungandrBot.getLastRoundResult(stepBuilder.build())
             );
         }
 
