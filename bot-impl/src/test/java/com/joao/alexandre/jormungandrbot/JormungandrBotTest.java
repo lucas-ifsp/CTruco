@@ -1425,8 +1425,6 @@ class JormungandrBotTest {
         @DisplayName("If on first round and is Second To Play and cant beat opCard, return False")
         void shouldNotRaiseIfFirstRoundAndIsSecondToPlayAndCantBeatCard() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
-            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.DREW);
-
             TrucoCard opCard = TrucoCard.of(CardRank.QUEEN,CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
@@ -1435,7 +1433,7 @@ class JormungandrBotTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(results, List.of(), vira, 1)
+                    .gameInfo(List.of(), List.of(), vira, 1)
                     .botInfo(myCards, 1)
                     .opponentScore(0)
                     .opponentCard(opCard);
