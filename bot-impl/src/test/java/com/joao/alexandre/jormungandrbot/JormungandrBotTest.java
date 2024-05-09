@@ -1202,5 +1202,23 @@ class JormungandrBotTest {
 
             assertEquals((double) 13 /3,jormungandrBot.getAverageValueOfHand(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("with 1 card in hand, return should be its relative value")
+        void makeSureToReturnRelativeValueOfTheOnlyCardInHand(){
+            List<GameIntel.RoundResult> results = List.of(
+                    GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results,List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(10.0,jormungandrBot.getAverageValueOfHand(stepBuilder.build()));
+        }
     }
 }
