@@ -379,4 +379,16 @@ public class AkkosocorrompidoTest {
 
         assertThat(bot.decideIfRaises(intel)).isFalse();
     }
+
+    @Test
+    @DisplayName("Random boolean by seed method must return false for a seed less than five")
+    public void ShouldReturnFalseIfLessThanFive() {
+        assertThat(Akkosocorrompido.randomBooleanByIntSeed(0)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Random boolean by seed method must return true for a seed gratter than or equals five")
+    public void ShouldReturnTrueIfGratterOrEqualsFive() {
+        assertThat(Akkosocorrompido.randomBooleanByIntSeed(5)).isTrue();
+    }
 }
