@@ -1442,5 +1442,24 @@ class JormungandrBotTest {
 
             assertFalse(jormungandrBot.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("If One or more manilha, raise")
+        void shouldNotRaiseIfOneMoreManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.DREW);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
