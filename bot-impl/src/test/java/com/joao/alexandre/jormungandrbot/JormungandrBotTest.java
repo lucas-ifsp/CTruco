@@ -782,6 +782,28 @@ class JormungandrBotTest {
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
         }
+
+        @Test
+        @DisplayName("Should play highest card if last round was drawn")
+        void shouldPlayHighestCardIfLastRoundWasDrawn() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
     }
 
     @Nested
