@@ -1,10 +1,7 @@
 package com.lucasmurilo.m.lazarinipodenciano;
 
-import static com.bueno.spi.model.CardRank.SIX;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -20,7 +17,6 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 
 public class AkkosocorrompidoTest {
     private Akkosocorrompido bot;
