@@ -1,5 +1,6 @@
 package com.lucasmurilo.m.lazarinipodenciano;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -312,5 +313,70 @@ public class AkkosocorrompidoTest {
             .build();
 
         assertEquals(2, bot.getCurrentRoundNumber(intel));
+    }
+
+    @Test
+    @DisplayName("Raise response method must return a valid int")
+    public void getRaiseResponseMethodMustReturnValidInt() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.getRaiseResponse(intel)).isBetween(-1, 1);
+    }
+
+    @Test
+    @DisplayName("Cannot raise in hand score 12 when the opponent raises")
+    public void shouldNotRaiseWhenHandScoreIsTwelveWhenOpponent() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 12)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.getRaiseResponse(intel)).isLessThan(1);
+    }
+
+    @Test
+    @DisplayName("Cannot raise in hand score 12 when its the bot's choose turn")
+    public void shouldNotRaiseWhenHandScoreIsTwelveWhenBot() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 12)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.decideIfRaises(intel)).isFalse();
     }
 }
