@@ -150,6 +150,18 @@ class MinePowerBotTest {
     }
 
     @Test
+    @DisplayName("Should play Mão de Onze if the player at least 1 manilha.")
+    void playMaoDeOnzeWithManilhas() {
+        intel = create()
+                .viraToBe(CardRank.SEVEN, CardSuit.HEARTS)
+                .cards(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)).finish();
+
+        assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
+    }
+
+    @Test
     @DisplayName("Should respond raise with quit")
     void shouldRespondRaiseWithQuit() {
         intel = create()
