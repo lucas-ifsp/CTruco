@@ -1224,17 +1224,74 @@ class JormungandrBotTest {
 
     @Nested
     @DisplayName("Testing getRaiseResponse() function")
-    class GetRaiseRespone{
+    class GetRaiseResponeTest{
 
         @Test
-        @DisplayName("2 cards with RelativeValue >8, Raises")
-        void shouldRaiseIfTwoCardsWithRelativeValueHigherThanEigth() {
+        @DisplayName("2 cards with RelativeValue == 8, Raises")
+        void shouldRaiseIfTwoCardsWithRelativeValueEight() {
             List<GameIntel.RoundResult> results = List.of();
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("2 cards with RelativeValue == 7, Accept")
+        void shouldAcceptIfTwoCardsWithRelativeValueSeven() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("2 cards with RelativeValue == 6, Run")
+        void shouldRunIfTwoCardsWithRelativeValueSix() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(-1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("With Manilha on hand, Raises")
+        void shouldRaiseIfHasManilhaOnHand() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
 
             stepBuilder = GameIntel.StepBuilder.with()

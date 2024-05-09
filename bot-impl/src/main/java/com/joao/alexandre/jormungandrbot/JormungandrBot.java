@@ -28,7 +28,14 @@ public class JormungandrBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(getManilhaCountInHand(intel) > 0 ||
+                getCardCountInHandHigherThanRelativeValue(intel, 7) >= 2)
+            return 1;
+
+        if(getCardCountInHandHigherThanRelativeValue(intel, 6) >= 2)
+            return 0;
+
+        return -1;
     }
 
     @Override
