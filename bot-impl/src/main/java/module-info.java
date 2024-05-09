@@ -29,6 +29,7 @@ import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
+import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
 import com.fabio.bruno.minepowerbot.MinePowerBot;
 import com.otavio.lopes.teitasbot.TeitasBot;
 import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
@@ -60,6 +61,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.antonelli.rufino.bardoalexbot;
     exports com.fabio.bruno.minepowerbot;
     exports com.joao.alexandre.jormungandrbot;
     exports com.lucasmurilo.m.lazarinipodenciano;
@@ -99,6 +101,7 @@ module bot.impl {
             MarrecoBot,
             AddTheNewSoul,
             LazyBot,
+            BarDoAlexBot,
             MinePowerBot,
             JormungandrBot,
             LazyBot,
