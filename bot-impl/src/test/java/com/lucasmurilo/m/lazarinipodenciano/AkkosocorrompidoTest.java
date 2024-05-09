@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ public class AkkosocorrompidoTest {
         List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
             );
 
         List<TrucoCard> openCards = List.of(vira);
@@ -49,7 +49,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(3)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), bot.chooseCard(intel).value());
     }
 
     //truca depois dessa, ou agora tbm
@@ -71,7 +71,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(0)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), bot.chooseCard(intel).value());
     }
 
     @Test
@@ -93,7 +93,10 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.getLowestCardToWin(intel));
+        Optional<TrucoCard> result = bot.getLowestCardToWin(intel);
+
+        assertTrue(result.isPresent());        
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), result.orElseThrow());
     }
 
     @Test
@@ -103,7 +106,7 @@ public class AkkosocorrompidoTest {
 
         List<TrucoCard> botCards = Arrays.asList(
             TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
-            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
             TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
         );
         List<TrucoCard> openCards = List.of(vira);
@@ -112,10 +115,10 @@ public class AkkosocorrompidoTest {
             .gameInfo(List.of(), openCards, vira, 1)
             .botInfo(botCards, 3)
             .opponentScore(3)
-            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
+            .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), bot.chooseCard(intel).value());
     }
     
     @Test
@@ -136,7 +139,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS), bot.chooseCard(intel).value());
     }
     
     //truco/blefe instead
@@ -162,7 +165,7 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel));
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), bot.chooseCard(intel).value());
     }
         
     @Test
@@ -291,7 +294,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(0)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestCardToWin(intel));
+        assertTrue(bot.getLowestCardToWin(intel).isEmpty());
     }
 
     @Test

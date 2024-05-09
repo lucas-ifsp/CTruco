@@ -329,7 +329,6 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
     }
 
-    //low card
     public TrucoCard getLowestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
@@ -342,8 +341,8 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         return lowestCard;
       }
-    //high card
-    public TrucoCard getHighestCardInHand(GameIntel intel) {
+
+      public TrucoCard getHighestCardInHand(GameIntel intel) {
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
@@ -355,8 +354,8 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         return highestCard;
       }
-    //manilha
-    private boolean haveHighCardInHand(GameIntel intel) {
+
+      private boolean haveHighCardInHand(GameIntel intel) {
         for (TrucoCard card : intel.getCards()) {
             if (card.isManilha(intel.getVira())) {
                 return true;
@@ -368,39 +367,58 @@ public class Akkosocorrompido implements BotServiceProvider {
         return false;
     }
 
-    //lowtowin
-    public TrucoCard getLowestCardToWin(GameIntel intel){
+    public Optional<TrucoCard> getLowestCardToWin(GameIntel intel){
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard lowestCardToWin = botCards.get(0);
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         
+        Optional<TrucoCard> result = Optional.empty();
+
         if(intel.getOpponentCard().isPresent()){
             TrucoCard presentOpponentCard = opponentCard.orElseThrow();
-            for (TrucoCard trucoCard : botCards) {
-                if (trucoCard.relativeValue(vira) > presentOpponentCard.relativeValue(vira)) {
-                    if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
-                        lowestCardToWin = trucoCard;
+            for (TrucoCard card : botCards) {
+                if (card.relativeValue(vira) > presentOpponentCard.relativeValue(vira)) {
+                    if (card.relativeValue(vira) <= lowestCardToWin.relativeValue(vira)) {
+                        lowestCardToWin = card;
+                        result = Optional.of(lowestCardToWin);
                     }
                 }
-            }
-            return lowestCardToWin;
-        }else{
-            return lowestCardToWin;
+            }   
         }
+
+        return result;
     }
 
     public CardToPlay chooseCardFirstRound(GameIntel intel){
-        if (haveHighCardInHand(intel)) {
-            return CardToPlay.of(getHighestCardInHand(intel));
+        if(intel.getOpponentCard().isPresent()){
+            return CardToPlay.of(
+                getLowestCardToWin(intel)
+                .orElse(getLowestCardInHand(intel))
+                );        
+        }else{
+            if (haveHighCardInHand(intel)) {
+                getRaiseResponse(intel);
+                return CardToPlay.of(getHighestCardInHand(intel));
+            }else{
+                return CardToPlay.of(getHighestCardInHand(intel));
+            }
         }
-        //se o oponente jogou primeiro
-        //return CardToPlay.of(getLowestCardToWin(intel.getCards(), intel.getOpponentCard(), intel.getVira()));        
-        return CardToPlay.of(intel.getCards().get(0));
     }
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){
-        return CardToPlay.of(intel.getCards().get(0));
+        if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
+
+            getRaiseResponse(intel);
+
+            if(intel.getOpponentCard().isPresent()){
+                return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCardInHand(intel)));
+            }else{
+                return CardToPlay.of(getLowestCardInHand(intel));
+            }
+        }else{
+            return CardToPlay.of(getHighestCardInHand(intel));
+        }
     }
 
     public CardToPlay chooseCardThirdRound(GameIntel intel){
