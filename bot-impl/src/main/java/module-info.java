@@ -11,6 +11,7 @@ import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
+import com.pedrocagiovane.pauladasecabot.PauladaSecaBot;
 import com.renato.DarthVader.DarthVader;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
@@ -39,6 +40,7 @@ module bot.impl {
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.newton.dolensi.sabotabot;
+    exports com.pedrocagiovane.pauladasecabot;
     exports com.brenoduda.cafeconlechebot;
     exports com.meima.skoltable;
     exports com.rossi.lopes.trucoguru;
@@ -84,6 +86,7 @@ module bot.impl {
             DestroyerBot,
             WrkncacnterBot,
             PaulistaBot,
+            PauladaSecaBot,
             MarrecoBot,
             AddTheNewSoul,
             LazyBot,
