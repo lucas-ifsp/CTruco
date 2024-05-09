@@ -93,7 +93,47 @@ public class Akkosocorrompido implements BotServiceProvider {
             )
                 return true;
 
-            
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+            )
+                return false;
+
+                if (
+                    (
+                        intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                        &&
+                        intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    )
+                    ||
+                    (
+                        intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                        &&
+                        intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    )
+                    ||
+                    (
+                        intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                        &&
+                        intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    )
+                )
+                    return false;
         }
     }
 
