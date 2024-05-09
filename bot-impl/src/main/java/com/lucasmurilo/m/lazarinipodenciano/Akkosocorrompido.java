@@ -43,7 +43,11 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        if(haveHighCardInHand(intel)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -58,7 +62,11 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(haveHighCardInHand(intel)){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     public TrucoCard getLowestCardInHand(GameIntel intel) {
@@ -130,7 +138,7 @@ public class Akkosocorrompido implements BotServiceProvider {
                 );        
         }else{
             if (haveHighCardInHand(intel)) {
-                //truco
+                getRaiseResponse(intel);
                 return CardToPlay.of(getHighestCardInHand(intel));
             }else{
                 return CardToPlay.of(getHighestCardInHand(intel));
@@ -140,7 +148,9 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){
         if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
-            //truco
+
+            getRaiseResponse(intel);
+
             if(intel.getOpponentCard().isPresent()){
                 return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCardInHand(intel)));
             }else{
