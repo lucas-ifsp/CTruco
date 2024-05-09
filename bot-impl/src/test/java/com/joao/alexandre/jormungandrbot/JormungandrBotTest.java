@@ -804,6 +804,27 @@ class JormungandrBotTest {
             );
         }
 
+        @Test
+        @DisplayName("Should play the manilha if there's only one in hand and won first round")
+        void shouldPlayManilhaIfHasOnlyOneAndWonFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
     }
 
     @Nested
