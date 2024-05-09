@@ -126,7 +126,7 @@ public class Akkosocorrompido implements BotServiceProvider {
         }else{
             if (haveHighCardInHand(intel)) {
                 //truco
-                return CardToPlay.of(intel.getCards().get(0));
+                return CardToPlay.of(getHighestCardInHand(intel));
             }else{
                 return CardToPlay.of(getHighestCardInHand(intel));
             }
@@ -134,6 +134,12 @@ public class Akkosocorrompido implements BotServiceProvider {
     }
 
     public CardToPlay chooseCardSecondRound(GameIntel intel){
+        if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
+            //truco
+            CardToPlay.of(getLowestCardToWin(intel));
+        }else{
+            return CardToPlay.of(getHighestCardInHand(intel));
+        }
         return CardToPlay.of(intel.getCards().get(0));
     }
 
