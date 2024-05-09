@@ -357,7 +357,7 @@ class JakareDuMatuBotTest {
                     .opponentScore(2)
                     .build();
 
-            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
         }
 
        //---------------------------------------------------------------------------------------------------------------
