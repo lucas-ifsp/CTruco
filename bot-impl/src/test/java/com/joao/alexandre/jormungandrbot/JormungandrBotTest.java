@@ -845,6 +845,7 @@ class JormungandrBotTest {
                     jormungandrBot.chooseCardFirstRound(stepBuilder.build())
             );
 
+        }
     }
 
     @Nested
