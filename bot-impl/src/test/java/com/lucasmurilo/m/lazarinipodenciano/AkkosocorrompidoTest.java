@@ -1,4 +1,4 @@
-package com.lucasmurilo.akkosocorrompido;
+package com.lucasmurilo.m.lazarinipodenciano;
 
 import static com.bueno.spi.model.CardRank.SIX;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -274,4 +274,7 @@ public class AkkosocorrompidoTest {
         
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.getHighestCardInHand(intel));
     }
+
+    @Test
+    @DisplayName("")
 }
