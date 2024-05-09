@@ -91,18 +91,11 @@ module bot.impl {
             VapoBot,
             SabotaBot,
             CaipirasBot,
-            DummyBot,
-            Carlsen,
-            DestroyerBot,
-            WrkncacnterBot,
-            PaulistaBot,
             PauladaSecaBot,
-            MarrecoBot,
-            AddTheNewSoul,
             LazyBot,
-            Akkosocorrompido;
-            JakareDuMatuBot;
-            ChatGptBot;
+            Akkosocorrompido,
+            JakareDuMatuBot,
+            ChatGptBot,
             PatriciaAparecida,
             PatoBot,
             ItaipavaBot,
