@@ -757,6 +757,34 @@ class JormungandrBotTest {
     }
 
     @Nested
+    @DisplayName("Testing chooseCardSecondRound()")
+    class ChooseCardSecondRoundTest {
+        @Test
+        @DisplayName("If self has a card that beats the opponent's, should use the lowest one possible to do so after losing the first round")
+        void shouldBeatOpponentsCardWithLowestPossibleIfLostFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Testing chooseCardThirdRound()")
     class ChooseCardThirdRoundTest {
 
