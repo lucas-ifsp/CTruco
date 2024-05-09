@@ -391,4 +391,26 @@ public class AkkosocorrompidoTest {
     public void ShouldReturnTrueIfGratterOrEqualsFive() {
         assertThat(Akkosocorrompido.randomBooleanByIntSeed(5)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should Raise if the hand has two good cards")
+    public void ShouldRaiseIfHandHasTwoGoodCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertThat(bot.getRaiseResponse(intel)).isEqualTo(1);
+    }
 }
