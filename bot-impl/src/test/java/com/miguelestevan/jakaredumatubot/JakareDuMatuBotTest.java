@@ -476,6 +476,33 @@ class JakareDuMatuBotTest {
             assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 1);
         }
         // Pediu truco para sair Aceita se tiver 2 cartas boas (a,2,3)
+        @Test
+        @DisplayName("ShouldAcceptRaisesIfWasTwoGoodHand")
+        public void ShouldAcceptRaisesIfWasTwoGoodHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(); // Ganhou a primeira rodada
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertEquals(jakareDuMatuBot.getRaiseResponse(intel), 0);
+        }
 
         // Se
 
