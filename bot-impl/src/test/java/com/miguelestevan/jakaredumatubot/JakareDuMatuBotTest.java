@@ -817,6 +817,37 @@ class JakareDuMatuBotTest {
 
             assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
         }
+
+
+        @Test
+        @DisplayName("Should accept if still have good card in third hand")
+        public void ShouldAcceptIfStillHaveGoodCardInThirdHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(0, jakareDuMatuBot.getRaiseResponse(intel));
+        }
+
+
     }
 
     @Nested
