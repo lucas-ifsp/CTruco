@@ -30,53 +30,52 @@ public class FernasFirstHand implements FernasStrategy {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (intel.getOpponentScore() <= 6){
-            return getAmountBetween(intel, 13, 7) >= 2;
+            return getAmountOfCardsBetween(intel, 13, 7) >= 2;
         }
-        return getAmountManilhas(intel) >= 2 || getAmountBetween(intel, 13, 9) >= 2;
+        return getAmountOfManilhas(intel) >= 2 || getAmountOfCardsBetween(intel, 13, 9) >= 2;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (getAmountBetween(intel, 7, 3) >= 2) return true;
-        if (getAmountBetween(intel, 13, 8) >= 2) return true;
-        return getAmountBetween(intel, 9, 5) >= 1 && getAmountManilhas(intel) >= 1;
+        if (getAmountOfCardsBetween(intel, 7, 3) >= 2) return true;
+        if (getAmountOfCardsBetween(intel, 13, 8) >= 2) return true;
+        return getAmountOfCardsBetween(intel, 9, 5) >= 1 && getAmountOfManilhas(intel) >= 1;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = getCurrentCards(intel);
 
-        if (hasTresManilhas(intel)) return CardToPlay.of(cards.get(0));
+        if (hasThreeManilhas(intel)) return CardToPlay.of(cards.get(0));
 
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         if (opponentCard.isPresent()){
-            Optional<TrucoCard> menorCarta = getMenorCarta(intel);
-            return menorCarta.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(cards.get(0)));
+            Optional<TrucoCard> minimumCardToWin = getMinimumCardToWin(intel);
+            return minimumCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(cards.get(0)));
         }
+
         if (hasCasalMaior(intel) || hasCasalPreto(intel) || hasPausOuros(intel) || hasCopasEspadilha(intel)){
             return CardToPlay.of(cards.get(0));
         } else if (hasCasalMenor(intel) || hasCasalVermelho(intel)) {
             return CardToPlay.of(cards.get(1));
         }
 
-        List<TrucoCard> cartasTres = getTres(cards);
-        if (cartasTres.isEmpty()) return CardToPlay.of(cards.get(0));
-        else if (getAmountManilhas(intel) == 1){
-            Optional<TrucoCard> manilha = getManilha(intel);
-            if (manilha.isPresent()) return CardToPlay.of(manilha.get());
-        }
-        return CardToPlay.of(cartasTres.get(0));
+        List<TrucoCard> allCardsThree = getAllCardsThree(cards);
+        if (allCardsThree.isEmpty()) return CardToPlay.of(cards.get(0));
+
+        Optional<TrucoCard> manilha = getManilha(intel);
+        return manilha.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(allCardsThree.get(0)));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (getAmountBetween(intel, 13, 9) >= 2) return 1;
-        if (getAmountBetween(intel, 10, 6) >= 1 && getAmountManilhas(intel) >= 1) return 0;
+        if (getAmountOfCardsBetween(intel, 13, 9) >= 2) return 1;
+        if (getAmountOfCardsBetween(intel, 10, 6) >= 1 && getAmountOfManilhas(intel) >= 1) return 0;
         return -1;
     }
 
-    public boolean hasTresManilhas(GameIntel intel){
+    public boolean hasThreeManilhas(GameIntel intel){
         return intel
                 .getCards()
                 .stream()

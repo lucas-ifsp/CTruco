@@ -42,7 +42,7 @@ public interface FernasStrategy {
         return cards;
     }
 
-    default Optional<TrucoCard> getMenorCarta(GameIntel intel){
+    default Optional<TrucoCard> getMinimumCardToWin(GameIntel intel){
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         return opponentCard.flatMap(trucoCard -> getCurrentCards(intel)
                 .stream()
@@ -112,7 +112,7 @@ public interface FernasStrategy {
                 .size() == 2;
     }
 
-    default int getAmountManilhas(GameIntel intel){
+    default int getAmountOfManilhas(GameIntel intel){
         return intel
                 .getCards()
                 .stream()
@@ -121,8 +121,7 @@ public interface FernasStrategy {
                 .size();
     }
 
-
-    default List<TrucoCard> getTres(List<TrucoCard> cards){
+    default List<TrucoCard> getAllCardsThree(List<TrucoCard> cards){
         return cards
                 .stream()
                 .filter(c -> c.getRank() == CardRank.THREE)
@@ -136,7 +135,7 @@ public interface FernasStrategy {
                 .findFirst();
     }
 
-    default int getAmountBetween(GameIntel intel, int ceil, int floor){
+    default int getAmountOfCardsBetween(GameIntel intel, int ceil, int floor){
         return intel
                 .getCards()
                 .stream()
