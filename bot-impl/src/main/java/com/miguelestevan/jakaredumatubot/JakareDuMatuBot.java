@@ -43,13 +43,14 @@ public class JakareDuMatuBot implements BotServiceProvider {
             }
             case 2 -> {
                 // Third Hand (Miguel)
-                System.out.println("THIRD HAND");
                 // Se tiver uma manilha pede truco
-                if(getManilhas(intel.getCards(), intel.getVira()).size() > 0){
+                if(intel.getCards().get(0).isManilha(intel.getVira())){
                     return true;
                 }
                 // Se tiver uma carta boa e uma diferença de score de 3 pontos
-                System.out.println("THIRD HAND");
+                if(!hasGoodCards(intel.getCards(), intel.getVira()).isEmpty() && Math.abs(intel.getScore() - intel.getOpponentScore()) > 3){
+                    return true;
+                }
             }
 
         }
