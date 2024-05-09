@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -134,6 +135,18 @@ class MinePowerBotTest {
         intel = create().finish();
         when(intel.getScore()).thenReturn(11);
         assertThat(sut.decideIfRaises(intel)).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should play Mão de Onze if the player has three cards above the ace rank, and the opponent's score is less than 9 points.")
+    void playMaoDeOnzeWithThreeCardsAboveAceAndOpponentsScoreIsLessThanNine() {
+        intel = create()
+                .viraToBe(CardRank.SEVEN, CardSuit.HEARTS)
+                .cards(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)).finish();
+
+        assertThat(sut.getMaoDeOnzeResponse(intel)).isTrue();
     }
 
     @Test
