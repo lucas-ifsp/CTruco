@@ -292,4 +292,25 @@ public class AkkosocorrompidoTest {
 
         assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestCardToWin(intel));
     }
+
+    @Test
+    @DisplayName("Should Return The Right Round Number")
+    public void ShouldReturnTheRightRoundNumber(){
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS); 
+
+        List<TrucoCard> botCards = Arrays.asList(
+            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+            .botInfo(botCards, 11)
+            .opponentScore(0)
+            .build();
+
+        assertEquals(2, bot.getCurrentRoundNumber(intel));
+    }
 }
