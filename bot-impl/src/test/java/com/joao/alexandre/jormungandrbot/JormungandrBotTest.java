@@ -1246,4 +1246,25 @@ class JormungandrBotTest {
         }
     }
 
+    @Nested
+    @DisplayName("Testing getMaoDeOnzeResponse() function")
+    class GetMaoDeOnzeResponseTest {
+        @Test
+        @DisplayName("Should return true if hand has at least one manilha")
+        void shouldReturnTrueIfHasAtLeastOneManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(),List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertTrue(jormungandrBot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
+    }
 }
