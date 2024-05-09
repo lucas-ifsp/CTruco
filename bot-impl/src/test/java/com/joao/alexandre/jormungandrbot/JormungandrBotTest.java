@@ -1127,4 +1127,52 @@ class JormungandrBotTest {
                     jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getLastRoundResult() function")
+    class GetLastRoundResultTest {
+
+        @Test
+        @DisplayName("If asking on First Round should Throw exception")
+        void shouldReturnExceptionOnFisrtRound() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertThrows(ArrayIndexOutOfBoundsException.class,
+                    () -> jormungandrBot.getCardToTieOpponentsCard(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("Should Return the right enum value of the last round")
+        void makeSureReturnTheActualValueOfTheRound() {
+            List<GameIntel.RoundResult> results = List.of(
+                    GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON); //secondRound
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS), //below
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //above
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //on
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(GameIntel.RoundResult.WON,
+                    jormungandrBot.getLastRoundResult(stepBuilder.build())
+            );
+        }
+    }
 }

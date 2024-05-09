@@ -233,4 +233,13 @@ public class JormungandrBot implements BotServiceProvider {
 
         return (double) sum / valores.size();
     }
+
+    GameIntel.RoundResult getLastRoundResult(GameIntel intel) {
+        if(intel.getRoundResults().isEmpty())
+            throw new ArrayIndexOutOfBoundsException("There is no last round to get the result of");
+
+        return intel.getRoundResults().get(
+                intel.getRoundResults().size() - 1
+        );
+    }
 }
