@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +37,7 @@ public class AkkosocorrompidoTest {
         List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
             );
 
         List<TrucoCard> openCards = List.of(vira);
@@ -92,7 +92,10 @@ public class AkkosocorrompidoTest {
             .opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), bot.getLowestCardToWin(intel));
+        Optional<TrucoCard> result = bot.getLowestCardToWin(intel);
+
+        assertTrue(result.isPresent());        
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), result.orElseThrow());
     }
 
     @Test
@@ -290,7 +293,7 @@ public class AkkosocorrompidoTest {
             .opponentScore(0)
             .build();
 
-        assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), bot.getLowestCardToWin(intel));
+        assertTrue(bot.getLowestCardToWin(intel).isEmpty());
     }
 
     @Test
