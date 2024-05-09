@@ -808,7 +808,7 @@ class JormungandrBotTest {
             List<TrucoCard> myCards = List.of(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
                     TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //8
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //7
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
