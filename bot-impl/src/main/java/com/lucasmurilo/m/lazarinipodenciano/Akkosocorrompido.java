@@ -24,6 +24,8 @@ package com.lucasmurilo.m.lazarinipodenciano;
 import java.util.List;
 import java.util.Optional;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -49,6 +51,27 @@ public class Akkosocorrompido implements BotServiceProvider {
         }
         //can raise
         else {
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+            )
+                return true;
+
             if (
                 (
                     intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
