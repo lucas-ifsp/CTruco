@@ -8,6 +8,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class ThirdRoundStrategy implements BotServiceProvider {
     private List<TrucoCard> roundCards;
@@ -26,16 +27,38 @@ public class ThirdRoundStrategy implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        setCards(intel);
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        if (ordendedCards.size() == 1){
+            if (ordendedCards.get(0).isZap(vira) || ordendedCards.get(0).isCopas(vira)) return 1;
+            if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+        } else {
+            TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
+            if (lastCardPlayed.isCopas(vira) || lastCardPlayed.isZap(vira)) return 1;
+            if (lastCardPlayed.isManilha(vira)) return 0;
+        }
+        return -1;
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        setCards(intel);
+        int opponentScore = intel.getOpponentScore();
+        boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
+        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
+        if (opponentScore <= 6) return isMedium;
+        return isPowerfull;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        setCards(intel);
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        Optional<TrucoCard> maybeOpponentCard = intel.getOpponentCard();
+
+        if (maybeOpponentCard.isPresent()) {
+            if (ordendedCards.get(0).compareValueTo(maybeOpponentCard.get(), vira) > 0) return true;
+        }
         return false;
     }
 

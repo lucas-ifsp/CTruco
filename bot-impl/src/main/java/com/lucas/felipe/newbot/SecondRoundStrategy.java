@@ -63,7 +63,7 @@ public class SecondRoundStrategy implements BotServiceProvider {
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         if (hasTwoManilhas(ordendedCards)) return true;
-
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
         // Se ganhamos a primeira
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON || intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
             if (opponentCard.isPresent()){

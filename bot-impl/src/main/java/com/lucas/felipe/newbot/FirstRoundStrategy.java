@@ -62,10 +62,19 @@ public class FirstRoundStrategy implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         setCards(intel);
         if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        Optional<TrucoCard> maybeOpponentCard = intel.getOpponentCard();
+
+        if (maybeOpponentCard.isPresent()) {
+            int indexOfCardThatCanWin = indexOfCardThatCanWin(ordendedCards, maybeOpponentCard);
+            if (indexOfCardThatCanWin != -1){
+                if (defaultFunctions.isMedium(ordendedCards)) return true;
+            }
+            return defaultFunctions.isPowerfull(ordendedCards);
+        }
         if (defaultFunctions.isPowerfull(ordendedCards)) {
             if (intel.getScore() == 0 && intel.getOpponentScore() == 0) return true;
             if (intel.getScore() - intel.getOpponentScore() >= 3) return true;
-            if (intel.getScore() - intel.getOpponentScore() < 0) return false;
+            if (intel.getScore() - intel.getOpponentScore() <= 0) return false;
         }
         return false;
     }
@@ -98,5 +107,12 @@ public class FirstRoundStrategy implements BotServiceProvider {
     private boolean hasCasalMaior(List<TrucoCard> ordendedCards){
         if (ordendedCards.size() == 3) return ordendedCards.get(2).isZap(vira) && ordendedCards.get(1).isCopas(vira);
         else return ordendedCards.get(1).isZap(vira) && ordendedCards.get(0).isCopas(vira);
+    }
+
+    private int indexOfCardThatCanWin(List<TrucoCard> ordendedCards, Optional<TrucoCard> opponentCard){
+        if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) return 0;
+        else if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0) return 1;
+        else if (ordendedCards.get(2).compareValueTo(opponentCard.get(), vira) > 0) return 2;
+        return -1;
     }
 }
