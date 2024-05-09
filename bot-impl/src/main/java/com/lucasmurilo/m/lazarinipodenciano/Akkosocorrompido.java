@@ -99,30 +99,35 @@ public class Akkosocorrompido implements BotServiceProvider {
         return false;
     }
 
-    public TrucoCard getLowestCardToWin(GameIntel intel){
+    public Optional<TrucoCard> getLowestCardToWin(GameIntel intel){
         List<TrucoCard> botCards = intel.getCards();
         TrucoCard lowestCardToWin = botCards.get(0);
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         
+        Optional<TrucoCard> result = Optional.empty();
+
         if(intel.getOpponentCard().isPresent()){
             TrucoCard presentOpponentCard = opponentCard.orElseThrow();
-            for (TrucoCard trucoCard : botCards) {
-                if (trucoCard.relativeValue(vira) > presentOpponentCard.relativeValue(vira)) {
-                    if (trucoCard.relativeValue(vira) < lowestCardToWin.relativeValue(vira)) {
-                        lowestCardToWin = trucoCard;
+            for (TrucoCard card : botCards) {
+                if (card.relativeValue(vira) > presentOpponentCard.relativeValue(vira)) {
+                    if (card.relativeValue(vira) <= lowestCardToWin.relativeValue(vira)) {
+                        lowestCardToWin = card;
+                        result = Optional.of(lowestCardToWin);
                     }
                 }
-            }
-            return lowestCardToWin;
-        }else{
-            return lowestCardToWin;
+            }   
         }
+
+        return result;
     }
 
     public CardToPlay chooseCardFirstRound(GameIntel intel){
         if(intel.getOpponentCard().isPresent()){
-            return CardToPlay.of(getLowestCardToWin(intel));        
+            return CardToPlay.of(
+                getLowestCardToWin(intel)
+                .orElse(getLowestCardInHand(intel))
+                );        
         }else{
             if (haveHighCardInHand(intel)) {
                 //truco
@@ -136,11 +141,14 @@ public class Akkosocorrompido implements BotServiceProvider {
     public CardToPlay chooseCardSecondRound(GameIntel intel){
         if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
             //truco
-            CardToPlay.of(getLowestCardToWin(intel));
+            if(intel.getOpponentCard().isPresent()){
+                return CardToPlay.of(getLowestCardToWin(intel).orElse(getLowestCardInHand(intel)));
+            }else{
+                return CardToPlay.of(getLowestCardInHand(intel));
+            }
         }else{
             return CardToPlay.of(getHighestCardInHand(intel));
         }
-        return CardToPlay.of(intel.getCards().get(0));
     }
 
     public CardToPlay chooseCardThirdRound(GameIntel intel){
