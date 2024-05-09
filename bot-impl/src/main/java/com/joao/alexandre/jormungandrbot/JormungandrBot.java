@@ -268,11 +268,14 @@ public class JormungandrBot implements BotServiceProvider {
             valores.add(card.relativeValue(vira));
         }
 
-        valores.add(
-                getSelfCardPlayed(intel)
-                        .orElse(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
-                        .relativeValue(vira)
-        );
+        Optional<TrucoCard> selfCardPlayed = getSelfCardPlayed(intel);
+
+        if(selfCardPlayed.isPresent())
+            valores.add(
+                    getSelfCardPlayed(intel)
+                            .orElse(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
+                            .relativeValue(vira)
+            );
 
         int sum = valores.stream()
                 .mapToInt(Integer::intValue)
