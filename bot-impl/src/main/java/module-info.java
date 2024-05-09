@@ -1,26 +1,27 @@
+import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.caueisa.destroyerbot.DestroyerBot;
+import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
+import com.everton.ronaldo.arrebentabot.ArrebentaBot;
+import com.gatti.casaque.caipirasbot.CaipirasBot;
+import com.gustavo.contiero.lazybot.LazyBot;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
-import com.newton.dolensi.sabotabot.SabotaBot;
-import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
+import com.luna.jundi.jokerBot.JokerBot;
 import com.meima.skoltable.SkolTable;
-import com.rossi.lopes.trucoguru.TrucoGuru;
-import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
-import com.everton.ronaldo.arrebentabot.ArrebentaBot;
-import com.almeida.strapasson.veiodobar.VeioDoBarBot;
-import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
-import com.tatayrapha.leonardabot.LeonardaBot;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
+import com.newton.dolensi.sabotabot.SabotaBot;
+import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
+import com.rossi.lopes.trucoguru.TrucoGuru;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
+import com.tatayrapha.leonardabot.LeonardaBot;
 import com.yuri.impl.BotMadeInDescalvado;
-import com.gatti.casaque.caipirasbot.CaipirasBot;
-import com.gustavo.contiero.lazybot.LazyBot;
+import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 
 module bot.impl {
     requires bot.spi;
@@ -43,6 +44,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
+    exports com.luna.jundi.jokerBot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -67,5 +69,7 @@ module bot.impl {
             PaulistaBot,
             MarrecoBot,
             AddTheNewSoul,
-            LazyBot;
+            LazyBot,
+            JokerBot;
+
 }
