@@ -22,7 +22,7 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
-import com.bueno.domain.usecases.game.CreateGameUseCase;
+import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
