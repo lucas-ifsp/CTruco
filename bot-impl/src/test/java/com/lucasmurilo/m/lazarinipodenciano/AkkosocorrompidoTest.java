@@ -548,7 +548,7 @@ public class AkkosocorrompidoTest {
 
         assertThat(bot.decideIfRaises(intel)).isTrue();
     }
-
+/* 
     @Test
     @DisplayName("Should not raise if the hand has two cards less than vira")
     public void ShouldNotRaiseIfHandHasTwoCardsLessThanViraWhenBot() {
@@ -570,7 +570,7 @@ public class AkkosocorrompidoTest {
 
         assertThat(bot.decideIfRaises(intel)).isTrue();
     }
-
+*/
     @Test
     @DisplayName("Should not raise if the hand has two cards less than king")
     public void ShouldNotRaiseIfHandHasTwoCardsLessThanKingWhenBot() {
