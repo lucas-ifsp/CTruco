@@ -153,11 +153,179 @@ public class Akkosocorrompido implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         //cannot raise
         if (intel.getHandPoints() == 12) {
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+            )
+                return 0;
 
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+            )
+                return 0;
+
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+            )
+                return -1;
+
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+            )
+                return -1;
+
+            return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10)) ? 0 : -1;
         }
         //can raise
         else {
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0
+                )
+            )
+                return 1;
 
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) > 0
+                )
+            )
+                return 1;
+
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), intel.getVira()) < 0
+                )
+            )
+                return -1;
+
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+            )
+                return -1;
+
+            return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10)) ? 1 : -1;
         }
     }
 
