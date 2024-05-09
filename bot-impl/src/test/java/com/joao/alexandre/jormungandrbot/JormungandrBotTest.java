@@ -617,6 +617,170 @@ class JormungandrBotTest {
     }
 
     @Nested
+    @DisplayName("Testing chooseCardFirstRound()")
+    class ChooseCardFirstRoundTest {
+
+        @Test
+        @DisplayName("If self has a card that beats the opponent's, should use the lowest one possible to do so")
+        void shouldBeatOpponentsCardWithLowestPossible() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("If self can't beat opponent but can tie, then they should force a tie")
+        void shouldForceTieIfCantBeatOpponentsCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("If self can't beat opponent nor tie, then they should discard worst card")
+        void shouldDiscardLowestCardIfCantBeatOrTie() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("If no manilhas and first, should play highest card")
+        void shouldPlayHighestCardIfNoManilhasAndFirst() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.SPADES)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("If has a manilha but no other cards with relative value >7, should play highest card")
+        void shouldPlayOnlyManilhaIfCardsAreLow() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+
+        @Test
+        @DisplayName("If has a manilha and other cards with relative value >7, should play non-manilha highest card")
+        void shouldPlayNonManilhaIfCardsAreHigh() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> currentCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(currentCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)),
+                    jormungandrBot.chooseCardFirstRound(stepBuilder.build())
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("Testing chooseCardThirdRound()")
+    class ChooseCardThirdRoundTest {
+
+        @Test
+        @DisplayName("Should return CardToPlay of the one card in hand")
+        void shouldReturnCardToPlayOfTheOneCardInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(trucoCards, 0)
+                    .opponentScore(0);
+
+            assertEquals(
+                    CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)),
+                    jormungandrBot.chooseCardThirdRound(stepBuilder.build())
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("Testing getSelfCardPlayed() function")
     class GetSelfCardPlayedTest{
         @Test
@@ -663,30 +827,6 @@ class JormungandrBotTest {
             assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), response.orElseThrow());
         }
 
-    }
-
-    @Nested
-    @DisplayName("Testing chooseCardThirdRound()")
-    class ChooseCardThirdRoundTest {
-
-        @Test
-        @DisplayName("Should return CardToPlay of the one card in hand")
-        void shouldReturnCardToPlayOfTheOneCardInHand() {
-            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
-            List<TrucoCard> trucoCards = List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
-            );
-
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(trucoCards, 0)
-                    .opponentScore(0);
-
-            assertEquals(
-                    CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)),
-                    jormungandrBot.chooseCardThirdRound(stepBuilder.build())
-            );
-        }
     }
 
     @Nested
