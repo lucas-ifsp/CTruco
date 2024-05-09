@@ -1305,7 +1305,7 @@ class JormungandrBotTest {
 
         @Test
         @DisplayName("Should return false if player has more than five points and hand doesn't have two cards worth more than 7")
-        void shouldReturnFalseIfPlayerHasMoreThanFivePointsAndHandDoesntTwoCardsWorthMoreThanSeven(){
+        void shouldReturnFalseIfPlayerHasMoreThanFivePointsAndHandDoesntHaveTwoCardsWorthMoreThanSeven(){
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
