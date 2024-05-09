@@ -19,7 +19,27 @@ public class JormungandrBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        //se empatar rodada passada e for o segundo truca
+        if(getCurrentRoundNumber(intel) > 1 &&
+                getLastRoundResult(intel) == GameIntel.RoundResult.DREW &&
+                isSecondToPlay(intel))
+            return true;
+
+        //segundo a jogar na primeira rodada e nao consegue matar fica quieto
+        if(isSecondToPlay(intel) &&
+                getCurrentRoundNumber(intel) == 1 &&
+                getLowestCardToBeatOpponentsCard(intel).isEmpty())
+            return false;
+
+        //se tem manilha truca
+        if(getManilhaCountInHand(intel) > 0)
+            return true;
+
+        //se tiver mao boa 8= dois 2 em média
+        if(intel.getOpponentScore() <= 5)
+            return true;
+
+        return getCardCountInHandHigherThanRelativeValue(intel, 7) >= 2;
     }
 
     @Override
