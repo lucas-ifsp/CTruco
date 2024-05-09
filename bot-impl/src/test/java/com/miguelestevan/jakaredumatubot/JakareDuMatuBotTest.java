@@ -269,6 +269,34 @@ class JakareDuMatuBotTest {
         }
 
         //Se tiver empatado tiver duas cartas fortes ou uma manilha
+        @Test
+        @DisplayName("Should raise request truco when have Drew ") // Pedir truco quando tiver duas manilhas na mão na primeira rodada com uma diferença de score maior que 3
+        public void ShouldRaiseRequestTrucoWhenHaveDrewAndHaveTwoGoodCardsOrOneManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.decideIfRaises(intel)).isEqualTo(true);
+        }
 
         // Third Hand
         @Test

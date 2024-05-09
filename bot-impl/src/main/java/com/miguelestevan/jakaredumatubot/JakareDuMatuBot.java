@@ -45,9 +45,12 @@ public class JakareDuMatuBot implements BotServiceProvider {
                         && (!getManilhas(intel.getCards(), intel.getVira()).isEmpty() || !hasGoodCards(intel.getCards(), intel.getVira()).isEmpty())){
                     return true;
                 }
-                //Se tiver feito a primeira e tiver uma ou duas carta forte
 
-                //Se tiver duas cartas fortes
+                //Se tiver empatado tiver duas cartas fortes ou uma manilha
+                if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.DREW)
+                        && (!getManilhas(intel.getCards(), intel.getVira()).isEmpty() || hasGoodCards(intel.getCards(), intel.getVira()).size() > 1)){
+                    return true;
+                }
             }
             case 2 -> {
                 // Third Hand (Miguel)
