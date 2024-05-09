@@ -85,7 +85,9 @@ public class JakareDuMatuBot implements BotServiceProvider {
                     else  return CardToPlay.of(list.get(2));
 
                 }
-                // jogar sempre a mais forte na primeira
+
+                // jogar sempre a mais forte na primeira se não tiver zap
+                if (list.get(0).isZap(intel.getVira())) return CardToPlay.of(list.get(1));
                 return CardToPlay.of(list.get(0));
             }
             case 1->{
