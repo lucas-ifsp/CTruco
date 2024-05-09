@@ -1474,7 +1474,5 @@ class JormungandrBotTest {
 
             assertTrue(jormungandrBot.decideIfRaises(stepBuilder.build()));
         }
-
-
     }
 }
