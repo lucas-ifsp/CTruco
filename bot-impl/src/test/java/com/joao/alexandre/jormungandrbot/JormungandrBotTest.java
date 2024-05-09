@@ -1013,9 +1013,9 @@ class JormungandrBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
             List<TrucoCard> myCards = List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), //below
-                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS), //above
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)); //on
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
@@ -1047,5 +1047,84 @@ class JormungandrBotTest {
                             stepBuilder.build(), 9));
         }
 
+    }
+
+    @Nested
+    @DisplayName("Testing getAverageValueOfTwoHighestCards() function")
+    class GetAverageValueOfTwoHighestCardsTest {
+
+        @Test
+        @DisplayName("With 3 cards in hand, X Y and Z, Z is the weakest card in hand, average should be X+Y/2")
+        void makeSureAverageIsIgnoringTheWeakestCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), //8
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //7
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals((double) (TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS).relativeValue(vira) +
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS).relativeValue(vira)) /2,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("With 2 cards in hand, average should be average of them")
+        void makeSureAverageIsDoingAverageOfTwoCardsWhenOnlyTwoCardsInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //7
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals((double) (TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS).relativeValue(vira) +
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS).relativeValue(vira)) /2,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("With 2 cards with wildly diferent values in hand, average should be accurate")
+        void makeSureAverageIsBeenAccurateWhenTwoWildlyDifferentCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)); //1
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(7.0,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("With 1 cards in hand, average should be that card relative value")
+        void makeSureWithOneCardInHandAverageShouldBeThatCardRelativeValue() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)); //13
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS).relativeValue(vira),
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
     }
 }

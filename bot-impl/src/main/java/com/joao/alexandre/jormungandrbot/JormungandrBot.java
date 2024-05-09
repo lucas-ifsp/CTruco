@@ -3,8 +3,7 @@ package com.joao.alexandre.jormungandrbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 public class JormungandrBot implements BotServiceProvider {
     @Override
@@ -209,5 +208,29 @@ public class JormungandrBot implements BotServiceProvider {
             cardCount++;
 
         return cardCount;
+    }
+
+    double getAverageValueOfTwoHighestCards(GameIntel intel) {
+        List<Integer> valores = new ArrayList<>();
+        TrucoCard vira = intel.getVira();
+
+        for(TrucoCard card : intel.getCards()) {
+            valores.add(card.relativeValue(vira));
+        }
+
+        valores.add(
+                getSelfCardPlayed(intel)
+                        .orElse(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
+                        .relativeValue(vira)
+        );
+
+        if(valores.size() == 3)
+            valores.remove(Collections.min(valores));
+
+        int sum = valores.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        return (double) sum / valores.size();
     }
 }
