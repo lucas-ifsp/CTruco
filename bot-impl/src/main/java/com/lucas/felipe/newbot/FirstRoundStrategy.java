@@ -5,10 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class FirstRoundStrategy implements BotServiceProvider {
     private List<TrucoCard> roundCards;
@@ -38,24 +35,24 @@ public class FirstRoundStrategy implements BotServiceProvider {
                     if (ordendedCards.get(2).isManilha(vira)) return 1;
                     if (ordendedCards.get(2).relativeValue(vira) >= 9) return 0;
                 }
+            }
+        } else {
+            if (ordendedCards.size() == 3) {
+                if (defaultFunctions.isPowerfull(ordendedCards)) return 1;
+                if (defaultFunctions.isMedium(ordendedCards)) return 0;
             } else {
-                if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0){
-                    if (ordendedCards.get(1).isManilha(vira)) return 1;
-                    if (ordendedCards.get(1).relativeValue(vira) >= 9) return 0;
-                }
+                TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
+                if (lastCardPlayed.isManilha(vira)) return 1; // Nesse caso teremos jogado nossa carta do meio, se ela for manilha, nossa maior carta também será
+                if (lastCardPlayed.relativeValue(vira) >= 7 && ordendedCards.get(2).relativeValue(vira) >= 9) return 0;
             }
         }
-        return -1;
+        return 0;
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         setCards(intel);
-        int opponentScore = intel.getOpponentScore();
-        boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
-        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
-        if (opponentScore <= 6) return isMedium;
-        return isPowerfull;
+        return defaultFunctions.maoDeOnzeResponse(ordendedCards, intel);
     }
 
     @Override
@@ -71,6 +68,11 @@ public class FirstRoundStrategy implements BotServiceProvider {
             }
             return defaultFunctions.isPowerfull(ordendedCards);
         }
+
+        Random random = new Random();
+        int numero = random.nextInt(100);
+        if (numero > 0 && numero <= 20 && defaultFunctions.isMedium(ordendedCards)) return true;
+
         if (defaultFunctions.isPowerfull(ordendedCards)) {
             if (intel.getScore() == 0 && intel.getOpponentScore() == 0) return true;
             if (intel.getScore() - intel.getOpponentScore() >= 3) return true;
@@ -84,20 +86,13 @@ public class FirstRoundStrategy implements BotServiceProvider {
         setCards(intel);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        // Oponente já jogou a carta?
         if (opponentCard.isEmpty()) {
             // Se o oponente não jogou a carta, jogamos nossa carta do meio
             return CardToPlay.of(ordendedCards.get(1));
         }
-        if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) {
-            return CardToPlay.of(ordendedCards.get(0));
-        }
-        else if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0) {
-            return CardToPlay.of(ordendedCards.get(1));
-        }
-        else if (ordendedCards.get(2).compareValueTo(opponentCard.get(), vira) > 0) {
-            return CardToPlay.of(ordendedCards.get(2));
-        } else return CardToPlay.of(ordendedCards.get(0));
+        int indexOfCardThatCanWin = indexOfCardThatCanWin(ordendedCards, opponentCard);
+        if (indexOfCardThatCanWin != -1) return CardToPlay.of(ordendedCards.get(indexOfCardThatCanWin));
+        else return CardToPlay.of(ordendedCards.get(0));
     }
 
     private int getNumberOfManilhas(List<TrucoCard> ordendedCards) {

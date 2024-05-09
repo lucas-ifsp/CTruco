@@ -5,10 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ThirdRoundStrategy implements BotServiceProvider {
     private List<TrucoCard> roundCards;
@@ -43,11 +40,7 @@ public class ThirdRoundStrategy implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         setCards(intel);
-        int opponentScore = intel.getOpponentScore();
-        boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
-        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
-        if (opponentScore <= 6) return isMedium;
-        return isPowerfull;
+        return defaultFunctions.maoDeOnzeResponse(ordendedCards, intel);
     }
 
     @Override
@@ -58,6 +51,13 @@ public class ThirdRoundStrategy implements BotServiceProvider {
 
         if (maybeOpponentCard.isPresent()) {
             if (ordendedCards.get(0).compareValueTo(maybeOpponentCard.get(), vira) > 0) return true;
+        } else {
+            if (ordendedCards.size() == 1) {
+                if (defaultFunctions.isPowerfull(ordendedCards)) return true;
+                Random random = new Random();
+                int numero = random.nextInt(100);
+                if (numero > 0 && numero <= 30 && defaultFunctions.isMedium(ordendedCards)) return true;
+            }
         }
         return false;
     }

@@ -1,5 +1,6 @@
 package com.lucas.felipe.newbot;
 
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.ArrayList;
@@ -43,5 +44,14 @@ public class DefaultFunctions {
         } else {
             return ordenedCards.get(0).relativeValue(vira) >= 7;
         }
+    }
+
+    public boolean maoDeOnzeResponse(List<TrucoCard> ordendedCards, GameIntel intel) {
+        DefaultFunctions defaultFunctions = new DefaultFunctions(intel.getCards(), intel.getVira());
+        int opponentScore = intel.getOpponentScore();
+        boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
+        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
+        if (opponentScore <= 6) return isMedium;
+        return isPowerfull;
     }
 }

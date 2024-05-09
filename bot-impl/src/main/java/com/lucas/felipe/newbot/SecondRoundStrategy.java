@@ -50,11 +50,7 @@ public class SecondRoundStrategy implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         setCards(intel);
-        int opponentScore = intel.getOpponentScore();
-        boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
-        boolean isMedium = defaultFunctions.isMedium(ordendedCards);
-        if (opponentScore <= 6) return isMedium;
-        return isPowerfull;
+        return defaultFunctions.maoDeOnzeResponse(ordendedCards, intel);
     }
 
     @Override
