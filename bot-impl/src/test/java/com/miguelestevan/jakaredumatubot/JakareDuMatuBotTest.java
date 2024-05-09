@@ -208,6 +208,65 @@ class JakareDuMatuBotTest {
         }
 
         // Second Hand
+
+        // Third Hand
+        @Test
+        @DisplayName("Should raise request truco when have manilha on third hand") // Pedir truco quando tiver duas manilhas na mão na primeira rodada com uma diferença de score maior que 3
+        public void ShouldRaiseRequestTrucoWhenHaveManilhaOnThirdHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.decideIfRaises(intel)).isEqualTo(true);
+        }
+
+        @Test
+        @DisplayName("Should raise request truco when have one good card and score difference higher than 3 points on third hand") // Pedir truco quando tiver duas manilhas na mão na primeira rodada com uma diferença de score maior que 3
+        public void ShouldRaiseRequestTrucoWhenHaveOneGoodCardAndScoreDifferenceHigherThanThreePointsOnThirdHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST);
+            List<TrucoCard> openCards = List.of(
+                    vira,
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 1)
+                    .opponentScore(7)
+                    .build();
+
+            assertThat(jakareDuMatuBot.decideIfRaises(intel)).isEqualTo(true);
+        }
     }
 
     @Nested

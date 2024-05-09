@@ -38,12 +38,19 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 }
             }
             case 1 -> {
-                // Second Hand
+                // Second Hand (Estevan)
                 System.out.println("SECOND HAND");
             }
             case 2 -> {
-                // First Hand
-                System.out.println("THIRD HAND");
+                // Third Hand (Miguel)
+                // Se tiver uma manilha pede truco
+                if(intel.getCards().get(0).isManilha(intel.getVira())){
+                    return true;
+                }
+                // Se tiver uma carta boa e uma diferença de score de 3 pontos
+                if(!hasGoodCards(intel.getCards(), intel.getVira()).isEmpty() && Math.abs(intel.getScore() - intel.getOpponentScore()) > 3){
+                    return true;
+                }
             }
 
         }
