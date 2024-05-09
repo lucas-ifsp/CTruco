@@ -820,5 +820,24 @@ class JormungandrBotTest {
                     jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("With 2 cards in hand, average should be average of them")
+        void makeSureAverageIsDoingAverageOfTwoCardsWhenOnlyTwoCardsInHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS), //13
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)); //7
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals((double) (TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS).relativeValue(vira) +
+                            TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS).relativeValue(vira)) /2,
+                    jormungandrBot.getAverageValueOfTwoHighestCards(stepBuilder.build()));
+        }
+
     }
 }
