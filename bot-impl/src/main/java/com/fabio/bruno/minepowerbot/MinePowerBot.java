@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class MinePowerBot implements BotServiceProvider {
@@ -57,32 +58,24 @@ public class MinePowerBot implements BotServiceProvider {
             if (qtdManilhas.size() == 1) {
                 TrucoCard manilha = qtdManilhas.get(0);
                 return CardToPlay.of(manilha);
-            }
-        } else {
-            var opponentCard = intel.getOpponentCard().get();
-            switch (roundNumber) {
-                case 1 -> {
-                    var lowestCardStrongerThanOpponentCard = intel.getCards().stream()
-                            .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
-                            .min((card1, card2) -> card1.compareValueTo(card2, vira));
-                    if (lowestCardStrongerThanOpponentCard.isPresent())
-                        return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
-                }
-                default -> {
-                    if (intel.getOpponentScore() == intel.getScore()){
-                        return CardToPlay.of(higherCard(intel));
-                    } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
-                        return CardToPlay.of(getLowerCard(intel));
-                    }
-                }
-            }
-            if (intel.getOpponentScore() == intel.getScore()) {
+            } else {
                 return CardToPlay.of(higherCard(intel));
             }
-        }
-        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
+        }else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) { // joga uma carta baixa
             var lowCard = getLowerCard(intel);
             return CardToPlay.of(lowCard);
+        } else {
+            var opponentCard = intel.getOpponentCard().get();
+            Optional<TrucoCard> lowestCardStrongerThanOpponentCard = intel.getCards().stream()
+                    .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                    .min((card1, card2) -> card1.compareValueTo(card2, vira));
+            if (lowestCardStrongerThanOpponentCard.isPresent())
+                return CardToPlay.of(lowestCardStrongerThanOpponentCard.get());
+            if (intel.getOpponentScore() == intel.getScore()){
+                return CardToPlay.of(higherCard(intel));
+            } else if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
+                return CardToPlay.of(getLowerCard(intel));
+            }
         }
         return CardToPlay.of(intel.getCards().get(0));
     }
