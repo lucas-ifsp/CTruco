@@ -1,26 +1,18 @@
 package com.antonelli.rufino.bardoalexbot;
 
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BarDoAlexBotTest {
-
-
-    @Mock
-
-    public BarDoAlexBot barDoAlexBot;
-    private GameIntel.StepBuilder stepBuilder;
-    private GameIntel intel;
 
     @Nested
     @DisplayName("Test of the bot logic to decide if raises")
@@ -50,7 +42,7 @@ public class BarDoAlexBotTest {
                     TrucoCard.of(TWO, SPADES),
                     TrucoCard.of(THREE, HEARTS),
                     TrucoCard.of(FIVE, DIAMONDS),
-                    TrucoCard.of(ACE, SPADES)
+                    TrucoCard.of(EIGHT, SPADES)
             );
 
             BarDoAlexBot bot = new BarDoAlexBot();
