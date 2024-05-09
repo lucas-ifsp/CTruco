@@ -47,7 +47,7 @@ public class Akkosocorrompido implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         //cannot raise
         if (intel.getHandPoints() == 12) {
-
+            return false;
         }
         //can raise
         else {
@@ -114,26 +114,28 @@ public class Akkosocorrompido implements BotServiceProvider {
             )
                 return false;
 
-                if (
-                    (
-                        intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                        &&
-                        intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                    )
-                    ||
-                    (
-                        intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                        &&
-                        intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                    )
-                    ||
-                    (
-                        intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                        &&
-                        intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
-                    )
+            if (
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
                 )
-                    return false;
+                ||
+                (
+                    intel.getCards().get(1).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+                ||
+                (
+                    intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                    &&
+                    intel.getCards().get(2).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) < 0
+                )
+            )
+                return false;
+
+            return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10));
         }
     }
 
