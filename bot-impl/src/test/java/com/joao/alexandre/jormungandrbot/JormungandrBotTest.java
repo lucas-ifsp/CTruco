@@ -1264,7 +1264,24 @@ class JormungandrBotTest {
             assertEquals(0, jormungandrBot.getRaiseResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("2 cards with RelativeValue == 6, Run")
+        void shouldRunIfTwoCardsWithRelativeValueSix() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
 
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(0);
+
+            assertEquals(-1, jormungandrBot.getRaiseResponse(stepBuilder.build()));
+        }
     }
 
 }
