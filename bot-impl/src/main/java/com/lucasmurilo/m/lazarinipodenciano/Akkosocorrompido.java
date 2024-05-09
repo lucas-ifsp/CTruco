@@ -42,8 +42,7 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'decideIfRaises'");
+        return false;
     }
 
     @Override
@@ -58,8 +57,7 @@ public class Akkosocorrompido implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRaiseResponse'");
+        return 0;
     }
 
     //low card
