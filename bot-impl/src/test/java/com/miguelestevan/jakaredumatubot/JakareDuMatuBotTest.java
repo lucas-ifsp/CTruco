@@ -447,7 +447,7 @@ class JakareDuMatuBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             // Game info
-            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON); // Ganhou a segunda rodada
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON); // Ganhou a segunda rodada
             List<TrucoCard> openCards = Arrays.asList(
                     vira,
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES), //first bot card
