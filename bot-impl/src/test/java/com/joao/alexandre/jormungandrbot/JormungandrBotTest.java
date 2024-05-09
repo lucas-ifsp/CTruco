@@ -786,7 +786,7 @@ class JormungandrBotTest {
         @Test
         @DisplayName("Should play highest card if last round was drawn")
         void shouldPlayHighestCardIfLastRoundWasDrawn() {
-            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
             List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
 
             List<TrucoCard> currentCards = List.of(
