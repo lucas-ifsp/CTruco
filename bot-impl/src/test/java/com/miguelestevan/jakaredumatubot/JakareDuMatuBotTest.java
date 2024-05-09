@@ -500,7 +500,7 @@ class JakareDuMatuBotTest {
 
     @Nested
     class getRaiseResponse {
-        // First Hand (Miguel)
+        //                                   First Hand
 
         // Pediu truco para sair Se tiver 1 manilha e uma outra carta boa aceita (a,2,3)
         @Test
@@ -586,12 +586,39 @@ class JakareDuMatuBotTest {
                     .build();
 
             assertEquals(1, jakareDuMatuBot.getRaiseResponse(intel));
-
         }
 
-        // Second Hand (Estevan)
+        //                                  Second Hand
+        @Test
+        @DisplayName("Should accept raises if have one manilha")
+        public void ShouldAcceptRaisesIfHaveOneManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
-        // Third Hand (Miguel)
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(1)
+                    .build();
+
+            assertEquals(0, jakareDuMatuBot.getRaiseResponse(intel));
+        }
+
+        //                                   Third Hand
     }
 
     @Nested
