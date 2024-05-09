@@ -41,10 +41,12 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 // Second Hand (Estevan)
                 System.out.println("SECOND HAND");
                 //Se tiver feito a primeira e tiver uma manilha
-                if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON) && !getManilhas(intel.getCards(), intel.getVira()).isEmpty()){
+                if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON)
+                        && (!getManilhas(intel.getCards(), intel.getVira()).isEmpty() || !hasGoodCards(intel.getCards(), intel.getVira()).isEmpty())){
                     return true;
                 }
-                //Se tiver feito a primeira e tiver uma carta forte
+                //Se tiver feito a primeira e tiver uma ou duas carta forte
+
                 //Se tiver duas cartas fortes
             }
             case 2 -> {
