@@ -119,6 +119,19 @@ public class JakareDuMatuBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        switch (intel.getRoundResults().size()) {
+            case 0 -> {
+                // First Hand
+                if(intel.getOpenCards().size() == 1){
+                    // Truco para sair -> Só tem a vira na mesa
+                    if(getManilhas(intel.getCards(), intel.getVira()).size() == 1){
+
+                    }
+                }
+                // Pediu truco na carta do bot
+            }
+        }
+
         return 0;
     }
 
@@ -156,6 +169,14 @@ public class JakareDuMatuBot implements BotServiceProvider {
         Collections.reverse(cards);
         return cards;
 
+    }
+
+    // GoodCards -> a,2,3 not been a manilha
+    public List<TrucoCard> hasGoodCards(List<TrucoCard> trucoCards, TrucoCard vira){
+        return trucoCards.stream()
+                .filter(trucoCard -> !trucoCard.isManilha(vira))
+                .filter(trucoCard -> trucoCard.getRank() == CardRank.ACE || trucoCard.getRank() == CardRank.TWO || trucoCard.getRank() == CardRank.THREE)
+                .toList();
     }
 
 }
