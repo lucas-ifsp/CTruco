@@ -92,7 +92,9 @@ public class JakareDuMatuBot implements BotServiceProvider {
                     else  return CardToPlay.of(list.get(2));
 
                 }
-                // jogar sempre a mais forte na primeira
+
+                // jogar sempre a mais forte na primeira se não tiver zap
+                if (list.get(0).isZap(intel.getVira())) return CardToPlay.of(list.get(1));
                 return CardToPlay.of(list.get(0));
             }
             case 1->{
@@ -115,14 +117,14 @@ public class JakareDuMatuBot implements BotServiceProvider {
                 List<TrucoCard> sorted = sortedListCards(intel, intel.getVira());
                 if(intel.getHandPoints() > 1){
                     // Está trucado
-                    if(getManilhas(intel.getCards(), intel.getVira()).size() > 0){
+                    if(!getManilhas(intel.getCards(), intel.getVira()).isEmpty()){
                         return CardToPlay.of(sorted.get(0)); // Vai retornar a manilha
                     }
                     return CardToPlay.of(sorted.get(1));
                 }
 
                 // Não está trucado
-                if(getManilhas(intel.getCards(), intel.getVira()).size() > 0){
+                if(!getManilhas(intel.getCards(), intel.getVira()).isEmpty()){
                     return CardToPlay.of(sorted.get(1)); // Retorna a mais fraca
                 }
 

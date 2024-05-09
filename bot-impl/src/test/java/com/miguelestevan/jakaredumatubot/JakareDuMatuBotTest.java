@@ -271,9 +271,9 @@ class JakareDuMatuBotTest {
 
     @Nested
     class chooseCard {
-        //                                  First Hand (Estevan)
+        //                                          First Hand
 
-        //                                  Adversario primeiro
+        //                                      Adversario primeiro
         //Se consigo matar a primeira carta do adversario, matar com a mais fraca possivel
         @Test
         @DisplayName("Should play the more weakest card possible if can win opponent first card in first hand")
@@ -364,7 +364,7 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
         }
 
-        //                                     Nos primeiro
+        //                                       Nos primeiro
         //Jogar a maior carta na mão
         @Test
         @DisplayName("Should play the strongest card if play first in first hand")
@@ -393,10 +393,36 @@ class JakareDuMatuBotTest {
             assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
         }
 
+        //Se tiver zap e um tres ou dois, guardar o zap pra dar na testa do caquinho
+        @Test
+        @DisplayName("Should play the second strongest card if play first and have zap in first hand")
+        public void ShouldPlayTheSecondStrongestCardIfPlayFirstAndHaveZapInFirstHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            // Game info
+            List<GameIntel.RoundResult> roundResults = List.of();
+            List<TrucoCard> openCards = Arrays.asList(vira);
+
+            // Bot info
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(2)
+                    .build();
+
+            assertThat(jakareDuMatuBot.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+        }
+
        //---------------------------------------------------------------------------------------------------------------
 
 
-        //                                     Second Hand (Miguel)
+        //                                        Second Hand
         // Se a carta mais fraca das duas mata a segunda carta do adversário jogar a mais fraca
         @Test
         @DisplayName("Should play the weakest card if it kills the opponent's second card")
@@ -499,7 +525,7 @@ class JakareDuMatuBotTest {
 
         //--------------------------------------------------------------------------------------------------------------
 
-        // Third Hand (Estevan)
+        //                                        Third Hand
         @Test
         @DisplayName("Should play the last card in third hand")
         public void ShouldPlayTheLastCardInThirdHand(){
