@@ -5,10 +5,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class SecondRoundStrategy implements BotServiceProvider {
     private List<TrucoCard> roundCards;
@@ -30,21 +29,50 @@ public class SecondRoundStrategy implements BotServiceProvider {
         setCards(intel);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        if (hasCasalMaior(ordendedCards)) return 1;
+        if (hasJustManilhas(ordendedCards)) return 1;
         if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
 
-        if (opponentCard.isPresent()){
-            if (ordendedCards.size() == 2){
-                if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0){
-                    if (ordendedCards.get(1).isManilha(vira)) return 1;
-                    if (ordendedCards.get(1).relativeValue(vira) >= 9) return 0;
+        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            if (opponentCard.isPresent()){
+                int index = indexOfCardThatCanWin(ordendedCards, opponentCard);
+                if (index != -1){
+                    if (defaultFunctions.isPowerfull(ordendedCards)) return 1;
+                    if (defaultFunctions.isMedium(ordendedCards)) return 0;
+                } else {
+                    if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+                }
+            } else {
+                if (defaultFunctions.isPowerfull(ordendedCards)) return 1;
+                Random random = new Random();
+                int numero = random.nextInt(100);
+                if (numero > 0 && numero <= 30) {
+                    if (defaultFunctions.isMedium(ordendedCards)) return 0;
                 }
             }
+        } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+            if (opponentCard.isPresent()){
+                int index = indexOfCardThatCanWin(ordendedCards, opponentCard);
+                if (index != -1){
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (ordendedCards.get(0).isManilha(vira)) return 0;
+            }
         } else {
-            if (ordendedCards.get(0).isManilha(vira)) return 1;
-            if (ordendedCards.get(0).relativeValue(vira) >= 9) return 0;
+            if (opponentCard.isPresent()){
+                int index = indexOfCardThatCanWin(ordendedCards, opponentCard);
+                if (index != -1) {
+                    if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+            }
         }
-        return 1;
+        return -1;
     }
 
     @Override
@@ -56,11 +84,11 @@ public class SecondRoundStrategy implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         setCards(intel);
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        if (hasTwoManilhas(ordendedCards)) return true;
-        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
-        // Se ganhamos a primeira
+        if (hasJustManilhas(ordendedCards)) return true;
+        // Se ganhamos ou empatamos a primeira
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON || intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
             if (opponentCard.isPresent()){
                 int index = indexOfCardThatCanWin(ordendedCards, opponentCard);
@@ -76,22 +104,19 @@ public class SecondRoundStrategy implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         setCards(intel);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        // Ganhamos ?
+
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON){
-            // Oponente jogou a carta ?
             if (opponentCard.isPresent()) {
-                lowestCardToWinOrDiscard(ordendedCards, opponentCard);
+                return lowestCardToWinOrDiscard(ordendedCards, opponentCard);
             }
-            // se o oponente não jogou, jogamos nossa carta mais forte
-            return CardToPlay.of(ordendedCards.get(1));
-            // Caso primeiro round empatou, jogamos a mais forte
+            return CardToPlay.of(ordendedCards.get(0)); // Guarda maior carta para o terceiro round
+
         } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
             return CardToPlay.of(ordendedCards.get(1));
-            // Caso perdemos o primeiro round
-        } else {
-            // Se conseguirmos, ganhamos com nossas cartas mais fracas, se não der, perdemos :(
+
+        } else{
             if (opponentCard.isPresent()){
-                lowestCardToWinOrDiscard(ordendedCards, opponentCard);
+                return lowestCardToWinOrDiscard(ordendedCards, opponentCard);
             }
             // se o oponente não jogou, jogamos nossa carta mais forte
             return CardToPlay.of(ordendedCards.get(1));
@@ -108,25 +133,28 @@ public class SecondRoundStrategy implements BotServiceProvider {
     }
 
     private int indexOfCardThatCanWin(List<TrucoCard> ordendedCards, Optional<TrucoCard> opponentCard){
-        if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) {
-            return 0;
-        } else if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0) {
-            return 1;
+        if (ordendedCards.size() == 2){
+            if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) {
+                return 0;
+            } else if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0) {
+                return 1;
+            }
+        } else if (ordendedCards.size() == 1){
+            if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) {
+                return 0;
+            }
         }
         return -1;
     }
+
+
     private boolean hasThreeOrBetter(List<TrucoCard> ordendedCards){
         if (ordendedCards.size() == 2) return ordendedCards.get(0).relativeValue(vira) >= 9 && ordendedCards.get(1).relativeValue(vira) >= 9;
         else return ordendedCards.get(0).relativeValue(vira) >= 9;
     }
 
-    private boolean hasTwoManilhas(List<TrucoCard> ordendedCards){
+    private boolean hasJustManilhas(List<TrucoCard> ordendedCards){
         if (ordendedCards.size() == 2) return ordendedCards.get(1).isManilha(vira) && ordendedCards.get(0).isManilha(vira);
         else return ordendedCards.get(0).isManilha(vira);
-    }
-
-    private boolean hasCasalMaior(List<TrucoCard> ordendedCards){
-        if (ordendedCards.size() == 2) return ordendedCards.get(1).isZap(vira) && ordendedCards.get(0).isCopas(vira);
-        return false;
     }
 }

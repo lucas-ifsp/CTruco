@@ -51,7 +51,7 @@ public class DefaultFunctions {
         int opponentScore = intel.getOpponentScore();
         boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
         boolean isMedium = defaultFunctions.isMedium(ordendedCards);
-        if (opponentScore <= 6) return isMedium;
+        if (opponentScore <= 7) return isMedium;
         return isPowerfull;
     }
 }

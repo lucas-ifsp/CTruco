@@ -29,11 +29,15 @@ public class FirstRoundStrategy implements BotServiceProvider {
 
         if (hasCasalMaior(ordendedCards)) return 1;
         if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+
         if (opponentCard.isPresent()){
             if (ordendedCards.size() == 3){
                 if (ordendedCards.get(1).compareValueTo(opponentCard.get(), vira) > 0){
                     if (ordendedCards.get(2).isManilha(vira)) return 1;
                     if (ordendedCards.get(2).relativeValue(vira) >= 9) return 0;
+                } else if (ordendedCards.get(2).compareValueTo(opponentCard.get(), vira) > 0) {
+                    if (ordendedCards.get(1).isManilha(vira)) return 1;
+                    if (ordendedCards.get(1).relativeValue(vira) >= 9) return 0;
                 }
             }
         } else {
@@ -69,15 +73,14 @@ public class FirstRoundStrategy implements BotServiceProvider {
             return defaultFunctions.isPowerfull(ordendedCards);
         }
 
+        if (defaultFunctions.isPowerfull(ordendedCards)) {
+            return true;
+        }
+
         Random random = new Random();
         int numero = random.nextInt(100);
         if (numero > 0 && numero <= 20 && defaultFunctions.isMedium(ordendedCards)) return true;
 
-        if (defaultFunctions.isPowerfull(ordendedCards)) {
-            if (intel.getScore() == 0 && intel.getOpponentScore() == 0) return true;
-            if (intel.getScore() - intel.getOpponentScore() >= 3) return true;
-            if (intel.getScore() - intel.getOpponentScore() <= 0) return false;
-        }
         return false;
     }
 
@@ -93,10 +96,6 @@ public class FirstRoundStrategy implements BotServiceProvider {
         int indexOfCardThatCanWin = indexOfCardThatCanWin(ordendedCards, opponentCard);
         if (indexOfCardThatCanWin != -1) return CardToPlay.of(ordendedCards.get(indexOfCardThatCanWin));
         else return CardToPlay.of(ordendedCards.get(0));
-    }
-
-    private int getNumberOfManilhas(List<TrucoCard> ordendedCards) {
-        return (int) ordendedCards.stream().filter(c -> c.isManilha(vira)).count();
     }
 
     private boolean hasCasalMaior(List<TrucoCard> ordendedCards){

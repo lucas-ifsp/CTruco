@@ -26,13 +26,28 @@ public class ThirdRoundStrategy implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         setCards(intel);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        if (ordendedCards.size() == 1){
-            if (ordendedCards.get(0).isZap(vira) || ordendedCards.get(0).isCopas(vira)) return 1;
-            if (defaultFunctions.isPowerfull(ordendedCards)) return 0;
+
+        if (opponentCard.isPresent()){
+            if (ordendedCards.size() == 1){
+                if (ordendedCards.get(0).isZap(vira) || ordendedCards.get(0).isCopas(vira)) return 1;
+                if (ordendedCards.get(0).isManilha(vira)) return 0;
+
+                int index = indexOfCardThatCanWin(ordendedCards, opponentCard);
+                if (index != -1){
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
         } else {
-            TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
-            if (lastCardPlayed.isCopas(vira) || lastCardPlayed.isZap(vira)) return 1;
-            if (lastCardPlayed.isManilha(vira)) return 0;
+            if (ordendedCards.size() == 1){
+                if (ordendedCards.get(0).isZap(vira) || ordendedCards.get(0).isCopas(vira)) return 1;
+                if (ordendedCards.get(0).isManilha(vira)) return 0;
+            } else {
+                TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
+                if (lastCardPlayed.isCopas(vira) || lastCardPlayed.isZap(vira)) return 1;
+                if (lastCardPlayed.isManilha(vira)) return 0;
+            }
         }
         return -1;
     }
@@ -57,6 +72,9 @@ public class ThirdRoundStrategy implements BotServiceProvider {
                 Random random = new Random();
                 int numero = random.nextInt(100);
                 if (numero > 0 && numero <= 30 && defaultFunctions.isMedium(ordendedCards)) return true;
+            } else {
+                TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
+                if (lastCardPlayed.isManilha(vira)) return true;
             }
         }
         return false;
@@ -66,5 +84,14 @@ public class ThirdRoundStrategy implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         setCards(intel);
         return CardToPlay.of(ordendedCards.get(0));
+    }
+
+    private int indexOfCardThatCanWin(List<TrucoCard> ordendedCards, Optional<TrucoCard> opponentCard){
+        if (ordendedCards.size() == 1) {
+            if (ordendedCards.get(0).compareValueTo(opponentCard.get(), vira) > 0) {
+                return 0;
+            }
+        }
+        return -1;
     }
 }

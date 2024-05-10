@@ -1,14 +1,10 @@
 package com.lucas.felipe.newbot;
 
-import com.bonelli.noli.paulistabot.FirstRound;
-import com.bonelli.noli.paulistabot.SecondRound;
-import com.bonelli.noli.paulistabot.ThirdRound;
+
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.*;
 
 public class NewBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel){
