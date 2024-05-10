@@ -99,19 +99,49 @@ public class JokerBot implements BotServiceProvider {
         return intel.getRoundResults().isEmpty();
     }
 
-    private boolean isTied(GameIntel intel){
+    private boolean isTiedHand(GameIntel intel){
         List<RoundResult> roundResults = intel.getRoundResults();
         int roundNumber = getRoundNumber(intel);
-        if (roundNumber == 0 && roundResults.isEmpty()) return false;
-        //adicionar condições de empate
+        //considerando: round 0, round 1, round 2
+
+        //esta no começo do primeiro round
+        if (isStartOfRound(intel)) return false;
+
+        //se está no segundo round e empatou no primeiro round
+        if (roundNumber == 1 && roundResults.get(0).equals(DREW)) return true;
+
+        //se está no terceiro round e empatou no primeiro e no segundo round
+        if (roundNumber == 2 && roundResults.get(1).equals(DREW)) return true;
+
+        //com três empates não verifico, pois a mão acabou
+        //no inicio da mão não verifico, pois está no começo da rodada
+        return false;
+    }
+
+    private boolean isWinningHand(GameIntel intel){
+        List<RoundResult> roundResults = intel.getRoundResults();
+        int roundNumber = getRoundNumber(intel);
+        //considerando: round 0, round 1, round 2
+
+        //se está empatado não está ganhando
+        if (isTiedHand(intel)) return false;
+
+        //na primeira rodada ninguém está ganhando
+        if (isStartOfRound(intel)) return false;
+
+        //na segunda rodada, e ganhou na primeira
+        if (roundNumber == 1 && WON.equals(roundResults.get(0))) return false;
+
+        //se está na
         return true;
     }
-    //private boolean isTied(GameIntel intel){
-    //    int numberOfResults = intel.getRoundResults().size();
-    //    int roundNumber = getRoundNumber(intel);
-    //    if (numberOfResults == 0 && roundNumber == 0) return false;
-    //    //adicionar outras condições
-    //    return true;
-    //}
 
+    private boolean isLoosingHand(GameIntel intel){
+
+        return false;
+    }
+
+    private boolean hasTheSameCard(GameIntel intel){
+        return true;
+    }
 }
