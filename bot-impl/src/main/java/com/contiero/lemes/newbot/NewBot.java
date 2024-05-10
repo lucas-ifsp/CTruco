@@ -7,7 +7,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
 import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
-import com.contiero.lemes.newbot.services.utils.PowerCalculator;
+import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class NewBot implements BotServiceProvider {
         if (status == GOOD) {
             int scoreDistance = intel.getScore() - intel.getOpponentScore();
             if (scoreDistance >= 4) return true;
-            return PowerCalculator.powerOfCard(intel, 0) >= 9;
+            return PowerCalculatorService.powerOfCard(intel, 0) >= 9;
         }
         return false;
     }
@@ -35,7 +35,7 @@ public class NewBot implements BotServiceProvider {
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand();
         if (status == GOD && myCards.size() <= 2) return true;
-        return status == GOOD && myCards.size() == 2 && PowerCalculator.powerOfCard(intel, 1) >= 8;
+        return status == GOOD && myCards.size() == 2 && PowerCalculatorService.powerOfCard(intel, 1) >= 8;
     }
 
     @Override
