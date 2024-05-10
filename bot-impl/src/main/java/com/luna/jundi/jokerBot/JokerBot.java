@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.GameIntel.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class JokerBot implements BotServiceProvider {
 
