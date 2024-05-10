@@ -5,23 +5,27 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class CasinhaDeCabloco implements BotServiceProvider {
+    private TrucoCard vira;
+    private List<TrucoCard> hand;
 
     public int CardsValues(TrucoCard vira, List<TrucoCard> cards){
         return cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
     }
 
+    @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel){
-
+        vira = intel.getVira();
         final List<TrucoCard> BotCards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        int EnemyScore = intel.getOpponentScore();
+        int opponentScore = intel.getOpponentScore();
         int value = CardsValues(vira, BotCards);
 
-        if (EnemyScore >= 9 && EnemyScore < 11){
-            if (value >= 25){
+        if (opponentScore >= 9 && opponentScore < 11){
+            if (value >= 21){
                 return true;
             } else{
                 return false;
@@ -35,6 +39,7 @@ public class CasinhaDeCabloco implements BotServiceProvider {
      * <p>Decides if the bot wants to request a hand points raise.</p>
      * @return {@code true} if it wants to request a hand points raise or {@code false} otherwise.
      */
+    @Override
     public boolean decideIfRaises(GameIntel intel) {
         final List<TrucoCard> BotCards = intel.getCards();
         TrucoCard vira = intel.getVira();
@@ -76,10 +81,42 @@ public class CasinhaDeCabloco implements BotServiceProvider {
      * which wraps a {@link TrucoCard} and adds information about whether it should be played or discarded.</p>
      * @return a TrucoCard representing the card to be played or discarded.
      */
+    @Override
     public CardToPlay chooseCard(GameIntel intel){
-        TrucoCard card = null;
-        return CardToPlay.discard(card); // Apenas para possibilitar os testes
+        sortHand(intel);
+        if(intel.getRoundResults().isEmpty() && intel.getOpponentCard().isEmpty())
+            return CardToPlay.of(hand.get(1));
+        else{
+            TrucoCard minCard = minCardToWin(intel);
+            return CardToPlay.of(minCard);
+        }
     }
+
+    private void sortHand(GameIntel intel){
+        vira = intel.getVira();
+        hand = intel.getCards().stream()
+               .sorted(Comparator.comparing(card -> card.relativeValue(vira), Comparator.reverseOrder()))
+               .toList();
+    }
+
+    public TrucoCard minCardToWin(GameIntel intel) {
+        TrucoCard minCard = hand.get(0);
+        Optional<TrucoCard> opponentCardOptional = intel.getOpponentCard();
+
+        if (opponentCardOptional.isPresent()) {
+            TrucoCard opponentCard = opponentCardOptional.get();
+
+            for (TrucoCard card : hand) {
+                if (card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
+                    if (card.relativeValue(vira) <= minCard.relativeValue(vira)) {
+                        minCard = card;
+                    }
+                }
+            }
+        }
+        return minCard;
+    }
+
 
     /**
      * <p>Decides what the bot does when the opponent requests to increase the hand points. If the bot decides to
@@ -91,8 +128,9 @@ public class CasinhaDeCabloco implements BotServiceProvider {
      * @return {@code -1} if the bot quits, {@code 0} if it accepts, and {@code 1} if bot wants to place a re-raise
      * request.
      */
+    @Override
     public int getRaiseResponse(GameIntel intel){
-        return 1; // Apenas para possibilitar os testes
+        return -1; // Apenas para possibilitar os testes
     }
 
 
