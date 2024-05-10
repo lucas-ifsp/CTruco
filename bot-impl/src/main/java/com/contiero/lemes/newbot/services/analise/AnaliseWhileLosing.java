@@ -8,7 +8,7 @@ import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 import java.util.List;
 import java.util.Optional;
 
-public class AnaliseWhileLosing implements Analise {
+public class AnaliseWhileLosing extends Analise {
 
     private final GameIntel intel;
 
@@ -17,39 +17,25 @@ public class AnaliseWhileLosing implements Analise {
     }
 
     @Override
-    public HandStatus myHand() {
-        List<TrucoCard> myCards = intel.getCards();
-        if (myCards.size() == 3){
-            return threeCardsHandler(myCards);
-        }
-        if (myCards.size() == 2){
-            return twoCardsHandler(myCards);
-        }
-        if(myCards.size() == 1){
-            return oneCardHandler();
-        }
-        return HandStatus.GOD;
-    }
-
-    private HandStatus threeCardsHandler(List<TrucoCard> myCards){
-        if (haveAtLeastTwoManilhas()){
+    public HandStatus threeCardsHandler(List<TrucoCard> myCards) {
+        if (haveAtLeastTwoManilhas()) {
             return HandStatus.GOD;
         }
-        if (haveAtLeastOneManilha()){
-            if(intel.getOpponentCard().isPresent()){
+        if (haveAtLeastOneManilha()) {
+            if (intel.getOpponentCard().isPresent()) {
                 TrucoCard oppCard = intel.getOpponentCard().get();
-                if(myCards
+                if (myCards
                         .stream()
-                        .filter(card -> card.compareValueTo(oppCard,intel.getVira()) > 0)
-                        .count() == 3){
+                        .filter(card -> card.compareValueTo(oppCard, intel.getVira()) > 0)
+                        .count() == 3) {
                     return HandStatus.GOD;
                 }
             }
-            if (PowerCalculatorService.powerOfCard(intel,1) >= 3) return HandStatus.GOOD;
+            if (PowerCalculatorService.powerOfCard(intel, 1) >= 3) return HandStatus.GOOD;
             return HandStatus.MEDIUM;
         }
         long handPower = powerOfTheTwoBestCards();
-        if (handPower >= 13){
+        if (handPower >= 13) {
             return HandStatus.GOOD;
         }
         if (handPower >= 8) {
@@ -58,24 +44,24 @@ public class AnaliseWhileLosing implements Analise {
         return HandStatus.BAD;
     }
 
-    private HandStatus twoCardsHandler(List<TrucoCard> myCards){
-        if (wonFirstRound()){
-            if(PowerCalculatorService.powerOfCard(intel,0) >= 9){
+    public HandStatus twoCardsHandler(List<TrucoCard> myCards) {
+        if (wonFirstRound()) {
+            if (PowerCalculatorService.powerOfCard(intel, 0) >= 9) {
                 return HandStatus.GOD;
             }
-            if (PowerCalculatorService.powerOfCard(intel,0) >= 5){
+            if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) {
                 return HandStatus.GOOD;
             }
             return HandStatus.MEDIUM;
         }
-        if (lostFirstRound()){
+        if (lostFirstRound()) {
 
-            if(intel.getOpponentCard().isPresent()){
+            if (intel.getOpponentCard().isPresent()) {
                 TrucoCard oppCard = intel.getOpponentCard().get();
-                if(myCards
+                if (myCards
                         .stream()
-                        .filter(card -> card.compareValueTo(oppCard,intel.getVira()) > 0)
-                        .count() == 2){
+                        .filter(card -> card.compareValueTo(oppCard, intel.getVira()) > 0)
+                        .count() == 2) {
                     return HandStatus.GOOD;
                 }
                 return HandStatus.MEDIUM;
@@ -83,9 +69,9 @@ public class AnaliseWhileLosing implements Analise {
 
             if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
 
-            if (haveAtLeastOneManilha()){
-                if (PowerCalculatorService.powerOfCard(intel,1) >= 7) return HandStatus.GOD;
-                if (PowerCalculatorService.powerOfCard(intel,1) >= 4) return HandStatus.GOOD;
+            if (haveAtLeastOneManilha()) {
+                if (PowerCalculatorService.powerOfCard(intel, 1) >= 7) return HandStatus.GOD;
+                if (PowerCalculatorService.powerOfCard(intel, 1) >= 4) return HandStatus.GOOD;
                 return HandStatus.MEDIUM;
             }
             if (powerOfTheTwoBestCards() >= 13) return HandStatus.GOOD;
@@ -94,57 +80,58 @@ public class AnaliseWhileLosing implements Analise {
         }
 
         if (haveAtLeastOneManilha()) return HandStatus.GOD;
-        if (PowerCalculatorService.powerOfCard(intel,0) >= 8) return HandStatus.GOOD;
-        if (PowerCalculatorService.powerOfCard(intel,0) >= 5) return HandStatus.MEDIUM;
+        if (PowerCalculatorService.powerOfCard(intel, 0) >= 8) return HandStatus.GOOD;
+        if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
-    private HandStatus oneCardHandler(){
+    @Override
+    public HandStatus oneCardHandler() {
         TrucoCard myCard = intel.getCards().get(0);
         Optional<TrucoCard> oppCard = intel.getOpponentCard();
 
-        if (wonFirstRound()){
-            if (oppCard.isPresent()){
-                if (myCard.compareValueTo(oppCard.get(),intel.getVira()) > 0){
+        if (wonFirstRound()) {
+            if (oppCard.isPresent()) {
+                if (myCard.compareValueTo(oppCard.get(), intel.getVira()) > 0) {
                     return HandStatus.GOD;
                 }
-                if (intel.getHandPoints() <= 6){
+                if (intel.getHandPoints() <= 6) {
                     return HandStatus.GOOD;
                 }
                 return HandStatus.MEDIUM;
             }
         }
 
-        if (lostFirstRound()){
-            if (PowerCalculatorService.powerOfCard(intel,0) >= 9) return HandStatus.GOD;
-            if (PowerCalculatorService.powerOfCard(intel,0) >= 7) return HandStatus.GOOD;
-            if (PowerCalculatorService.powerOfCard(intel,0) >= 3) return HandStatus.MEDIUM;
+        if (lostFirstRound()) {
+            if (PowerCalculatorService.powerOfCard(intel, 0) >= 9) return HandStatus.GOD;
+            if (PowerCalculatorService.powerOfCard(intel, 0) >= 7) return HandStatus.GOOD;
+            if (PowerCalculatorService.powerOfCard(intel, 0) >= 3) return HandStatus.MEDIUM;
             return HandStatus.BAD;
         }
 
         if (intel.getHandPoints() <= 3) return HandStatus.GOD;
-        if (PowerCalculatorService.powerOfCard(intel,0) >= 5) return HandStatus.GOOD;
-        if (PowerCalculatorService.powerOfCard(intel,0) >= 3) return HandStatus.MEDIUM;
+        if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) return HandStatus.GOOD;
+        if (PowerCalculatorService.powerOfCard(intel, 0) >= 3) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
 
-    private boolean haveAtLeastTwoManilhas(){
+    private boolean haveAtLeastTwoManilhas() {
         return getManilhaAmount() >= 2;
     }
 
-    private boolean haveAtLeastOneManilha(){
+    private boolean haveAtLeastOneManilha() {
         return getManilhaAmount() >= 1;
     }
 
     private long getManilhaAmount() {
         List<TrucoCard> myCards = intel.getCards();
         return myCards.stream()
-                .filter(card-> card.isManilha(intel.getVira()))
+                .filter(card -> card.isManilha(intel.getVira()))
                 .count();
     }
 
-    private long powerOfTheTwoBestCards(){
+    private long powerOfTheTwoBestCards() {
         List<TrucoCard> myCards = intel.getCards();
         return myCards.stream()
                 .mapToLong(card -> card.relativeValue(intel.getVira()))
@@ -153,12 +140,12 @@ public class AnaliseWhileLosing implements Analise {
                 .sum();
     }
 
-    private boolean wonFirstRound(){
+    private boolean wonFirstRound() {
         if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
         return false;
     }
 
-    private boolean lostFirstRound(){
+    private boolean lostFirstRound() {
         if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
         return false;
     }

@@ -25,7 +25,7 @@ public class AgressiveChoosing implements Choosing {
         this.intel = intel;
         vira = intel.getVira();
 
-        MyCards myCards = new MyCards(intel.getCards(),intel.getVira());
+        MyCards myCards = new MyCards(intel.getCards(), intel.getVira());
 
         bestCard = myCards.getBestCard();
         secondBestCard = myCards.getSecondBestCard();

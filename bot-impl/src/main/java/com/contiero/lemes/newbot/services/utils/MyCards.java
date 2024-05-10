@@ -10,7 +10,7 @@ public class MyCards {
     TrucoCard vira;
 
 
-    public MyCards(List<TrucoCard> myHand,TrucoCard vira) {
+    public MyCards(List<TrucoCard> myHand, TrucoCard vira) {
         this.myHand = myHand;
         this.vira = vira;
         myHandValuesSorted = this.myHand.stream()
@@ -20,7 +20,7 @@ public class MyCards {
     }
 
 
-    public TrucoCard getBestCard(){
+    public TrucoCard getBestCard() {
         Integer valueOfBestCard = myHandValuesSorted.get(2);
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == valueOfBestCard)
@@ -28,7 +28,7 @@ public class MyCards {
                 .orElse(myHand.get(0));
     }
 
-    public TrucoCard getSecondBestCard(){
+    public TrucoCard getSecondBestCard() {
         Integer valueOfSecondBestCard = myHandValuesSorted.get(1);
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == valueOfSecondBestCard)
@@ -36,7 +36,7 @@ public class MyCards {
                 .orElse(myHand.get(0));
     }
 
-    public TrucoCard getWorstCard(){
+    public TrucoCard getWorstCard() {
         Integer worstCardValue = myHandValuesSorted.get(0);
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == worstCardValue)
