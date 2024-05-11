@@ -1,3 +1,24 @@
+/*
+ *  Copyright (C) 2024 Alan Andrade Vasconi de Souza - IFSP/SCL and Ian de Oliveira Fernandes - IFSP/SCL
+ *  Contact: alan<dot>vasconi<at>aluno<dot>ifsp<dot>edu<dot>br
+ *  Contact: ian<dot>f<at>aluno<dot>ifsp<dot>edu<dot>br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.alanIan.casinhadecabloco;
 
 import com.bueno.spi.model.CardToPlay;
@@ -13,26 +34,26 @@ public class CasinhaDeCabloco implements BotServiceProvider {
     private TrucoCard vira;
     private List<TrucoCard> hand;
 
+    private static final int HIGH_CARD_VALUE = 25;
+    private static final int MODERATE_CARD_VALUE = 20;
+    private static final int LOW_CARD_VALUE = 18;
+    private static final int CRUCIAL_ROUND_VALUE = 15;
+
     public int CardsValues(TrucoCard vira, List<TrucoCard> cards){
         return cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel){
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
         vira = intel.getVira();
-        final List<TrucoCard> BotCards = intel.getCards();
+        final List<TrucoCard> botCards = intel.getCards();
         int opponentScore = intel.getOpponentScore();
-        int value = CardsValues(vira, BotCards);
+        int value = CardsValues(vira, botCards);
 
-        if (opponentScore >= 9 && opponentScore < 11){
-            if (value >= 21){
-                return true;
-            } else{
-                return false;
-            }
-        }else{
-            return true;
+        if (opponentScore >= 9 && opponentScore < 11) {
+            return value >= MODERATE_CARD_VALUE + 1;
         }
+        return true;
     }
 
     /**
@@ -52,25 +73,37 @@ public class CasinhaDeCabloco implements BotServiceProvider {
         boolean aggressive = true;
 
         if (BotScore >= 9 || EnemyScore >= 9) {
-            if (value >= 20) return aggressive;
+            if (value >= MODERATE_CARD_VALUE) return aggressive;
         }
 
         if (round == 2) {
             if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-                if (value >= 25) return aggressive;
+                if (value >= HIGH_CARD_VALUE) return aggressive;
                 return conservative;
             } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-                if (value >= 22) return aggressive;
+                if (value >= MODERATE_CARD_VALUE + 2) return aggressive;
             }
         }
 
         if (BotScore < EnemyScore) {
             if (EnemyScore == 10) return aggressive;
-            if (value >= 25) return aggressive;
+            if (value >= HIGH_CARD_VALUE) return aggressive;
         }
 
         if (BotScore > EnemyScore) {
             if (BotScore >= 10) return conservative;
+        }
+
+        Optional<TrucoCard> opponentCardOptional = intel.getOpponentCard();
+        if (opponentCardOptional.isPresent()) {
+            TrucoCard opponentCard = opponentCardOptional.get();
+            long strongerCardsCount = BotCards.stream()
+                    .filter(BotCard -> BotCard.relativeValue(vira) > opponentCard.relativeValue(vira))
+                    .count();
+
+            if (strongerCardsCount >= 2) {
+                return aggressive;
+            }
         }
 
         return conservative;
@@ -129,9 +162,44 @@ public class CasinhaDeCabloco implements BotServiceProvider {
      * request.
      */
     @Override
-    public int getRaiseResponse(GameIntel intel){
-        return -1; // Apenas para possibilitar os testes
+    public int getRaiseResponse(GameIntel intel) {
+        final List<TrucoCard> BotCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int value = CardsValues(vira, BotCards);
+        int EnemyScore = intel.getOpponentScore();
+        int BotScore = intel.getScore();
+        int currentRound = intel.getRoundResults().size() + 1;
+
+        int deny = -1;
+        int accept = 0;
+        int increase = 1;
+
+        if (value >= HIGH_CARD_VALUE) {
+            return increase;
+        }
+
+        if (BotScore >= 9) {
+            if (value >= MODERATE_CARD_VALUE) {
+                return accept;
+            } else {
+                return deny;
+            }
+        }
+
+        if (value >= LOW_CARD_VALUE) {
+            return accept;
+        }
+
+        if (currentRound == 3 && (EnemyScore >= 10 || BotScore < EnemyScore)) {
+            if (value >= CRUCIAL_ROUND_VALUE) {
+                return increase;
+            } else {
+                return deny;
+            }
+        }
+        return deny;
     }
+
 
 
     /**
