@@ -35,31 +35,29 @@ public class AgressiveChoosing implements Choosing {
     @Override
     public CardToPlay firstRoundChoose() {
 
-        int bestCardValue = bestCard.relativeValue(vira);
-        int secondBestCardValue = secondBestCard.relativeValue(vira);
-        int worstCardValue = worstCard.relativeValue(vira);
-
         if (intel.getOpponentCard().isPresent()) {
             int opponentCardOnTableValue = intel.getOpponentCard().get().relativeValue(vira);
-
-            if (worstCardValue >= opponentCardOnTableValue) return CardToPlay.of(worstCard);
-            if (secondBestCardValue >= opponentCardOnTableValue) return CardToPlay.of(secondBestCard);
-            if (bestCardValue > opponentCardOnTableValue) return CardToPlay.of(bestCard);
+            if (status == GOD){
+                return CardToPlay.of(worstCard);
+            }
+            if (worstCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(worstCard);
+            if (secondBestCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) > opponentCardOnTableValue) return CardToPlay.of(bestCard);
         }
 
         if (haveAtLeastTwoManilhas()) {
-            if (secondBestCardValue == 12 || secondBestCardValue == 11) return CardToPlay.of(worstCard);
-            if (secondBestCardValue == 10) return CardToPlay.of(secondBestCard);
+            if (secondBestCard.relativeValue(vira) >= 11) return CardToPlay.of(worstCard);
+            if (secondBestCard.relativeValue(vira) == 10) return CardToPlay.of(secondBestCard);
         }
 
         if (haveAtLeastOneManilha()) {
-            if (bestCardValue >= 11) return CardToPlay.of(secondBestCard);
-            if (bestCardValue == 10) return CardToPlay.of(bestCard);
+            if (bestCard.relativeValue(vira) >= 11) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) == 10) return CardToPlay.of(bestCard);
 
         }
         long handPower = powerOfTheTwoBestCards();
 
-        if (handPower >= 16 && secondBestCardValue >= 8) return CardToPlay.of(secondBestCard);
+        if (handPower >= 14 && secondBestCard.relativeValue(vira) >= 7) return CardToPlay.of(secondBestCard);
         return CardToPlay.of(bestCard);
     }
 
@@ -74,8 +72,8 @@ public class AgressiveChoosing implements Choosing {
             Optional<TrucoCard> oppCard = intel.getOpponentCard();
             if (oppCard.isPresent()) {
                 if (worstCard.compareValueTo(oppCard.get(),vira) > 0) return CardToPlay.of(worstCard);
-                return CardToPlay.of(bestCard);
             }
+            return CardToPlay.of(bestCard);
         }
 
         return CardToPlay.of(bestCard);
@@ -83,9 +81,8 @@ public class AgressiveChoosing implements Choosing {
 
     @Override
     public CardToPlay thirdRoundChoose() {
-        return null;
+        return CardToPlay.of(bestCard);
     }
-
 
     private boolean haveAtLeastTwoManilhas() {
         return getManilhaAmount() >= 2;
