@@ -4,5 +4,7 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
 public interface Choosing {
-    CardToPlay choose(GameIntel intel);
+    CardToPlay firstRoundChoose();
+    CardToPlay secondRoundChoose();
+    CardToPlay thirdRoundChoose();
 }

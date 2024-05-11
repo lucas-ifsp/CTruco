@@ -13,8 +13,10 @@ import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
 import java.util.List;
 
 
+
+
 public class NewBot implements BotServiceProvider {
-    private static Analise.HandStatus status;
+    private Analise.HandStatus status;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
