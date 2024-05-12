@@ -29,11 +29,9 @@ public class UnamedBot implements BotServiceProvider{
     raiseThreshold += highValueCards * 2;
 
     if (sum > raiseThreshold) {
-        return 1; // Re-raise or call
-    } else if (sum > 20) {
-        return 0; // Accept raise
+        return true;
     } else {
-        return -1; // Quit
+        return false;
     }
 }
 
