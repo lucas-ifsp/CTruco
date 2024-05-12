@@ -1,11 +1,11 @@
 
-package com.luna.jundi.jokerBot;
+package com.luna.jundi.jokerBot.states;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
-public interface HandState {
+public interface RoundState {
 
     //static pois nao muda para rounds
     static boolean getMaoDeOnzeResponse(GameIntel intel) {

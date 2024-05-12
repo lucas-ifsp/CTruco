@@ -1,16 +1,9 @@
-package com.luna.jundi.jokerBot;
+package com.luna.jundi.jokerBot.states;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
-import static com.luna.jundi.jokerBot.JokerBotUtils.bestCard;
-import static com.luna.jundi.jokerBot.JokerBotUtils.jokerBotWonFirstRound;
-
-public class RoundTwo implements HandState {
-
-
-    public RoundTwo(GameIntel intel) {
-    }
+public class RoundTwoState implements RoundState {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
@@ -19,7 +12,6 @@ public class RoundTwo implements HandState {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if(jokerBotWonFirstRound(intel)) return bestCard(intel);
         return null;
     }
 
