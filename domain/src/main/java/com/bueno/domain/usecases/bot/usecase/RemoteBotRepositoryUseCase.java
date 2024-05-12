@@ -6,6 +6,7 @@ import com.bueno.domain.usecases.utils.exceptions.DtoNotStringableException;
 import com.bueno.domain.usecases.utils.exceptions.RemoteBotAlreadyExistsException;
 import com.bueno.domain.usecases.utils.exceptions.RemoteBotNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,6 +15,18 @@ public class RemoteBotRepositoryUseCase {
 
     public RemoteBotRepositoryUseCase(RemoteBotRepository remoteBotRepository) {
         this.remoteBotRepository = remoteBotRepository;
+    }
+
+    public List<RemoteBotDto> getAll(){
+        return remoteBotRepository.findAll();
+    }
+
+    public RemoteBotDto getByName(String name) throws RemoteBotNotFoundException {
+        final Optional<RemoteBotDto> bot = remoteBotRepository.findAll().stream()
+                .filter(remoteBotDto -> remoteBotDto.name().equals(name)).limit(1)
+                .findAny();
+        if (bot.isEmpty()) throw new RemoteBotNotFoundException("Bot with name: " + name + " wasn't found");
+        return bot.get();
     }
 
     public void addBot(RemoteBotDto dtoToadd) throws DtoNotStringableException, RemoteBotAlreadyExistsException {
@@ -27,7 +40,7 @@ public class RemoteBotRepositoryUseCase {
         Optional<RemoteBotDto> botToDelete = remoteBotRepository.findAll().stream()
                 .filter(remoteBotDto -> remoteBotDto.name().equals(name))
                 .findFirst();
-        if (botToDelete.isEmpty()) throw new RemoteBotNotFoundException("Bot with name: " + name + "wasn't found");
+        if (botToDelete.isEmpty()) throw new RemoteBotNotFoundException("Bot with name: " + name + " wasn't found");
         remoteBotRepository.remove(botToDelete.get());
     }
 

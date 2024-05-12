@@ -22,19 +22,21 @@ public class RemoteBotController { //TODO receber url,porta,email. Usar postman
     }
 
     @GetMapping("{name}")
-    private ResponseEntity<?> getByUUID(@PathVariable String name){
-        final var responseModel = repository.findAll().stream()
-                .filter(remoteBotDto -> remoteBotDto.name().equals(name)).limit(1)
-                .findAny()
-                .orElse(null);
-        if (responseModel == null) return ResponseEntity.badRequest().body("Bot: " + name + " not found");
-        return ResponseEntity.ok(responseModel);
+    private ResponseEntity<?> getRemoteBotByName(@PathVariable String name){
+        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
+
+        try {
+            RemoteBotDto bot = useCase.getByName(name);
+            return ResponseEntity.ok(bot);
+        } catch (RemoteBotNotFoundException e) {
+            return ResponseEntity.badRequest().body("Bot: " + name + " not found");
+        }
     }
 
     @GetMapping("all-bots")
-    private ResponseEntity<?> getAll() {
-        final var responseModel = repository.findAll();
-        return ResponseEntity.ok(responseModel);
+    private ResponseEntity<?> getAllRemoteOnes() {
+        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
+        return ResponseEntity.ok(useCase.getAll());
     }
 
     @PostMapping()

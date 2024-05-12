@@ -51,11 +51,4 @@ public class RemoteBotRepositoryFileImpl implements RemoteBotRepository {
         return dto.name() + ";" + dto.email() + ";" + dto.url() + ";" + dto.port();
     }
 
-    private void remove(RemoteBotDto bot) {
-        try {
-            remoteBotsMock.remove(toRemoteBotsString(bot));
-        } catch (DtoNotStringableException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
