@@ -22,6 +22,7 @@
  */
 
 package com.luna.jundi.jokerBot.states;
+
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
@@ -29,7 +30,8 @@ public final class FirstToPlayRoundOneState implements RoundState {
     private final GameIntel intel;
 
     public FirstToPlayRoundOneState(GameIntel intel) {
-        if (!(isValidRoundState().test(intel,1))) throw new IllegalStateException("is not" + getClass().getSimpleName());
+        if (!(isValidRoundState().test(intel, 1)))
+            throw new IllegalStateException("is not" + getClass().getSimpleName());
         this.intel = intel;
     }
 
@@ -40,8 +42,7 @@ public final class FirstToPlayRoundOneState implements RoundState {
 
     @Override
     public boolean raiseDecision() {
-//        return raiseHandCards(intel);
-        return defaultRaiseHandDecision(intel);
+        return raiseHandByMyCards(intel);
     }
 
     @Override

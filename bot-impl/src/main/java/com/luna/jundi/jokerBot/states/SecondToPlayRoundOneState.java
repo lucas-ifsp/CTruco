@@ -24,12 +24,12 @@ public final class SecondToPlayRoundOneState implements RoundState {
 
     @Override
     public boolean raiseDecision() {
-//        return raiseHandCards(intel);
-        return defaultRaiseHandDecision(intel);
+        if (raiseHandByOpponentCard(intel)) return true;
+        return raiseHandByMyCards(intel);
     }
 
     @Override
     public int raiseResponse() {
-        return 0;
+        return defaultRaiseResponse(intel);
     }
 }

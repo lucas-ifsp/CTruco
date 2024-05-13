@@ -66,6 +66,10 @@ public final class JokerBot implements BotServiceProvider {
     private void setState(GameIntel intel) throws InvalidNumberOfRoundsException {
         boolean start = jokerBotStartsTheRound().test(intel);
         int roundNumber = getRoundNumber(intel);
+
+        if (1 == intel.getScore() && 1 == intel.getHandPoints() && 10 == intel.getOpponentScore())
+            this.state = new JokerState(intel);
+
         switch (roundNumber) {
             case 1 -> this.state = start ? new FirstToPlayRoundOneState(intel) : new SecondToPlayRoundOneState(intel);
             case 2 -> this.state = start ? new FirstToPlayRoundTwoState(intel) : new SecondToPlayRoundTwoState(intel);

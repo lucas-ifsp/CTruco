@@ -50,7 +50,8 @@ public final class SecondToPlayRoundTwoState implements RoundState {
 
     @Override
     public boolean raiseDecision() {
-        return defaultRaiseHandDecision(intel);
+        if (raiseHandByOpponentCard(intel)) return true;
+        return isWinningHand(intel) && 7 >= getHandEvaluation(intel).value();
     }
 
     @Override

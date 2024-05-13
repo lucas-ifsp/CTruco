@@ -46,13 +46,28 @@ public sealed interface RoundState
         FirstToPlayRoundTwoState, SecondToPlayRoundTwoState,
         RoundThreeState, JokerState {
 
+
+    default int defaultRaiseResponse(GameIntel intel){
+        int handPoints = intel.getHandPoints();
+        boolean myCardsAreExcellent = EXCELLENT.equals(getHandEvaluation(intel));
+        boolean myCardsAreGood = GREAT.equals(getHandEvaluation(intel));
+        if(hasZap(intel)) return 1;
+        if (handPoints < 6 && ( myCardsAreGood || myCardsAreExcellent)) return  0;
+        if (myCardsAreExcellent) return 1; //raise condition
+        if (getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) == 0) return -1; // run conditions
+        if (isTiedHand(intel) && getHandEvaluation(intel).value() >= 3) return 0; //accept conditions
+        if (jokerBotStartsTheRound().test(intel) && isNotLoosingHand(intel)) return 0;
+
+        return -1;
+    }
+
     CardToPlay cardChoice();
 
     boolean raiseDecision();
 
     int raiseResponse();
 
-    default boolean maoDeOnzeDecision(GameIntel intel) {                                            //PUT MY LOGIC HERE
+    default boolean maoDeOnzeDecision(GameIntel intel) {
 
         boolean myCardsAreExcellent = EXCELLENT.equals(getHandEvaluation(intel));
         boolean myCardsAreGood = GREAT.equals(getHandEvaluation(intel));
@@ -69,28 +84,24 @@ public sealed interface RoundState
         return (intel, roundNumber) -> intel.getRoundResults().size() + 1 == roundNumber;
     }
 
-    default BiPredicate<TrucoCard, GameIntel> hasBiggerCard() {
+    default Function<GameIntel, CardToPlay> secondRoundsChoicesCard() {
+        return (intel) -> intel.getCards().stream()
+                .filter(card -> hasBiggerCard().test(card, intel) || hasEqualCard().test(card, intel))
+                .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
+                .map(CardToPlay::of)
+                .orElse(getWorstCard().apply(intel));
+    }
+
+    private BiPredicate<TrucoCard, GameIntel> hasBiggerCard() {
         return (botCard, intel) -> intel.getOpponentCard()
                 .map(opponentCard -> botCard.relativeValue(intel.getVira()) > opponentCard.relativeValue(intel.getVira()))
                 .orElse(false);
     }
 
-    default BiPredicate<TrucoCard, GameIntel> hasEqualCard() {
+    private BiPredicate<TrucoCard, GameIntel> hasEqualCard() {
         return (botCard, intel) -> intel.getOpponentCard()
                 .map(opponentCard -> botCard.relativeValue(intel.getVira()) == opponentCard.relativeValue(intel.getVira()))
                 .orElse(false);
-    }
-
-    default BiPredicate<TrucoCard, GameIntel> hasMinorCard() {
-        return (botCard, intel) -> intel.getOpponentCard()
-                .map(opponentCard -> botCard.relativeValue(intel.getVira()) < opponentCard.relativeValue(intel.getVira()))
-                .orElse(false);
-    }
-
-    default Function<GameIntel, List<TrucoCard>> getMyCardsSorted() {
-        return (intel) -> intel.getCards().stream()
-                .sorted(Comparator.comparingInt(card -> ((TrucoCard) card).relativeValue(intel.getVira())).reversed())
-                .collect(Collectors.toList());
     }
 
     default Function<GameIntel, CardToPlay> getBestCard() {
@@ -100,6 +111,12 @@ public sealed interface RoundState
                 .orElseThrow(() -> new WithoutCardsToPlayException("JokerBot have no cards to play :(\n"));
     }
 
+    private Function<GameIntel, List<TrucoCard>> getMyCardsSorted() {
+        return (intel) -> intel.getCards().stream()
+                .sorted(Comparator.comparingInt(card -> ((TrucoCard) card).relativeValue(intel.getVira())).reversed())
+                .collect(Collectors.toList());
+    }
+
     default Function<GameIntel, CardToPlay> getWorstCard() {
         return (intel) -> getMyCardsSorted().apply(intel).stream()
                 .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
@@ -107,20 +124,16 @@ public sealed interface RoundState
                 .orElseThrow(() -> new WithoutCardsToPlayException("JokerBot have no cards to play, even a worse :'\n"));
     }
 
-    default Function<GameIntel, CardToPlay> secondRoundsChoicesCard() {
-        return (intel) -> intel.getCards().stream()
-                .filter(card -> hasBiggerCard().test(card, intel) || hasEqualCard().test(card, intel))
-                .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
-                .map(CardToPlay::of)
-                .orElse(getWorstCard().apply(intel));
-    }
-
     default boolean isWinningHand(GameIntel intel) {                     //PREDICATE
         if (isTiedHand(intel)) return false;
         return !isFirstRound().test(intel);
     }
 
-    default boolean isTiedHand(GameIntel intel) {                        //PREDICATE        //ADD MELADO, MELADAO E EMPATADO <===
+    private Predicate<GameIntel> isFirstRound(){
+        return intel -> intel.getRoundResults().isEmpty();
+    }
+
+    private boolean isTiedHand(GameIntel intel) {                        //PREDICATE        //ADD MELADO, MELADAO E EMPATADO <===
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int roundNumber = getRoundNumber(intel);
         if (isFirstRound().test(intel)) return false;
@@ -128,15 +141,11 @@ public sealed interface RoundState
         return roundNumber == 3 && DREW.equals(roundResults.get(0)) && DREW.equals(roundResults.get(1));
     }
 
-    default boolean isLoosingHand(GameIntel intel) {                     //PREDICATE
-        return (!(isWinningHand(intel) || isTiedHand(intel) || isFirstRound().test(intel)));
+    default boolean isNotLoosingHand(GameIntel intel) {                     //PREDICATE
+        return (isWinningHand(intel) || isTiedHand(intel) || isFirstRound().test(intel));
     }
 
-    //----------------------------------------------------------------
-    //  CARDS EVALUATION
-    //----------------------------------------------------------------
-
-    default Function<GameIntel, Double> averageRelativeValueOfCards() {
+    private Function<GameIntel, Double> averageRelativeValueOfCards() {
         return intel -> intel.getCards().stream()
                 .mapToDouble(card -> card.relativeValue(intel.getVira()))
                 .average().orElse(0.00);
@@ -151,68 +160,21 @@ public sealed interface RoundState
         return BAD;
     }
 
-    default BiFunction<List<TrucoCard>, TrucoCard, Integer> getNumberOfManilhas(){
+    private BiFunction<List<TrucoCard>, TrucoCard, Integer> getNumberOfManilhas(){
         return (trucoCards, vira) -> (int) trucoCards.stream()
                 .filter(card -> card.isManilha(vira))
                 .count();
     }
 
-    //----------------------------------------------------------------
-    //  BASIC VERSION OPTIMIZE IF HAVE TIME
-    //----------------------------------------------------------------
-
-
-    default boolean raiseHandCards(GameIntel intel) {
+    default boolean raiseHandByMyCards(GameIntel intel) {
         if (EXCELLENT.equals(getHandEvaluation(intel))) return true;
         return GREAT.equals(getHandEvaluation(intel));
     }
 
-    /**
-     * this raiseHandDecision only can be called when is secondToPlay
-     */
-//    default boolean raiseHandDecisionOpponentCard(GameInte intel) {
-//        CardToPlay possibleBiggerCard = secondRoundsChoicesCard().apply(intel);
-//        int myBiggerCardValue = possibleBiggerCard.value().relativeValue(intel.getVira());
-//        int opponentCardValue = intel.getOpponentCard().map(card -> card.relativeValue(intel.getVira())).orElse(0);
-//        return true;
-//    }
-
-    default boolean defaultRaiseHandDecision(GameIntel intel) {
+    default boolean raiseHandByOpponentCard(GameIntel intel) {
         CardToPlay possibleBiggerCard = secondRoundsChoicesCard().apply(intel);
         int myBiggerCardValue = possibleBiggerCard.value().relativeValue(intel.getVira());
         int opponentCardValue = intel.getOpponentCard().map(card -> card.relativeValue(intel.getVira())).orElse(0);
-        if (jokerBotStartsTheRound().test(intel) &&
-                !isFirstRound().test(intel) && (
-                isWinningHand(intel) || isTiedHand(intel) || getHandEvaluation(intel).value() >= 4))
-            return true;
-        if (jokerBotStartsTheRound().negate().test(intel) && myBiggerCardValue > opponentCardValue && isTiedHand(intel))
-            return true;
-        return false;
-    }
-
-    default int defaultRaiseResponse(GameIntel intel){
-
-        int handPoints = intel.getHandPoints();
-        boolean myCardsAreExcellent = EXCELLENT.equals(getHandEvaluation(intel));
-        boolean myCardsAreGood = GREAT.equals(getHandEvaluation(intel));
-
-        if (handPoints < 6 && ( myCardsAreGood || myCardsAreExcellent)) return  0;
-
-        if (myCardsAreExcellent) return 1; //raise condition
-
-        if (getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) == 0) return -1; // run conditions
-
-        if (isTiedHand(intel) && getHandEvaluation(intel).value() >= 3) return 0; //accept conditions
-        if (jokerBotStartsTheRound().test(intel) && !isLoosingHand(intel)) return 0;
-        else return -1;
-    }
-
-    default boolean raiseHandCardsAndResults(GameIntel intel) {
-        return raiseHandCards(intel) && !isLoosingHand(intel);
-    }
-
-
-    default Predicate<GameIntel> isFirstRound(){
-        return intel -> intel.getRoundResults().isEmpty();
+        return myBiggerCardValue >= opponentCardValue;
     }
 }

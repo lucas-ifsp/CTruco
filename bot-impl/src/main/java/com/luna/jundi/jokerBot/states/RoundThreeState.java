@@ -3,6 +3,8 @@ package com.luna.jundi.jokerBot.states;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
+import static com.luna.jundi.jokerBot.utils.RoundUtils.jokerBotStartsTheRound;
+
 public final class RoundThreeState implements RoundState {
 
     private final GameIntel intel;
@@ -23,7 +25,16 @@ public final class RoundThreeState implements RoundState {
 
     @Override
     public boolean raiseDecision() {
-        return defaultRaiseHandDecision(intel);
+        boolean anyGoodCardWasPlayed = intel.getOpenCards().stream()
+                .map(card -> card.relativeValue(intel.getVira()))
+                .filter(value -> value > 3)
+                .toList()
+                .isEmpty();
+        if (jokerBotStartsTheRound().test(intel) && raiseHandByOpponentCard(intel)) return true;
+        int myCardsEvaluation = getHandEvaluation(intel).value();
+        if (myCardsEvaluation >= 4 && isNotLoosingHand(intel)) return true;
+        if (anyGoodCardWasPlayed && myCardsEvaluation > 2) return true;
+        return false;
     }
 
     @Override

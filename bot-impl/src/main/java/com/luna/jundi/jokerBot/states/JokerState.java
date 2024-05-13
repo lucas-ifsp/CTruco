@@ -32,7 +32,6 @@ import java.util.Random;
 
 public final class JokerState implements RoundState {
 
-    //Pensar em remover se não for útil
     //Why playing so serious???
     private final GameIntel intel;
     private final Random random = new Random();
@@ -41,7 +40,6 @@ public final class JokerState implements RoundState {
         this.intel = intel;
     }
 
-    //Pensar em quando entra no modo JokerState
     @Override
     public CardToPlay cardChoice() {
         List<TrucoCard> cards = intel.getCards();
@@ -56,6 +54,6 @@ public final class JokerState implements RoundState {
 
     @Override
     public int raiseResponse() {
-        return random.nextInt(-1,2);
+        return 1;
     }
 }
