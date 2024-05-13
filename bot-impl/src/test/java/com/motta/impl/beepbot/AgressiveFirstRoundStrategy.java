@@ -38,7 +38,6 @@ public class AgressiveFirstRoundStrategy extends BotStrategy{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(getManilhaAmount(intel.getCards(), intel.getVira())==2) return true;
         if(hasManilha(intel.getCards(), intel.getVira())) return true;
         return calculateAverageCardValue(intel.getCards(), intel.getVira()) > 8;
     }
@@ -52,7 +51,7 @@ public class AgressiveFirstRoundStrategy extends BotStrategy{
         if(intel.getScore() > 3){
             card = getHighestCard(intel.getCards(), intel.getVira());
         }else{
-            card = selectHighestNonManilhaCard(intel.getCards(), intel.getVira());
+            card = getLowestCard(intel.getCards(), intel.getVira());
         }
         if (card == null){
             card = intel.getCards().get(0);
