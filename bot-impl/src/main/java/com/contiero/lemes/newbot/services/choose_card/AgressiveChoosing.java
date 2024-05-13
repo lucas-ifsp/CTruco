@@ -39,6 +39,9 @@ public class AgressiveChoosing implements Choosing {
         if (intel.getOpponentCard().isPresent()) {
             int opponentCardOnTableValue = intel.getOpponentCard().get().relativeValue(vira);
             if (status == GOD || status == GOOD) {
+                if (secondBestCard.relativeValue(vira) == opponentCardOnTableValue && secondBestCard.relativeValue(vira) >= 11){
+                    return CardToPlay.of(secondBestCard);
+                }
                 return CardToPlay.of(worstCard);
             }
             if (worstCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(worstCard);

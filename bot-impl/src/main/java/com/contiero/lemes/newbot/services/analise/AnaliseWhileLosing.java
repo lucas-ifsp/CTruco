@@ -3,7 +3,7 @@ package com.contiero.lemes.newbot.services.analise;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
-import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
+import com.contiero.lemes.newbot.services.utils.MyCards;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +11,20 @@ import java.util.Optional;
 public class AnaliseWhileLosing extends Analise {
 
     private final GameIntel intel;
+    private final TrucoCard vira;
+    private final int bestCardValue;
+    private final int secondBestCardValue;
+
 
     public AnaliseWhileLosing(GameIntel intel) {
         this.intel = intel;
+        vira = intel.getVira();
+
+        MyCards myCards = new MyCards(intel.getCards(),vira);
+
+        bestCardValue = myCards.getBestCard().relativeValue(vira);
+        secondBestCardValue = myCards.getSecondBestCard().relativeValue(vira);
+
     }
 
     @Override
@@ -21,67 +32,74 @@ public class AnaliseWhileLosing extends Analise {
         if (haveAtLeastTwoManilhas()) {
             return HandStatus.GOD;
         }
+
         if (haveAtLeastOneManilha()) {
             if (intel.getOpponentCard().isPresent()) {
                 TrucoCard oppCard = intel.getOpponentCard().get();
                 if (myCards
                         .stream()
                         .filter(card -> card.compareValueTo(oppCard, intel.getVira()) > 0)
-                        .count() == 3) {
-                    return HandStatus.GOD;
+                        .count() == 2 && secondBestCardValue >= 7) {
+                    return HandStatus.GOOD;
                 }
             }
-            if (PowerCalculatorService.powerOfCard(intel, 1) >= 3) return HandStatus.GOOD;
+            if (secondBestCardValue >= 8) return HandStatus.GOOD;
             return HandStatus.MEDIUM;
         }
+
         long handPower = powerOfTheTwoBestCards();
-        if (handPower >= 13) {
+
+        if (handPower >= 14) {
             return HandStatus.GOOD;
         }
-        if (handPower >= 8) {
+        if (handPower >= 11) {
             return HandStatus.MEDIUM;
         }
         return HandStatus.BAD;
     }
 
     public HandStatus twoCardsHandler(List<TrucoCard> myCards) {
+
         if (wonFirstRound()) {
-            if (PowerCalculatorService.powerOfCard(intel, 0) >= 9) {
+            if (bestCardValue >= 9) {
                 return HandStatus.GOD;
             }
-            if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) {
+            if (bestCardValue >= 7) {
                 return HandStatus.GOOD;
             }
             return HandStatus.MEDIUM;
         }
+
         if (lostFirstRound()) {
+
+            if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
 
             if (intel.getOpponentCard().isPresent()) {
                 TrucoCard oppCard = intel.getOpponentCard().get();
-                if (myCards
-                        .stream()
-                        .filter(card -> card.compareValueTo(oppCard, intel.getVira()) > 0)
-                        .count() == 2) {
+                if (secondBestCardValue > oppCard.relativeValue(vira) && bestCardValue >= 9) {
                     return HandStatus.GOOD;
                 }
                 return HandStatus.MEDIUM;
             }
 
-            if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
-
             if (haveAtLeastOneManilha()) {
-                if (PowerCalculatorService.powerOfCard(intel, 1) >= 7) return HandStatus.GOD;
-                if (PowerCalculatorService.powerOfCard(intel, 1) >= 4) return HandStatus.GOOD;
-                return HandStatus.MEDIUM;
+
+                if (secondBestCardValue >= 9) return HandStatus.GOD;
+                if (secondBestCardValue == 8) return HandStatus.GOOD;
+                if (secondBestCardValue == 7) return HandStatus.MEDIUM;
+
+                return HandStatus.BAD;
             }
-            if (powerOfTheTwoBestCards() >= 13) return HandStatus.GOOD;
-            if (powerOfTheTwoBestCards() >= 10) return HandStatus.MEDIUM;
+
+            if (powerOfTheTwoBestCards() >= 17) return HandStatus.GOOD;
+            if (powerOfTheTwoBestCards() >= 13) return HandStatus.MEDIUM;
+
             return HandStatus.BAD;
         }
 
         if (haveAtLeastOneManilha()) return HandStatus.GOD;
-        if (PowerCalculatorService.powerOfCard(intel, 0) >= 8) return HandStatus.GOOD;
-        if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) return HandStatus.MEDIUM;
+        if (bestCardValue >= 8) return HandStatus.GOOD;
+        if (bestCardValue >= 6) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 
@@ -98,20 +116,20 @@ public class AnaliseWhileLosing extends Analise {
                 if (intel.getHandPoints() <= 6) {
                     return HandStatus.GOOD;
                 }
-                return HandStatus.MEDIUM;
+                return HandStatus.BAD;
             }
         }
 
         if (lostFirstRound()) {
-            if (PowerCalculatorService.powerOfCard(intel, 0) >= 9) return HandStatus.GOD;
-            if (PowerCalculatorService.powerOfCard(intel, 0) >= 7) return HandStatus.GOOD;
-            if (PowerCalculatorService.powerOfCard(intel, 0) >= 3) return HandStatus.MEDIUM;
+            if (bestCardValue >= 9) return HandStatus.GOD;
+            if (bestCardValue >= 7) return HandStatus.GOOD;
+            if (bestCardValue >= 3) return HandStatus.MEDIUM;
             return HandStatus.BAD;
         }
 
         if (intel.getHandPoints() <= 3) return HandStatus.GOD;
-        if (PowerCalculatorService.powerOfCard(intel, 0) >= 5) return HandStatus.GOOD;
-        if (PowerCalculatorService.powerOfCard(intel, 0) >= 3) return HandStatus.MEDIUM;
+        if (bestCardValue >= 5) return HandStatus.GOOD;
+        if (bestCardValue >= 3) return HandStatus.MEDIUM;
         return HandStatus.BAD;
     }
 

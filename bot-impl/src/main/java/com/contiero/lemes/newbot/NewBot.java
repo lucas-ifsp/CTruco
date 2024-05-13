@@ -9,6 +9,7 @@ import com.contiero.lemes.newbot.interfaces.Choosing;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
 import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
 import com.contiero.lemes.newbot.services.choose_card.AgressiveChoosing;
+import com.contiero.lemes.newbot.services.choose_card.PassiveChoosing;
 import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
@@ -38,7 +39,8 @@ public class NewBot implements BotServiceProvider {
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand(intel);
         if (status == GOD && myCards.size() <= 2) return true;
-        return status == GOOD && myCards.size() == 2 && PowerCalculatorService.powerOfCard(intel, 1) >= 8;
+        if(status == GOOD && myCards.size() == 2 && PowerCalculatorService.powerOfCard(intel, 1) >= 8) return true;
+        return intel.getOpponentCard().isPresent() && myCards.size() == 1;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class NewBot implements BotServiceProvider {
         List<TrucoCard> myCards = intel.getCards();
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand(intel);
-        Choosing chooser = new AgressiveChoosing(intel, status);
+        Choosing chooser = createChoosingInstance(intel);
         if (myCards.size() == 3) return chooser.firstRoundChoose();
         if (myCards.size() == 2) return chooser.secondRoundChoose();
         else return chooser.thirdRoundChoose();
@@ -76,6 +78,19 @@ public class NewBot implements BotServiceProvider {
             return new AnaliseWhileLosing(intel);
         } else {
             return new DefaultAnalise(intel);
+        }
+
+    }
+    private Choosing createChoosingInstance(GameIntel intel) {
+
+        int myScore = intel.getScore();
+        int oppScore = intel.getOpponentScore();
+        int scoreDistance = myScore - oppScore;
+
+        if (oppScore > myScore && scoreDistance < -6) {
+            return new AgressiveChoosing(intel,status);
+        } else {
+            return new PassiveChoosing(intel,status);
         }
 
     }
