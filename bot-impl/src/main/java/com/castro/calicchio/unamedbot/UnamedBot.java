@@ -4,40 +4,30 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class UnamedBot implements BotServiceProvider{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
-        
-        int totalPoints = calculateTotalPoints(cards);
-    
-        if (totalPoints == 11) {
-            return true;
-        } else {
-            return false;
-        }
+        int totalPoints = intel.getScore();
+
+        return totalPoints == 11;
     }
 
-    private int calculateTotalPoints(List<TrucoCard> cards) {
-        int totalPoints = 0;
-        for (TrucoCard card : cards) {
-            totalPoints += card.getPoints();
-        }
-        return totalPoints;
-    }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        sortHand(intel);
+        TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
+        sortHand(intel, cards);
+
+        int sum = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
         
-        int sum = cards.stream().mapToInt(TrucoCard::relativeValue).sum();
+        long highValueCards = cards.stream().filter(card -> card.relativeValue(vira) > 9).count();
         
-        long highValueCards = cards.stream().filter(card -> card.relativeValue() > 9).count();
-        
-        List<RoundResult> roundResults = intel.getRoundResults();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int currentRound = roundResults.size();
         
         int raiseThreshold = 25;
@@ -50,37 +40,31 @@ public class UnamedBot implements BotServiceProvider{
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        sortHand(intel);
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        
-        for (TrucoCard card : cards) {
-            if (card.beats(vira)) {
-                return new CardToPlay(card, PlayType.PLAY);
-            }
-        }
-    
-        TrucoCard lowestCard = cards.get(0);
-        return new CardToPlay(lowestCard, PlayType.DISCARD);
+        sortHand(intel, cards);
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
     }
 
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        sortHand(intel);
+        TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-        int sum = cards.stream().mapToInt(TrucoCard::relativeValue).sum();
+        sortHand(intel, cards);
+        int sum = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
         if (sum > 20) {
             return 1;
-        } else if (sum <= 20 && sum >= 10) {
+        } else if (sum >= 10) {
             return 0; 
         } else {
             return -1;
         }
     }
 
-    public void sortHand(GameIntel intel){
-        List<TrucoCard> cards = intel.getCards();
-        cards.sort(Comparator.comparingInt(TrucoCard::relativeValue));
+    public void sortHand(GameIntel intel, List<TrucoCard> cards ){
+        TrucoCard vira = intel.getVira();
+        cards = intel.getCards();
+        cards.sort(Comparator.comparingInt(card -> card.relativeValue(vira)));
     }
 }
