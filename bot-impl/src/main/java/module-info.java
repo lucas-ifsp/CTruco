@@ -2,6 +2,7 @@ import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
@@ -21,7 +22,7 @@ import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
-import com.castro.calicchio.unamedbot.UnamedBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
 
 module bot.impl {
     requires bot.spi;
@@ -44,7 +45,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
-    exports com.castro.calicchio.unamedbot;
+    exports com.castro.calicchio.jogasafebot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -70,5 +71,5 @@ module bot.impl {
             MarrecoBot,
             AddTheNewSoul,
             LazyBot,
-            UnamedBot;
+            JogaSafeBot;
 }
