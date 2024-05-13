@@ -28,186 +28,172 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class CasinhaDeCabloco implements BotServiceProvider {
     private TrucoCard vira;
     private List<TrucoCard> hand;
+    private int handValue;
+    private double cardsValueAvg;
+    private int opponentRaiseCount = 0; // MODIFICAÇÃO 2.3
 
-    private static final int HIGH_CARD_VALUE = 25;
-    private static final int MODERATE_CARD_VALUE = 20;
-    private static final int LOW_CARD_VALUE = 18;
-    private static final int CRUCIAL_ROUND_VALUE = 15;
-
-    public int CardsValues(TrucoCard vira, List<TrucoCard> cards){
-        return cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
-    }
+    private static final double HIGH_CARD_VALUE = 8;
+    private static final double MODERATE_CARD_VALUE = 6.5;
+    private static final double LOW_CARD_VALUE = 3.3;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        vira = intel.getVira();
-        final List<TrucoCard> botCards = intel.getCards();
+        sortHand(intel);
         int opponentScore = intel.getOpponentScore();
-        int value = CardsValues(vira, botCards);
-
         if (opponentScore >= 9 && opponentScore < 11) {
-            return value >= MODERATE_CARD_VALUE + 1;
+            return cardsValueAvg >= MODERATE_CARD_VALUE;
         }
         return true;
     }
-
-    /**
-     * <p>Decides if the bot wants to request a hand points raise.</p>
-     * @return {@code true} if it wants to request a hand points raise or {@code false} otherwise.
-     */
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        final List<TrucoCard> BotCards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        int value = CardsValues(vira, BotCards);
-        int EnemyScore = intel.getOpponentScore();
+        sortHand(intel);
+        int opponentScore = intel.getOpponentScore();
         int BotScore = intel.getScore();
-        int round = intel.getRoundResults().size() + 1;
 
         boolean conservative = false;
         boolean aggressive = true;
 
-        if (BotScore >= 9 || EnemyScore >= 9) {
-            if (value >= MODERATE_CARD_VALUE) return aggressive;
+
+        if (BotScore >= 9 || opponentScore >= 9) {
+            if (handValue >= MODERATE_CARD_VALUE) return aggressive;
         }
 
-        if (round == 2) {
+        if (getNumberOfRounds(intel) == 2) {
             if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-                if (value >= HIGH_CARD_VALUE) return aggressive;
+                if (handValue >= HIGH_CARD_VALUE) return aggressive;
                 return conservative;
-            } else if (intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-                if (value >= MODERATE_CARD_VALUE + 2) return aggressive;
             }
+            if (handValue >= MODERATE_CARD_VALUE + 2) return aggressive;
         }
 
-        if (BotScore < EnemyScore) {
-            if (EnemyScore == 10) return aggressive;
-            if (value >= HIGH_CARD_VALUE) return aggressive;
+        if (BotScore < opponentScore) {
+            if (opponentScore == 10) return aggressive;
+            if (handValue >= HIGH_CARD_VALUE) return aggressive;
         }
 
-        if (BotScore > EnemyScore) {
+        if (BotScore > opponentScore) {
             if (BotScore >= 10) return conservative;
         }
 
-        Optional<TrucoCard> opponentCardOptional = intel.getOpponentCard();
-        if (opponentCardOptional.isPresent()) {
-            TrucoCard opponentCard = opponentCardOptional.get();
-            long strongerCardsCount = BotCards.stream()
-                    .filter(BotCard -> BotCard.relativeValue(vira) > opponentCard.relativeValue(vira))
-                    .count();
 
-            if (strongerCardsCount >= 2) {
+        if (intel.getOpponentCard().isPresent()) {
+
+            if (hasHighValueCards() >= 2) {
                 return aggressive;
             }
         }
-
         return conservative;
     }
 
-    /**
-     * <p>Choose a card to be played or discarded. The card is represented by a {@link CardToPlay} object,
-     * which wraps a {@link TrucoCard} and adds information about whether it should be played or discarded.</p>
-     * @return a TrucoCard representing the card to be played or discarded.
-     */
+    private int getNumberOfRounds(GameIntel intel){
+        return intel.getRoundResults().size();
+    }
+
+    private long hasHighValueCards() {
+        return hand.stream().filter(card -> card.relativeValue(vira) >= 8).count();
+    }
+
+
+    public boolean opponentIsAggressive() {
+        double raiseRate = opponentRaiseCount;
+        return raiseRate > 3;
+    }
+
+    public boolean decideToBluff(GameIntel intel) {
+        if (opponentIsAggressive() && intel.getScore() <= 8 && cardsValueAvg < LOW_CARD_VALUE) {
+            return true;
+        }
+        return false;
+    }
     @Override
     public CardToPlay chooseCard(GameIntel intel){
         sortHand(intel);
-        if(intel.getRoundResults().isEmpty() && intel.getOpponentCard().isEmpty())
-            return CardToPlay.of(hand.get(1));
-        else{
-            TrucoCard minCard = minCardToWin(intel);
-            return CardToPlay.of(minCard);
-        }
+        return switch (intel.getRoundResults().size()) {
+            case 0 -> cardFirstRound(intel);
+            case 1 -> cardSecondRound(intel);
+            default -> CardToPlay.of(hand.get(0));
+        };
     }
 
     private void sortHand(GameIntel intel){
         vira = intel.getVira();
         hand = intel.getCards().stream()
-               .sorted(Comparator.comparing(card -> card.relativeValue(vira), Comparator.reverseOrder()))
-               .toList();
+                .sorted(Comparator.comparing(card -> card.relativeValue(vira), Comparator.reverseOrder()))
+                .toList();
+        cardsValueAvg = hand.stream().mapToInt(card -> card.relativeValue(vira)).average().orElse(0);
+        handValue = hand.stream().mapToInt(card -> card.relativeValue(vira)).sum();
     }
 
-    public TrucoCard minCardToWin(GameIntel intel) {
-        TrucoCard minCard = hand.get(0);
-        Optional<TrucoCard> opponentCardOptional = intel.getOpponentCard();
+    private CardToPlay cardFirstRound(GameIntel intel){
+        if(getManilhaCount() > 1) return CardToPlay.of(hand.get(0));
+        if( intel.getOpponentCard().isEmpty()) return CardToPlay.of(hand.get(1));
+        return minCardToWin(intel);
+    }
 
-        if (opponentCardOptional.isPresent()) {
-            TrucoCard opponentCard = opponentCardOptional.get();
-
-            for (TrucoCard card : hand) {
-                if (card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
-                    if (card.relativeValue(vira) <= minCard.relativeValue(vira)) {
-                        minCard = card;
-                    }
-                }
-            }
+    private CardToPlay cardSecondRound(GameIntel intel){
+        if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON)){
+            return minCardToWin(intel);
         }
-        return minCard;
+        if(intel.getOpponentCard().isEmpty()) {
+            return CardToPlay.of(hand.get(0));
+        }
+        return minCardToWin(intel);
     }
 
+    private CardToPlay minCardToWin(GameIntel intel) {
+        TrucoCard minCard = lastCard();
+        if(intel.getOpponentCard().isPresent()){
+            TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
 
-    /**
-     * <p>Decides what the bot does when the opponent requests to increase the hand points. If the bot decides to
-     * quit, it loses the hand. If it decides to accept, the hand points will be increased and the game continues.
-     * If it decides to re-raise, the hand points will be increased and a higher bet will be placed to the bot
-     * opponent. If the current hand points request is already enough to the losing player to win and the bot decides
-     * to re-raise, the decision will be considered as acceptance and no request will be made to the opponent.</p>
-     *
-     * @return {@code -1} if the bot quits, {@code 0} if it accepts, and {@code 1} if bot wants to place a re-raise
-     * request.
-     */
+            minCard = hand.stream()
+                    .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                    .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                    .orElse(cardToDraw(intel));
+        }
+        return CardToPlay.of(minCard);
+    }
+
+    private TrucoCard cardToDraw(GameIntel intel){
+        TrucoCard drawCard = lastCard();
+        if(intel.getOpponentCard().isPresent()) {
+            TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+            drawCard = hand.stream()
+                    .filter(card -> card.compareValueTo(opponentCard, vira) == 0)
+                    .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                    .orElse(drawCard);
+        }
+        return drawCard;
+    }
+
+    private TrucoCard lastCard(){
+        return hand.get(hand.size()-1);
+    }
+
+    private long getManilhaCount(){
+        return hand.stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
+    }
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        final List<TrucoCard> BotCards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        int value = CardsValues(vira, BotCards);
-        int EnemyScore = intel.getOpponentScore();
-        int BotScore = intel.getScore();
-        int currentRound = intel.getRoundResults().size() + 1;
-
-        int deny = -1;
-        int accept = 0;
-        int increase = 1;
-
-        if (value >= HIGH_CARD_VALUE) {
-            return increase;
-        }
-
-        if (BotScore >= 9) {
-            if (value >= MODERATE_CARD_VALUE) {
-                return accept;
-            } else {
-                return deny;
-            }
-        }
-
-        if (value >= LOW_CARD_VALUE) {
-            return accept;
-        }
-
-        if (currentRound == 3 && (EnemyScore >= 10 || BotScore < EnemyScore)) {
-            if (value >= CRUCIAL_ROUND_VALUE) {
-                return increase;
-            } else {
-                return deny;
-            }
-        }
-        return deny;
+        sortHand(intel);
+        incrementOpponentRaiseCount();
+        if (cardsValueAvg >= HIGH_CARD_VALUE || getManilhaCount() > 0) return 1 ;
+        if (cardsValueAvg >= MODERATE_CARD_VALUE ) return 0;
+        return -1;
     }
 
-
-
-    /**
-     * <p>Returns the bot name. By default, the bot name is the name of the class implementing this interface.</p>
-     * @return The bot name that will be used during the game.
-     */
     public String getName(){
         return "Casinha de Caboclo";
     }
 
+    public void incrementOpponentRaiseCount() { // MODIFICAÇÃO 2.4
+        opponentRaiseCount++;
+    }
 }
