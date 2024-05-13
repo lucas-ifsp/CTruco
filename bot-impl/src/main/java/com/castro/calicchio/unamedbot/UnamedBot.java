@@ -43,7 +43,16 @@ public class UnamedBot implements BotServiceProvider{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        sortHand(intel);
+        List<TrucoCard> cards = intel.getCards();
+        int sum = cards.stream().mapToInt(TrucoCard::relativeValue).sum();
+        if (sum > 20) {
+            return 1;
+        } else if (sum <= 20 && sum >= 10) {
+            return 0; 
+        } else {
+            return -1;
+        }
     }
 
     public void sortHand(GameIntel intel){
