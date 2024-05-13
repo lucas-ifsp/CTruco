@@ -24,16 +24,18 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.Optional;
+
 
 public class SecondRoundStrategy extends BotStrategy {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (getLastRoundResult().equals(GameIntel.RoundResult.LOST) && calculateAverageCardValue(intel.getCards(), intel.getVira()) > 7) {
+        Optional<GameIntel.RoundResult> lastRoundResult = getLastRoundResult();
+        if (lastRoundResult.isPresent() && lastRoundResult.get().equals(GameIntel.RoundResult.LOST) && shouldRaise(intel)) {
             return 1;
         }
-        if(hasStrongPair(intel)) return 0;
-        return -1;
+        return  0;
     }
 
     @Override

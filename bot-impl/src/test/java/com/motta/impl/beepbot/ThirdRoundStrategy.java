@@ -24,6 +24,8 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.Optional;
+
 public class ThirdRoundStrategy extends BotStrategy {
     @Override
     public int getRaiseResponse(GameIntel intel) {
@@ -39,7 +41,8 @@ public class ThirdRoundStrategy extends BotStrategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return intel.getScore() <= intel.getOpponentScore() && hasStrongPair(intel);
+        Optional<GameIntel.RoundResult> lastRoundResult = getLastRoundResult();
+        return lastRoundResult.isPresent() && lastRoundResult.get().equals(GameIntel.RoundResult.LOST) && hasStrongPair(intel);
     }
 
     @Override

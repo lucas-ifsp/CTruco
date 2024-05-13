@@ -65,6 +65,10 @@ public abstract class BotStrategy {
         return intel.getCards().stream().filter(card -> card.relativeValue(intel.getVira()) > 10).count() >= 2;
     }
 
+    public boolean shouldRaise(GameIntel intel) {
+        return calculateAverageCardValue(intel.getCards(), intel.getVira())>7;
+    }
+
     public double calculateAverageCardValue(List<TrucoCard> cards, TrucoCard vira){
         return cards.stream().mapToInt(card -> card.relativeValue(vira)).average().orElse(0.0);
     }
