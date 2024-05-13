@@ -59,8 +59,11 @@ public class NewBot implements BotServiceProvider {
         int myScore = intel.getScore();
         int oppScore = intel.getOpponentScore();
         int scoreDistance = myScore - oppScore;
-        Analise analise = createAnaliseInstance(intel);
-        status = analise.myHand(intel);
+        List<TrucoCard> myCards = intel.getCards();
+        if (!myCards.isEmpty()){
+            Analise analise = createAnaliseInstance(intel);
+            status = analise.myHand(intel);
+        }
         if (status == GOD) return 1;
         if (status == GOOD && scoreDistance <= -6) {
             return 1;
@@ -88,9 +91,9 @@ public class NewBot implements BotServiceProvider {
         int scoreDistance = myScore - oppScore;
 
         if (oppScore > myScore && scoreDistance < -6) {
-            return new AgressiveChoosing(intel,status);
-        } else {
             return new PassiveChoosing(intel,status);
+        } else {
+            return new AgressiveChoosing(intel,status);
         }
 
     }
