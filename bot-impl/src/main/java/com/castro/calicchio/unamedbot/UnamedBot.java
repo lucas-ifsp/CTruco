@@ -21,7 +21,7 @@ public class UnamedBot implements BotServiceProvider{
     public boolean decideIfRaises(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-        sortHand(intel, cards);
+        sortHand(intel);
 
         int sum = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
         
@@ -42,8 +42,35 @@ public class UnamedBot implements BotServiceProvider{
     public CardToPlay chooseCard(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        sortHand(intel, cards);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        int currentRound = roundResults.size() + 1;
+
+        sortHand(intel);
+        TrucoCard strongestCard = cards.get(cards.size() - 1);
+
+        if(currentRound == 1){
+            if(opponentCard.isPresent()){
+                if(strongestCard.relativeValue(vira) > opponentCard.get().relativeValue(vira)){
+                    return CardToPlay.of(strongestCard);
+                }
+                else{
+                    return CardToPlay.discard(cards.get(0));
+                }
+            }
+            else{
+                if(strongestCard.relativeValue(vira) >= 8 && !strongestCard.isZap(vira)){
+                    return CardToPlay.of(strongestCard);
+                }
+                else{
+                    return CardToPlay.discard(cards.get(0));
+                }
+            }
+        }
+
+
+        return CardToPlay.of(strongestCard);
     }
 
 
@@ -51,20 +78,25 @@ public class UnamedBot implements BotServiceProvider{
     public int getRaiseResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-        sortHand(intel, cards);
+        sortHand(intel);
         int sum = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
         if (sum > 20) {
             return 1;
         } else if (sum >= 10) {
-            return 0; 
+            return 0;
         } else {
             return -1;
         }
     }
 
-    public void sortHand(GameIntel intel, List<TrucoCard> cards ){
+    public void sortHand(GameIntel intel){
         TrucoCard vira = intel.getVira();
-        cards = intel.getCards();
-        cards.sort(Comparator.comparingInt(card -> card.relativeValue(vira)));
+        List <TrucoCard> cards = intel.getCards();
+        if (!cards.isEmpty()) {
+            cards.sort(Comparator.comparingInt(card -> card.relativeValue(vira)));
+        }
+        else{
+            throw new IllegalStateException("Sem cartas por enquanto!");
+        }
     }
 }
