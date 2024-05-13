@@ -40,7 +40,7 @@ public class FirstRoundStrategy extends BotStrategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return getManilhaAmount(intel.getCards(), intel.getVira()) == 2;
+        return hasManilha(intel.getCards(), intel.getVira()) || shouldRaise(intel);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FirstRoundStrategy extends BotStrategy {
             throw new IllegalStateException("Não há cartas disponíveis para seleção.");
         }
         TrucoCard card;
-        if(getManilhaAmount(intel.getCards(), intel.getVira()) == 2){
+        if(intel.getScore() > 3){
             card = getHighestCard(intel.getCards(), intel.getVira());
         }else if(hasZap(intel.getCards(), intel.getVira())){
                 card = selectHighestNonManilhaCard(intel.getCards(), intel.getVira());
