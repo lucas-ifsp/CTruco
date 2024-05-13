@@ -4,6 +4,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.utils.MyCards;
+import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,13 +58,13 @@ public class DefaultAnalise extends Analise {
 
     @Override
     public HandStatus twoCardsHandler(List<TrucoCard> myCards) {
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (haveAtLeastOneManilha()) return HandStatus.GOD;
             if (bestCardValue >= 8) return HandStatus.GOOD;
             if (bestCardValue >= 4) return HandStatus.MEDIUM;
             return HandStatus.BAD;
         }
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
 
             if (intel.getOpponentCard().isPresent()) {
                 TrucoCard oppCard = intel.getOpponentCard().get();
@@ -99,11 +100,11 @@ public class DefaultAnalise extends Analise {
         TrucoCard myCard = intel.getCards().get(0);
         Optional<TrucoCard> oppCard = intel.getOpponentCard();
 
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (oppCard.isPresent()) return oneCardHandlerWinningFirstRound(oppCard.get(), myCard);
         }
 
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
             return oneCardHandlerLosingFirstRound();
         }
 
@@ -166,15 +167,5 @@ public class DefaultAnalise extends Analise {
                 .sorted()
                 .limit(2)
                 .sum();
-    }
-
-    private boolean wonFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
-        return false;
-    }
-
-    private boolean lostFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
-        return false;
     }
 }

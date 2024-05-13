@@ -35,9 +35,13 @@ public class NewBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        int scoreDistance = intel.getScore() - intel.getOpponentScore();
         List<TrucoCard> myCards = intel.getCards();
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand(intel);
+        if (scoreDistance <= -9){
+            if ((status == MEDIUM || status == BAD) && myCards.size() == 3) return true;
+        }
         if (status == GOD && myCards.size() <= 2) return true;
         if(status == GOOD && myCards.size() == 2 && PowerCalculatorService.powerOfCard(intel, 1) >= 8) return true;
         return intel.getOpponentCard().isPresent() && myCards.size() == 1;

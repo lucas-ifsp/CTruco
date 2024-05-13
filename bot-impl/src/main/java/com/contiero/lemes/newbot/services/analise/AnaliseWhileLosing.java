@@ -4,6 +4,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.utils.MyCards;
+import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class AnaliseWhileLosing extends Analise {
 
     public HandStatus twoCardsHandler(List<TrucoCard> myCards) {
 
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (bestCardValue >= 9) {
                 return HandStatus.GOD;
             }
@@ -70,7 +71,7 @@ public class AnaliseWhileLosing extends Analise {
             return HandStatus.MEDIUM;
         }
 
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
 
             if (haveAtLeastTwoManilhas()) return HandStatus.GOD;
 
@@ -108,7 +109,7 @@ public class AnaliseWhileLosing extends Analise {
         TrucoCard myCard = intel.getCards().get(0);
         Optional<TrucoCard> oppCard = intel.getOpponentCard();
 
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (oppCard.isPresent()) {
                 if (myCard.compareValueTo(oppCard.get(), intel.getVira()) > 0) {
                     return HandStatus.GOD;
@@ -120,7 +121,7 @@ public class AnaliseWhileLosing extends Analise {
             }
         }
 
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
             if (bestCardValue >= 9) return HandStatus.GOD;
             if (bestCardValue >= 7) return HandStatus.GOOD;
             if (bestCardValue >= 3) return HandStatus.MEDIUM;
@@ -158,13 +159,4 @@ public class AnaliseWhileLosing extends Analise {
                 .sum();
     }
 
-    private boolean wonFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
-        return false;
-    }
-
-    private boolean lostFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
-        return false;
-    }
 }
