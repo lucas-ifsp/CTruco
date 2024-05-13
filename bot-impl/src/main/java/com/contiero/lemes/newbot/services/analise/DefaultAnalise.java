@@ -4,7 +4,6 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.services.utils.MyCards;
-import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 import java.util.Optional;

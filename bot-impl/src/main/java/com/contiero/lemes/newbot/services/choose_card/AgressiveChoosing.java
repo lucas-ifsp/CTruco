@@ -6,6 +6,7 @@ import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.interfaces.Choosing;
 import com.contiero.lemes.newbot.services.utils.MyCards;
+import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
 
@@ -50,7 +51,6 @@ public class AgressiveChoosing implements Choosing {
         }
 
         if (haveAtLeastTwoManilhas()) {
-//            if (secondBestCard.relativeValue(vira) == 10) return CardToPlay.of(secondBestCard);
             return CardToPlay.of(worstCard);
         }
 
@@ -67,13 +67,13 @@ public class AgressiveChoosing implements Choosing {
 
     @Override
     public CardToPlay secondRoundChoose() {
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (status == GOD) return CardToPlay.discard(worstCard);
             if (status == GOOD) return CardToPlay.of(worstCard);
             return CardToPlay.of(bestCard);
         }
 
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
             Optional<TrucoCard> oppCard = intel.getOpponentCard();
             if (oppCard.isPresent()) {
                 if (worstCard.compareValueTo(oppCard.get(), vira) > 0) return CardToPlay.of(worstCard);
@@ -113,13 +113,4 @@ public class AgressiveChoosing implements Choosing {
                 .sum();
     }
 
-    private boolean wonFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
-        return false;
-    }
-
-    private boolean lostFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
-        return false;
-    }
 }

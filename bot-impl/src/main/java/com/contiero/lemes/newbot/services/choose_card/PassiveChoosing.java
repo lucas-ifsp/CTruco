@@ -6,12 +6,12 @@ import com.bueno.spi.model.TrucoCard;
 import com.contiero.lemes.newbot.interfaces.Analise;
 import com.contiero.lemes.newbot.interfaces.Choosing;
 import com.contiero.lemes.newbot.services.utils.MyCards;
+import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.GOD;
-import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.GOOD;
 
 public class PassiveChoosing implements Choosing {
     private final GameIntel intel;
@@ -62,12 +62,12 @@ public class PassiveChoosing implements Choosing {
 
     @Override
     public CardToPlay secondRoundChoose() {
-        if (wonFirstRound()) {
+        if (PowerCalculatorService.wonFirstRound(intel)) {
             if (status == GOD) return CardToPlay.of(worstCard);
             return CardToPlay.of(bestCard);
         }
 
-        if (lostFirstRound()) {
+        if (PowerCalculatorService.lostFirstRound(intel)) {
             Optional<TrucoCard> oppCard = intel.getOpponentCard();
             if (oppCard.isPresent()) {
                 if (worstCard.compareValueTo(oppCard.get(), vira) > 0) return CardToPlay.of(worstCard);
@@ -105,15 +105,5 @@ public class PassiveChoosing implements Choosing {
                 .sorted()
                 .limit(2)
                 .sum();
-    }
-
-    private boolean wonFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
-        return false;
-    }
-
-    private boolean lostFirstRound() {
-        if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
-        return false;
     }
 }

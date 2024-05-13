@@ -60,14 +60,34 @@ public class NewBot implements BotServiceProvider {
         int oppScore = intel.getOpponentScore();
         int scoreDistance = myScore - oppScore;
         List<TrucoCard> myCards = intel.getCards();
+
         if (!myCards.isEmpty()){
             Analise analise = createAnaliseInstance(intel);
             status = analise.myHand(intel);
         }
+
         if (status == GOD) return 1;
-        if (status == GOOD && scoreDistance <= -6) {
-            return 1;
+
+        if (myCards.size() == 3){
+            if (status == BAD) return -1;
+            else return 0;
         }
+
+        if (myCards.size() == 2){
+            if (PowerCalculatorService.wonFirstRound(intel)) return 0;
+
+            if (PowerCalculatorService.lostFirstRound(intel)){
+                if (status == GOOD) return 0;
+                return -1;
+            }
+            if (status == GOOD && scoreDistance <= -6) {
+                return 1;
+            }
+            if (status == GOOD) return 0;
+            return -1;
+        }
+
+        if (status == GOOD && scoreDistance <= -6) return 1;
         if (status == BAD || (status == MEDIUM && scoreDistance <= -4)) return -1;
         return 0;
     }
