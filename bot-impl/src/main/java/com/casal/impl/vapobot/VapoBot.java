@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class VapoBot implements BotServiceProvider {
-    private final List<TrucoCard> opponentCardsThatHaveBeenPlayed = new ArrayList<>();
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -35,12 +34,12 @@ public class VapoBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        switch (getRoundNumber(intel)){
-            case 1: return chooseCardFirstRound(intel);
-            case 2: return chooseCardSecondRound(intel);
-            case 3: return chooseCardLastRound(intel);
-            default: return CardToPlay.of(intel.getCards().get(0));
-        }
+        return switch (getRoundNumber(intel)) {
+            case 1 -> chooseCardFirstRound(intel);
+            case 2 -> chooseCardSecondRound(intel);
+            case 3 -> chooseCardLastRound(intel);
+            default -> CardToPlay.of(intel.getCards().get(0));
+        };
 
     }
 
@@ -50,11 +49,6 @@ public class VapoBot implements BotServiceProvider {
         if (getAverageCardValue(intel) > 8) return 1;
         if (getAverageCardValue(intel) > 6) return 0;
         return -1;
-    }
-
-    @Override
-    public String getName() {
-        return BotServiceProvider.super.getName();
     }
 
     private CardToPlay chooseCardFirstRound(GameIntel intel){
@@ -112,8 +106,7 @@ public class VapoBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards())
             values += card.relativeValue(intel.getVira());
 
-        double average = (double) values / intel.getCards().size();
-        return average;
+        return (double) values / intel.getCards().size();
     }
 
     boolean hasZap(GameIntel intel) {
@@ -197,5 +190,10 @@ public class VapoBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards())
             if (card.relativeValue(intel.getVira()) > relativeValue) count++;
         return count;
+    }
+
+    @Override
+    public String getName() {
+        return BotServiceProvider.super.getName();
     }
 }
