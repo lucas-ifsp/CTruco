@@ -24,6 +24,13 @@ public class UnamedBot implements BotServiceProvider{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        if(opponentCard.isPresent()){
+            if(hasHorribleHand(intel)){
+                return true;
+            }
+        }
         return hasStrongCards(intel) || hasManilha(intel);
     }
 
@@ -137,8 +144,11 @@ public class UnamedBot implements BotServiceProvider{
 
         return !cards.isEmpty();
     }
-    public boolean ShitHand(GameIntel intel){
+    public boolean hasHorribleHand(GameIntel intel){
         cards = intel.getCards();
         vira = intel.getVira();
+        cards = cards.stream().filter(card -> card.getRank().value() > 9).toList();
+
+        return cards.isEmpty();
     }
 }
