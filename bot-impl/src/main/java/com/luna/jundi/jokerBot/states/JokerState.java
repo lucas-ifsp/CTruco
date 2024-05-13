@@ -21,18 +21,41 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.luna.jundi.jokerBot;
+package com.luna.jundi.jokerBot.states;
 
-public enum HandClassification {
-    EXCELLENT(5), GREAT(4), GOOD(3), NOT_BAD(2), BAD(1);
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 
-    private final int value;
+import java.util.List;
+import java.util.Random;
 
-    HandClassification(int value) {
-        this.value = value;
+public final class JokerState implements RoundState {
+
+    //Pensar em remover se não for útil
+    //Why playing so serious???
+    private final GameIntel intel;
+    private final Random random = new Random();
+
+    public JokerState(GameIntel intel) {
+        this.intel = intel;
     }
 
-    public int value() {
-        return value;
+    //Pensar em quando entra no modo JokerState
+    @Override
+    public CardToPlay cardChoice() {
+        List<TrucoCard> cards = intel.getCards();
+        int size = cards.size();
+        return CardToPlay.of(cards.get(random.nextInt(size)));
+    }
+
+    @Override
+    public boolean raiseDecision() {
+        return true;
+    }
+
+    @Override
+    public int raiseResponse() {
+        return random.nextInt(-1,2);
     }
 }

@@ -21,18 +21,32 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.luna.jundi.jokerBot;
+package com.luna.jundi.jokerBot.states;
 
-public enum HandClassification {
-    EXCELLENT(5), GREAT(4), GOOD(3), NOT_BAD(2), BAD(1);
+import com.bueno.spi.model.CardToPlay;
+import com.bueno.spi.model.GameIntel;
 
-    private final int value;
+public final class FirstToPlayRoundTwoState implements RoundState {
 
-    HandClassification(int value) {
-        this.value = value;
+    private final GameIntel intel;
+
+    public FirstToPlayRoundTwoState(GameIntel intel) {
+        if(!(isValidRoundState().test(intel, 2))) throw new IllegalStateException("is not" + getClass().getSimpleName());
+        this.intel = intel;
     }
 
-    public int value() {
-        return value;
+    @Override
+    public CardToPlay cardChoice() {
+        return getBestCard().apply(intel);
+    }
+
+    @Override
+    public boolean raiseDecision() {
+        return defaultRaiseHandDecision(intel);
+    }
+
+    @Override
+    public int raiseResponse() {
+        return defaultRaiseResponse(intel);
     }
 }

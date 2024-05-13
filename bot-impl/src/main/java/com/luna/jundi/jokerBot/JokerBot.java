@@ -1,91 +1,76 @@
+/*
+ *  Copyright (C) 2024 Lucas Jundi Hikazudani - IFSP/SCL
+ *  Copyright (C) 2024 Priscila de Luna Farias - IFSP/SCL
+ *
+ *  Contact: h <dot> jundi <at> aluno <dot> ifsp <dot> edu <dot> br
+ *  Contact: luna <dot> p <at> aluno <dot> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.luna.jundi.jokerBot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-import com.luna.jundi.jokerBot.utils.CardUtils;
+import com.luna.jundi.jokerBot.exceptions.InvalidNumberOfRoundsException;
+import com.luna.jundi.jokerBot.states.*;
 
-import java.util.List;
-
-import static com.luna.jundi.jokerBot.HandClassification.EXCELLENT;
-import static com.luna.jundi.jokerBot.utils.CardUtils.*;
-import static com.luna.jundi.jokerBot.utils.HandUtils.*;
-import static com.luna.jundi.jokerBot.utils.RoundUtils.isStartOfRound;
+import static com.luna.jundi.jokerBot.utils.RoundUtils.getRoundNumber;
+import static com.luna.jundi.jokerBot.utils.RoundUtils.jokerBotStartsTheRound;
 
 public final class JokerBot implements BotServiceProvider {
 
-    //private HandState currentRound;
+    private RoundState state;
 
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (averageRelativeValueOfCards(intel) >= 8) return true;
-        if (averageRelativeValueOfCards(intel) >= 6 && getNumberOfManilhas(getMyCardsSorted(intel), intel.getVira()) >0 ) return true;
-        return false;
+    public CardToPlay chooseCard(GameIntel intel) {
+        setState(intel);
+        return state.cardChoice();
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return canRaiseHand(intel);
-    }
-
-    @Override
-    public CardToPlay chooseCard(GameIntel intel) {
-//            return switch (getRoundNumber(intel)) {
-//                case 1 -> new RoundOne(intel).chooseCard(intel);
-//                case 2 -> new RoundTwo(intel).chooseCard(intel);
-//                case 3 -> new RoundThree(intel).chooseCard(intel);
-//                default -> CardToPlay.of(intel.getCards().get(0));
-//            };
-        List<TrucoCard> myCardsSorted = getMyCardsSorted(intel);
-
-        //returns the card it has
-        if (myCardsSorted.size() == 1)
-            return CardToPlay.of(myCardsSorted.get(0));
-
-        //choose the biggest card
-        //quando é o primeiro a jogar e é o inicio do round
-        if (isFirstToPlay(intel) && isStartOfRound(intel))
-            return getBestCard(intel);
-        //quando é o primeiro a jogar e não está no começo do round
-        if (isFirstToPlay(intel) && !isStartOfRound(intel) && isTiedHand(intel))
-            return getBestCard(intel);
-
-        //choose an equal card
-        //quando NÃO é o primeiro E NÃO tem uma carta maior E tem uma carta igual
-        if (!isFirstToPlay(intel) && !hasABiggerCardInHand(intel) && hasTheSameCardInHand(intel))
-            return getTheSameCardInHand(intel);
-
-        //choose the smallest card
-        //quando NÃO é o primeiro E NÃO tem uma carta maior E NÃO tem uma carta igual
-        if (!isFirstToPlay(intel) && !hasABiggerCardInHand(intel) && !hasTheSameCardInHand(intel))
-            return getWorstCard(intel);
-
-        //choose the smallest of the biggest (medium)
-        //quando NÃO é o primeiro a jogar E tem uma carta maior E NÃO esta empatado/melado/meladão? (não tenho ideia do que é meladão)
-        if (!isFirstToPlay(intel) && hasABiggerCardInHand(intel) && !isTiedHand(intel))
-            return CardUtils.getMediumCard(intel);
-
-        return CardToPlay.of(myCardsSorted.get(0));
+        setState(intel);
+        return state.raiseDecision();
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        // adicionar exception de quando o valor da mão for maior que 12
-
-        //raise conditions
-        if (EXCELLENT.equals(getHandClassification(intel))) return 1;
-
-        //accept conditions
-        if (!isLoosingHand(intel) && averageRelativeValueOfCards(intel) >= 7) return 0;
-        if (isFirstToPlay(intel) && !isLoosingHand(intel)) return 0;
-
-        //run conditions
-        if (isStartOfRound(intel) && getNumberOfManilhas(getMyCardsSorted(intel), intel.getVira()) == 0) return -1;
-        if (!isFirstToPlay(intel) && isTiedHand(intel) && averageRelativeValueOfCards(intel) < 7) return -1;
-        if (isFirstToPlay(intel) && !isLoosingHand(intel)) return -1;
-
-        return 0;
+        setState(intel);
+        return state.raiseResponse();
     }
 
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        setState(intel);
+        if (!(state instanceof FirstToPlayRoundOneState || state instanceof SecondToPlayRoundOneState)) {
+            throw new IllegalStateException("Asking mao de onze response in round" + getRoundNumber(intel) + " is not valid.\n");
+        }
+        return state.maoDeOnzeDecision(intel);
+    }
+
+    private void setState(GameIntel intel) throws InvalidNumberOfRoundsException {
+        boolean start = jokerBotStartsTheRound().test(intel);
+        int roundNumber = getRoundNumber(intel);
+        switch (roundNumber) {
+            case 1 -> this.state = start ? new FirstToPlayRoundOneState(intel) : new SecondToPlayRoundOneState(intel);
+            case 2 -> this.state = start ? new FirstToPlayRoundTwoState(intel) : new SecondToPlayRoundTwoState(intel);
+            case 3 -> this.state = new RoundThreeState(intel);
+            default -> throw new InvalidNumberOfRoundsException(roundNumber + " is not a valid round number\n");
+        }
+    }
 }

@@ -3,24 +3,31 @@ package com.luna.jundi.jokerBot.states;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
-import static com.luna.jundi.jokerBot.JokerBotUtils.jokerBotWonFirstRound;
-import static com.luna.jundi.jokerBot.utils.CardUtils.getBestCard;
+public final class RoundThreeState implements RoundState {
 
-public class RoundThreeState implements RoundState {
+    private final GameIntel intel;
 
-    @Override
-    public boolean decideIfRaises(GameIntel intel) {
-        return false;
+    public RoundThreeState(GameIntel intel) {
+        if (!(isValidRoundState().test(intel, 3)))
+            throw new IllegalStateException("is not" + getClass().getSimpleName());
+        this.intel = intel;
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
-        if(jokerBotWonFirstRound(intel)) return getBestCard(intel);
-        return null;
+    public CardToPlay cardChoice() {
+        return intel.getCards().stream()
+                .map(CardToPlay::of)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("JokerBot have no cards to play at" + getClass().getSimpleName()));
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return 0;
+    public boolean raiseDecision() {
+        return defaultRaiseHandDecision(intel);
+    }
+
+    @Override
+    public int raiseResponse() {
+        return defaultRaiseResponse(intel);
     }
 }

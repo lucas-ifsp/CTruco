@@ -21,18 +21,10 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-package com.luna.jundi.jokerBot;
+package com.luna.jundi.jokerBot.exceptions;
 
-public enum HandClassification {
-    EXCELLENT(5), GREAT(4), GOOD(3), NOT_BAD(2), BAD(1);
-
-    private final int value;
-
-    HandClassification(int value) {
-        this.value = value;
-    }
-
-    public int value() {
-        return value;
+public class WithoutCardsToPlayException extends RuntimeException {
+    public WithoutCardsToPlayException(String message) {
+        super(message);
     }
 }
