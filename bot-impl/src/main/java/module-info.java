@@ -35,7 +35,7 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
-import com.contiero.lemes.newbot.NewBot;
+import com.contiero.lemes.atrasabot.AtrasaBot;
 
 
 module bot.impl {
@@ -62,7 +62,7 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
-    exports com.contiero.lemes.newbot;
+    exports com.contiero.lemes.atrasabot;
     exports com.fabio.bruno.minepowerbot;
     exports com.joao.alexandre.jormungandrbot;
     exports com.lucasmurilo.m.lazarinipodenciano;
@@ -101,7 +101,7 @@ module bot.impl {
             SabotaBot,
             CaipirasBot,
             LazyBot,
-            NewBot,
+            AtrasaBot,
             PauladaSecaBot,
             MinePowerBot,
             JormungandrBot,

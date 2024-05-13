@@ -1,4 +1,4 @@
-package com.contiero.lemes.newbot.services.utils;
+package com.contiero.lemes.atrasabot.services.utils;
 
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;

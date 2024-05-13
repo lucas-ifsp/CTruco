@@ -1,23 +1,23 @@
-package com.contiero.lemes.newbot;
+package com.contiero.lemes.atrasabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-import com.contiero.lemes.newbot.interfaces.Analise;
-import com.contiero.lemes.newbot.interfaces.Choosing;
-import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
-import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
-import com.contiero.lemes.newbot.services.choose_card.AgressiveChoosing;
-import com.contiero.lemes.newbot.services.choose_card.PassiveChoosing;
-import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
+import com.contiero.lemes.atrasabot.interfaces.Analise;
+import com.contiero.lemes.atrasabot.interfaces.Choosing;
+import com.contiero.lemes.atrasabot.services.analise.AnaliseWhileLosing;
+import com.contiero.lemes.atrasabot.services.analise.DefaultAnalise;
+import com.contiero.lemes.atrasabot.services.choose_card.AgressiveChoosing;
+import com.contiero.lemes.atrasabot.services.choose_card.PassiveChoosing;
+import com.contiero.lemes.atrasabot.services.utils.PowerCalculatorService;
 
-import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
+import static com.contiero.lemes.atrasabot.interfaces.Analise.HandStatus.*;
 
 import java.util.List;
 
 
-public class NewBot implements BotServiceProvider {
+public class AtrasaBot implements BotServiceProvider {
     private Analise.HandStatus status;
 
     @Override

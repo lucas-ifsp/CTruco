@@ -1,20 +1,19 @@
-package com.contiero.lemes.newbot.services.choose_card;
+package com.contiero.lemes.atrasabot.services.choose_card;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.contiero.lemes.newbot.interfaces.Analise;
-import com.contiero.lemes.newbot.interfaces.Choosing;
-import com.contiero.lemes.newbot.services.utils.MyCards;
-import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
-
-import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
+import com.contiero.lemes.atrasabot.interfaces.Analise;
+import com.contiero.lemes.atrasabot.interfaces.Choosing;
+import com.contiero.lemes.atrasabot.services.utils.MyCards;
+import com.contiero.lemes.atrasabot.services.utils.PowerCalculatorService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class AgressiveChoosing implements Choosing {
+import static com.contiero.lemes.atrasabot.interfaces.Analise.HandStatus.GOD;
 
+public class PassiveChoosing implements Choosing {
     private final GameIntel intel;
     private final Analise.HandStatus status;
     private final TrucoCard vira;
@@ -22,7 +21,7 @@ public class AgressiveChoosing implements Choosing {
     private final TrucoCard secondBestCard;
     private final TrucoCard worstCard;
 
-    public AgressiveChoosing(GameIntel intel, Analise.HandStatus status) {
+    public PassiveChoosing(GameIntel intel, Analise.HandStatus status) {
         this.intel = intel;
         this.status = status;
         vira = intel.getVira();
@@ -39,19 +38,15 @@ public class AgressiveChoosing implements Choosing {
 
         if (intel.getOpponentCard().isPresent()) {
             int opponentCardOnTableValue = intel.getOpponentCard().get().relativeValue(vira);
-            if (status == GOD || status == GOOD) {
-                if (secondBestCard.relativeValue(vira) == opponentCardOnTableValue && secondBestCard.relativeValue(vira) >= 11){
-                    return CardToPlay.of(secondBestCard);
-                }
-                return CardToPlay.of(worstCard);
-            }
+
             if (worstCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(worstCard);
             if (secondBestCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(secondBestCard);
             if (bestCard.relativeValue(vira) > opponentCardOnTableValue) return CardToPlay.of(bestCard);
         }
 
         if (haveAtLeastTwoManilhas()) {
-            return CardToPlay.of(worstCard);
+            if (secondBestCard.relativeValue(vira) == 10) return CardToPlay.of(secondBestCard);
+            if (secondBestCard.relativeValue(vira) >= 11) return CardToPlay.of(worstCard);
         }
 
         if (haveAtLeastOneManilha()) {
@@ -61,15 +56,14 @@ public class AgressiveChoosing implements Choosing {
         }
         long handPower = powerOfTheTwoBestCards();
 
-        if (handPower >= 12 && secondBestCard.relativeValue(vira) >= 5) return CardToPlay.of(secondBestCard);
+        if (handPower >= 15 && secondBestCard.relativeValue(vira) >= 7) return CardToPlay.of(secondBestCard);
         return CardToPlay.of(bestCard);
     }
 
     @Override
     public CardToPlay secondRoundChoose() {
         if (PowerCalculatorService.wonFirstRound(intel)) {
-            if (status == GOD) return CardToPlay.discard(worstCard);
-            if (status == GOOD) return CardToPlay.of(worstCard);
+            if (status == GOD) return CardToPlay.of(worstCard);
             return CardToPlay.of(bestCard);
         }
 
@@ -112,5 +106,4 @@ public class AgressiveChoosing implements Choosing {
                 .limit(2)
                 .sum();
     }
-
 }
