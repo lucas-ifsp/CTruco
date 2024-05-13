@@ -5,14 +5,15 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 import com.contiero.lemes.newbot.interfaces.Analise;
+import com.contiero.lemes.newbot.interfaces.Choosing;
 import com.contiero.lemes.newbot.services.analise.AnaliseWhileLosing;
 import com.contiero.lemes.newbot.services.analise.DefaultAnalise;
+import com.contiero.lemes.newbot.services.choose_card.AgressiveChoosing;
 import com.contiero.lemes.newbot.services.utils.PowerCalculatorService;
+
 import static com.contiero.lemes.newbot.interfaces.Analise.HandStatus.*;
 
 import java.util.List;
-
-
 
 
 public class NewBot implements BotServiceProvider {
@@ -42,10 +43,13 @@ public class NewBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
         Analise analise = createAnaliseInstance(intel);
         status = analise.myHand(intel);
-
-        return CardToPlay.of(intel.getCards().get(0));
+        Choosing chooser = new AgressiveChoosing(intel, status);
+        if (myCards.size() == 3) return chooser.firstRoundChoose();
+        if (myCards.size() == 2) return chooser.secondRoundChoose();
+        else return chooser.thirdRoundChoose();
     }
 
     @Override

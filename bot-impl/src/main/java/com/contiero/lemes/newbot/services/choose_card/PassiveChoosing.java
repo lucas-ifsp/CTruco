@@ -45,8 +45,8 @@ public class PassiveChoosing implements Choosing {
         }
 
         if (haveAtLeastTwoManilhas()) {
-            if (secondBestCard.relativeValue(vira) >= 11) return CardToPlay.of(worstCard);
             if (secondBestCard.relativeValue(vira) == 10) return CardToPlay.of(secondBestCard);
+            if (secondBestCard.relativeValue(vira) >= 11) return CardToPlay.of(worstCard);
         }
 
         if (haveAtLeastOneManilha()) {
@@ -56,21 +56,21 @@ public class PassiveChoosing implements Choosing {
         }
         long handPower = powerOfTheTwoBestCards();
 
-        if (handPower >= 16 && secondBestCard.relativeValue(vira) >= 8) return CardToPlay.of(secondBestCard);
+        if (handPower >= 15 && secondBestCard.relativeValue(vira) >= 7) return CardToPlay.of(secondBestCard);
         return CardToPlay.of(bestCard);
     }
 
     @Override
     public CardToPlay secondRoundChoose() {
-        if (wonFirstRound()){
+        if (wonFirstRound()) {
             if (status == GOD) return CardToPlay.of(worstCard);
             return CardToPlay.of(bestCard);
         }
 
-        if (lostFirstRound()){
+        if (lostFirstRound()) {
             Optional<TrucoCard> oppCard = intel.getOpponentCard();
             if (oppCard.isPresent()) {
-                if (worstCard.compareValueTo(oppCard.get(),vira) > 0) return CardToPlay.of(worstCard);
+                if (worstCard.compareValueTo(oppCard.get(), vira) > 0) return CardToPlay.of(worstCard);
             }
             return CardToPlay.of(bestCard);
         }

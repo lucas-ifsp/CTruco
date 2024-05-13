@@ -9,7 +9,9 @@ import java.util.List;
 public class PowerCalculatorService {
 
     public static long powerOfCard(GameIntel intel, int index) {
+
         List<TrucoCard> myCards = intel.getCards();
+
         return myCards.stream()
                 .map(card -> card.relativeValue(intel.getVira()))
                 .sorted(Comparator.reverseOrder())

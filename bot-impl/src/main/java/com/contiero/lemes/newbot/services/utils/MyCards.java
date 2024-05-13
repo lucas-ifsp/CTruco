@@ -5,6 +5,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.List;
 
 public class MyCards {
+
     List<TrucoCard> myHand;
     List<Integer> myHandValuesSorted;
     TrucoCard vira;
@@ -21,7 +22,12 @@ public class MyCards {
 
 
     public TrucoCard getBestCard() {
-        Integer valueOfBestCard = myHandValuesSorted.get(2);
+
+        Integer valueOfBestCard;
+        if (myHand.size() == 3) valueOfBestCard = myHandValuesSorted.get(2);
+        else if (myHand.size() == 2) valueOfBestCard = myHandValuesSorted.get(1);
+        else valueOfBestCard = myHandValuesSorted.get(0);
+
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == valueOfBestCard)
                 .findAny()
@@ -29,7 +35,11 @@ public class MyCards {
     }
 
     public TrucoCard getSecondBestCard() {
-        Integer valueOfSecondBestCard = myHandValuesSorted.get(1);
+
+        Integer valueOfSecondBestCard;
+        if (myHand.size() == 3) valueOfSecondBestCard = myHandValuesSorted.get(1);
+        else valueOfSecondBestCard = myHandValuesSorted.get(0);
+
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == valueOfSecondBestCard)
                 .findAny()
@@ -37,7 +47,9 @@ public class MyCards {
     }
 
     public TrucoCard getWorstCard() {
+
         Integer worstCardValue = myHandValuesSorted.get(0);
+
         return myHand.stream()
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == worstCardValue)
                 .findAny()
