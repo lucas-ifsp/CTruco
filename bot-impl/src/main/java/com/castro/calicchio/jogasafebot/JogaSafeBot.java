@@ -142,15 +142,15 @@ public class JogaSafeBot implements BotServiceProvider{
     }
 
     public boolean hasMoreThanOneManilha(GameIntel intel){
-        cards = intel.getCards();
-        vira = intel.getVira();
+        List <TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
         cards = cards.stream().filter(card -> card.isManilha(vira)).toList();
         return cards.size() == 2;
     }
 
     public boolean hasManilha(GameIntel intel){
-        cards = intel.getCards();
-        vira = intel.getVira();
+        List <TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
         cards = cards.stream().filter(card -> card.isManilha(vira)).toList();
 
         return !cards.isEmpty();
