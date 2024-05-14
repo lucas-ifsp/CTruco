@@ -124,7 +124,7 @@ public sealed interface RoundState
                 .orElseThrow(() -> new WithoutCardsToPlayException("JokerBot have no cards to play, even a worse :'\n"));
     }
 
-    default boolean isWinningHand(GameIntel intel) {                     //PREDICATE
+    default boolean isWinningHand(GameIntel intel) {
         if (isTiedHand(intel)) return false;
         return !isFirstRound().test(intel);
     }
@@ -133,7 +133,7 @@ public sealed interface RoundState
         return intel -> intel.getRoundResults().isEmpty();
     }
 
-    private boolean isTiedHand(GameIntel intel) {                        //PREDICATE        //ADD MELADO, MELADAO E EMPATADO <===
+    private boolean isTiedHand(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         int roundNumber = getRoundNumber(intel);
         if (isFirstRound().test(intel)) return false;
