@@ -27,7 +27,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.Comparator;
 import java.util.List;
 
-public class SecondRound implements GameStrategy {
+public class SecondRound implements GameState {
 
     private TrucoCard vira;
     private List<TrucoCard> hand;

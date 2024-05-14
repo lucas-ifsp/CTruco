@@ -24,7 +24,7 @@ package com.alanIan.casinhadecabloco;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
-public interface GameStrategy {
+public interface GameState {
     double HIGH_CARD_VALUE = 8;
     double MODERATE_CARD_VALUE = 6.5;
     double LOW_CARD_VALUE = 3.3;

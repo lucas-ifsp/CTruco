@@ -31,7 +31,7 @@ public class CasinhaDeCabloco implements BotServiceProvider {
         return intel.getRoundResults().size();
     }
 
-    public GameStrategy gameState(GameIntel intel) {
+    public GameState gameState(GameIntel intel) {
         return switch (numberOfRounds(intel)) {
             case 0 -> new FirstRound(intel);
             case 1 -> new SecondRound(intel);
