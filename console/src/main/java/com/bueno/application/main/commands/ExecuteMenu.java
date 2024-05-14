@@ -23,12 +23,12 @@ public class ExecuteMenu implements Command<Void> {
         return null;
     }
     private void menuOptions(){
-        System.out.println("\nWhat do you Wanna to execute");
         System.out.println("Play Player vs Bot...............[1]");
         System.out.println("Simulate Bot vs Bot .............[2]");
         System.out.println("Evaluate a Bot...................[3]");
         System.out.println("Rank all Bots....................[4]");
-        System.out.println("exit.............................[0]");
+        System.out.println("Exit.............................[0]");
+        System.out.print("Choose a menu option: ");
     }
     private void menuSwitch(String  option){
         switch (option){
