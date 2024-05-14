@@ -2,6 +2,7 @@ import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
@@ -36,12 +37,17 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
+import com.shojisilva.fernasbot.FernasBot;
+import com.contiero.lemes.atrasabot.AtrasaBot;
+import com.lucas.felipe.newbot.NewBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
+import com.felipe.fabiano.truccard.Truccard;
 
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
-  
+
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -62,7 +68,6 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
-    exports com.gabriel.kayky.coisaruim;
     exports com.fabio.bruno.minepowerbot;
     exports com.joao.alexandre.jormungandrbot;
     exports com.lucasmurilo.m.lazarinipodenciano;
@@ -75,15 +80,14 @@ module bot.impl {
     exports com.erick.itaipavabot;
     exports com.renato.DarthVader;
     exports com.antonelli.rufino.bardoalexbot;
+    exports com.lucas.felipe.newbot;
+    exports com.contiero.lemes.atrasabot;
+    exports com.shojisilva.fernasbot;
+    exports com.castro.calicchio.jogasafebot;
+    exports com.felipe.fabiano.truccard;
+    exports com.gabriel.kayky.coisaruim;
 
     provides com.bueno.spi.service.BotServiceProvider with
-            DummyBot, 
-            Carlsen, 
-            DestroyerBot, 
-            WrkncacnterBot, 
-            PaulistaBot, 
-            MarrecoBot, 
-            AddTheNewSoul, 
             ArrebentaBot,
             BarDoAlexBot,
             TecoNoMarrecoBot,
@@ -114,5 +118,12 @@ module bot.impl {
             DarthVader,
             SlayerBot,
             TeitasBot,
-            MalasiaBot;
+            MalasiaBot,
+            FernasBot,
+            NewBot,
+            AtrasaBot,
+            JogaSafeBot,
+            Truccard,
+            CoisaRuim
+  
 }
