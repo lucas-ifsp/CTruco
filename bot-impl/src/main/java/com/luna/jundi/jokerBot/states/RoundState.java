@@ -39,20 +39,27 @@ import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
 import static com.luna.jundi.jokerBot.HandClassification.*;
-import static com.luna.jundi.jokerBot.utils.RoundUtils.*;
+import static com.luna.jundi.jokerBot.utils.RoundUtils.getRoundNumber;
+import static com.luna.jundi.jokerBot.utils.RoundUtils.jokerBotStartsTheRound;
 
 public sealed interface RoundState
         permits FirstToPlayRoundOneState, SecondToPlayRoundOneState,
         FirstToPlayRoundTwoState, SecondToPlayRoundTwoState,
-        RoundThreeState, JokerState {
+        RoundThreeState {
 
 
-    default int defaultRaiseResponse(GameIntel intel){
+    CardToPlay cardChoice();
+
+    boolean raiseDecision();
+
+    int raiseResponse();
+
+    default int defaultRaiseResponse(GameIntel intel) {
         int handPoints = intel.getHandPoints();
         boolean myCardsAreExcellent = EXCELLENT.equals(getHandEvaluation(intel));
         boolean myCardsAreGood = GREAT.equals(getHandEvaluation(intel));
-        if(hasZap(intel)) return 1;
-        if (handPoints < 6 && ( myCardsAreGood || myCardsAreExcellent)) return  0;
+        if (hasZap(intel)) return 1;
+        if (handPoints < 6 && (myCardsAreGood || myCardsAreExcellent)) return 0;
         if (myCardsAreExcellent) return 1; //raise condition
         if (getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) == 0) return -1; // run conditions
         if (isTiedHand(intel) && getHandEvaluation(intel).value() >= 3) return 0; //accept conditions
@@ -61,20 +68,19 @@ public sealed interface RoundState
         return -1;
     }
 
-    CardToPlay cardChoice();
-
-    boolean raiseDecision();
-
-    int raiseResponse();
+    private boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
 
     default boolean maoDeOnzeDecision(GameIntel intel) {
 
         boolean myCardsAreExcellent = EXCELLENT.equals(getHandEvaluation(intel));
         boolean myCardsAreGood = GREAT.equals(getHandEvaluation(intel));
 
-        if(intel.getOpponentScore() == 11 || intel.getOpponentScore() <= 6) return true;
-        if(getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) > 1 && ( myCardsAreGood || myCardsAreExcellent) ) return true;
-        if(intel.getOpponentScore() >=9)
+        if (intel.getOpponentScore() == 11 || intel.getOpponentScore() <= 6) return true;
+        if (getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) > 1 && (myCardsAreGood || myCardsAreExcellent))
+            return true;
+        if (intel.getOpponentScore() >= 9)
             return myCardsAreGood || myCardsAreExcellent;
 
         return false;
@@ -129,7 +135,7 @@ public sealed interface RoundState
         return !isFirstRound().test(intel);
     }
 
-    private Predicate<GameIntel> isFirstRound(){
+    private Predicate<GameIntel> isFirstRound() {
         return intel -> intel.getRoundResults().isEmpty();
     }
 
@@ -151,24 +157,19 @@ public sealed interface RoundState
                 .average().orElse(0.00);
     }
 
-    default HandClassification getHandEvaluation(GameIntel intel){
+    default HandClassification getHandEvaluation(GameIntel intel) {
         double average = averageRelativeValueOfCards().apply(intel);
-        if ( average >= 10 ) return EXCELLENT;
-        if ( average >= 8  ) return GREAT;
-        if ( average >= 6 || getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) > 0  ) return GOOD;
-        if ( average >= 4  ) return NOT_BAD;
+        if (average >= 10) return EXCELLENT;
+        if (average >= 8) return GREAT;
+        if (average >= 6 || getNumberOfManilhas().apply(intel.getCards(), intel.getVira()) > 0) return GOOD;
+        if (average >= 4) return NOT_BAD;
         return BAD;
     }
 
-    private BiFunction<List<TrucoCard>, TrucoCard, Integer> getNumberOfManilhas(){
+    private BiFunction<List<TrucoCard>, TrucoCard, Integer> getNumberOfManilhas() {
         return (trucoCards, vira) -> (int) trucoCards.stream()
                 .filter(card -> card.isManilha(vira))
                 .count();
-    }
-
-    default boolean raiseHandByMyCards(GameIntel intel) {
-        if (EXCELLENT.equals(getHandEvaluation(intel))) return true;
-        return GREAT.equals(getHandEvaluation(intel));
     }
 
     default boolean raiseHandByOpponentCard(GameIntel intel) {

@@ -44,8 +44,7 @@ public final class FirstToPlayRoundTwoState implements RoundState {
     public boolean raiseDecision() {
         boolean tryRaiseHand = getHandEvaluation(intel).value() >= 4;
         if (tryRaiseHand) return true;
-        if (isNotLoosingHand(intel)) return true;
-        return false;
+        return isNotLoosingHand(intel);
     }
 
     @Override
