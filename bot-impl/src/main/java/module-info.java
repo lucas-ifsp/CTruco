@@ -1,9 +1,11 @@
+import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
+import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
@@ -20,14 +22,12 @@ import com.pedrocagiovane.pauladasecabot.PauladaSecaBot;
 import com.renato.DarthVader.DarthVader;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
-import com.rossi.lopes.trucoguru.TrucoGuru;
-import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
-import com.everton.ronaldo.arrebentabot.ArrebentaBot;
-import com.almeida.strapasson.veiodobar.VeioDoBarBot;
-import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
-import com.tatayrapha.leonardabot.LeonardaBot;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
+import com.newton.dolensi.sabotabot.SabotaBot;
+import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
+import com.rossi.lopes.trucoguru.TrucoGuru;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
+import com.tatayrapha.leonardabot.LeonardaBot;
 import com.yuri.impl.BotMadeInDescalvado;
 import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
@@ -43,6 +43,7 @@ import com.lucas.felipe.newbot.NewBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.felipe.fabiano.truccard.Truccard;
 import com.murilo.joao.jackbot.JackBot;
+import com.luna.jundi.jokerBot.JokerBot;
 
 module bot.impl {
     requires bot.spi;
@@ -88,6 +89,7 @@ module bot.impl {
     exports com.felipe.fabiano.truccard;
     exports com.gabriel.kayky.coisaruim;
     exports com.murilo.joao.jackbot;
+    exports com.luna.jundi.jokerBot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -127,4 +129,5 @@ module bot.impl {
             Truccard,
             CoisaRuim,
             JackBot,
+            JockerBot;
 }
