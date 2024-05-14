@@ -17,7 +17,7 @@ public class ThirdRound implements GameStrategy{
                 return 1;
             }
         }
-        if(intel.getCards().stream().anyMatch(e->e.relativeValue(intel.getVira())>7)) {
+        if(intel.getCards().stream().anyMatch(e->e.relativeValue(intel.getVira())>=7)) {
             return 0;
         }
         return -1;
@@ -50,9 +50,8 @@ public class ThirdRound implements GameStrategy{
                 return maracutaia == 3;
             }
             return false;
-
         }
-        return intel.getCards().stream().anyMatch(e -> e.relativeValue(intel.getVira()) > 8);
+        return intel.getCards().stream().anyMatch(e -> e.relativeValue(intel.getVira()) >=7);
     }
     @Override
     public CardToPlay chooseCard(GameIntel intel) {

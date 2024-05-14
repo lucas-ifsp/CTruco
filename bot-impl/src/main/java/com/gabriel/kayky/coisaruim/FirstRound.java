@@ -19,6 +19,11 @@ public class FirstRound implements GameStrategy {
                 return 0;
             }
         }
+        if(intel.getOpponentScore()<6 && intel.getCards().stream().anyMatch(e->e.relativeValue(intel.getVira())>=7)){
+            return 0;
+
+
+        }
         if(ourCards.stream().anyMatch(e->e.isZap(intel.getVira())) && ourCards
                 .stream().anyMatch(e->e.isManilha(intel.getVira()) && !e.isZap(intel.getVira())))
             return 1;
@@ -41,9 +46,11 @@ public class FirstRound implements GameStrategy {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(intel.getCards().stream().filter(e->e.isManilha(intel.getVira())).count()>=2){
+        if(intel.getCards().stream().filter(e->e.isManilha(intel.getVira())).count()>=2 || intel
+                .getCards().stream().filter(e->e.relativeValue(intel.getVira())>8).count()>2){
             return true;
         }
+
         if(intel.getOpponentCard().isPresent()){
             if(intel.getCards().stream().anyMatch(e->e.compareValueTo(intel
                     .getOpponentCard().get(),intel.getVira())>0) || intel.getCards()
@@ -77,7 +84,6 @@ public class FirstRound implements GameStrategy {
             if (intel.getScore() < 6 && intel.getOpponentScore() > 9) {
                 if (intel.getCards().stream().filter(e -> e.relativeValue(
                         intel.getVira()) >= 8).count() >= 2) {
-
                     return CardToPlay.of(mid);
                 }
             }

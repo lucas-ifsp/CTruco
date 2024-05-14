@@ -20,7 +20,7 @@ public class SecondRound implements GameStrategy {
                 if(intel.getCards().stream().anyMatch(e -> e.isManilha(intel.getVira()))){
                     return 1;
                 }
-                if(intel.getCards().stream().anyMatch(e->e.relativeValue(intel.getVira())>8)){
+                if(intel.getCards().stream().anyMatch(e->e.relativeValue(intel.getVira())>=7)){
                     return 0;
                 }
             }
@@ -33,7 +33,6 @@ public class SecondRound implements GameStrategy {
                     filter(e->e.relativeValue(intel.getVira())>8).count()>=2 && intel.getOpponentScore()<9){
                 return 0;
             }
-
         }
         if(intel.getOpponentScore()<9 && intel.getCards().stream().anyMatch(e->e.isManilha(intel.getVira()))) {
             return 0;
@@ -69,7 +68,8 @@ public class SecondRound implements GameStrategy {
         }
         if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.DREW)){
             if(intel.getOpponentCard().isPresent()){
-                if(intel.getCards().stream().anyMatch(e->e.compareValueTo(intel.getOpponentCard().get(), intel.getVira())>0)){
+                if(intel.getCards().stream().anyMatch(e->e.compareValueTo(intel
+                        .getOpponentCard().get(), intel.getVira())>0)){
                     return true;
                 }
             }
@@ -97,8 +97,8 @@ public class SecondRound implements GameStrategy {
             }
             return CardToPlay.of(strongest);
         }
-        if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)){TrucoCard opponentCard = intel.
-                getOpponentCard().get();
+        if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.LOST)){TrucoCard opponentCard =
+                intel.getOpponentCard().get();
             if (weakest.compareValueTo(opponentCard, intel.getVira()) > 0) {
                 return CardToPlay.of(weakest);
             }
