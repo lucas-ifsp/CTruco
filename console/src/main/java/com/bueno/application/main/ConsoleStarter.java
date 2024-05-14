@@ -20,5 +20,4 @@ public class ConsoleStarter {
         printer.execute();
     }
 
-
 }
