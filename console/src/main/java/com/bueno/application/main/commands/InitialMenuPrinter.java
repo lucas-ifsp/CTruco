@@ -5,7 +5,7 @@ import com.bueno.application.utils.Command;
 public class InitialMenuPrinter implements Command<Void> {
     @Override
     public Void execute() {
-        System.out.println("=+=+= CTRUCO COSOLE =+=+=");
+        System.out.println("=+=+= CTRUCO CONSOLE =+=+=");
         return null;
     }
 }
