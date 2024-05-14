@@ -1,6 +1,7 @@
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
+import com.carvalho.candido.tomegapbot.GapBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
@@ -35,6 +36,7 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
+import com.carvalho.candido.tomegapbot.GapBot;
 
 module bot.impl {
     requires bot.spi;
@@ -73,6 +75,7 @@ module bot.impl {
     exports com.erick.itaipavabot;
     exports com.renato.DarthVader;
     exports com.antonelli.rufino.bardoalexbot;
+    exports com.carvalho.candido.tomegapbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot, 
@@ -111,5 +114,6 @@ module bot.impl {
             DarthVader,
             SlayerBot,
             TeitasBot,
-            MalasiaBot;
+            MalasiaBot,
+            GapBot;
 }
