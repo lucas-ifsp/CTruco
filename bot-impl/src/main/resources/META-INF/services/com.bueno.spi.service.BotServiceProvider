@@ -43,6 +43,7 @@ com.yuri.impl.BotMadeInDescalvado
 com.correacarini.impl.trucomachinebot.TrucoMachineBot
 com.gatti.casaque.caipirasbot.CaipirasBot
 com.gustavo.contiero.lazybot.LazyBot
+com.gabriel.kayky.coisaruim.CoisaRuim
 com.joao.alexandre.jormungandrbot.JormungandrBot
 com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido
 com.otavio.lopes.teitasbot.TeitasBot
@@ -57,3 +58,4 @@ com.lucas.felipe.newbot.NewBot
 com.contiero.lemes.atrasabot.AtrasaBot
 com.castro.calicchio.jogasafebot.JogaSafeBot
 com.felipe.fabiano.truccard.Truccard
+com.gabriel.kayky.coisaruim.CoisaRuim

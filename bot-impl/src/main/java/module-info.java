@@ -5,6 +5,7 @@ import com.casal.impl.vapobot.VapoBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
+import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
 import com.hermespiassi.casados.marrecobot.MarrecoBot;
@@ -67,7 +68,6 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
-
     exports com.fabio.bruno.minepowerbot;
     exports com.joao.alexandre.jormungandrbot;
     exports com.lucasmurilo.m.lazarinipodenciano;
@@ -85,6 +85,7 @@ module bot.impl {
     exports com.shojisilva.fernasbot;
     exports com.castro.calicchio.jogasafebot;
     exports com.felipe.fabiano.truccard;
+    exports com.gabriel.kayky.coisaruim;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -103,8 +104,9 @@ module bot.impl {
             VapoBot,
             SabotaBot,
             CaipirasBot,
-            PauladaSecaBot,
             LazyBot,
+            CoisaRuim,
+            PauladaSecaBot,
             MinePowerBot,
             JormungandrBot,
             Akkosocorrompido,
@@ -122,4 +124,6 @@ module bot.impl {
             AtrasaBot,
             JogaSafeBot,
             Truccard,
+            CoisaRuim
+  
 }
