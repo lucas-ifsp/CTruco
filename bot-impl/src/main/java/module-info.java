@@ -2,6 +2,7 @@ import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
+import com.carvalho.candido.tomegapbot.GapBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
@@ -44,6 +45,7 @@ import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.felipe.fabiano.truccard.Truccard;
 import com.murilo.joao.jackbot.JackBot;
 import com.luna.jundi.jokerBot.JokerBot;
+import com.carvalho.candido.tomegapbot.GapBot;
 
 module bot.impl {
     requires bot.spi;
@@ -90,6 +92,7 @@ module bot.impl {
     exports com.gabriel.kayky.coisaruim;
     exports com.murilo.joao.jackbot;
     exports com.luna.jundi.jokerBot;
+    exports com.carvalho.candido.tomegapbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -129,5 +132,6 @@ module bot.impl {
             Truccard,
             CoisaRuim,
             JackBot,
-            JockerBot;
+            JockerBot,
+            GapBot;
 }
