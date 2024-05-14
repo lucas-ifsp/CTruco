@@ -2,6 +2,7 @@ import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.casal.impl.vapobot.VapoBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.garcia.orlandi.slayerbot.SlayerBot;
@@ -38,6 +39,7 @@ import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
 import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.lucas.felipe.newbot.NewBot;
+import com.castro.calicchio.jogasafebot.JogaSafeBot;
 
 module bot.impl {
     requires bot.spi;
@@ -78,6 +80,7 @@ module bot.impl {
     exports com.lucas.felipe.newbot;
     exports com.contiero.lemes.atrasabot;
     exports com.shojisilva.fernasbot;
+    exports com.castro.calicchio.jogasafebot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
@@ -103,7 +106,7 @@ module bot.impl {
             VapoBot,
             SabotaBot,
             CaipirasBot,
-            AtrasaBot,
+            LazyBot,
             PauladaSecaBot,
             MinePowerBot,
             JormungandrBot,
@@ -119,5 +122,6 @@ module bot.impl {
             MalasiaBot,
             FernasBot,
             NewBot,
-            LazyBot,
+            AtrasaBot,
+            JogaSafeBot;
 }
