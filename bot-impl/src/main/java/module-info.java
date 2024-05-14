@@ -42,6 +42,7 @@ import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.lucas.felipe.newbot.NewBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.felipe.fabiano.truccard.Truccard;
+import com.murilo.joao.jackbot.JackBot;
 
 module bot.impl {
     requires bot.spi;
@@ -86,6 +87,7 @@ module bot.impl {
     exports com.castro.calicchio.jogasafebot;
     exports com.felipe.fabiano.truccard;
     exports com.gabriel.kayky.coisaruim;
+    exports com.murilo.joao.jackbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -105,7 +107,6 @@ module bot.impl {
             SabotaBot,
             CaipirasBot,
             LazyBot,
-            CoisaRuim,
             PauladaSecaBot,
             MinePowerBot,
             JormungandrBot,
@@ -124,6 +125,6 @@ module bot.impl {
             AtrasaBot,
             JogaSafeBot,
             Truccard,
-            CoisaRuim
-  
+            CoisaRuim,
+            JackBot,
 }
