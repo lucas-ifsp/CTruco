@@ -178,4 +178,9 @@ public sealed interface RoundState
         int opponentCardValue = intel.getOpponentCard().map(card -> card.relativeValue(intel.getVira())).orElse(0);
         return myBiggerCardValue >= opponentCardValue;
     }
+
+    default boolean raiseHandByMyCards(GameIntel intel) {
+        if (EXCELLENT.equals(getHandEvaluation(intel))) return true;
+        return GREAT.equals(getHandEvaluation(intel));
+    }
 }
