@@ -23,38 +23,14 @@ package com.alanIan.casinhadecabloco;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.service.BotServiceProvider;
 
-public class CasinhaDeCabloco implements BotServiceProvider {
+public interface GameStrategy {
+    double HIGH_CARD_VALUE = 8;
+    double MODERATE_CARD_VALUE = 6.5;
+    double LOW_CARD_VALUE = 3.3;
 
-    private int numberOfRounds(GameIntel intel){
-        return intel.getRoundResults().size();
-    }
-
-    public GameStrategy gameState(GameIntel intel) {
-        return switch (numberOfRounds(intel)) {
-            case 0 -> new FirstRound(intel);
-            case 1 -> new SecondRound(intel);
-            default -> new ThirdRound(intel);
-        };
-    }
-    @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return gameState(intel).getMaoDeOnzeResponse(intel);
-    }
-
-    @Override
-    public boolean decideIfRaises(GameIntel intel) {
-        return gameState(intel).decideIfRaises(intel);
-    }
-
-    @Override
-    public CardToPlay chooseCard(GameIntel intel) {
-        return gameState(intel).chooseCard(intel);
-    }
-
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return gameState(intel).getRaiseResponse(intel);
-    }
+    boolean getMaoDeOnzeResponse( GameIntel intel);
+    boolean decideIfRaises(GameIntel intel);
+    CardToPlay chooseCard(GameIntel intel);
+    int getRaiseResponse(GameIntel intel);
 }
