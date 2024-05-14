@@ -46,6 +46,7 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.murilo.joao.jackbot.JackBot;
 import com.luna.jundi.jokerBot.JokerBot;
 import com.carvalho.candido.tomegapbot.GapBot;
+import com.bruno.tiago.jeckiechanbot.JackieChanBot;
 
 module bot.impl {
     requires bot.spi;
@@ -93,6 +94,7 @@ module bot.impl {
     exports com.murilo.joao.jackbot;
     exports com.luna.jundi.jokerBot;
     exports com.carvalho.candido.tomegapbot;
+    exports com.bruno.tiago.jeckiechanbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -104,6 +106,7 @@ module bot.impl {
             PerdeNuncaBot,
             TrucoMachineBot,
             BotMadeInDescalvado,
+            JackieChanBot,
             TrucoGuru,
             SkolTable,
             UncleBobBot,
@@ -133,5 +136,6 @@ module bot.impl {
             CoisaRuim,
             JackBot,
             JockerBot,
-            GapBot;
+            GapBot, 
+            JackieChanBot;
 }
