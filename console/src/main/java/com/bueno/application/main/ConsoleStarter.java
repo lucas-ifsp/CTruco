@@ -19,6 +19,4 @@ public class ConsoleStarter {
         ExecuteMenu printer = new ExecuteMenu();
         printer.execute();
     }
-
-
 }
