@@ -32,9 +32,8 @@ import java.util.List;
 public class CasinhaDeCabloco implements BotServiceProvider {
     private TrucoCard vira;
     private List<TrucoCard> hand;
-    private int handValue;
     private double cardsValueAvg;
-    private int opponentRaiseCount = 0; // MODIFICAÇÃO 2.3
+    private int opponentRaiseCount = 0;
 
     private static final double HIGH_CARD_VALUE = 8;
     private static final double MODERATE_CARD_VALUE = 6.5;
@@ -53,63 +52,23 @@ public class CasinhaDeCabloco implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         sortHand(intel);
         int opponentScore = intel.getOpponentScore();
-        int BotScore = intel.getScore();
+        int botScore = intel.getScore();
 
         boolean conservative = false;
         boolean aggressive = true;
-
-
-        if (BotScore >= 9 || opponentScore >= 9) {
-            if (handValue >= MODERATE_CARD_VALUE) return aggressive;
+        if(numberOfRounds(intel) == 1) {
+            if (wonFirstRound(intel) && numberOfStrongCards(intel) > 0) return aggressive;
         }
-
-        if (getNumberOfRounds(intel) == 2) {
-            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-                if (handValue >= HIGH_CARD_VALUE) return aggressive;
-                return conservative;
-            }
-            if (handValue >= MODERATE_CARD_VALUE + 2) return aggressive;
+        if(numberOfStrongCards(intel) >= 1) return aggressive;
+        if (opponentScore == 10) {
+            return aggressive;
         }
-
-        if (BotScore < opponentScore) {
-            if (opponentScore == 10) return aggressive;
-            if (handValue >= HIGH_CARD_VALUE) return aggressive;
+        if (botScore >= 10 && winning(intel)) {
+            return conservative;
         }
-
-        if (BotScore > opponentScore) {
-            if (BotScore >= 10) return conservative;
-        }
-
-
-        if (intel.getOpponentCard().isPresent()) {
-
-            if (hasHighValueCards() >= 2) {
-                return aggressive;
-            }
-        }
-        return conservative;
+        return decideToBluff(intel) ? aggressive : conservative;
     }
 
-    private int getNumberOfRounds(GameIntel intel){
-        return intel.getRoundResults().size();
-    }
-
-    private long hasHighValueCards() {
-        return hand.stream().filter(card -> card.relativeValue(vira) >= 8).count();
-    }
-
-
-    public boolean opponentIsAggressive() {
-        double raiseRate = opponentRaiseCount;
-        return raiseRate > 3;
-    }
-
-    public boolean decideToBluff(GameIntel intel) {
-        if (opponentIsAggressive() && intel.getScore() <= 8 && cardsValueAvg < LOW_CARD_VALUE) {
-            return true;
-        }
-        return false;
-    }
     @Override
     public CardToPlay chooseCard(GameIntel intel){
         sortHand(intel);
@@ -120,29 +79,27 @@ public class CasinhaDeCabloco implements BotServiceProvider {
         };
     }
 
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        sortHand(intel);
+        incrementOpponentRaiseCount();
+        if (cardsValueAvg >= HIGH_CARD_VALUE || numberOfManilhas() > 0) return 1 ;
+        if (cardsValueAvg >= MODERATE_CARD_VALUE ) return 0;
+        return -1;
+    }
+
     private void sortHand(GameIntel intel){
         vira = intel.getVira();
         hand = intel.getCards().stream()
                 .sorted(Comparator.comparing(card -> card.relativeValue(vira), Comparator.reverseOrder()))
                 .toList();
         cardsValueAvg = hand.stream().mapToInt(card -> card.relativeValue(vira)).average().orElse(0);
-        handValue = hand.stream().mapToInt(card -> card.relativeValue(vira)).sum();
     }
 
-    private CardToPlay cardFirstRound(GameIntel intel){
-        if(getManilhaCount() > 1) return CardToPlay.of(hand.get(0));
-        if( intel.getOpponentCard().isEmpty()) return CardToPlay.of(hand.get(1));
-        return minCardToWin(intel);
-    }
-
-    private CardToPlay cardSecondRound(GameIntel intel){
-        if(intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON)){
-            return minCardToWin(intel);
-        }
-        if(intel.getOpponentCard().isEmpty()) {
-            return CardToPlay.of(hand.get(0));
-        }
-        return minCardToWin(intel);
+    private long numberOfStrongCards(GameIntel intel){
+        return hand.stream()
+                .filter(card -> card.relativeValue(vira) > 8)
+                .count();
     }
 
     private CardToPlay minCardToWin(GameIntel intel) {
@@ -170,30 +127,65 @@ public class CasinhaDeCabloco implements BotServiceProvider {
         return drawCard;
     }
 
+    private CardToPlay cardFirstRound(GameIntel intel){
+        if(numberOfManilhas() > 1) return CardToPlay.of(hand.get(2));
+        if(numberOfManilhas() == 1 && numberOfStrongCards(intel) > 1) return CardToPlay.of(hand.get(2));
+        if(numberOfManilhas() == 1 && numberOfStrongCards(intel) < 1) return CardToPlay.of(hand.get(1));
+        if( intel.getOpponentCard().isEmpty()) return CardToPlay.of(hand.get(1));
+        return minCardToWin(intel);
+    }
+
+    private CardToPlay cardSecondRound(GameIntel intel){
+        if(wonFirstRound(intel)){
+            return minCardToWin(intel);
+        }
+        if(intel.getOpponentCard().isEmpty()) {
+            return CardToPlay.of(hand.get(0));
+        }
+        return minCardToWin(intel);
+    }
+
+    private int numberOfRounds(GameIntel intel){
+        return intel.getRoundResults().size();
+    }
+
+    private boolean winning(GameIntel intel){
+        return intel.getScore() >= intel.getOpponentScore();
+    }
+
+    private boolean wonFirstRound(GameIntel intel){
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
+    }
+
+
+    public boolean opponentIsAggressive() {
+        double raiseRate = opponentRaiseCount;
+        return raiseRate > 3;
+    }
+
+    public boolean decideToBluff(GameIntel intel) {
+        if (opponentIsAggressive() && intel.getScore() <= 8 && cardsValueAvg < LOW_CARD_VALUE) {
+            return true;
+        }
+        return false;
+    }
+
     private TrucoCard lastCard(){
         return hand.get(hand.size()-1);
     }
 
-    private long getManilhaCount(){
+    private long numberOfManilhas(){
         return hand.stream()
                 .filter(card -> card.isManilha(vira))
                 .count();
     }
 
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        sortHand(intel);
-        incrementOpponentRaiseCount();
-        if (cardsValueAvg >= HIGH_CARD_VALUE || getManilhaCount() > 0) return 1 ;
-        if (cardsValueAvg >= MODERATE_CARD_VALUE ) return 0;
-        return -1;
-    }
 
     public String getName(){
         return "Casinha de Caboclo";
     }
 
-    public void incrementOpponentRaiseCount() { // MODIFICAÇÃO 2.4
+    public void incrementOpponentRaiseCount() {
         opponentRaiseCount++;
     }
 }
