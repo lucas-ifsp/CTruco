@@ -14,12 +14,9 @@ public class RankBots {
 
     public void allBots() {
         RankBotsUseCase useCase = new RankBotsUseCase();
-
         showWaitingMessage();
-
         Map<String, Long> rankMap = useCase.rankAll();
         rankMap = sortByValueDescending(rankMap);
-
         printRank(rankMap);
     }
 
@@ -38,5 +35,4 @@ public class RankBots {
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
-
 }

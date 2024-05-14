@@ -27,7 +27,8 @@ public class RankBotsUseCase {
                 .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
                 .toList();
 
-        Long botWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
+        Long botWins = results.stream()
+                .mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
                 .sum();
         rankMap.put(botName, botWins);
     }
