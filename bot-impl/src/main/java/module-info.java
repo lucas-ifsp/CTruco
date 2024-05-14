@@ -36,6 +36,7 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
+import com.lucas.felipe.newbot.NewBot;
 
 module bot.impl {
     requires bot.spi;
@@ -75,6 +76,7 @@ module bot.impl {
     exports com.erick.itaipavabot;
     exports com.renato.DarthVader;
     exports com.antonelli.rufino.bardoalexbot;
+    exports com.lucas.felipe.newbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot, 
@@ -115,5 +117,6 @@ module bot.impl {
             SlayerBot,
             TeitasBot,
             MalasiaBot,
-            FernasBot;
+            FernasBot,
+            NewBot;
 }
