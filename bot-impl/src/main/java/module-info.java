@@ -48,6 +48,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.bruno.tiago.jeckiechanbot.JackieChanBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
+import com.bernardo.caio.zeusbot.Zeusbot;
 
 module bot.impl {
     requires bot.spi;
@@ -97,6 +98,7 @@ module bot.impl {
     exports com.carvalho.candido.tomegapbot;
     exports com.bruno.tiago.jeckiechanbot;
     exports com.alanIan.casinhadecabloco;
+    exports com.bernardo.caio.zeusbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -140,5 +142,6 @@ module bot.impl {
             JockerBot,
             GapBot, 
             JackieChanBot,
-            CasinhaDeCabloco;
+            CasinhaDeCabloco,
+            Zeusbot;
 }
