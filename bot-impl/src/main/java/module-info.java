@@ -36,13 +36,13 @@ import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
+import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.lucas.felipe.newbot.NewBot;
 
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
-  
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -63,7 +63,6 @@ module bot.impl {
     exports com.yuri.impl;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
-    exports com.shojisilva.fernasbot;
     exports com.fabio.bruno.minepowerbot;
     exports com.joao.alexandre.jormungandrbot;
     exports com.lucasmurilo.m.lazarinipodenciano;
@@ -77,15 +76,17 @@ module bot.impl {
     exports com.renato.DarthVader;
     exports com.antonelli.rufino.bardoalexbot;
     exports com.lucas.felipe.newbot;
+    exports com.contiero.lemes.atrasabot;
+    exports com.shojisilva.fernasbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
-            DummyBot, 
-            Carlsen, 
-            DestroyerBot, 
-            WrkncacnterBot, 
-            PaulistaBot, 
-            MarrecoBot, 
-            AddTheNewSoul, 
+            DummyBot,
+            Carlsen,
+            DestroyerBot,
+            WrkncacnterBot,
+            PaulistaBot,
+            MarrecoBot,
+            AddTheNewSoul,
             ArrebentaBot,
             BarDoAlexBot,
             TecoNoMarrecoBot,
@@ -102,9 +103,8 @@ module bot.impl {
             VapoBot,
             SabotaBot,
             CaipirasBot,
-            LazyBot,
+            AtrasaBot,
             PauladaSecaBot,
-            LazyBot,
             MinePowerBot,
             JormungandrBot,
             Akkosocorrompido,
@@ -118,5 +118,6 @@ module bot.impl {
             TeitasBot,
             MalasiaBot,
             FernasBot,
-            NewBot;
+            NewBot,
+            LazyBot,
 }

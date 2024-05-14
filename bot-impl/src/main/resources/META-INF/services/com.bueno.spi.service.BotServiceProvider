@@ -18,7 +18,6 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
-com.garcia.orlandi.slayerbot.SlayerBot
 com.bueno.impl.dummybot.DummyBot
 com.hideki.araujo.wrkncacnterbot.WrkncacnterBot
 com.caueisa.destroyerbot.DestroyerBot
@@ -26,7 +25,6 @@ com.bonelli.noli.paulistabot.PaulistaBot
 com.cremonezzi.impl.carlsenbot.Carlsen
 com.hermespiassi.casados.marrecobot.MarrecoBot
 com.indi.impl.addthenewsoul.AddTheNewSoul
-com.petrilli.sandro.malasiabot.MalasiaBot
 com.newton.dolensi.sabotabot.SabotaBot
 com.casal.impl.vapobot.VapoBot
 com.brenoduda.cafeconlechebot.CafeConLecheBot
@@ -54,3 +52,4 @@ com.renato.DarthVader.DarthVader
 com.antonelli.rufino.bardoalexbot.BarDoAlexBot
 com.shojisilva.fernasbot.FernasBot
 com.lucas.felipe.newbot.NewBot
+com.contiero.lemes.atrasabot.AtrasaBot
