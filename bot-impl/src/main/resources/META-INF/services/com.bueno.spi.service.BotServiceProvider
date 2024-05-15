@@ -18,6 +18,7 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
+com.garcia.orlandi.slayerbot.SlayerBot
 com.bueno.impl.dummybot.DummyBot
 com.hideki.araujo.wrkncacnterbot.WrkncacnterBot
 com.caueisa.destroyerbot.DestroyerBot
@@ -25,6 +26,7 @@ com.bonelli.noli.paulistabot.PaulistaBot
 com.cremonezzi.impl.carlsenbot.Carlsen
 com.hermespiassi.casados.marrecobot.MarrecoBot
 com.indi.impl.addthenewsoul.AddTheNewSoul
+com.petrilli.sandro.malasiabot.MalasiaBot
 com.newton.dolensi.sabotabot.SabotaBot
 com.casal.impl.vapobot.VapoBot
 com.brenoduda.cafeconlechebot.CafeConLecheBot
@@ -41,4 +43,24 @@ com.yuri.impl.BotMadeInDescalvado
 com.correacarini.impl.trucomachinebot.TrucoMachineBot
 com.gatti.casaque.caipirasbot.CaipirasBot
 com.gustavo.contiero.lazybot.LazyBot
+com.gabriel.kayky.coisaruim.CoisaRuim
+com.joao.alexandre.jormungandrbot.JormungandrBot
+com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido
+com.otavio.lopes.teitasbot.TeitasBot
+com.miguelestevan.jakaredumatubot.JakareDuMatuBot
+com.soares.gibim.chatgptbot.ChatGptBot
+com.pedrocagiovane.pauladasecabot.PauladaSecaBot
+com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida
+com.renato.DarthVader.DarthVader
+com.antonelli.rufino.bardoalexbot.BarDoAlexBot
+com.shojisilva.fernasbot.FernasBot
+com.lucas.felipe.newbot.NewBot
+com.contiero.lemes.atrasabot.AtrasaBot
+com.castro.calicchio.jogasafebot.JogaSafeBot
+com.felipe.fabiano.truccard.Truccard
+com.gabriel.kayky.coisaruim.CoisaRuim
+com.murilo.joao.jackbot.JackBot
+com.carvalho.candido.tomegapbot.GapBot
+com.alanIan.casinhadecabloco.CasinhaDeCabloco
+com.bernardo.caio.zeusbot.Zeusbot
 com.campos.turazzi.reidozap.ReiDoZap
