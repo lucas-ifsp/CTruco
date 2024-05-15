@@ -1,6 +1,7 @@
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
+import com.bruno.tiago.jeckiechanbot.JackieChanBot;
 import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.casal.impl.vapobot.VapoBot;
@@ -24,7 +25,6 @@ import com.renato.DarthVader.DarthVader;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import com.meima.skoltable.SkolTable;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
-import com.newton.dolensi.sabotabot.SabotaBot;
 import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
 import com.rossi.lopes.trucoguru.TrucoGuru;
 import com.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot;
@@ -34,19 +34,18 @@ import com.gatti.casaque.caipirasbot.CaipirasBot;
 import com.gustavo.contiero.lazybot.LazyBot;
 import com.fabio.bruno.minepowerbot.MinePowerBot;
 import com.otavio.lopes.teitasbot.TeitasBot;
+import com.everton.ronaldo.arrebentabot.ArrebentaBot;
 import com.miguelestevan.jakaredumatubot.JakareDuMatuBot;
 import com.barbara.lucasCruz.patriciaAparecida.PatriciaAparecida;
 import com.Sigoli.Castro.PatoBot.PatoBot;
 import com.antonelli.rufino.bardoalexbot.BarDoAlexBot;
 import com.shojisilva.fernasbot.FernasBot;
+import com.motta.impl.beepbot.BeepBot;
 import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.lucas.felipe.newbot.NewBot;
-import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.felipe.fabiano.truccard.Truccard;
 import com.murilo.joao.jackbot.JackBot;
 import com.luna.jundi.jokerBot.JokerBot;
-import com.carvalho.candido.tomegapbot.GapBot;
-import com.bruno.tiago.jeckiechanbot.JackieChanBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 
@@ -58,11 +57,11 @@ module bot.impl {
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
+    exports com.newton.dolensi.sabotabot;
     exports com.cremonezzi.impl.carlsenbot;
     exports com.caueisa.destroyerbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
-    exports com.newton.dolensi.sabotabot;
     exports com.pedrocagiovane.pauladasecabot;
     exports com.brenoduda.cafeconlechebot;
     exports com.meima.skoltable;
@@ -99,9 +98,17 @@ module bot.impl {
     exports com.bruno.tiago.jeckiechanbot;
     exports com.alanIan.casinhadecabloco;
     exports com.bernardo.caio.zeusbot;
+    exports com.motta.impl.beepbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
+            AddTheNewSoul,
+            WrkncacnterBot,
+            MarrecoBot,
+            Carlsen,
+            DummyBot,
+            DestroyerBot,
+            PaulistaBot,
             BarDoAlexBot,
             TecoNoMarrecoBot,
             SilvaBrufatoBot,
@@ -110,7 +117,6 @@ module bot.impl {
             PerdeNuncaBot,
             TrucoMachineBot,
             BotMadeInDescalvado,
-            JackieChanBot,
             TrucoGuru,
             SkolTable,
             UncleBobBot,
@@ -132,6 +138,7 @@ module bot.impl {
             SlayerBot,
             TeitasBot,
             MalasiaBot,
+
             FernasBot,
             NewBot,
             AtrasaBot,
@@ -139,9 +146,10 @@ module bot.impl {
             Truccard,
             CoisaRuim,
             JackBot,
-            JockerBot,
-            GapBot, 
+            JokerBot,
+            GapBot,
             JackieChanBot,
             CasinhaDeCabloco,
+            BeepBot,
             Zeusbot;
 }
