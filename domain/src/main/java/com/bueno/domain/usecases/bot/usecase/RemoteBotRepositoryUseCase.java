@@ -2,15 +2,16 @@ package com.bueno.domain.usecases.bot.usecase;
 
 import com.bueno.domain.usecases.bot.repository.RemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.utils.exceptions.DtoNotStringableException;
 import com.bueno.domain.usecases.utils.exceptions.RemoteBotAlreadyExistsException;
 import com.bueno.domain.usecases.utils.exceptions.RemoteBotNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
-public class RemoteBotRepositoryUseCase {
+public class RemoteBotRepositoryUseCase { // TODO - separar um usecase por verbo RemoteBotRegisterUseCase/RemoteBot
     private final RemoteBotRepository remoteBotRepository;
 
     public RemoteBotRepositoryUseCase(RemoteBotRepository remoteBotRepository) {
@@ -29,23 +30,24 @@ public class RemoteBotRepositoryUseCase {
         return bot.get();
     }
 
-    public void addBot(RemoteBotDto dtoToadd) throws DtoNotStringableException, RemoteBotAlreadyExistsException {
-        if(remoteBotRepository.findAll().stream().anyMatch(checkIfBotAlreadyExists(dtoToadd))){
+    public void addBot(RemoteBotDto dtoToAdd) throws RemoteBotAlreadyExistsException {
+//        if(remoteBotRepository.findAll().stream().anyMatch(checkIfBotAlreadyExists(dtoToAdd)))
+        Objects.requireNonNull(dtoToAdd, "Bot cannot be null");// TODO - Faz tudo desse jeito aqui ó
+        if(remoteBotRepository.existByName(dtoToAdd.name())){
             throw new RemoteBotAlreadyExistsException("Trying to add a bot with same name or port of one already registered");
         }
-        remoteBotRepository.save(dtoToadd);
+        remoteBotRepository.save(dtoToAdd);
     }
 
-    public void delete(String name) throws RemoteBotNotFoundException, DtoNotStringableException {
+    public void delete(String name) throws RemoteBotNotFoundException{
         Optional<RemoteBotDto> botToDelete = remoteBotRepository.findAll().stream()
                 .filter(remoteBotDto -> remoteBotDto.name().equals(name))
                 .findFirst();
         if (botToDelete.isEmpty()) throw new RemoteBotNotFoundException("Bot with name: " + name + " wasn't found");
-        remoteBotRepository.remove(botToDelete.get());
+        remoteBotRepository.delete(botToDelete.get());
     }
 
     public void update(String botToUpdateName,RemoteBotDto newDto) throws   RemoteBotNotFoundException,
-                                                                            DtoNotStringableException,
                                                                             RemoteBotAlreadyExistsException {
         delete(botToUpdateName);
         addBot(newDto);

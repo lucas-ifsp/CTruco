@@ -7,7 +7,7 @@ import com.bueno.application.withbots.features.RankBots;
 import com.bueno.application.withuser.PlayAgainstBots;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 
 import java.util.Scanner;
@@ -19,7 +19,7 @@ public class ExecuteMenu implements Command<Void> {
     private final RemoteBotApi botApi;
 
     public ExecuteMenu() {
-        repository = new RemoteBotRepositoryFileImpl();
+        repository = new RemoteBotRepositoryImpl();
         botApi = new RemoteBotApiAdapter();
     }
 
