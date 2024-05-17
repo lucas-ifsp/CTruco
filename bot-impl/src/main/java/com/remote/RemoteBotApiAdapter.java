@@ -5,8 +5,6 @@ import com.bueno.domain.usecases.bot.repository.RemoteBotDto;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 public class RemoteBotApiAdapter implements RemoteBotApi {
 
