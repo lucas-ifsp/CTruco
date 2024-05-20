@@ -23,8 +23,8 @@ public class AddBotRemoteBotRepositoryUseCase {
         this.userRepository = userRepository;
     }
 
-    public RemoteBotResponseModel addBot(RemoteBotRequestModel dtoRequest) throws EntityNotFoundException {
-        Objects.requireNonNull(dtoRequest, "Bot cannot be null");// TODO - Faz tudo desse jeito aqui ó
+    public RemoteBotResponseModel addBot(RemoteBotRequestModel dtoRequest) {
+        Objects.requireNonNull(dtoRequest, "request is null");// TODO - Faz tudo desse jeito aqui ó
         RemoteBotDto dto = new RemoteBotDto(UUID.randomUUID(),
                 dtoRequest.userId(),
                 dtoRequest.name(),

@@ -9,6 +9,7 @@ import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -25,23 +26,27 @@ public class GetRemoteBotRepositoryUseCase {
     public List<RemoteBotResponseModel> getAll() {
         List<RemoteBotDto> botDtoList = remoteBotRepository.findAll();
         return botDtoList.stream()
-                .map(bot -> new RemoteBotResponseModel(bot.name(), getApplicationUserDto(bot).username(), bot.url(), bot.port())).toList();
+                .map(bot -> new RemoteBotResponseModel(bot.name(), getUserDtoByRemoteBotDto(bot).username(), bot.url(), bot.port())).toList();
     }
 
-    public RemoteBotResponseModel getByName(String botName) throws EntityNotFoundException {
+    public RemoteBotResponseModel getByName(String botName) {
+        Objects.requireNonNull(botName, "botName is null");
+
         RemoteBotDto dto = remoteBotRepository.findByName(botName).orElseThrow(() -> new EntityNotFoundException(botName + " not found"));
-        ApplicationUserDto userDto = getApplicationUserDto(dto);
+        ApplicationUserDto userDto = getUserDtoByRemoteBotDto(dto);
         return new RemoteBotResponseModel(dto.name(), userDto.username(), dto.url(), dto.port());
     }
 
-    private ApplicationUserDto getApplicationUserDto(RemoteBotDto dto) {
-        return userRepository.findByUuid(dto.user())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-    }
-
     public List<RemoteBotResponseModel> getByUserId(UUID userId) {
+        Objects.requireNonNull(userId, "userId is null");
+
         ApplicationUserDto userDto = userRepository.findByUuid(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         List<RemoteBotDto> bots = remoteBotRepository.findByUserId(userId);
         return bots.stream().map(bot -> new RemoteBotResponseModel(bot.name(), userDto.username(), bot.url(), bot.port())).toList();
+    }
+
+    private ApplicationUserDto getUserDtoByRemoteBotDto(RemoteBotDto dto) {
+        return userRepository.findByUuid(dto.user())
+                .orElseThrow(() -> new EntityNotFoundException("User not found, userId might be wrong"));
     }
 }
