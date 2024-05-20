@@ -1,6 +1,6 @@
 package com.bueno.domain.usecases.bot.providers;
 
-import com.bueno.domain.usecases.bot.repository.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 

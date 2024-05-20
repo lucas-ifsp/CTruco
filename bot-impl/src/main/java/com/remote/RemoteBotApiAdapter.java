@@ -1,7 +1,7 @@
 package com.remote;
 
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
-import com.bueno.domain.usecases.bot.repository.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import org.springframework.http.HttpMethod;
@@ -41,7 +41,7 @@ public class RemoteBotApiAdapter implements RemoteBotApi {
         return false;
     }
 
-    private String buildUrl(RemoteBotDto botData, String resource){
+    private String buildUrl(RemoteBotDto botData, String resource) {
         return String.format("%s:%s/%s", botData.url(), botData.port(), resource);
     }
 }

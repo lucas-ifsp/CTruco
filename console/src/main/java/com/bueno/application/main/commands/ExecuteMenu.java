@@ -18,9 +18,9 @@ public class ExecuteMenu implements Command<Void> {
     private final RemoteBotRepository repository;
     private final RemoteBotApi botApi;
 
-    public ExecuteMenu() {
-        repository = new RemoteBotRepositoryImpl();
-        botApi = new RemoteBotApiAdapter();
+    public ExecuteMenu(RemoteBotRepository repository, RemoteBotApi botApi) {
+        this.repository = repository;
+        this.botApi = botApi;
     }
 
     @Override
