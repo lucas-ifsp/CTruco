@@ -18,4 +18,5 @@ module domain {
     exports com.bueno.domain.usecases.bot.repository;
     exports com.bueno.domain.usecases.bot.providers;
     exports com.bueno.domain.usecases.bot.usecase;
+    exports com.bueno.domain.usecases.bot.dtos;
 }

@@ -1,91 +1,70 @@
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.bot.repository.RemoteBotDto;
-import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.bot.usecase.RemoteBotRepositoryUseCase;
-import com.bueno.domain.usecases.utils.exceptions.RemoteBotAlreadyExistsException;
-import com.bueno.domain.usecases.utils.exceptions.RemoteBotNotFoundException;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotResponseModel;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
+import com.bueno.domain.usecases.bot.usecase.AddBotRemoteBotRepositoryUseCase;
+import com.bueno.domain.usecases.bot.usecase.DeleteRemoteBotRepositoryUseCase;
+import com.bueno.domain.usecases.bot.usecase.GetRemoteBotRepositoryUseCase;
+import com.bueno.domain.usecases.bot.usecase.UpdateRemoteBotRepositoryUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/remote-bots")
 public class RemoteBotController {
 
-    RemoteBotRepository repository;
+    private final AddBotRemoteBotRepositoryUseCase addBotRemoteBotRepositoryUseCase;
+    private final DeleteRemoteBotRepositoryUseCase deleteRemoteBotRepositoryUseCase;
+    private final GetRemoteBotRepositoryUseCase getRemoteBotRepositoryUseCase;
+    private final UpdateRemoteBotRepositoryUseCase updateRemoteBotRepositoryUseCase;
 
-    public RemoteBotController(RemoteBotRepository remoteBotRepository) {
-        repository = remoteBotRepository;
+    @Autowired
+    public RemoteBotController(AddBotRemoteBotRepositoryUseCase addBotRemoteBotRepositoryUseCase,
+                               DeleteRemoteBotRepositoryUseCase deleteRemoteBotRepositoryUseCase,
+                               GetRemoteBotRepositoryUseCase getRemoteBotRepositoryUseCase,
+                               UpdateRemoteBotRepositoryUseCase updateRemoteBotRepositoryUseCase) {
+        this.addBotRemoteBotRepositoryUseCase = addBotRemoteBotRepositoryUseCase;
+        this.deleteRemoteBotRepositoryUseCase = deleteRemoteBotRepositoryUseCase;
+        this.getRemoteBotRepositoryUseCase = getRemoteBotRepositoryUseCase;
+        this.updateRemoteBotRepositoryUseCase = updateRemoteBotRepositoryUseCase;
+    }
+
+    @GetMapping
+    private ResponseEntity<?> getAllRemoteOnes() {// TODO - Construir o Response Model no próprio RemoteBotController ou n?
+        return ResponseEntity.ok(getRemoteBotRepositoryUseCase.getAll());
     }
 
     @GetMapping("/{name}")
     private ResponseEntity<?> getRemoteBotByName(@PathVariable String name) {
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-
-        try {
-            RemoteBotDto bot = useCase.getByName(name);
-            return ResponseEntity.ok(bot);
-        } catch (RemoteBotNotFoundException e) {
-            return ResponseEntity.badRequest().body("Bot: " + name + " not found");
-        }
+        return ResponseEntity.ok(getRemoteBotRepositoryUseCase.getByName(name));
     }
 
     @GetMapping("/user/{userId}")
-    private ResponseEntity<?> getRemoteBotsByUserName(@PathVariable String userId) {// TODO fazer metodo que pega todos os bots cadastrados por um usuário;
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-
-        try {
-            RemoteBotDto bot = useCase.getByName(userId);
-            return ResponseEntity.ok(bot);
-        } catch (RemoteBotNotFoundException e) {
-            return ResponseEntity.badRequest().body("Bot: " + userId + " not found");
-        }
-    }
-
-    @GetMapping
-    private ResponseEntity<?> getAllRemoteOnes() {
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-        return ResponseEntity.ok(useCase.getAll());
+    private ResponseEntity<?> getRemoteBotsByUserName(@PathVariable UUID userId) {
+        return ResponseEntity.ok(getRemoteBotRepositoryUseCase.getByUserId(userId));
     }
 
     @PostMapping
-    private ResponseEntity<?> addRemote(@RequestBody RemoteBotRequestType requestType) {// TODO tirar uuid por String
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-        RemoteBotDto dto = new RemoteBotDto(UUID.randomUUID(),
-                                                requestType.userId(),
-                                                requestType.name(),
-                                                requestType.url(),
-                                                requestType.port());
-        try {
-            useCase.addBot(dto);
-            return ResponseEntity.ok(dto);
-        } catch (RemoteBotAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
+    private ResponseEntity<?> addRemote(@RequestBody RemoteBotRequestModel dtoRequest) {
+        RemoteBotResponseModel responseDto =
+                Objects.requireNonNull(addBotRemoteBotRepositoryUseCase.addBot(dtoRequest), "Not able to create a RemoteBotResponseModel");
+        return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{name}")
-    private ResponseEntity<?> update(@PathVariable String name, @RequestBody RemoteBotDto dto) { // TODO fazer um método update no RemoteBotRepositoryUseCase;
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-        try {
-            useCase.delete(name);
-            return ResponseEntity.ok(dto);
-        } catch (RemoteBotNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    private ResponseEntity<?> update(@PathVariable String name, @RequestBody RemoteBotDto dto) {
+        RemoteBotResponseModel responseDto = updateRemoteBotRepositoryUseCase.update(name,dto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("{name}")
     private ResponseEntity<?> delete(@PathVariable String name) {
-        RemoteBotRepositoryUseCase useCase = new RemoteBotRepositoryUseCase(repository);
-        try {
-            useCase.delete(name);
-            return ResponseEntity.ok("Bot: " + name + " successfully deleted");
-        } catch (RemoteBotNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        deleteRemoteBotRepositoryUseCase.delete(name);
+        return ResponseEntity.ok("Bot: " + name + " successfully deleted");
     }
 }
