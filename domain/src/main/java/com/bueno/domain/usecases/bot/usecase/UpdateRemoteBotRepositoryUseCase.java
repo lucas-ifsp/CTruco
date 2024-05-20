@@ -5,9 +5,12 @@ import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotResponseModel;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.UserNotAllowedException;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class UpdateRemoteBotRepositoryUseCase {
@@ -23,12 +26,16 @@ public class UpdateRemoteBotRepositoryUseCase {
 
     public RemoteBotResponseModel update(String botName, RemoteBotRequestModel requestDto) {// TODO - Implementar método update e fazer as verificações necessárias
 
+        Objects.requireNonNull(requestDto, "request is null");
+        Objects.requireNonNull(botName, "botName is null");
+
         RemoteBotDto bot = botRepository.findByName(botName).orElseThrow(() -> new EntityNotFoundException("bot not found"));
-        String userName = userRepository
+
+        ApplicationUserDto userOfNewBot = userRepository
                 .findByUuid(requestDto.userId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"))
-                .username();
-        if (requestDto.userId() == bot.user()) {
+                .orElseThrow(() -> new EntityNotFoundException("User not found, userId might be wrong"));
+
+        if (requestDto.userId().equals(bot.user())) {
             botRepository.delete(bot);
             RemoteBotDto newDto = new RemoteBotDto(bot.uuid(),
                     requestDto.userId(),
@@ -36,7 +43,7 @@ public class UpdateRemoteBotRepositoryUseCase {
                     requestDto.url(),
                     requestDto.port());
             botRepository.save(newDto);
-            return new RemoteBotResponseModel(newDto.name(), userName, newDto.url(), newDto.port());
+            return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port());
         }
         throw new UserNotAllowedException("User does not own this bot");
     }

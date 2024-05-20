@@ -5,6 +5,7 @@ import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,11 +16,12 @@ public class DeleteRemoteBotRepositoryUseCase {
         this.remoteBotRepository = remoteBotRepository;
     }
 
-    public void delete(String name) throws EntityNotFoundException {
+    public void delete(String botName) {
+        Objects.requireNonNull(botName, "botName is null");
         Optional<RemoteBotDto> botToDelete = remoteBotRepository.findAll().stream()
-                .filter(remoteBotDto -> remoteBotDto.name().equals(name))
+                .filter(remoteBotDto -> remoteBotDto.name().equals(botName))
                 .findFirst();
-        if (botToDelete.isEmpty()) throw new EntityNotFoundException("Bot with name: " + name + " wasn't found");
+        if (botToDelete.isEmpty()) throw new EntityNotFoundException("Bot with name: " + botName + " wasn't found");
         remoteBotRepository.delete(botToDelete.get());
     }
 }
