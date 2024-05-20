@@ -57,8 +57,8 @@ public class RemoteBotController {
     }
 
     @PutMapping("/{name}")
-    private ResponseEntity<?> update(@PathVariable String name, @RequestBody RemoteBotDto dto) {
-        RemoteBotResponseModel responseDto = updateRemoteBotRepositoryUseCase.update(name,dto);
+    private ResponseEntity<?> update(@PathVariable String name, @RequestBody RemoteBotRequestModel dto) {
+        RemoteBotResponseModel responseDto = updateRemoteBotRepositoryUseCase.update(name, dto);
         return ResponseEntity.ok(responseDto);
     }
 

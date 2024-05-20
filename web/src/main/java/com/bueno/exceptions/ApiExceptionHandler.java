@@ -142,4 +142,15 @@ public class ApiExceptionHandler {
                 .build();
         return new ResponseEntity<>(apiException, notFound);
     }
+    @ExceptionHandler(value = UserNotAllowedException.class)
+    public ResponseEntity<?> handleUserNotAllowedException(UserNotAllowedException e){
+        final HttpStatus notFound = BAD_REQUEST;
+        final ApiException apiException = ApiException.builder()
+                .status(notFound)
+                .message(e.getMessage())
+                .developerMessage(e.getClass().getName())
+                .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
+                .build();
+        return new ResponseEntity<>(apiException, notFound);
+    }
 }
