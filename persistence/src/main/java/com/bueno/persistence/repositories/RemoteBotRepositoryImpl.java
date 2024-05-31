@@ -17,8 +17,11 @@ import java.util.UUID;
 @Repository
 public class RemoteBotRepositoryImpl implements RemoteBotRepository {
 
-    private final RemoteBotDao dao;
-    private final UserRepositoryImpl userRepositoryImpl;
+    private RemoteBotDao dao;
+    private UserRepositoryImpl userRepositoryImpl;
+
+    public RemoteBotRepositoryImpl() {
+    }
 
     @Autowired
     public RemoteBotRepositoryImpl(RemoteBotDao dao, UserRepositoryImpl userRepositoryImpl) {
