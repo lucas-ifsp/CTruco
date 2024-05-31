@@ -7,6 +7,8 @@ module application.persistence {
     requires spring.beans;
     requires spring.data.mongodb;
     requires spring.data.commons;
+    requires java.sql;
+    requires org.postgresql.jdbc;
     exports com.bueno.persistence.repositories;
     exports com.bueno.persistence.dao;
     exports com.bueno.persistence.dto;
