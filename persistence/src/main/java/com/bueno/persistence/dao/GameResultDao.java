@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface GameResultDao extends JpaRepository<GameResultEntity, UUID> {
+public interface GameResultDao{
 
     @Query("""
             SELECT a.username as username, count(a.username) as wins
@@ -69,4 +69,6 @@ public interface GameResultDao extends JpaRepository<GameResultEntity, UUID> {
             , nativeQuery = true
     )
     List<GameResultQR> findAllByPlayerUuid(@Param("uuid") UUID uuid);
+
+    void save(GameResultEntity game);
 }
