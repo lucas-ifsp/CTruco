@@ -6,24 +6,18 @@ import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.RemoteBotDao;
 import com.bueno.persistence.dto.RemoteBotEntity;
 import com.bueno.persistence.dto.UserEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 public class RemoteBotRepositoryImpl implements RemoteBotRepository {
 
-    private RemoteBotDao dao;
-    private UserRepositoryImpl userRepositoryImpl;
+    private final RemoteBotDao dao;
+    private final UserRepositoryImpl userRepositoryImpl;
 
-    public RemoteBotRepositoryImpl() {
-    }
-
-    @Autowired
     public RemoteBotRepositoryImpl(RemoteBotDao dao, UserRepositoryImpl userRepositoryImpl) {
         this.dao = dao;
         this.userRepositoryImpl = userRepositoryImpl;

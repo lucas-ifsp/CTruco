@@ -24,12 +24,12 @@ import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.persistence.dao.UserDao;
 import com.bueno.persistence.dto.UserEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserDao dao;
