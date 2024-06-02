@@ -11,7 +11,7 @@ public class HandResultDaoImpl implements HandResultDao {
 
     @Override
     public void save(HandResultEntity hand) throws SQLException {
-        try(Statement statement = ConnectionFactory.createStatement()){
+        try (Statement statement = ConnectionFactory.createStatement()) {
             statement.executeQuery(createHandResultSaveQuery(hand));
         }
     }
