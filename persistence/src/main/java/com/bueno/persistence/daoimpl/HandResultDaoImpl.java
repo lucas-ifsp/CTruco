@@ -4,6 +4,7 @@ import com.bueno.persistence.ConnectionFactory;
 import com.bueno.persistence.dao.HandResultDao;
 import com.bueno.persistence.dto.HandResultEntity;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -11,25 +12,18 @@ public class HandResultDaoImpl implements HandResultDao {
 
     @Override
     public void save(HandResultEntity hand) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            statement.executeQuery(createHandResultSaveQuery(hand));
+        String sql = """
+                INSERT INTO hand_results(id,hand_type,game_uuid,hand_winner,points,points_proposal)
+                VALUES (?, ?, ?, ?, ?, ?);
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setLong(1, hand.getId());
+            preparedStatement.setString(2, hand.getHandType());
+            preparedStatement.setString(3, hand.getGameUuid().toString());
+            preparedStatement.setString(4, hand.getHandWinner().toString());
+            preparedStatement.setInt(5, hand.getPoints());
+            preparedStatement.setInt(6, hand.getPointsProposal());
+            preparedStatement.executeQuery();
         }
-    }
-
-    private static String createHandResultSaveQuery(HandResultEntity hand) {
-        return "INSERT INTO hand_results(id,hand_type,game_uuid,hand_winner,points,points_proposal) " +
-               "VALUES (" +
-               hand.getId() +
-               "," +
-               hand.getHandType() +
-               "," +
-               hand.getGameUuid() +
-               "," +
-               hand.getHandWinner() +
-               "," +
-               hand.getPoints() +
-               "," +
-               hand.getPointsProposal() +
-               ");";
     }
 }

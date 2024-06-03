@@ -27,6 +27,8 @@ import com.bueno.persistence.dto.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,25 +41,51 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(ApplicationUserDto user) {
-        dao.save(UserEntity.from(user));
+    public void save(ApplicationUserDto dto) {
+        try {
+            dao.save(UserEntity.from(dto));
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the user: " + dto.username() +
+                               "\n" + Arrays.toString(e.getStackTrace()));
+        }
     }
 
     @Override
     public Optional<ApplicationUserDto> findByUsername(String username) {
-        final UserEntity dto = dao.getByUsername(username);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        final UserEntity dto;
+        try {
+            dto = dao.getByUsername(username);
+            return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() +
+                               "\n" + Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<ApplicationUserDto> findByEmail(String email) {
-        final UserEntity dto = dao.getByEmail(email);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        final UserEntity dto;
+        try {
+            dto = dao.getByEmail(email);
+            return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() +
+                               "\n" + Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<ApplicationUserDto> findByUuid(UUID uuid) {
-        final UserEntity dto = dao.getByUuid(uuid);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        final UserEntity dto;
+        try {
+            dto = dao.getByUuid(uuid);
+            return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() +
+                               "\n" + Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
     }
 }

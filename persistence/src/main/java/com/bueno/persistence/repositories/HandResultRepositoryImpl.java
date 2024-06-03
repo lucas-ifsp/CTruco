@@ -27,6 +27,7 @@ import com.bueno.persistence.dto.HandResultEntity;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class HandResultRepositoryImpl implements HandResultRepository {
 
@@ -41,7 +42,8 @@ public class HandResultRepositoryImpl implements HandResultRepository {
         try {
             dao.save(HandResultEntity.from(handResultDto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "| hand couldn't be saved");
+            System.err.println(e.getClass() + ": " + e.getMessage() + "| Hand couldn't be saved" +
+                               "\n" + Arrays.toString(e.getStackTrace()));
         }
     }
 }
