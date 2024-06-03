@@ -29,6 +29,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+@Repository
 public class HandResultRepositoryImpl implements HandResultRepository {
 
     private final HandResultDao dao;
@@ -42,8 +43,8 @@ public class HandResultRepositoryImpl implements HandResultRepository {
         try {
             dao.save(HandResultEntity.from(handResultDto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "| Hand couldn't be saved" +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage() + "| HandResult couldn't be saved");
+            e.printStackTrace();
         }
     }
 }

@@ -36,9 +36,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document
 public class PlayerEntity {
-    @Id
     private UUID id;
     private String username;
     private int score;

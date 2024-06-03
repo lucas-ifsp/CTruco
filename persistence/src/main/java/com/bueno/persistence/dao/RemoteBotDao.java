@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 public interface RemoteBotDao {
     RemoteBotEntity getByUuid(UUID uuid) throws SQLException;
 

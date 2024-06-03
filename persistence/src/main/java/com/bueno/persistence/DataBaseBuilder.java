@@ -1,10 +1,6 @@
 package com.bueno.persistence;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 public class DataBaseBuilder {
 
@@ -23,7 +19,8 @@ public class DataBaseBuilder {
 
             System.out.println("DATABASE CREATED");
         }catch (SQLException e) {
-            System.err.println( e.getClass() + ": " + e.getMessage() + " " + Arrays.toString(e.getStackTrace()));
+            System.err.println( e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -36,8 +33,7 @@ public class DataBaseBuilder {
                     password TEXT NOT NULL,
                     CONSTRAINT uuid_pk PRIMARY KEY (uuid),
                     CONSTRAINT username_uk UNIQUE (username),
-                    CONSTRAINT email_uk UNIQUE (email),
-                    CONSTRAINT password_uk UNIQUE (password)
+                    CONSTRAINT email_uk UNIQUE (email)
                 );
                 """;
     }
@@ -61,40 +57,38 @@ public class DataBaseBuilder {
     private String createGameResultTable(){
         return """
                 CREATE TABLE IF NOT EXISTS GAME_RESULT(
-                    game_uuid TEXT NOT NULL,
-                    game_start DATE NOT NULL,
-                    game_end DATE,
+                    game_uuid VARCHAR(36) NOT NULL,
+                    game_start TIMESTAMP NOT NULL,
+                    game_end TIMESTAMP,
                     winner_uuid VARCHAR(36),
                     player1_uuid VARCHAR(36) NOT NULL,
                     player1_score INTEGER,
                     player2_uuid VARCHAR(36) NOT NULL,
                     player2_score INTEGER,
-                    CONSTRAINT game_uuid_pk PRIMARY KEY (game_uuid),
-                    CONSTRAINT winner_uuid_fk_app_user FOREIGN KEY (winner_uuid)
-                        REFERENCES APP_USER(uuid),
-                    CONSTRAINT winner_uuid_fk_remote_bots FOREIGN KEY (winner_uuid)
-                        REFERENCES REMOTE_BOT(uuid),
-                    CONSTRAINT p1_uuid_fk_app_user FOREIGN KEY (player1_uuid)
-                        REFERENCES APP_USER(uuid),
-                    CONSTRAINT p1_uuid_fk_remote_bot FOREIGN KEY (player1_uuid)
-                        REFERENCES REMOTE_BOT(uuid),
-                    CONSTRAINT p2_uuid_fk_app_user FOREIGN KEY (player2_uuid)
-                        REFERENCES APP_USER(uuid),
-                    CONSTRAINT p2_uuid_fk_remote_bot FOREIGN KEY (player2_uuid)
-                        REFERENCES REMOTE_BOT(uuid)
+                    CONSTRAINT game_uuid_pk PRIMARY KEY (game_uuid)
                 );
                 """;
     }
 
     private String createHandResultsTable(){
         return """
-                CREATE TABLE IF NOT EXISTS HAND_RESULTS(
+                CREATE TABLE IF NOT EXISTS HAND_RESULT(
                     id INTEGER NOT NULL,
-                    hand_type VARCHAR(9) NOT NULL,
+                    r1_c1 VARCHAR(2),
+                    r1_c2 VARCHAR(2),
+                    r2_c1 VARCHAR(2),
+                    r2_c2 VARCHAR(2),
+                    r3_c1 VARCHAR(2),
+                    r3_c2 VARCHAR(2),
                     game_uuid VARCHAR(36) NOT NULL,
+                    hand_type VARCHAR(9) NOT NULL,
                     hand_winner VARCHAR(36),
                     points INTEGER NOT NULL,
                     points_proposal INTEGER,
+                    r1_winner VARCHAR(36),
+                    r2_winner VARCHAR(36),
+                    r3_winner VARCHAR(36),
+                    vira VARCHAR(2),
                     CONSTRAINT hand_results_id_pk PRIMARY KEY(id),
                     CONSTRAINT game_uuid_fk FOREIGN KEY (game_uuid)
                         REFERENCES GAME_RESULT(game_uuid)

@@ -25,6 +25,7 @@ import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.persistence.dao.UserDao;
 import com.bueno.persistence.dto.UserEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserDao dao;
@@ -45,8 +47,8 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             dao.save(UserEntity.from(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the user: " + dto.username() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the user: " + dto.username());
+            e.printStackTrace();
         }
     }
 
@@ -57,8 +59,8 @@ public class UserRepositoryImpl implements UserRepository {
             dto = dao.getByUsername(username);
             return Optional.ofNullable(UserEntity.toApplicationUser(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -70,8 +72,8 @@ public class UserRepositoryImpl implements UserRepository {
             dto = dao.getByEmail(email);
             return Optional.ofNullable(UserEntity.toApplicationUser(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -83,8 +85,8 @@ public class UserRepositoryImpl implements UserRepository {
             dto = dao.getByUuid(uuid);
             return Optional.ofNullable(UserEntity.toApplicationUser(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
         }
         return Optional.empty();
     }

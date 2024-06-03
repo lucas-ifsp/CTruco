@@ -28,12 +28,13 @@ import com.bueno.persistence.dao.GameResultDao;
 import com.bueno.persistence.dto.GameResultEntity;
 import com.bueno.persistence.dto.GameResultQR;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-
+@Repository
 public class GameResultRepositoryImpl implements GameResultRepository {
 
     private final GameResultDao repo;
@@ -44,7 +45,12 @@ public class GameResultRepositoryImpl implements GameResultRepository {
 
     @Override
     public void save(GameResultDto gameResult) {
-        repo.save(GameResultEntity.from(gameResult));
+        try {
+            repo.save(GameResultEntity.from(gameResult));
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() + "| GameResult couldn't be saved");
+            e.printStackTrace();
+        }
     }
 
     @Override

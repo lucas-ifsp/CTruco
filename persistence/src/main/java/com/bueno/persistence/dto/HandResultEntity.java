@@ -34,43 +34,41 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "HAND_RESULT")
 public class HandResultEntity {
 
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    //    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "HAND_TYPE", length = 9)
+    //    @Column(name = "HAND_TYPE", length = 9)
     private String handType;
     private UUID gameUuid;
     private UUID handWinner;
     private int points;
     private int pointsProposal;
 
-    @Column(name = "R1_WINNER")
+    //    @Column(name = "R1_WINNER")
     private UUID round1Winner;
-    @Column(name = "R2_WINNER")
+    //    @Column(name = "R2_WINNER")
     private UUID round2Winner;
-    @Column(name = "R3_WINNER")
+    //    @Column(name = "R3_WINNER")
     private UUID round3Winner;
 
-    @Column(name = "VIRA", length = 2)
+    //    @Column(name = "VIRA", length = 2)
     private String vira;
-    @Column(name = "R1_C1", length = 2)
+    //    @Column(name = "R1_C1", length = 2)
     private String card1Round1;
-    @Column(name = "R1_C2", length = 2)
+    //    @Column(name = "R1_C2", length = 2)
     private String card2Round1;
-    @Column(name = "R2_C1", length = 2)
+    //    @Column(name = "R2_C1", length = 2)
     private String card1Round2;
-    @Column(name = "R2_C2", length = 2)
+    //    @Column(name = "R2_C2", length = 2)
     private String card2Round2;
-    @Column(name = "R3_C1", length = 2)
+    //    @Column(name = "R3_C1", length = 2)
     private String card1Round3;
-    @Column(name = "R3_C2", length = 2)
+    //    @Column(name = "R3_C2", length = 2)
     private String card2Round3;
 
-    public static HandResultEntity from(HandResultDto dto){
+    public static HandResultEntity from(HandResultDto dto) {
         final List<String> openCards = dto.openCards();
         final List<UUID> roundWinners = dto.roundWinners();
 
@@ -93,8 +91,8 @@ public class HandResultEntity {
                 .build();
     }
 
-    private static <T> T getIfAvailable(List<T> list, int index){
-        if(index < list.size()) return list.get(index);
+    private static <T> T getIfAvailable(List<T> list, int index) {
+        if (index < list.size()) return list.get(index);
         return null;
     }
 }

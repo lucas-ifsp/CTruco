@@ -7,10 +7,12 @@ import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.RemoteBotDao;
 import com.bueno.persistence.dto.RemoteBotEntity;
 import com.bueno.persistence.dto.UserEntity;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.*;
 
+@Repository
 public class RemoteBotRepositoryImpl implements RemoteBotRepository {
 
     private final RemoteBotDao dao;

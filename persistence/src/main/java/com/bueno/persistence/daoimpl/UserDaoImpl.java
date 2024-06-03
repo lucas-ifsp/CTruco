@@ -4,12 +4,14 @@ import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.persistence.ConnectionFactory;
 import com.bueno.persistence.dao.UserDao;
 import com.bueno.persistence.dto.UserEntity;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+@Repository
 public class UserDaoImpl implements UserDao {
 
     @Override
@@ -38,26 +40,30 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            preparedStatement.executeQuery(sql);
+            preparedStatement.executeUpdate();
         }
     }
 
-    private static UserEntity SelectUserByAttribute(String value, String type) throws SQLException {
+    private UserEntity SelectUserByAttribute(String value, String type) throws SQLException {
         String sql = "SELECT * FROM app_user WHERE ? = ? ;";
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
             preparedStatement.setString(1, type);
             preparedStatement.setString(2, value);
             ResultSet res = preparedStatement.executeQuery();
             if (res.next()) {
-                return UserEntity.from(
-                        new ApplicationUserDto(
-                                UUID.fromString(res.getString("uuid")),
-                                res.getString("name"),
-                                res.getString("url"),
-                                res.getString("port")
-                        ));
+                return resultSetToUserEntity(res);
             }
         }
         return null;
+    }
+
+    private UserEntity resultSetToUserEntity(ResultSet res) throws SQLException {
+        return UserEntity.from(
+                new ApplicationUserDto(
+                        UUID.fromString(res.getString("uuid")),
+                        res.getString("name"),
+                        res.getString("url"),
+                        res.getString("port")
+                ));
     }
 }
