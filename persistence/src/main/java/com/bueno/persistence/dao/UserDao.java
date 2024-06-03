@@ -24,13 +24,16 @@ import com.bueno.persistence.dto.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 @Repository
-public interface UserDao{
-    UserEntity getByUuid(UUID uuid);
-    UserEntity getByEmail(String email);
-    UserEntity getByUsername(String username);
+public interface UserDao {
+    UserEntity getByUuid(UUID uuid) throws SQLException;
 
-    void save(UserEntity user);
+    UserEntity getByEmail(String email) throws SQLException;
+
+    UserEntity getByUsername(String username) throws SQLException;
+
+    void save(UserEntity user) throws SQLException;
 }

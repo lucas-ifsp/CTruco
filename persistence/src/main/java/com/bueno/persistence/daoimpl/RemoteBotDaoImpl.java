@@ -5,6 +5,7 @@ import com.bueno.persistence.dao.RemoteBotDao;
 import com.bueno.persistence.dto.RemoteBotEntity;
 import com.bueno.persistence.dto.UserEntity;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class RemoteBotDaoImpl implements RemoteBotDao {
 
     @Override
-    public List<RemoteBotEntity> findAll() throws SQLException{
+    public List<RemoteBotEntity> findAll() throws SQLException {
         try (Statement statement = ConnectionFactory.createStatement()) {
             List<RemoteBotEntity> bots = new ArrayList<>();
             ResultSet res = statement.executeQuery("SELECT * FROM remote_bot;");
@@ -32,9 +33,8 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
     }
 
     @Override
-    public RemoteBotEntity getById(UUID uuid) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            ResultSet res = statement.executeQuery(" SELECT * FROM remote_bot WHERE uuid = " + uuid + ";");
+    public RemoteBotEntity getByUuid(UUID uuid) throws SQLException {
+        try (ResultSet res = SelectRemoteBotByAttribute(uuid.toString(), "uuid")) {
             if (res.next()) {
                 return new RemoteBotEntity(
                         UUID.fromString(res.getString("uuid")),
@@ -50,8 +50,7 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
 
     @Override
     public Optional<RemoteBotEntity> getByName(String name) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            ResultSet res = statement.executeQuery(" SELECT * FROM remote_bot WHERE name = " + name + ";");
+        try (ResultSet res = SelectRemoteBotByAttribute(name, "name")) {
             if (res.next()) {
                 return Optional.of(new RemoteBotEntity(
                         UUID.fromString(res.getString("uuid")),
@@ -69,7 +68,9 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
     public List<RemoteBotEntity> getRemoteBotEntitiesByUser(UserEntity userEntity) throws SQLException {
         try (Statement statement = ConnectionFactory.createStatement()) {
             List<RemoteBotEntity> bots = new ArrayList<>();
-            ResultSet res = statement.executeQuery("SELECT * FROM remote_bot b WHERE(SELECT * FROM app_user u WHERE u.uuid = b.user_uuid);");
+            ResultSet res = statement.executeQuery("""
+                    SELECT * FROM remote_bot b WHERE(SELECT * FROM app_user u WHERE u.uuid = b.user_uuid);
+                    """);
             while (res.next()) {
                 bots.add(new RemoteBotEntity(
                         UUID.fromString(res.getString("uuid")),
@@ -85,40 +86,43 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
 
     @Override
     public boolean existsByName(String name) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            ResultSet res = statement.executeQuery(" SELECT * FROM remote_bot WHERE name = " + name + ";");
+        try (ResultSet res = SelectRemoteBotByAttribute(name, "name")) {
             return res.next();
         }
     }
 
     @Override
     public void save(RemoteBotEntity bot) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            String sql = "INSERT INTO remote_bot(uuid,user_uuid,name,url,port) " +
-                         "VALUES (" +
-                         bot.getUuid() +
-                         "," +
-                         bot.getUserUuid() +
-                         "," +
-                         bot.getName() +
-                         "," +
-                         bot.getPort() +
-                         "," +
-                         bot.getUrl() +
-                         ");";
-            ResultSet res = statement.executeQuery(sql);
+        String sql = """
+                INSERT INTO remote_bot(uuid,user_uuid,name,url,port)
+                        VALUES ( ? , ? , ? , ? , ?);
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setString(1, bot.getUuid().toString());
+            preparedStatement.setString(2, bot.getUserUuid().toString());
+            preparedStatement.setString(3, bot.getName());
+            preparedStatement.setString(4, bot.getUrl());
+            preparedStatement.setString(5, bot.getPort());
+            ResultSet res = preparedStatement.executeQuery(sql);
 
         }
     }
 
     @Override
     public void delete(RemoteBotEntity bot) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            String sql = "DELETE FROM remote_bot WHERE uuid = " + bot.getUuid() + ";";
-            ResultSet res = statement.executeQuery(sql);
-
+        String sql = "DELETE FROM remote_bot WHERE uuid = ? ;";
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setString(1, bot.getUuid().toString());
+            preparedStatement.executeQuery();
         }
     }
 
-
+    private static ResultSet SelectRemoteBotByAttribute(String value, String type) throws SQLException {
+        String sql = "SELECT * FROM remote_bot WHERE ? = ? ;";
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setString(1, type);
+            preparedStatement.setString(2, value);
+            return preparedStatement.executeQuery();
+        }
+    }
 }

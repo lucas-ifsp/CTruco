@@ -63,7 +63,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     public Optional<RemoteBotDto> findById(UUID uuid) {
         final RemoteBotEntity dto;
         try {
-            dto = dao.getById(uuid);
+            dto = dao.getByUuid(uuid);
             return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage() +
@@ -87,7 +87,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         try {
             dao.delete(Objects.requireNonNull(RemoteBotEntity.from(dto)));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot." +
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name() +
                                "\n" + Arrays.toString(e.getStackTrace()));
         }
     }
