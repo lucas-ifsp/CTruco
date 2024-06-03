@@ -29,6 +29,7 @@ import com.bueno.persistence.dto.GameResultEntity;
 import com.bueno.persistence.dto.GameResultQR;
 import org.springframework.data.domain.Pageable;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,17 +48,30 @@ public class GameResultRepositoryImpl implements GameResultRepository {
     }
 
     @Override
-    public List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers){
-        return repo.findTopWinners(Pageable.ofSize(maxNumberOfUsers)).stream()
-                .map(playerWins -> new PlayerWinsDto(playerWins.getUsername(), playerWins.getWins().intValue()))
-                .toList();
+    public List<PlayerWinsDto> findTopWinners(Integer maxNumberOfUsers) {
+        try {
+            return repo.findTopWinners(Pageable.ofSize(maxNumberOfUsers)).stream()
+                    .map(playerWins -> new PlayerWinsDto(playerWins.userName(), playerWins.wins().intValue()))
+                    .toList();
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return List.of();
     }
 
     @Override
     public List<GameResultUsernamesDto> findAllByUserUuid(UUID uuid) {
-        final List<GameResultQR> result = repo.findAllByPlayerUuid(uuid);
-        return result.stream()
-                .map(r -> new GameResultUsernamesDto(r.getEnding(), r.getPlayer1(), r.getPlayer2(), r.getWinner()))
-                .toList();
+        final List<GameResultQR> result;
+        try {
+            result = repo.findAllByPlayerUuid(uuid);
+            return result.stream()
+                    .map(r -> new GameResultUsernamesDto(r.ending(), r.player1(), r.player2(), r.winner()))
+                    .toList();
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return List.of();
     }
 }
