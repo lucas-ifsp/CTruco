@@ -26,8 +26,6 @@ import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
-import com.remote.RemoteBotApiAdapter;
 
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +75,7 @@ public class PlayWithBots {
     }
 
     private List<PlayWithBotsDto> playBotsStarter() {
-        final var useCase = new PlayWithBotsUseCase(repository, botApi);
+        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi);
         return useCase.playWithBots(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
 
