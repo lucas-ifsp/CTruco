@@ -33,43 +33,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
-public interface GameResultDao{
+public interface GameResultDao {
 
-    @Query("""
-            SELECT a.username as username, count(a.username) as wins
-            FROM UserEntity a
-            RIGHT JOIN GameResultEntity b ON a.uuid = b.winnerUuid
-            GROUP BY username
-            ORDER BY username
-            """
-    )
     List<PlayerWinsQR> findTopWinners(Pageable pageable) throws SQLException;
 
-    @Query(
-            value = """
-            SELECT ending_time ending, temp1.p1 player1, temp2.p2 player2, temp3.win winner FROM
-                (SELECT game_id, player1 p1_uuid, username p1, game_end_time ending_time FROM app_user app
-                LEFT JOIN game_result game ON app.id = game.player1
-                WHERE game.player1 = :uuid OR game.player2 = :uuid
-                ) AS temp1
-            INNER JOIN
-                (SELECT game_id, player2 p2_uuid, username p2 FROM app_user app
-                LEFT JOIN game_result game ON app.id = game.player2
-                 WHERE game.player1 = :uuid OR game.player2 = :uuid
-                ) AS temp2
-            ON temp1.game_id = temp2.game_id
-            INNER JOIN
-                (SELECT game_id, winner win_uuid, username win  FROM app_user app
-                LEFT JOIN game_result game ON app.id = game.winner
-                 WHERE game.player1 = :uuid OR game.player2 = :uuid
-                ) AS temp3
-            ON temp1.game_id = temp3.game_id
-            ORDER BY ending_time DESC
-            """
-            , nativeQuery = true
-    )
-    List<GameResultQR> findAllByPlayerUuid(@Param("uuid") UUID uuid) throws SQLException;
+    List<GameResultQR> findAllByPlayerUuid(UUID uuid) throws SQLException;
 
-    void save(GameResultEntity game);
+    void save(GameResultEntity game) throws SQLException;
 }

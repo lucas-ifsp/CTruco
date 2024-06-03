@@ -31,11 +31,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @ToString
-@Entity
-@Table(name = "APP_USER")
 public class UserEntity {
-    @Id
-    @Column(name = "ID")
+//    @Id
+//    @Column(name = "ID")
     private UUID uuid;
     private String username;
     private String email;

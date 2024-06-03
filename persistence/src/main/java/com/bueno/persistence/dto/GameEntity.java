@@ -38,9 +38,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document
 public class GameEntity {
-    @Id
     private UUID id;
     private LocalDateTime timestamp;
     private UUID player1;

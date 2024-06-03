@@ -35,7 +35,7 @@ public class BotManagerService {
 
         List<BotServiceProvider> bots = new ArrayList<>(spiProviders.toList());
 
-        List<BotServiceProvider> remoteOnes = repository.findAll().stream()
+        List<BotServiceProvider> remoteOnes = repository.findAll().stream()//TODO - Fazer um cache disso aqui.
                 .map(this::toBotServiceProvider)
                 .toList();
 

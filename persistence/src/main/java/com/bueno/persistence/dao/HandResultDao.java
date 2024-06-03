@@ -26,7 +26,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
-@Repository
+
 public interface HandResultDao {
 
     void save(HandResultEntity hand) throws SQLException;

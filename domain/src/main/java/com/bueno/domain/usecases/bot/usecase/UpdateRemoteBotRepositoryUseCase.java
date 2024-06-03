@@ -24,7 +24,7 @@ public class UpdateRemoteBotRepositoryUseCase {
     }
 
 
-    public RemoteBotResponseModel update(String botName, RemoteBotRequestModel requestDto) {// TODO - Implementar método update e fazer as verificações necessárias
+    public RemoteBotResponseModel update(String botName, RemoteBotRequestModel requestDto) {
 
         Objects.requireNonNull(requestDto, "request is null");
         Objects.requireNonNull(botName, "botName is null");

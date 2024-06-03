@@ -24,6 +24,7 @@ import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
+import com.bueno.persistence.DataBaseBuilder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,6 +39,8 @@ import java.util.UUID;
 @EnableScheduling
 public class WebApp {
     public static void main(String[] args) {
+        DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
+        dataBaseBuilder.buildDataBaseIfMissing();
         SpringApplication.run(WebApp.class, args);
     }
     @Bean

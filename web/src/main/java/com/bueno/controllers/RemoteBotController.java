@@ -35,7 +35,7 @@ public class RemoteBotController {
     }
 
     @GetMapping
-    private ResponseEntity<?> getAllRemoteOnes() {// TODO - Construir o Response Model no próprio RemoteBotController ou n?
+    private ResponseEntity<?> getAllRemoteOnes() {
         return ResponseEntity.ok(getRemoteBotRepositoryUseCase.getAll());
     }
 

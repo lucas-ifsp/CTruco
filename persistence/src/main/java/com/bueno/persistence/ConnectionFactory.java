@@ -1,7 +1,5 @@
 package com.bueno.persistence;
 
-import org.postgresql.ds.PGSimpleDataSource;
-
 import java.sql.*;
 
 public class ConnectionFactory implements AutoCloseable {
@@ -26,7 +24,8 @@ public class ConnectionFactory implements AutoCloseable {
     }
 
     public static PreparedStatement createPreparedStatement(String sql) {
-        try (Connection con = createConnection()){
+        try{
+            Connection con = createConnection();
             preparedStatement = con.prepareStatement(sql);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -35,7 +34,8 @@ public class ConnectionFactory implements AutoCloseable {
     }
 
     public static Statement createStatement() {
-        try(Connection con = createConnection()) {
+        try{
+            Connection con = createConnection();
             statement = con.createStatement();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

@@ -36,25 +36,14 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "GAME_RESULT")
 public class GameResultEntity {
-    @Id
-    @Column(name = "GAME_ID")
     private UUID gameUuid;
-    @Column(name = "GAME_START_TIME")
     private LocalDateTime gameStart;
-    @Column(name = "GAME_END_TIME")
     private LocalDateTime gameEnd;
-    @Column(name = "WINNER")
     private UUID winnerUuid;
-    @Column(name = "PLAYER1")
     private UUID player1Uuid;
-    @Column(name = "PLAYER1_SCORE")
     private int player1Score;
-    @Column(name = "PLAYER2")
     private UUID player2Uuid;
-    @Column(name = "PLAYER2_SCORE")
     private int player2Score;
 
 
