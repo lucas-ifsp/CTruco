@@ -20,7 +20,5 @@
 
 package com.bueno.persistence.dto;
 
-public interface PlayerWinsQR {
-    String getUsername();
-    Long getWins();
+public record PlayerWinsQR(String userName, Long wins) {
 }

@@ -26,8 +26,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         try {
             return dao.findAll().stream().map(RemoteBotEntity::toRemoteBotDto).toList();
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
             return List.of();
         }
     }
@@ -38,8 +38,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             dto = dao.getByName(name).orElseThrow(() -> new EntityNotFoundException("bot not found"));
             return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -53,8 +53,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
                             .orElseThrow(() -> new EntityNotFoundException("User not found"))));
             return botEntities.stream().map(RemoteBotEntity::toRemoteBotDto).toList();
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
             return List.of();
         }
     }
@@ -66,8 +66,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             dto = dao.getByUuid(uuid);
             return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
             return Optional.empty();
         }
     }
@@ -77,8 +77,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         try {
             dao.save(Objects.requireNonNull(RemoteBotEntity.from(dto)));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot." +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
+            e.printStackTrace();
         }
     }
 
@@ -87,8 +87,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         try {
             dao.delete(Objects.requireNonNull(RemoteBotEntity.from(dto)));
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name() +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name());
+            e.printStackTrace();
         }
     }
 
@@ -97,8 +97,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         try {
             return dao.existsByName(botName);
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot." +
-                               "\n" + Arrays.toString(e.getStackTrace()));
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
+            e.printStackTrace();
             return false;
         }
     }

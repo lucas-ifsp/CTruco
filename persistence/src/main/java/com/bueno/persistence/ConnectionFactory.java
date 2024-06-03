@@ -2,10 +2,7 @@ package com.bueno.persistence;
 
 import org.postgresql.ds.PGSimpleDataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ConnectionFactory implements AutoCloseable {
 
@@ -23,17 +20,14 @@ public class ConnectionFactory implements AutoCloseable {
     }
 
     private static void instantiateConnectionIfNull() throws SQLException {
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/ctruco");
-        dataSource.setUser("postgres");
-        dataSource.setPassword("2902909090gc");
+        Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ctruco","postgres","2902909090gc");
 
-        if (connection == null) connection = dataSource.getConnection();
+        if (connection == null) connection = con;
     }
 
     public static PreparedStatement createPreparedStatement(String sql) {
-        try {
-            preparedStatement = createConnection().prepareStatement(sql);
+        try (Connection con = createConnection()){
+            preparedStatement = con.prepareStatement(sql);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -41,8 +35,8 @@ public class ConnectionFactory implements AutoCloseable {
     }
 
     public static Statement createStatement() {
-        try {
-            statement = createConnection().createStatement();
+        try(Connection con = createConnection()) {
+            statement = con.createStatement();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

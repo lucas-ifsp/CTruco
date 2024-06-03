@@ -6,7 +6,6 @@ import com.bueno.persistence.dto.HandResultEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class HandResultDaoImpl implements HandResultDao {
 
@@ -16,7 +15,7 @@ public class HandResultDaoImpl implements HandResultDao {
                 INSERT INTO hand_results(id,hand_type,game_uuid,hand_winner,points,points_proposal)
                 VALUES (?, ?, ?, ?, ?, ?);
                 """;
-        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {// TODO - estudar Try/Catch with resources;
             preparedStatement.setLong(1, hand.getId());
             preparedStatement.setString(2, hand.getHandType());
             preparedStatement.setString(3, hand.getGameUuid().toString());

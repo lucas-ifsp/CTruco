@@ -32,7 +32,10 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
+import com.bueno.persistence.daoimpl.UserDaoImpl;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
+import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 
 import java.util.*;
@@ -66,7 +69,7 @@ public class PlayAgainstBots {
 
     public PlayAgainstBots() {
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        final var remoteBotRepo = new RemoteBotRepositoryFileImpl();
+        final var remoteBotRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),new UserRepositoryImpl(new UserDaoImpl()));// TODO - mudar essa coisa feia
         final var remoteBotApi = new RemoteBotApiAdapter();
         gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi);
         playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi);
