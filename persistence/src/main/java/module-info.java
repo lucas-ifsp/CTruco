@@ -13,4 +13,5 @@ module application.persistence {
     exports com.bueno.persistence.repositories;
     exports com.bueno.persistence.dao;
     exports com.bueno.persistence.dto;
+    exports com.bueno.persistence.daoimpl;
 }

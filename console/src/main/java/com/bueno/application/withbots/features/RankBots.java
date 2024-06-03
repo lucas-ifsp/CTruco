@@ -5,8 +5,6 @@ import com.bueno.application.withbots.commands.WaitingMessagePrinter;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.usecase.RankBotsUseCase;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
-import com.remote.RemoteBotApiAdapter;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -15,12 +13,12 @@ import java.util.stream.Collectors;
 
 public class RankBots {
 
-    final RemoteBotRepository repository;
-    final RemoteBotApi api;
+    private final RemoteBotRepository repository;
+    private final RemoteBotApi api;
 
-    public RankBots() {
-        repository = new RemoteBotRepositoryFileImpl();
-        api = new RemoteBotApiAdapter();
+    public RankBots(RemoteBotRepository repository, RemoteBotApi api) {
+        this.repository = repository;
+        this.api = api;
     }
 
     public void allBots() {
@@ -46,7 +44,7 @@ public class RankBots {
     }
 
     private Map<String, Long> sortByValueDescending(Map<String, Long> mapToSort) {
-        return  mapToSort.entrySet().stream()
+        return mapToSort.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }

@@ -55,11 +55,11 @@ public class ExecuteMenu implements Command<Void> {
                 playBots.playWithBotsConsole();
             }
             case "3" ->{
-                final var evaluateBot = new EvaluateBot();
+                final var evaluateBot = new EvaluateBot(repository,botApi);
                 evaluateBot.againstAll();
             }
             case"4"->{
-                final var rank = new RankBots();
+                final var rank = new RankBots(repository,botApi);
                 rank.allBots();
             }
             default -> System.out.println("invalid Answer! \n");

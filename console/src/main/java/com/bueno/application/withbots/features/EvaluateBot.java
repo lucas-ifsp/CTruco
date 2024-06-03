@@ -9,7 +9,6 @@ import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
 import com.remote.RemoteBotApiAdapter;
 
 import java.util.List;
@@ -19,13 +18,12 @@ public class EvaluateBot {
     private final RemoteBotRepository repository;
     private final RemoteBotApi botApi;
 
-    public EvaluateBot() {
-        repository = new RemoteBotRepositoryFileImpl();
-        botApi = new RemoteBotApiAdapter();
+    public EvaluateBot(RemoteBotRepository repository, RemoteBotApi botApi) {
+        this.repository = repository;
+        this.botApi = botApi;
     }
 
     public void againstAll() {
-        RemoteBotRepository repository = new RemoteBotRepositoryFileImpl();
         RemoteBotApi botApi = new RemoteBotApiAdapter();
         BotManagerService providerService = new BotManagerService(repository, botApi);
         final var botNames = providerService.providersNames();
