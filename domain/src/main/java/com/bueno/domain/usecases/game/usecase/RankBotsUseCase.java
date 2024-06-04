@@ -19,13 +19,14 @@ public class RankBotsUseCase {
     private final RemoteBotApi remoteBotApi;
     private final Map<String, Long> rankMap;
     private final List<String> botNames;
+    private final BotManagerService botManagerService;
 
     public RankBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi) {
         rankMap = new HashMap<>();
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
-        var botProviderService = new BotManagerService(remoteBotRepository, remoteBotApi);
-        botNames = botProviderService.providersNames();
+        botManagerService = new BotManagerService(remoteBotRepository, remoteBotApi);
+        botNames = botManagerService.providersNames();
     }
 
     public Map<String, Long> rankAll() {
@@ -50,7 +51,7 @@ public class RankBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
-        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi);
+        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi,botManagerService);
         return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName,UUID.randomUUID(), challengedBotName, TIMES);
     }
 

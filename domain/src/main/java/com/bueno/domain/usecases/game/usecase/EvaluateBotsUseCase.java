@@ -1,5 +1,6 @@
 package com.bueno.domain.usecases.game.usecase;
 
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
@@ -19,12 +20,14 @@ public class EvaluateBotsUseCase {
     private final String botToEvaluateName;
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi botApi;
+    private final BotManagerService providerService;
 
     // TODO usar o construtor apenas para injeção de dependência. Pensar em outra forma de passar o botToEvaliate name. Provavelmente no método que faz a avaliação.
-    public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, String botToEvaluateName) {
+    public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, String botToEvaluateName, BotManagerService providerService) {
         this.botToEvaluateName = botToEvaluateName;
         this.remoteBotRepository = remoteBotRepository;
         this.botApi = botApi;
+        this.providerService = providerService;
     }
 
     public EvaluateResultsDto getResults(List<String> botNames) {
@@ -48,7 +51,7 @@ public class EvaluateBotsUseCase {
     }
 
     private List<PlayWithBotsDto> runSimulations(String challengedBotName) {
-        final var playManyService = new SimulationService(remoteBotRepository, botApi);
+        final var playManyService = new SimulationService(remoteBotRepository, botApi,providerService);
         return playManyService.runInParallel(uuidBotToEvaluate, botToEvaluateName,UUID.randomUUID(), challengedBotName, TIMES);
     }
 

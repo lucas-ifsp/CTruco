@@ -5,7 +5,6 @@ import com.bueno.persistence.dao.RemoteBotDao;
 import com.bueno.persistence.dto.RemoteBotEntity;
 import com.bueno.persistence.dto.UserEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,7 +30,7 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
 
     @Override
     public RemoteBotEntity getByUuid(UUID uuid) throws SQLException {
-        try (ResultSet res = SelectRemoteBotByAttribute(uuid.toString(), "uuid")) {
+        try (ResultSet res = SelectRemoteBotByUUID(uuid.toString())) {
             if (res.next()) {
                 return new RemoteBotEntity(
                         UUID.fromString(res.getString("uuid")),
@@ -47,19 +45,17 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
     }
 
     @Override
-    public Optional<RemoteBotEntity> getByName(String name) throws SQLException {
-        try (ResultSet res = SelectRemoteBotByAttribute(name, "name")) {
-            if (res.next()) {
-                return Optional.of(new RemoteBotEntity(
-                        UUID.fromString(res.getString("uuid")),
-                        UUID.fromString(res.getString("user_uuid")),
-                        res.getString("name"),
-                        res.getString("url"),
-                        res.getString("port")
-                ));
-            }
+    public RemoteBotEntity getByName(String name) throws SQLException {
+        try (ResultSet res = SelectRemoteBotByName(name)) {
+            res.next();
+            return new RemoteBotEntity(
+                    UUID.fromString(res.getString("uuid")),
+                    UUID.fromString(res.getString("user_uuid")),
+                    res.getString("name"),
+                    res.getString("url"),
+                    res.getString("port")
+            );
         }
-        return Optional.empty();
     }
 
     @Override
@@ -67,7 +63,7 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
         try (Statement statement = ConnectionFactory.createStatement()) {
             List<RemoteBotEntity> bots = new ArrayList<>();
             ResultSet res = statement.executeQuery("""
-                    SELECT * FROM remote_bot b WHERE(SELECT * FROM app_user u WHERE u.uuid = b.user_uuid);
+                    SELECT * FROM remote_bot b WHERE b.user_uuid = (SELECT uuid FROM app_user u WHERE u.uuid = b.user_uuid);
                     """);
             while (res.next()) {
                 bots.add(new RemoteBotEntity(
@@ -84,8 +80,8 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
 
     @Override
     public boolean existsByName(String name) throws SQLException {
-        try (ResultSet res = SelectRemoteBotByAttribute(name, "name")) {
-            return res.next();
+        try (ResultSet res = SelectRemoteBotByName(name)) {
+            return !res.isClosed();
         }
     }
 
@@ -115,11 +111,18 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
         }
     }
 
-    private static ResultSet SelectRemoteBotByAttribute(String value, String type) throws SQLException {
-        String sql = "SELECT * FROM remote_bot WHERE ? = ? ;";
+    private static ResultSet SelectRemoteBotByName(String value) throws SQLException {
+        String sql = "SELECT * FROM remote_bot WHERE name = ? ;";
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
-            preparedStatement.setString(1, type);
-            preparedStatement.setString(2, value);
+            preparedStatement.setString(1, value);
+            return preparedStatement.executeQuery();
+        }
+    }
+
+    private static ResultSet SelectRemoteBotByUUID(String value) throws SQLException {
+        String sql = "SELECT * FROM remote_bot WHERE uuid = ? ;";
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setString(1, value);
             return preparedStatement.executeQuery();
         }
     }

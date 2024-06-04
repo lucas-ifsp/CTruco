@@ -64,7 +64,7 @@ public class PlayWithBots {
         bot2Name = botNames.get(bot2 - 1);
 
         final long start = System.currentTimeMillis();
-        final var results = playBotsStarter();
+        final var results = playBotsStarter(botManagerService);
         final long end = System.currentTimeMillis();
         printResult(times, (end - start), results);
     }
@@ -74,8 +74,8 @@ public class PlayWithBots {
         return scanSimulations.execute();
     }
 
-    private List<PlayWithBotsDto> playBotsStarter() {
-        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi);
+    private List<PlayWithBotsDto> playBotsStarter(BotManagerService botManagerService) {
+        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi,botManagerService);
         return useCase.playWithBots(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
 

@@ -26,6 +26,7 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.converter.GameConverter;
@@ -90,7 +91,7 @@ class PlayCardUseCaseTest {
 
         repo = new GameRepositoryInMemoryImpl();
         game = new Game(player1, player2, deck);
-        sut = new PlayCardUseCase(repo, remoteRepository, remoteBotApi);
+        sut = new PlayCardUseCase(repo, remoteRepository, remoteBotApi,new BotManagerService(remoteRepository,remoteBotApi));
     }
 
     @AfterEach

@@ -3,16 +3,20 @@ package com.bueno.domain.usecases.bot.providers;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.spi.service.BotServiceProvider;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 public class BotManagerService {
 
     private final RemoteBotRepository repository;
     private final RemoteBotApi api;
+    private boolean cacheAlreadyUpdated;
+    private final List<BotServiceProvider> remoteBotsCache = new ArrayList<>();
 
     public BotManagerService(RemoteBotRepository repository, RemoteBotApi api) {
         this.repository = repository;
@@ -35,11 +39,14 @@ public class BotManagerService {
 
         List<BotServiceProvider> bots = new ArrayList<>(spiProviders.toList());
 
-        List<BotServiceProvider> remoteOnes = repository.findAll().stream()//TODO - Fazer um cache disso aqui.
-                .map(this::toBotServiceProvider)
-                .toList();
+        if (!cacheAlreadyUpdated) {
+             remoteBotsCache.addAll(repository.findAll().stream()
+                    .map(this::toBotServiceProvider)
+                    .toList());
+             cacheAlreadyUpdated = true;
+        }
+        bots.addAll(remoteBotsCache);
 
-        bots.addAll(remoteOnes);
         return bots.stream();
     }
 

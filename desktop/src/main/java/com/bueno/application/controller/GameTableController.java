@@ -22,7 +22,7 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
-import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
@@ -33,7 +33,11 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
+import com.bueno.persistence.daoimpl.UserDaoImpl;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
+import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -99,12 +103,14 @@ public class GameTableController {
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
+        final var userRepo = new UserRepositoryImpl(new UserDaoImpl());
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        final var botRepo = new RemoteBotRepositoryFileImpl();
+        final var botRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),userRepo);
         final var botApi = new RemoteBotApiAdapter();
-        gameUseCase = new CreateGameUseCase(gameRepo, botRepo, botApi);
-        playCardUseCase = new PlayCardUseCase(gameRepo, botRepo, botApi);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, botRepo, botApi);
+        final var botManagerService = new BotManagerService(botRepo,botApi);
+        gameUseCase = new CreateGameUseCase(gameRepo, botRepo, botApi,botManagerService);
+        playCardUseCase = new PlayCardUseCase(gameRepo, botRepo, botApi,botManagerService);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, botRepo, botApi,botManagerService);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
