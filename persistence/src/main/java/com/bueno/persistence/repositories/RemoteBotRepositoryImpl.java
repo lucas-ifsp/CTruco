@@ -37,7 +37,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     public Optional<RemoteBotDto> findByName(String name) {
         final RemoteBotEntity dto;
         try {
-            dto = dao.getByName(name).orElseThrow(() -> new EntityNotFoundException("bot not found"));
+            dto = dao.getByName(name);
+            Objects.requireNonNull(dto,"dto is null on RemoteBotRepositoryImpl");
             return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage());

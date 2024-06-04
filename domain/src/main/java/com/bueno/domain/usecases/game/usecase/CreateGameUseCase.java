@@ -50,18 +50,20 @@ public class CreateGameUseCase {
     private final UserRepository userRepo;
     private final RemoteBotRepository botRepository;
     private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
 
     @Autowired
     public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo,
-                             RemoteBotRepository botRepository, RemoteBotApi remoteBotApi) {
+                             RemoteBotRepository botRepository, RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
         this.userRepo = userRepo;
         this.botRepository = Objects.requireNonNull(botRepository);
         this.remoteBotApi = Objects.requireNonNull(remoteBotApi);
+        this.botManagerService = botManagerService;
     }
 
-    public CreateGameUseCase(GameRepository gameRepo, RemoteBotRepository botRepository,RemoteBotApi remoteBotApi ) {
-        this(gameRepo, null, botRepository, remoteBotApi);
+    public CreateGameUseCase(GameRepository gameRepo, RemoteBotRepository botRepository, RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
+        this(gameRepo, null, botRepository, remoteBotApi, botManagerService);
     }
 
     public IntelDto createForUserAndBot(CreateForUserAndBotDto request){
@@ -82,8 +84,7 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    private boolean hasNoBotServiceWith(String botName) {
-        BotManagerService botManagerService = new BotManagerService(botRepository, remoteBotApi);
+    private boolean hasNoBotServiceWith(String botName) {// TODO - COISA AQUI
         return !Objects.requireNonNull(botManagerService.providersNames()).contains(botName);
     }
 

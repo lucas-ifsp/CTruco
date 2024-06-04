@@ -21,7 +21,6 @@
 package com.bueno.persistence.dao;
 
 import com.bueno.persistence.dto.UserEntity;
-import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.UUID;

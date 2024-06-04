@@ -5,14 +5,13 @@ import com.bueno.persistence.dto.UserEntity;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
 public interface RemoteBotDao {
     RemoteBotEntity getByUuid(UUID uuid) throws SQLException;
 
-    Optional<RemoteBotEntity> getByName(String username) throws SQLException;
+    RemoteBotEntity getByName(String username) throws SQLException;
 
     List<RemoteBotEntity> getRemoteBotEntitiesByUser(UserEntity userEntity) throws SQLException;
 

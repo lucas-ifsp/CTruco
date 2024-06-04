@@ -20,6 +20,7 @@
 
 package com.bueno.domain.usecases.game.usecase;
 
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
@@ -29,19 +30,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 public class PlayWithBotsUseCase {
 
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
 
-    public PlayWithBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi) {
+    public PlayWithBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
+        this.botManagerService = botManagerService;
     }
 
     public List<PlayWithBotsDto> playWithBots(UUID uuidBot1, String bot1Name,UUID uuidBot2, String bot2Name, int times) {
-        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi);
+        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
         return simulator.runInParallel(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
 }

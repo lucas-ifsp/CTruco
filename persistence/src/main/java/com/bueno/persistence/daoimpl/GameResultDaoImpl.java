@@ -7,11 +7,9 @@ import com.bueno.persistence.dto.GameResultQR;
 import com.bueno.persistence.dto.PlayerWinsQR;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

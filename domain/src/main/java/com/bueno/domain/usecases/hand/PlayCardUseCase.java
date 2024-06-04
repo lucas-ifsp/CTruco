@@ -25,6 +25,7 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.bot.usecase.BotUseCase;
@@ -48,11 +49,12 @@ public class PlayCardUseCase {
     private final BotUseCase botUseCase;
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
 
     public PlayCardUseCase(GameRepository gameRepository,
                            RemoteBotRepository remoteBotRepository,
-                           RemoteBotApi remoteBotApi) {
-        this(gameRepository, remoteBotRepository, remoteBotApi, null, null);
+                           RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
+        this(gameRepository, remoteBotRepository, remoteBotApi, null, null, botManagerService);
     }
 
     @Autowired
@@ -60,14 +62,15 @@ public class PlayCardUseCase {
                            RemoteBotRepository remoteBotRepository,
                            RemoteBotApi remoteBotApi,
                            GameResultRepository gameResultRepository,
-                           HandResultRepository handResultRepository) {
+                           HandResultRepository handResultRepository, BotManagerService botManagerService) {
 
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
-        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository);
+        this.botManagerService = botManagerService;
+        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository,botManagerService);
     }
 
     public IntelDto playCard(PlayCardDto request) {
@@ -99,7 +102,7 @@ public class PlayCardUseCase {
         gameRepository.update(GameConverter.toDto(game));
         if(gameResult != null) return gameResult;
 
-        botUseCase.playWhenNecessary(game);
+        botUseCase.playWhenNecessary(game,botManagerService);
 
         game = gameRepository.findByPlayerUuid(request.uuid()).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());

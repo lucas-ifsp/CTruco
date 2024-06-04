@@ -21,8 +21,7 @@
 package com.bueno.application.withuser;
 
 import com.bueno.application.withuser.commands.*;
-import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
-import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
@@ -68,12 +67,14 @@ public class PlayAgainstBots {
     }
 
     public PlayAgainstBots() {
+        final var userRepo = new UserRepositoryImpl(new UserDaoImpl());
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        final var remoteBotRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),new UserRepositoryImpl(new UserDaoImpl()));// TODO - mudar essa coisa feia
+        final var remoteBotRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),userRepo);
         final var remoteBotApi = new RemoteBotApiAdapter();
-        gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi);
-        playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi);
+        final var botManagerService = new BotManagerService(remoteBotRepo,remoteBotApi);
+        gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi,botManagerService);
+        playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi,botManagerService);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, botManagerService);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }

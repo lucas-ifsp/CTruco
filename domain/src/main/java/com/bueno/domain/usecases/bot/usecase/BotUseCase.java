@@ -37,6 +37,7 @@ import com.bueno.domain.usecases.hand.PlayCardUseCase;
 import com.bueno.domain.usecases.hand.PointsProposalUseCase;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.spi.service.BotServiceProvider;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
@@ -48,22 +49,24 @@ public class BotUseCase {
     private final HandResultRepository handResultRepo;
     private final RemoteBotRepository remoteBotRepo;
     private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
     private MaoDeOnzeHandler maoDeOnzeHandler;
     private RaiseHandler raiseHandler;
     private CardPlayingHandler cardHandler;
     private RaiseRequestHandler requestHandler;
 
-    public BotUseCase(GameRepository gameRepo, RemoteBotRepository remoteBotRepo, RemoteBotApi remoteBotApi) {
-        this(gameRepo, remoteBotRepo, remoteBotApi, null, null, null, null, null, null);
+
+    public BotUseCase(GameRepository gameRepo, RemoteBotRepository remoteBotRepo, RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
+        this(gameRepo, remoteBotRepo, remoteBotApi, null, null, botManagerService, null, null, null, null);
     }
 
     public BotUseCase(GameRepository gameRepo, RemoteBotRepository remoteBotRepo, RemoteBotApi remoteBotApi,
-                      GameResultRepository gameResultRepo, HandResultRepository handResultRepo) {
-        this(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo, null, null, null, null);
+                      GameResultRepository gameResultRepo, HandResultRepository handResultRepo, BotManagerService botManagerService) {
+        this(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo, botManagerService, null, null, null, null);
     }
 
     public BotUseCase(GameRepository gameRepo, RemoteBotRepository remoteBotRepo, RemoteBotApi remoteBotApi,
-                      GameResultRepository gameResultRepo, HandResultRepository handResultRepo,
+                      GameResultRepository gameResultRepo, HandResultRepository handResultRepo, BotManagerService botManagerService,
                       MaoDeOnzeHandler maoDeOnze, RaiseHandler raise, CardPlayingHandler card,
                       RaiseRequestHandler request) {
 
@@ -72,19 +75,19 @@ public class BotUseCase {
         this.remoteBotRepo = Objects.requireNonNull(remoteBotRepo);
         this.remoteBotApi = remoteBotApi;
         this.handResultRepo = handResultRepo;
+        this.botManagerService = botManagerService;
         this.maoDeOnzeHandler = maoDeOnze;
         this.raiseHandler = raise;
         this.cardHandler = card;
         this.requestHandler = request;
     }
 
-    public Intel playWhenNecessary(Game game) {
+    public Intel playWhenNecessary(Game game,BotManagerService botManagerService) {
         final Player currentPlayer = game.currentHand().getCurrentPlayer();
         final Intel intel = game.getIntel();
 
         if (!isBotTurn(currentPlayer, intel)) return intel;
-
-        BotManagerService botManagerService = new BotManagerService(remoteBotRepo, remoteBotApi);
+        
         initializeNullHandlers(botManagerService.load(currentPlayer.getUsername()));
 
         if (maoDeOnzeHandler.shouldHandle(intel))
@@ -113,19 +116,19 @@ public class BotUseCase {
     private void initializeNullHandlers(BotServiceProvider botService) {
         if (maoDeOnzeHandler == null)
             maoDeOnzeHandler = new MaoDeOnzeHandler(
-                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo),
+                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo,botManagerService),
                     botService);
         if (raiseHandler == null)
             raiseHandler = new RaiseHandler(
-                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo),
+                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo,botManagerService),
                     botService);
         if (cardHandler == null)
             cardHandler = new CardPlayingHandler(
-                    new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo),
+                    new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo,botManagerService),
                     botService);
         if (requestHandler == null)
             requestHandler = new RaiseRequestHandler(
-                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo),
+                    new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, gameResultRepo, handResultRepo,botManagerService),
                     botService);
     }
 }

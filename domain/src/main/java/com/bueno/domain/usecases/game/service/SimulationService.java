@@ -1,5 +1,6 @@
 package com.bueno.domain.usecases.game.service;
 
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.bot.usecase.BotUseCase;
@@ -20,10 +21,12 @@ import java.util.stream.Stream;
 public class SimulationService {
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
 
-    public SimulationService(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi) {
+    public SimulationService(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, BotManagerService providerService) {
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = botApi;
+        this.botManagerService = providerService;
     }
 
     public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate, String botToEvaluateName,UUID challengedBotuuid, String challengedBotName, int times ) {
@@ -42,13 +45,13 @@ public class SimulationService {
         GameRepository gameRepository = new GameRepoDisposableImpl();
 
         final var requestModel = new CreateForBotsDto(evaluatedUuid, evaluateName, challengedUuid, challengedName);
-        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository, remoteBotRepository, remoteBotApi);
+        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository, remoteBotRepository, remoteBotApi,botManagerService);
         createGameUseCase.createForBots(requestModel);
         final var game = gameRepository.findByPlayerUuid(requestModel.bot1Uuid()).map(GameConverter::fromDto).orElseThrow();
-        final var botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi);
+        final var botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi,botManagerService);
 
         //Plays the game
-        final var intel = botUseCase.playWhenNecessary(game);
+        final var intel = botUseCase.playWhenNecessary(game, botManagerService);
 
         final var winnerUUID = intel.gameWinner().orElseThrow();
         final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
