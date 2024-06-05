@@ -18,16 +18,13 @@ public class ConnectionFactory implements AutoCloseable {
     }
 
     private static void instantiateConnectionIfNull() throws SQLException {
-        if (connection == null){
+        if (connection == null)
             connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ctruco","postgres","2902909090gc");
-        }
-
     }
 
     public static PreparedStatement createPreparedStatement(String sql) {
         try{
-            Connection con = createConnection();
-            preparedStatement = con.prepareStatement(sql);
+            preparedStatement = createConnection().prepareStatement(sql);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -36,8 +33,7 @@ public class ConnectionFactory implements AutoCloseable {
 
     public static Statement createStatement() {
         try{
-            Connection con = createConnection();
-            statement = con.createStatement();
+            statement = createConnection().createStatement();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

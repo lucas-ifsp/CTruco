@@ -23,15 +23,16 @@ package com.bueno.persistence.dao;
 import com.bueno.persistence.dto.UserEntity;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 
 public interface UserDao {
-    UserEntity getByUuid(UUID uuid) throws SQLException;
+    Optional<UserEntity> getByUuid(UUID uuid) throws SQLException;
 
-    UserEntity getByEmail(String email) throws SQLException;
+    Optional<UserEntity> getByEmail(String email) throws SQLException;
 
-    UserEntity getByUsername(String username) throws SQLException;
+    Optional<UserEntity> getByUsername(String username) throws SQLException;
 
     void save(UserEntity user) throws SQLException;
 }

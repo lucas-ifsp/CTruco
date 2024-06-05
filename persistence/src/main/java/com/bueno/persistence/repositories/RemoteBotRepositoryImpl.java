@@ -35,11 +35,26 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     }
 
     public Optional<RemoteBotDto> findByName(String name) {
-        final RemoteBotEntity dto;
+        final Optional<RemoteBotEntity> dto;
         try {
             dto = dao.getByName(name);
-            Objects.requireNonNull(dto,"dto is null on RemoteBotRepositoryImpl");
-            return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
+            if (dto.isPresent()) {
+                return Optional.of(RemoteBotEntity.toRemoteBotDto(dto.get()));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    public Optional<RemoteBotDto> findById(UUID uuid) {
+        final Optional<RemoteBotEntity> dto;
+        try {
+            dto = dao.getByUuid(uuid);
+            if (dto.isPresent()) {
+                return Optional.of(RemoteBotEntity.toRemoteBotDto(dto.orElse(null)));
+            }
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage());
             e.printStackTrace();
@@ -62,18 +77,6 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
         }
     }
 
-
-    public Optional<RemoteBotDto> findById(UUID uuid) {
-        final RemoteBotEntity dto;
-        try {
-            dto = dao.getByUuid(uuid);
-            return Optional.of(RemoteBotEntity.toRemoteBotDto(dto));
-        } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage());
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }
 
     @Override
     public void save(RemoteBotDto dto) {
