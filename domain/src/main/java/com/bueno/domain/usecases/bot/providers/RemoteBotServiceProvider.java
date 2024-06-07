@@ -40,8 +40,4 @@ public class RemoteBotServiceProvider implements BotServiceProvider {
         return botData.name();
     }
 
-    public boolean isHeath(){
-        //TODO implementar um endpoint get para heath check. O nome ficará fixo do cadastro.
-        return true;
-    }
 }

@@ -10,5 +10,5 @@ public interface RemoteBotApi {
     boolean fetchRaiseRequestDecision(GameIntel intel, RemoteBotDto botData);
     CardToPlay fetchCardToPlay(GameIntel intel, RemoteBotDto botData) ;
     int fetchRaiseResponse(GameIntel intel, RemoteBotDto botData) ;
-    boolean isHealthy();
+    boolean isHealthy(RemoteBotDto botData);
 }

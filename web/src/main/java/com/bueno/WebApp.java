@@ -20,6 +20,9 @@
 
 package com.bueno;
 
+import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
@@ -32,13 +35,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SpringBootApplication
 @EnableScheduling
 public class WebApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
         dataBaseBuilder.buildDataBaseIfMissing();
         SpringApplication.run(WebApp.class, args);
@@ -46,7 +50,8 @@ public class WebApp {
     @Bean
     CommandLineRunner run(RegisterUserUseCase registerUserUseCase,
                           GameResultRepository gameResultRepository,
-                          PasswordEncoder encoder){
+                          PasswordEncoder encoder,
+                            RemoteBotRepository botRepository){
         return args -> {
             final String encodedPassword = encoder.encode("123123");
             final RegisterUserRequestDto defaultUser = new RegisterUserRequestDto("Lucas", encodedPassword, "lucas.ruas@gmail.com");
@@ -55,7 +60,8 @@ public class WebApp {
             final UUID defaultUuid = registerUserUseCase.create(defaultUser).uuid();
             final UUID user1Uuid = registerUserUseCase.create(user1).uuid();
             final UUID user2Uuid = registerUserUseCase.create(user2).uuid();
-
+            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(),defaultUuid,"Remote Bot","http://localhost:","8030");
+            botRepository.save(remoteBot);
             for (int i = 0; i < 30; i++) {
                 gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
                         LocalDateTime.now(), defaultUuid, defaultUuid, 12, user1Uuid, 3));

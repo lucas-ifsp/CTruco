@@ -5,6 +5,8 @@ import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.spi.service.BotServiceProvider;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -13,10 +15,12 @@ import java.util.stream.Stream;
 @Service
 public class BotManagerService {
 
+    private static final int HEALTH_CHECK_PERIOD = 2;
+
     private final RemoteBotRepository repository;
     private final RemoteBotApi api;
-    private boolean cacheAlreadyUpdated;
     private final List<BotServiceProvider> remoteBotsCache = new ArrayList<>();
+    private Instant lastCheck;
 
     public BotManagerService(RemoteBotRepository repository, RemoteBotApi api) {
         this.repository = repository;
@@ -30,7 +34,7 @@ public class BotManagerService {
     }
 
     public List<String> providersNames() {
-        return providers().map(BotServiceProvider::getName).filter(Objects::nonNull).collect(Collectors.toList());
+        return providers().map(BotServiceProvider::getName).filter(Objects::nonNull).collect(Collectors.toList());// TODO - fazer health check em um período de tempo
     }
 
     private Stream<BotServiceProvider> providers() {
@@ -39,15 +43,20 @@ public class BotManagerService {
 
         List<BotServiceProvider> bots = new ArrayList<>(spiProviders.toList());
 
-        if (!cacheAlreadyUpdated) {
-             remoteBotsCache.addAll(repository.findAll().stream()
+        if (lastCheck == null || Duration.between(lastCheck, Instant.now()).toMinutes() > HEALTH_CHECK_PERIOD) {
+            remoteBotsCache.addAll(repository.findAll().stream()
+                    .filter(this::isHealth)
                     .map(this::toBotServiceProvider)
                     .toList());
-             cacheAlreadyUpdated = true;
+            lastCheck = Instant.now();
         }
         bots.addAll(remoteBotsCache);
 
         return bots.stream();
+    }
+
+    private boolean isHealth(RemoteBotDto dto) {
+        return api.isHealthy(dto);
     }
 
     private BotServiceProvider toBotServiceProvider(RemoteBotDto dto) {

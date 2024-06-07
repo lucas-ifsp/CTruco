@@ -38,7 +38,6 @@ import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 
 import java.util.*;
-import java.util.logging.LogManager;
 
 import static com.bueno.application.withuser.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.withuser.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
@@ -54,27 +53,26 @@ public class PlayAgainstBots {
     private IntelDto lastIntel;
     private UUID userUUID;
 
-    public static void main(String[] args) {
-        LogManager.getLogManager().reset();
-        final var cli = new PlayAgainstBots();
-        cli.createGame();
-        cli.play();
-    }
+//    public static void main(String[] args) {
+//        LogManager.getLogManager().reset();
+//        final var cli = new PlayAgainstBots();
+//        cli.createGame();
+//        cli.play();
+//    }
 
     public void gameCLIStarter() {
         createGame();
         play();
     }
 
-    public PlayAgainstBots() {
+    public PlayAgainstBots(BotManagerService providerService) {
         final var userRepo = new UserRepositoryImpl(new UserDaoImpl());
         final var gameRepo = new GameRepositoryInMemoryImpl();
         final var remoteBotRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),userRepo);
         final var remoteBotApi = new RemoteBotApiAdapter();
-        final var botManagerService = new BotManagerService(remoteBotRepo,remoteBotApi);
-        gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi,botManagerService);
-        playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi,botManagerService);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, botManagerService);
+        gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi,providerService);
+        playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi,providerService);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }

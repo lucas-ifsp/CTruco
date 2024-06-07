@@ -4,4 +4,5 @@ module application.console {
     requires com.google.common;
     requires application.persistence;
     requires bot.impl;
+    requires java.sql;
 }

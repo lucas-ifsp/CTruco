@@ -10,11 +10,11 @@ import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 
+import java.sql.SQLException;
+
 public class ConsoleStarter {
 
-
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
         dataBaseBuilder.buildDataBaseIfMissing();
         ConsoleStarter console = new ConsoleStarter();
@@ -22,17 +22,15 @@ public class ConsoleStarter {
         console.menu();
     }
 
-    private void printInitialMenu(){
+    private void printInitialMenu() {
         InitialMenuPrinter init = new InitialMenuPrinter();
         init.execute();
     }
 
-    private void menu(){
+    private void menu() {
         UserRepository userRepository = new UserRepositoryImpl(new UserDaoImpl());
         RemoteBotRepositoryImpl RemoteBotRepository = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(), userRepository);
         ExecuteMenu printer = new ExecuteMenu(RemoteBotRepository, new RemoteBotApiAdapter());
         printer.execute();
     }
-
-
 }

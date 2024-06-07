@@ -6,6 +6,8 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import org.springframework.http.HttpMethod;
 
+import java.util.Optional;
+
 public class RemoteBotApiAdapter implements RemoteBotApi {
 
     @Override
@@ -37,8 +39,11 @@ public class RemoteBotApiAdapter implements RemoteBotApi {
     }
 
     @Override
-    public boolean isHealthy() {
-        return false;
+    public boolean isHealthy(RemoteBotDto botData) {// TODO - Implementar isso.
+        String url = buildUrl(botData,"name");
+        HttpRequestService<GameIntel, String> requester = new HttpRequestService<>();
+        Optional<String> response = requester.sendGetRequest(url, String.class);
+        return response.isPresent();
     }
 
     private String buildUrl(RemoteBotDto botData, String resource) {

@@ -77,13 +77,13 @@ public class GameResultDaoImpl implements GameResultDao {
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?);
                 """;
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
-            preparedStatement.setString(1, game.getGameUuid().toString());
+            preparedStatement.setObject(1, game.getGameUuid());
             preparedStatement.setTimestamp(2, Timestamp.valueOf(game.getGameStart()));
             preparedStatement.setTimestamp(3, Timestamp.valueOf(game.getGameEnd()));
-            preparedStatement.setString(4, game.getWinnerUuid().toString());
-            preparedStatement.setString(5, game.getPlayer1Uuid().toString());
+            preparedStatement.setObject(4, game.getWinnerUuid());
+            preparedStatement.setObject(5, game.getPlayer1Uuid());
             preparedStatement.setInt(6, game.getPlayer1Score());
-            preparedStatement.setString(7, game.getPlayer2Uuid().toString());
+            preparedStatement.setObject(7, game.getPlayer2Uuid());
             preparedStatement.setLong(8, game.getPlayer2Score());
             preparedStatement.executeUpdate();
         }
