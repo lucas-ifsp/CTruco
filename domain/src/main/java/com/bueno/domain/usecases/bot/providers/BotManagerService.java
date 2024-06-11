@@ -34,7 +34,7 @@ public class BotManagerService {
     }
 
     public List<String> providersNames() {
-        return providers().map(BotServiceProvider::getName).filter(Objects::nonNull).collect(Collectors.toList());// TODO - fazer health check em um período de tempo
+        return providers().map(BotServiceProvider::getName).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private Stream<BotServiceProvider> providers() {

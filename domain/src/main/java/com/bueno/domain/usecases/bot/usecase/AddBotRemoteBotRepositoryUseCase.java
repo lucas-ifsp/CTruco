@@ -24,7 +24,7 @@ public class AddBotRemoteBotRepositoryUseCase {
     }
 
     public RemoteBotResponseModel addBot(RemoteBotRequestModel dtoRequest) {
-        Objects.requireNonNull(dtoRequest, "request is null");// TODO - Faz tudo desse jeito aqui ó
+        Objects.requireNonNull(dtoRequest, "request is null");
         RemoteBotDto dto = new RemoteBotDto(UUID.randomUUID(),
                 dtoRequest.userId(),
                 dtoRequest.name(),

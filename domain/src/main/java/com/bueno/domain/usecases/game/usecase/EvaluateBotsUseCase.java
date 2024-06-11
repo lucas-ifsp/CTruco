@@ -17,20 +17,19 @@ import java.util.stream.Collectors;
 public class EvaluateBotsUseCase {
     private static final int TIMES = 31;
     private final UUID uuidBotToEvaluate = UUID.randomUUID();
-    private final String botToEvaluateName;
+    private String botToEvaluateName;
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi botApi;
     private final BotManagerService providerService;
 
-    // TODO usar o construtor apenas para injeção de dependência. Pensar em outra forma de passar o botToEvaluate name. Provavelmente no método que faz a avaliação.
-    public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, String botToEvaluateName, BotManagerService providerService) {
-        this.botToEvaluateName = botToEvaluateName;
+    public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, BotManagerService providerService) {
         this.remoteBotRepository = remoteBotRepository;
         this.botApi = botApi;
         this.providerService = providerService;
     }
 
-    public EvaluateResultsDto getResults(List<String> botNames) {
+    public EvaluateResultsDto getResults(List<String> botNames,String botToEvaluateName) {
+        setBotToEvaluateName(botToEvaluateName);
         final int numberOfGames = (botNames.size() - 1) * TIMES;
 
         final long start = System.currentTimeMillis();
@@ -60,5 +59,9 @@ public class EvaluateBotsUseCase {
                 .collect(Collectors.groupingBy(PlayWithBotsDto::name, Collectors.counting()));
         if (!collectResults.containsKey(botToEvaluateName)) return 0L;
         return collectResults.get(botToEvaluateName);
+    }
+
+    public void setBotToEvaluateName(String botToEvaluateName) {
+        this.botToEvaluateName = botToEvaluateName;
     }
 }

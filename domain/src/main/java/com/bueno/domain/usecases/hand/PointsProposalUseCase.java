@@ -110,7 +110,7 @@ public class PointsProposalUseCase {
 
         hand.quit(player);
 
-        final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
+        final ResultHandler resultHandler = new ResultHandler(gameRepository,gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
 
         gameRepository.update(GameConverter.toDto(game));

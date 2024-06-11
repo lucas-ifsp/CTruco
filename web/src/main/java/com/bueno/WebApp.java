@@ -60,18 +60,18 @@ public class WebApp {
             final UUID defaultUuid = registerUserUseCase.create(defaultUser).uuid();
             final UUID user1Uuid = registerUserUseCase.create(user1).uuid();
             final UUID user2Uuid = registerUserUseCase.create(user2).uuid();
-            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(),defaultUuid,"Remote Bot","http://localhost:","8030");
+            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(),defaultUuid,"Remote Bot","http://localhost","8030");
             botRepository.save(remoteBot);
-            for (int i = 0; i < 30; i++) {
-                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
-                        LocalDateTime.now(), defaultUuid, defaultUuid, 12, user1Uuid, 3));
-                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
-                        LocalDateTime.now(), user1Uuid, user2Uuid, 7, user1Uuid, 12));
-                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
-                        LocalDateTime.now(), defaultUuid, user2Uuid, 5, defaultUuid, 12));
-            }
-            gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
-                    LocalDateTime.now(), user2Uuid, user2Uuid, 7, user1Uuid, 12));
+//            for (int i = 0; i < 30; i++) {
+//                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+//                        LocalDateTime.now(), defaultUuid, defaultUuid, 12, user1Uuid, 3));
+//                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+//                        LocalDateTime.now(), user1Uuid, user2Uuid, 7, user1Uuid, 12));
+//                gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+//                        LocalDateTime.now(), defaultUuid, user2Uuid, 5, defaultUuid, 12));
+//            }
+//            gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
+//                    LocalDateTime.now(), user2Uuid, user2Uuid, 7, user1Uuid, 12));
 
             //gameResultRepository.findTopWinners(3).forEach((entry -> System.out.println(entry.username() + " - " + entry.wins())));
 

@@ -39,7 +39,7 @@ public class RemoteBotApiAdapter implements RemoteBotApi {
     }
 
     @Override
-    public boolean isHealthy(RemoteBotDto botData) {// TODO - Implementar isso.
+    public boolean isHealthy(RemoteBotDto botData) {
         String url = buildUrl(botData,"name");
         HttpRequestService<GameIntel, String> requester = new HttpRequestService<>();
         Optional<String> response = requester.sendGetRequest(url, String.class);

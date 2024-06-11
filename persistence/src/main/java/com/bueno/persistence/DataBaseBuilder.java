@@ -1,6 +1,5 @@
 package com.bueno.persistence;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -82,7 +81,7 @@ public class DataBaseBuilder {
     private String createHandResultsTable() {
         return """
                 CREATE TABLE IF NOT EXISTS HAND_RESULT(
-                    id INTEGER NOT NULL,
+                    id SERIAL,
                     r1_c1 VARCHAR(2),
                     r1_c2 VARCHAR(2),
                     r2_c1 VARCHAR(2),
@@ -98,9 +97,7 @@ public class DataBaseBuilder {
                     r2_winner UUID,
                     r3_winner UUID,
                     vira VARCHAR(2),
-                    CONSTRAINT hand_results_id_pk PRIMARY KEY(id),
-                    CONSTRAINT game_uuid_fk FOREIGN KEY (game_uuid)
-                        REFERENCES GAME_RESULT(game_uuid)
+                    CONSTRAINT hand_results_id_pk PRIMARY KEY(id)
                 );
                 """;
     }

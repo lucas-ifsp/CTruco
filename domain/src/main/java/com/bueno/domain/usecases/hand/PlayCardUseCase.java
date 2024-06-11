@@ -96,7 +96,7 @@ public class PlayCardUseCase {
         if (hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playedCard);
         else hand.playSecondCard(player, playedCard);
 
-        final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
+        final ResultHandler resultHandler = new ResultHandler(gameRepository,gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
 
         gameRepository.update(GameConverter.toDto(game));

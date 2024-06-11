@@ -17,7 +17,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<UserEntity> getByUuid(UUID uuid) throws SQLException {
-        return getByAttribute("uuid", uuid); //TODO - tentar salvar direto como UUID
+        return getByAttribute("uuid", uuid);
     }
 
     @Override
