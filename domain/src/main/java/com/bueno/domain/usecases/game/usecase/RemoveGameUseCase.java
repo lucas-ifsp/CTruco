@@ -56,7 +56,8 @@ public class RemoveGameUseCase {
 
     public UUID inactivePlayerUuid(GameDto game){
         final HandDto currentHand = game.hands().get(game.hands().size() - 1);
-        return currentHand.currentPlayer().uuid();
+        UUID uuid = currentHand.currentPlayer().uuid();
+        return uuid;
     }
 
     public void byUserUuid(UUID userUuid) {

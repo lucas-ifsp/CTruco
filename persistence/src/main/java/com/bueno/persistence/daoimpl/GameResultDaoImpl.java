@@ -38,28 +38,35 @@ public class GameResultDaoImpl implements GameResultDao {
 
     @Override
     public List<GameResultQR> findAllByPlayerUuid(UUID uuid) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            List<GameResultQR> players = new ArrayList<>();
-            ResultSet res = statement.executeQuery("""
+        String sql ="""
                     SELECT ending_time ending, temp1.p1 player1, temp2.p2 player2, temp3.win winner FROM
                         (SELECT game_uuid, player1_uuid p1_uuid, username p1, game_end ending_time FROM app_user app
                         LEFT JOIN game_result game ON app.uuid = game.player1_uuid
-                        WHERE game.player1_uuid = :uuid OR game.player2_uuid = :uuid
+                        WHERE game.player1_uuid = ? OR game.player2_uuid = ?
                         ) AS temp1
                     INNER JOIN
                         (SELECT game_uuid, player2_uuid p2_uuid, username p2 FROM app_user app
                         LEFT JOIN game_result game ON app.uuid = game.player2_uuid
-                         WHERE game.player1_uuid = :uuid OR game.player2_uuid = :uuid
+                         WHERE game.player1_uuid = ? OR game.player2_uuid = ?
                         ) AS temp2
                     ON temp1.game_uuid = temp2.game_uuid
                     INNER JOIN
                         (SELECT game_uuid, winner_uuid win_uuid, username win  FROM app_user app
                         LEFT JOIN game_result game ON app.uuid = game.winner_uuid
-                         WHERE game.player1_uuid = :uuid OR game.player2_uuid = :uuid
+                         WHERE game.player1_uuid = ? OR game.player2_uuid = ?
                         ) AS temp3
                     ON temp1.game_uuid = temp3.game_uuid
                     ORDER BY ending_time DESC
-                    """);
+                    """;
+        try (PreparedStatement statement = ConnectionFactory.createPreparedStatement(sql)) {
+            List<GameResultQR> players = new ArrayList<>();
+            statement.setObject(1,uuid);
+            statement.setObject(2,uuid);
+            statement.setObject(3,uuid);
+            statement.setObject(4,uuid);
+            statement.setObject(5,uuid);
+            statement.setObject(6,uuid);
+            ResultSet res = statement.executeQuery();
             while (res.next()) players.add(new GameResultQR(
                     LocalDateTime.parse(res.getString("ending")),
                     res.getString("player1"),

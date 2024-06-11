@@ -36,8 +36,8 @@ public class EvaluateBot {
     }
 
     private EvaluateResultsDto getEvaluateResultsDto(String botToEvaluateName, List<String> botNames) {
-        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(repository, botApi, botToEvaluateName,providerService);
-        return useCase.getResults(botNames);
+        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(repository, botApi,providerService);
+        return useCase.getResults(botNames,botToEvaluateName);
     }
 
 
