@@ -53,7 +53,7 @@ public class RemoteBotDaoImpl implements RemoteBotDao {
         try (Statement statement = ConnectionFactory.createStatement()) {
             List<RemoteBotEntity> bots = new ArrayList<>();
             ResultSet res = statement.executeQuery("""
-                    SELECT * FROM remote_bot b WHERE b.user_uuid = (SELECT uuid FROM app_user u WHERE u.uuid = b.user_uuid);
+                    SELECT * FROM remote_bot b JOIN app_user u on u.uuid = b.user_uuid;
                     """);
             while (res.next()) {
                 bots.add(resultSetToRemoteBotEntity(res));
