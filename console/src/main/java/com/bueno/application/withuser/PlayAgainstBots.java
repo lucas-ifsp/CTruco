@@ -64,9 +64,8 @@ public class PlayAgainstBots {
     }
 
     public PlayAgainstBots(BotManagerService providerService) {
-        final var userRepo = new UserRepositoryImpl();
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        final var remoteBotRepo = new RemoteBotRepositoryImpl(userRepo);
+        final var remoteBotRepo = new RemoteBotRepositoryImpl();
         final var remoteBotApi = new RemoteBotApiAdapter();
         gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);
         playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);

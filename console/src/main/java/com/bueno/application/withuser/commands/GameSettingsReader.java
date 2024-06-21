@@ -47,13 +47,12 @@ public class GameSettingsReader implements Command<CreateDetachedDto> {
     }
 
     private String readBotName() {
-        UserRepository userRepository = new UserRepositoryImpl();
-        final RemoteBotRepository repository = new RemoteBotRepositoryImpl(userRepository);
+        final RemoteBotRepository repository = new RemoteBotRepositoryImpl();
         final RemoteBotApiAdapter botApi = new RemoteBotApiAdapter();
         final BotManagerService botManagerService = new BotManagerService(repository, botApi);
         final var botNames = botManagerService.providersNames();
         Integer botId;
-        while (true){
+        while (true) {
             System.out.println("Oponente(s): ");
             for (int i = 0; i < botNames.size(); i++) {
                 System.out.println("[" + (i + 1) + "] " + botNames.get(i));
@@ -61,7 +60,7 @@ public class GameSettingsReader implements Command<CreateDetachedDto> {
             System.out.print("Selecione pelo número > ");
             final Scanner scanner = new Scanner(System.in);
             botId = Ints.tryParse(scanner.nextLine());
-            if (botId == null || botId < 1 || botId > botNames.size()){
+            if (botId == null || botId < 1 || botId > botNames.size()) {
                 System.out.println("Invalid input!");
                 continue;
             }
