@@ -22,13 +22,12 @@ package com.bueno.persistence.dto;
 
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
+import com.bueno.domain.usecases.hand.dtos.HandDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +44,9 @@ public class GameEntity {
     private UUID player2;
     private UUID firstToPlay;
     private UUID lastToPlay;
-    private List<HandEntity> hands;
+    private List<HandDto> hands;
 
-    public static GameEntity from(GameDto dto){
+    public static GameEntity from(GameDto dto) {
         return GameEntity.builder()
                 .id(dto.gameUuid())
                 .timestamp(dto.timestamp())
@@ -55,11 +54,11 @@ public class GameEntity {
                 .player2(dto.player2().uuid())
                 .firstToPlay(dto.firstToPlay().uuid())
                 .lastToPlay(dto.lastToPlay().uuid())
-                .hands(dto.hands().stream().map(HandEntity::from).toList())
+                .hands(dto.hands())
                 .build();
     }
 
-    public GameDto toDto(Map<UUID, PlayerDto> players){
+    public GameDto toDto(Map<UUID, PlayerDto> players) {
         return new GameDto(
                 id,
                 timestamp,
@@ -67,7 +66,7 @@ public class GameEntity {
                 players.get(player2),
                 players.get(firstToPlay),
                 players.get(lastToPlay),
-                hands.stream().map(hand -> hand.toDto(players)).toList()
+                hands
         );
     }
 }

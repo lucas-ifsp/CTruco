@@ -36,7 +36,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SpringBootApplication

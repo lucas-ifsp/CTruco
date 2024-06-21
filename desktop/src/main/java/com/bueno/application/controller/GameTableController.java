@@ -33,9 +33,6 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
-import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
-import com.bueno.persistence.daoimpl.UserDaoImpl;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
@@ -103,9 +100,9 @@ public class GameTableController {
     private AtomicBoolean isAnimating;
 
     public GameTableController() {
-        final var userRepo = new UserRepositoryImpl(new UserDaoImpl());
+        final var userRepo = new UserRepositoryImpl();
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        final var botRepo = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),userRepo);
+        final var botRepo = new RemoteBotRepositoryImpl(userRepo);
         final var botApi = new RemoteBotApiAdapter();
         final var botManagerService = new BotManagerService(botRepo,botApi);
         gameUseCase = new CreateGameUseCase(gameRepo, botRepo, botApi,botManagerService);

@@ -28,7 +28,7 @@ public class EvaluateBotsUseCase {
         this.providerService = providerService;
     }
 
-    public EvaluateResultsDto getResults(List<String> botNames,String botToEvaluateName) {
+    public EvaluateResultsDto evaluate(List<String> botNames, String botToEvaluateName) {
         setBotToEvaluateName(botToEvaluateName);
         final int numberOfGames = (botNames.size() - 1) * TIMES;
 

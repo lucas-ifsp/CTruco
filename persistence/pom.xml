@@ -80,8 +80,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-<!--            <scope>runtime</scope>-->
-<!-- TODO - Mudei isso aqui-->
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

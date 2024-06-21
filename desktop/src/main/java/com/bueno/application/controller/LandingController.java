@@ -25,8 +25,6 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
-import com.bueno.persistence.daoimpl.UserDaoImpl;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
@@ -51,8 +49,8 @@ public class LandingController implements ChangeListener<Boolean> {
 
     @FXML
     private void initialize(){
-        UserRepository userRepository = new UserRepositoryImpl(new UserDaoImpl());
-        RemoteBotRepository botRepository = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),userRepository);
+        UserRepository userRepository = new UserRepositoryImpl();
+        RemoteBotRepository botRepository = new RemoteBotRepositoryImpl(userRepository);
         RemoteBotApi botApi = new RemoteBotApiAdapter();
         BotManagerService botManagerService = new BotManagerService(botRepository, botApi);
         final List<String> bots = botManagerService.providersNames();
