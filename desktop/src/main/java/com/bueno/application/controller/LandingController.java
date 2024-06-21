@@ -42,15 +42,16 @@ import java.util.List;
 public class LandingController implements ChangeListener<Boolean> {
 
     public static final boolean ON_FOCUS = true;
-    @FXML private TextField txtPlayer;
-    @FXML private ComboBox<String> cbBot;
+    @FXML
+    private TextField txtPlayer;
+    @FXML
+    private ComboBox<String> cbBot;
 
     public String txtDefaultStyle;
 
     @FXML
-    private void initialize(){
-        UserRepository userRepository = new UserRepositoryImpl();
-        RemoteBotRepository botRepository = new RemoteBotRepositoryImpl(userRepository);
+    private void initialize() {
+        RemoteBotRepository botRepository = new RemoteBotRepositoryImpl();
         RemoteBotApi botApi = new RemoteBotApiAdapter();
         BotManagerService botManagerService = new BotManagerService(botRepository, botApi);
         final List<String> bots = botManagerService.providersNames();
@@ -73,12 +74,12 @@ public class LandingController implements ChangeListener<Boolean> {
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-        if(oldValue == null || newValue == oldValue) return;
-        if(newValue == ON_FOCUS) {
+        if (oldValue == null || newValue == oldValue) return;
+        if (newValue == ON_FOCUS) {
             txtPlayer.setStyle(txtDefaultStyle);
             return;
         }
-        if(isNotValid(txtPlayer.getText().trim()))
+        if (isNotValid(txtPlayer.getText().trim()))
             txtPlayer.setStyle("-fx-background-color: #ecd3d5;");
     }
 

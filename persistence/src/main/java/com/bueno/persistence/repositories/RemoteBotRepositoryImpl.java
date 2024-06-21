@@ -2,10 +2,7 @@ package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.user.UserRepository;
-import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.ConnectionFactory;
-import com.bueno.persistence.dto.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -17,11 +14,7 @@ import java.util.*;
 @Repository
 public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - remover Entities e DAOs (fora mongo), fazer todo o processo nos repositoriesImpl
 
-    private final UserRepository userRepositoryImpl;
-
-
-    public RemoteBotRepositoryImpl(UserRepository userRepositoryImpl) {
-        this.userRepositoryImpl = userRepositoryImpl;
+    public RemoteBotRepositoryImpl() {
     }
 
     @Override
@@ -60,10 +53,15 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - r
 
     @Override
     public List<RemoteBotDto> findByUserId(UUID userId) {
-        try {
-            return getRemoteBotEntitiesByUser(UserEntity
-                    .from(userRepositoryImpl.findByUuid(userId)
-                            .orElseThrow(() -> new EntityNotFoundException("User not found"))));
+        try (Statement statement = ConnectionFactory.createStatement()) {
+            List<RemoteBotDto> bots = new ArrayList<>();
+            ResultSet res = statement.executeQuery("""
+                    SELECT * FROM remote_bot b JOIN app_user u on u.uuid = b.user_uuid;
+                    """);
+            while (res.next()) {
+                bots.add(resultSetToRemoteBotDto(res));
+            }
+            return bots;
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage());
             e.printStackTrace();
@@ -136,18 +134,5 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - r
             }
         }
         return Optional.empty();
-    }
-
-    private List<RemoteBotDto> getRemoteBotEntitiesByUser(UserEntity userEntity) throws SQLException {
-        try (Statement statement = ConnectionFactory.createStatement()) {
-            List<RemoteBotDto> bots = new ArrayList<>();
-            ResultSet res = statement.executeQuery("""
-                    SELECT * FROM remote_bot b JOIN app_user u on u.uuid = b.user_uuid;
-                    """);
-            while (res.next()) {
-                bots.add(resultSetToRemoteBotDto(res));
-            }
-            return bots;
-        }
     }
 }

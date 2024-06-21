@@ -27,7 +27,7 @@ public class ConsoleStarter {
 
     private void menu() {
         UserRepository userRepository = new UserRepositoryImpl();
-        RemoteBotRepositoryImpl RemoteBotRepository = new RemoteBotRepositoryImpl(userRepository);
+        RemoteBotRepositoryImpl RemoteBotRepository = new RemoteBotRepositoryImpl();
         ExecuteMenu printer = new ExecuteMenu(RemoteBotRepository, new RemoteBotApiAdapter());
         printer.execute();
     }

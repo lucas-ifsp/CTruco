@@ -23,7 +23,6 @@ package com.bueno.persistence.repositories;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.persistence.ConnectionFactory;
-import com.bueno.persistence.dto.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -70,7 +69,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<ApplicationUserDto> findByEmail(String email) {
-        final Optional<UserEntity> dto;
         try {
             return getByAttribute("email", email);
         } catch (SQLException e) {

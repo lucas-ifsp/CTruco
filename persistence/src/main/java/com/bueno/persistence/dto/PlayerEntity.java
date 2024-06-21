@@ -41,7 +41,7 @@ public class PlayerEntity {
     private boolean isBot;
     private List<String> cards;
 
-    public static PlayerEntity from(PlayerDto dto){
+    public static PlayerEntity from(PlayerDto dto) {
         return PlayerEntity.builder()
                 .id(dto.uuid())
                 .username(dto.username())
@@ -51,7 +51,7 @@ public class PlayerEntity {
                 .build();
     }
 
-    public PlayerDto toDto(){
+    public PlayerDto toDto() {
         final List<CardDto> cardDtos = cards.stream()
                 .map(card -> new CardDto(card.substring(0, 1), card.substring(1, 2)))
                 .toList();

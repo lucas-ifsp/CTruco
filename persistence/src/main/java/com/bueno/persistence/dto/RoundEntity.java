@@ -20,52 +20,52 @@
 
 package com.bueno.persistence.dto;
 
-import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
+import com.bueno.domain.usecases.hand.dtos.RoundDto;
+import com.bueno.domain.usecases.intel.dtos.CardDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GameEntity {
-    private UUID id;
-    private LocalDateTime timestamp;
-    private UUID player1;
-    private UUID player2;
+public class RoundEntity {
     private UUID firstToPlay;
     private UUID lastToPlay;
-    private List<HandEntity> hands;
+    private UUID winner;
+    private String vira;
+    private String firstCard;
+    private String lastCard;
 
-    public static GameEntity from(GameDto dto) {
-        return GameEntity.builder()
-                .id(dto.gameUuid())
-                .timestamp(dto.timestamp())
-                .player1(dto.player1().uuid())
-                .player2(dto.player2().uuid())
+    public static RoundEntity from(RoundDto dto){
+        return RoundEntity.builder()
                 .firstToPlay(dto.firstToPlay().uuid())
                 .lastToPlay(dto.lastToPlay().uuid())
-                .hands(dto.hands().stream().map(HandEntity::from).toList())
+                .winner(dto.winner() != null ? dto.winner().uuid() : null)
+                .vira(dto.vira().toString())
+                .firstCard(dto.firstCard().toString())
+                .lastCard(dto.lastCard().toString())
                 .build();
     }
 
-    public GameDto toDto(Map<UUID, PlayerDto> players) {
-        return new GameDto(
-                id,
-                timestamp,
-                players.get(player1),
-                players.get(player2),
+    public RoundDto toDto(Map<UUID, PlayerDto> players){
+         final Function<String, CardDto> toCardDto = card -> card != null?
+                new CardDto(card.substring(0, 1), card.substring(1, 2)) : null;
+        final Function<UUID, PlayerDto> toPlayerDtoOrNull = uuid -> uuid != null ? players.get(uuid) : null;
+
+        return new RoundDto(
                 players.get(firstToPlay),
                 players.get(lastToPlay),
-                hands.stream().map(hand -> hand.toDto(players)).toList()
-        );
+                toPlayerDtoOrNull.apply(winner),
+                toCardDto.apply(vira),
+                toCardDto.apply(firstCard),
+                toCardDto.apply(lastCard));
     }
 }

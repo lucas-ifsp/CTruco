@@ -20,36 +20,36 @@
 
 package com.bueno.persistence.dto;
 
-import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
+
+import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class UserEntity {
-    private UUID uuid;
-    private String username;
-    private String email;
-    private String password;
+public class GameResultEntity {
+    private UUID gameUuid;
+    private LocalDateTime gameStart;
+    private LocalDateTime gameEnd;
+    private UUID winnerUuid;
+    private UUID player1Uuid;
+    private int player1Score;
+    private UUID player2Uuid;
+    private int player2Score;
 
-    private UserEntity(UUID uuid, String username, String password, String email) {
-        this.uuid = uuid;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
 
-    public static UserEntity from(ApplicationUserDto user) {
-        return new UserEntity(user.uuid(), user.username(), user.password(), user.email());
-    }
-
-    public static ApplicationUserDto toApplicationUser(UserEntity dto){
-        if(dto == null) return null;
-        return new ApplicationUserDto(dto.uuid, dto.username, dto.password, dto.email);
+    public static GameResultEntity from(GameResultDto dto){
+        return new GameResultEntity(dto.gameUuid(), dto.gameStart(), dto.gameEnd(),
+                dto.winnerUuid(), dto.player1Uuid(), dto.player1Score(), dto.player2Uuid(), dto.player2Score()
+        );
     }
 }
