@@ -23,12 +23,12 @@ package com.bueno.persistence.repositories;
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.hand.dtos.HandDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.GameDao;
 import com.bueno.persistence.dao.PlayerDao;
 import com.bueno.persistence.dto.GameEntity;
-import com.bueno.persistence.dto.HandEntity;
-import com.bueno.persistence.dto.IntelEntity;
 import com.bueno.persistence.dto.PlayerEntity;
 import org.springframework.stereotype.Repository;
 
@@ -50,7 +50,9 @@ public class GameRepositoryImpl implements GameRepository {
     @Override
     public void save(GameDto dto) {
         gameDao.findById(dto.gameUuid())
-                .ifPresent(game -> {throw new EntityNotFoundException("Game already exists: " + game.getId());});
+                .ifPresent(game -> {
+                    throw new EntityNotFoundException("Game already exists: " + game.getId());
+                });
         playerDao.save(PlayerEntity.from(dto.player1()));
         playerDao.save(PlayerEntity.from(dto.player2()));
         gameDao.save(GameEntity.from(dto));
@@ -91,12 +93,12 @@ public class GameRepositoryImpl implements GameRepository {
                 .toList();
     }
 
-    public boolean isInactive(GameEntity game, int minutes){
-        if(game.getHands().isEmpty()) return false;
+    public boolean isInactive(GameEntity game, int minutes) {
+        if (game.getHands().isEmpty()) return false;
         final int index = game.getHands().size() - 1;
-        final HandEntity hand = game.getHands().get(index);
-        final IntelEntity intel = hand.getHistory().get(hand.getHistory().size() - 1);
-        final Instant lastInteraction = intel.getTimestamp();
+        final HandDto handDto = game.getHands().get(index);
+        final IntelDto intelDto = handDto.history().get(handDto.history().size() - 1);
+        final Instant lastInteraction = intelDto.timestamp();
         final Instant now = Instant.now();
         final long inactivityInMinutes = Duration.between(lastInteraction, now).toMinutes();
         System.out.println("Inactive during (minutes): " + inactivityInMinutes);
@@ -104,7 +106,7 @@ public class GameRepositoryImpl implements GameRepository {
     }
 
     private Optional<GameDto> getGameDto(GameEntity game) {
-        if(game == null) return Optional.empty();
+        if (game == null) return Optional.empty();
         final PlayerDto player1 = playerDao.findById(game.getPlayer1()).orElseThrow().toDto();
         final PlayerDto player2 = playerDao.findById(game.getPlayer2()).orElseThrow().toDto();
         return Optional.of(game.toDto(Map.of(player1.uuid(), player1, player2.uuid(), player2)));

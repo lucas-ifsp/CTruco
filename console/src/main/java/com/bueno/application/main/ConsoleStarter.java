@@ -4,8 +4,6 @@ import com.bueno.application.main.commands.InitialMenuPrinter;
 import com.bueno.application.main.commands.ExecuteMenu;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.DataBaseBuilder;
-import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
-import com.bueno.persistence.daoimpl.UserDaoImpl;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
@@ -28,8 +26,8 @@ public class ConsoleStarter {
     }
 
     private void menu() {
-        UserRepository userRepository = new UserRepositoryImpl(new UserDaoImpl());
-        RemoteBotRepositoryImpl RemoteBotRepository = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(), userRepository);
+        UserRepository userRepository = new UserRepositoryImpl();
+        RemoteBotRepositoryImpl RemoteBotRepository = new RemoteBotRepositoryImpl(userRepository);
         ExecuteMenu printer = new ExecuteMenu(RemoteBotRepository, new RemoteBotApiAdapter());
         printer.execute();
     }
