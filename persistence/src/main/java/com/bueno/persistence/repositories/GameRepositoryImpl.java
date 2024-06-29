@@ -23,12 +23,13 @@ package com.bueno.persistence.repositories;
 import com.bueno.domain.usecases.game.dtos.GameDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.game.repos.GameRepository;
+import com.bueno.domain.usecases.hand.dtos.HandDto;
+import com.bueno.domain.usecases.intel.dtos.IntelDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.persistence.dao.GameDao;
 import com.bueno.persistence.dao.PlayerDao;
 import com.bueno.persistence.dto.GameEntity;
 import com.bueno.persistence.dto.HandEntity;
-import com.bueno.persistence.dto.IntelEntity;
 import com.bueno.persistence.dto.PlayerEntity;
 import org.springframework.stereotype.Repository;
 
@@ -95,12 +96,23 @@ public class GameRepositoryImpl implements GameRepository {
         if(game.getHands().isEmpty()) return false;
         final int index = game.getHands().size() - 1;
         final HandEntity hand = game.getHands().get(index);
-        final IntelEntity intel = hand.getHistory().get(hand.getHistory().size() - 1);
-        final Instant lastInteraction = intel.getTimestamp();
+        Map<UUID, PlayerDto> players = playersMap(game);
+        final HandDto handDto = game.getHands().get(index).toDto(players);
+        final IntelDto intel = handDto.history().get(handDto.history().size() - 1);
+        final Instant lastInteraction = intel.timestamp();
         final Instant now = Instant.now();
         final long inactivityInMinutes = Duration.between(lastInteraction, now).toMinutes();
         System.out.println("Inactive during (minutes): " + inactivityInMinutes);
         return inactivityInMinutes >= minutes;
+    }
+
+    private Map<UUID, PlayerDto> playersMap(GameEntity game) {
+        PlayerDto p1 = playerDao.findById(game.getPlayer1()).orElseThrow().toDto();
+        PlayerDto p2 = playerDao.findById(game.getPlayer2()).orElseThrow().toDto();
+        Map<UUID,PlayerDto> players = new HashMap<>();
+        players.put(p1.uuid(),p1);
+        players.put(p2.uuid(),p2);
+        return players;
     }
 
     private Optional<GameDto> getGameDto(GameEntity game) {

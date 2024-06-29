@@ -22,6 +22,7 @@ package com.bueno.persistence.dto;
 
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
 import com.bueno.domain.usecases.hand.dtos.HandDto;
+import com.bueno.domain.usecases.hand.dtos.RoundDto;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +43,7 @@ public class HandEntity {
     private String vira;
     private List<String> dealtCard;
     private List<String> openCards;
-    private List<RoundEntity> roundsPlayed;
+    private List<RoundDto> roundsPlayed;
     private List<IntelEntity> history;
     private Set<String> possibleActions;
     private UUID firstToPlay;
@@ -59,7 +60,7 @@ public class HandEntity {
     public static HandEntity from(HandDto dto){
         final Function<List<CardDto>, List<String>> mapToString = dtos -> dtos.stream().map(CardDto::toString).toList();
         final Function<PlayerDto, UUID> playerUuidOrNull = playerDto -> playerDto != null ? playerDto.uuid() : null;
-        final List<RoundEntity> roundEntities = dto.roundsPlayed().stream().map(RoundEntity::from).toList();
+        final List<RoundDto> roundEntities = dto.roundsPlayed();
         final List<IntelEntity> history = dto.history().stream().map(IntelEntity::from).toList();
         return HandEntity.builder()
                 .vira(dto.vira().toString())
@@ -89,7 +90,7 @@ public class HandEntity {
                 toCardDto.apply(vira),
                 dealtCard.stream().map(toCardDto).toList(),
                 openCards.stream().map(toCardDto).toList(),
-                roundsPlayed.stream().map(round -> round.toDto(players)).toList(),
+                roundsPlayed,
                 history.stream().map(IntelEntity::toDto).toList(),
                 possibleActions,
                 players.get(firstToPlay),
