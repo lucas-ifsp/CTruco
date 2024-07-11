@@ -1,6 +1,5 @@
 package com.bueno.controllers;
 
-import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotResponseModel;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.usecase.AddBotRemoteBotRepositoryUseCase;

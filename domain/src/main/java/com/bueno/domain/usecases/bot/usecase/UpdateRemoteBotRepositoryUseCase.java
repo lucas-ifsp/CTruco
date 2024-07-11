@@ -17,14 +17,12 @@ public class UpdateRemoteBotRepositoryUseCase {
     private final RemoteBotRepository botRepository;
     private final UserRepository userRepository;
 
-
     public UpdateRemoteBotRepositoryUseCase(RemoteBotRepository botRepository, UserRepository userRepository) {
         this.botRepository = botRepository;
         this.userRepository = userRepository;
     }
 
-
-    public RemoteBotResponseModel update(String botName, RemoteBotRequestModel requestDto) {// TODO mudar o jeito q isso é feito
+    public RemoteBotResponseModel update(String botName, RemoteBotRequestModel requestDto) {// TODO mudar o jeito q o update é feito, passando por uma query de update no Banco
 
         Objects.requireNonNull(requestDto, "request is null");
         Objects.requireNonNull(botName, "botName is null");
