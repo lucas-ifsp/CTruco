@@ -24,8 +24,8 @@ import com.bueno.application.withbots.commands.*;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
-import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -64,9 +64,10 @@ public class PlayWithBots {
         bot2Name = botNames.get(bot2 - 1);
 
         final long start = System.currentTimeMillis();
-        final var results = playBotsStarter(providerService);
+        final PlayWithBotsResultsDto results = playBotsStarter(providerService);
         final long end = System.currentTimeMillis();
-        printResult(times, (end - start), results);
+
+        printResult(results);
     }
 
     private int scanNumberOfSimulations() {
@@ -74,7 +75,7 @@ public class PlayWithBots {
         return scanSimulations.execute();
     }
 
-    private List<PlayWithBotsDto> playBotsStarter(BotManagerService botManagerService) {
+    private PlayWithBotsResultsDto playBotsStarter(BotManagerService botManagerService) {
         final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi,botManagerService);
         return useCase.playWithBots(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
     }
@@ -89,8 +90,8 @@ public class PlayWithBots {
         return scanOptions.execute();
     }
 
-    private void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
-        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(numberOfGames, computingTime, results);
+    private void printResult(PlayWithBotsResultsDto result) {
+        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(result.times(), result.timeToExecute(), result.info());
         printer.execute();
     }
 
