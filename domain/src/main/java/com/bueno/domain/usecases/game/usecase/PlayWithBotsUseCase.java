@@ -24,8 +24,8 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,8 +42,12 @@ public class PlayWithBotsUseCase {
         this.botManagerService = botManagerService;
     }
 
-    public List<PlayWithBotsDto> playWithBots(UUID uuidBot1, String bot1Name,UUID uuidBot2, String bot2Name, int times) {
+    public PlayWithBotsResultsDto playWithBots(UUID uuidBot1, String bot1Name, UUID uuidBot2, String bot2Name, int times) {
+        final long start = System.currentTimeMillis();
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
-        return simulator.runInParallel(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
+        final List<PlayWithBotsDto> results = simulator.runInParallel(uuidBot1, bot1Name, uuidBot2, bot2Name, times);
+        final long end = System.currentTimeMillis();
+        final PlayWithBotsResultsDto response = new PlayWithBotsResultsDto(results,(end - start),times);
+        return response;
     }
 }
