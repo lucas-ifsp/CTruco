@@ -50,6 +50,7 @@ public class RemoteBotController {
 
     @PostMapping
     private ResponseEntity<?> addRemote(@RequestBody RemoteBotRequestModel dtoRequest) {
+        System.out.println(dtoRequest);
         RemoteBotResponseModel responseDto =
                 Objects.requireNonNull(addBotRemoteBotRepositoryUseCase.addBot(dtoRequest), "Not able to create a RemoteBotResponseModel");
         return ResponseEntity.ok(responseDto);
