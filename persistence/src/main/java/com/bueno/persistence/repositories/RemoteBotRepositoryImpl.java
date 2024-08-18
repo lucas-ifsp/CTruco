@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.*;
 
 @Repository
-public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - remover Entities e DAOs (fora mongo), fazer todo o processo nos repositoriesImpl
+public class RemoteBotRepositoryImpl implements RemoteBotRepository {
 
     public RemoteBotRepositoryImpl() {
     }
@@ -85,7 +85,6 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - r
 
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
-            e.printStackTrace();
         }
     }
 
@@ -97,7 +96,25 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {// TODO - r
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name());
-            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(RemoteBotDto dto) {
+        String sql = """
+                UPDATE remote_bot
+                SET name = ?, url = ?, port = ?
+                WHERE uuid = ?;
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setString(1, dto.name());
+            preparedStatement.setString(2, dto.url());
+            preparedStatement.setString(3, dto.port());
+            preparedStatement.setObject(4, dto.uuid());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
         }
     }
 

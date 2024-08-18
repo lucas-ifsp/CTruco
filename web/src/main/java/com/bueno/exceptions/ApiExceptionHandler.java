@@ -36,7 +36,7 @@ import static org.springframework.http.HttpStatus.*;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = GameRuleViolationException.class)
-    public ResponseEntity<?> handleGameRuleViolationException(GameRuleViolationException e){
+    public ResponseEntity<?> handleGameRuleViolationException(GameRuleViolationException e) {
         final HttpStatus forbidden = FORBIDDEN;
         final ApiException apiException = ApiException.builder()
                 .status(forbidden)
@@ -48,7 +48,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = UnsupportedGameRequestException.class)
-    public ResponseEntity<?> handleUnsupportedGameRequestException(UnsupportedGameRequestException e){
+    public ResponseEntity<?> handleUnsupportedGameRequestException(UnsupportedGameRequestException e) {
         final HttpStatus forbidden = FORBIDDEN;
         final ApiException apiException = ApiException.builder()
                 .status(forbidden)
@@ -60,7 +60,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = GameNotFoundException.class)
-    public ResponseEntity<?> handleGameNotFoundException(GameNotFoundException e){
+    public ResponseEntity<?> handleGameNotFoundException(GameNotFoundException e) {
         final HttpStatus notFound = NOT_FOUND;
         final ApiException apiException = ApiException.builder()
                 .status(notFound)
@@ -72,7 +72,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = IllegalGameEnrolmentException.class)
-    public ResponseEntity<?> handleIllegalGameEnrolmentException(IllegalGameEnrolmentException e){
+    public ResponseEntity<?> handleIllegalGameEnrolmentException(IllegalGameEnrolmentException e) {
         final HttpStatus conflict = CONFLICT;
         final ApiException apiException = ApiException.builder()
                 .status(conflict)
@@ -84,7 +84,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e){
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         final HttpStatus badRequest = BAD_REQUEST;
         final ApiException apiException = ApiException.builder()
                 .status(badRequest)
@@ -96,7 +96,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = IllegalStateException.class)
-    public ResponseEntity<?> handleIllegalStateException(IllegalStateException e){
+    public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
         final HttpStatus forbidden = FORBIDDEN;
         final ApiException apiException = ApiException.builder()
                 .status(forbidden)
@@ -108,7 +108,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e){
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e) {
         final HttpStatus notFound = NOT_FOUND;
         final ApiException apiException = ApiException.builder()
                 .status(notFound)
@@ -120,7 +120,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = EntityAlreadyExistsException.class)
-    public ResponseEntity<?> handleEntityAlreadyExistsException(EntityAlreadyExistsException e){
+    public ResponseEntity<?> handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
         final HttpStatus conflict = CONFLICT;
         final ApiException apiException = ApiException.builder()
                 .status(conflict)
@@ -132,7 +132,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = NullPointerException.class)
-    public ResponseEntity<?> handleNullPointerException(NullPointerException e){
+    public ResponseEntity<?> handleNullPointerException(NullPointerException e) {
         final HttpStatus notFound = NOT_FOUND;
         final ApiException apiException = ApiException.builder()
                 .status(notFound)
@@ -142,8 +142,9 @@ public class ApiExceptionHandler {
                 .build();
         return new ResponseEntity<>(apiException, notFound);
     }
+
     @ExceptionHandler(value = UserNotAllowedException.class)
-    public ResponseEntity<?> handleUserNotAllowedException(UserNotAllowedException e){
+    public ResponseEntity<?> handleUserNotAllowedException(UserNotAllowedException e) {
         final HttpStatus notFound = BAD_REQUEST;
         final ApiException apiException = ApiException.builder()
                 .status(notFound)
@@ -152,5 +153,17 @@ public class ApiExceptionHandler {
                 .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
                 .build();
         return new ResponseEntity<>(apiException, notFound);
+    }
+
+    @ExceptionHandler(value = InvalidRequestException.class)
+    public ResponseEntity<?> handleInvalidRequestException(InvalidRequestException e) {
+        final HttpStatus badRequest = BAD_REQUEST;
+        final ApiException apiException = ApiException.builder()
+                .status(badRequest)
+                .message(e.getMessage())
+                .developerMessage(e.getClass().getName())
+                .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
+                .build();
+        return new ResponseEntity<>(apiException, badRequest);
     }
 }

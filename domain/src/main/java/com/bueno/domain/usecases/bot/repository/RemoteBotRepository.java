@@ -19,5 +19,7 @@ public interface RemoteBotRepository {
 
     void delete(RemoteBotDto dto);
 
+    void update(RemoteBotDto dto);
+
     boolean existByName(String botName);
 }

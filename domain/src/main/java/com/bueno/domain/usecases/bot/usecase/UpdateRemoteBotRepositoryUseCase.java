@@ -11,6 +11,7 @@ import com.bueno.domain.usecases.utils.exceptions.UserNotAllowedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UpdateRemoteBotRepositoryUseCase {
@@ -29,20 +30,24 @@ public class UpdateRemoteBotRepositoryUseCase {
 
         RemoteBotDto bot = botRepository.findByName(botName).orElseThrow(() -> new EntityNotFoundException("bot not found"));
 
+        if (!isSameUser(bot.user(), requestDto.userId())) {
+            throw new UserNotAllowedException("user not allowed to update bot");
+        }
+
         ApplicationUserDto userOfNewBot = userRepository
                 .findByUuid(requestDto.userId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found, userId might be wrong"));
 
-        if (requestDto.userId().equals(bot.user())) {
-            botRepository.delete(bot);
-            RemoteBotDto newDto = new RemoteBotDto(bot.uuid(),
-                    requestDto.userId(),
-                    requestDto.name(),
-                    requestDto.url(),
-                    requestDto.port());
-            botRepository.save(newDto);
-            return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port());
-        }
-        throw new UserNotAllowedException("User does not own this bot");
+        RemoteBotDto newDto = new RemoteBotDto(bot.uuid(),
+                requestDto.userId(),
+                requestDto.name(),
+                requestDto.url(),
+                requestDto.port());
+        botRepository.update(newDto);
+        return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port());
+    }
+
+    private boolean isSameUser(UUID botOwner, UUID requester) {
+        return botOwner.equals(requester);
     }
 }
