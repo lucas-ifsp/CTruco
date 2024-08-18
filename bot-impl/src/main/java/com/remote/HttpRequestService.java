@@ -23,7 +23,7 @@ public class HttpRequestService<T,R>  {
             return new Gson().fromJson(response, returnType);
         } catch (Exception e){
             System.out.println("Error: could not fetch remote bot decision");
-            e.printStackTrace();
+
         }
         return null;
     }
@@ -40,8 +40,7 @@ public class HttpRequestService<T,R>  {
                     .block();
             return Optional.ofNullable(new Gson().fromJson(response, returnType));
         } catch (Exception e){
-            System.out.println("Error: could not fetch remote bot decision");
-            e.printStackTrace();
+            System.out.println("Error: could not fetch remote bot info");
         }
         return Optional.empty();
     }
