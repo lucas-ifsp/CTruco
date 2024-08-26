@@ -70,7 +70,7 @@ public class PlayCardUseCase {
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
         this.botManagerService = botManagerService;
-        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository,botManagerService);
+        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository, botManagerService);
     }
 
     public IntelDto playCard(PlayCardDto request) {
@@ -96,15 +96,17 @@ public class PlayCardUseCase {
         if (hand.getCardToPlayAgainst().isEmpty()) hand.playFirstCard(player, playedCard);
         else hand.playSecondCard(player, playedCard);
 
-        final ResultHandler resultHandler = new ResultHandler(gameRepository,gameResultRepository, handResultRepository);
+        final ResultHandler resultHandler = new ResultHandler(gameRepository, gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
 
         gameRepository.update(GameConverter.toDto(game));
-        if(gameResult != null) return gameResult;
+        if (gameResult != null) return gameResult;
 
-        botUseCase.playWhenNecessary(game,botManagerService);
+        botUseCase.playWhenNecessary(game, botManagerService);
 
         game = gameRepository.findByPlayerUuid(request.uuid()).map(GameConverter::fromDto).orElseThrow();
-        return IntelConverter.toDto(game.getIntel());
+        IntelDto intelResponse = IntelConverter.toDto(game.getIntel());
+//        if (game.isDone()) gameRepository.delete(game.getUuid());
+        return intelResponse;
     }
 }
