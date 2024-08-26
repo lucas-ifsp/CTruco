@@ -20,4 +20,9 @@ public class BotController {
     private List<String> getBotNames(){
         return provider.providersNames();
     }
+
+    //TODO - fazer endpoint Evaluate Bots
+
+    //TODO - fazer endpoint Rank Bots -> hall da fama
+
 }

@@ -48,10 +48,8 @@ class ResultHandler {
         });
 
         if (game.isDone()) {
-            if (gameResultRepository != null){
-                SaveGameResultUseCase usecase = new SaveGameResultUseCase(gameRepository,gameResultRepository);
-                usecase.save(GameResultConverter.toDto(game));
-            }
+//            SaveGameResultUseCase usecase = new SaveGameResultUseCase(gameRepository, gameResultRepository);
+//            usecase.save(GameResultConverter.toDto(game));
             return IntelConverter.toDto(game.getIntel());
         }
         return null;

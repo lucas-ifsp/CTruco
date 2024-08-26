@@ -41,6 +41,6 @@ public class SaveGameResultUseCase {
     public void save(GameResultDto result){
         Objects.requireNonNull(result, "Result must not be null");
         gameResultRepository.save(result);
-        gameRepository.delete(result.gameUuid());
+//        gameRepository.delete(result.gameUuid());
     }
 }
