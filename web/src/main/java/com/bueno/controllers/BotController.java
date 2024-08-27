@@ -3,7 +3,6 @@ package com.bueno.controllers;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
 import com.bueno.domain.usecases.game.usecase.RankBotsUseCase;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +16,16 @@ public class BotController {
     BotManagerService provider;
     RemoteBotRepository remoteBotRepository;
     RemoteBotApi remoteBotApi;
+    RankBotsUseCase rankUseCase;
 
-    public BotController(BotManagerService provider, RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi) {
+    public BotController(BotManagerService provider,
+                         RemoteBotRepository remoteBotRepository,
+                         RemoteBotApi remoteBotApi
+    ) {
         this.provider = provider;
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
+        this.rankUseCase = new RankBotsUseCase(remoteBotRepository, remoteBotApi);
     }
 
     @GetMapping
@@ -45,9 +49,16 @@ public class BotController {
     @PostMapping("/rank")
     private ResponseEntity<?> RankBots() {
         try {
-            RankBotsUseCase rankUseCase = new RankBotsUseCase(remoteBotRepository, remoteBotApi);
-            var botsRank = rankUseCase.rankAll();
-            return ResponseEntity.ok("Ranking...");
+            if (rankUseCase.isRanking() && !rankUseCase.hasRank())
+                return ResponseEntity.ok("Ranking...");
+            else {
+                if (rankUseCase.isRanking() && rankUseCase.hasRank()) {
+                    return ResponseEntity.ok(rankUseCase.getRank());
+                } else {
+                    rankUseCase.rankAll();
+                    return ResponseEntity.ok("Ranking...");
+                }
+            }
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
