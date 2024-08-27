@@ -24,11 +24,12 @@ public class DataBaseBuilder {
     }
 
     private void dropDatabases() throws SQLException {
-        try(Statement statement = ConnectionFactory.createStatement()){
+        try (Statement statement = ConnectionFactory.createStatement()) {
             statement.addBatch("DROP TABLE IF EXISTS remote_bot");
             statement.addBatch("DROP TABLE IF EXISTS hand_result");
             statement.addBatch("DROP TABLE IF EXISTS game_result");
             statement.addBatch("DROP TABLE IF EXISTS app_user");
+            statement.addBatch("DROP TABLE IF EXISTS bot_rank");
             statement.executeBatch();
         }
     }
@@ -98,6 +99,16 @@ public class DataBaseBuilder {
                     r3_winner UUID,
                     vira VARCHAR(2),
                     CONSTRAINT hand_results_id_pk PRIMARY KEY(id)
+                );
+                """;
+    }
+
+    private String createRankBotsTable() {
+        return """
+                CREATE TABLE IF NOT EXISTS BOT_RANK(
+                    rank INTEGER,
+                    bot_name VARCHAR(30),
+                    CONSTRAINT bot_rank_pk PRIMARY KEY(rank)
                 );
                 """;
     }
