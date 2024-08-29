@@ -8,25 +8,23 @@ import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RankBotsUseCase {
-    private final int TIMES = 7;
+    private final int TIMES = 1;
 
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
-    private final Map<String, Long> rankMap;
     private final List<String> botNames;
     private final BotManagerService botManagerService;
     private boolean isRanking = false;
     private boolean hasRank = false;
-    private List<BotRankInfoDto> rank;
+    private List<BotRankInfoDto> rank = new ArrayList<>();
+    Map<String, Long> resultsMap = new HashMap<>();
+    private long start;
 
     public RankBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi) {
-        rankMap = new HashMap<>();
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
         botManagerService = new BotManagerService(remoteBotRepository, remoteBotApi);
@@ -35,25 +33,33 @@ public class RankBotsUseCase {
 
     public Map<String, Long> rankAll() {
         setIsRanking(true);
-        setHasRank(false);
+        start = System.currentTimeMillis();
+        System.out.println("simulando");
         botNames.forEach(this::playAgainstAll);
-        //TODO - deixar só rank, ou seja, retirar esse rankMap
-        setRank(rankMapToBotRankInfoDto(rankMap));
+        var sortedRankMap = resultsMap.entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        long rankNumber = 1;
+        for (Map.Entry<String, Long> bot : sortedRankMap.entrySet()) {
+            rank.add(new BotRankInfoDto(bot.getKey(), bot.getValue(), rankNumber));
+            rankNumber++;
+        }
+        System.out.println("terminou");
         setIsRanking(false);
         setHasRank(true);
-        return rankMap;
+        setRank(rank);
+        return resultsMap;
     }
 
     private void playAgainstAll(String botName) {
+
         UUID uuidBotToEvaluate = UUID.randomUUID();
-        var results = botNames.stream()
+        var botWins = botNames.stream()
                 .filter(opponentName -> isNotEvaluatedBot(opponentName, botName))
                 .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
-                .toList();
-
-        Long botWins = results.stream().mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
+                .mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
                 .sum();
-        rankMap.put(botName, botWins);
+        resultsMap.put(botName, botWins);
     }
 
     private boolean isNotEvaluatedBot(String opponentName, String botToEvaluateName) {
@@ -63,12 +69,6 @@ public class RankBotsUseCase {
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
         return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, UUID.randomUUID(), challengedBotName, TIMES);
-    }
-
-    private List<BotRankInfoDto> rankMapToBotRankInfoDto(Map<String, Long> rankMap) {
-        return rankMap.entrySet().stream()
-                .map(entry -> new BotRankInfoDto(entry.getKey(), entry.getValue()))
-                .toList();
     }
 
     public void setIsRanking(boolean ranking) {
@@ -85,6 +85,10 @@ public class RankBotsUseCase {
 
     public void setHasRank(boolean hasRank) {
         this.hasRank = hasRank;
+    }
+
+    public long getProcessingTime() {
+        return System.currentTimeMillis() - start;
     }
 
     public List<BotRankInfoDto> getRank() {
