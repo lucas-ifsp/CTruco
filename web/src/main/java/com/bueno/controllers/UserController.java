@@ -20,6 +20,8 @@
 
 package com.bueno.controllers;
 
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.game.usecase.ReportTopWinnersUseCase;
 import com.bueno.domain.usecases.game.usecase.UserRecordUseCase;
 import com.bueno.domain.usecases.game.dtos.UserRecordDto;
 import com.bueno.domain.usecases.user.FindUserUseCase;
@@ -42,16 +44,18 @@ public class UserController {
     private final FindUserUseCase findUserUseCase;
     private final UserRecordUseCase userRecordUseCase;
     private final PasswordEncoder encoder;
+    private final GameResultRepository gameResultRepository;
 
-    public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, UserRecordUseCase userRecordUseCase, PasswordEncoder encoder) {
+    public UserController(RegisterUserUseCase registerUserUseCase, FindUserUseCase findUserUseCase, UserRecordUseCase userRecordUseCase, PasswordEncoder encoder, GameResultRepository gameResultRepository) {
         this.registerUserUseCase = registerUserUseCase;
         this.findUserUseCase = findUserUseCase;
         this.userRecordUseCase = userRecordUseCase;
         this.encoder = encoder;
+        this.gameResultRepository = gameResultRepository;
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<RegisterUserResponseDto> create(@RequestBody RegisterUserRequestDto request){
+    public ResponseEntity<RegisterUserResponseDto> create(@RequestBody RegisterUserRequestDto request) {
         final String encodedPassword = encoder.encode(request.password());
         final RegisterUserRequestDto encodedPasswordRequest = new RegisterUserRequestDto(
                 request.username(),
@@ -62,8 +66,19 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping(path = "/api/v1/users/top-winners")
+    private ResponseEntity<?> topWinners() {
+        try {
+            ReportTopWinnersUseCase useCase = new ReportTopWinnersUseCase(gameResultRepository);
+            var response = useCase.create(5);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @GetMapping(path = "/api/v1/users/{uuid}")
-    public ResponseEntity<?> find(@PathVariable UUID uuid){
+    public ResponseEntity<?> find(@PathVariable UUID uuid) {
         final var response = findUserUseCase.findByUUID(uuid);
         final ApplicationUserDto responseWithoutPassword = new ApplicationUserDto(
                 response.uuid(),
@@ -75,7 +90,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/api/v1/users/{uuid}/matches")
-    public UserRecordDto removeGame(@PathVariable UUID uuid){
+    public UserRecordDto removeGame(@PathVariable UUID uuid) {
         return userRecordUseCase.listByUuid(uuid);
     }
 }
