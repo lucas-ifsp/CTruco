@@ -113,7 +113,7 @@ public class GameResultRepositoryImpl implements GameResultRepository {
                 ORDER BY ending_time DESC
                 """;
         try (PreparedStatement statement = ConnectionFactory.createPreparedStatement(sql)) {
-            List<GameResultQR> players = new ArrayList<>();
+            List<GameResultQR> gameResults = new ArrayList<>();
             statement.setObject(1, uuid);
             statement.setObject(2, uuid);
             statement.setObject(3, uuid);
@@ -121,13 +121,13 @@ public class GameResultRepositoryImpl implements GameResultRepository {
             statement.setObject(5, uuid);
             statement.setObject(6, uuid);
             ResultSet res = statement.executeQuery();
-            while (res.next()) players.add(new GameResultQR(
+            while (res.next()) gameResults.add(new GameResultQR(
                     LocalDateTime.parse(res.getString("ending")),
                     res.getString("player1"),
                     res.getString("player2"),
                     res.getString("winner")
             ));
-            return players.stream().map(r -> new GameResultUsernamesDto(
+            return gameResults.stream().map(r -> new GameResultUsernamesDto(
                             r.ending(),
                             r.player1(),
                             r.player2(),
