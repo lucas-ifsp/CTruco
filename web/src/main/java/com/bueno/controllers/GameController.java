@@ -25,6 +25,7 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.*;
+import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.usecase.RemoveGameUseCase;
@@ -51,17 +52,19 @@ public class GameController {
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
     private final BotManagerService botManagerService;
+    private final GameResultRepository gameResultRepository;
 
 
     public GameController(CreateGameUseCase createGameUseCase,
                           RemoveGameUseCase removeGameUseCase,
-                          GameRepository gameRepository, RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
+                          GameRepository gameRepository, RemoteBotRepository remoteBotRepository, RemoteBotApi remoteBotApi, BotManagerService botManagerService, GameResultRepository gameResultRepository) {
         this.createGameUseCase = createGameUseCase;
         this.removeGameUseCase = removeGameUseCase;
         this.gameRepository = gameRepository;
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
         this.botManagerService = botManagerService;
+        this.gameResultRepository = gameResultRepository;
     }
 
     @PostMapping(path = "/user-bot")
@@ -124,6 +127,21 @@ public class GameController {
         }
         return new ResponseBuilder(HttpStatus.NOT_FOUND)
                 .addEntry(new ResponseEntry("error", "User with UUID " + uuid + " is not in an active game."))
+                .addTimestamp()
+                .build();
+    }
+
+    @GetMapping(path = "players/{uuid}/match-history")
+    private ResponseEntity<?> listGameResultsByPlayerUuid(@PathVariable UUID uuid) {
+        final var results = gameResultRepository.findAllByUserUuid(uuid);
+        if (results.isEmpty()) {
+            return new ResponseBuilder(HttpStatus.NOT_FOUND)
+                    .addEntry(new ResponseEntry("error", "User with UUID has no match history"))
+                    .addTimestamp()
+                    .build();
+        }
+        return new ResponseBuilder(HttpStatus.OK)
+                .addEntry(new ResponseEntry("games", results))
                 .addTimestamp()
                 .build();
     }
