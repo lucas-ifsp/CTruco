@@ -61,7 +61,7 @@ public class BotController {
         if (rankUseCase.isRanking())
             return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Ranking... " + rankUseCase.getProcessingTime() + "ms");
         if (rankUseCase.hasRank()) {
-//            rankUseCase.setHasRank(false);
+            rankUseCase.setHasRank(false);
             return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Rank finished");
         }
         rankUseCase.rankAll();
