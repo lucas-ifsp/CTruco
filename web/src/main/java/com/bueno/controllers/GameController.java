@@ -148,7 +148,8 @@ public class GameController {
 
     @DeleteMapping(path = "/players/{uuid}")
     public ResponseEntity<IntelDto> removeGame(@PathVariable UUID uuid) {
-        removeGameUseCase.byUserUuid(uuid);
+        final boolean isFromInactivity = false;
+        removeGameUseCase.byUserUuid(uuid,false);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
