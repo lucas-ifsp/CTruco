@@ -31,6 +31,11 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -79,6 +84,7 @@ public class GameResultRepositoryImpl implements GameResultRepository {
                     res.getLong("wins")
             ));
             return players.stream()
+                    .filter(playerWinsQR -> playerWinsQR.userName() != null && playerWinsQR.wins() > 0)
                     .map(playerWinsQR -> new PlayerWinsDto(
                             playerWinsQR.userName(),
                             playerWinsQR.wins().intValue()))
@@ -93,44 +99,56 @@ public class GameResultRepositoryImpl implements GameResultRepository {
     @Override
     public List<GameResultUsernamesDto> findAllByUserUuid(UUID uuid) {
         String sql = """
-                SELECT ending_time ending, temp1.p1 player1, temp2.p2 player2, temp3.win winner FROM
-                    (SELECT game_uuid, player1_uuid p1_uuid, username p1, game_end ending_time FROM app_user app
-                    LEFT JOIN game_result game ON app.uuid = game.player1_uuid
-                    WHERE game.player1_uuid = ? OR game.player2_uuid = ?
-                    ) AS temp1
-                INNER JOIN
-                    (SELECT game_uuid, player2_uuid p2_uuid, username p2 FROM app_user app
-                    LEFT JOIN game_result game ON app.uuid = game.player2_uuid
-                     WHERE game.player1_uuid = ? OR game.player2_uuid = ?
-                    ) AS temp2
-                ON temp1.game_uuid = temp2.game_uuid
-                INNER JOIN
-                    (SELECT game_uuid, winner_uuid win_uuid, username win  FROM app_user app
-                    LEFT JOIN game_result game ON app.uuid = game.winner_uuid
-                     WHERE game.player1_uuid = ? OR game.player2_uuid = ?
-                    ) AS temp3
-                ON temp1.game_uuid = temp3.game_uuid
-                ORDER BY ending_time DESC
+                SELECT game.game_end      AS ending,
+                       game.game_start    as start,
+                       game.player1_score AS player1_score,
+                       game.player2_score AS player2_score,
+                       player1.username   AS player1,
+                       player2.username   AS player2,
+                       winner.username    AS winner
+                FROM game_result game
+                         JOIN
+                     app_user player1 ON game.player1_uuid = player1.uuid
+                         JOIN
+                     app_user player2 ON game.player2_uuid = player2.uuid
+                         JOIN
+                     app_user winner ON game.winner_uuid = winner.uuid
+                WHERE game.player1_uuid = ?
+                   OR game.player2_uuid = ?
+                ORDER BY game.game_end DESC;
                 """;
         try (PreparedStatement statement = ConnectionFactory.createPreparedStatement(sql)) {
             List<GameResultQR> gameResults = new ArrayList<>();
             statement.setObject(1, uuid);
             statement.setObject(2, uuid);
-            statement.setObject(3, uuid);
-            statement.setObject(4, uuid);
-            statement.setObject(5, uuid);
-            statement.setObject(6, uuid);
             ResultSet res = statement.executeQuery();
             while (res.next()) gameResults.add(new GameResultQR(
-                    LocalDateTime.parse(res.getString("ending")),
+                    res.getObject("ending", LocalDateTime.class),
+                    res.getObject("start", LocalDateTime.class),
+                    res.getInt("player1_score"),
+                    res.getInt("player2_score"),
                     res.getString("player1"),
                     res.getString("player2"),
                     res.getString("winner")
             ));
             return gameResults.stream().map(r -> new GameResultUsernamesDto(
                             r.ending(),
-                            r.player1(),
-                            r.player2(),
+                            r.ending().getDayOfMonth(),
+                            r.ending().getMonthValue(),
+                            r.ending().getYear(),
+                            r.ending().getHour(),
+                            r.ending().getMinute(),
+                            r.start(),
+                            r.start().getDayOfMonth(),
+                            r.start().getMonthValue(),
+                            r.start().getYear(),
+                            r.start().getHour(),
+                            r.start().getMinute(),
+                            r.start().until(r.ending(), ChronoUnit.SECONDS),
+                            r.p1Score(),
+                            r.p2Score(),
+                            r.p1Name(),
+                            r.p2Name(),
                             r.winner()
                     ))
                     .toList();

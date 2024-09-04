@@ -22,5 +22,12 @@ package com.bueno.persistence.dto;
 
 import java.time.LocalDateTime;
 
-public record GameResultQR(LocalDateTime ending, String player1, String player2, String winner) {
+public record GameResultQR(LocalDateTime ending,
+                           LocalDateTime start,
+                           int p1Score,
+                           int p2Score,
+                           String p1Name,
+                           String p2Name,
+                           String winner
+) {
 }

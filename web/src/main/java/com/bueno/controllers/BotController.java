@@ -51,6 +51,8 @@ public class BotController {
     }
 
     //TODO - fazer endpoint Rank Bots -> hall da fama
+    //TODO - separar em dois endpoint um para iniciar a simulação e outro para consultar uma tabela no banco
+    // com um rank pré pronto
     @PostMapping("/rank")
     private ResponseEntity<?> rankBots() {
         try {
