@@ -29,6 +29,8 @@ import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import com.bueno.domain.usecases.user.dtos.RegisterUserResponseDto;
+import com.bueno.responses.ResponseBuilder;
+import com.bueno.responses.ResponseEntry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,9 +73,15 @@ public class UserController {
         try {
             ReportTopWinnersUseCase useCase = new ReportTopWinnersUseCase(gameResultRepository);
             var response = useCase.create(5);
-            return ResponseEntity.ok().body(response);
+            return new ResponseBuilder(HttpStatus.OK)
+                    .addEntry(new ResponseEntry("topWinners", response))
+                    .addTimestamp()
+                    .build();
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return new ResponseBuilder(HttpStatus.NOT_FOUND)
+                    .addEntry(new ResponseEntry("error", "the server couldn't found the top winners"))
+                    .addTimestamp()
+                    .build();
         }
     }
 
