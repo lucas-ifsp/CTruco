@@ -30,6 +30,7 @@ import com.bueno.persistence.dto.PlayerWinsQR;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -99,7 +100,9 @@ public class GameResultRepositoryImpl implements GameResultRepository {
     @Override
     public List<GameResultUsernamesDto> findAllByUserUuid(UUID uuid) {
         String sql = """
-                SELECT game.game_end      AS ending,
+                SELECT
+                       game.game_uuid     AS game_uuid,
+                       game.game_end      AS ending,
                        game.game_start    as start,
                        game.player1_score AS player1_score,
                        game.player2_score AS player2_score,
@@ -123,6 +126,7 @@ public class GameResultRepositoryImpl implements GameResultRepository {
             statement.setObject(2, uuid);
             ResultSet res = statement.executeQuery();
             while (res.next()) gameResults.add(new GameResultQR(
+                    res.getObject("game_uuid", UUID.class),
                     res.getObject("ending", LocalDateTime.class),
                     res.getObject("start", LocalDateTime.class),
                     res.getInt("player1_score"),
@@ -132,18 +136,9 @@ public class GameResultRepositoryImpl implements GameResultRepository {
                     res.getString("winner")
             ));
             return gameResults.stream().map(r -> new GameResultUsernamesDto(
-                            r.ending(),
-                            r.ending().getDayOfMonth(),
-                            r.ending().getMonthValue(),
-                            r.ending().getYear(),
-                            r.ending().getHour(),
-                            r.ending().getMinute(),
-                            r.start(),
-                            r.start().getDayOfMonth(),
-                            r.start().getMonthValue(),
-                            r.start().getYear(),
-                            r.start().getHour(),
-                            r.start().getMinute(),
+                            r.gameId(),
+                            dateTimeFormatter(r.ending().toLocalDate(), r.ending().getHour(), r.ending().getMinute()),
+                            dateTimeFormatter(r.start().toLocalDate(), r.start().getHour(), r.start().getMinute()),
                             r.start().until(r.ending(), ChronoUnit.SECONDS),
                             r.p1Score(),
                             r.p2Score(),
@@ -159,5 +154,12 @@ public class GameResultRepositoryImpl implements GameResultRepository {
         }
         return List.of();
 
+    }
+
+    private String dateTimeFormatter(LocalDate date, long minute, long hour) {
+        return date + " " +
+                hour +
+                ":" +
+                (minute > 9 ? minute : ("0" + minute));
     }
 }
