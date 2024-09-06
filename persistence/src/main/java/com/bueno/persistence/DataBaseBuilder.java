@@ -14,6 +14,7 @@ public class DataBaseBuilder {
             statement.addBatch(createRemoteBotsTable());
             statement.addBatch(createGameResultTable());
             statement.addBatch(createHandResultsTable());
+            statement.addBatch(createRankBotsTable());
             statement.executeBatch();
 
             System.out.println("DATABASE CREATED");
@@ -29,7 +30,7 @@ public class DataBaseBuilder {
             statement.addBatch("DROP TABLE IF EXISTS hand_result");
             statement.addBatch("DROP TABLE IF EXISTS game_result");
             statement.addBatch("DROP TABLE IF EXISTS app_user");
-            statement.addBatch("DROP TABLE IF EXISTS bot_rank");
+//            statement.addBatch("DROP TABLE IF EXISTS bot_rank");
             statement.executeBatch();
         }
     }
@@ -108,6 +109,7 @@ public class DataBaseBuilder {
                 CREATE TABLE IF NOT EXISTS BOT_RANK(
                     rank INTEGER,
                     bot_name VARCHAR(30),
+                    wins INTEGER,
                     CONSTRAINT bot_rank_pk PRIMARY KEY(rank)
                 );
                 """;

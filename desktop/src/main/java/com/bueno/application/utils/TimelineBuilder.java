@@ -32,17 +32,17 @@ public class TimelineBuilder {
         this.timeline = new Timeline();
     }
 
-    public void append(Runnable runnable){
+    public void append(Runnable runnable) {
         append(0.0, runnable);
     }
 
-    public void append(double durationInSeconds, Runnable runnable){
+    public void append(double durationInSeconds, Runnable runnable) {
         time += durationInSeconds;
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(time), e -> runnable.run());
         timeline.getKeyFrames().add(keyFrame);
     }
 
-    public Timeline build(){
+    public Timeline build() {
         return timeline;
     }
 

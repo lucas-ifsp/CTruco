@@ -10,6 +10,7 @@ module application.persistence {
     requires java.rmi;
     requires java.persistence;
     requires spring.data.jpa;
+    requires java.naming;
     exports com.bueno.persistence.repositories;
     exports com.bueno.persistence.dao;
     exports com.bueno.persistence.dto;
