@@ -7,12 +7,14 @@ import com.bueno.domain.usecases.game.dtos.BotRankInfoDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
 import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class RankBotsUseCase {
-    private final int TIMES = 1;
+    private final int TIMES = 7;
 
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
@@ -32,22 +34,14 @@ public class RankBotsUseCase {
     }
 
     public Map<String, Long> rankAll() {
+        setRank(new ArrayList<>());
         setIsRanking(true);
         start = System.currentTimeMillis();
         System.out.println("simulando");
         botNames.forEach(this::playAgainstAll);
-        var sortedRankMap = resultsMap.entrySet().stream()
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        long rankNumber = 1;
-        for (Map.Entry<String, Long> bot : sortedRankMap.entrySet()) {
-            rank.add(new BotRankInfoDto(bot.getKey(), bot.getValue(), rankNumber));
-            rankNumber++;
-        }
+        resultsHandler(rank, resultsMap);
         System.out.println("terminou");
         setIsRanking(false);
-        setHasRank(true);
-        setRank(rank);
         return resultsMap;
     }
 
@@ -69,6 +63,17 @@ public class RankBotsUseCase {
     private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
         return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, UUID.randomUUID(), challengedBotName, TIMES);
+    }
+
+    static void resultsHandler(List<BotRankInfoDto> rank, Map<String, Long> result) {
+        var sortedRankMap = result.entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        long rankNumber = 1;
+        for (Map.Entry<String, Long> bot : sortedRankMap.entrySet()) {
+            rank.add(new BotRankInfoDto(bot.getKey(), bot.getValue(), rankNumber));
+            rankNumber++;
+        }
     }
 
     public void setIsRanking(boolean ranking) {

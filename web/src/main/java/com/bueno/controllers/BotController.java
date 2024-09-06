@@ -3,12 +3,11 @@ package com.bueno.controllers;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.game.dtos.RankBotsResponse;
-import com.bueno.domain.usecases.game.repos.GameResultRepository;
-import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
-import com.bueno.domain.usecases.game.usecase.RankBotsUseCase;
-import com.bueno.domain.usecases.game.usecase.ReportTopWinnersUseCase;
-import com.bueno.persistence.repositories.GameResultRepositoryImpl;
+import com.bueno.domain.usecases.game.dtos.BotRankInfoDto;
+import com.bueno.domain.usecases.game.usecase.*;
+import com.bueno.responses.ResponseBuilder;
+import com.bueno.responses.ResponseEntry;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +19,20 @@ public class BotController {
     private final BotManagerService provider;
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
-    private final RankBotsUseCase rankUseCase;
-
+    private final GetRankBotsUseCase getRankUseCase;
+    private Thread rankInParallelThread;
+    private final RankAllInParallelUseCase rankInParallel;
 
     public BotController(BotManagerService provider,
                          RemoteBotRepository remoteBotRepository,
-                         RemoteBotApi remoteBotApi
-    ) {
+                         RemoteBotApi remoteBotApi,
+                         GetRankBotsUseCase getRankUseCase, RankAllInParallelUseCase rankInParallel) {
         this.provider = provider;
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
-        this.rankUseCase = new RankBotsUseCase(remoteBotRepository, remoteBotApi);
+        this.getRankUseCase = getRankUseCase;
+        this.rankInParallel = rankInParallel;
+        this.rankInParallelThread = new Thread(rankInParallel);
     }
 
     @GetMapping
@@ -50,30 +52,43 @@ public class BotController {
         }
     }
 
-    //TODO - fazer endpoint Rank Bots -> hall da fama
-    //TODO - separar em dois endpoint um para iniciar a simulação e outro para consultar uma tabela no banco
-    // com um rank pré pronto
     @PostMapping("/rank")
     private ResponseEntity<?> rankBots() {
         try {
-            var response = rankBotsResponseFactory();
-            return ResponseEntity.ok().body(response);
+            if (rankInParallelThread.isAlive()) throw new InterruptedException("Thread is already running");
+//            rankInParallelThread.interrupt();
+//            rankInParallelThread = new Thread(rankInParallel);
+            rankInParallelThread.start();
+            return new ResponseBuilder(HttpStatus.OK)
+                    .addEntry(new ResponseEntry("request accepted", "starting to rank"))
+                    .addTimestamp()
+                    .build();
+        } catch (InterruptedException e) {
+            return new ResponseBuilder(HttpStatus.CONFLICT)
+                    .addEntry(new ResponseEntry("error", e.getMessage()))
+                    .addTimestamp()
+                    .build();
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return new ResponseBuilder(HttpStatus.NOT_FOUND)
+                    .addEntry(new ResponseEntry("error", "something went wrong"))
+                    .addTimestamp()
+                    .build();
         }
     }
 
-
-    private RankBotsResponse rankBotsResponseFactory() {
-        if (rankUseCase.isRanking())
-            return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Ranking... " + rankUseCase.getProcessingTime() + "ms");
-        if (rankUseCase.hasRank()) {
-            rankUseCase.setHasRank(false);
-            return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Rank finished");
+    @GetMapping("/rank")
+    private ResponseEntity<?> reportTopWinners() {
+        try {
+            List<BotRankInfoDto> response = getRankUseCase.exec();
+            return new ResponseBuilder(HttpStatus.OK)
+                    .addEntry(new ResponseEntry("rank", response))
+                    .addTimestamp()
+                    .build();
+        } catch (Exception e) {
+            return new ResponseBuilder(HttpStatus.NOT_FOUND)
+                    .addEntry(new ResponseEntry("error", "the server couldn't found bots rank"))
+                    .addTimestamp()
+                    .build();
         }
-        rankUseCase.rankAll();
-        return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Starting to rank");
-
     }
-
 }
