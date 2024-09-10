@@ -9,6 +9,7 @@ import java.util.List;
 @Service
 public class GetRankBotsUseCase {
     private final RankBotsRepository rankBotsRepository;
+    private List<BotRankInfoDto> rank;
 
 
     public GetRankBotsUseCase(RankBotsRepository rankBotsRepository) {
@@ -20,4 +21,9 @@ public class GetRankBotsUseCase {
 
         return rank;
     }
+
+    public int getNumberOfBots() {
+        return rank.size();
+    }
+
 }

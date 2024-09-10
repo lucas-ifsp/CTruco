@@ -4,6 +4,7 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.BotRankInfoDto;
+import com.bueno.domain.usecases.game.dtos.RankBotsResponse;
 import com.bueno.domain.usecases.game.usecase.*;
 import com.bueno.responses.ResponseBuilder;
 import com.bueno.responses.ResponseEntry;
@@ -21,7 +22,6 @@ public class BotController {
     private final RemoteBotApi remoteBotApi;
     private final GetRankBotsUseCase getRankUseCase;
     private Thread rankInParallelThread;
-    private final RankAllInParallelUseCase rankInParallel;
 
     public BotController(BotManagerService provider,
                          RemoteBotRepository remoteBotRepository,
@@ -31,7 +31,6 @@ public class BotController {
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
         this.getRankUseCase = getRankUseCase;
-        this.rankInParallel = rankInParallel;
         this.rankInParallelThread = new Thread(rankInParallel);
     }
 
@@ -79,7 +78,9 @@ public class BotController {
     @GetMapping("/rank")
     private ResponseEntity<?> reportTopWinners() {
         try {
-            List<BotRankInfoDto> response = getRankUseCase.exec();
+            List<BotRankInfoDto> results = getRankUseCase.exec();
+            RankBotsResponse response = new RankBotsResponse(results,
+                    getNumberOfSimulationsToRankOneBot(getRankUseCase.getNumberOfBots()));
             return new ResponseBuilder(HttpStatus.OK)
                     .addEntry(new ResponseEntry("rank", response))
                     .addTimestamp()
@@ -90,5 +91,9 @@ public class BotController {
                     .addTimestamp()
                     .build();
         }
+    }
+
+    public static long getNumberOfSimulationsToRankOneBot(int numberOfBots) {
+        return (long) (numberOfBots - 1) * RankBotsUseCase.TIMES_RANK;
     }
 }
