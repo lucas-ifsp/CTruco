@@ -35,8 +35,8 @@ public class SimulationService {
 
         return Stream.generate(() -> gameWaitingForBeCreatedAndPlayed)
                 .limit(times)
-                .parallel()
                 .map(executeGameCall())
+                .parallel()
                 .filter(Objects::nonNull)
                 .toList();
     }
