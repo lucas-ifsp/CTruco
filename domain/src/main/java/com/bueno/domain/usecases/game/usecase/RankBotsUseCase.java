@@ -6,7 +6,6 @@ import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.BotRankInfoDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.service.SimulationService;
-import com.bueno.domain.usecases.game.service.WinsAccumulatorService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RankBotsUseCase {
-    private final int TIMES = 7;
+    public static final int TIMES_RANK = 7;
 
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
@@ -39,33 +38,13 @@ public class RankBotsUseCase {
         start = System.currentTimeMillis();
         System.out.println("simulando");
         botNames.forEach(this::playAgainstAll);
-        resultsHandler(rank, resultsMap);
+        resultsHandler(resultsMap, botNames);
         System.out.println("terminou");
         setIsRanking(false);
         return resultsMap;
     }
 
-    private void playAgainstAll(String botName) {
-
-        UUID uuidBotToEvaluate = UUID.randomUUID();
-        var botWins = botNames.stream()
-                .filter(opponentName -> isNotEvaluatedBot(opponentName, botName))
-                .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
-                .mapToLong(match -> WinsAccumulatorService.getWins(match, botName, TIMES))
-                .sum();
-        resultsMap.put(botName, botWins);
-    }
-
-    private boolean isNotEvaluatedBot(String opponentName, String botToEvaluateName) {
-        return !opponentName.equals(botToEvaluateName);
-    }
-
-    private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
-        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
-        return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, UUID.randomUUID(), challengedBotName, TIMES);
-    }
-
-    static void resultsHandler(List<BotRankInfoDto> rank, Map<String, Long> result) {
+    private void resultsHandler(Map<String, Long> result, List<String> botNames) {
         var sortedRankMap = result.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -75,6 +54,29 @@ public class RankBotsUseCase {
             rankNumber++;
         }
     }
+
+    private void playAgainstAll(String botName) {
+
+        UUID uuidBotToEvaluate = UUID.randomUUID();
+        long botWins = botNames.stream()
+                .filter(opponentName -> isNotEvaluatedBot(opponentName, botName))
+                .map(opponent -> runSimulations(opponent, botName, uuidBotToEvaluate))
+                .flatMap(List::stream)
+                .filter(result -> result.name().equals(botName))
+                .count();
+
+        resultsMap.put(botName, botWins);
+    }
+
+    private boolean isNotEvaluatedBot(String opponentName, String botToEvaluateName) {
+        return !opponentName.equals(botToEvaluateName);
+    }
+
+    private List<PlayWithBotsDto> runSimulations(String challengedBotName, String botToEvaluateName, UUID uuidBotToEvaluate) {
+        final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
+        return simulator.runInParallel(uuidBotToEvaluate, botToEvaluateName, UUID.randomUUID(), challengedBotName, TIMES_RANK);
+    }
+
 
     public void setIsRanking(boolean ranking) {
         isRanking = ranking;

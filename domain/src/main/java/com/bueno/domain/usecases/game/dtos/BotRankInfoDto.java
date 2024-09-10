@@ -1,5 +1,5 @@
 package com.bueno.domain.usecases.game.dtos;
 
 //TODO - adicionar partidas totais
-public record BotRankInfoDto(String botName, Long botWins, Long botRank) {
+public record BotRankInfoDto(String botName, long botWins, long botRank) {
 }

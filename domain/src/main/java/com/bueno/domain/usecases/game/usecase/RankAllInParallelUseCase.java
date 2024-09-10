@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.bueno.domain.usecases.game.usecase.RankBotsUseCase.resultsHandler;
-
 @Service
 public class RankAllInParallelUseCase implements Runnable {
     private final RankBotsUseCase rankBotsUseCase;
-    private final List<BotRankInfoDto> rank;
+    private List<BotRankInfoDto> rank;
     private final RankBotsRepository rankBotsRepository;
 
 
@@ -24,8 +22,7 @@ public class RankAllInParallelUseCase implements Runnable {
     @Override
     public void run() {
         Map<String, Long> result = rankBotsUseCase.rankAll();
-        resultsHandler(rank, result);
-        rankBotsUseCase.setRank(rank);
+        rank = rankBotsUseCase.getRank();
         System.out.println("Vai Atualizar no banco agora");
         rank.forEach(System.out::println);
         rankBotsRepository.refreshTable(rank);
