@@ -21,7 +21,7 @@ public class RankAllInParallelUseCase implements Runnable {
 
     @Override
     public void run() {
-        Map<String, Long> result = rankBotsUseCase.rankAll();
+        rankBotsUseCase.rankAll();
         rank = rankBotsUseCase.getRank();
         System.out.println("Vai Atualizar no banco agora");
         rank.forEach(System.out::println);

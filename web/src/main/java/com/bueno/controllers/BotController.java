@@ -82,7 +82,7 @@ public class BotController {
             RankBotsResponse response = new RankBotsResponse(results,
                     getNumberOfSimulationsToRankOneBot(getRankUseCase.getNumberOfBots()));
             return new ResponseBuilder(HttpStatus.OK)
-                    .addEntry(new ResponseEntry("rank", response))
+                    .addEntry(new ResponseEntry("payload", response))
                     .addTimestamp()
                     .build();
         } catch (Exception e) {

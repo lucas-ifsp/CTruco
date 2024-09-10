@@ -17,7 +17,7 @@ public class GetRankBotsUseCase {
     }
 
     public List<BotRankInfoDto> exec() {
-        var rank = rankBotsRepository.findAll();
+        rank = rankBotsRepository.findAll();
 
         return rank;
     }
