@@ -29,9 +29,9 @@ public class SimulationService {
         this.botManagerService = providerService;
     }
 
-    public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate, String botToEvaluateName,UUID challengedBotuuid, String challengedBotName, int times ) {
+    public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate, String botToEvaluateName, UUID challengedBotuuid, String challengedBotName, int times) {
         final Callable<PlayWithBotsDto> gameWaitingForBeCreatedAndPlayed =
-                () -> simulate(uuidBotToEvaluate, botToEvaluateName,challengedBotuuid, challengedBotName);
+                () -> simulate(uuidBotToEvaluate, botToEvaluateName, challengedBotuuid, challengedBotName);
 
         return Stream.generate(() -> gameWaitingForBeCreatedAndPlayed)
                 .limit(times)
@@ -45,10 +45,10 @@ public class SimulationService {
         GameRepository gameRepository = new GameRepoDisposableImpl();
 
         final var requestModel = new CreateForBotsDto(evaluatedUuid, evaluateName, challengedUuid, challengedName);
-        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository, remoteBotRepository, remoteBotApi,botManagerService);
+        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository, remoteBotRepository, remoteBotApi, botManagerService);
         createGameUseCase.createForBots(requestModel);
         final var game = gameRepository.findByPlayerUuid(requestModel.bot1Uuid()).map(GameConverter::fromDto).orElseThrow();
-        final var botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi,botManagerService);
+        final var botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, botManagerService);
 
         //Plays the game
         final var intel = botUseCase.playWhenNecessary(game, botManagerService);
