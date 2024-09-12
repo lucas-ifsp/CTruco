@@ -40,12 +40,17 @@ public class BotController {
     }
 
     //TODO - fazer endpoint Evaluate Bots
-    @PostMapping("/{botName}")
+    @PostMapping("/evaluate/{botName}")
     private ResponseEntity<?> evaluateBot(@PathVariable String botName) {
         try {
             EvaluateBotsUseCase evaluateUseCase = new EvaluateBotsUseCase(remoteBotRepository, remoteBotApi, provider);
+            System.out.println("avaliando bot");
             var evaluateResults = evaluateUseCase.evaluateWithAll(botName);
-            return ResponseEntity.ok().body(evaluateResults);
+            System.out.println("terminou");
+            return new ResponseBuilder(HttpStatus.OK)
+                    .addEntry(new ResponseEntry("payload", evaluateResults))
+                    .addTimestamp()
+                    .build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
@@ -76,7 +81,7 @@ public class BotController {
     }
 
     @GetMapping("/rank")
-    private ResponseEntity<?> reportTopWinners() {
+    private ResponseEntity<?> getRankFromDB() {
         try {
             List<BotRankInfoDto> results = getRankUseCase.exec();
             RankBotsResponse response = new RankBotsResponse(results,
