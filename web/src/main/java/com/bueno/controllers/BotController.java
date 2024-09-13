@@ -21,17 +21,21 @@ public class BotController {
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi remoteBotApi;
     private final GetRankBotsUseCase getRankUseCase;
-    private Thread rankInParallelThread;
+    private final EvaluateBotsUseCase evaluateUseCase;
+    private final Thread rankInParallelThread;
 
     public BotController(BotManagerService provider,
                          RemoteBotRepository remoteBotRepository,
                          RemoteBotApi remoteBotApi,
-                         GetRankBotsUseCase getRankUseCase, RankAllInParallelUseCase rankInParallel) {
+                         GetRankBotsUseCase getRankUseCase,
+                         RankAllInParallelUseCase rankInParallel,
+                         EvaluateBotsUseCase evaluateUseCase) {
         this.provider = provider;
         this.remoteBotRepository = remoteBotRepository;
         this.remoteBotApi = remoteBotApi;
         this.getRankUseCase = getRankUseCase;
         this.rankInParallelThread = new Thread(rankInParallel);
+        this.evaluateUseCase = evaluateUseCase;
     }
 
     @GetMapping
@@ -43,7 +47,6 @@ public class BotController {
     @PostMapping("/evaluate/{botName}")
     private ResponseEntity<?> evaluateBot(@PathVariable String botName) {
         try {
-            EvaluateBotsUseCase evaluateUseCase = new EvaluateBotsUseCase(remoteBotRepository, remoteBotApi, provider);
             System.out.println("avaliando bot");
             var evaluateResults = evaluateUseCase.evaluateWithAll(botName);
             System.out.println("terminou");

@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public record TopWinnersDto(Map<String, Integer> topUsersRecords){
-    public TopWinnersDto(List<PlayerWinsDto> topUserRecords){
+public record TopWinnersDto(Map<String, Integer> topUsersRecords) {
+    public TopWinnersDto(List<PlayerWinsDto> topUserRecords) {
         this(topUserRecords.stream().collect(Collectors.toMap(PlayerWinsDto::username, PlayerWinsDto::wins)));
     }
 }
