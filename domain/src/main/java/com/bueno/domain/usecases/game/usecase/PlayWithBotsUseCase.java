@@ -47,7 +47,7 @@ public class PlayWithBotsUseCase {
         final var simulator = new SimulationService(remoteBotRepository, remoteBotApi, botManagerService);
         final List<PlayWithBotsDto> results = simulator.runInParallel(uuidBot1, bot1Name, uuidBot2, bot2Name, times);
         final long end = System.currentTimeMillis();
-        final PlayWithBotsResultsDto response = new PlayWithBotsResultsDto(results,(end - start),times);
+        final PlayWithBotsResultsDto response = new PlayWithBotsResultsDto(results, (end - start), times);
         return response;
     }
 }
