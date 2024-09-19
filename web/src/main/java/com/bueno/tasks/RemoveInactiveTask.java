@@ -28,8 +28,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
+
 //TODO - fazer um criar rank utilizando @Scheduled 5hrs
-//TODO - aprender sobre runnable e task
 @Component
 public class RemoveInactiveTask {
 
