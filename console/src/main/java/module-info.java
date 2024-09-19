@@ -5,4 +5,5 @@ module application.console {
     requires application.persistence;
     requires bot.impl;
     requires java.sql;
+    requires bot.spi;
 }
