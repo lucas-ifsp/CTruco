@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -66,10 +67,10 @@ public class CreateGameUseCase {
         this(gameRepo, null, botRepository, remoteBotApi, botManagerService);
     }
 
-    public IntelDto createForUserAndBot(CreateForUserAndBotDto request){
+    public IntelDto createForUserAndBot(CreateForUserAndBotDto request) {
         Objects.requireNonNull(request, "Request not be null!");
 
-        if(hasNoBotServiceWith(request.botName()))
+        if (hasNoBotServiceWith(request.botName()))
             throw new NoSuchElementException("Service implementation not available: " + request.botName());
 
         final ApplicationUserDto user = userRepo.findByUuid(request.userUuid())
@@ -79,19 +80,22 @@ public class CreateGameUseCase {
         final Player botPlayer = Player.ofBot(request.botName());
 
         gameRepo.findByPlayerUuid(userPlayer.getUuid()).ifPresent(unused -> {
-            throw new IllegalGameEnrolmentException(userPlayer.getUuid() + " is already playing a game.");});
+            throw new IllegalGameEnrolmentException(userPlayer.getUuid() + " is already playing a game.");
+        });
 
         return create(userPlayer, botPlayer);
     }
 
     private boolean hasNoBotServiceWith(String botName) {
+        List<String> availableBots = botManagerService.providersNames();
+        boolean hasService = availableBots.contains(botName);
         return !Objects.requireNonNull(botManagerService.providersNames()).contains(botName);
     }
 
-    public IntelDto createDetached(CreateDetachedDto request){
+    public IntelDto createDetached(CreateDetachedDto request) {
         Objects.requireNonNull(request, "Request model not be null!");
 
-        if(hasNoBotServiceWith(request.botName()))
+        if (hasNoBotServiceWith(request.botName()))
             throw new NoSuchElementException("Service implementation not available: " + request.botName());
 
         final Player userPlayer = Player.of(request.userUuid(), request.username());
@@ -100,13 +104,13 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    public IntelDto createForBots(CreateForBotsDto request){
+    public IntelDto createForBots(CreateForBotsDto request) {
         Objects.requireNonNull(request);
 
-        if(hasNoBotServiceWith(request.bot1Name()))
+        if (hasNoBotServiceWith(request.bot1Name()))
             throw new NoSuchElementException("Service implementation not available: " + request.bot1Name());
 
-        if(hasNoBotServiceWith(request.bot2Name()))
+        if (hasNoBotServiceWith(request.bot2Name()))
             throw new NoSuchElementException("Service implementation not available: " + request.bot2Name());
 
         final var bot1 = Player.ofBot(request.bot1Uuid(), request.bot1Name());

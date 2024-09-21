@@ -1,17 +1,18 @@
-package com.bueno.application.withbots.features.tournament;
+package com.bueno.domain.entities.tournament;
 
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
+import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 
-import java.util.List;
 import java.util.UUID;
 
-public class Match {
+
+public class Match implements Comparable {
     private final UUID id;
+    private final int matchNumber;
     private String p1Name;
     private String p2Name;
     private boolean available;
@@ -20,8 +21,9 @@ public class Match {
     private int p2Score;
     private Match next;
 
-    public Match(UUID id, String p1Name, String p2Name, boolean available, String winnerName, int p1Score, int p2Score, Match next) {
+    public Match(UUID id, int matchNumber, String p1Name, String p2Name, boolean available, String winnerName, int p1Score, int p2Score, Match next) {
         this.id = id;
+        this.matchNumber = matchNumber;
         this.p1Name = p1Name;
         this.p2Name = p2Name;
         this.available = available;
@@ -31,7 +33,7 @@ public class Match {
         this.next = next;
     }
 
-    public Match play(RemoteBotRepository repository, RemoteBotApi botApi, BotManagerService botManagerService, int times) {
+    public void play(RemoteBotRepository repository, RemoteBotApi botApi, BotManagerService botManagerService, int times) {
         final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi, botManagerService);
         PlayWithBotsResultsDto results = useCase.playWithBots(UUID.randomUUID(), p1Name, UUID.randomUUID(), p2Name, times);
         long p1Wins = results.info().stream().filter(info -> info.name().equals(p1Name)).count();
@@ -39,20 +41,15 @@ public class Match {
             winnerName = p1Name;
         } else
             winnerName = p2Name;
-        return this;
     }
 
-    @Override
-    public String toString() {
-        return "MatchInfo{" +
-                "id=" + id +
-                ", p1Name='" + p1Name + '\'' +
-                ", p2Name='" + p2Name + '\'' +
-                ", available=" + available +
-                ", winnerName='" + winnerName + '\'' +
-                ", p1Score=" + p1Score +
-                ", p2Score=" + p2Score +
-                ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
+
+    public UUID getId() {
+        return id;
+    }
+
+    public int getMatchNumber() {
+        return matchNumber;
     }
 
     public String getP1Name() {
@@ -109,5 +106,26 @@ public class Match {
 
     public void setNext(Match next) {
         this.next = next;
+    }
+
+    @Override
+    public String toString() {
+        return "MatchInfo{" +
+               "id= " + id +
+               ", number= " + matchNumber +
+               ", p1Name='" + p1Name + '\'' +
+               ", p2Name='" + p2Name + '\'' +
+               ", available=" + available +
+               ", winnerName='" + winnerName + '\'' +
+               ", p1Score=" + p1Score +
+               ", p2Score=" + p2Score +
+               ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o == null || this.getClass() != o.getClass()) throw new RuntimeException();
+        Match match = (Match) o;
+        return Integer.compare(this.matchNumber, match.matchNumber);
     }
 }

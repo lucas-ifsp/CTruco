@@ -19,7 +19,7 @@ public class ConnectionFactory implements AutoCloseable {
 
     private static void instantiateConnectionIfNull() throws SQLException {
         if (connection == null)
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ctruco", "postgres", "password");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ctruco", "postgres", "2902909090gc");
     }
 
     public static PreparedStatement createPreparedStatement(String sql) {
