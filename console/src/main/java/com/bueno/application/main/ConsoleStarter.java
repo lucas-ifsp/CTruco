@@ -2,23 +2,76 @@ package com.bueno.application.main;
 
 import com.bueno.application.main.commands.InitialMenuPrinter;
 import com.bueno.application.main.commands.ExecuteMenu;
-import com.bueno.application.withbots.features.tournament.Tournament;
+import com.bueno.application.withbots.features.ConsoleTournament;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.tournament.converter.MatchConverter;
+import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
+import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
+import com.bueno.domain.usecases.tournament.repos.FakeMatchRepository;
+import com.bueno.domain.usecases.tournament.repos.FakeTournamentRepository;
+import com.bueno.domain.usecases.tournament.repos.MatchRepository;
+import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
+import com.bueno.domain.usecases.tournament.usecase.*;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ConsoleStarter {
 
     public static void main(String[] args) throws SQLException {
         RemoteBotRepositoryImpl remoteBotRepository = new RemoteBotRepositoryImpl();
+        TournamentRepository tournamentRepository = new FakeTournamentRepository();
+        MatchRepository matchRepository = new FakeMatchRepository();
+
         RemoteBotApi api = new RemoteBotApiAdapter();
-        var provider = new BotManagerService(remoteBotRepository, api);
-        Tournament.createCamp(provider.providersNames(), 16);
+        BotManagerService provider = new BotManagerService(remoteBotRepository, api);
+
+        MatchConverter matchConverter = new MatchConverter(matchRepository);
+        TournamentConverter tournamentConverter = new TournamentConverter(matchConverter, tournamentRepository, matchRepository);
+
+        CreateTournamentUseCase tournamentProvider = new CreateTournamentUseCase(tournamentRepository, tournamentConverter);
+        PrepareTournamentUseCase prepareTournamentUseCase = new PrepareTournamentUseCase(tournamentConverter, tournamentRepository);
+        PlayTournamentMatchesUseCase playUseCase = new PlayTournamentMatchesUseCase(tournamentConverter, remoteBotRepository, api, provider, matchConverter);
+        RefreshTournamentUseCase refreshUseCase = new RefreshTournamentUseCase(tournamentConverter, matchConverter);
+
+
+        ConsoleTournament consoleTournament = new ConsoleTournament(tournamentProvider,
+                prepareTournamentUseCase,
+                playUseCase,
+                refreshUseCase);
+        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot","W'rkncacnter"));
+        consoleTournament.tournamentMenu();
+
+
+        //TODO - fazer jogador escolher as partidas a serem jogadas
+//        TournamentDTO dto = tournamentProvider.createTournament(provider.providersNames(), 16);
+//        System.out.println(dto);
+//        dto = prepareTournamentUseCase.prepareMatches(dto);
+//        System.out.println(dto);
+//        dto = playUseCase.playAll(dto);
+//        System.out.println(dto);
+//        dto = refreshUseCase.refresh(dto);
+//        System.out.println(dto);
+//        playUseCase.getAllAvailableMatches(dto)
+//                .forEach(matchDTO ->
+//                        System.out.println("Match number: " +
+//                                           matchDTO.matchNumber() +
+//                                           " " +
+//                                           matchDTO.p1Name() +
+//                                           " VS " +
+//                                           matchDTO.p2Name()));
+//        Scanner scanner = new Scanner(System.in);
+//        final int playMatchNumber = scanner.nextInt();
+//        final UUID matchUuid = FindMatchUseCase.findUuidByMatchNumber(dto, playMatchNumber);
+//        dto = playUseCase.playOne(dto, matchUuid);
+//        dto = refreshUseCase.refresh(dto);
+//        System.out.println(dto);
+
 //        DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
 //        dataBaseBuilder.buildDataBaseIfMissing();
 //        ConsoleStarter console = new ConsoleStarter();

@@ -63,9 +63,7 @@ public class PlayWithBots {
         bot1Name = botNames.get(bot1 - 1);
         bot2Name = botNames.get(bot2 - 1);
 
-        final long start = System.currentTimeMillis();
         final PlayWithBotsResultsDto results = playBotsStarter(providerService);
-        final long end = System.currentTimeMillis();
 
         printResult(results);
     }
@@ -76,8 +74,8 @@ public class PlayWithBots {
     }
 
     private PlayWithBotsResultsDto playBotsStarter(BotManagerService botManagerService) {
-        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi,botManagerService);
-        return useCase.playWithBots(uuidBot1, bot1Name,uuidBot2, bot2Name, times);
+        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi, botManagerService);
+        return useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name, times);
     }
 
     private void printAvailableBots(List<String> botNames) {
