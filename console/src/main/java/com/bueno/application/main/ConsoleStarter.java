@@ -7,7 +7,6 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.tournament.converter.MatchConverter;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
-import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.repos.FakeMatchRepository;
 import com.bueno.domain.usecases.tournament.repos.FakeTournamentRepository;
 import com.bueno.domain.usecases.tournament.repos.MatchRepository;
@@ -44,7 +43,7 @@ public class ConsoleStarter {
                 prepareTournamentUseCase,
                 playUseCase,
                 refreshUseCase);
-        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot","W'rkncacnter"));
+        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"));
         consoleTournament.tournamentMenu();
 
 
