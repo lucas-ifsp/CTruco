@@ -32,7 +32,7 @@ public class Tournament {
         matches.stream()
                 .filter(match -> match.getId() == matchUuid)
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 11),
+                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 101),
                         () -> System.out.println("No match found"));
     }
 
@@ -70,9 +70,9 @@ public class Tournament {
     @Override
     public String toString() {
         return "Tournament{" +
-               "tournamentUUID=" + tournamentUUID +
-               ", size=" + size +
-               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-               '}';
+                "tournamentUUID=" + tournamentUUID +
+                ", size=" + size +
+                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+                '}';
     }
 }

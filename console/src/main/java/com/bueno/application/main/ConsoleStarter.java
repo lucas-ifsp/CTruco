@@ -14,6 +14,7 @@ import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.domain.usecases.tournament.usecase.*;
 import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.persistence.DataBaseBuilder;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
 import com.bueno.persistence.repositories.UserRepositoryImpl;
 import com.remote.RemoteBotApiAdapter;
@@ -24,6 +25,8 @@ import java.util.List;
 public class ConsoleStarter {
 
     public static void main(String[] args) throws SQLException {
+        DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
+        dataBaseBuilder.buildDataBaseIfMissing();
         RemoteBotRepositoryImpl remoteBotRepository = new RemoteBotRepositoryImpl();
         TournamentRepository tournamentRepository = new FakeTournamentRepository();
         MatchRepository matchRepository = new FakeMatchRepository();
@@ -72,9 +75,8 @@ public class ConsoleStarter {
 //        dto = refreshUseCase.refresh(dto);
 //        System.out.println(dto);
 
-//        DataBaseBuilder dataBaseBuilder = new DataBaseBuilder();
-//        dataBaseBuilder.buildDataBaseIfMissing();
-//        ConsoleStarter console = new ConsoleStarter();
+
+        ConsoleStarter console = new ConsoleStarter();
 //        console.printInitialMenu();
 //        console.menu();
     }
