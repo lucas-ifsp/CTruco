@@ -5,10 +5,7 @@ import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.usecase.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 public class ConsoleTournament {
     private final CreateTournamentUseCase tournamentProvider;
@@ -27,11 +24,13 @@ public class ConsoleTournament {
         this.refreshUseCase = refreshUseCase;
     }
 
-    public void startTournament(List<String> participants) {
-        if (participants.size() != 16 && participants.size() != 8 && participants.size() != 4) {
+    public void startTournament(List<String> bots) {
+        if (bots.size() != 16 && bots.size() != 8 && bots.size() != 4) {
             System.out.println("invalid number of participants");
             return;
         }
+        List<String> participants = new ArrayList<>(bots);
+        Collections.shuffle(participants);
         dto = tournamentProvider.createTournament(participants, participants.size());
         dto = prepareTournament.prepareMatches(dto);
         System.out.println("ALL Matches: ");

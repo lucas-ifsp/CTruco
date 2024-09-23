@@ -4,7 +4,6 @@ import com.bueno.domain.entities.tournament.Match;
 import com.bueno.domain.entities.tournament.Tournament;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
-import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import org.springframework.stereotype.Service;
 

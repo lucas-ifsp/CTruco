@@ -22,7 +22,7 @@ public class Tournament {
     public void playAllAvailable(RemoteBotApi api, RemoteBotRepository repository, BotManagerService botManagerService) {
         for (Match m : matches) {
             if (m.isAvailable()) {
-                m.play(repository, api, botManagerService, 11);
+                m.play(repository, api, botManagerService, 51);
             }
         }
 
@@ -32,7 +32,7 @@ public class Tournament {
         matches.stream()
                 .filter(match -> match.getId() == matchUuid)
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 11),
+                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 51),
                         () -> System.out.println("No match found"));
     }
 

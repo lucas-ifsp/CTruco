@@ -5,7 +5,6 @@ import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
-import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 
 import java.util.UUID;
 
@@ -17,11 +16,11 @@ public class Match implements Comparable {
     private String p2Name;
     private boolean available;
     private String winnerName;
-    private int p1Score;
-    private int p2Score;
+    private long p1Score;
+    private long p2Score;
     private Match next;
 
-    public Match(UUID id, int matchNumber, String p1Name, String p2Name, boolean available, String winnerName, int p1Score, int p2Score, Match next) {
+    public Match(UUID id, int matchNumber, String p1Name, String p2Name, boolean available, String winnerName, long p1Score, long p2Score, Match next) {
         this.id = id;
         this.matchNumber = matchNumber;
         this.p1Name = p1Name;
@@ -37,6 +36,9 @@ public class Match implements Comparable {
         final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi, botManagerService);
         PlayWithBotsResultsDto results = useCase.playWithBots(UUID.randomUUID(), p1Name, UUID.randomUUID(), p2Name, times);
         long p1Wins = results.info().stream().filter(info -> info.name().equals(p1Name)).count();
+        long p2Wins = times - p1Wins;
+        p1Score = p1Wins;
+        p2Score = p2Wins;
         if (p1Wins > times / 2) {
             winnerName = p1Name;
         } else
@@ -84,19 +86,19 @@ public class Match implements Comparable {
         this.winnerName = winnerName;
     }
 
-    public int getP1Score() {
+    public long getP1Score() {
         return p1Score;
     }
 
-    public void setP1Score(int p1Score) {
+    public void setP1Score(long p1Score) {
         this.p1Score = p1Score;
     }
 
-    public int getP2Score() {
+    public long getP2Score() {
         return p2Score;
     }
 
-    public void setP2Score(int p2Score) {
+    public void setP2Score(long p2Score) {
         this.p2Score = p2Score;
     }
 
