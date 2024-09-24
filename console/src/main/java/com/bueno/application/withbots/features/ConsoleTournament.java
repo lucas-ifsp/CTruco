@@ -34,7 +34,7 @@ public class ConsoleTournament {
         dto = tournamentProvider.createTournament(participants, participants.size());
         dto = prepareTournament.prepareMatches(dto);
         System.out.println("ALL Matches: ");
-        dto.matchesDto().forEach((uuid, matchDTO) -> System.out.println("Match number: " +
+        dto.matchesDTO().forEach((uuid, matchDTO) -> System.out.println("Match number: " +
                                                                         matchDTO.matchNumber() +
                                                                         " " +
                                                                         matchDTO.p1Name() +
@@ -45,7 +45,7 @@ public class ConsoleTournament {
 
     public void tournamentMenu() {
         Objects.requireNonNull(dto, "tournament menu requires tournament data");
-        MatchDTO finalMatch = dto.matchesDto()
+        MatchDTO finalMatch = dto.matchesDTO()
                 .values()
                 .stream()
                 .filter(matchDTO -> matchDTO.next() == null).findFirst().orElseThrow();
@@ -63,7 +63,7 @@ public class ConsoleTournament {
             dto = playUseCase.playOne(dto, matchUUID);
             dto = refreshUseCase.refresh(dto);
 
-            finalMatch = dto.matchesDto()
+            finalMatch = dto.matchesDTO()
                     .values()
                     .stream()
                     .filter(matchDTO -> matchDTO.next() == null).findFirst().orElseThrow();
@@ -75,7 +75,7 @@ public class ConsoleTournament {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the match number: ");
         int nextMatchNumber = scan.nextInt();
-        return dto.matchesDto().values().stream()
+        return dto.matchesDTO().values().stream()
                 .filter(matchDTO -> matchDTO.matchNumber() == nextMatchNumber)
                 .findFirst()
                 .orElseThrow()

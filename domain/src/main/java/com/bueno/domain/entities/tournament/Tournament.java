@@ -19,6 +19,12 @@ public class Tournament {
         this.participantNames = participantNames;
     }
 
+    public Tournament(UUID tournamentUUID, List<String> participantNames, int size) {
+        this.tournamentUUID = tournamentUUID;
+        this.size = size;
+        this.participantNames = participantNames;
+    }
+
     public void playAllAvailable(RemoteBotApi api, RemoteBotRepository repository, BotManagerService botManagerService) {
         for (Match m : matches) {
             if (m.isAvailable()) {
@@ -70,9 +76,9 @@ public class Tournament {
     @Override
     public String toString() {
         return "Tournament{" +
-                "tournamentUUID=" + tournamentUUID +
-                ", size=" + size +
-                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-                '}';
+               "tournamentUUID=" + tournamentUUID +
+               ", size=" + size +
+               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+               '}';
     }
 }
