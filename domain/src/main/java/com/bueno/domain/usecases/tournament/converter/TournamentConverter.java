@@ -26,20 +26,19 @@ public class TournamentConverter {
     }
 
     public Tournament fromDTO(TournamentDTO dto) {
-        Tournament tournament = new Tournament(dto.participantsNames(), dto.size());
-        tournament.setMatches(dto.matchesDto().values().stream().map(matchConverter::fromDTO).sorted().toList());
+        Tournament tournament = new Tournament(dto.uuid(), dto.participantsNames(), dto.size());
+        tournament.setMatches(dto.matchesDTO().values().stream().map(matchConverter::fromDTO).sorted().toList());
         return tournament;
     }
 
     public TournamentDTO toDTO(Tournament tournament) {
-        System.out.println(tournament.toString());
         Map<UUID, MatchDTO> matchAndNextOneMap = matchesToDto(tournament.getMatches());
         TournamentDTO dto = new TournamentDTO(tournament.getTournamentUUID(),
                 tournament.getParticipantNames(),
                 matchAndNextOneMap,
                 tournament.getSize());
         tournamentRepository.save(dto);
-        dto.matchesDto().values().forEach(matchRepository::save);
+        dto.matchesDTO().values().forEach(matchRepository::save);
         return dto;
     }
 

@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public record TournamentDTO(UUID uuid, List<String> participantsNames, List<UUID> matchUUID, int size) {
+public record TournamentDTO(UUID uuid, List<String> participantsNames, Map<UUID, MatchDTO> matchesDTO, int size) {
 
     @Override
     public String toString() {
         return "TournamentDTO{" +
-                "uuid=" + uuid +
-                ", participantsNames=" + participantsNames +
-                ", size=" + size +
-                '}';
+               "uuid=" + uuid +
+               ", participantsNames=" + participantsNames +
+               ", size=" + size +
+               ", matchesDTO=" + matchesDTO +
+               '}';
     }
 }

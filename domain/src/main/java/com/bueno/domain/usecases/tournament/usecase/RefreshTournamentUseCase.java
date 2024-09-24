@@ -5,9 +5,11 @@ import com.bueno.domain.entities.tournament.Tournament;
 import com.bueno.domain.usecases.tournament.converter.MatchConverter;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RefreshTournamentUseCase {
     private final TournamentConverter tournamentConverter;
     private final MatchConverter matchConverter;
@@ -19,9 +21,10 @@ public class RefreshTournamentUseCase {
 
     public TournamentDTO refresh(TournamentDTO dto) {
         Tournament tournament = tournamentConverter.fromDTO(dto);
-        List<Match> matches = dto.matchesDto().values().stream().map(matchConverter::fromDTO).sorted().toList();
+        List<Match> matches = dto.matchesDTO().values().stream().map(matchConverter::fromDTO).sorted().toList();
         refreshMatches(matches);
         tournament.setMatches(matches);
+        System.out.println(tournament);
         return tournamentConverter.toDTO(tournament);
     }
 

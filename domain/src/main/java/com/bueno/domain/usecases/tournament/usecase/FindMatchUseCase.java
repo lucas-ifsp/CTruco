@@ -9,7 +9,7 @@ import java.util.UUID;
 public class FindMatchUseCase {
 
     public static UUID findUuidByMatchNumber(TournamentDTO dto, int matchNumber) {
-        return dto.matchesDto().entrySet().stream()
+        return dto.matchesDTO().entrySet().stream()
                 .filter(set -> set.getValue().matchNumber() == matchNumber)
                 .findFirst()
                 .orElseThrow()
