@@ -36,9 +36,9 @@ public class Tournament {
 
     public void playByMatchUuid(UUID matchUuid, RemoteBotApi api, BotManagerService botManagerService, RemoteBotRepository repository) {
         matches.stream()
-                .filter(match -> match.getId() == matchUuid)
+                .filter(match -> match.getId().equals(matchUuid))
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 101),
+                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 11),
                         () -> System.out.println("No match found"));
     }
 

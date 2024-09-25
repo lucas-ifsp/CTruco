@@ -18,7 +18,7 @@ public class FakeTournamentRepository implements TournamentRepository {
         return Optional.of(tournaments.get(uuid));
     }
 
-    public Map<UUID, TournamentDTO> getTournaments() {
+    public Map<UUID, TournamentDTO> findAll() {
         return tournaments;
     }
 
