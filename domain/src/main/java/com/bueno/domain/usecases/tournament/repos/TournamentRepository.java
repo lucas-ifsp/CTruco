@@ -10,7 +10,7 @@ public interface TournamentRepository {
 
     Optional<TournamentDTO> findTournamentById(UUID uuid);
 
-    Map<UUID, TournamentDTO> getTournaments();
+    Map<UUID, TournamentDTO> findAll();
 
     void save(TournamentDTO dto);
 }

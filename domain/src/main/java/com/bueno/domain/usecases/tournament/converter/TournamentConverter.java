@@ -27,28 +27,33 @@ public class TournamentConverter {
 
     public Tournament fromDTO(TournamentDTO dto) {
         Tournament tournament = new Tournament(dto.uuid(), dto.participantsNames(), dto.size());
-        tournament.setMatches(dto.matchesDTO().values().stream().map(matchConverter::fromDTO).sorted().toList());
+        tournament.setMatches(dto.matchesDTO().stream().map(matchConverter::fromDTO).sorted().toList());
         return tournament;
     }
 
     public TournamentDTO toDTO(Tournament tournament) {
-        Map<UUID, MatchDTO> matchAndNextOneMap = matchesToDto(tournament.getMatches());
+        List<MatchDTO> matchList = matchesToDto(tournament.getMatches());
+        MatchDTO lastMatch = matchList.stream().filter(matchDTO -> matchDTO.next() == null).findFirst().orElse(null);
         TournamentDTO dto = new TournamentDTO(tournament.getTournamentUUID(),
                 tournament.getParticipantNames(),
-                matchAndNextOneMap,
-                tournament.getSize());
+                matchList,
+                tournament.getSize(), null);
+        if (lastMatch != null) {
+            if (lastMatch.winnerName() != null) {
+                dto = new TournamentDTO(tournament.getTournamentUUID(),
+                        tournament.getParticipantNames(),
+                        matchList,
+                        tournament.getSize(), lastMatch.winnerName());
+            }
+        }
+
         tournamentRepository.save(dto);
-        dto.matchesDTO().values().forEach(matchRepository::save);
+        dto.matchesDTO().forEach(matchRepository::save);
         return dto;
     }
 
-    private Map<UUID, MatchDTO> matchesToDto(List<Match> matches) {
-        if (matches == null) return Map.of();
-        return matches.stream()
-                .collect(Collectors.toMap(
-                                Match::getId,
-                                matchConverter::toDTO
-                        )
-                );
+    private List<MatchDTO> matchesToDto(List<Match> matches) {
+        if (matches == null) return List.of();
+        return matches.stream().map(matchConverter::toDTO).toList();
     }
 }

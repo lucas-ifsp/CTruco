@@ -21,7 +21,7 @@ public class RefreshTournamentUseCase {
 
     public TournamentDTO refresh(TournamentDTO dto) {
         Tournament tournament = tournamentConverter.fromDTO(dto);
-        List<Match> matches = dto.matchesDTO().values().stream().map(matchConverter::fromDTO).sorted().toList();
+        List<Match> matches = dto.matchesDTO().stream().map(matchConverter::fromDTO).sorted().toList();
         refreshMatches(matches);
         tournament.setMatches(matches);
         System.out.println(tournament);

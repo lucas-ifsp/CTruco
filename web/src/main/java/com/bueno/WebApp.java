@@ -76,7 +76,7 @@ public class WebApp {
 
             gameResultRepository.findTopWinners(3).forEach((entry -> System.out.println(entry.username() + " - " + entry.wins())));
 
-            gameResultRepository.findAllByUserUuid(defaultUuid).forEach(System.out::println);
+//            gameResultRepository.findAllByUserUuid(defaultUuid).forEach(System.out::println);
 
         };
     }
