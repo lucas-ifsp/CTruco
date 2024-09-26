@@ -1,6 +1,5 @@
 package com.bueno.application.withbots.features;
 
-import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.usecase.*;
@@ -24,29 +23,28 @@ public class ConsoleTournament {
         this.refreshUseCase = refreshUseCase;
     }
 
-    public void startTournament(List<String> bots) {
+    public void startTournament(List<String> bots, int times) {
         if (bots.size() != 16 && bots.size() != 8 && bots.size() != 4) {
             System.out.println("invalid number of participants");
             return;
         }
         List<String> participants = new ArrayList<>(bots);
         Collections.shuffle(participants);
-        dto = tournamentProvider.createTournament(participants, participants.size());
+        dto = tournamentProvider.createTournament(participants, participants.size(), times);
         dto = prepareTournament.prepareMatches(dto);
         System.out.println("ALL Matches: ");
-        dto.matchesDTO().forEach((uuid, matchDTO) -> System.out.println("Match number: " +
-                                                                        matchDTO.matchNumber() +
-                                                                        " " +
-                                                                        matchDTO.p1Name() +
-                                                                        " VS " +
-                                                                        matchDTO.p2Name()
+        dto.matchesDTO().forEach((matchDTO) -> System.out.println("Match number: " +
+                                                                  matchDTO.matchNumber() +
+                                                                  " " +
+                                                                  matchDTO.p1Name() +
+                                                                  " VS " +
+                                                                  matchDTO.p2Name()
         ));
     }
 
     public void tournamentMenu() {
         Objects.requireNonNull(dto, "tournament menu requires tournament data");
         MatchDTO finalMatch = dto.matchesDTO()
-                .values()
                 .stream()
                 .filter(matchDTO -> matchDTO.next() == null).findFirst().orElseThrow();
 
@@ -64,7 +62,6 @@ public class ConsoleTournament {
             dto = refreshUseCase.refresh(dto);
 
             finalMatch = dto.matchesDTO()
-                    .values()
                     .stream()
                     .filter(matchDTO -> matchDTO.next() == null).findFirst().orElseThrow();
         }
@@ -75,7 +72,7 @@ public class ConsoleTournament {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the match number: ");
         int nextMatchNumber = scan.nextInt();
-        return dto.matchesDTO().values().stream()
+        return dto.matchesDTO().stream()
                 .filter(matchDTO -> matchDTO.matchNumber() == nextMatchNumber)
                 .findFirst()
                 .orElseThrow()

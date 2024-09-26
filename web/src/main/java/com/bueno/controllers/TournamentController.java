@@ -2,7 +2,7 @@ package com.bueno.controllers;
 
 import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
-import com.bueno.domain.usecases.tournament.dtos.TournamentResponseDTO;
+import com.bueno.domain.usecases.tournament.dtos.TournamentRequestDTO;
 import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.domain.usecases.tournament.usecase.CreateTournamentUseCase;
@@ -42,9 +42,9 @@ public class TournamentController {
 
 
     @PostMapping
-    public ResponseEntity<?> createTournament(@RequestBody List<String> participants) {
+    public ResponseEntity<?> createTournament(@RequestBody TournamentRequestDTO request) {
         TournamentDTO dto;
-        dto = tournamentProvider.createTournament(participants, participants.size());
+        dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times());
         dto = prepareTournamentUseCase.prepareMatches(dto);
         dto = refreshUseCase.refresh(dto);
 
@@ -100,10 +100,9 @@ public class TournamentController {
             dto = playUseCase.playOne(dto, chosenMatchId);
             dto = refreshUseCase.refresh(dto);
 
-            List<MatchDTO> availableMatches = new ArrayList<>(dto.matchesDTO().stream().filter(MatchDTO::available).toList());
-            TournamentResponseDTO response = new TournamentResponseDTO(dto.uuid(), availableMatches, dto.size());
+            TournamentDTO response = new TournamentDTO(dto.uuid(), dto.participantsNames(), dto.matchesDTO(), dto.size(), dto.times(), dto.winnerName());
             return new ResponseBuilder(HttpStatus.OK)
-                    .addEntry(new ResponseEntry("tournament", response))
+                    .addEntry(new ResponseEntry("payload", response))
                     .addTimestamp()
                     .build();
 
