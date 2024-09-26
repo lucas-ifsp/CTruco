@@ -11,24 +11,27 @@ public class Tournament {
     private final UUID tournamentUUID;
     private final int size;
     private final List<String> participantNames;
+    private final int times;
     private List<Match> matches;
 
-    public Tournament(List<String> participantNames, int size) {
+    public Tournament(List<String> participantNames, int size, int times) {
+        this.times = times;
         this.tournamentUUID = UUID.randomUUID();
         this.size = size;
         this.participantNames = participantNames;
     }
 
-    public Tournament(UUID tournamentUUID, List<String> participantNames, int size) {
+    public Tournament(UUID tournamentUUID, List<String> participantNames, int size, int times) {
         this.tournamentUUID = tournamentUUID;
         this.size = size;
         this.participantNames = participantNames;
+        this.times = times;
     }
 
     public void playAllAvailable(RemoteBotApi api, RemoteBotRepository repository, BotManagerService botManagerService) {
         for (Match m : matches) {
             if (m.isAvailable()) {
-                m.play(repository, api, botManagerService, 11);
+                m.play(repository, api, botManagerService, times);
             }
         }
 
@@ -38,7 +41,7 @@ public class Tournament {
         matches.stream()
                 .filter(match -> match.getId().equals(matchUuid))
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, 11),
+                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, times),
                         () -> System.out.println("No match found"));
     }
 
@@ -71,6 +74,10 @@ public class Tournament {
 
     public void setMatches(List<Match> matches) {
         this.matches = matches;
+    }
+
+    public int getTimes() {
+        return times;
     }
 
     @Override

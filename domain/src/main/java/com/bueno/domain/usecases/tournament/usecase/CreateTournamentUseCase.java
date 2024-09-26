@@ -21,10 +21,10 @@ public class CreateTournamentUseCase {
         this.tournamentConverter = tournamentConverter;
     }
 
-    public TournamentDTO createTournament(List<String> bots, int size) {
+    public TournamentDTO createTournament(List<String> bots, int size, int times) {
         List<String> participants = new ArrayList<>(bots);
         Collections.shuffle(participants);
-        Tournament tournament = new Tournament(participants, size);
+        Tournament tournament = new Tournament(participants, size, times);
         tournamentRepository.save(tournamentConverter.toDTO(tournament));
         return tournamentConverter.toDTO(tournament);
     }

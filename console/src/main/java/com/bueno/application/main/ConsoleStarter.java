@@ -46,7 +46,7 @@ public class ConsoleStarter {
                 prepareTournamentUseCase,
                 playUseCase,
                 refreshUseCase);
-        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"));
+        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"),31);
         consoleTournament.tournamentMenu();
 
 

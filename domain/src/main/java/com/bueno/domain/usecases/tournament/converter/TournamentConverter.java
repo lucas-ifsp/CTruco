@@ -9,9 +9,6 @@ import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class TournamentConverter {
@@ -26,7 +23,7 @@ public class TournamentConverter {
     }
 
     public Tournament fromDTO(TournamentDTO dto) {
-        Tournament tournament = new Tournament(dto.uuid(), dto.participantsNames(), dto.size());
+        Tournament tournament = new Tournament(dto.uuid(), dto.participantsNames(), dto.size(), dto.times());
         tournament.setMatches(dto.matchesDTO().stream().map(matchConverter::fromDTO).sorted().toList());
         return tournament;
     }
@@ -37,13 +34,13 @@ public class TournamentConverter {
         TournamentDTO dto = new TournamentDTO(tournament.getTournamentUUID(),
                 tournament.getParticipantNames(),
                 matchList,
-                tournament.getSize(), null);
+                tournament.getSize(), tournament.getTimes(), null);
         if (lastMatch != null) {
             if (lastMatch.winnerName() != null) {
                 dto = new TournamentDTO(tournament.getTournamentUUID(),
                         tournament.getParticipantNames(),
                         matchList,
-                        tournament.getSize(), lastMatch.winnerName());
+                        tournament.getSize(), tournament.getTimes(), lastMatch.winnerName());
             }
         }
 
