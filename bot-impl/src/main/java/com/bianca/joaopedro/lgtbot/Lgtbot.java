@@ -10,11 +10,11 @@ public class Lgtbot implements BotServiceProvider{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (intel.getOpponentScore() < 7 && getStrongCards(intel, CardRank.JACK).size() == 3 &&
-                findManilhas(intel).size() > 0) {
+                getManilhas(intel).size() > 0) {
             return true;
         }
         if (intel.getOpponentScore() < 11 && getStrongCards(intel, CardRank.ACE).size() == 3 &&
-                findManilhas(intel).size() > 0){
+                getManilhas(intel).size() > 0){
             return true;
         }
         if (intel.getOpponentScore() == 11){
@@ -39,18 +39,16 @@ public class Lgtbot implements BotServiceProvider{
     }
 
     public List<TrucoCard> getStrongCards(GameIntel intel, CardRank referenceRank){
-        TrucoCard vira = intel.getVira();
         return intel.getCards().stream()
-                .filter(card -> card.getRank().compareTo(referenceRank) > 0 || card.isManilha(vira))
+                .filter(card -> card.getRank().compareTo(referenceRank) > 0)
                 .toList();
     }
 
-    private List<TrucoCard> findManilhas(GameIntel intel) {
+
+    private List<TrucoCard> getManilhas(GameIntel intel) {
         TrucoCard viraCard = intel.getVira();
         return intel.getCards().stream()
                 .filter(carta -> carta.isManilha(viraCard))
                 .toList();
     }
-
 }
-
