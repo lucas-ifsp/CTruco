@@ -3,8 +3,10 @@ package com.bianca.joaopedro.lgtbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class Lgtbot implements BotServiceProvider{
@@ -71,6 +73,41 @@ public class Lgtbot implements BotServiceProvider{
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        int round = getRoundNumber(intel);
+        List<TrucoCard> strongCards = getStrongerCards(intel, CardRank.KING);
+        List<TrucoCard> okCards = getStrongerCards(intel, CardRank.QUEEN);
+        List<TrucoCard> badCards = getHorrifyingCards(intel);
+        List<TrucoCard> manilhas = getManilhas(intel);
+
+        //goodCards (manilha até J)
+        //horrifyngCards (4 à Q)
+        int goodCardsCount = strongCards.size() + okCards.size() + manilhas.size();
+        int badCardsCount = badCards.size();
+        TrucoCard theBestCard = getTheBestCard(intel);
+
+        //---------------------------------------------------------
+        if (round == 1) {
+            if(isFirstToPlay(intel)){
+                if (goodCardsCount == 2 && badCardsCount == 1) {
+                    TrucoCard weakestCard = getWeakCard(badCards);
+                    return CardToPlay.of(weakestCard);
+                }
+                if (goodCardsCount >= 1){
+                    return CardToPlay.of(theBestCard);
+                }
+                if (badCardsCount == 3){
+                    return CardToPlay.of(theBestCard);
+                }
+            }
+            else{
+                // condição ainda
+            }
+        }
+        if (round == 2){
+
+        }
+
+
         return null;
     }
 
@@ -109,4 +146,32 @@ public class Lgtbot implements BotServiceProvider{
         return false;
     }
 
+    public List<TrucoCard> getHorrifyingCards(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(card -> card.getRank() == CardRank.FOUR ||
+                        card.getRank() == CardRank.FIVE ||
+                        card.getRank() == CardRank.SIX ||
+                        card.getRank() == CardRank.SEVEN ||
+                        card.getRank() == CardRank.QUEEN)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isFirstToPlay(GameIntel intel){
+        return intel.getOpponentCard().isEmpty();
+    }
+
+    private TrucoCard getTheBestCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        if (cards.isEmpty()) {
+            return null;
+        }
+        cards.sort((card1, card2) -> card2.getRank().compareTo(card1.getRank()));
+        return cards.get(0);
+    }
+
+
+    private TrucoCard getWeakCard(List<TrucoCard> cards) {
+        cards.sort(Comparator.comparing(TrucoCard::getRank));
+        return cards.get(0);
+    }
 }
