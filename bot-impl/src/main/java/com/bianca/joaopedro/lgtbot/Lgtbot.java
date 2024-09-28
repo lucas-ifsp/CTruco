@@ -4,17 +4,18 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class Lgtbot implements BotServiceProvider{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if (intel.getOpponentScore() < 7 && getStrongerCards(intel, CardRank.JACK).size() == 3 &&
-                getManilhas(intel).size() > 0) {
+                !getManilhas(intel).isEmpty()) {
             return true;
         }
         if (intel.getOpponentScore() < 11 && getStrongerCards(intel, CardRank.ACE).size() == 3 &&
-                getManilhas(intel).size() > 0){
+                !getManilhas(intel).isEmpty()){
             return true;
         }
         if (intel.getOpponentScore() == 11){
@@ -32,8 +33,8 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> okCards = getStrongerCards(intel, CardRank.QUEEN);
         List<TrucoCard> manilhas = getManilhas(intel);
 
-        if (myScore >= 10 || (myScore - opponentScore) > 6)  {
-            if (okCards.size() >= 2 || manilhas.size() > 0) {
+        if (myScore >= 9 || (myScore - opponentScore) > 6)  {
+            if (okCards.size() >= 2 || !manilhas.isEmpty()) {
                 return true;
             }
         }
@@ -47,12 +48,12 @@ public class Lgtbot implements BotServiceProvider{
                 if (strongCards.size() >= 2) {
                     return true; // Pedir truco
                 }
-                if (manilhas.size() > 0 && strongCards.size() > 0) {
+                if (!manilhas.isEmpty() && !strongCards.isEmpty()) {
                     return true; // Pedir truco
                 }
             }
             if (round == 2) {
-                if (didIWinFirstRound(intel) && strongCards.size() > 0) {
+                if (didIWinFirstRound(intel) && !strongCards.isEmpty()) {
                     return true; // Pedir truco
                 }
                 if (!didIWinFirstRound(intel) && strongCards.size() >= 2) {
@@ -60,7 +61,7 @@ public class Lgtbot implements BotServiceProvider{
                 }
             }
             if (round == 3) {
-                if (strongCards.size() > 0 || manilhas.size() > 0) {
+                if (!strongCards.isEmpty() || !manilhas.isEmpty()) {
                     return true; // Pedir truco
                 }
             }
@@ -77,6 +78,7 @@ public class Lgtbot implements BotServiceProvider{
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
 
     public List<TrucoCard> getStrongerCards(GameIntel intel, CardRank referenceRank){
         return intel.getCards().stream()
@@ -106,4 +108,5 @@ public class Lgtbot implements BotServiceProvider{
         }
         return false;
     }
+
 }
