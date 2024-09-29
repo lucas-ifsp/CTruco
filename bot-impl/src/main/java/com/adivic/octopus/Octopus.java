@@ -2,7 +2,10 @@ package com.adivic.octopus;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
 
 public class Octopus implements BotServiceProvider {
 
