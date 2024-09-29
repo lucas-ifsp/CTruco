@@ -37,4 +37,8 @@ public class Octopus implements BotServiceProvider {
                 .limit(3)
                 .anyMatch(card -> card.isManilha(vira));
     }
+
+    public int numberOfManilhas(){
+        return 3;
+    }
 }
