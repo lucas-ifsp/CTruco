@@ -30,6 +30,11 @@ public class Octopus implements BotServiceProvider {
     }
 
     public boolean hasManilha(GameIntel intel) {
-        return true;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        return cards.stream()
+                .limit(3)
+                .anyMatch(card -> card.isManilha(vira));
     }
 }
