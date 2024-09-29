@@ -39,7 +39,7 @@ public class OctopusTest {
             );
 
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
                     .botInfo(ourCards, 0)
                     .opponentScore(0);
 
@@ -61,6 +61,30 @@ public class OctopusTest {
                     .opponentScore(7);
 
             assertThat(octopus.numberOfManilhas(stepBuilder.build())).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("Return which manilhas have in hand")
+        void returnWhichManilhasHaveInHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 4)
+                    .opponentScore(4);
+
+
+            List <TrucoCard> expectedManilhas = List.of(
+                    TrucoCard.of(vira.getRank().next(), CardSuit.DIAMONDS),
+                    TrucoCard.of(vira.getRank().next(), CardSuit.SPADES),
+                    TrucoCard.of(vira.getRank().next(), CardSuit.HEARTS),
+                    TrucoCard.of(vira.getRank().next(), CardSuit.CLUBS));
+
+            assertThat(octopus.listOfManilhas(stepBuilder.build())).containsAnyElementsOf(expectedManilhas);
         }
     }
 }
