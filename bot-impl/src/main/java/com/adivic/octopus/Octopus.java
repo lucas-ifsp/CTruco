@@ -7,6 +7,8 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Octopus implements BotServiceProvider {
 
@@ -49,7 +51,14 @@ public class Octopus implements BotServiceProvider {
     }
 
     public List<TrucoCard> listOfManilhas(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
 
+        if(hasManilha(intel)){
+            return cards.stream()
+                    .filter(card -> card.getRank() == vira.getRank()
+                    .next()).collect(Collectors.toList());
+        }
         return Collections.emptyList();
     }
 }
