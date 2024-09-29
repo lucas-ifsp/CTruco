@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Octopus implements BotServiceProvider {
@@ -45,5 +46,10 @@ public class Octopus implements BotServiceProvider {
         return (int) cards.stream()
                 .filter(card -> card.isManilha(vira))
                 .count();
+    }
+
+    public List<TrucoCard> listOfManilhas(GameIntel intel){
+
+        return Collections.emptyList();
     }
 }
