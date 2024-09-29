@@ -28,4 +28,8 @@ public class Octopus implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+    public boolean hasManilha(GameIntel intel) {
+        return true;
+    }
 }
