@@ -45,5 +45,22 @@ public class OctopusTest {
 
             assertThat(octopus.hasManilha(stepBuilder.build())).isFalse();
         }
+
+        @Test
+        @DisplayName("Return the number of manilhas in the hand")
+        void returnTheNumberOfManilhasInTheHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 4)
+                    .opponentScore(7);
+
+            assertThat(octopus.numberOfManilhas()).isEqualTo(2);
+        }
     }
 }
