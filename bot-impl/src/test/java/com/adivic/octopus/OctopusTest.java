@@ -60,7 +60,7 @@ public class OctopusTest {
                     .botInfo(ourCards, 4)
                     .opponentScore(7);
 
-            assertThat(octopus.numberOfManilhas()).isEqualTo(2);
+            assertThat(octopus.numberOfManilhas(stepBuilder.build())).isEqualTo(2);
         }
     }
 }
