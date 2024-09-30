@@ -71,4 +71,8 @@ public class Octopus implements BotServiceProvider {
                 .anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
+    public int numberOfThreeCards(GameIntel intel){
+        return 1;
+    }
+
 }
