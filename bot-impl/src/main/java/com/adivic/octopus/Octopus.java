@@ -80,7 +80,10 @@ public class Octopus implements BotServiceProvider {
     }
     public boolean hasTwo(GameIntel intel){
 
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.stream()
+                .anyMatch(card -> card.getRank() == CardRank.TWO);
     }
 
 }
