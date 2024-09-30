@@ -141,5 +141,22 @@ public class OctopusTest {
             assertThat(octopus.hasTwo(stepBuilder.build())).isTrue();
         }
 
+        @Test
+        @DisplayName("Return the number of two cards in the hand")
+        void returnTheNumberOfTwoCardsInTheHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 8)
+                    .opponentScore(5);
+
+            assertThat(octopus.numberOfTwoCards(stepBuilder.build())).isEqualTo(2);
+        }
+
     }
 }
