@@ -110,5 +110,19 @@ public class ArmageddonTest {
 
         assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
     }
+
+    @Test
+    @DisplayName("Should accept mao de onze when have manilha and three")
+    void shouldAcceptMaoDeOnzeWithManilhaAndThree(){
+        vira = TrucoCard.of(JACK,CLUBS);
+        botCards = List.of(
+                TrucoCard.of(THREE,HEARTS),
+                TrucoCard.of(KING,SPADES),
+                TrucoCard.of(FIVE,DIAMONDS)
+        );
+        intel = maoDeOnze(botCards,vira);
+
+        assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+    }
 }
 
