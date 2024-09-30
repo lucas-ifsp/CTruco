@@ -50,6 +50,8 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 
+import com.adriann.emanuel.armageddon.Armageddon;
+
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
@@ -101,6 +103,8 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+
+    exports com.adriann.emanuel.armageddon;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -154,5 +158,7 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-            ReiDoZap;
+            ReiDoZap,
+
+            Armageddon;
 }
