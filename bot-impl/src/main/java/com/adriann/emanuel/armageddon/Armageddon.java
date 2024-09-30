@@ -21,19 +21,24 @@
 
 package com.adriann.emanuel.armageddon;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
 
 public class Armageddon implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> botCards = intel.getCards();
         int strength = 0;
         for (TrucoCard card: intel.getCards()){
             strength += card.relativeValue(intel.getVira());
         }
-        return strength >= 7 ? true: false;
+        if(strength < 7) return false;
+        if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return false;
+
+        return true;
     }
 
     @Override
@@ -49,5 +54,21 @@ public class Armageddon implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
+    }
+
+    private boolean hasManilha(List<TrucoCard> cards,TrucoCard vira){
+        for (TrucoCard card:cards){
+            if (card.isManilha(vira)) return true;
+        }
+        return false;
+    }
+
+    private boolean hasThree(List<TrucoCard> cards,TrucoCard vira){
+        for (TrucoCard card:cards){
+            if (card.compareValueTo(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), vira) == 0){
+                return true;
+            }
+        }
+        return false;
     }
 }
