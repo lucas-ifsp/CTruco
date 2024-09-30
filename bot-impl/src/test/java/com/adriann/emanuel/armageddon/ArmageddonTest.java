@@ -152,6 +152,20 @@ public class ArmageddonTest {
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
         }
+
+        @Test
+        @DisplayName("should refuse mao de onze when the hand contains only one manilha")
+        void shouldRefuseMaoDeOnzeWithOnlyOneManilha(){
+            vira = TrucoCard.of(JACK,SPADES);
+            botCards = List.of(
+                    TrucoCard.of(KING,SPADES),
+                    TrucoCard.of(SIX,HEARTS),
+                    TrucoCard.of(QUEEN,DIAMONDS)
+            );
+            intel = maoDeOnze(botCards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
+        }
     }
 }
 
