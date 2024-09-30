@@ -138,6 +138,20 @@ public class ArmageddonTest {
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
         }
+
+        @Test
+        @DisplayName("should refuse mao de onze when the hand contains only one three")
+        void shouldRefuseMaoDeOnzeWithOnlyOneThree(){
+            vira = TrucoCard.of(SEVEN,CLUBS);
+            botCards = List.of(
+                    TrucoCard.of(THREE,DIAMONDS),
+                    TrucoCard.of(TWO,HEARTS),
+                    TrucoCard.of(SEVEN,DIAMONDS)
+            );
+            intel = maoDeOnze(botCards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
+        }
     }
 }
 
