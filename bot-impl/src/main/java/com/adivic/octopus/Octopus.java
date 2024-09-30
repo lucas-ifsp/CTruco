@@ -78,4 +78,9 @@ public class Octopus implements BotServiceProvider {
                 .filter(card -> card.getRank() == CardRank.THREE)
                 .count();
     }
+    public boolean hasTwo(GameIntel intel){
+
+        return false;
+    }
+
 }
