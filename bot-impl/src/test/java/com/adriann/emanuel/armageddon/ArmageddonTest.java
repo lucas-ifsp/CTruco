@@ -53,6 +53,13 @@ public class ArmageddonTest {
                 .botInfo(botCards,1).opponentScore(1);
     }
 
+    private GameIntel.StepBuilder firstRoundSecondToPlay(List<TrucoCard> botCards,
+                                                         TrucoCard vira, TrucoCard opponentCard){
+
+        return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
+                .botInfo(botCards,1).opponentScore(1).opponentCard(opponentCard);
+    }
+
     @BeforeEach
     void setUp(){
         armageddon = new Armageddon();
