@@ -46,20 +46,23 @@ public class Octopus implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        return (int) cards.stream()
-                .filter(card -> card.isManilha(vira))
-                .count();
+        if(hasManilha(intel))
+            return (int) cards.stream()
+                    .filter(card -> card.isManilha(vira))
+                    .count();
+
+        return 0;
     }
 
     public List<TrucoCard> listOfManilhas(GameIntel intel){
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        if(hasManilha(intel)){
+        if(hasManilha(intel))
             return cards.stream()
                     .filter(card -> card.getRank() == vira.getRank()
                     .next()).collect(Collectors.toList());
-        }
+
         return Collections.emptyList();
     }
 
@@ -73,10 +76,11 @@ public class Octopus implements BotServiceProvider {
 
     public int numberOfThreeCards(GameIntel intel){
         List<TrucoCard> cards = intel.getCards();
-
-        return (int) cards.stream()
-                .filter(card -> card.getRank() == CardRank.THREE)
-                .count();
+        if(hasThree(intel))
+            return (int) cards.stream()
+                    .filter(card -> card.getRank() == CardRank.THREE)
+                    .count();
+        return 0;
     }
     public boolean hasTwo(GameIntel intel){
 
