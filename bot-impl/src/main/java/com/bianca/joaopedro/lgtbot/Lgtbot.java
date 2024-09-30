@@ -6,6 +6,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -78,9 +79,10 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> okCards = getStrongerCards(intel, CardRank.QUEEN);
         List<TrucoCard> badCards = getHorrifyingCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
+        List<TrucoCard> myCards = intel.getCards();
 
         //goodCards (manilha até J)
-        //horrifyngCards (4 à Q)
+        //badCards (4 à Q)
         int goodCardsCount = strongCards.size() + okCards.size() + manilhas.size();
         int badCardsCount = badCards.size();
         TrucoCard theBestCard = getTheBestCard(intel);
@@ -100,7 +102,19 @@ public class Lgtbot implements BotServiceProvider{
                 }
             }
             else{
-                // condição ainda
+                Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
+                if (opponentCardOpt.isPresent()) {
+                    TrucoCard opponentCard = opponentCardOpt.get();
+
+                    Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
+
+                    if (winningCardOpt.isPresent()) {
+                        return CardToPlay.of(winningCardOpt.get());
+                    } else {
+                        TrucoCard weakestCard = getWeakCard(badCards);
+                        return CardToPlay.of(weakestCard);
+                    }
+                }
             }
         }
         if (round == 2){
@@ -169,9 +183,15 @@ public class Lgtbot implements BotServiceProvider{
         return cards.get(0);
     }
 
-
     private TrucoCard getWeakCard(List<TrucoCard> cards) {
         cards.sort(Comparator.comparing(TrucoCard::getRank));
         return cards.get(0);
     }
+
+    private Optional<TrucoCard> findLowestWinningCard(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream()
+                .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                .min((card1, card2) -> card1.compareValueTo(card2, vira));
+    }
+
 }
