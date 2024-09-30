@@ -124,5 +124,22 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfThreeCards(stepBuilder.build())).isEqualTo(3);
         }
+        @Test
+        @DisplayName("Return if the hand contains TWO")
+        void returnIfTheHandContainsTwo(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 5)
+                    .opponentScore(0);
+
+            assertThat(octopus.hasTwo(stepBuilder.build())).isTrue();
+        }
+
     }
 }
