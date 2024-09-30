@@ -39,6 +39,8 @@ public class ArmageddonTest {
 
     private Armageddon armageddon;
     private GameIntel.StepBuilder intel;
+    private TrucoCard vira;
+    private List<TrucoCard> botCards;
 
     private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
@@ -56,13 +58,13 @@ public class ArmageddonTest {
         @Test
         @DisplayName("Should refuse mao de onze when the hand is weak")
         void shouldRefuseMaoDeOnzeHandWeak(){
-            TrucoCard vira = TrucoCard.of(KING,DIAMONDS);
-            List<TrucoCard> cards = List.of(
+            vira = TrucoCard.of(KING,DIAMONDS);
+            botCards = List.of(
                     TrucoCard.of(FOUR,DIAMONDS),
                     TrucoCard.of(FIVE,HEARTS),
                     TrucoCard.of(SIX,SPADES)
             );
-            intel = maoDeOnze(cards,vira);
+            intel = maoDeOnze(botCards,vira);
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
         }
@@ -70,13 +72,13 @@ public class ArmageddonTest {
         @Test
         @DisplayName("Should accept mao de onze when the hand is strong")
         void shouldAcceptMaoDeOnzeHandStrong(){
-            TrucoCard vira = TrucoCard.of(KING,DIAMONDS);
-            List<TrucoCard> cards = List.of(
+            vira = TrucoCard.of(KING,DIAMONDS);
+            botCards = List.of(
                     TrucoCard.of(ACE,DIAMONDS),
                     TrucoCard.of(THREE,SPADES),
                     TrucoCard.of(ACE,CLUBS)
             );
-            intel = maoDeOnze(cards,vira);
+            intel = maoDeOnze(botCards,vira);
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
         }
@@ -84,13 +86,13 @@ public class ArmageddonTest {
         @Test
         @DisplayName("Should refuse mao de onze when don't have manilha or three")
         void shouldRefuseMaoDeOnzeWithoutThreeOrManilha(){
-            TrucoCard vira = TrucoCard.of(FOUR,SPADES);
-            List<TrucoCard> cards = List.of(
+            vira = TrucoCard.of(FOUR,SPADES);
+            botCards = List.of(
                     TrucoCard.of(SEVEN,DIAMONDS),
                     TrucoCard.of(TWO,SPADES),
                     TrucoCard.of(TWO,CLUBS)
             );
-            intel = maoDeOnze(cards,vira);
+            intel = maoDeOnze(botCards,vira);
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
         }
