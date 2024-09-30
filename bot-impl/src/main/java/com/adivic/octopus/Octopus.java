@@ -61,4 +61,10 @@ public class Octopus implements BotServiceProvider {
         }
         return Collections.emptyList();
     }
+
+    public boolean hasThree(GameIntel intel){
+
+        return false;
+    }
+
 }
