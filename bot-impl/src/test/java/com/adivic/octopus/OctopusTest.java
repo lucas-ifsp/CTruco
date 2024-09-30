@@ -107,5 +107,22 @@ public class OctopusTest {
 
             assertThat(octopus.hasThree(stepBuilder.build())).isTrue();
         }
-     }
+
+        @Test
+        @DisplayName("Return the number of three cards in the hand")
+        void returnTheNumberOfThreeCardsInTheHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 9)
+                    .opponentScore(10);
+
+            assertThat(octopus.numberOfThreeCards(stepBuilder.build())).isEqualTo(3);
+        }
     }
+}
