@@ -55,6 +55,18 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> botCards = intel.getCards();
+        if (intel.getRoundResults().isEmpty()){
+            int score = 0;
+            for (TrucoCard card:botCards){
+                if (card.isCopas(vira)) score++;
+                if (card.isZap(vira)) score++;
+            }
+            if (score == 2){
+                return CardToPlay.of(botCards.get(2));
+            }
+        }
         return null;
     }
 
