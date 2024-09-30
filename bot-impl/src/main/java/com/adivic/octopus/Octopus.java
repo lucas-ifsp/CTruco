@@ -72,7 +72,10 @@ public class Octopus implements BotServiceProvider {
     }
 
     public int numberOfThreeCards(GameIntel intel){
-        return 1;
-    }
+        List<TrucoCard> cards = intel.getCards();
 
+        return (int) cards.stream()
+                .filter(card -> card.getRank() == CardRank.THREE)
+                .count();
+    }
 }
