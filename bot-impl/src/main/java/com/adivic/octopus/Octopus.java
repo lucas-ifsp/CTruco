@@ -86,7 +86,13 @@ public class Octopus implements BotServiceProvider {
                 .anyMatch(card -> card.getRank() == CardRank.TWO);
     }
 
-    public int numberOfTwoCards(GameIntel intel){
-        return 1;
+    public int numberOfTwoCards(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+
+        if (hasTwo(intel))
+            return (int) cards.stream()
+                    .filter(card -> card.getRank() == CardRank.TWO)
+                    .count();
+        return 0;
     }
 }
