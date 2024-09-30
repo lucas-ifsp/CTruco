@@ -26,19 +26,26 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
+import static com.bueno.spi.model.CardRank.*;
+
 public class Armageddon implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
-        int strength = 0;
-        for (TrucoCard card: intel.getCards()){
-            strength += card.relativeValue(intel.getVira());
-        }
-        if(strength < 7) return false;
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return false;
 
-        return true;
+        int goodCard = 0;
+        for (TrucoCard card: botCards){
+            if (isTwo(vira) && isTwo(card)){
+                goodCard++;
+            }
+            if (card.isManilha(vira) || isThree(card)){
+                goodCard++;
+            }
+        }
+
+        return goodCard >=2;
     }
 
     @Override
@@ -70,5 +77,13 @@ public class Armageddon implements BotServiceProvider {
             }
         }
         return false;
+    }
+
+    private boolean isThree(TrucoCard card){
+        return card.getRank().equals(THREE);
+    }
+
+    private boolean isTwo(TrucoCard card){
+        return card.getRank().equals(TWO);
     }
 }
