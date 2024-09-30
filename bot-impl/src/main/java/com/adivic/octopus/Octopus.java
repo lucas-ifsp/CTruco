@@ -1,5 +1,6 @@
 package com.adivic.octopus;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -64,7 +65,10 @@ public class Octopus implements BotServiceProvider {
 
     public boolean hasThree(GameIntel intel){
 
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.stream()
+                .anyMatch(card -> card.getRank() == CardRank.THREE);
     }
 
 }
