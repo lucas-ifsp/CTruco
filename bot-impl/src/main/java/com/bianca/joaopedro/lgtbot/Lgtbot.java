@@ -86,6 +86,7 @@ public class Lgtbot implements BotServiceProvider{
         int goodCardsCount = strongCards.size() + okCards.size() + manilhas.size();
         int badCardsCount = badCards.size();
         TrucoCard theBestCard = getTheBestCard(intel);
+        TrucoCard theWeakestCard = getWeakCard(myCards);
 
         //---------------------------------------------------------
         if (round == 1) {
@@ -105,7 +106,6 @@ public class Lgtbot implements BotServiceProvider{
                 Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
                 if (opponentCardOpt.isPresent()) {
                     TrucoCard opponentCard = opponentCardOpt.get();
-
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
 
                     if (winningCardOpt.isPresent()) {
@@ -118,10 +118,29 @@ public class Lgtbot implements BotServiceProvider{
             }
         }
         if (round == 2){
+            if (isFirstToPlay(intel)) {
+                if (didIWinFirstRound(intel)) {
+                    return CardToPlay.of(theWeakestCard);
+                } else {
+                    return CardToPlay.of(theBestCard);
+                }
+            } else {
+                Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
+                if (opponentCardOpt.isPresent()) {
+                    TrucoCard opponentCard = opponentCardOpt.get();
+                    Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
 
+                    if (winningCardOpt.isPresent()) {
+                        return CardToPlay.of(winningCardOpt.get());
+                    } else {
+                        return CardToPlay.of(theWeakestCard);
+                    }
+                }
+            }
         }
-
-
+        if(round == 3){
+            return CardToPlay.of(theBestCard);
+        }
         return null;
     }
 
@@ -179,8 +198,18 @@ public class Lgtbot implements BotServiceProvider{
         if (cards.isEmpty()) {
             return null;
         }
-        cards.sort((card1, card2) -> card2.getRank().compareTo(card1.getRank()));
-        return cards.get(0);
+        List<TrucoCard> manilhas = getManilhas(intel);
+        if (!manilhas.isEmpty()) {
+            return manilhas.stream()
+                    .max(Comparator.comparing(TrucoCard::getRank)
+                            .thenComparing(TrucoCard::getSuit))
+                    .orElse(null);
+        }
+
+        return cards.stream()
+                .max(Comparator.comparing(TrucoCard::getRank)
+                        .thenComparing(TrucoCard::getSuit))
+                .orElse(null);
     }
 
     private TrucoCard getWeakCard(List<TrucoCard> cards) {
