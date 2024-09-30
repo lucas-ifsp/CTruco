@@ -100,4 +100,7 @@ public class Octopus implements BotServiceProvider {
         return 0;
     }
 
+    public boolean hasThreePointAdvantage(GameIntel intel){
+        return false;
+    }
 }
