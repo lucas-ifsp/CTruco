@@ -87,4 +87,25 @@ public class OctopusTest {
             assertThat(octopus.listOfManilhas(stepBuilder.build())).containsAnyElementsOf(expectedManilhas);
         }
     }
-}
+
+    @Nested
+    @DisplayName("Testing the functions to identify strongest cards")
+    class StrongestCardsTest{
+        @Test
+        @DisplayName("Return if the hand contains THREE")
+        void returnIfTheHandContainsThree(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 1)
+                    .opponentScore(1);
+
+            assertThat(octopus.hasThree(stepBuilder.build())).isTrue();
+        }
+     }
+    }
