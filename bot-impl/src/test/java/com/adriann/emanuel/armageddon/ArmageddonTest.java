@@ -21,6 +21,7 @@
 
 package com.adriann.emanuel.armageddon;
 
+import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,11 @@ public class ArmageddonTest {
     private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
                 .botInfo(botCards,11).opponentScore(0);
+    }
+
+    private GameIntel.StepBuilder firstRound(List<TrucoCard> botCards, TrucoCard vira){
+        return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
+                .botInfo(botCards,1).opponentScore(1);
     }
 
     @BeforeEach
@@ -165,6 +171,30 @@ public class ArmageddonTest {
             intel = maoDeOnze(botCards,vira);
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests to implement choose card logic")
+    class ChooseCardTest{
+
+        @Nested
+        @DisplayName("Tests to implement logic of choose card in the first round")
+        class FirstRoundChoose{
+
+            @Test
+            @DisplayName("Should play the weakest card when have a higher couple")
+            void shouldPlayWeakestWithHigherCouple(){
+                vira = TrucoCard.of(JACK,DIAMONDS);
+                botCards = List.of(
+                        TrucoCard.of(KING,HEARTS),
+                        TrucoCard.of(KING,CLUBS),
+                        TrucoCard.of(SIX,DIAMONDS));
+
+                intel = firstRound(botCards,vira);
+
+                assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+            }
         }
     }
 }
