@@ -48,7 +48,7 @@ public class ArmageddonTest {
                 .botInfo(botCards,11).opponentScore(0);
     }
 
-    private GameIntel.StepBuilder firstRound(List<TrucoCard> botCards, TrucoCard vira){
+    private GameIntel.StepBuilder firstRoundFirstToPlay(List<TrucoCard> botCards, TrucoCard vira){
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
                 .botInfo(botCards,1).opponentScore(1);
     }
@@ -182,18 +182,23 @@ public class ArmageddonTest {
         @DisplayName("Tests to implement logic of choose card in the first round")
         class FirstRoundChoose{
 
-            @Test
-            @DisplayName("Should play the weakest card when have a higher couple")
-            void shouldPlayWeakestWithHigherCouple(){
-                vira = TrucoCard.of(JACK,DIAMONDS);
-                botCards = List.of(
-                        TrucoCard.of(KING,HEARTS),
-                        TrucoCard.of(KING,CLUBS),
-                        TrucoCard.of(SIX,DIAMONDS));
+            @Nested
+            @DisplayName("Tests to implement logic pf choose card in the first round when is first to play")
+            class FirstRoundFirstToPlayChoose{
 
-                intel = firstRound(botCards,vira);
+                @Test
+                @DisplayName("Should play the weakest card when have a higher couple")
+                void shouldPlayWeakestWithHigherCouple(){
+                    vira = TrucoCard.of(JACK,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(KING,HEARTS),
+                            TrucoCard.of(KING,CLUBS),
+                            TrucoCard.of(SIX,DIAMONDS));
 
-                assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
             }
         }
     }
