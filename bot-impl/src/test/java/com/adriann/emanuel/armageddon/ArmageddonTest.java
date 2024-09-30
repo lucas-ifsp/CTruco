@@ -55,7 +55,7 @@ public class ArmageddonTest {
     class MaoDeOnzeTest{
         @Test
         @DisplayName("Should refuse mao de onze when the hand is weak")
-        void shouldRefuseMaoDeONzeHandWeak(){
+        void shouldRefuseMaoDeOnzeHandWeak(){
             TrucoCard vira = TrucoCard.of(KING,DIAMONDS);
             List<TrucoCard> cards = List.of(
                     TrucoCard.of(FOUR,DIAMONDS),
@@ -65,6 +65,20 @@ public class ArmageddonTest {
             intel = maoDeOnze(cards,vira);
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should accept mao de onze when the hand is strong")
+        void shouldAcceptMaoDeOnzeHandStrong(){
+            TrucoCard vira = TrucoCard.of(KING,DIAMONDS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(ACE,DIAMONDS),
+                    TrucoCard.of(THREE,SPADES),
+                    TrucoCard.of(ACE,CLUBS)
+            );
+            intel = maoDeOnze(cards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
         }
     }
 }
