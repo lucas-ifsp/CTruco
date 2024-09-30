@@ -96,33 +96,34 @@ public class ArmageddonTest {
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
         }
-    }
-    @Test
-    @DisplayName("Should accept mao de onze when have two manilhas")
-    void shouldAcceptMaoDeOnzeWithTwoManilhas(){
-        vira = TrucoCard.of(TWO,CLUBS);
-        botCards = List.of(
-                TrucoCard.of(THREE,HEARTS),
-                TrucoCard.of(THREE,SPADES),
-                TrucoCard.of(QUEEN,CLUBS)
-        );
-        intel = maoDeOnze(botCards,vira);
 
-        assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
-    }
+        @Test
+        @DisplayName("Should accept mao de onze when have two manilhas")
+        void shouldAcceptMaoDeOnzeWithTwoManilhas(){
+            vira = TrucoCard.of(TWO,CLUBS);
+            botCards = List.of(
+                    TrucoCard.of(THREE,HEARTS),
+                    TrucoCard.of(THREE,SPADES),
+                    TrucoCard.of(QUEEN,CLUBS)
+            );
+            intel = maoDeOnze(botCards,vira);
 
-    @Test
-    @DisplayName("Should accept mao de onze when have manilha and three")
-    void shouldAcceptMaoDeOnzeWithManilhaAndThree(){
-        vira = TrucoCard.of(JACK,CLUBS);
-        botCards = List.of(
-                TrucoCard.of(THREE,HEARTS),
-                TrucoCard.of(KING,SPADES),
-                TrucoCard.of(FIVE,DIAMONDS)
-        );
-        intel = maoDeOnze(botCards,vira);
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+        }
 
-        assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+        @Test
+        @DisplayName("Should accept mao de onze when have manilha and three")
+        void shouldAcceptMaoDeOnzeWithManilhaAndThree(){
+            vira = TrucoCard.of(JACK,CLUBS);
+            botCards = List.of(
+                    TrucoCard.of(THREE,HEARTS),
+                    TrucoCard.of(KING,SPADES),
+                    TrucoCard.of(FIVE,DIAMONDS)
+            );
+            intel = maoDeOnze(botCards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+        }
     }
 }
 
