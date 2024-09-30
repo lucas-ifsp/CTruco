@@ -57,17 +57,13 @@ public class Armageddon implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
+
         if (intel.getRoundResults().isEmpty()){
-            int score = 0;
-            for (TrucoCard card:botCards){
-                if (card.isCopas(vira)) score++;
-                if (card.isZap(vira)) score++;
-            }
-            if (score == 2){
-                return CardToPlay.of(botCards.get(2));
+            if (hasHigherCouple(botCards,vira)){
+                return CardToPlay.of(weakestCard(botCards,vira));
             }
         }
-        return null;
+        return CardToPlay.of(botCards.get(0));
     }
 
     @Override
@@ -97,5 +93,24 @@ public class Armageddon implements BotServiceProvider {
 
     private boolean isTwo(TrucoCard card){
         return card.getRank().equals(TWO);
+    }
+
+    private boolean hasHigherCouple(List<TrucoCard> cards, TrucoCard vira){
+        int score = 0;
+        for (TrucoCard card:cards){
+            if (card.isCopas(vira)) score++;
+            if (card.isZap(vira)) score++;
+        }
+
+        return score == 2;
+    }
+
+    private TrucoCard weakestCard(List<TrucoCard> cards, TrucoCard vira){
+        TrucoCard weakest = cards.get(0);
+        for (TrucoCard card:cards){
+            if (weakest.compareValueTo(card,vira) > 0) weakest = card;
+        }
+
+        return weakest;
     }
 }
