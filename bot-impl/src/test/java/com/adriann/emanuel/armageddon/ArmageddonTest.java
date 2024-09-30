@@ -21,5 +21,50 @@
 
 package com.adriann.emanuel.armageddon;
 
+import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardSuit.*;
+
+import static org.assertj.core.api.Assertions.*;
+
 public class ArmageddonTest {
+
+    private Armageddon armageddon;
+    private GameIntel.StepBuilder intel;
+
+    private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
+        return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
+                .botInfo(botCards,11).opponentScore(0);
+    }
+
+    @BeforeEach
+    void setUp(){
+        armageddon = new Armageddon();
+    }
+
+    @Nested
+    @DisplayName("Tests to implement mao de onze logic")
+    class MaoDeOnzeTest{
+        @Test
+        @DisplayName("Should refuse mao de onze when the hand is weak")
+        void shouldRefuseMaoDeONzeHandWeak(){
+            TrucoCard vira = TrucoCard.of(KING,DIAMONDS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(FOUR,DIAMONDS),
+                    TrucoCard.of(FIVE,HEARTS),
+                    TrucoCard.of(SIX,SPADES)
+            );
+            intel = maoDeOnze(cards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
+        }
+    }
 }
