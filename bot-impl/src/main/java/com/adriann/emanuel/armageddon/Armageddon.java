@@ -23,12 +23,17 @@ package com.adriann.emanuel.armageddon;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class Armageddon implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        int strength = 0;
+        for (TrucoCard card: intel.getCards()){
+            strength += card.relativeValue(intel.getVira());
+        }
+        return strength >= 7 ? true: false;
     }
 
     @Override
