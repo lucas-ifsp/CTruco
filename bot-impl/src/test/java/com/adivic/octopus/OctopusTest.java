@@ -157,6 +157,27 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfTwoCards(stepBuilder.build())).isEqualTo(2);
         }
+    }
 
+    @Nested
+    @DisplayName("Testing the functions to identify game advantages")
+    class AdvantagesGameTest{
+        @Test
+        @DisplayName("Returns if there is at least a three-point advantage")
+        void returnsIfThereIsAtLeastAThreePointAdvantage(){
+
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 4)
+                    .opponentScore(1);
+
+            assertThat(octopus.hasThreePointAdvantage(stepBuilder.build())).isTrue();
+        }
     }
 }
