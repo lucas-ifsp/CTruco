@@ -47,11 +47,11 @@ public class TournamentController {
     public ResponseEntity<?> createTournament(@RequestBody TournamentRequestDTO request) {
         TournamentDTO dto;
         dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times());
-        dto = prepareTournamentUseCase.prepareMatches(dto);
-        tournamentRepository.save(dto);
+        TournamentDTO newDto = prepareTournamentUseCase.prepareMatches(dto);
+        tournamentRepository.save(newDto);
 
         return new ResponseBuilder(HttpStatus.CREATED)
-                .addEntry(new ResponseEntry("payload", dto))
+                .addEntry(new ResponseEntry("payload", newDto))
                 .addTimestamp()
                 .build();
     }
@@ -100,12 +100,12 @@ public class TournamentController {
             TournamentDTO dto = tournamentRepository.findTournamentById(tournamentUuid).orElseThrow();
             UUID chosenMatchId = dto.matchesDTO().stream().filter(matchDTO -> matchDTO.matchNumber() == chosenMatch).findFirst().orElseThrow().uuid();
             dto = playUseCase.playOne(dto, chosenMatchId);
-            dto = refreshUseCase.refresh(dto);
-            tournamentRepository.update(dto);
+            TournamentDTO newDto = refreshUseCase.refresh(dto);
+            System.out.println(newDto);
+            tournamentRepository.update(newDto);
 
-            TournamentDTO response = new TournamentDTO(dto.uuid(), dto.participantsNames(), dto.matchesDTO(), dto.size(), dto.times(), dto.winnerName());
             return new ResponseBuilder(HttpStatus.OK)
-                    .addEntry(new ResponseEntry("payload", response))
+                    .addEntry(new ResponseEntry("payload", newDto))
                     .addTimestamp()
                     .build();
 

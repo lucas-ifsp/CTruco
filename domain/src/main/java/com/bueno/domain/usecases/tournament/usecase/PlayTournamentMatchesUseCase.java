@@ -51,6 +51,7 @@ public class PlayTournamentMatchesUseCase {
         Tournament tournament = tournamentConverter.fromDTO(dto);
         tournament.playByMatchUuid(matchUuuid, api, provider, remoteBotRepository);
         tournament.setAvailableMatches();
+        System.out.println(tournament);
         return tournamentConverter.toDTO(tournament);
     }
 }

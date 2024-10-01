@@ -13,6 +13,7 @@ public class Tournament {
     private final List<String> participantNames;
     private final int times;
     private List<Match> matches;
+    private String winnerName;
 
     public Tournament(List<String> participantNames, int size, int times) {
         this.times = times;
@@ -41,7 +42,12 @@ public class Tournament {
         matches.stream()
                 .filter(match -> match.getId().equals(matchUuid))
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, times),
+                .ifPresentOrElse(match -> {
+                            match.play(repository, api, botManagerService, times);
+                            if (match.getWinnerName() != null && match.getNext() == null) {
+                                winnerName = match.getWinnerName();
+                            }
+                        },
                         () -> System.out.println("No match found"));
     }
 
@@ -83,9 +89,10 @@ public class Tournament {
     @Override
     public String toString() {
         return "Tournament{" +
-               "tournamentUUID=" + tournamentUUID +
-               ", size=" + size +
-               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-               '}';
+                "tournamentUUID=" + tournamentUUID +
+                ", size=" + size +
+                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+                ", winnerName=" + winnerName +
+                '}';
     }
 }

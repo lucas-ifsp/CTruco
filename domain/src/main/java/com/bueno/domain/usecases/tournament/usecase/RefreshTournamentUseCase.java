@@ -21,18 +21,19 @@ public class RefreshTournamentUseCase {
 
     public TournamentDTO refresh(TournamentDTO dto) {
         Tournament tournament = tournamentConverter.fromDTO(dto);
+        System.out.println(tournament);
         List<Match> matches = dto.matchesDTO().stream().map(matchConverter::fromDTO).sorted().toList();
         refreshMatches(matches);
         tournament.setMatches(matches);
-        System.out.println(tournament);
         return tournamentConverter.toDTO(tournament);
     }
 
     // logica de passar os vencedores de uma partida para os participantes da outra
     public static List<Match> refreshMatches(List<Match> matches) {
         for (Match match : matches) {
+
             if (match.getNext() != null && match.getWinnerName() != null) {
-                Match next = matches.stream().filter(m -> m.getId() == match.getNext().getId()).findFirst().orElseThrow();
+                Match next = matches.stream().filter(m -> m.getId().equals(match.getNext().getId())).findFirst().orElseThrow();
                 if (next.getP1Name() == null && match.getMatchNumber() % 2 != 0) {
                     next.setP1Name(match.getWinnerName());
                     continue;
@@ -45,6 +46,7 @@ public class RefreshTournamentUseCase {
                 match.setAvailable(true);
             }
         }
+        matches.forEach(System.out::println);
         return matches;
     }
 }
