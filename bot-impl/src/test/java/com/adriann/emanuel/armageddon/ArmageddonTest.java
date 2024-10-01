@@ -206,6 +206,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("Should play the strongest card when the the hand is weak")
+                void shouldPlayStrongestCardWeakHand(){
+                    vira = TrucoCard.of(ACE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(FIVE,HEARTS),
+                            TrucoCard.of(FOUR,CLUBS),
+                            TrucoCard.of(SIX,DIAMONDS));
+
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
             }
         }
     }
