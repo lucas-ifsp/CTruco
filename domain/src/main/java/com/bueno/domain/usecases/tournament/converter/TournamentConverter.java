@@ -6,6 +6,7 @@ import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +14,9 @@ import java.util.List;
 @Service
 public class TournamentConverter {
     private final MatchConverter matchConverter;
-    private final TournamentRepository tournamentRepository;
-    private final MatchRepository matchRepository;
 
-    public TournamentConverter(MatchConverter matchConverter, TournamentRepository tournamentRepository, MatchRepository matchRepository) {
+    public TournamentConverter(MatchConverter matchConverter) {
         this.matchConverter = matchConverter;
-        this.tournamentRepository = tournamentRepository;
-        this.matchRepository = matchRepository;
     }
 
     public Tournament fromDTO(TournamentDTO dto) {
@@ -43,9 +40,6 @@ public class TournamentConverter {
                         tournament.getSize(), tournament.getTimes(), lastMatch.winnerName());
             }
         }
-
-        tournamentRepository.save(dto);
-        dto.matchesDTO().forEach(matchRepository::save);
         return dto;
     }
 

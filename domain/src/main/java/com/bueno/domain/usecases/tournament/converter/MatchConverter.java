@@ -3,6 +3,7 @@ package com.bueno.domain.usecases.tournament.converter;
 import com.bueno.domain.entities.tournament.Match;
 import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.repos.MatchRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class MatchConverter {
     private final MatchRepository matchRepository;
 
-    public MatchConverter(MatchRepository matchRepository) {
+    public MatchConverter(@Qualifier("matchesRepositoryMongoImpl") MatchRepository matchRepository) {
         this.matchRepository = matchRepository;
     }
 
@@ -19,9 +20,9 @@ public class MatchConverter {
         Optional<MatchDTO> nextOpt = matchRepository.findById(dto.next());
         if (nextOpt.isPresent()) {
             Match next = fromDTO(nextOpt.get());
-            return new Match(dto.id(), dto.matchNumber(), dto.p1Name(), dto.p2Name(), dto.available(), dto.winnerName(), dto.p1Score(), dto.p2Score(), next);
+            return new Match(dto.uuid(), dto.matchNumber(), dto.p1Name(), dto.p2Name(), dto.available(), dto.winnerName(), dto.p1Score(), dto.p2Score(), next);
         } else {
-            return new Match(dto.id(), dto.matchNumber(), dto.p1Name(), dto.p2Name(), dto.available(), dto.winnerName(), dto.p1Score(), dto.p2Score(), null);
+            return new Match(dto.uuid(), dto.matchNumber(), dto.p1Name(), dto.p2Name(), dto.available(), dto.winnerName(), dto.p1Score(), dto.p2Score(), null);
         }
     }
 

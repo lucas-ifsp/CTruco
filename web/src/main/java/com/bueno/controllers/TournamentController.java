@@ -11,6 +11,7 @@ import com.bueno.domain.usecases.tournament.usecase.PrepareTournamentUseCase;
 import com.bueno.domain.usecases.tournament.usecase.RefreshTournamentUseCase;
 import com.bueno.responses.ResponseBuilder;
 import com.bueno.responses.ResponseEntry;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,8 @@ public class TournamentController {
     private final PlayTournamentMatchesUseCase playUseCase;
     private final RefreshTournamentUseCase refreshUseCase;
 
-    public TournamentController(MatchRepository matchRepository, TournamentRepository tournamentRepository,
+    public TournamentController(@Qualifier("matchesRepositoryMongoImpl") MatchRepository matchRepository,
+                                @Qualifier("tournamentRepositoryMongoImpl") TournamentRepository tournamentRepository,
                                 CreateTournamentUseCase tournamentProvider,
                                 PrepareTournamentUseCase prepareTournamentUseCase,
                                 PlayTournamentMatchesUseCase playUseCase,
@@ -46,7 +48,7 @@ public class TournamentController {
         TournamentDTO dto;
         dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times());
         dto = prepareTournamentUseCase.prepareMatches(dto);
-        dto = refreshUseCase.refresh(dto);
+        tournamentRepository.save(dto);
 
         return new ResponseBuilder(HttpStatus.CREATED)
                 .addEntry(new ResponseEntry("payload", dto))
@@ -86,7 +88,7 @@ public class TournamentController {
                 .build();
     }
 
-
+    // TODO - Resolver problema de persistencia
     @PostMapping("{tournamentUuid}/match/{chosenMatch}")
     public ResponseEntity<?> playMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatch) {
         if (tournamentUuid == null) return new ResponseBuilder(HttpStatus.BAD_REQUEST)
@@ -96,9 +98,10 @@ public class TournamentController {
         try {
 
             TournamentDTO dto = tournamentRepository.findTournamentById(tournamentUuid).orElseThrow();
-            UUID chosenMatchId = dto.matchesDTO().stream().filter(matchDTO -> matchDTO.matchNumber() == chosenMatch).findFirst().orElseThrow().id();
+            UUID chosenMatchId = dto.matchesDTO().stream().filter(matchDTO -> matchDTO.matchNumber() == chosenMatch).findFirst().orElseThrow().uuid();
             dto = playUseCase.playOne(dto, chosenMatchId);
             dto = refreshUseCase.refresh(dto);
+            tournamentRepository.update(dto);
 
             TournamentDTO response = new TournamentDTO(dto.uuid(), dto.participantsNames(), dto.matchesDTO(), dto.size(), dto.times(), dto.winnerName());
             return new ResponseBuilder(HttpStatus.OK)

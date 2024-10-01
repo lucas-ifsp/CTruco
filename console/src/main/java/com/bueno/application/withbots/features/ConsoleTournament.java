@@ -76,6 +76,6 @@ public class ConsoleTournament {
                 .filter(matchDTO -> matchDTO.matchNumber() == nextMatchNumber)
                 .findFirst()
                 .orElseThrow()
-                .id();
+                .uuid();
     }
 }

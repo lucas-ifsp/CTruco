@@ -34,10 +34,10 @@ public class ConsoleStarter {
         BotManagerService provider = new BotManagerService(remoteBotRepository, api);
 
         MatchConverter matchConverter = new MatchConverter(matchRepository);
-        TournamentConverter tournamentConverter = new TournamentConverter(matchConverter, tournamentRepository, matchRepository);
+        TournamentConverter tournamentConverter = new TournamentConverter(matchConverter);
 
-        CreateTournamentUseCase tournamentProvider = new CreateTournamentUseCase(tournamentRepository, tournamentConverter);
-        PrepareTournamentUseCase prepareTournamentUseCase = new PrepareTournamentUseCase(tournamentConverter, tournamentRepository);
+        CreateTournamentUseCase tournamentProvider = new CreateTournamentUseCase(tournamentConverter);
+        PrepareTournamentUseCase prepareTournamentUseCase = new PrepareTournamentUseCase(tournamentConverter);
         PlayTournamentMatchesUseCase playUseCase = new PlayTournamentMatchesUseCase(tournamentConverter, remoteBotRepository, api, provider, matchConverter);
         RefreshTournamentUseCase refreshUseCase = new RefreshTournamentUseCase(tournamentConverter, matchConverter);
 
@@ -46,7 +46,7 @@ public class ConsoleStarter {
                 prepareTournamentUseCase,
                 playUseCase,
                 refreshUseCase);
-        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"),31);
+        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"), 31);
         consoleTournament.tournamentMenu();
 
 
