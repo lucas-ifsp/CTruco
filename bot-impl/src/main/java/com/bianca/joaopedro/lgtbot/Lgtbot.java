@@ -146,7 +146,20 @@ public class Lgtbot implements BotServiceProvider{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        List<TrucoCard> strongCards = getStrongerCards(intel, CardRank.KING);
+        List<TrucoCard> manilhas = getManilhas(intel);
+
+        int strongCardsPlusManilhaCount = strongCards.size() + manilhas.size();
+
+        if (strongCardsPlusManilhaCount == 3){
+            return 1;
+        }
+        else if (strongCardsPlusManilhaCount == 2){
+            return 0;
+        }
+        else{
+            return -1;
+        }
     }
 
 
