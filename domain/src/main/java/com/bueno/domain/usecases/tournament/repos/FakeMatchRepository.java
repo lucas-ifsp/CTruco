@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
 public class FakeMatchRepository implements MatchRepository {
     private final Map<UUID, MatchDTO> matches;
 
@@ -20,17 +19,12 @@ public class FakeMatchRepository implements MatchRepository {
     }
 
     @Override
-    public Map<UUID, MatchDTO> findAll() {
-        return matches;
-    }
-
-    @Override
-    public List<MatchDTO> findByTournamentUUID(UUID tournamentUUID) {
-        return List.of();
+    public List<MatchDTO> findAll() {
+        return matches.values().stream().toList();
     }
 
     @Override
     public void save(MatchDTO matchDTO) {
-        matches.put(matchDTO.id(), matchDTO);
+        matches.put(matchDTO.uuid(), matchDTO);
     }
 }
