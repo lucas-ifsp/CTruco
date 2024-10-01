@@ -55,7 +55,6 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        int strength = 0;
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
 
@@ -63,11 +62,12 @@ public class Armageddon implements BotServiceProvider {
             if (hasHigherCouple(botCards,vira)){
                 return CardToPlay.of(weakestCard(botCards,vira));
             }
-            for (TrucoCard card:botCards){
-                strength += card.relativeValue(vira);
+
+            if (handStrength(botCards,vira) < 7) {
+                return CardToPlay.of(strongestCard(botCards,vira));
             }
-            if (strength < 7) return CardToPlay.of(strongestCard(botCards,vira));
         }
+
         return CardToPlay.of(botCards.get(0));
     }
 
@@ -126,5 +126,14 @@ public class Armageddon implements BotServiceProvider {
         }
 
         return strongest;
+    }
+
+    private int handStrength(List<TrucoCard> cards, TrucoCard vira){
+        int strength = 0;
+        for (TrucoCard card:cards){
+            strength += card.relativeValue(vira);
+        }
+
+        return strength;
     }
 }
