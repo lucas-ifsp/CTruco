@@ -2,7 +2,7 @@ package com.bueno.domain.usecases.tournament.dtos;
 
 import java.util.UUID;
 
-public record MatchDTO(UUID id,
+public record MatchDTO(UUID uuid,
                        int matchNumber,
                        String p1Name,
                        String p2Name,
@@ -16,13 +16,13 @@ public record MatchDTO(UUID id,
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        
+
         MatchDTO matchDTO = (MatchDTO) o;
-        return id.equals(matchDTO.id);
+        return uuid.equals(matchDTO.uuid);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return uuid.hashCode();
     }
 }

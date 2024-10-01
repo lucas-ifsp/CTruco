@@ -33,11 +33,11 @@ public class RefreshTournamentUseCase {
         for (Match match : matches) {
             if (match.getNext() != null && match.getWinnerName() != null) {
                 Match next = matches.stream().filter(m -> m.getId() == match.getNext().getId()).findFirst().orElseThrow();
-                if (next.getP1Name() == null) {
+                if (next.getP1Name() == null && match.getMatchNumber() % 2 != 0) {
                     next.setP1Name(match.getWinnerName());
                     continue;
                 }
-                if (next.getP2Name() == null && !match.getWinnerName().equals(next.getP1Name())) {
+                if (next.getP2Name() == null && match.getMatchNumber() % 2 == 0) {
                     next.setP2Name(match.getWinnerName());
                 }
             }

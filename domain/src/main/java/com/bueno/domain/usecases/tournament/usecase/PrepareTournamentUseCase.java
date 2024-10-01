@@ -18,11 +18,9 @@ import static com.bueno.domain.usecases.tournament.usecase.RefreshTournamentUseC
 @Service
 public class PrepareTournamentUseCase {
     private final TournamentConverter tournamentConverter;
-    private final TournamentRepository tournamentRepository;
 
-    public PrepareTournamentUseCase(TournamentConverter tournamentConverter, TournamentRepository tournamentRepository) {
+    public PrepareTournamentUseCase(TournamentConverter tournamentConverter) {
         this.tournamentConverter = tournamentConverter;
-        this.tournamentRepository = tournamentRepository;
     }
 
 

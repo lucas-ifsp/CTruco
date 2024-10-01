@@ -113,7 +113,7 @@ public class Match implements Comparable {
     @Override
     public String toString() {
         return "MatchInfo{" +
-               "id= " + id +
+               "uuid= " + id +
                ", number= " + matchNumber +
                ", p1Name='" + p1Name + '\'' +
                ", p2Name='" + p2Name + '\'' +

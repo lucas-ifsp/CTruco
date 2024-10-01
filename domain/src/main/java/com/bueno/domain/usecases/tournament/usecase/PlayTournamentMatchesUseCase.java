@@ -37,6 +37,7 @@ public class PlayTournamentMatchesUseCase {
         return tournamentConverter.toDTO(tournament);
     }
 
+    // TODO - colocar este método no findMatchUseCase
     public List<MatchDTO> getAllAvailableMatches(TournamentDTO dto) {
         Tournament tournament = tournamentConverter.fromDTO(dto);
         tournament.setAvailableMatches();
