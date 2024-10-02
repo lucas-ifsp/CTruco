@@ -94,6 +94,22 @@ public class TheRoverTest {
 
             assertEquals(2, theRover.getCurrentRound(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return 3 if in the third round")
+        void ShouldReturnThreeIfInThirdRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(3, theRover.getCurrentRound(stepBuilder.build()));
+        }
     }
 
 }
