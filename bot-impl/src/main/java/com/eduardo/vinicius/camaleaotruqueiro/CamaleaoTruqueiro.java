@@ -45,4 +45,19 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
             else return cards.get(0);
         }
     }
+
+    public TrucoCard getLowestCard(List<TrucoCard> cards, TrucoCard vira) {
+
+        int compareCard01WithCard02 = cards.get(0).compareValueTo(cards.get(1), vira);
+        int compareCard02WithCard03 = cards.get(1).compareValueTo(cards.get(2), vira);
+        int compareCard01WithCard03 = cards.get(0).compareValueTo(cards.get(2), vira);
+
+        if (compareCard01WithCard02 > 0) {
+            if (compareCard02WithCard03 > 0) return cards.get(2);
+            else return cards.get(1);
+        }
+        if (compareCard01WithCard03 > 0) return cards.get(2);
+
+        return cards.get(0);
+    }
 }
