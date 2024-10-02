@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TheRoverTest {
@@ -55,6 +54,30 @@ public class TheRoverTest {
 
             assertTrue(theRover.isPlayingFirst(stepBuilder.build()));
         }
+    }
+
+    @Nested
+    @DisplayName("getCurrentRound tests")
+    class getCurrentRoundTest {
+
+        @Test
+        @DisplayName("Should return 1 if in the first round")
+        void ShouldReturnOneIfInFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(1, theRover.getCurrentRound(stepBuilder.build()));
+        }
+
     }
 
 }
