@@ -8,9 +8,10 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class CamaleaoTruqueiroTest {
 
@@ -39,8 +40,24 @@ public class CamaleaoTruqueiroTest {
 
 
 
-    //menor carta
 
+
+    //menor carta
+    @Test
+    @DisplayName("Should return the lowest card")
+    void shouldReturnTheLowestCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.THREE,CardSuit.CLUBS);
+
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR,CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE,CardSuit.CLUBS)
+        );
+
+        TrucoCard lowest = camaleao.getLowestCard(cards, vira);
+        assertThat(lowest).isEqualTo(TrucoCard.of(CardRank.QUEEN,CardSuit.CLUBS));
+    }
+    
     //estamos ganhando
 
     //estamos perdendo
