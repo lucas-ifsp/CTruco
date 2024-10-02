@@ -33,6 +33,6 @@ public class TheRover implements BotServiceProvider {
     }
 
     public boolean isPlayingFirst(GameIntel intel) {
-        return false;
+        return intel.getOpponentCard().isEmpty();
     }
 }
