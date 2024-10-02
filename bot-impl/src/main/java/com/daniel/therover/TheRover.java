@@ -31,4 +31,8 @@ public class TheRover implements BotServiceProvider {
     public String getName() {
         return "The Rover";
     }
+
+    public boolean isPlayingFirst(GameIntel intel) {
+        return false;
+    }
 }
