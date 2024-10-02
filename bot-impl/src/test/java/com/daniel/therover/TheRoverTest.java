@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class TheRoverTest {
@@ -42,8 +43,18 @@ public class TheRoverTest {
             assertFalse(theRover.isPlayingFirst(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return true if player is playing first")
+        void ShouldReturnTrueIfPlayerIsPlayingFirst() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
 
+            assertTrue(theRover.isPlayingFirst(stepBuilder.build()));
+        }
     }
 
 }
