@@ -3,10 +3,7 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.TrucoCard;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
+
+    private CamaleaoTruqueiro camaleao;
+
+    @BeforeEach
+    public void config() {
+        camaleao = new CamaleaoTruqueiro();
+    }
 
     //maior carta
     @Test
@@ -29,7 +33,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
         );
 
-        TrucoCard greaterCard = getGreaterCard(cards);
+        TrucoCard greaterCard = camaleao.getGreaterCard(cards, vira);
         assertEquals(greaterCard, TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
     }
 
