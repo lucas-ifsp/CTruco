@@ -37,6 +37,10 @@ public class TheRover implements BotServiceProvider {
     }
 
     public int getCurrentRound (GameIntel intel) {
-        return 1;
+        int cardsInHand = intel.getCards().size();
+        if (cardsInHand == 3) return 1;
+        if (cardsInHand == 2) return 2;
+        if (cardsInHand == 1) return 3;
+        return -1;
     }
 }
