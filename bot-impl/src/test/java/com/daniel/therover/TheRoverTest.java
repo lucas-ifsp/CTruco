@@ -78,6 +78,22 @@ public class TheRoverTest {
             assertEquals(1, theRover.getCurrentRound(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should return 2 if in the second round")
+        void ShouldReturnTwoIfInSecondRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(2, theRover.getCurrentRound(stepBuilder.build()));
+        }
     }
 
 }
