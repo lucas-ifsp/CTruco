@@ -35,4 +35,8 @@ public class TheRover implements BotServiceProvider {
     public boolean isPlayingFirst(GameIntel intel) {
         return intel.getOpponentCard().isEmpty();
     }
+
+    public int getCurrentRound (GameIntel intel) {
+        return 1;
+    }
 }
