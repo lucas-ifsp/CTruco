@@ -87,10 +87,11 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
         );
         //Then
-        softly.assertThat(camaleao.numberOfManilhas(zeroManilhasCards)).isEqualTo(0);
-        softly.assertThat(camaleao.numberOfManilhas(oneManilhasCards)).isEqualTo(1);
-        softly.assertThat(camaleao.numberOfManilhas(twoManilhasCards)).isEqualTo(2);
-        softly.assertThat(camaleao.numberOfManilhas(threeManilhasCards)).isEqualTo(3);
+        softly.assertThat(camaleao.numberOfManilhas(zeroManilhasCards, vira)).as("Zero manilhas").isEqualTo(0);
+        softly.assertThat(camaleao.numberOfManilhas(oneManilhasCards, vira)).as("One manilha").isEqualTo(1);
+        softly.assertThat(camaleao.numberOfManilhas(twoManilhasCards, vira)).as("Two manilhas").isEqualTo(2);
+        softly.assertThat(camaleao.numberOfManilhas(threeManilhasCards, vira)).as("Three manilhas").isEqualTo(3);
+        softly.assertAll();
     }
 
     //temos carta alta
