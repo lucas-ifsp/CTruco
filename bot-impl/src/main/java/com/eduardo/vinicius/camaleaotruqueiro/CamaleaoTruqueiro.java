@@ -60,4 +60,10 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
 
         return cards.get(0);
     }
+
+    public int numberOfManilhas(List<TrucoCard> cards, TrucoCard vira) {
+        int numberOfManilhas;
+        numberOfManilhas = cards.stream().filter(card -> card.isManilha(vira)).toList().size();
+        return numberOfManilhas;
+    }
 }
