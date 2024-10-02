@@ -60,12 +60,12 @@ public class CamaleaoTruqueiroTest {
 
 
     @Test
-    @DisplayName("Shoult returno number of manilhas")
+    @DisplayName("Shoult return number of manilhas")
     void shoultReturnoNumberOfManilhas() {
         SoftAssertions softly = new SoftAssertions();
         //Given
-        TrucoCard vir = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
-        //When
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
         List<TrucoCard> zeroManilhasCards = Arrays.asList(
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
@@ -87,10 +87,10 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
         );
         //Then
-        softly.assertAll(zeroManilhasCards.numberOfManilhas()).isEqualTo(0);
-        softly.assertAll(oneManilhasCards.numberOfManilhas()).isEqualTo(1);
-        softly.assertAll(twoManilhasCards.numberOfManilhas()).isEqualTo(2);
-        softly.assertAll(threeManilhasCards.numberOfManilhas()).isEqualTo(3);
+        softly.assertThat(camaleao.numberOfManilhas(zeroManilhasCards)).isEqualTo(0);
+        softly.assertThat(camaleao.numberOfManilhas(oneManilhasCards)).isEqualTo(1);
+        softly.assertThat(camaleao.numberOfManilhas(twoManilhasCards)).isEqualTo(2);
+        softly.assertThat(camaleao.numberOfManilhas(threeManilhasCards)).isEqualTo(3);
     }
 
     //temos carta alta
