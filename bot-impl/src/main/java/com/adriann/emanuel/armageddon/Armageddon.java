@@ -24,6 +24,7 @@ package com.adriann.emanuel.armageddon;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
@@ -55,22 +56,25 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        int rounds = intel.getRoundResults().size();
+
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
 
-        if (intel.getRoundResults().isEmpty()){
-            if (hasHigherCouple(botCards,vira)){
-                return CardToPlay.of(weakestCard(botCards,vira));
-            }
-
-            if (handStrength(botCards,vira) < 7) {
-                return CardToPlay.of(strongestCard(botCards,vira));
-            }
-            if (hasManilha(botCards,vira) && hasThree(botCards,vira)){
-                return CardToPlay.of(botCards.get(1));
-            }
-            if (handStrength(botCards,vira) > 15){
-                return CardToPlay.of(strongestCard(botCards,vira));
+        switch (rounds) {
+            case 0 -> {
+                if (hasHigherCouple(botCards, vira)) {
+                    return CardToPlay.of(weakestCard(botCards, vira));
+                }
+                if (handStrength(botCards, vira) < 7) {
+                    return CardToPlay.of(strongestCard(botCards, vira));
+                }
+                if (hasManilha(botCards, vira) && hasThree(botCards, vira)) {
+                    return CardToPlay.of(middleCard(botCards, vira));
+                }
+                if (handStrength(botCards, vira) > 15) {
+                    return CardToPlay.of(strongestCard(botCards, vira));
+                }
             }
         }
 
@@ -132,6 +136,14 @@ public class Armageddon implements BotServiceProvider {
         }
 
         return strongest;
+    }
+
+    private TrucoCard middleCard(List<TrucoCard> cards, TrucoCard vira){
+        List<TrucoCard> sortedCarts = cards.stream().
+                sorted(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .toList();
+
+        return sortedCarts.get(1);
     }
 
     private int handStrength(List<TrucoCard> cards, TrucoCard vira){
