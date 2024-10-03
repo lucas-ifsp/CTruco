@@ -41,6 +41,7 @@ public class ArmageddonTest {
     private Armageddon armageddon;
     private GameIntel.StepBuilder intel;
     private TrucoCard vira;
+    private TrucoCard opponentCard;
     private List<TrucoCard> botCards;
 
     private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
@@ -286,14 +287,15 @@ public class ArmageddonTest {
                 @DisplayName("Draw the point when have zap")
                 void shouldDrawWhenZap(){
                     vira = TrucoCard.of(ACE,DIAMONDS);
+                    opponentCard = TrucoCard.of(SEVEN,CLUBS);
                     botCards = List.of(
                             TrucoCard.of(SEVEN,HEARTS),
                             TrucoCard.of(TWO,CLUBS),
                             TrucoCard.of(FOUR,DIAMONDS));
 
-                    intel = firstRoundSecondToPlay(botCards,vira,TrucoCard.of(SEVEN,CLUBS));
+                    intel = firstRoundSecondToPlay(botCards,vira,opponentCard);
 
-                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
             }
         }
