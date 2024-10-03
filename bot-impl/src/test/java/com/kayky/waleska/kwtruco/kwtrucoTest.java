@@ -164,5 +164,22 @@ kwtrucoTest {
 
         assertFalse(cardToPlay.isDiscard());
     }
+
+    @Test
+    @DisplayName("If possible Plays the highest card available to win the round")
+    void playsHighestCardAvailableToWinRoundIfPossible() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = kwtrucoBot.chooseCard(gameIntel);
+
+        assertEquals(CardRank.THREE, cardToPlay.content().getRank());
+    }
 }
 
