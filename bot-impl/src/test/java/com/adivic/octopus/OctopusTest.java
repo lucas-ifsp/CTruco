@@ -148,7 +148,7 @@ public class OctopusTest {
         void returnIfTheHandContainsAce(){
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
 
