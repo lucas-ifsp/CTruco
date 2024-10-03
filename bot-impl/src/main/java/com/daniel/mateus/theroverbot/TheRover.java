@@ -45,4 +45,8 @@ public class TheRover implements BotServiceProvider {
         return -1;
     }
 
+    public TrucoCard chooseCardFirstHand (GameIntel intel) {
+        return null;
+    }
+
 }
