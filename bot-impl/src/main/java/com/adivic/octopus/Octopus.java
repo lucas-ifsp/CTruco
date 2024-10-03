@@ -113,4 +113,8 @@ public class Octopus implements BotServiceProvider {
             return true;
         return false;
     }
+
+    public boolean hasAce(GameIntel intel){
+        return false;
+    }
 }
