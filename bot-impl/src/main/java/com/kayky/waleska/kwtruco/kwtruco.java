@@ -7,6 +7,15 @@ import com.bueno.spi.service.BotServiceProvider;
 public class kwtruco implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if (intel.getOpponentCard().stream().anyMatch(c-> c.isZap(intel.getVira()))){
+            return false;
+        }
+        if (intel.getOpponentScore() == 11){
+            return true;
+        }
+        if (intel.getOpponentScore() >= 9 ){
+            return true;
+        }
         return false;
     }
 
