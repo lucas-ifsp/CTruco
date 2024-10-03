@@ -66,6 +66,9 @@ public class Armageddon implements BotServiceProvider {
             if (handStrength(botCards,vira) < 7) {
                 return CardToPlay.of(strongestCard(botCards,vira));
             }
+            if (handStrength(botCards,vira) > 15){
+                return CardToPlay.of(strongestCard(botCards,vira));
+            }
         }
 
         return CardToPlay.of(botCards.get(0));
