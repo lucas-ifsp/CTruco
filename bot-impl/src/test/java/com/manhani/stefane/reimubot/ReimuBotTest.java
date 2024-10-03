@@ -37,6 +37,23 @@ class ReimuBotTest {
         var selectedCard = reimuBot.chooseCard(step).content();
         assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
     }
-    
+
+    @Test
+    @DisplayName("Should raise if on round 2 and has two manilhas")
+    void raiseIfTwoManilhas(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        List<TrucoCard> reimuCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+        );
+        var step = GameIntel.StepBuilder.with()
+                .gameInfo(
+                        List.of(GameIntel.RoundResult.WON),
+                        List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                        vira, 1).botInfo(reimuCards, 0)
+                .opponentScore(1).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
+                .build();
+        assertThat(reimuBot.decideIfRaises(step)).isTrue();
+    }
 
 }
