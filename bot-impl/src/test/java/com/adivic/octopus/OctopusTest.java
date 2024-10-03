@@ -21,6 +21,14 @@ public class OctopusTest {
 
     private GameIntel.StepBuilder stepBuilder;
 
+    private GameIntel.StepBuilder createStepBuilder(List<TrucoCard> ourCards, TrucoCard vira, int botScore, int opponentScore, int handpoints) {
+        return GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, handpoints)
+                .botInfo(ourCards, botScore)
+                .opponentScore(opponentScore);
+    }
+
+
     @BeforeEach
     public void setUp(){
         octopus = new Octopus();
@@ -37,13 +45,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES)
             );
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 0, 0, 0);
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 0)
-                    .opponentScore(0);
-
-            assertThat(octopus.hasManilha(stepBuilder.build())).isFalse();
+            assertThat(octopus.hasManilha(step.build())).isFalse();
         }
 
         @Test
@@ -55,12 +59,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 4)
-                    .opponentScore(7);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 4, 7, 1);
 
-            assertThat(octopus.numberOfManilhas(stepBuilder.build())).isEqualTo(2);
+            assertThat(octopus.numberOfManilhas(step.build())).isEqualTo(2);
         }
 
         @Test
@@ -72,11 +73,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 4)
-                    .opponentScore(4);
-
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 4, 4, 1);
 
             List <TrucoCard> expectedManilhas = List.of(
                     TrucoCard.of(vira.getRank().next(), CardSuit.DIAMONDS),
@@ -84,7 +81,7 @@ public class OctopusTest {
                     TrucoCard.of(vira.getRank().next(), CardSuit.HEARTS),
                     TrucoCard.of(vira.getRank().next(), CardSuit.CLUBS));
 
-            assertThat(octopus.listOfManilhas(stepBuilder.build())).containsAnyElementsOf(expectedManilhas);
+            assertThat(octopus.listOfManilhas(step.build())).containsAnyElementsOf(expectedManilhas);
         }
     }
 
@@ -100,12 +97,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 1)
-                    .opponentScore(1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 1, 1, 1);
 
-            assertThat(octopus.hasThree(stepBuilder.build())).isTrue();
+            assertThat(octopus.hasThree(step.build())).isTrue();
         }
 
         @Test
@@ -117,12 +111,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 9)
-                    .opponentScore(10);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 9, 10, 3);
 
-            assertThat(octopus.numberOfThreeCards(stepBuilder.build())).isEqualTo(3);
+            assertThat(octopus.numberOfThreeCards(step.build())).isEqualTo(3);
         }
         @Test
         @DisplayName("Return if the hand contains TWO")
@@ -133,12 +124,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 5)
-                    .opponentScore(0);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 5, 0, 1);
 
-            assertThat(octopus.hasTwo(stepBuilder.build())).isTrue();
+            assertThat(octopus.hasTwo(step.build())).isTrue();
         }
 
         @Test
@@ -150,12 +138,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 8)
-                    .opponentScore(5);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 8, 5, 1);
 
-            assertThat(octopus.numberOfTwoCards(stepBuilder.build())).isEqualTo(2);
+            assertThat(octopus.numberOfTwoCards(step.build())).isEqualTo(2);
         }
 
         @Test
@@ -189,12 +174,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 4)
-                    .opponentScore(1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 7, 1, 1);
 
-            assertThat(octopus.hasThreePointAdvantage(stepBuilder.build())).isTrue();
+            assertThat(octopus.hasThreePointAdvantage(step.build())).isTrue();
         }
         @Test
         @DisplayName("Returns if there is at least a six-point advantage")
@@ -207,12 +189,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 12)
-                    .opponentScore(1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 11, 4, 1);
 
-            assertThat(octopus.hasSixPointAdvantage(stepBuilder.build())).isTrue();
+            assertThat(octopus.hasSixPointAdvantage(step.build())).isTrue();
         }
     }
 }
