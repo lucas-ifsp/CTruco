@@ -115,6 +115,9 @@ public class Octopus implements BotServiceProvider {
     }
 
     public boolean hasAce(GameIntel intel){
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.stream()
+                .anyMatch(card -> card.getRank() == CardRank.ACE);
     }
 }
