@@ -249,6 +249,25 @@ public class TheRoverTest {
                 assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS), theRover.chooseCardFirstHand(stepBuilder.build()));
             }
 
+            @Test
+            @DisplayName("When none card can beat opponent card should play lowest card")
+            void WhenNoneCardCanBeatOpponentCardShouldPlayLowestCard() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.TWO,CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                );
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertEquals(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS), theRover.chooseCardFirstHand(stepBuilder.build()));
+            }
 
 
         }
