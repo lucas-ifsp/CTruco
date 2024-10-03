@@ -30,6 +30,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 
 public class Armageddon implements BotServiceProvider {
+    private static final int GOOD_HAND_STRENGTH = 25;
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
@@ -69,11 +70,11 @@ public class Armageddon implements BotServiceProvider {
                 if (hasManilha(botCards, vira)){
                     return CardToPlay.of(middleCard(botCards, vira));
                 }
-                if (handStrength(botCards, vira) < 7) {
+                if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
                     return CardToPlay.of(strongestCard(botCards, vira));
                 }
-                if (handStrength(botCards, vira) > 15) {
-                    return CardToPlay.of(strongestCard(botCards, vira));
+                if (handStrength(botCards, vira) >GOOD_HAND_STRENGTH) {
+                    return CardToPlay.of(middleCard(botCards,vira));
                 }
             }
         }
