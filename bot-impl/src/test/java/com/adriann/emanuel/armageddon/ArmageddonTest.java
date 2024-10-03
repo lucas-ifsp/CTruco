@@ -262,6 +262,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+
+                @Test
+                @DisplayName("Should play the weakest manilha when have two")
+                void shouldPlayWeakestManilha(){
+                    vira = TrucoCard.of(SIX,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SEVEN,DIAMONDS),
+                            TrucoCard.of(QUEEN,CLUBS),
+                            TrucoCard.of(SEVEN,HEARTS));
+
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }
