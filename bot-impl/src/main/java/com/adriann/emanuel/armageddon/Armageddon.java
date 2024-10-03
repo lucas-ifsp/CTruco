@@ -64,17 +64,19 @@ public class Armageddon implements BotServiceProvider {
 
         switch (rounds) {
             case 0 -> {
-                if (hasHigherCouple(botCards, vira)) {
-                    return CardToPlay.of(weakestCard(botCards, vira));
-                }
-                if (hasManilha(botCards, vira)){
-                    return CardToPlay.of(middleCard(botCards, vira));
-                }
-                if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
-                    return CardToPlay.of(strongestCard(botCards, vira));
-                }
-                if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
-                    return CardToPlay.of(middleCard(botCards,vira));
+                if (intel.getOpponentCard().isEmpty()){
+                    if (hasHigherCouple(botCards, vira)) {
+                        return CardToPlay.of(weakestCard(botCards, vira));
+                    }
+                    if (hasManilha(botCards, vira)){
+                        return CardToPlay.of(middleCard(botCards, vira));
+                    }
+                    if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
+                        return CardToPlay.of(strongestCard(botCards, vira));
+                    }
+                    if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
+                        return CardToPlay.of(middleCard(botCards,vira));
+                    }
                 }
                 if (intel.getOpponentCard().get().relativeValue(vira) == botCards.get(0).relativeValue(vira)){
                     return CardToPlay.of(botCards.get(0));
