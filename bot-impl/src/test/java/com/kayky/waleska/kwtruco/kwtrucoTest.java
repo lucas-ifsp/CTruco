@@ -144,5 +144,25 @@ kwtrucoTest {
 
         assertEquals(CardSuit.DIAMONDS, cardToPlay.content().getSuit());
     }
+
+    @Test
+    @DisplayName("Discards when opponent plays stronger card and no manilhas in hand")
+    void discardsWhenOpponentPlaysStrongerCardAndNoManilhasInHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = kwtrucoBot.chooseCard(gameIntel);
+
+        assertFalse(cardToPlay.isDiscard());
+    }
 }
 
