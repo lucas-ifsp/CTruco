@@ -1,8 +1,6 @@
 package com.bianca.joaopedro.lgtbot;
-
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,14 +11,17 @@ import java.util.stream.Collectors;
 public class Lgtbot implements BotServiceProvider{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentScore() < 7 &&
-                !getManilhas(intel).isEmpty() &&
-                !getStrongerCards(intel, CardRank.JACK).isEmpty()) {
+        List<TrucoCard> strongCards = getStrongCards(intel);
+        List<TrucoCard> goodCards = getGoodCards(intel);
+        List<TrucoCard> manilhas = getManilhas(intel);
+
+        int goodCardsCount = strongCards.size() + goodCards.size() + manilhas.size();
+        int strongCardsCount = strongCards.size() + manilhas.size();
+
+        if (intel.getOpponentScore() < 7 && goodCardsCount >= 2) {
             return true;
         }
-        if (intel.getOpponentScore() < 11 &&
-                !getManilhas(intel).isEmpty() &&
-                !getStrongerCards(intel, CardRank.JACK).isEmpty()) {
+        if (intel.getOpponentScore() < 11 && strongCardsCount >= 2) {
             return true;
         }
         if (intel.getOpponentScore() == 11){
@@ -34,12 +35,12 @@ public class Lgtbot implements BotServiceProvider{
         int round = getRoundNumber(intel);
         int myScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
-        List<TrucoCard> strongCards = getStrongerCards(intel, CardRank.KING);
-        List<TrucoCard> okCards = getStrongerCards(intel, CardRank.QUEEN);
+        List<TrucoCard> strongCards = getStrongCards(intel);
+        List<TrucoCard> goodCards = getGoodCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
 
         if (myScore >= 9 || (myScore - opponentScore) > 6)  {
-            if (okCards.size() >= 2 || !manilhas.isEmpty()) {
+            if (goodCards.size() >= 2 || !manilhas.isEmpty()) {
                 return true;
             }
         }
@@ -77,15 +78,13 @@ public class Lgtbot implements BotServiceProvider{
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         int round = getRoundNumber(intel);
-        List<TrucoCard> strongCards = getStrongerCards(intel, CardRank.KING);
-        List<TrucoCard> okCards = getStrongerCards(intel, CardRank.QUEEN);
-        List<TrucoCard> badCards = getHorrifyingCards(intel);
+        List<TrucoCard> strongCards = getStrongCards(intel);
+        List<TrucoCard> goodCards = getGoodCards(intel);
+        List<TrucoCard> badCards = getBadCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
         List<TrucoCard> myCards = intel.getCards();
 
-        //goodCards (manilha até J)
-        //badCards (4 à Q)
-        int goodCardsCount = strongCards.size() + okCards.size() + manilhas.size();
+        int goodCardsCount = strongCards.size() + goodCards.size() + manilhas.size();
         int badCardsCount = badCards.size();
         TrucoCard theBestCard = getTheBestCard(intel);
         TrucoCard theWeakestCard = getWeakCard(myCards);
@@ -148,7 +147,7 @@ public class Lgtbot implements BotServiceProvider{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        List<TrucoCard> strongCards = getStrongerCards(intel, CardRank.KING);
+        List<TrucoCard> strongCards = getStrongCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
 
         int strongCardsPlusManilhaCount = strongCards.size() + manilhas.size();
@@ -163,14 +162,6 @@ public class Lgtbot implements BotServiceProvider{
             return -1;
         }
     }
-
-
-    public List<TrucoCard> getStrongerCards(GameIntel intel, CardRank referenceRank){
-        return intel.getCards().stream()
-                .filter(card -> card.getRank().compareTo(referenceRank) > 0)
-                .toList();
-    }
-
 
     public List<TrucoCard> getManilhas(GameIntel intel) {
         return intel.getCards().stream()
@@ -191,16 +182,6 @@ public class Lgtbot implements BotServiceProvider{
             }
         }
         return false;
-    }
-
-    public List<TrucoCard> getHorrifyingCards(GameIntel intel) {
-        return intel.getCards().stream()
-                .filter(card -> card.getRank() == CardRank.FOUR ||
-                        card.getRank() == CardRank.FIVE ||
-                        card.getRank() == CardRank.SIX ||
-                        card.getRank() == CardRank.SEVEN ||
-                        card.getRank() == CardRank.QUEEN)
-                .collect(Collectors.toList());
     }
 
     private boolean isFirstToPlay(GameIntel intel){
@@ -235,6 +216,27 @@ public class Lgtbot implements BotServiceProvider{
         return cards.stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                 .min((card1, card2) -> card1.compareValueTo(card2, vira));
+    }
+
+    public List<TrucoCard> getStrongCards(GameIntel intel) {
+        List<CardRank> strongRanks = List.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
+        return intel.getCards().stream()
+                .filter(card -> strongRanks.contains(card.getRank()))
+                .toList();
+    }
+
+    public List<TrucoCard> getGoodCards(GameIntel intel) {
+        List<CardRank> goodRanks = List.of(CardRank.KING, CardRank.JACK);
+        return intel.getCards().stream()
+                .filter(card -> goodRanks.contains(card.getRank()))
+                .toList();
+    }
+
+    public List<TrucoCard> getBadCards(GameIntel intel) {
+        List<CardRank> badRanks = List.of(CardRank.QUEEN, CardRank.SEVEN, CardRank.SIX, CardRank.FIVE, CardRank.FOUR);
+        return intel.getCards().stream()
+                .filter(card -> badRanks.contains(card.getRank()))
+                .toList();
     }
 
 }

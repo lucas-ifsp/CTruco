@@ -20,95 +20,90 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class LgtbotTest {
-    @Mock
-    private GameIntel intel;
     private Lgtbot lgtbot;
     private GameIntel.StepBuilder stepBuilder;
 
-    private TrucoCard vira;
-    private List<TrucoCard> cards;
-    private Optional<TrucoCard> opponentCard;
-    private List<GameIntel.RoundResult> results;
-
     @BeforeEach
-    public void config(){
+    public void config() {
         lgtbot = new Lgtbot();
+
     }
 
     @Nested
     @DisplayName("Test getMaoDeOnzeResponse method")
     class GetMaoDeOnzeResponseTest {
         @Test
-        @DisplayName("Should accept mao de onze if opponent score is less than 7 and bot has three cards above Jack rank")
-        void shouldAcceptMaoDeOnzeIfOpponentScoreIsLessThanSevenAndBotHasThreeCardsAboveJackRank() {
-            vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
-            cards = List.of(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+        @DisplayName("Aceitar mão de onze quando oponente tem menos de 7 pontos e jogador possui boas cartas")
+        public void testShouldAcceptMaoDeOnze_WhenOpponentScoreLessThan7_HasThreeGoodCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
             );
 
-            // Mockando o comportamento do GameIntel
-            when(intel.getOpponentScore()).thenReturn(6);
-            when(intel.getCards()).thenReturn(cards);
-            when(intel.getVira()).thenReturn(vira);
-
-            // Executando o teste
-            assertThat(lgtbot.getMaoDeOnzeResponse(intel)).isTrue();
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(goodCards, 11)
+                    .opponentScore(6);
+            assertTrue(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
 
-
         @Test
-        @DisplayName("Should return true when opponent has less than 11 points, 3 cards stronger than Ace, and has manilhas")
-        void shouldReturnTrueWhenLessThan11PointsAndHasStrongerCardsThanAce() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        @DisplayName("Aceitar mão de onze quando oponente tem menos de 11 pontos e jogador possui cartas fortes")
+        public void testShouldAcceptMaoDeOnze_WhenOpponentScoreLessThan11_HasThreeStrongCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
             List<TrucoCard> strongCards = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
-            );
-            List<TrucoCard> manilhas = List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
             );
 
-            when(intel.getOpponentScore()).thenReturn(9);
-            when(lgtbot.getStrongerCards(intel, CardRank.ACE)).thenReturn(strongCards);
-            when(lgtbot.getManilhas(intel)).thenReturn(manilhas);
-
-            assertTrue(lgtbot.getMaoDeOnzeResponse(intel));
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(strongCards, 11)
+                    .opponentScore(10);
+            assertTrue(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
 
         @Test
-        @DisplayName("Should return true when opponent has exactly 11 points")
-        void shouldReturnTrueWhenOpponentHasExactly11Points() {
-            GameIntel intel = mock(GameIntel.class);
+        @DisplayName("Aceitar mão de onze quando oponente tem exatamente 11 pontos")
+        public void testShouldAcceptMaoDeOnze_WhenOpponentScoreEqualTo11() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
 
-            when(intel.getOpponentScore()).thenReturn(11);
-
-            assertTrue(lgtbot.getMaoDeOnzeResponse(intel));
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(myCards, 11)
+                    .opponentScore(11);
+            assertTrue(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
 
+
         @Test
-        @DisplayName("Should return false when opponent has more than 7 points and no strong cards or manilhas")
-        void shouldReturnFalseWhenMoreThan7PointsAndNoStrongCardsOrManilhas() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-            List<TrucoCard> strongCards = List.of(
-                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+        @DisplayName("Não aceitar mão de onze quando não tem boas cartas e oponente tem menos de 7 pontos")
+        public void testShouldNotAcceptMaoDeOnze_WhenNoGoodCardsAndOpponentScoreLessThan7() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> badCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
             );
-            List<TrucoCard> manilhas = List.of();
 
-            when(intel.getOpponentScore()).thenReturn(8);
-            when(lgtbot.getStrongerCards(intel, CardRank.JACK)).thenReturn(strongCards);
-            when(lgtbot.getManilhas(intel)).thenReturn(manilhas);
-
-            assertFalse(lgtbot.getMaoDeOnzeResponse(intel));
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(badCards, 11)
+                    .opponentScore(6);
+            assertFalse(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
         }
     }
-
 }
