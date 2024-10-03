@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 public class Lgtbot implements BotServiceProvider{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentScore() < 7 && getStrongerCards(intel, CardRank.JACK).size() == 3 &&
-                !getManilhas(intel).isEmpty()) {
+        if (intel.getOpponentScore() < 7 &&
+                !getManilhas(intel).isEmpty() &&
+                !getStrongerCards(intel, CardRank.JACK).isEmpty()) {
             return true;
         }
-        if (intel.getOpponentScore() < 11 && getStrongerCards(intel, CardRank.ACE).size() == 3 &&
-                !getManilhas(intel).isEmpty()){
+        if (intel.getOpponentScore() < 11 &&
+                !getManilhas(intel).isEmpty() &&
+                !getStrongerCards(intel, CardRank.JACK).isEmpty()) {
             return true;
         }
         if (intel.getOpponentScore() == 11){
@@ -171,9 +173,8 @@ public class Lgtbot implements BotServiceProvider{
 
 
     public List<TrucoCard> getManilhas(GameIntel intel) {
-        TrucoCard viraCard = intel.getVira();
         return intel.getCards().stream()
-                .filter(carta -> carta.isManilha(viraCard))
+                .filter(carta -> carta.isManilha(intel.getVira()))
                 .toList();
     }
 
