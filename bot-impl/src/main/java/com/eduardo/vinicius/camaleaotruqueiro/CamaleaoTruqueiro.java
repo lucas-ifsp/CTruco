@@ -75,4 +75,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         }
         return numberOfHighCards;
     }
+    public boolean isWinning(int myScore, int opponentScore){
+        return myScore > opponentScore;
+    }
 }
