@@ -80,10 +80,11 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(middleCard(botCards,vira));
                     }
                 }
-
-                Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
-                if (equalCard.isPresent()){
-                    return CardToPlay.of(equalCard.get());
+                if (opponentCard.isPresent()){
+                    Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
+                    if (equalCard.isPresent()){
+                        return CardToPlay.of(equalCard.get());
+                }
                 }
 
             }
