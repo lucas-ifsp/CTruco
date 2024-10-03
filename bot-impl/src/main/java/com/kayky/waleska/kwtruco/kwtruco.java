@@ -1,4 +1,4 @@
-package com.kayky.waleska.kwtruco;
+ package com.kayky.waleska.kwtruco;
 
 import com.bueno.spi.service.BotServiceProvider;
 import com.bueno.spi.model.*;
@@ -11,16 +11,17 @@ public class kwtruco implements BotServiceProvider {
     private static final List<CardRank> offCards = List.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentCard().stream().anyMatch(c-> c.isZap(intel.getVira()))){
+        if (oponnentHasZap(intel)){
             return false;
         }
         if (intel.getOpponentScore() == 11){
             return true;
         }
-        if (intel.getOpponentScore() >= 9 ){
+        if (intel.getOpponentScore() >= 9){
             return true;
         }
-        return false;
+
+        return hasManilhaAndHighRank(intel);
     }
 
     @Override
@@ -198,6 +199,9 @@ public class kwtruco implements BotServiceProvider {
 
     private boolean hasZap(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+    private boolean oponnentHasZap(GameIntel intel) {
+        return intel.getOpponentCard().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
 
 }
