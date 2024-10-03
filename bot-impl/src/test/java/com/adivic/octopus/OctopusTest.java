@@ -192,7 +192,7 @@ public class OctopusTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 4)
+                    .botInfo(ourCards, 12)
                     .opponentScore(1);
 
             assertThat(octopus.hasSixPointAdvantage(stepBuilder.build())).isTrue();

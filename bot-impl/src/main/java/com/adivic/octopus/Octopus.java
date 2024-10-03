@@ -108,6 +108,9 @@ public class Octopus implements BotServiceProvider {
     }
 
     public boolean hasSixPointAdvantage(GameIntel intel){
+        int scoreDifference = intel.getScore() - intel.getOpponentScore();
+        if(scoreDifference > 6)
+            return true;
         return false;
     }
 }
