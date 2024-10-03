@@ -170,7 +170,7 @@ public class Lgtbot implements BotServiceProvider{
     }
 
 
-    private List<TrucoCard> getManilhas(GameIntel intel) {
+    public List<TrucoCard> getManilhas(GameIntel intel) {
         TrucoCard viraCard = intel.getVira();
         return intel.getCards().stream()
                 .filter(carta -> carta.isManilha(viraCard))
