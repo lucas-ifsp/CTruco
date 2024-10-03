@@ -120,8 +120,8 @@ public class TheRoverTest {
         @DisplayName("Playing first test")
         class playingFirst {
             @Test
-            @DisplayName("When players has one manilha one high card and one low card should return high card")
-            void WhenPlayersHasOneManilhaOneHighCardAndOneLowCardShouldReturnHighCard() {
+            @DisplayName("When player has one manilha one high card and one low card should return high card")
+            void WhenPlayerHasOneManilhaOneHighCardAndOneLowCardShouldReturnHighCard() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
                 List<TrucoCard> cards = List.of(
                         TrucoCard.of(CardRank.FIVE,CardSuit.HEARTS),
@@ -136,8 +136,8 @@ public class TheRoverTest {
             }
 
             @Test
-            @DisplayName("When players has two manilhas and one low card should return lower manilha")
-            void WhenPlayersHasTwoManilhasAndOneLowCardShouldReturnLowerManilha() {
+            @DisplayName("When player has two manilhas and one low card should return lower manilha")
+            void WhenPlayerHasTwoManilhasAndOneLowCardShouldReturnLowerManilha() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
                 List<TrucoCard> cards = List.of(
                         TrucoCard.of(CardRank.FIVE,CardSuit.HEARTS),
@@ -152,8 +152,8 @@ public class TheRoverTest {
             }
 
             @Test
-            @DisplayName("When players has three manilhas should return lower manilha")
-            void WhenPlayersHasThreeManilhasShouldReturnLowerManilha() {
+            @DisplayName("When player has three manilhas should return lower manilha")
+            void WhenPlayerHasThreeManilhasShouldReturnLowerManilha() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
                 List<TrucoCard> cards = List.of(
                         TrucoCard.of(CardRank.FIVE,CardSuit.HEARTS),
@@ -165,6 +165,22 @@ public class TheRoverTest {
                         .botInfo(cards, 0)
                         .opponentScore(0);
                 assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), theRover.chooseCardFirstHand(stepBuilder.build()));
+            }
+
+            @Test
+            @DisplayName("When player has three regular card should return higher card")
+            void WhenPlayerHasThreeRegularCardsShouldReturnHigherCard() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                );
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(),vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0);
+                assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), theRover.chooseCardFirstHand(stepBuilder.build()));
             }
 
         }
