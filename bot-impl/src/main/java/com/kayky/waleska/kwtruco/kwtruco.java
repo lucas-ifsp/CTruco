@@ -25,8 +25,62 @@ public class kwtruco implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if (intel.getOpponentCard().isPresent()) {
+            if (getMaxCardValue(intel) <= intel.getOpponentCard().get().relativeValue(intel.getVira())) {
+                return false;
+            }
+        }
+
+        if (intel.getOpponentScore() == 0 || intel.getScore() >= intel.getOpponentScore() + 3 || hasHigherThanAverageValue
+                (intel) || hasManilhaAndHighRank(intel)) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() >= 9) {
+            return false;
+        }
         return false;
     }
+
+    private int getMaxCardValue(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        return cards.stream().mapToInt(card -> card.relativeValue(vira)).max().orElse(0);
+    }
+
+    private boolean hasHigherThanAverageValue(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        int handValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
+
+        return handValue >= 18;
+    }
+
+    private boolean hasManilhaAndHighRank(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        boolean hasManilha = false;
+        boolean hasCartaHigh = false;
+
+
+        for (TrucoCard carta : cartas) {
+            if (carta.isManilha(vira)) {
+                hasCartaHigh = true;
+            }
+            else if (carta.getRank().value() > 4) {
+                hasCartaHigh = true;
+            }
+            if (hasManilha && hasCartaHigh) {
+                return true;
+            }
+        }
+        return hasManilha && hasCartaHigh;
+    }
+
+
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -137,35 +191,7 @@ public class kwtruco implements BotServiceProvider {
     public String getName() {
         return BotServiceProvider.super.getName();
     }
-    private boolean hasManilhaAndHighRank(GameIntel intel) {
-        // Obtém as cartas do jogador.
-        List<TrucoCard> cartas = intel.getCards();
 
-        // Obtém a carta vira.
-        TrucoCard vira = intel.getVira();
 
-        // Variáveis para armazenar se temos manilha e uma carta de alto valor.
-        boolean hasManilha = false;
-        boolean hasCartaHigh = false;
 
-        // Itera pelas cartas do jogador.
-        for (TrucoCard carta : cartas) {
-            // Verifica se a carta é uma manilha.
-            if (carta.isManilha(vira)) {
-                hasCartaHigh = true;
-            }
-            // Se não for manilha, verifica se tem um valor alto.
-            else if (carta.getRank().value() > 4) {
-                hasCartaHigh = true;
-            }
-
-            // Se ambos forem verdadeiros, podemos retornar true mais cedo.
-            if (hasManilha && hasCartaHigh) {
-                return true;
-            }
-        }
-
-        // Retorna true se o jogador tiver tanto uma manilha quanto uma carta de valor alto.
-        return hasManilha && hasCartaHigh;
-    }
 }
