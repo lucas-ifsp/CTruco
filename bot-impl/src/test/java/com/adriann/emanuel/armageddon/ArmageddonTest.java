@@ -220,6 +220,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("Should play the strongest card when the hand is average and don't have manilha")
+                void shouldPlayStrongestMidHand(){
+                    vira = TrucoCard.of(SEVEN,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(SEVEN,HEARTS),
+                            TrucoCard.of(KING,CLUBS),
+                            TrucoCard.of(TWO,DIAMONDS));
+
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
             }
         }
     }
