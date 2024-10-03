@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -93,7 +94,20 @@ public class CamaleaoTruqueiroTest {
         softly.assertThat(camaleao.numberOfManilhas(threeManilhasCards, vira)).as("Three manilhas").isEqualTo(3);
         softly.assertAll();
     }
+    
+    @Test
+    @DisplayName("shouldReturnOneHighCards")
+    void shouldReturnOneHighCard(){
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
+        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard card3 = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+        int numberOfHighCard = camaleao.getNumberOfHighCards(card1,card2,card3,vira);
+        assertEquals(1, numberOfHighCard);
+    org.junit.jupiter.api.Assertions.fail();
+    }
     //temos carta alta
         // temos 0 carta alta
         // temos 1 carta alta
