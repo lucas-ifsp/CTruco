@@ -120,7 +120,7 @@ public class TheRoverTest {
         @DisplayName("Playing first test")
         class playingFirst {
             @Test
-            @DisplayName("When Players Has One Manilha One High Card And One Low Card Should Return High Card")
+            @DisplayName("When players has one manilha one high card and one low card should return high card")
             void WhenPlayersHasOneManilhaOneHighCardAndOneLowCardShouldReturnHighCard() {
                 TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
                 List<TrucoCard> cards = List.of(
@@ -134,6 +134,25 @@ public class TheRoverTest {
                          .opponentScore(0);
                  assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), theRover.chooseCardFirstHand(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("When players has two manilha and one low card should return lower manilha")
+            void WhenPlayersHasTwoManilhasAndOneLowCardShouldReturnLowerManilha() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.FIVE,CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FIVE,CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                );
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(),vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0);
+                assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), theRover.chooseCardFirstHand(stepBuilder.build()));
+            }
+
+
+
         }
     }
 }
