@@ -3,6 +3,7 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CamaleaoTruqueiro implements BotServiceProvider {
@@ -65,5 +66,14 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         int numberOfManilhas;
         numberOfManilhas = cards.stream().filter(card -> card.isManilha(vira)).toList().size();
         return numberOfManilhas;
+    }
+
+    public int getNumberOfHighCards(TrucoCard card1, TrucoCard card2, TrucoCard card3, TrucoCard vira) {
+        List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
+        int numberOfHighCards = 0;
+        for (TrucoCard handCard : handCards) {
+            if(handCard.getRank().value()>7 || handCard.isManilha(vira)) numberOfHighCards++;
+        }
+        return numberOfHighCards;
     }
 }
