@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -117,7 +118,7 @@ public class TheRoverTest {
     class chooseCardFirstHandTest {
 
         @Nested
-        @DisplayName("Playing first test")
+        @DisplayName("Playing first tests")
         class playingFirst {
             @Test
             @DisplayName("When player has one manilha one high card and one low card should return high card")
@@ -183,6 +184,26 @@ public class TheRoverTest {
                 assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES), theRover.chooseCardFirstHand(stepBuilder.build()));
             }
 
+            @Test
+            @DisplayName("When player has three cards of the same value return any of then")
+            void WhenPlayerHasThreeCardsOfSameValue() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                );
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(),vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0);
+                assertThat(theRover.chooseCardFirstHand(stepBuilder.build())).isIn(
+                        TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.ACE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                );
+            }
         }
+
     }
 }
