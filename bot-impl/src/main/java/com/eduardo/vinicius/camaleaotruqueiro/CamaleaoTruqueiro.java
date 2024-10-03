@@ -68,8 +68,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return numberOfManilhas;
     }
 
-    public int getNumberOfHighCards(TrucoCard card1, TrucoCard card2, TrucoCard card3, TrucoCard vira) {
-        List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
+    public int getNumberOfHighCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfHighCards = 0;
         for (TrucoCard handCard : handCards) {
             if(handCard.getRank().value()>7 || handCard.isManilha(vira)) numberOfHighCards++;
