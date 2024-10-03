@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class
-kwtrucoTest{
+kwtrucoTest {
     private kwtruco kwtrucoBot;
 
     private final TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
@@ -23,17 +23,17 @@ kwtrucoTest{
     );
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         kwtrucoBot = new kwtruco();
     }
 
     @Test
     @DisplayName("Select the lowest card at the beginning of the game")
-    void SelectTheLowestCardAtTheBeginningOfTheGame(){
+    void SelectTheLowestCardAtTheBeginningOfTheGame() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST),List.of(vira),vira, 1)
-                .botInfo(botCards,7)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 7)
                 .opponentScore(2);
 
         CardToPlay cardToPlay = kwtrucoBot.chooseCard(stepBuilder.build());
@@ -62,5 +62,25 @@ kwtrucoTest{
         assertEquals(CardRank.TWO, botCard.content().getRank());
 
 
+    }
+
+    @Test
+    @DisplayName("Should select the lowest card by suit when the bot lacks manilhas")
+    public void shouldSelectTheLowestCardBySuitWhenTheBotLacksManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.closed());
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.closed());
+
+        CardToPlay botCard = kwtrucoBot.chooseCard(stepBuilder.build());
+
+        assertEquals(CardSuit.HEARTS, botCard.content().getSuit());
+    }
 }
 
