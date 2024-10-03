@@ -9,7 +9,7 @@ import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
-import com.daniel.therover.TheRover;
+import com.daniel.mateus.theroverbot.TheRover;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
@@ -102,7 +102,7 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
-    exports com.daniel.therover;
+    exports com.daniel.mateus.theroverbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,

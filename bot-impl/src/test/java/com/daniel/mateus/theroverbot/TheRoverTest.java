@@ -1,4 +1,4 @@
-package com.daniel.therover;
+package com.daniel.mateus.theroverbot;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
@@ -111,5 +111,7 @@ public class TheRoverTest {
             assertEquals(3, theRover.getCurrentRound(stepBuilder.build()));
         }
     }
+
+
 
 }

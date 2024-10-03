@@ -1,7 +1,8 @@
-package com.daniel.therover;
+package com.daniel.mateus.theroverbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class TheRover implements BotServiceProvider {
@@ -43,4 +44,5 @@ public class TheRover implements BotServiceProvider {
         if (cardsInHand == 1) return 3;
         return -1;
     }
+
 }
