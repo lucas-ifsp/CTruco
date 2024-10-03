@@ -157,6 +157,22 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfTwoCards(stepBuilder.build())).isEqualTo(2);
         }
+        @Test
+        @DisplayName("Return if the hand contains Ace")
+        void returnIfTheHandContainsAce(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 5)
+                    .opponentScore(0);
+
+            assertThat(octopus.hasAce(stepBuilder.build())).isTrue();
+        }
     }
 
     @Nested
