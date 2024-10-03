@@ -248,6 +248,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
+
+                @Test
+                @DisplayName("Should play the middle card when have three as manilha")
+                void shouldPlayMiddleWhenThreeIsManilha(){
+                    vira = TrucoCard.of(TWO,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(ACE,SPADES),
+                            TrucoCard.of(THREE,CLUBS),
+                            TrucoCard.of(FIVE,DIAMONDS));
+
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }
