@@ -26,6 +26,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static com.bueno.spi.model.CardRank.*;
 
@@ -61,10 +62,11 @@ public class Armageddon implements BotServiceProvider {
 
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         switch (rounds) {
             case 0 -> {
-                if (intel.getOpponentCard().isEmpty()){
+                if (opponentCard.isEmpty()){
                     if (hasHigherCouple(botCards, vira)) {
                         return CardToPlay.of(weakestCard(botCards, vira));
                     }
@@ -78,9 +80,12 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(middleCard(botCards,vira));
                     }
                 }
-                if (intel.getOpponentCard().get().relativeValue(vira) == botCards.get(0).relativeValue(vira)){
-                    return CardToPlay.of(botCards.get(0));
+
+                Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
+                if (equalCard.isPresent()){
+                    return CardToPlay.of(equalCard.get());
                 }
+
             }
         }
 
@@ -159,5 +164,12 @@ public class Armageddon implements BotServiceProvider {
         }
 
         return strength;
+    }
+
+    private Optional<TrucoCard> relativelyEqualCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+        for (TrucoCard card:cards){
+            if (card.relativeValue(vira) == opponentCard.relativeValue(vira)) return Optional.of(card);
+        }
+        return Optional.empty();
     }
 }
