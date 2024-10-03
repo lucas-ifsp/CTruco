@@ -179,5 +179,23 @@ public class OctopusTest {
 
             assertThat(octopus.hasThreePointAdvantage(stepBuilder.build())).isTrue();
         }
+        @Test
+        @DisplayName("Returns if there is at least a six-point advantage")
+
+        void returnsIfThereIsAtLeastASixPointAdvantage(){
+
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(ourCards, 4)
+                    .opponentScore(1);
+
+            assertThat(octopus.hasSixPointAdvantage(stepBuilder.build())).isTrue();
+        }
     }
 }
