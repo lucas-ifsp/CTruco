@@ -277,6 +277,25 @@ public class ArmageddonTest {
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
             }
+
+            @Nested
+            @DisplayName("Tests to implement logic of choose card in the first round when is second to play")
+            class FirstRoundSecondToPlayChoose{
+
+                @Test
+                @DisplayName("Draw the point when have zap")
+                void shouldDrawWhenZap(){
+                    vira = TrucoCard.of(ACE,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SEVEN,HEARTS),
+                            TrucoCard.of(TWO,CLUBS),
+                            TrucoCard.of(FOUR,DIAMONDS));
+
+                    intel = firstRoundSecondToPlay(botCards,vira,TrucoCard.of(SEVEN,CLUBS));
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
+            }
         }
     }
 }
