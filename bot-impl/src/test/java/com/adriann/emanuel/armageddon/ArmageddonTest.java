@@ -234,6 +234,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("Should play three when have this and manilha at same hand")
+                void shouldPlayThreeWhenHaveThreeAndManilha(){
+                    vira = TrucoCard.of(QUEEN,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(JACK,HEARTS),
+                            TrucoCard.of(THREE,CLUBS),
+                            TrucoCard.of(SIX,DIAMONDS));
+
+                    intel = firstRoundFirstToPlay(botCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
