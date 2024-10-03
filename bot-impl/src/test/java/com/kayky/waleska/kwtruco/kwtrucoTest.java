@@ -123,5 +123,26 @@ kwtrucoTest {
 
         assertEquals(CardRank.THREE, selectedBotCard.content().getRank());
     }
+
+    @Test
+    @DisplayName("Selects the Diamonds manilha when available in hand")
+    void selectsTheDiamondsManilhaWhenAvailableInHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+
+        GameIntel gameIntel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS))
+                .build();
+
+        CardToPlay cardToPlay = kwtrucoBot.chooseCard(gameIntel);
+
+        assertEquals(CardSuit.DIAMONDS, cardToPlay.content().getSuit());
+    }
 }
 
