@@ -101,5 +101,27 @@ kwtrucoTest {
 
         assertEquals(CardRank.FOUR, kwtrucoBot.chooseCard(stepBuilder.build()).content().getRank());
     }
+
+    @Test
+    @DisplayName("Should play a stronger manilha than the opponent's if the bot possesses manilhas")
+    public void shouldPlayStrongerManilhaThanTheOpponentIfTheBotPossessesManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(4)
+                .opponentCard(opponentCard);
+
+        CardToPlay selectedBotCard = kwtrucoBot.chooseCard(stepBuilder.build());
+
+        assertEquals(CardRank.THREE, selectedBotCard.content().getRank());
+    }
 }
 
