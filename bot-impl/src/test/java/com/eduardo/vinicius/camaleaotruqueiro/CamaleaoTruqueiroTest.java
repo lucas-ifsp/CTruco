@@ -2,6 +2,7 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -138,12 +140,13 @@ public class CamaleaoTruqueiroTest {
         int numberOfHighCard = camaleao.getNumberOfHighCards(handCards,vira);
         assertEquals(3, numberOfHighCard);
     }
-    //temos carta alta
-        // temos 0 carta alta
-        // temos 1 carta alta
-        // temos 2 carta alta
-        // temos 3 carta alta
 
+    @Test
+    @DisplayName("shouldReturnIfTheBotIsWinning")
+    void shouldReturnIfTheBotIsWinning(){
+        boolean isWinning = camaleao.isWinning(9,9);
+        assertTrue(isWinning);
+    }
     //temos carta baixa
 
 
