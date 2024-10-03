@@ -27,6 +27,21 @@ kwtrucoTest {
     public void setUp() {
         kwtrucoBot = new kwtruco();
     }
+    @Nested
+    class getMaoDeOnzeResponse{
+        @Test
+        @DisplayName("Return false when opponent has Zap")
+        void shouldReturnFalseWhenOpponentHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8);
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(response);
+        }
+    }
+
 
     @Nested
     class chooseCard {
