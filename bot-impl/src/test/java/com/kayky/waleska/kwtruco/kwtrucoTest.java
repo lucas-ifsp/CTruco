@@ -54,6 +54,18 @@ kwtrucoTest {
             assertTrue(response);
         }
 
+        @Test
+        @DisplayName("Return true when opponent score is 9 or more")
+        void shouldReturnTrueWhenOpponentScoreIsNineOrGreater() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 7)
+                    .opponentScore(10);
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(response);
+        }
     }
 
 
