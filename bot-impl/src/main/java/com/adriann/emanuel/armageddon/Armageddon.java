@@ -66,11 +66,11 @@ public class Armageddon implements BotServiceProvider {
                 if (hasHigherCouple(botCards, vira)) {
                     return CardToPlay.of(weakestCard(botCards, vira));
                 }
+                if (hasManilha(botCards, vira)){
+                    return CardToPlay.of(middleCard(botCards, vira));
+                }
                 if (handStrength(botCards, vira) < 7) {
                     return CardToPlay.of(strongestCard(botCards, vira));
-                }
-                if (hasManilha(botCards, vira) && hasThree(botCards, vira)) {
-                    return CardToPlay.of(middleCard(botCards, vira));
                 }
                 if (handStrength(botCards, vira) > 15) {
                     return CardToPlay.of(strongestCard(botCards, vira));
