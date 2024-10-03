@@ -157,8 +157,9 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfTwoCards(stepBuilder.build())).isEqualTo(2);
         }
+
         @Test
-        @DisplayName("Return if the hand contains Ace")
+        @DisplayName("Return if the hand contains ACE")
         void returnIfTheHandContainsAce(){
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
