@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static com.manhani.stefane.reimubot.ReimuBot.REFUSE;
+import static com.manhani.stefane.reimubot.ReimuBot.ACCEPT;
+import static com.manhani.stefane.reimubot.ReimuBot.RERAISE;
 
 class ReimuBotTest {
 
@@ -104,7 +107,7 @@ class ReimuBotTest {
                             vira, 1).botInfo(reimuCards, 0)
                     .opponentScore(1).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
                     .build();
-            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(1);
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(RERAISE);
         }
     }
 
