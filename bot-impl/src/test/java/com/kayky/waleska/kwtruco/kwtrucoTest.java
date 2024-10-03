@@ -82,5 +82,24 @@ kwtrucoTest {
 
         assertEquals(CardSuit.HEARTS, botCard.content().getSuit());
     }
+
+    @Test
+    @DisplayName("Should select the lowest ranked card that can defeat the opponent")
+    public void ShouldSelectTheLowestRankedCardThatCanDefeatTheOpponent() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+        );
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(3)
+                .opponentCard(opponentCard);
+
+        assertEquals(CardRank.FOUR, kwtrucoBot.chooseCard(stepBuilder.build()).content().getRank());
+    }
 }
 
