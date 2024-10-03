@@ -192,6 +192,12 @@ public class kwtruco implements BotServiceProvider {
         return BotServiceProvider.super.getName();
     }
 
+    public boolean hasManilha(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
+    }
 
+    private boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
 
 }
