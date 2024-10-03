@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class kwtrucoTest{
+public class
+kwtrucoTest{
     private kwtruco kwtrucoBot;
 
     private final TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
@@ -26,8 +28,8 @@ public class kwtrucoTest{
     }
 
     @Test
-    @DisplayName("Choose the lowest card when the game is starting")
-    void chooseLowestCardWhenTheGameIsStarting(){
+    @DisplayName("Select the lowest card at the beginning of the game")
+    void SelectTheLowestCardAtTheBeginningOfTheGame(){
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST),List.of(vira),vira, 1)
@@ -38,4 +40,27 @@ public class kwtrucoTest{
 
         assertEquals(CardRank.FOUR, cardToPlay.content().getRank());
     }
+
+    @Test
+    @DisplayName("Bot discards the lowest ranked card when the opponent has a stronger card")
+    void botDiscardsLowestRankedCardWhenOpponentHasStrongerCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> openCards = Arrays.asList(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+
+        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                .botInfo(botCards, 9)
+                .opponentScore(3)
+                .opponentCard(opponentCard);
+
+        CardToPlay botCard = kwtrucoBot.chooseCard(stepBuilder.build());
+
+        assertEquals(CardRank.TWO, botCard.content().getRank());
+
+
 }
+
