@@ -136,4 +136,9 @@ public class Octopus implements BotServiceProvider {
 
         return cards.get(0);
     }
+
+    public int numberOfStrongCards(GameIntel intel) {
+
+        return 1;
+    }
 }
