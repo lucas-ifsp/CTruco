@@ -305,6 +305,28 @@ kwtrucoTest {
                     assertFalse(shouldRaise);
                 }
 
+                @Test
+                @DisplayName("Bot should raise when it has manilha")
+                public void botShouldRaiseWhenItHasManilha() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+                    List<TrucoCard> openCards = Arrays.asList(
+                            vira,
+                            opponentCard);
+                    GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(botCards, 9)
+                            .opponentScore(5)
+                            .opponentCard(opponentCard);
+
+                    boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+                    assertThat(shouldRaise).isTrue();
+                }
+
 
             }
 
