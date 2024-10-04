@@ -138,7 +138,11 @@ public class Octopus implements BotServiceProvider {
     }
 
     public int numberOfStrongCards(GameIntel intel) {
+        int manilhasCount = numberOfManilhas(intel);
+        int threeCount = numberOfThreeCards(intel);
+        int twoCount = numberOfTwoCards(intel);
+        int aceCount = numberOfAceCards(intel);
 
-        return 1;
+        return manilhasCount + threeCount + twoCount + aceCount;
     }
 }
