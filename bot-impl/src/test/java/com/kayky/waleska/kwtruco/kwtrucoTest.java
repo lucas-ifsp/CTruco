@@ -408,6 +408,26 @@ public class kwtrucoTest {
             assertFalse(shouldRaise);
         }
 
+        @Test
+        @DisplayName("Return false when opponent has strong cards")
+        public void returnFalseWhenOpponentHasStrongCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(Arrays.asList(TrucoCard.of(CardRank.KING, CardSuit.SPADES), TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)), 3)
+                    .opponentScore(2)
+                    .opponentCard(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+            boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+            assertFalse(shouldRaise);
+        }
+
     }
 
 }
