@@ -1,8 +1,5 @@
 package com.bianca.joaopedro.lgtbot;
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -292,6 +289,30 @@ class LgtbotTest {
                     .opponentScore(9);
             assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Bot escolhe a melhor carta para jogar")
+        public void testBotChoosesBestCardToPlay() {
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(6);
+
+            TrucoCard expectedCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            // O método chooseCard retorna um objeto CardToPlay
+            CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
+
+        }
+
 
     }
 }
