@@ -388,6 +388,34 @@ public class kwtrucoTest {
         }
 
         @Test
+        @DisplayName("Return True if player has more the one strong card")
+        public void returnTrueIfPlayerHasMoreTheOneStrongCard() {
+            TrucoCard goodCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+            );
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, goodCard, 1)
+                    .botInfo(botCards, 4)
+                    .opponentScore(6)
+                    .opponentCard(opponentCard);
+
+            boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+            assertTrue(shouldRaise);
+        }
+
+        @Test
         @DisplayName("Return False When Have Only Low Rank Cards")
         public void returnFalseWhenHaveOnlyLowRankCards() {
 
