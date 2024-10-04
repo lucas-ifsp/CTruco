@@ -17,9 +17,7 @@ public class kwtruco implements BotServiceProvider {
         if (intel.getOpponentScore() == 11){
             return true;
         }
-        if (intel.getOpponentScore() >= 9){
-            return true;
-        }
+
 
         return hasManilhaAndHighRank(intel);
     }
@@ -69,16 +67,16 @@ public class kwtruco implements BotServiceProvider {
 
         for (TrucoCard carta : cartas) {
             if (carta.isManilha(vira)) {
-                hasCartaHigh = true;
+                hasManilha= true;
             }
             else if (carta.getRank().value() > 4) {
                 hasCartaHigh = true;
             }
-            if (hasManilha && hasCartaHigh) {
-                return true;
-            }
         }
-        return hasManilha && hasCartaHigh;
+        if (hasCartaHigh && hasManilha){
+            return true;
+        }
+        return false;
     }
 
 
