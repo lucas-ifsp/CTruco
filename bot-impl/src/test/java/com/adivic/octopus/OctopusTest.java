@@ -210,4 +210,21 @@ public class OctopusTest {
             assertThat(octopus.hasSixPointAdvantage(step.build())).isTrue();
         }
     }
+    @Nested
+    @DisplayName("Testing the methods to win the first round")
+    class WinFirstRound{
+        @Test
+        @DisplayName("Return the better card to win the first round if opponent play first")
+        void ReturnTheBetterCardToWinTheFirstRoundIfOpponentPlayFirst(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 1, 4, 1);
+            assertThat(octopus.chooseBetterCardToWinFirstRound(step.build())).isEqualTo(ourCards.get(1));
+        }
+    }
 }
