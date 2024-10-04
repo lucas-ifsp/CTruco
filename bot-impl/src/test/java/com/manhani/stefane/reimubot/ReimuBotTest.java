@@ -231,6 +231,25 @@ class ReimuBotTest {
             assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
         }
 
+        @Test
+        @DisplayName("Should accept mão de onze if has two threes or more in hand")
+        void acceptsMaoDeOnzeIfHasTwoThrees() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 1)
+                    .botInfo(reimuCards, 11)
+                    .opponentScore(4)
+                    .build();
+            assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
+        }
 
 
 
