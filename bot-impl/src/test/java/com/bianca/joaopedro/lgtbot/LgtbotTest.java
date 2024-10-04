@@ -171,6 +171,22 @@ class LgtbotTest {
         }
 
 
+        @Test
+        @DisplayName("Não deve pedir truco quando tem cartas fracas e oponente tem menos de 6 pontos")
+        public void testShouldNotRaise_WhenHasWeakCardsAndOpponentScoreLessThan() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES); // Carta vira
+            List<TrucoCard> weakCards = List.of( // Cartas fracas do jogador
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1) // Configura as informações do jogo
+                    .botInfo(weakCards, 9) // Configura as informações do bot
+                    .opponentScore(5); // Configura a pontuação do oponente
+
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build())); // Verifica se não deve pedir truco
+        }
+
 
         @Test
         @DisplayName("Deve pedir truco na rodada 2 após ganhar a primeira rodada, tendo boas cartas")
