@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -471,6 +472,26 @@ public class kwtrucoTest {
                     .opponentCard(opponentCard);
 
             assertFalse(kwtrucoBot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Return true if bot have zap")
+        void returnTrueIfBotHaveZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+
+            List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 6)
+                    .opponentScore(2)
+                    .opponentCard(opponentCard);
+
+            assertTrue(kwtrucoBot.decideIfRaises(stepBuilder.build()));
         }
 
     }
