@@ -124,8 +124,8 @@ class ReimuBotTest {
         }
 
         @Test
-        @DisplayName("Should avoid using manilhas if has Clubs or Hearts on first round")
-        void avoidUsingManilhasOnFirstRound() {
+        @DisplayName("Should do the first round avoid using manilhas if has Clubs or Hearts on first round")
+        void doFirstRoundAvoidUsingManilhas() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
             List<TrucoCard> reimuCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
