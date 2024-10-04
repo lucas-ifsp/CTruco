@@ -212,8 +212,8 @@ class ReimuBotTest {
         }
 
         @Test
-        @DisplayName("Should accept mão de onze if has two manilhas in hand")
-        void acceptsMaoDeOnzeIfHasTwoManilhas() {
+        @DisplayName("Should accept mão de onze if has two manilhas in hand and opponent has low points")
+        void acceptsMaoDeOnzeIfHasTwoManilhasAndOpponentLowPoints() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
             List<TrucoCard> reimuCards = List.of(
                     TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
@@ -226,7 +226,7 @@ class ReimuBotTest {
                             List.of(),
                             vira, 1)
                     .botInfo(reimuCards, 11)
-                    .opponentScore(9)
+                    .opponentScore(2)
                     .build();
             assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
         }
@@ -291,7 +291,25 @@ class ReimuBotTest {
             assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
         }
 
-
+        @Test
+        @DisplayName("Should refuse mão de onze if hand value is lower than 19")
+        void refuseIfHandValueLowerThan19() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 1)
+                    .botInfo(reimuCards, 11)
+                    .opponentScore(4)
+                    .build();
+            assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
+        }
 
 
     }
