@@ -235,6 +235,48 @@ class ReimuBotTest {
                     .build();
             assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(RERAISE);
         }
+
+        @Test
+        @DisplayName("Should accept raise if has manilha of hearts and won the first round")
+        void acceptsIfHasManilhaHeartsAndWonFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(GameIntel.RoundResult.WON),
+                            List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                            vira, 1)
+                    .botInfo(reimuCards, 1)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
+                    .build();
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+        }
+
+        @Test
+        @DisplayName("Should accept raise if has manilha of clubs and won the first round")
+        void acceptsIfHasManilhaClubsAndWonFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(GameIntel.RoundResult.WON),
+                            List.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                            vira, 1)
+                    .botInfo(reimuCards, 1)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
+                    .build();
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+        }
+
+
+
+
     }
 
 }
