@@ -514,6 +514,26 @@ public class kwtrucoTest {
             assertFalse(kwtrucoBot.decideIfRaises(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Return false if Opponent have more 9 points")
+        void returnFalseIfOpponentHaveMore9points() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+            List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+
+            TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 6)
+                    .opponentScore(9)
+                    .opponentCard(opponentCard);
+
+            assertFalse(kwtrucoBot.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 
 }
