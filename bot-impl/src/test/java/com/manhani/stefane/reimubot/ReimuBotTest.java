@@ -274,6 +274,25 @@ class ReimuBotTest {
             assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
         }
 
+        @Test
+        @DisplayName("Should accept raise if has more than one manilha in hand")
+        void acceptsIfHasMoreThanOneManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 1)
+                    .botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(null)
+                    .build();
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+        }
 
 
 
