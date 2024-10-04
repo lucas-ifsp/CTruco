@@ -130,4 +130,11 @@ public class Octopus implements BotServiceProvider {
                     .count();
         return 0;
     }
+
+    public TrucoCard chooseBetterCardToWinFirstRound(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+
+        return cards.get(0);
+    }
+
 }
