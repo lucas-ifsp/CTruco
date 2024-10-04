@@ -264,6 +264,23 @@ kwtrucoTest {
                     assertTrue(shouldRaise);
                 }
 
+                @Test
+                @DisplayName("Check if not has good hand and specific conditions")
+                public void checkIfNotHasGoodHandAndSpecificConditions() {
+                    TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+                    List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
+
+                    GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                            .botInfo(botCards, 9)
+                            .opponentScore(8)
+                            .opponentCard(opponentCard);
+
+                    boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+                    assertTrue(shouldRaise);
+                }
+
 
             }
 
