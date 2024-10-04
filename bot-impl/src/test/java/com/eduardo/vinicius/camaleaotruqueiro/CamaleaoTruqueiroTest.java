@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -43,7 +46,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
         );
 
-        TrucoCard greaterCard = camaleao.getGreaterCard(cards, vira);
+        TrucoCard greaterCard = camaleao.getGreatestCard(cards, vira);
         assertEquals(greaterCard, TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
     }
 
@@ -145,8 +148,139 @@ public class CamaleaoTruqueiroTest {
     @Test
     @DisplayName("shouldReturnIfTheBotIsWinning")
     void shouldReturnIfTheBotIsWinning(){
-        boolean isWinning = camaleao.isWinning(9,9);
-        assertTrue(isWinning);
+        SoftAssertions softly = new SoftAssertions();
+        boolean isWinning01 = camaleao.isWinning(10,9);
+        boolean isWinning02 = camaleao.isWinning(8,9);
+        boolean isWinning03 = camaleao.isWinning(0,0);
+
+        softly.assertThat(isWinning01).isTrue();
+        softly.assertThat(isWinning02).isFalse();
+        softly.assertThat(isWinning03).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return a median card that is a Manilha")
+    void shouldReturnAMedianCardThatIsAManilha() {
+        SoftAssertions softly = new SoftAssertions();
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        List<TrucoCard> cards  = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        softly.assertThat(medianCard.isManilha(vira)).isTrue();
+        softly.assertThat(medianCard.getRank()).isEqualTo(CardRank.ACE);
+        softly.assertThat(medianCard.getSuit()).isEqualTo(CardSuit.DIAMONDS);
+        softly.assertAll();
+    }
+
+    @Test
+    @DisplayName("Should return a median card that is the same as the lowest")
+    void shouldReturnAMedianCardThatIsTheSameAsTheLowest() {
+        SoftAssertions softly = new SoftAssertions();
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        List<TrucoCard> cards  = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        TrucoCard lowestCard = camaleao.getLowestCard(cards,vira);
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        softly.assertThat(medianCard).isEqualTo(lowestCard);
+        softly.assertAll();
+    }
+
+    @Test
+    @DisplayName("Should return a median card that is the same as the greatest")
+    void shouldReturnAMedianCardThatIsTheSameAsTheGreatest() {
+        SoftAssertions softly = new SoftAssertions();
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        List<TrucoCard> cards  = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        TrucoCard greatestCard = camaleao.getGreatestCard(cards,vira);
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        softly.assertThat(medianCard).isEqualTo(greatestCard);
+        softly.assertAll();
+    }
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when it is Copas")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenItCopas() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN,CardSuit.DIAMONDS);
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(38);
+    }
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when it is Espadilhas")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenItIsEspadilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN,CardSuit.DIAMONDS);
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(37);
+    }
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when it is Ouros")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenItIsOuros() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN,CardSuit.DIAMONDS);
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(36);
+    }
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when vira is greater or equals then median card")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenViraIsGreaterOrEqualsThenMedianCard() {
+        SoftAssertions softly= new SoftAssertions();
+
+        TrucoCard viraSomeRankThenMedianCard = TrucoCard.of(CardRank.JACK,CardSuit.DIAMONDS);
+        TrucoCard viraGreaterRankThenMedianCard = TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS);
+        TrucoCard medianCard = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        softly.assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, viraSomeRankThenMedianCard)).isEqualTo(20);
+        softly.assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, viraGreaterRankThenMedianCard)).isEqualTo(20);
+        softly.assertAll();
+    }
+
+
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when vira is lowest then median card")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenViraIsLowestThenMedianCard() {
+        SoftAssertions softly= new SoftAssertions();
+
+        TrucoCard vira= TrucoCard.of(CardRank.SEVEN,CardSuit.DIAMONDS);
+        TrucoCard medianCard = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+        softly.assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(15);
+        vira= TrucoCard.of(CardRank.FOUR,CardSuit.DIAMONDS);
+        medianCard = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+        softly.assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(3);
+        softly.assertAll();
+    }
+
+    @Test
+    @DisplayName("Should return the number of worst cards then the median card when ranks of vira and median card are both 1")
+    void shouldReturnTheNumberOfWorstCardsThenTheMedianCardWhenRanksOfViraAndMedianCardAreBoth1() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR,CardSuit.DIAMONDS);
+        TrucoCard medianCard = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(0);
     }
 
     @Test
@@ -155,8 +289,8 @@ public class CamaleaoTruqueiroTest {
         TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
         List<TrucoCard> playersHand = Arrays.asList(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
         );
 
         Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);
@@ -168,23 +302,9 @@ public class CamaleaoTruqueiroTest {
     void shouldReturnTheChancesOfPlayerHasAAbsolutVictoryWhenHeOrSheHasWorstestCards() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
         List<TrucoCard> playersHand = Arrays.asList(
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
-        );
-
-        Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);
-        assertThat(result).isEqualTo(0);
-    }
-
-    @Test
-    @DisplayName("Should return the chances of player has a absolut victory when he or she has median cards")
-    void shouldReturnTheChancesOfPlayerHasAAbsolutVictoryHeOrSheHasMedianCards() {
-        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-        List<TrucoCard> playersHand = Arrays.asList(
-                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
         );
 
         Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);

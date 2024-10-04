@@ -32,7 +32,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return BotServiceProvider.super.getName();
     }
 
-    public TrucoCard getGreaterCard(List<TrucoCard> cards, TrucoCard vira) {
+    public TrucoCard getGreatestCard(List<TrucoCard> cards, TrucoCard vira) {
 
         int compareCard01WithCard02 = cards.get(0).compareValueTo(cards.get(1), vira);
 
@@ -77,5 +77,47 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     }
     public boolean isWinning(int myScore, int opponentScore){
         return myScore > opponentScore;
+    }
+
+    public Float getProbabilityOfAbsolutVictoryHand(List<TrucoCard> playersHand, TrucoCard vira) {
+        // absolut victory ( when a players cards play againts an opponent hand´s
+        // that can´t win or draw in any possible Hand´s played in a Round)
+
+        // is when the median value player´s card is greater or
+        // equal than the greater than the greater card of the opponent
+        // and the highest player card is greater than the media
+
+        TrucoCard medianCard = getMedianCard(playersHand, vira);
+
+        int numberOfCard = getNumberOfCardWorstThanMedianCard(medianCard, vira);
+
+        return ((float) (numberOfCard * (numberOfCard - 1) * (numberOfCard - 2)) /(38*37*36));
+    }
+
+    public TrucoCard getMedianCard(List<TrucoCard> playersHand, TrucoCard vira){
+        TrucoCard greatestCard = getGreatestCard(playersHand, vira);
+        TrucoCard lowestCard = getLowestCard(playersHand, vira);
+        if(playersHand.get(0).equals(greatestCard) && playersHand.get(1).equals(lowestCard))
+            return playersHand.get(2);
+        if(playersHand.get(0).equals(greatestCard) && playersHand.get(2).equals(lowestCard))
+            return playersHand.get(1);
+        return playersHand.get(0);
+    }
+
+    public int getNumberOfCardWorstThanMedianCard(TrucoCard medianCard, TrucoCard vira) {
+        int medianCardRank = medianCard.relativeValue(vira);
+        if (medianCard.isManilha(vira)) {
+            switch (medianCardRank) {
+                case 12: return 38;
+                case 11: return 37;
+                case 10: return 36;
+            }
+        }
+        if(medianCardRank == 1)
+            return 0;
+        if (vira.relativeValue(vira) >= medianCardRank) {
+            return ( medianCardRank - 1) * 4 ;
+        }
+        return ( medianCardRank * 4) - 5;
     }
 }
