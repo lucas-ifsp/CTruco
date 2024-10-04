@@ -133,6 +133,31 @@ class ReimuBotTest {
                     .build();
             assertThat(reimuBot.decideIfRaises(step)).isTrue();
         }
+
+        @Test
+        @DisplayName("Should raise on first round if has casal maior")
+        void raiseIfCasalMaior() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 0)
+                    .botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(null)
+                    .build();
+            assertThat(reimuBot.decideIfRaises(step)).isTrue();
+        }
+
+
+
+
+
     }
     
     @Nested
