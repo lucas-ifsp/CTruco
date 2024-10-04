@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -147,7 +148,48 @@ public class CamaleaoTruqueiroTest {
         boolean isWinning = camaleao.isWinning(9,9);
         assertTrue(isWinning);
     }
-    //temos carta baixa
+
+    @Test
+    @DisplayName("Should return the chances of player has a absolut victory when he or she has best cards")
+    void shouldReturnTheChancesOfPlayerHasAAbsolutVictoryWhenHeOrSheHasGreatestCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        List<TrucoCard> playersHand = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);
+        assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should return the chances of player has a absolut victory when he or she has worst cards")
+    void shouldReturnTheChancesOfPlayerHasAAbsolutVictoryWhenHeOrSheHasWorstestCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> playersHand = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Should return the chances of player has a absolut victory when he or she has median cards")
+    void shouldReturnTheChancesOfPlayerHasAAbsolutVictoryHeOrSheHasMedianCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> playersHand = Arrays.asList(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+        );
+
+        Float result = camaleao.getProbabilityOfAbsolutVictoryHand(playersHand, vira);
+        assertThat(result).isEqualTo(0);
+    }
 
 
 
