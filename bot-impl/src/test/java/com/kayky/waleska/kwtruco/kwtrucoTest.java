@@ -88,8 +88,6 @@ kwtrucoTest {
         }
 
 
-
-       
         @Nested
         class chooseCard {
             @Test
@@ -247,12 +245,29 @@ kwtrucoTest {
                 assertEquals(CardRank.THREE, cardToPlay.content().getRank());
             }
 
+            @Nested
+            class decideIfRaises {
+                @Test
+                @DisplayName("Check if has good hand and specific conditions")
+                public void checkIfHasGoodHandAndSpecificConditions() {
+                    TrucoCard trumpCard = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+                    List<TrucoCard> playedCards = Arrays.asList(trumpCard, opponentCard);
 
+                    GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, trumpCard, 1)
+                            .botInfo(botCards, 9)
+                            .opponentScore(8)
+                            .opponentCard(opponentCard);
+
+                    boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+                    assertTrue(shouldRaise);
+                }
 
 
             }
 
         }
-    }
+    }}
 
 
