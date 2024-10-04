@@ -74,6 +74,19 @@ kwtrucoTest {
             assertFalse(response);
         }
 
+        @Test
+        @DisplayName("Return true for mão de onze when bot has high rank cards")
+        void shouldReturnTrueWhenBotHasHighRankCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8);
+
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(response);
+        }
+
 
 
        
