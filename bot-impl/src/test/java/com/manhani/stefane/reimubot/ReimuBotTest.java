@@ -334,6 +334,24 @@ class ReimuBotTest {
             assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
         }
 
+        @Test
+        @DisplayName("Should accept raise in second round if won first and has three in hand")
+        void acceptsIfWonFirstAndHasThree() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(GameIntel.RoundResult.WON),
+                            List.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                            vira, 1)
+                    .botInfo(reimuCards, 1)
+                    .opponentScore(0).opponentCard(null)
+                    .build();
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+        }
     }
 
 }
