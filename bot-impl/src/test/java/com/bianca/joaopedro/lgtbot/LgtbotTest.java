@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
@@ -272,5 +274,24 @@ class LgtbotTest {
 
             assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Bot recusa truco quando tem cartas fracas")
+        public void testShouldNotRaisePoints_WhenBotHasWeakCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+            List<TrucoCard> weakCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(weakCards, 10)
+                    .opponentScore(9);
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 }
