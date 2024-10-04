@@ -81,12 +81,22 @@ public class Armageddon implements BotServiceProvider {
                     }
                 }
                 if (opponentCard.isPresent()){
+                    int relativeValueOpponentCard = opponentCard.get().relativeValue(vira);
                     Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
-                    if (equalCard.isPresent()){
+                    if (equalCard.isPresent() && hasZap(botCards, vira)){
                         return CardToPlay.of(equalCard.get());
-                }
-                }
+                    }
+                    if (relativeValueOpponentCard < strongestCard(botCards,vira).relativeValue(vira)){
+                        if (relativeValueOpponentCard < middleCard(botCards,vira).relativeValue(vira)){
+                            if (relativeValueOpponentCard < weakestCard(botCards,vira).relativeValue(vira)){
+                                return CardToPlay.of(weakestCard(botCards,vira));
+                            }
+                            return CardToPlay.of(middleCard(botCards,vira));
+                        }
+                        return CardToPlay.of(strongestCard(botCards,vira));
+                    }
 
+                }
             }
         }
 
@@ -130,6 +140,14 @@ public class Armageddon implements BotServiceProvider {
         }
 
         return score == 2;
+    }
+
+    private boolean hasZap(List<TrucoCard> cards, TrucoCard vira){
+        for (TrucoCard card:cards){
+            if (card.isManilha(vira)) return true;
+        }
+
+        return false;
     }
 
     private TrucoCard weakestCard(List<TrucoCard> cards, TrucoCard vira){
