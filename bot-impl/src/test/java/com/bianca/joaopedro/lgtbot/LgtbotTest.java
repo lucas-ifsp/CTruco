@@ -254,5 +254,23 @@ class LgtbotTest {
 
             assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Deve pedir truco quando tem 3 ou mais cartas boas após perder a primeira rodada")
+        public void testShouldRaise_AfterLosingFirstRoundWithThreeGoodCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(goodCards, 9)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
