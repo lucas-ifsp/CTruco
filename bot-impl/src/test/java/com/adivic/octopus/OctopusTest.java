@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 public class OctopusTest {
@@ -21,13 +22,17 @@ public class OctopusTest {
 
     private GameIntel.StepBuilder stepBuilder;
 
-    private GameIntel.StepBuilder createStepBuilder(List<TrucoCard> ourCards, TrucoCard vira, int botScore, int opponentScore, int handpoints) {
+    private GameIntel.StepBuilder createStepBuilder(List<TrucoCard> ourCards, Optional<List<TrucoCard>> openCards, TrucoCard vira, int botScore, int opponentScore, int handPoints) {
+        List<TrucoCard> updatedOpenCards = Stream.concat(
+                openCards.orElse(List.of()).stream(),
+                Stream.of(vira)
+        ).toList();
+
         return GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(vira), vira, handpoints)
+                .gameInfo(List.of(), updatedOpenCards, vira, handPoints)
                 .botInfo(ourCards, botScore)
                 .opponentScore(opponentScore);
     }
-
 
     @BeforeEach
     public void setUp(){
@@ -45,7 +50,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES)
             );
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 0, 0, 0);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 0, 0, 0);
 
             assertThat(octopus.hasManilha(step.build())).isFalse();
         }
@@ -59,7 +64,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 4, 7, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 4, 7, 1);
 
             assertThat(octopus.numberOfManilhas(step.build())).isEqualTo(2);
         }
@@ -73,7 +78,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 4, 4, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 4, 4, 1);
 
             List <TrucoCard> expectedManilhas = List.of(
                     TrucoCard.of(vira.getRank().next(), CardSuit.DIAMONDS),
@@ -97,7 +102,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 1, 1, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 1, 1, 1);
 
             assertThat(octopus.hasThree(step.build())).isTrue();
         }
@@ -111,7 +116,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 9, 10, 3);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 9, 10, 3);
 
             assertThat(octopus.numberOfThreeCards(step.build())).isEqualTo(3);
         }
@@ -124,7 +129,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 5, 0, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 5, 0, 1);
 
             assertThat(octopus.hasTwo(step.build())).isTrue();
         }
@@ -138,7 +143,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 8, 5, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 8, 5, 1);
 
             assertThat(octopus.numberOfTwoCards(step.build())).isEqualTo(2);
         }
@@ -152,7 +157,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 5, 0, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 5, 0, 1);
 
             assertThat(octopus.hasAce(step.build())).isTrue();
         }
@@ -166,7 +171,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 10, 10, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 10, 10, 1);
 
             assertThat(octopus.numberOfAceCards(step.build())).isEqualTo(1);
         }
@@ -185,7 +190,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 7, 1, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 7, 1, 1);
 
             assertThat(octopus.hasThreePointAdvantage(step.build())).isTrue();
         }
@@ -200,7 +205,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 11, 4, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 4, 1);
 
             assertThat(octopus.hasSixPointAdvantage(step.build())).isTrue();
         }
