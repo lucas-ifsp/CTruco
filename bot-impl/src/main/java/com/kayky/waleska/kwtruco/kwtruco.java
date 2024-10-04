@@ -24,6 +24,10 @@ public class kwtruco implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+
+        if (intel.getOpponentScore() >= 9) {
+            return false;
+        }
         if (intel.getOpponentCard().isPresent()) {
             if (getMaxCardValue(intel) <= intel.getOpponentCard().get().relativeValue(intel.getVira())) {
                 return false;
@@ -33,10 +37,6 @@ public class kwtruco implements BotServiceProvider {
         if (intel.getOpponentScore() == 0 || intel.getScore() >= intel.getOpponentScore() + 3 || hasHigherThanAverageValue
                 (intel) || hasManilhaAndHighRank(intel)) {
             return true;
-        }
-
-        if (intel.getOpponentScore() >= 9) {
-            return false;
         }
         return false;
     }

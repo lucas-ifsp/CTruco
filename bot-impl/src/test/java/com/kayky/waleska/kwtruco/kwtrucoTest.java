@@ -428,6 +428,23 @@ public class kwtrucoTest {
             assertFalse(shouldRaise);
         }
 
+        @Test
+        @DisplayName("Return false when 1 point is missing to win")
+        public void returnFalseWhen1PointIsMissingToWin() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    opponentCard);
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(10)
+                    .opponentCard(opponentCard);
+
+            assertFalse(kwtrucoBot.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 
 }
