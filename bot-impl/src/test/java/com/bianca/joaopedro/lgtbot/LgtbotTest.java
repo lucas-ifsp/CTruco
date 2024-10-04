@@ -313,8 +313,11 @@ class LgtbotTest {
 
                 TrucoCard expectedCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+                // Verifica se a carta escolhida pelo bot é a esperada
                 CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
 
+                // Se CardToPlay for a própria carta
+                assertEquals(expectedCard, cardToPlay, "O bot deve jogar a melhor carta.");
             }
 
             @Nested
