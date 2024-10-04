@@ -387,6 +387,27 @@ public class kwtrucoTest {
             assertFalse(shouldRaise);
         }
 
+        @Test
+        @DisplayName("Return False When Have Only Low Rank Cards")
+        public void returnFalseWhenHaveOnlyLowRankCards() {
+
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    opponentCard);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(Arrays.asList(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS), TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)), 3)
+                    .opponentScore(2)
+                    .opponentCard(opponentCard);
+
+            boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+            assertFalse(shouldRaise);
+        }
+
     }
 
 }
