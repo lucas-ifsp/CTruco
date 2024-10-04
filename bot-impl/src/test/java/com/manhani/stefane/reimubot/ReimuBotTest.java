@@ -314,7 +314,25 @@ class ReimuBotTest {
             assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
         }
 
-
+        @Test
+        @DisplayName("Should accept raise if has two three in hand")
+        void acceptsIfHasTwoThrees() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 1)
+                    .botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(null)
+                    .build();
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+        }
 
     }
 
