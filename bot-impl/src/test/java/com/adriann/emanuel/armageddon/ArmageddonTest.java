@@ -316,6 +316,21 @@ public class ArmageddonTest {
                 @Test
                 @DisplayName("Should play the weakest card possible when can beat the opponent card")
                 void shouldPlayWeakestCardWhenCanWin(){
+                    vira = TrucoCard.of(FOUR,DIAMONDS);
+                    opponentCard = TrucoCard.of(SIX,SPADES);
+                    botCards = List.of(
+                            TrucoCard.of(SEVEN,HEARTS),
+                            TrucoCard.of(TWO,CLUBS),
+                            TrucoCard.of(KING,DIAMONDS));
+
+                    intel = firstRoundSecondToPlay(botCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should play the middle card when can beat and weakest card can't beat the opponent card")
+                void shouldPlayMiddleWhenWeakestCardWhenCanWin(){
                     vira = TrucoCard.of(FIVE,DIAMONDS);
                     opponentCard = TrucoCard.of(JACK,SPADES);
                     botCards = List.of(
