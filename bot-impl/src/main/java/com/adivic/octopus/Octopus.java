@@ -120,4 +120,14 @@ public class Octopus implements BotServiceProvider {
         return cards.stream()
                 .anyMatch(card -> card.getRank() == CardRank.ACE);
     }
+
+    public int numberOfAceCards(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+
+        if (hasAce(intel))
+            return (int) cards.stream()
+                    .filter(card -> card.getRank() == CardRank.ACE)
+                    .count();
+        return 0;
+    }
 }
