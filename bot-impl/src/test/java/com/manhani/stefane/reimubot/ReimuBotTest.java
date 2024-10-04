@@ -42,6 +42,21 @@ class ReimuBotTest {
             assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
         }
 
+        @Test
+        @DisplayName("Should select the weakest card on first round if has casal maior")
+        void selectWeakestIfCasalMaior(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .opponentScore(0).build();
+            var selectedCard = reimuBot.chooseCard(step).content();
+            assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+        }
     }
 
     @Nested
