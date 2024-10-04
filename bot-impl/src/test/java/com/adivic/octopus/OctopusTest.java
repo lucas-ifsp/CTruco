@@ -175,6 +175,20 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfAceCards(step.build())).isEqualTo(1);
         }
+
+        @Test
+        @DisplayName("Return the number of strong cards in the hand")
+        void returnTheNumberOfStrongCardsInTheHand() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
+
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 10, 10, 1);
+
+            assertThat(octopus.numberOfStrongCards(step.build())).isEqualTo(2);
+        }
     }
 
     @Nested

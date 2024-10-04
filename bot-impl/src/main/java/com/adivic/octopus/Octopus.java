@@ -136,5 +136,4 @@ public class Octopus implements BotServiceProvider {
 
         return cards.get(0);
     }
-
 }
