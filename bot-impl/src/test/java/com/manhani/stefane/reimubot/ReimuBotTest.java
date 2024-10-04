@@ -167,6 +167,26 @@ class ReimuBotTest {
             assertThat(reimuBot.decideIfRaises(step)).isTrue();
         }
 
+        @Test
+        @DisplayName("If the opponent has mao de onze, don't raise")
+        void opponentMaoDeOnzeDontRaise() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(),
+                            List.of(),
+                            vira, 1)
+                    .botInfo(reimuCards, 0)
+                    .opponentScore(11)
+                    .build();
+            assertThat(reimuBot.decideIfRaises(step)).isFalse();
+        }
+
     }
     
     @Nested
@@ -190,6 +210,9 @@ class ReimuBotTest {
                     .build();
             assertThat(reimuBot.getMaoDeOnzeResponse(step)).isFalse();
         }
+
+
+
     }
 
     @Nested
