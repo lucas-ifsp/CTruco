@@ -78,11 +78,14 @@ public class Lgtbot implements BotServiceProvider{
             }
             if (round == 3) {
                 System.out.println("3 round");
-                if (!manilhas.isEmpty()){
+                if (!manilhas.isEmpty()) {
                     System.out.println("PEDE TRUCO");
                     return true; // Pedir truco
+                } else {
+                    System.out.println("Não tem manilhas, não pede truco");
                 }
             }
+
         }
 
         return false;
@@ -153,6 +156,7 @@ public class Lgtbot implements BotServiceProvider{
             }
         }
         if(round == 3){
+            System.out.println("Escolhendo carta no round 3");
             return CardToPlay.of(theBestCard);
         }
         return null;
