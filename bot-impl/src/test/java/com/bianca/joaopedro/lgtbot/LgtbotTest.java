@@ -3,19 +3,12 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.bueno.spi.service.BotServiceProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
-import java.util.Optional;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,6 +16,7 @@ import static org.mockito.Mockito.*;
 class LgtbotTest {
     private Lgtbot lgtbot;
     private GameIntel.StepBuilder stepBuilder;
+    private GameIntel intel;
 
     @BeforeEach
     public void config() {
@@ -104,6 +98,128 @@ class LgtbotTest {
                     .botInfo(badCards, 11)
                     .opponentScore(6);
             assertFalse(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
+    }
+
+    @Nested
+    @DisplayName("Test decideIfRaises method")
+    class DecideIfRaisesTest {
+
+        @Test
+        @DisplayName("Deve pedir truco quando tem boas cartas e oponente tem menos de 6 pontos")
+        public void testShouldRaise_WhenHasGoodCardsAndOpponentScoreLessThan6() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(goodCards, 9)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Deve pedir truco quando o oponente tem 11 pontos")
+        public void testShouldRaise_WhenOpponentHas11Points() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(myCards, 9)
+                    .opponentScore(11);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Não deve pedir truco quando tem cartas fracas e oponente tem menos de 6 pontos")
+        public void testShouldNotRaise_WhenHasWeakCardsAndOpponentScoreLessThan6() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> weakCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(weakCards, 9)
+                    .opponentScore(5);
+
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Deve pedir truco quando tem mais 2 ou mais cartas fortes")
+        public void testShouldRaise_WhenHasStrongCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> weakCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(weakCards, 9)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+
+
+        @Test
+        @DisplayName("Deve pedir truco na rodada 2 após ganhar a primeira rodada, tendo boas cartas")
+        public void testShouldRaiseInRound2_AfterWinningFirstRoundWithGoodCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                    .botInfo(myCards, 9)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Se perdeu na primeira, deve pedir truco na rodada 2 se tiver 2 ou mais cartas fortes")
+        public void testShouldRaiseInRound2_ifILostFistRounAndHaveTwoOrMoreStrongCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> strongCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(strongCards, 9)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Se perdeu na primeira, não deve pedir truco na rodada 2 se tiver apenas 1 carta forte")
+        public void testShouldRaiseInRound2_ifILostInTheFirstRoundIDontAskForTrucoInRoundTwoIfIHaveOneStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<TrucoCard> strongCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(strongCards, 3)
+                    .opponentScore(3);
+
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
     }
 }

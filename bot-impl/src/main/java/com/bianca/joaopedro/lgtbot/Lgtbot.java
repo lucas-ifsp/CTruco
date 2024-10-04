@@ -39,8 +39,21 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> goodCards = getGoodCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
 
+        int goodCardsCount = strongCards.size() + goodCards.size() + manilhas.size();
+        int strongCardsCount = strongCards.size() + manilhas.size();
+
+        System.out.println("Strong Cards: " + strongCards);
+        System.out.println("Ok Cards: " + goodCards);
+        System.out.println("Manilhas: " + manilhas);
+        System.out.println("Good Cards Count: " + goodCardsCount);
+        System.out.println("Strong Cards Count: " + strongCardsCount);
+        System.out.println("Dif: " + (myScore - opponentScore));
+        System.out.println("Get strong cards: " + strongCards);
+        System.out.println("Get good cards: " + goodCards);
+
+
         if (myScore >= 9 || (myScore - opponentScore) > 6)  {
-            if (goodCards.size() >= 2 || !manilhas.isEmpty()) {
+            if (goodCards.size() >= 2) {
                 return true;
             }
         }
@@ -51,27 +64,27 @@ public class Lgtbot implements BotServiceProvider{
 
         if (opponentScore != 11) {
             if (round == 1) {
-                if (strongCards.size() >= 2) {
-                    return true; // Pedir truco
-                }
-                if (!manilhas.isEmpty() && !strongCards.isEmpty()) {
+                if (strongCardsCount >= 2) {
                     return true; // Pedir truco
                 }
             }
             if (round == 2) {
-                if (didIWinFirstRound(intel) && !strongCards.isEmpty()) {
+                if (didIWinFirstRound(intel) && strongCardsCount >= 1) {
                     return true; // Pedir truco
                 }
-                if (!didIWinFirstRound(intel) && strongCards.size() >= 2) {
+                if (!didIWinFirstRound(intel) && strongCardsCount >= 2) {
                     return true; // Pedir truco
                 }
             }
             if (round == 3) {
-                if (!strongCards.isEmpty() || !manilhas.isEmpty()) {
+                System.out.println("3 round");
+                if (!manilhas.isEmpty()){
+                    System.out.println("PEDE TRUCO");
                     return true; // Pedir truco
                 }
             }
         }
+
         return false;
     }
 
@@ -169,7 +182,7 @@ public class Lgtbot implements BotServiceProvider{
                 .toList();
     }
 
-    private int getRoundNumber(GameIntel intel) {
+    public int getRoundNumber(GameIntel intel) {
         return intel.getRoundResults().size() + 1;
     }
 
@@ -238,5 +251,4 @@ public class Lgtbot implements BotServiceProvider{
                 .filter(card -> badRanks.contains(card.getRank()))
                 .toList();
     }
-
 }
