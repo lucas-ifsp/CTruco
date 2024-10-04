@@ -281,6 +281,30 @@ kwtrucoTest {
                     assertTrue(shouldRaise);
                 }
 
+                @Test
+                @DisplayName("Do not raise when the bot has a weak hand")
+                public void doNotRaiseWhenTheBotHasAWeakHand() {
+                    TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+                    List<TrucoCard> playedCards = Arrays.asList(
+                            opponentCard,
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS));
+
+                    GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), playedCards, vira, 1)
+                            .botInfo(botCards, 3)
+                            .opponentScore(3)
+                            .opponentCard(opponentCard);
+
+                    boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
+
+                    assertFalse(shouldRaise);
+                }
+
 
             }
 
