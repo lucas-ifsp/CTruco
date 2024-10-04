@@ -43,6 +43,23 @@ class ReimuBotTest {
         }
 
         @Test
+        @DisplayName("Should play the smallest card necessary to win the round")
+        void selectSmallestCardToWin() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS))
+                    .build();
+            var selectedCard = reimuBot.chooseCard(step).content();
+            assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+        }
+
+        @Test
         @DisplayName("Should select the weakest card on first round if has casal maior")
         void selectWeakestIfCasalMaior(){
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
