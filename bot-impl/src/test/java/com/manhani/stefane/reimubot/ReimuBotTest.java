@@ -122,6 +122,25 @@ class ReimuBotTest {
             var selectedCard = reimuBot.chooseCard(step).content();
             assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
         }
+
+        @Test
+        @DisplayName("Should avoid using manilhas if has Clubs or Hearts on first round")
+        void avoidUsingManilhasOnFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                    .build();
+            var selectedCard = reimuBot.chooseCard(step).content();
+            assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        }
+
+
     }
 
     @Nested
