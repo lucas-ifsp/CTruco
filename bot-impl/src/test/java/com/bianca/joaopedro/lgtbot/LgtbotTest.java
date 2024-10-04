@@ -221,6 +221,8 @@ class LgtbotTest {
             assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
         }
 
+
+
         @Test
         @DisplayName("Se perdeu na primeira, não deve pedir truco na rodada 2 se tiver apenas 1 carta forte")
         public void testShouldRaiseInRound2_ifILostInTheFirstRoundIDontAskForTrucoInRoundTwoIfIHaveOneStrongCard() {
@@ -234,6 +236,21 @@ class LgtbotTest {
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
                     .botInfo(strongCards, 3)
                     .opponentScore(3);
+
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("Não deve pedir truco quando tem apenas uma carta e oponente tem 10 pontos")
+        public void testShouldNotRaise_WhenHasOneCardAndOpponentScore10() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> oneCard = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(oneCard, 9)
+                    .opponentScore(10);
 
             assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
