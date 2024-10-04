@@ -152,12 +152,9 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES));
 
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1)
-                    .botInfo(ourCards, 5)
-                    .opponentScore(0);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, vira, 5, 0, 1);
 
-            assertThat(octopus.hasAce(stepBuilder.build())).isTrue();
+            assertThat(octopus.hasAce(step.build())).isTrue();
         }
     }
 
