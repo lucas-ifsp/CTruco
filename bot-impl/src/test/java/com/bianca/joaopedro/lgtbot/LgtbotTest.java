@@ -51,8 +51,8 @@ class LgtbotTest {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
             List<TrucoCard> strongCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
             );
 
             List<TrucoCard> openCards = List.of(vira);
