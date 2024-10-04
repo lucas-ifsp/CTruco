@@ -290,6 +290,8 @@ class LgtbotTest {
             assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
 
+
+
         @Test
         @DisplayName("Bot escolhe a melhor carta para jogar")
         public void testBotChoosesBestCardToPlay() {
@@ -312,6 +314,45 @@ class LgtbotTest {
             CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
 
         }
+
+        @Nested
+        @DisplayName("Test chooseCard method")
+        class ChooseCardTest {
+
+
+
+            @Nested
+            @DisplayName("First Round")
+            class FirstRoundTest {
+
+                @Nested
+                @DisplayName("If play first")
+                class PlayFirstTest {
+
+                    @Test
+                    @DisplayName("Na primeira rodada, se tiver duas cartas fortes, retorna a carta mais fraca")
+                    void testChooseCard_getWeakerCardIfTwoStrongCardsFirstRound() {
+                        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                        );
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+
+                    }
+                }
+            }
+        }
+
 
 
     }
