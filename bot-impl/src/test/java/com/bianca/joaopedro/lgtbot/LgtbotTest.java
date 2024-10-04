@@ -291,35 +291,31 @@ class LgtbotTest {
         }
 
 
-
-        @Test
-        @DisplayName("Bot escolhe a melhor carta para jogar")
-        public void testBotChoosesBestCardToPlay() {
-            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
-            List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
-            );
-
-            List<TrucoCard> openCards = List.of(vira);
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), openCards, vira, 1)
-                    .botInfo(botCards, 11)
-                    .opponentScore(6);
-
-            TrucoCard expectedCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-
-            // O método chooseCard retorna um objeto CardToPlay
-            CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
-
-        }
-
         @Nested
         @DisplayName("Test chooseCard method")
         class ChooseCardTest {
 
+            @Test
+            @DisplayName("Bot escolhe a melhor carta para jogar")
+            public void testBotChoosesBestCardToPlay() {
+                TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                );
 
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(botCards, 11)
+                        .opponentScore(6);
+
+                TrucoCard expectedCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
+
+            }
 
             @Nested
             @DisplayName("First Round")
