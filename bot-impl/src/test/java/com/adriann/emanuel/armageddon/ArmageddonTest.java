@@ -21,6 +21,7 @@
 
 package com.adriann.emanuel.armageddon;
 
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -35,6 +36,8 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ArmageddonTest {
 
@@ -299,6 +302,30 @@ public class ArmageddonTest {
                 }
             }
         }
+    }
+
+    // Comecei aqui ----------------------------------------------------------------------
+
+    @Nested
+    @DisplayName("Tests to decide if raises")
+    class DecideIfRaise {
+
+        @Test
+        @DisplayName("Should raise when the hand contains only one strong card")
+        void shouldRaiseWithOneStrongCard() {
+            vira = TrucoCard.of(ACE, HEARTS);
+            botCards = List.of(
+                    TrucoCard.of(FIVE, DIAMONDS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(FOUR, CLUBS)
+            );
+            intel = maoDeOnze(botCards, vira);
+
+            assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+        }
+
+
+
     }
 }
 
