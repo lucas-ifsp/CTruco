@@ -342,6 +342,21 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("Should play the weakest card when have high couple")
+                void shouldPlayWeakestWhenHaveHighCouple(){
+                    vira = TrucoCard.of(SEVEN,DIAMONDS);
+                    opponentCard = TrucoCard.of(TWO,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(QUEEN,CLUBS),
+                            TrucoCard.of(ACE,HEARTS),
+                            TrucoCard.of(QUEEN,HEARTS));
+
+                    intel = firstRoundSecondToPlay(botCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
