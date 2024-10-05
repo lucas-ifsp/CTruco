@@ -88,6 +88,7 @@ public class TheRover implements BotServiceProvider {
         if(intel.getOpponentCard().isEmpty()) {
             return null;
         }
+
         TrucoCard opponentCard = intel.getOpponentCard().get();
         TrucoCard lowestHandCard = null;
         for(int i = 0; i < intel.getCards().size(); i++){
@@ -98,5 +99,11 @@ public class TheRover implements BotServiceProvider {
             }
         }
         return lowestHandCard;
+    }
+
+    public TrucoCard getLowestCardInHand(GameIntel intel) {
+
+
+        return null;
     }
 }
