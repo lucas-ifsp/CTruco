@@ -115,6 +115,9 @@ public class TheRover implements BotServiceProvider {
     }
 
     public TrucoCard chooseCardSecondHand (GameIntel intel) {
-        return null;
+        if(isPlayingFirst(intel)) return getLowestCardInHand(intel);
+        TrucoCard cardToPlay = getLowestCardInHandThatBeatOpponentCard(intel);
+        if(cardToPlay == null) cardToPlay = intel.getCards().get(0);
+        return  cardToPlay;
     }
 }
