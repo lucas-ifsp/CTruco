@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -453,6 +454,21 @@ public class CamaleaoTruqueiroTest {
                 .opponentScore(1);
 
         assertTrue(camaleao.drewFistRound(builder.build()));
+    }
+
+    @Test
+    @DisplayName("should return if the bot lost the first round")
+    void shouldReturnIfTheBotLostTheFirstRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        assertTrue(camaleao.lostFistRound(builder.build()));
     }
 
 
