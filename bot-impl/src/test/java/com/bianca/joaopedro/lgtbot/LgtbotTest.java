@@ -616,6 +616,10 @@ class LgtbotTest {
                         .opponentScore(7);
                 assertEquals(1, lgtbot.getRaiseResponse(stepBuilder.build()));
             }
+
+
+
+
         }
     }
 }
