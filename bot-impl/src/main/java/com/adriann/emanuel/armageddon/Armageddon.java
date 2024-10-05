@@ -267,7 +267,10 @@ public class Armageddon implements BotServiceProvider {
         return hasManilha && hasThree;
     }
 
+    public boolean shouldRequestTruco(GameIntel intel) {
 
+        return false;
+    }
 
 
 
