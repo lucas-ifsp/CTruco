@@ -25,6 +25,18 @@ public class Octopus implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if(roundResults.isEmpty())
+            return false;
+        else if(numberOfStrongCards(intel) > 1 || hasManilha(intel))
+            return true;
+        else if(!hasManilha(intel) && roundResults.get(0) == WON && numberOfStrongCards(intel) > 1)
+            return true;
+        else if (numberOfManilhas(intel) > 1 && roundResults.get(0) == LOST)
+            return true;
+        else if(numberOfStrongCards(intel) > 2)
+            return true;
         return false;
     }
 
