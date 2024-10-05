@@ -470,6 +470,32 @@ public class ArmageddonTest {
         }
 
 
+        @Test
+        @DisplayName("Should call truco in the second round after winning the first round")
+        void shouldCallTrucoInSecondRoundAfterWinningFirst() {
+            TrucoCard vira = TrucoCard.of(ACE, HEARTS);
+
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(TWO, DIAMONDS),
+                    TrucoCard.of(THREE, SPADES)
+            );
+
+            List<TrucoCard> openCards = List.of(
+                    TrucoCard.of(FOUR, CLUBS),
+                    TrucoCard.of(FIVE, HEARTS)
+            );
+
+            GameIntel intel = secondRoundWonFirstRound(botCards, openCards, vira).build();
+
+            boolean shouldCallTruco = armageddon.shouldRequestTruco(intel);
+
+            assertThat(shouldCallTruco).isTrue();
+        }
+
+
+
+
+
     }
 }
 
