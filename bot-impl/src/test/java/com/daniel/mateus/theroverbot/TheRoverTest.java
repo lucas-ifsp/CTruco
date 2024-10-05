@@ -437,7 +437,7 @@ public class TheRoverTest {
                          .gameInfo(List.of(), List.of(), vira, 1)
                          .botInfo(cards, 0)
                          .opponentScore(0);
-                 assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
+                 assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), theRover.chooseCardSecondHand(stepBuilder.build()));
             }
 
             @Test
