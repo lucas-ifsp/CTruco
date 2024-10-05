@@ -599,27 +599,142 @@ class LgtbotTest {
         @Nested
         @DisplayName("Test getRaiseResponse method")
         class GetRaiseResponseTest {
-            @Test
-            @DisplayName("Deve dobrar se tiver pelo menos 2 manilhas e 1 carta forte")
-            void shouldReturnTrueIfHasTwoManilhasAndOneStrongCard() {
-                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
-                List<TrucoCard> myCards = List.of(
-                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
-                );
-                List<TrucoCard> openCards = List.of(vira);
-                stepBuilder = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), openCards, vira, 1)
-                        .botInfo(myCards, 5)
-                        .opponentScore(7);
-                assertEquals(1, lgtbot.getRaiseResponse(stepBuilder.build()));
+            @Nested
+            @DisplayName("First Round")
+            class FirstRoundGetResponseTest {
+
+                @Test
+                @DisplayName("Deve dobrar se tiver pelo menos 2 manilhas e 1 carta boa")
+                void shouldReturnOneIfHasTwoManilhasAndGoodCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(1, lgtbot.getRaiseResponse(stepBuilder.build()));
+                }
+
+                @Test
+                @DisplayName("Deve aceitar se tiver duas cartas fortes")
+                void shoulReturnZeroIfHasTwoStrongCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(0, lgtbot.getRaiseResponse(stepBuilder.build()));
+
+                }
+
+                @Test
+                @DisplayName("Deve fugir se tiver 2 cartas ruins")
+                void shouldRunIfHasTwoBadCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(-1, lgtbot.getRaiseResponse(stepBuilder.build()));
+
+                }
+
+                @Test
+                @DisplayName("Deve aceitar se tiver 1 manilha e 1 carta forte")
+                void shouldReturnZeroIfHasOneManilhaAndOneStrongCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(0, lgtbot.getRaiseResponse(stepBuilder.build()));
+                }
+
+                @Test
+                @DisplayName("Deve dobrar se tiver 3 manilhas no primeiro round")
+                void shouldReturnOneIfHasThreeManilhasInFirstRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(1, lgtbot.getRaiseResponse(stepBuilder.build()));
+                }
+
             }
 
+            @Nested
+            @DisplayName("Second Round")
+            class SecondRoundGetResponseTest {
+                @Test
+                @DisplayName("Mesmo se tiver perdido a primeira rodada, deve aceitar se no segundo round ainda tiver cartas fortes")
+                void shouldReturnZeroIfHasTwoStrongCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(0, lgtbot.getRaiseResponse(stepBuilder.build()));
+                }
 
+                @Test
+                @DisplayName("Deve fugir no segundo round se perdeu a primeira rodada e tem apenas cartas fracas")
+                void shouldReturnMinusOneIfLostFirstRoundAndHasOnlyBadCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
 
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 2)
+                            .botInfo(myCards, 5)
+                            .opponentScore(7);
+                    assertEquals(-1, lgtbot.getRaiseResponse(stepBuilder.build()));
+                }
+            }
         }
     }
 }
+

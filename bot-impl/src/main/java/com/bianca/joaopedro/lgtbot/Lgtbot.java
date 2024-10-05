@@ -36,9 +36,8 @@ public class Lgtbot implements BotServiceProvider{
         int strongCardsPlusManilhaCount = getStrongCardsCount(intel);
 
         if (myScore >= 9 || (myScore - opponentScore) > 6)  {
-            if (goodCardsCount >= 2) {
+            if (goodCardsCount >= 2)
                 return true;
-            }
         }
 
         if (opponentScore == 11)
@@ -47,16 +46,14 @@ public class Lgtbot implements BotServiceProvider{
         if (opponentScore != 11) {
             if (round == 1) {
                 if (strongCardsPlusManilhaCount >= 2) {
-                    return true; // Pedir truco
+                    return true;
                 }
             }
             if (round == 2) {
                 if (didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 1) {
-                    return true; // Pedir truco
+                    return true;
                 }
-                if (!didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 2) {
-                    return true; // Pedir truco
-                }
+                return !didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 2;
             }
         }
         return false;
@@ -118,36 +115,40 @@ public class Lgtbot implements BotServiceProvider{
                 }
             }
         }
-        if (round == 3){
-            return CardToPlay.of(myCards.get(0));
-        }
-
         return CardToPlay.of(myCards.get(0));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        int round = getRoundNumber(intel);
         List<TrucoCard> strongCards = getStrongCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
 
-        int strongCardsPlusManilhaCount = strongCards.size() + manilhas.size();
-        int strongCardsCount = strongCards.size();
+        int goodCardsCount = getGoodCardsCount(intel);
+        int strongCardsPlusManilhaCount = getStrongCardsCount(intel);
         int manilhasCount = manilhas.size();
 
         System.out.println("Strong Cards: " + strongCards);
         System.out.println("Manilhas: " + manilhas);
-        System.out.println("Strong Cards Count: " + strongCardsCount);
+        System.out.println("Strong Cards Count: " + goodCardsCount);
         System.out.println("Get strong cards: " + strongCards);
+        System.out.println("Contando boas cartas: " + goodCardsCount);
 
-        if (manilhasCount >= 2 && strongCardsCount >= 1){
-            return 1;
+        if (round == 1){
+            if (manilhasCount >= 2 && goodCardsCount >= 1){
+                return 1;
+            }
+            else if (strongCardsPlusManilhaCount == 2){
+                return 0;
+            }
         }
-        else if (strongCardsPlusManilhaCount == 2){
-            return 0;
+        if (round == 2){
+            if (!didIWinFirstRound(intel)) {
+                if (strongCardsPlusManilhaCount >= 1)
+                    return 0;
+            }
         }
-        else{
-            return -1;
-        }
+        return -1;
     }
 
     public List<TrucoCard> getManilhas(GameIntel intel) {
