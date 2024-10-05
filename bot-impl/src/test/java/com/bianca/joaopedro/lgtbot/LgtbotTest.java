@@ -81,6 +81,24 @@ class LgtbotTest {
         }
 
         @Test
+        @DisplayName("Aceitar mão de onze com cartas medianas quando oponente tem menos de 5 pontos")
+        public void testShouldAcceptMaoDeOnze_WithAverageCards_WhenOpponentScoreLessThan5() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> averageCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            List<TrucoCard> openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(averageCards, 11)
+                    .opponentScore(4);
+            assertTrue(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
+
+
+        @Test
         @DisplayName("Aceitar mão de onze quando oponente tem exatamente 11 pontos")
         public void testShouldAcceptMaoDeOnze_WhenOpponentScoreEqualTo11() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
