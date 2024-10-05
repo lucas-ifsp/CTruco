@@ -1,9 +1,12 @@
 package com.manhani.stefane.reimubot;
 
-import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class ReimuBot implements BotServiceProvider {
     public static final int REFUSE = -1;
@@ -22,7 +25,9 @@ public class ReimuBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        if(isFirstToPlayRound(intel))
+            return CardToPlay.of(FirstToPlayStrategy(intel));
+        return CardToPlay.of(LastToPlayStrategy(intel));
     }
 
     @Override
@@ -36,11 +41,39 @@ public class ReimuBot implements BotServiceProvider {
     
     //should only be called after checking if you're not first
     private boolean canDefeatOpponentCard(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(c -> c.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0);
+        return intel.getCards().stream()
+                .anyMatch(c -> c.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0);
     }
     
     private boolean isFirstToPlayRound(GameIntel intel){
         return intel.getOpponentCard().isEmpty();
+    }
+    
+    private TrucoCard getWeakestCard(GameIntel intel){
+        return getWeakestCard(intel.getCards(), intel.getVira());
+    }
+    
+    private TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira){
+        return cards.stream().min(Comparator.comparingInt(c->c.relativeValue(vira))).get();
+    }
+
+    //should only be called after checking if you're not first
+    private TrucoCard getWeakestCardThatWins(GameIntel intel){
+        var vira = intel.getVira();
+        var cards = intel.getCards().stream()
+                .filter(c -> c.relativeValue(vira) > intel.getOpponentCard().get().relativeValue(vira))
+                .toList();
+        return getWeakestCard(cards, vira);
+    }
+    
+    private TrucoCard FirstToPlayStrategy(GameIntel intel){
+        if(!canDefeatOpponentCard(intel))
+            return getWeakestCard(intel);
+        return getWeakestCard(intel);
+    }
+    
+    private TrucoCard LastToPlayStrategy(GameIntel intel){
+        return getWeakestCard(intel);
     }
 
 }
