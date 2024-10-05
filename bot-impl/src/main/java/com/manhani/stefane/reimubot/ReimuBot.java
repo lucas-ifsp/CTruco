@@ -41,12 +41,26 @@ public class ReimuBot implements BotServiceProvider {
     
     //should only be called after checking if you're not first
     private boolean canDefeatOpponentCard(GameIntel intel) {
-        return intel.getCards().stream()
-                .anyMatch(c -> c.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0);
+        return canDefeatOpponentCard(intel.getCards(), intel.getVira(), intel.getOpponentCard().get());
+    }
+    private boolean canDefeatOpponentCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+        return cards.stream().anyMatch(c-> c.compareValueTo(opponentCard,vira) > 0);
     }
     
     private boolean isFirstToPlayRound(GameIntel intel){
         return intel.getOpponentCard().isEmpty();
+    }
+    
+    private boolean isFirstRound(GameIntel intel){
+        return intel.getCards().size() == 3;
+    }
+    
+    private boolean isSecondRound(GameIntel intel){
+        return intel.getCards().size() == 2;
+    }
+    
+    private boolean isThirdRound(GameIntel intel){
+        return intel.getCards().size() == 1;
     }
     
     private TrucoCard getWeakestCard(GameIntel intel){
@@ -60,20 +74,39 @@ public class ReimuBot implements BotServiceProvider {
     //should only be called after checking if you're not first
     //should only be called after checking you can win
     private TrucoCard getWeakestCardThatWins(GameIntel intel){
-        var vira = intel.getVira();
-        var cards = intel.getCards().stream()
-                .filter(c -> c.relativeValue(vira) > intel.getOpponentCard().get().relativeValue(vira))
+        return getWeakestCardThatWins(intel.getCards(), intel.getVira(), intel.getOpponentCard().get());
+    }
+    
+    private TrucoCard getWeakestCardThatWins(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+         cards = cards.stream()
+                .filter(c -> c.relativeValue(vira) > opponentCard.relativeValue(vira))
                 .toList();
         return getWeakestCard(cards, vira);
     }
     
+    //should only be called after checking if you're not first
+    private boolean canWinWithoutMaior(GameIntel intel){
+        return canDefeatOpponentCard(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
+    }
+    //return a list, check if empty to know if any are not maior
+    private List<TrucoCard> tryGetCardsThatAreNotMaior(GameIntel intel){
+        return intel.getCards().stream().filter(c-> !c.isZap(intel.getVira())&&!c.isCopas(intel.getVira())).toList();
+    }
+    
+    
     private TrucoCard FirstToPlayStrategy(GameIntel intel){
+        if(isFirstRound(intel)) return getWeakestCard(tryGetCardsThatAreNotMaior(intel), intel.getVira());
         return getWeakestCard(intel);
     }
     
-    private TrucoCard LastToPlayStrategy(GameIntel intel){
-        if(canDefeatOpponentCard(intel))
-            return getWeakestCardThatWins(intel);
+    private TrucoCard LastToPlayStrategy(GameIntel intel) {
+        if (canDefeatOpponentCard(intel)){
+            if (isFirstRound(intel) && canWinWithoutMaior(intel))
+                return getWeakestCardThatWins(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
+            if(isFirstRound(intel))
+                return getWeakestCard(intel);
+        return getWeakestCardThatWins(intel);
+    }
         return getWeakestCard(intel);
     }
 
