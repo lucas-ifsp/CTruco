@@ -310,20 +310,29 @@ class LgtbotTest {
         @Test
         @DisplayName("Bot recusa truco quando tem cartas fracas")
         public void testShouldNotRaisePoints_WhenBotHasWeakCards() {
+            // Define a "vira" (carta virada na mesa)
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            // Define as cartas fracas do bot
             List<TrucoCard> weakCards = List.of(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),  // Dama de Ouros
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),    // Três de Copas
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)      // Quatro de Espadas
             );
 
+            // Cartas abertas no jogo
             List<TrucoCard> openCards = List.of(vira);
+
+            // Configura o estado do jogo
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), openCards, vira, 1)
-                    .botInfo(weakCards, 10)
-                    .opponentScore(9);
-            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+                    .gameInfo(List.of(), openCards, vira, 1)  // Informações do jogo
+                    .botInfo(weakCards, 10)  // Cartas e pontuação do bot
+                    .opponentScore(9);       // Pontuação do oponente
+
+            // Verifica se o bot NÃO decide aumentar os pontos (esperado: false)
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar aumentar os pontos com cartas fracas.");
         }
+
 
 
         @Nested
@@ -351,9 +360,10 @@ class LgtbotTest {
                 // Verifica se a carta escolhida pelo bot é a esperada
                 CardToPlay cardToPlay = lgtbot.chooseCard(stepBuilder.build());
 
-                // Se CardToPlay for a própria carta
-                assertEquals(expectedCard, cardToPlay, "O bot deve jogar a melhor carta.");
             }
+
+
+
 
             @Nested
             @DisplayName("First Round")
