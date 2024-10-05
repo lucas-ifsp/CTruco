@@ -175,7 +175,7 @@ public class Armageddon implements BotServiceProvider {
 
     private boolean hasZap(List<TrucoCard> cards, TrucoCard vira){
         for (TrucoCard card:cards){
-            if (card.isManilha(vira)) return true;
+            if (card.isZap(vira)) return true;
         }
 
         return false;
