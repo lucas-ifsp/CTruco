@@ -58,33 +58,38 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        int rounds = intel.getRoundResults().size();
 
+        int rounds = intel.getRoundResults().size();
         TrucoCard vira = intel.getVira();
-        List<TrucoCard> botCards = intel.getCards();
+
         Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
+
+        List<TrucoCard> botCards = intel.getCards();
+        TrucoCard strongest = strongestCard(botCards,vira);
+        TrucoCard middle = middleCard(botCards,vira);
+        TrucoCard weakest = weakestCard(botCards,vira);
 
         switch (rounds) {
             case 0 -> {
                 if (optOpponentCard.isEmpty()){
                     if (hasHigherCouple(botCards, vira)) {
-                        return CardToPlay.of(weakestCard(botCards, vira));
+                        return CardToPlay.of(weakest);
                     }
                     if (hasManilha(botCards, vira)){
-                        return CardToPlay.of(middleCard(botCards, vira));
+                        return CardToPlay.of(middle);
                     }
                     if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(strongestCard(botCards, vira));
+                        return CardToPlay.of(strongest);
                     }
                     if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(middleCard(botCards,vira));
+                        return CardToPlay.of(middle);
                     }
                 }
                 if (optOpponentCard.isPresent()){
                     TrucoCard opponentCard = optOpponentCard.get();
 
                     if (hasHigherCouple(botCards,vira)){
-                        return CardToPlay.of(weakestCard(botCards,vira));
+                        return CardToPlay.of(weakest);
                     }
 
                     Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
@@ -92,19 +97,18 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(equalCard.get());
                     }
 
-                    if (opponentCard.compareValueTo(strongestCard(botCards,vira),vira) < 0){
-                      if (opponentCard.compareValueTo(middleCard(botCards,vira),vira) < 0){
-                          if (opponentCard.compareValueTo(weakestCard(botCards,vira),vira) < 0){
-                              return CardToPlay.of(weakestCard(botCards,vira));
+                    if (opponentCard.compareValueTo(strongest,vira) < 0){
+                      if (opponentCard.compareValueTo(middle,vira) < 0){
+                          if (opponentCard.compareValueTo(weakest,vira) < 0){
+                              return CardToPlay.of(weakest);
                           }
-                          return CardToPlay.of(middleCard(botCards,vira));
+                          return CardToPlay.of(middle);
                       }
-                      return CardToPlay.of(strongestCard(botCards,vira));
+                      return CardToPlay.of(strongest);
                     }
                 }
             }
         }
-
         return CardToPlay.of(botCards.get(0));
     }
 
