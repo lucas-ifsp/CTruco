@@ -120,4 +120,8 @@ public class TheRover implements BotServiceProvider {
         if(cardToPlay == null) cardToPlay = intel.getCards().get(0);
         return  cardToPlay;
     }
+
+    public TrucoCard chooseCardThirdHand (GameIntel intel) {
+        return null;
+    }
 }
