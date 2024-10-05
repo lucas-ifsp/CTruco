@@ -87,14 +87,14 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         // equal than the greater than the greater card of the opponent
         // and the highest player card is greater than the media
 
-        TrucoCard medianCard = getMedianCard(playersHand, vira);
+        TrucoCard medianCard = getMedianValue(playersHand, vira);
 
         int numberOfCard = getNumberOfCardWorstThanMedianCard(medianCard, vira);
 
         return ((float) (numberOfCard * (numberOfCard - 1) * (numberOfCard - 2)) /(38*37*36));
     }
 
-    public TrucoCard getMedianCard(List<TrucoCard> playersHand, TrucoCard vira){
+    public TrucoCard getMedianValue(List<TrucoCard> playersHand, TrucoCard vira){
         TrucoCard greatestCard = getGreatestCard(playersHand, vira);
         TrucoCard lowestCard = getLowestCard(playersHand, vira);
         if(playersHand.get(0).equals(greatestCard) && playersHand.get(1).equals(lowestCard))
