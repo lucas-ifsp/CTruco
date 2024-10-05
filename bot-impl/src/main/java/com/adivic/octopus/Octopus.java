@@ -9,6 +9,8 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
+
 public class Octopus implements BotServiceProvider {
 
     @Override
@@ -170,6 +172,27 @@ public class Octopus implements BotServiceProvider {
     }
 
     public GameIntel.RoundResult whoWonTheRound(GameIntel intel) {
-        return GameIntel.RoundResult.LOST;
+        List<TrucoCard> ourCards = sortCards(intel);
+        TrucoCard vira = intel.getVira();
+        TrucoCard opponentCard = intel.getOpponentCard().orElseThrow(() -> new IllegalArgumentException("Opponent card is not present"));
+
+        if (hasManilha(intel) && !opponentCard.equals(vira.getRank().next()))
+            return WON;
+
+        if (!hasManilha(intel) && opponentCard.equals(vira.getRank().next()))
+            return LOST;
+
+        if (hasManilha(intel) && opponentCard.equals(vira.getRank().next()))
+            return DREW;
+
+        TrucoCard bestCard = chooseBetterCardToWinFirstRound(intel);
+        int comparison = bestCard.compareValueTo(opponentCard, vira);
+
+        if (comparison > 0)
+            return WON;
+        else if (comparison < 0)
+            return LOST;
+        else
+            return DREW;
     }
 }
