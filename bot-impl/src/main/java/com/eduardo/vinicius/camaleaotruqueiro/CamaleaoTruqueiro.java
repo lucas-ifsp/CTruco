@@ -124,4 +124,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public boolean theBotPlaysFirst(GameIntel intel) {
         return intel.getOpponentCard().isEmpty();
     }
+
+    public boolean isTheFirstRound(GameIntel intel) {
+        return intel.getRoundResults().isEmpty();
+    }
 }
