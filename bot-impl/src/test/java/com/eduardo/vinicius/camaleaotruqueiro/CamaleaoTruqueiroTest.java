@@ -471,6 +471,21 @@ public class CamaleaoTruqueiroTest {
         assertTrue(camaleao.lostFistRound(builder.build()));
     }
 
+    @Test
+    @DisplayName("Should return if the bot won the second round")
+    void shouldReturnIfTheBotWonTheSecondRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST,GameIntel.RoundResult.WON),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        assertTrue(camaleao.winSecondRound(builder.build()));
+    }
+
 
     //estamos ganhando
 
