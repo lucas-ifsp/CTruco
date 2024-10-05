@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -368,6 +369,31 @@ public class CamaleaoTruqueiroTest {
                 .opponentScore(1);
 
         assertTrue(camaleao.isTheSecondRound(builder.build()));
+    }
+
+    @Test
+    @DisplayName("Should return One card strongest than the opponent")
+    void shouldReturnOneCardStrongestThanTheOpponent(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+        );
+        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        builder.opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+        List<TrucoCard> cards = camaleao.haveStrongestCard(builder.build(), myCards);
+
+        System.out.println(cards);
+
+        assertEquals(1, cards.size());
     }
 
 
