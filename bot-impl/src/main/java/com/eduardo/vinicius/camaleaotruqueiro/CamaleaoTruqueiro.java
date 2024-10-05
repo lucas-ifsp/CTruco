@@ -120,4 +120,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         }
         return ( medianCardRank * 4) - 5;
     }
+
+    public boolean theBotPlaysFirst(GameIntel intel) {
+        return intel.getOpponentCard().isEmpty();
+    }
 }
