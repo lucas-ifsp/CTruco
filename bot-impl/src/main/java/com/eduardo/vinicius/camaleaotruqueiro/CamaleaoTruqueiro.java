@@ -158,4 +158,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         }
         return numberOfLowCards;
     }
+
+    public boolean winFistRound(GameIntel intel) {
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
+    }
 }
