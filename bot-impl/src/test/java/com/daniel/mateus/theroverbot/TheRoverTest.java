@@ -291,7 +291,7 @@ public class TheRoverTest {
                     .opponentScore(0)
                     .opponentCard(opponentCard);
 
-            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), theRover.chooseCardFirstHand(stepBuilder.build()));
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
         }
     }
 }
