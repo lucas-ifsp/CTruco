@@ -19,8 +19,12 @@ public class TheRover implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
-        return CardToPlay.of(intel.getCards().get(0));
+        return switch (getCurrentRound(intel)) {
+            case 1 -> CardToPlay.of(chooseCardFirstHand(intel));
+            case 2 -> CardToPlay.of(chooseCardSecondHand(intel));
+            case 3 -> CardToPlay.of(chooseCardThirdHand(intel));
+            default -> CardToPlay.of(intel.getCards().get(0));
+        };
     }
 
     @Override
