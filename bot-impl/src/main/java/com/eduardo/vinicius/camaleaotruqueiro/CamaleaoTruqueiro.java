@@ -71,7 +71,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public int getNumberOfHighCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfHighCards = 0;
         for (TrucoCard handCard : handCards) {
-            if(handCard.getRank().value()>7 || handCard.isManilha(vira)) numberOfHighCards++;
+            if(handCard.getRank().value()>8 || handCard.isManilha(vira)) numberOfHighCards++;
         }
         return numberOfHighCards;
     }
@@ -141,5 +141,13 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
             if(myCard.compareValueTo(opponentCard, vira) > 0) strongestCards.add(myCard);
         }
         return strongestCards;
+    }
+
+    public int getNumberOfMediumCards(List<TrucoCard> handCards, TrucoCard vira) {
+        int numberOfMediumCards = 0;
+        for (TrucoCard handCard : handCards) {
+            if(handCard.getRank().value()<=7 && handCard.getRank().value()>4) numberOfMediumCards++;
+        }
+        return numberOfMediumCards;
     }
 }
