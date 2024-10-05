@@ -566,4 +566,28 @@ public class TheRoverTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("Hand has card over relative value tests")
+    class handHasCardOverRelativeValueTests {
+
+        @Test
+        @DisplayName("When hand has one card over relative value should return true")
+        void WhenHandHasOneCardOverRelativeValueShouldReturnTrue() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE,CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR,CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertTrue (theRover.handHasCardOverRelativeValue(stepBuilder.build(), 9));
+        }
+
+    }
 }
