@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -422,6 +423,21 @@ public class CamaleaoTruqueiroTest {
 
         int numberOfLowCard = camaleao.getNumberOfLowCards(handCards,vira);
         assertEquals(1, numberOfLowCard);
+    }
+
+    @Test
+    @DisplayName("Should return if the bot won the first round")
+    void shouldReturnIfTheBotWonTheFirstRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        assertTrue(camaleao.winFistRound(builder.build()));
     }
 
 
