@@ -130,6 +130,12 @@ public class TheRover implements BotServiceProvider {
     }
 
     public boolean handHasCardOverRelativeValue (GameIntel intel, int relativeValue) {
-        return true;
+        for(int i = 0; i < intel.getCards().size(); i++) {
+            TrucoCard currentCard = intel.getCards().get(i);
+            if(currentCard.relativeValue(intel.getVira()) > relativeValue) {
+                return true;
+            }
+        }
+        return false;
     }
 }
