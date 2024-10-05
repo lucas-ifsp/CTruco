@@ -128,4 +128,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public boolean isTheFirstRound(GameIntel intel) {
         return intel.getRoundResults().isEmpty();
     }
+
+    public boolean isTheSecondRound(GameIntel build) {
+        return build.getRoundResults().size() == 1;
+    }
 }
