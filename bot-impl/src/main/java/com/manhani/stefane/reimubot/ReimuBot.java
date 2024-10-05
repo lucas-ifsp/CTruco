@@ -1,5 +1,6 @@
 package com.manhani.stefane.reimubot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
@@ -28,4 +29,9 @@ public class ReimuBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+    
+    private int getHandValue(GameIntel intel) {
+        return intel.getCards().stream().mapToInt(c -> c.relativeValue(intel.getVira())).sum();
+    }
+
 }
