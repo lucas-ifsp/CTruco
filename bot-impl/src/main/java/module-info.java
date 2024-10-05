@@ -101,6 +101,7 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+    exports com.luigi.ana.batatafritadobarbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -154,5 +155,6 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-            ReiDoZap;
+            ReiDoZap,
+            BatataFritaDoBarBot;
 }
