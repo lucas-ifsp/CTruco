@@ -128,4 +128,8 @@ public class TheRover implements BotServiceProvider {
     public TrucoCard chooseCardThirdHand (GameIntel intel) {
         return intel.getCards().get(0);
     }
+
+    public boolean handHasCardOverRelativeValue (GameIntel intel, int relativeValue) {
+        return true;
+    }
 }
