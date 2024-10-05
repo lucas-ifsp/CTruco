@@ -83,6 +83,9 @@ public class Armageddon implements BotServiceProvider {
                 if (opponentCard.isPresent()){
                     int relativeValueOpponentCard = opponentCard.get().relativeValue(vira);
                     Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
+                    if (hasHigherCouple(botCards,vira)){
+                        return CardToPlay.of(weakestCard(botCards,vira));
+                    }
                     if (equalCard.isPresent() && hasZap(botCards, vira)){
                         return CardToPlay.of(equalCard.get());
                     }
