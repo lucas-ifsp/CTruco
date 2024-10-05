@@ -501,6 +501,27 @@ public class TheRoverTest {
 
                 assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),theRover.chooseCardSecondHand(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("When two cards that tie beat opponent card should play either")
+            void WhenTwoCardsThatTieBeatOpponentCardShouldPlayEither() {
+                TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                );
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(),vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertThat(theRover.chooseCardSecondHand(stepBuilder.build())).isIn(
+                        TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                );
+            }
         }
     }
 }
