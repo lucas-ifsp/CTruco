@@ -86,15 +86,6 @@ public class Lgtbot implements BotServiceProvider{
         TrucoCard theBestCard = getTheBestCard(intel);
         TrucoCard theWeakestCard = getWeakCard(myCards, intel);
 
-        System.out.println("Goods Cards: " + goodCards);
-        System.out.println("Strong Cards: " + strongCards);
-        System.out.println("Manilhas: " + manilhas);
-        System.out.println("Good Cards Count: " + goodCardsCount);
-        System.out.println("Bad Cards Count: " + badCardsCount);
-        System.out.println("Strong Cards Count: " + strongCardsCount);
-        System.out.println("Get strong cards: " + strongCards);
-        System.out.println("Get good cards: " + goodCards);
-
         //---------------------------------------------------------
         if (round == 1) {
             if(isFirstToPlay(intel)){
@@ -158,8 +149,15 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> manilhas = getManilhas(intel);
 
         int strongCardsPlusManilhaCount = strongCards.size() + manilhas.size();
+        int strongCardsCount = strongCards.size();
+        int manilhasCount = manilhas.size();
 
-        if (strongCardsPlusManilhaCount == 3){
+        System.out.println("Strong Cards: " + strongCards);
+        System.out.println("Manilhas: " + manilhas);
+        System.out.println("Strong Cards Count: " + strongCardsCount);
+        System.out.println("Get strong cards: " + strongCards);
+
+        if (manilhasCount >= 2 && strongCardsCount >= 1){
             return 1;
         }
         else if (strongCardsPlusManilhaCount == 2){
@@ -216,7 +214,7 @@ public class Lgtbot implements BotServiceProvider{
 
     public TrucoCard getWeakCard(List<TrucoCard> myCards, GameIntel intel) {
         List<TrucoCard> noManilhas = myCards.stream()
-                .filter(carta -> !carta.isManilha(intel.getVira()))  // Exclui as manilhas
+                .filter(carta -> !carta.isManilha(intel.getVira()))
                 .toList();
 
         List<TrucoCard> manilhas = getManilhas(intel);
@@ -231,19 +229,6 @@ public class Lgtbot implements BotServiceProvider{
                 .min(Comparator.comparing(carta -> carta.getRank().value()))
                 .orElseThrow();
     }
-
-//
-//    public TrucoCard getWeakCard(List<TrucoCard> cards) {
-//        TrucoCard weakestCard = cards.get(0);
-//
-//        for (TrucoCard card : cards) {
-//            if (card.getRank().value() < weakestCard.getRank().value()) {
-//                weakestCard = card;
-//            }
-//        }
-//        return weakestCard;
-//    }
-//
 
 
     private Optional<TrucoCard> findLowestWinningCard(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {

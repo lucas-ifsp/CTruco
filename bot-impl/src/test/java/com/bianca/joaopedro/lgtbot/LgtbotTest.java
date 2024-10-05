@@ -559,5 +559,27 @@ class LgtbotTest {
                 }
             }
         }
+
+        @Nested
+        @DisplayName("Test getRaiseResponse method")
+        class GetRaiseResponseTest {
+            @Test
+            @DisplayName("Deve dobrar se tiver pelo menos 2 manilhas e 1 carta forte")
+            void shouldReturnTrueIfHasTwoManilhasAndOneStrongCard() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+                List<TrucoCard> myCards = List.of(
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                );
+                List<TrucoCard> openCards = List.of(vira);
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(myCards, 5)
+                        .opponentScore(7);
+                assertEquals(1, lgtbot.getRaiseResponse(stepBuilder.build()));
+            }
+        }
     }
 }
