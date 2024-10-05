@@ -482,6 +482,25 @@ public class TheRoverTest {
 
                 assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES),theRover.chooseCardSecondHand(stepBuilder.build()));
             }
+
+            @Test
+            @DisplayName("When two cards beat opponent card should play lowest card")
+            void WhenTwoCardsBeatOpponentCardShouldPlayLowestCard () {
+                TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.TWO,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+                );
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.SPADES),theRover.chooseCardSecondHand(stepBuilder.build()));
+            }
         }
     }
 }
