@@ -387,6 +387,21 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
+
+                @Test
+                @DisplayName("Should play the weakest card when opponent plays zap")
+                void shouldPlayWeakestCardWhenOpponentPlaysZap(){
+                    vira = TrucoCard.of(TWO,DIAMONDS);
+                    opponentCard = TrucoCard.of(THREE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(THREE,DIAMONDS),
+                            TrucoCard.of(FIVE,HEARTS),
+                            TrucoCard.of(TWO,SPADES));
+
+                    intel = firstRoundSecondToPlay(botCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
