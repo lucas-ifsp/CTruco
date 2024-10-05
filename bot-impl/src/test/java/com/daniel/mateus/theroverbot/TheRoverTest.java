@@ -542,5 +542,28 @@ public class TheRoverTest {
                 assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),theRover.chooseCardSecondHand(stepBuilder.build()));
             }
         }
+
+    }
+
+    @Nested
+    @DisplayName("Choose card third hand tests")
+    class chooseCardThirdHandTests {
+
+        @Test
+        @DisplayName("When third hand should play only card")
+        void WhenThirdHandShouldPlayOnlyCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.KING,CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.KING, CardSuit.CLUBS), theRover.chooseCardThirdHand(stepBuilder.build()));
+        }
+
     }
 }
