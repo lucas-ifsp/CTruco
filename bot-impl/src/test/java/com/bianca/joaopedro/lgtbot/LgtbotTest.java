@@ -438,28 +438,30 @@ class LgtbotTest {
 
                         assertEquals(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)), lgtbot.chooseCard(stepBuilder.build()));
                     }
-                }
 
-                @Test
-                @DisplayName("Deve jogar a carta mais fraca se não tiver para ganhar do oponente")
-                void testOpponentPlaysFirstWithWeakCard() {
-                    TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
-                    TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
-                    List<TrucoCard> myCards = List.of(
-                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
-                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
-                    );
-                    List<TrucoCard> openCards = List.of(vira, opponentCard);
+                    @Test
+                    @DisplayName("Deve jogar a carta mais fraca se não tiver para ganhar do oponente")
+                    void testOpponentPlaysFirstWithWeakCard() {
+                        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+                        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
 
-                    stepBuilder = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(), openCards, vira, 1)
-                            .botInfo(myCards, 1)
-                            .opponentScore(1)
-                            .opponentCard(opponentCard);
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                        );
+                        List<TrucoCard> openCards = List.of(vira, opponentCard);
 
-                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)), lgtbot.chooseCard(stepBuilder.build()));
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1)
+                                .opponentCard(opponentCard);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)), lgtbot.chooseCard(stepBuilder.build()));
+
+                    }
                 }
             }
 
@@ -468,7 +470,7 @@ class LgtbotTest {
             class SecondRoundTest {
 
                 @Nested
-                @DisplayName("If play first - Bait Mode")
+                @DisplayName("If play first")
                 class PlayFirstSecondRoundTest {
 
                     @Test
@@ -493,7 +495,7 @@ class LgtbotTest {
 
                     @Test
                     @DisplayName("Na segunda rodada, se tiver perdido a primeira, joga a carta mais forte")
-                    void testChooseCardSecondRound_getTheBestCardIfWinFirst() {
+                    void testChooseCardSecondRound_getTheBestCardIfLooseFirst() {
                         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
                         List<TrucoCard> myCards = List.of(
@@ -511,9 +513,51 @@ class LgtbotTest {
                         assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
                     }
 
+                    @Test
+                    @DisplayName("Na segunda rodada, se tiver empatado a primeira, joga a carta mais forte")
+                    void testChooseCardSecondRound_getTheBestCardIfDrewFirst() {
+                        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+                        );
+
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
                 }
             }
 
+            @Nested
+            @DisplayName("Last round")
+            class LastRoundTest {
+
+                @Test
+                @DisplayName("Deve escolher a última carta")
+                void lastRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(vira, opponentCard);
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1)
+                            .opponentCard(opponentCard);
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+            }
         }
     }
 }

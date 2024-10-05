@@ -108,20 +108,14 @@ public class Lgtbot implements BotServiceProvider{
             }
             else{
                 Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
-                System.out.println("carta oponente: " + opponentCardOpt);
                 if (opponentCardOpt.isPresent()) {
-                    System.out.println("test");
                     TrucoCard opponentCard = opponentCardOpt.get();
-                    System.out.println("carta oponente: " + opponentCard);
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
-                    System.out.println("win card:" + winningCardOpt);
 
                     if (winningCardOpt.isPresent()) {
-                        System.out.println("testt" + winningCardOpt);
                         return CardToPlay.of(winningCardOpt.get());
                     } else {
                         TrucoCard weakestCard = getWeakCard(myCards, intel);
-                        System.out.println("weark"+weakestCard);
                         return CardToPlay.of(weakestCard);
                     }
                 }
@@ -141,6 +135,7 @@ public class Lgtbot implements BotServiceProvider{
                 if (opponentCardOpt.isPresent()) {
                     TrucoCard opponentCard = opponentCardOpt.get();
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
+                    System.out.println("win card:" + winningCardOpt);
 
                     if (winningCardOpt.isPresent()) {
                         return CardToPlay.of(winningCardOpt.get());
@@ -151,10 +146,10 @@ public class Lgtbot implements BotServiceProvider{
             }
         }
         if(round == 3){
-            System.out.println("Escolhendo carta no round 3");
-            return CardToPlay.of(theBestCard);
+            return CardToPlay.of(myCards.get(0));
         }
-        return null;
+
+        return CardToPlay.of(myCards.get(0));
     }
 
     @Override
