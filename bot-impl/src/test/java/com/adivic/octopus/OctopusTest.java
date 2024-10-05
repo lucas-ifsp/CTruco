@@ -287,4 +287,19 @@ public class OctopusTest {
             assertThat(octopus.whoWonTheRound(stepBuilder.build())).isEqualTo(GameIntel.RoundResult.WON);
         }
     }
+    @Nested
+    @DisplayName("Testing override methods")
+    class OverrideMethods{
+        @Test
+        @DisplayName("Return getMaoDeOnzeResnponse")
+        void returnGetMaoDeOnzeResponse(){
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
+            assertThat(octopus.getMaoDeOnzeResponse(step.build())).isTrue();
+        }
+    }
 }
