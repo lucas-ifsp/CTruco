@@ -169,4 +169,7 @@ public class Octopus implements BotServiceProvider {
                 .collect(Collectors.toList());
     }
 
+    public GameIntel.RoundResult whoWonTheRound(GameIntel intel) {
+        return GameIntel.RoundResult.LOST;
+    }
 }
