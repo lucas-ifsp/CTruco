@@ -357,6 +357,21 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
+
+                @Test
+                @DisplayName("Should draw when possible and has one manilha")
+                void shouldDrawWhenHaveOneManilha(){
+                    vira = TrucoCard.of(FOUR,DIAMONDS);
+                    opponentCard = TrucoCard.of(ACE,SPADES);
+                    botCards = List.of(
+                            TrucoCard.of(KING,CLUBS),
+                            TrucoCard.of(ACE,HEARTS),
+                            TrucoCard.of(FIVE,SPADES));
+
+                    intel = firstRoundSecondToPlay(botCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
