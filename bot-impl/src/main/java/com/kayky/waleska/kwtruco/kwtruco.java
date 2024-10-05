@@ -2,7 +2,6 @@
 
 import com.bueno.spi.service.BotServiceProvider;
 import com.bueno.spi.model.*;
-import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,13 +41,8 @@ public class kwtruco implements BotServiceProvider {
             }
         }
 
-        if (intel.getOpponentScore() == 0 || intel.getScore() >= intel.getOpponentScore() + 3 || hasHigherThanAverageValue
-                (intel) || hasManilhaAndHighRank(intel) || hasZap(intel)) {
-            return true;
-        }
-
-
-        return false;
+        return intel.getOpponentScore() == 0 || intel.getScore() >= intel.getOpponentScore() + 3 || hasHigherThanAverageValue
+                (intel) || hasManilhaAndHighRank(intel) || hasZap(intel);
     }
 
     private int getMaxCardValue(GameIntel intel) {
@@ -83,10 +77,7 @@ public class kwtruco implements BotServiceProvider {
                 hasCartaHigh = true;
             }
         }
-        if (hasCartaHigh && hasManilha){
-            return true;
-        }
-        return false;
+        return hasCartaHigh && hasManilha;
     }
 
 
@@ -148,13 +139,10 @@ public class kwtruco implements BotServiceProvider {
             return null;
         }
 
-        // Obtém a carta vira.
         TrucoCard vira = intel.getVira();
 
-        // Inicializa a menor carta que pode vencer.
         TrucoCard smallestCardThatCanWin = null;
 
-        // Itera sobre todas as cartas na mão do jogador.
         for (TrucoCard card : intel.getCards()) {
             // Se a carta atual for maior que a carta do oponente, atualiza a menor carta que pode vencer.
             if (card.relativeValue(vira) > opponentCard.get().relativeValue(vira)) {
@@ -172,18 +160,12 @@ public class kwtruco implements BotServiceProvider {
     private TrucoCard findSmallestCardInHand(GameIntel intel) {
         // Inicializa a carta com o menor valor relativo em relação à carta vira.
         TrucoCard smallestCard = null;
-
-        // Obtém a carta vira.
         TrucoCard vira = intel.getVira();
-
-        // Itera sobre todas as cartas na mão do jogador.
         for (TrucoCard card : intel.getCards()) {
-            // Se a carta atual tiver um valor relativo menor que a carta com o menor valor relativo, atualiza.
             if (smallestCard == null || card.relativeValue(vira) < smallestCard.relativeValue(vira)) {
                 smallestCard = card;
             }
         }
-
         // Retorna a carta com o menor valor relativo em relação à carta vira.
         return smallestCard;
     }
