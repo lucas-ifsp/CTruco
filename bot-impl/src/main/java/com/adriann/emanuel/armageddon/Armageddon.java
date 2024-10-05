@@ -51,8 +51,25 @@ public class Armageddon implements BotServiceProvider {
         return goodCard >=2;
     }
 
+
+    // fAZENDO AQUI -----------------------------------------
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<TrucoCard> playerHand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard card : playerHand) {
+            if (card.isManilha(vira)) {
+                return true;
+            }
+        }
+
+        int handStrength = handStrength(playerHand, vira);
+
+        if (handStrength >= GOOD_HAND_STRENGTH) {
+            return true;
+        }
+
         return false;
     }
 
