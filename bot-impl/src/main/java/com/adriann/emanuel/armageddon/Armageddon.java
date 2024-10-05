@@ -52,7 +52,7 @@ public class Armageddon implements BotServiceProvider {
     }
 
 
-    // fAZENDO AQUI -----------------------------------------
+    // FAZENDO AQUI -----------------------------------------
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
@@ -249,4 +249,8 @@ public class Armageddon implements BotServiceProvider {
     private boolean canDraw(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
         return relativelyEqualCard(cards,vira,opponentCard).isPresent();
     }
+
+
+
+
 }

@@ -455,6 +455,19 @@ public class ArmageddonTest {
             assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
         }
 
+        @Test
+        @DisplayName("Should raise when the hand contains two strong cards: one manilha and one three")
+        void shouldRaiseWithTwoStrongCards() {
+            vira = TrucoCard.of(ACE, HEARTS);
+            botCards = List.of(
+                    TrucoCard.of(THREE, DIAMONDS),
+                    TrucoCard.of(FOUR, SPADES),
+                    TrucoCard.of(TWO, SPADES)
+            );
+            intel = maoDeOnze(botCards, vira);
+
+            assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
+        }
 
 
     }
