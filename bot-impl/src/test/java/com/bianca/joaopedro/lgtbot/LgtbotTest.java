@@ -221,7 +221,6 @@ class LgtbotTest {
         }
 
 
-
         @Test
         @DisplayName("Se perdeu na primeira, não deve pedir truco na rodada 2 se tiver apenas 1 carta forte")
         public void testShouldRaiseInRound2_ifILostInTheFirstRoundIDontAskForTrucoInRoundTwoIfIHaveOneStrongCard() {
@@ -325,8 +324,29 @@ class LgtbotTest {
             class FirstRoundTest {
 
                 @Nested
-                @DisplayName("If play first")
+                @DisplayName("If play first - Bait Mode")
                 class PlayFirstTest {
+
+                    @Test
+                    @DisplayName("Na primeira rodada, se tiver três cartas boas, retorna a carta mais forte")
+                    void testChooseCard_getTheBestCardIfThreeStrongCardsFirstRound() {
+                        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)   // boa
+                        );
+
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
 
                     @Test
                     @DisplayName("Na primeira rodada, se tiver duas cartas boas, retorna a carta mais fraca")
@@ -350,14 +370,14 @@ class LgtbotTest {
                     }
 
                     @Test
-                    @DisplayName("Na primeira rodada, se tiver três cartas boas, retorna a carta mais forte")
-                    void testChooseCard_getTheBestCardIfThreeStrongCardsFirstRound() {
-                        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+                    @DisplayName("Na primeira rodada, se tiver três cartas ruins, retorna a carta mais fraca")
+                    void testChooseCard_getTheBestCardIfThreeBadCardsFirstRound() {
+                        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
 
                         List<TrucoCard> myCards = List.of(
-                                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),   // boa
-                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),   // boa
-                                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)   // boa
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),   // ruim
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),   // ruim
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)   // ruim
                         );
 
                         List<TrucoCard> openCards = List.of(vira);
@@ -367,15 +387,133 @@ class LgtbotTest {
                                 .botInfo(myCards, 1)
                                 .opponentScore(1);
 
-                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
+                }
+
+                @Nested
+                @DisplayName("If opponent plays first")
+                class OpponentPlayFirstTest {
+
+                    @Test
+                    @DisplayName("Should play the best card when opponent plays first")
+                    void testOpponentPlaysFirstWithBestCard() {
+                        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+                        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+                        );
+                        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1)
+                                .opponentCard(opponentCard);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
                     }
 
+                    @Test
+                    @DisplayName("Should play the best card when opponent plays first considering manilha")
+                    void testOpponentPlaysFirstWithBestCardConsideringManilha() {
+                        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+                        TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+                        );
+                        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1)
+                                .opponentCard(opponentCard);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
+                }
+
+                @Test
+                @DisplayName("Deve jogar a carta mais fraca se não tiver para ganhar do oponente")
+                void testOpponentPlaysFirstWithWeakCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(myCards, 1)
+                            .opponentScore(1)
+                            .opponentCard(opponentCard);
+
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+            }
+
+            @Nested
+            @DisplayName("Second Round")
+            class SecondRoundTest {
+
+                @Nested
+                @DisplayName("If play first - Bait Mode")
+                class PlayFirstSecondRoundTest {
+
+                    @Test
+                    @DisplayName("Na segunda rodada, se tiver ganhado a primeira, joga a carta mais fraca")
+                    void testChooseCardSecondRound_getTheWeakCardIfWinFirst() {
+                        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+                        );
+
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
+
+                    @Test
+                    @DisplayName("Na segunda rodada, se tiver perdido a primeira, joga a carta mais forte")
+                    void testChooseCardSecondRound_getTheBestCardIfWinFirst() {
+                        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+                        );
+
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
 
                 }
             }
+
         }
-
-
-
     }
 }

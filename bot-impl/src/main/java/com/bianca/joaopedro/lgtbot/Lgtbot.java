@@ -98,27 +98,30 @@ public class Lgtbot implements BotServiceProvider{
         //---------------------------------------------------------
         if (round == 1) {
             if(isFirstToPlay(intel)){
-                if (goodCardsCount == 2) {
-                    TrucoCard weakestCard = getWeakCard(myCards, intel);
-                    return CardToPlay.of(weakestCard);
-                }
                 if (goodCardsCount == 3){
                     return CardToPlay.of(theBestCard);
                 }
-                if (badCardsCount == 3){
-                    return CardToPlay.of(theBestCard);
+                if (goodCardsCount >= 1 || badCardsCount == 3) {
+                    TrucoCard weakestCard = getWeakCard(myCards, intel);
+                    return CardToPlay.of(weakestCard);
                 }
             }
             else{
                 Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
+                System.out.println("carta oponente: " + opponentCardOpt);
                 if (opponentCardOpt.isPresent()) {
+                    System.out.println("test");
                     TrucoCard opponentCard = opponentCardOpt.get();
+                    System.out.println("carta oponente: " + opponentCard);
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
+                    System.out.println("win card:" + winningCardOpt);
 
                     if (winningCardOpt.isPresent()) {
+                        System.out.println("testt" + winningCardOpt);
                         return CardToPlay.of(winningCardOpt.get());
                     } else {
-                        TrucoCard weakestCard = getWeakCard(badCards, intel);
+                        TrucoCard weakestCard = getWeakCard(myCards, intel);
+                        System.out.println("weark"+weakestCard);
                         return CardToPlay.of(weakestCard);
                     }
                 }
@@ -127,8 +130,10 @@ public class Lgtbot implements BotServiceProvider{
         if (round == 2){
             if (isFirstToPlay(intel)) {
                 if (didIWinFirstRound(intel)) {
+                    System.out.println("retorna carta mais frac: " + theWeakestCard);
                     return CardToPlay.of(theWeakestCard);
                 } else {
+                    System.out.println("retorna best: " + theBestCard);
                     return CardToPlay.of(theBestCard);
                 }
             } else {
