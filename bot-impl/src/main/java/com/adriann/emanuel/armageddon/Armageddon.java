@@ -62,11 +62,11 @@ public class Armageddon implements BotServiceProvider {
 
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
 
         switch (rounds) {
             case 0 -> {
-                if (opponentCard.isEmpty()){
+                if (optOpponentCard.isEmpty()){
                     if (hasHigherCouple(botCards, vira)) {
                         return CardToPlay.of(weakestCard(botCards, vira));
                     }
@@ -80,25 +80,27 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(middleCard(botCards,vira));
                     }
                 }
-                if (opponentCard.isPresent()){
-                    int relativeValueOpponentCard = opponentCard.get().relativeValue(vira);
-                    Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard.get());
+                if (optOpponentCard.isPresent()){
+                    TrucoCard opponentCard = optOpponentCard.get();
+
                     if (hasHigherCouple(botCards,vira)){
                         return CardToPlay.of(weakestCard(botCards,vira));
                     }
+
+                    Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
                     if (equalCard.isPresent() && hasZap(botCards, vira)){
                         return CardToPlay.of(equalCard.get());
                     }
-                    if (relativeValueOpponentCard < strongestCard(botCards,vira).relativeValue(vira)){
-                        if (relativeValueOpponentCard < middleCard(botCards,vira).relativeValue(vira)){
-                            if (relativeValueOpponentCard < weakestCard(botCards,vira).relativeValue(vira)){
-                                return CardToPlay.of(weakestCard(botCards,vira));
-                            }
-                            return CardToPlay.of(middleCard(botCards,vira));
-                        }
-                        return CardToPlay.of(strongestCard(botCards,vira));
-                    }
 
+                    if (opponentCard.compareValueTo(strongestCard(botCards,vira),vira) < 0){
+                      if (opponentCard.compareValueTo(middleCard(botCards,vira),vira) < 0){
+                          if (opponentCard.compareValueTo(weakestCard(botCards,vira),vira) < 0){
+                              return CardToPlay.of(weakestCard(botCards,vira));
+                          }
+                          return CardToPlay.of(middleCard(botCards,vira));
+                      }
+                      return CardToPlay.of(strongestCard(botCards,vira));
+                    }
                 }
             }
         }
