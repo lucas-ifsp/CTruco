@@ -65,12 +65,13 @@ public class Armageddon implements BotServiceProvider {
         Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
 
         List<TrucoCard> botCards = intel.getCards();
-        TrucoCard strongest = strongestCard(botCards,vira);
-        TrucoCard middle = middleCard(botCards,vira);
-        TrucoCard weakest = weakestCard(botCards,vira);
 
         switch (rounds) {
             case 0 -> {
+                TrucoCard middle = middleCard(botCards,vira);
+                TrucoCard strongest = strongestCard(botCards,vira);
+                TrucoCard weakest = weakestCard(botCards,vira);
+
                 if (optOpponentCard.isEmpty()){
                     if (hasHigherCouple(botCards, vira)) {
                         return CardToPlay.of(weakest);
