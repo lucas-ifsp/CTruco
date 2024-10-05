@@ -586,7 +586,25 @@ public class TheRoverTest {
                     .botInfo(cards, 0)
                     .opponentScore(0);
 
-            assertTrue (theRover.handHasCardOverRelativeValue(stepBuilder.build(), 9));
+            assertTrue(theRover.handHasCardOverRelativeValue(stepBuilder.build(), 8));
+        }
+
+        @Test
+        @DisplayName("When hand has one card equal relative value should return false")
+        void WhenHandHasOneCardEqualRelativeValueShouldReturnFalse() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE,CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertFalse(theRover.handHasCardOverRelativeValue(stepBuilder.build(), 9));
         }
 
     }
