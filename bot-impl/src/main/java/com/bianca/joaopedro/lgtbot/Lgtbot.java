@@ -42,15 +42,6 @@ public class Lgtbot implements BotServiceProvider{
         int goodCardsCount = strongCards.size() + goodCards.size() + manilhas.size();
         int strongCardsPlusManilhaCount = strongCards.size() + manilhas.size();
 
-        System.out.println("Strong Cards: " + strongCards);
-        System.out.println("Ok Cards: " + goodCards);
-        System.out.println("Manilhas: " + manilhas);
-        System.out.println("Good Cards Count: " + goodCardsCount);
-        System.out.println("Strong Cards Count: " + strongCardsPlusManilhaCount);
-        System.out.println("Dif: " + (myScore - opponentScore));
-        System.out.println("Get strong cards: " + strongCards);
-        System.out.println("Get good cards: " + goodCards);
-
 
         if (myScore >= 9 || (myScore - opponentScore) > 6)  {
             if (goodCardsCount >= 2) {
@@ -90,18 +81,28 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> myCards = intel.getCards();
 
         int goodCardsCount = strongCards.size() + goodCards.size() + manilhas.size();
+        int strongCardsCount = strongCards.size() + manilhas.size();
         int badCardsCount = badCards.size();
         TrucoCard theBestCard = getTheBestCard(intel);
-        TrucoCard theWeakestCard = getWeakCard(myCards);
+        TrucoCard theWeakestCard = getWeakCard(myCards, intel);
+
+        System.out.println("Goods Cards: " + goodCards);
+        System.out.println("Strong Cards: " + strongCards);
+        System.out.println("Manilhas: " + manilhas);
+        System.out.println("Good Cards Count: " + goodCardsCount);
+        System.out.println("Bad Cards Count: " + badCardsCount);
+        System.out.println("Strong Cards Count: " + strongCardsCount);
+        System.out.println("Get strong cards: " + strongCards);
+        System.out.println("Get good cards: " + goodCards);
 
         //---------------------------------------------------------
         if (round == 1) {
             if(isFirstToPlay(intel)){
-                if (goodCardsCount == 2 && badCardsCount == 1) {
-                    TrucoCard weakestCard = getWeakCard(badCards);
+                if (goodCardsCount == 2) {
+                    TrucoCard weakestCard = getWeakCard(myCards, intel);
                     return CardToPlay.of(weakestCard);
                 }
-                if (goodCardsCount >= 1){
+                if (goodCardsCount == 3){
                     return CardToPlay.of(theBestCard);
                 }
                 if (badCardsCount == 3){
@@ -117,7 +118,7 @@ public class Lgtbot implements BotServiceProvider{
                     if (winningCardOpt.isPresent()) {
                         return CardToPlay.of(winningCardOpt.get());
                     } else {
-                        TrucoCard weakestCard = getWeakCard(badCards);
+                        TrucoCard weakestCard = getWeakCard(badCards, intel);
                         return CardToPlay.of(weakestCard);
                     }
                 }
@@ -213,10 +214,37 @@ public class Lgtbot implements BotServiceProvider{
                 .orElse(null);
     }
 
-    private TrucoCard getWeakCard(List<TrucoCard> cards) {
-        cards.sort(Comparator.comparing(TrucoCard::getRank));
-        return cards.get(0);
+    public TrucoCard getWeakCard(List<TrucoCard> myCards, GameIntel intel) {
+        List<TrucoCard> noManilhas = myCards.stream()
+                .filter(carta -> !carta.isManilha(intel.getVira()))  // Exclui as manilhas
+                .toList();
+
+        List<TrucoCard> manilhas = getManilhas(intel);
+
+        if (noManilhas.isEmpty()) {
+            return manilhas.stream()
+                    .min(Comparator.comparing(TrucoCard::getSuit))
+                    .orElse(myCards.get(0));
+        }
+
+        return noManilhas.stream()
+                .min(Comparator.comparing(carta -> carta.getRank().value()))
+                .orElseThrow();
     }
+
+//
+//    public TrucoCard getWeakCard(List<TrucoCard> cards) {
+//        TrucoCard weakestCard = cards.get(0);
+//
+//        for (TrucoCard card : cards) {
+//            if (card.getRank().value() < weakestCard.getRank().value()) {
+//                weakestCard = card;
+//            }
+//        }
+//        return weakestCard;
+//    }
+//
+
 
     private Optional<TrucoCard> findLowestWinningCard(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream()
@@ -244,4 +272,6 @@ public class Lgtbot implements BotServiceProvider{
                 .filter(card -> badRanks.contains(card.getRank()))
                 .toList();
     }
+
+
 }

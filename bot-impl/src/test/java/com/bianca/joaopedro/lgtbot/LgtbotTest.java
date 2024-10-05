@@ -329,25 +329,48 @@ class LgtbotTest {
                 class PlayFirstTest {
 
                     @Test
-                    @DisplayName("Na primeira rodada, se tiver duas cartas fortes, retorna a carta mais fraca")
-                    void testChooseCard_getWeakerCardIfTwoStrongCardsFirstRound() {
+                    @DisplayName("Na primeira rodada, se tiver duas cartas boas, retorna a carta mais fraca")
+                    void testChooseCard_getWeakerCardIfTwoGoodCardsFirstRound() {
                         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
 
-
                         List<TrucoCard> myCards = List.of(
-                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)   // Fraca
                         );
+
                         List<TrucoCard> openCards = List.of(vira);
 
                         stepBuilder = GameIntel.StepBuilder.with()
                                 .gameInfo(List.of(), openCards, vira, 1)
                                 .botInfo(myCards, 1)
                                 .opponentScore(1);
-                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
 
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
                     }
+
+                    @Test
+                    @DisplayName("Na primeira rodada, se tiver três cartas boas, retorna a carta mais forte")
+                    void testChooseCard_getTheBestCardIfThreeStrongCardsFirstRound() {
+                        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+                        List<TrucoCard> myCards = List.of(
+                                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),   // boa
+                                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)   // boa
+                        );
+
+                        List<TrucoCard> openCards = List.of(vira);
+
+                        stepBuilder = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(myCards, 1)
+                                .opponentScore(1);
+
+                        assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                    }
+
+
                 }
             }
         }
