@@ -38,5 +38,9 @@ public class ReimuBot implements BotServiceProvider {
     private boolean canDefeatOpponentCard(GameIntel intel) {
         return intel.getCards().stream().anyMatch(c -> c.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0);
     }
+    
+    private boolean isFirstToPlayRound(GameIntel intel){
+        return intel.getOpponentCard().isEmpty();
+    }
 
 }
