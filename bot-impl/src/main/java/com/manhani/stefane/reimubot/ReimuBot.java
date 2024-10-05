@@ -58,6 +58,7 @@ public class ReimuBot implements BotServiceProvider {
     }
 
     //should only be called after checking if you're not first
+    //should only be called after checking you can win
     private TrucoCard getWeakestCardThatWins(GameIntel intel){
         var vira = intel.getVira();
         var cards = intel.getCards().stream()
@@ -67,12 +68,12 @@ public class ReimuBot implements BotServiceProvider {
     }
     
     private TrucoCard FirstToPlayStrategy(GameIntel intel){
-        if(!canDefeatOpponentCard(intel))
-            return getWeakestCard(intel);
         return getWeakestCard(intel);
     }
     
     private TrucoCard LastToPlayStrategy(GameIntel intel){
+        if(canDefeatOpponentCard(intel))
+            return getWeakestCardThatWins(intel);
         return getWeakestCard(intel);
     }
 
