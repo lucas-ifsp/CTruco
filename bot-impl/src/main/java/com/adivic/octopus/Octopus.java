@@ -7,6 +7,7 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -145,4 +146,12 @@ public class Octopus implements BotServiceProvider {
 
         return manilhasCount + threeCount + twoCount + aceCount;
     }
+
+    public List<TrucoCard> sortCards(GameIntel intel) {
+        List<TrucoCard> ourCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        return ourCards;
+    }
+
 }

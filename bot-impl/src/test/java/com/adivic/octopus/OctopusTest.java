@@ -253,7 +253,7 @@ public class OctopusTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
             );
 
@@ -261,9 +261,9 @@ public class OctopusTest {
 
             assertThat(octopus.sortCards(step.build()))
                     .containsExactly(
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
         }
     }
 }
