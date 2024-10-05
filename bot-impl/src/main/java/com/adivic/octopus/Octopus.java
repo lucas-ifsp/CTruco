@@ -142,7 +142,6 @@ public class Octopus implements BotServiceProvider {
                     myCardsToWin.add(card);
                 }
             }
-
             if (!myCardsToWin.isEmpty())
                 return myCardsToWin.get(0);
             return ourCards.get(0);

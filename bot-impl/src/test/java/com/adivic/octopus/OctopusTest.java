@@ -229,8 +229,8 @@ public class OctopusTest {
     @DisplayName("Testing the methods to win the first round")
     class WinFirstRound{
         @Test
-        @DisplayName("Return the better card to win the first round if opponent play first")
-        void ReturnTheBetterCardToWinTheFirstRoundIfOpponentPlayFirst(){
+        @DisplayName("Return the better card to win the first round")
+        void returnTheBetterCardToWinTheFirstRound(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
             List<TrucoCard> openCards = new ArrayList<>();
@@ -249,7 +249,7 @@ public class OctopusTest {
     class ChooseBetterPlays{
         @Test
         @DisplayName("Return an array with our cards sorted in ascending order")
-        void ReturnAnArrayWithOurCardsSortedInAscendingOrder() {
+        void returnAnArrayWithOurCardsSortedInAscendingOrder() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
