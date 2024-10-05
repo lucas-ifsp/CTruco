@@ -667,5 +667,24 @@ public class TheRoverTest {
 
             assertFalse(theRover.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("")
+        void WhenWonFirstRoundAndHaveHighCardShouldReturnTrue() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN,CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertTrue(theRover.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
