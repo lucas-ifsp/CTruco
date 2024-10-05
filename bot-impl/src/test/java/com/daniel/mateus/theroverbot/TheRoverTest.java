@@ -669,7 +669,7 @@ public class TheRoverTest {
         }
 
         @Test
-        @DisplayName("")
+        @DisplayName("When won first round and have high card should return true")
         void WhenWonFirstRoundAndHaveHighCardShouldReturnTrue() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
@@ -686,5 +686,7 @@ public class TheRoverTest {
 
             assertTrue(theRover.decideIfRaises(stepBuilder.build()));
         }
+
+
     }
 }
