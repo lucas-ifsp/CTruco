@@ -213,6 +213,25 @@ public class Lgtbot implements BotServiceProvider{
                 .orElseThrow();
     }
 
+    // Método que verifica se o bot deve aceitar a mão de onze
+    public boolean getMaoDeOnzeResponse(List<TrucoCard> hand, int opponentScore) {
+
+        if (opponentScore < 5) {
+
+            if (isAverageHand(hand)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isAverageHand(List<TrucoCard> hand) {
+
+        return hand.contains(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)) &&
+                hand.contains(TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
+    }
+
 
     private Optional<TrucoCard> findLowestWinningCard(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream()
