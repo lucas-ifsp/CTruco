@@ -80,7 +80,9 @@ public class TheRover implements BotServiceProvider {
             return highestCard;
         }
 
-        return null ;
+        TrucoCard cardToPlay = getLowestCardInHandThatBeatOpponentCard(intel);
+        if(cardToPlay == null) cardToPlay = getLowestCardInHand(intel);
+        return cardToPlay;
     }
 
     public TrucoCard getLowestCardInHandThatBeatOpponentCard (GameIntel intel) {
