@@ -102,8 +102,13 @@ public class TheRover implements BotServiceProvider {
     }
 
     public TrucoCard getLowestCardInHand(GameIntel intel) {
-
-
-        return null;
+        TrucoCard lowestCardsInHand = intel.getCards().get(0);
+        for(int i = 0; i < intel.getCards().size(); i++) {
+            TrucoCard currentCard = intel.getCards().get(i);
+            if(currentCard.relativeValue(intel.getVira()) < lowestCardsInHand.relativeValue(intel.getVira())) {
+                lowestCardsInHand = currentCard;
+            }
+        }
+        return lowestCardsInHand;
     }
 }
