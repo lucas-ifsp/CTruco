@@ -174,7 +174,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
         );
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         softly.assertThat(medianCard.isManilha(vira)).isTrue();
         softly.assertThat(medianCard.getRank()).isEqualTo(CardRank.ACE);
         softly.assertThat(medianCard.getSuit()).isEqualTo(CardSuit.DIAMONDS);
@@ -192,7 +192,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
         );
         TrucoCard lowestCard = camaleao.getLowestCard(cards,vira);
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         softly.assertThat(medianCard).isEqualTo(lowestCard);
         softly.assertAll();
     }
@@ -208,7 +208,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
         );
         TrucoCard greatestCard = camaleao.getGreatestCard(cards,vira);
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         softly.assertThat(medianCard).isEqualTo(greatestCard);
         softly.assertAll();
     }
@@ -222,7 +222,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
         );
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(38);
     }
 
@@ -235,7 +235,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
         );
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(37);
     }
 
@@ -248,7 +248,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
         );
-        TrucoCard medianCard = camaleao.getMedianCard(cards, vira);
+        TrucoCard medianCard = camaleao.getMedianValue(cards, vira);
         assertThat(camaleao.getNumberOfCardWorstThanMedianCard(medianCard, vira)).isEqualTo(36);
     }
 
