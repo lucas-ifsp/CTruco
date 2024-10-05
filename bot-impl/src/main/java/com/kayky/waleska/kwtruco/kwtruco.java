@@ -14,6 +14,9 @@ public class kwtruco implements BotServiceProvider {
         if (oponnentHasZap(intel)){
             return false;
         }
+        if(hasZap(intel)){
+            return true;
+        }
         if (intel.getOpponentScore() == 11){
             return true;
         }

@@ -34,13 +34,32 @@ public class kwtrucoTest {
         @DisplayName("Return false when opponent has Zap")
         void shouldReturnFalseWhenOpponentHasZap() {
 
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
                     .botInfo(botCards, 11)
-                    .opponentScore(6);
+                    .opponentScore(6)
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
             boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertFalse(response);
+        }
+        @Test
+        @Tag("MaoDeOnze")
+        @DisplayName("Return false when bot has Zap")
+        void shouldReturnTrueWhenHasZap() {
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            List<TrucoCard> zapWithCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES));
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(zapWithCards, 11)
+                    .opponentScore(8);
+
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(response);
         }
         @Test
         @Tag("MaoDeOnze")
