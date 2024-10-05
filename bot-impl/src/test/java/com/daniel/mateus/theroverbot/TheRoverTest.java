@@ -355,4 +355,28 @@ public class TheRoverTest {
             assertNull(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Get lowest card in hand tests")
+    class getLowestCardInHandTests {
+
+        @Test
+        @DisplayName("When three cards in hand should return lowest")
+        void WhenThreeCardsInHandShouldReturnLowest () {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FOUR,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING,CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), theRover.getLowestCardInHand(stepBuilder.build()));
+        }
+    }
+
 }
