@@ -92,7 +92,7 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(weakest);
                     }
 
-                    if (strongest.isManilha(vira) && middle.isManilha(vira)){
+                    if (hasTwoManilhas(botCards,vira)){
                         if (middle.compareValueTo(opponentCard,vira) > 0){
                             return CardToPlay.of(middle);
                         }
@@ -156,6 +156,15 @@ public class Armageddon implements BotServiceProvider {
         }
 
         return score == 2;
+    }
+
+    private boolean hasTwoManilhas(List<TrucoCard> cards, TrucoCard vira){
+        int score = 0;
+        for (TrucoCard card:cards){
+            if (card.isManilha(vira)) score++;
+        }
+
+        return score >= 2;
     }
 
     private boolean hasZap(List<TrucoCard> cards, TrucoCard vira){
