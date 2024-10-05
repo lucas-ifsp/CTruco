@@ -134,7 +134,7 @@ class ReimuBotTest {
             );
             var step = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
-                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.SPADES))
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS))
                     .build();
             var selectedCard = reimuBot.chooseCard(step).content();
             assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
