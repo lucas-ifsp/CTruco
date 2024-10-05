@@ -465,7 +465,7 @@ public class TheRoverTest {
         class PlayingSecond {
 
             @Test
-            @DisplayName("")
+            @DisplayName("When only one card beat opponent card should play that card")
             void WhenOnlyOneCardBeatOpponentCardShouldPlayThatCard () {
                 TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
                 TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
