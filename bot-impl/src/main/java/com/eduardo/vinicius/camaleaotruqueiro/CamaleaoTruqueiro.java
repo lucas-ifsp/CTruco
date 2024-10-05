@@ -174,4 +174,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public boolean winSecondRound(GameIntel intel) {
         return intel.getRoundResults().get(1) == GameIntel.RoundResult.WON;
     }
+
+    public boolean lostSecondRound(GameIntel intel) {
+        return intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST;
+    }
 }
