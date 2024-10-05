@@ -151,7 +151,9 @@ public class Octopus implements BotServiceProvider {
         List<TrucoCard> ourCards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        return ourCards;
+        return ourCards.stream()
+                .sorted(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .collect(Collectors.toList());
     }
 
 }
