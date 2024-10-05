@@ -24,10 +24,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
     private CamaleaoTruqueiro camaleao;
+
+    private GameIntel.StepBuilder builder;
 
     @BeforeEach
     public void config() {
@@ -311,6 +314,20 @@ public class CamaleaoTruqueiroTest {
         assertThat(result).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Should return if the bot plays first")
+    void shouldReturnIfTheBotPlaysFirst(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of();
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        assertTrue(camaleao.theBotPlaysFirst(builder.build()));
+    }
 
 
     //estamos ganhando
