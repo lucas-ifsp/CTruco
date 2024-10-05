@@ -113,4 +113,8 @@ public class TheRover implements BotServiceProvider {
         }
         return lowestCardsInHand;
     }
+
+    public TrucoCard chooseCardSecondHand (GameIntel intel) {
+        return null;
+    }
 }
