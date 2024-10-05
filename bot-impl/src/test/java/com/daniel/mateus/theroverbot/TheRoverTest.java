@@ -423,6 +423,7 @@ public class TheRoverTest {
         @Nested
         @DisplayName("Playing first")
         class playingFirst {
+
             @Test
             @DisplayName("When two cards in hand Should play lowest card")
             void WhenTwoCardsInHandShouldPlayLowestCard () {
@@ -437,6 +438,24 @@ public class TheRoverTest {
                          .botInfo(cards, 0)
                          .opponentScore(0);
                  assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
+            }
+
+            @Test
+            @DisplayName("When both cards tie should play either")
+            void WhenBothCardsTieShouldPlayEither() {
+                TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.ACE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                );
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(),vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0);
+                assertThat(theRover.chooseCardSecondHand(stepBuilder.build())).isIn(
+                        TrucoCard.of(CardRank.ACE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+                );
             }
 
         }
