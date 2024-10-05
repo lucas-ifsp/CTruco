@@ -129,7 +129,17 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return intel.getRoundResults().isEmpty();
     }
 
-    public boolean isTheSecondRound(GameIntel build) {
-        return build.getRoundResults().size() == 1;
+    public boolean isTheSecondRound(GameIntel intel) {
+        return intel.getRoundResults().size() == 1;
+    }
+
+    public List<TrucoCard> haveStrongestCard(GameIntel intel, List<TrucoCard> myCards) {
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> strongestCards = new java.util.ArrayList<>(List.of());
+        for (TrucoCard myCard : myCards) {
+            if(myCard.compareValueTo(opponentCard, vira) > 0) strongestCards.add(myCard);
+        }
+        return strongestCards;
     }
 }
