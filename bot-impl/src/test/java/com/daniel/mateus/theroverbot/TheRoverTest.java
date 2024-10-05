@@ -377,6 +377,27 @@ public class TheRoverTest {
 
             assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS), theRover.getLowestCardInHand(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When two cards in hand tie should return either")
+        void WhenTwoCardsInHandTieShouldReturnEither () {
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SIX,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX,CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertThat(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build())).isIn(
+                    TrucoCard.of(CardRank.SIX,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX,CardSuit.SPADES)
+            );
+        }
     }
 
 }
