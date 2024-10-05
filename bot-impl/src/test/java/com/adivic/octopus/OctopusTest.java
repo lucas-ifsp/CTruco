@@ -301,5 +301,16 @@ public class OctopusTest {
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
             assertThat(octopus.getMaoDeOnzeResponse(step.build())).isTrue();
         }
+        @Test
+        @DisplayName("Return decideIfRaises")
+        void returnDecideIfRaises(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS));
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 9, 8, 1);
+            assertThat(octopus.decideIfRaises(step.build())).isTrue();
+        }
     }
 }
