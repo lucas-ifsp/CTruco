@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -232,12 +233,14 @@ public class OctopusTest {
         void ReturnTheBetterCardToWinTheFirstRoundIfOpponentPlayFirst(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            List<TrucoCard> openCards = new ArrayList<>();
+            openCards.add(opponentCard);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 1, 4, 1);
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.of(openCards), vira, 1, 4, 1);
             assertThat(octopus.chooseBetterCardToWinFirstRound(step.build())).isEqualTo(ourCards.get(1));
         }
     }
