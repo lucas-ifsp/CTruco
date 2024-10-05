@@ -20,7 +20,6 @@ public class kwtruco implements BotServiceProvider {
             return true;
         }
 
-
         return hasManilhaAndHighRank(intel);
     }
 
