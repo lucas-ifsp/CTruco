@@ -268,6 +268,13 @@ public class Armageddon implements BotServiceProvider {
     }
 
     public boolean shouldRequestTruco(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if (roundResults.size() >= 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
+            if (roundResults.size() == 1) {
+                return true;
+            }
+        }
 
         return false;
     }
