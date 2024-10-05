@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,20 +83,18 @@ class LgtbotTest {
         }
 
         @Test
-        @DisplayName("Aceitar mão de onze com cartas medianas quando oponente tem menos de 5 pontos")
+        @DisplayName("Deve aceitar a mão de onze com cartas medianas quando o oponente tem menos de 5 pontos")
         public void testShouldAcceptMaoDeOnze_WithAverageCards_WhenOpponentScoreLessThan5() {
-            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
-            List<TrucoCard> averageCards = List.of(
+            Lgtbot bot = new Lgtbot();
+            List<TrucoCard> averageHand = Arrays.asList(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
             );
+            int opponentScore = 4; // Pontuação do oponente é menor que 5
 
-            List<TrucoCard> openCards = List.of(vira);
-            stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), openCards, vira, 1)
-                    .botInfo(averageCards, 11)
-                    .opponentScore(4);
-            assertTrue(lgtbot.getMaoDeOnzeResponse(stepBuilder.build()));
+            boolean result = bot.getMaoDeOnzeResponse(averageHand, opponentScore);
+
+            assertTrue(result, "O bot deveria aceitar a mão de onze com cartas medianas quando o oponente tem menos de 5 pontos.");
         }
 
 
