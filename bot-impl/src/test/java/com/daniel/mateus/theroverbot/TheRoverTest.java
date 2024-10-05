@@ -293,5 +293,25 @@ public class TheRoverTest {
 
             assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When nome card beat opponent card should return null")
+        void WhenNoneCardBeatOpponentCardShouldReturnNull () {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertNull(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
+        }
     }
 }
