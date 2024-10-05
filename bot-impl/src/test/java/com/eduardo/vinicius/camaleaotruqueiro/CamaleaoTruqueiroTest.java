@@ -396,6 +396,20 @@ public class CamaleaoTruqueiroTest {
         assertEquals(1, cards.size());
     }
 
+    @Test
+    @DisplayName("shouldReturnOneMediumCards")
+    void shouldReturnOneMediumCard(){
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
+
+        int numberOfMediumCard = camaleao.getNumberOfMediumCards(handCards,vira);
+        assertEquals(1, numberOfMediumCard);
+    }
+
 
     //estamos ganhando
 
