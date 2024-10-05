@@ -250,7 +250,22 @@ public class Armageddon implements BotServiceProvider {
         return relativelyEqualCard(cards,vira,opponentCard).isPresent();
     }
 
+    // --------------------------------------------------------------------------
+    public boolean hasManilhaAndThree(List<TrucoCard> playerHand, TrucoCard vira) {
+        boolean hasManilha = false;
+        boolean hasThree = false;
 
+        for (TrucoCard card : playerHand) {
+            if (card.isManilha(vira)) {
+                hasManilha = true;
+            }
+            if (isThree(card)) {
+                hasThree = true;
+            }
+        }
+
+        return hasManilha && hasThree;
+    }
 
 
 }
