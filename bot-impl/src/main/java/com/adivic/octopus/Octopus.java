@@ -6,10 +6,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Octopus implements BotServiceProvider {
@@ -133,9 +130,26 @@ public class Octopus implements BotServiceProvider {
     }
 
     public TrucoCard chooseBetterCardToWinFirstRound(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
+        List<TrucoCard> ourCards = sortCards(intel);
+        List<TrucoCard> openCards = intel.getOpenCards();
+        List<TrucoCard> myCardsToWin = new ArrayList<>();
+        TrucoCard vira = intel.getVira();
 
-        return cards.get(0);
+        if (!openCards.isEmpty()) {
+            TrucoCard opponentCard = openCards.get(0);
+            for (TrucoCard card : ourCards) {
+                if (card.compareValueTo(opponentCard, vira) > 0) {
+                    myCardsToWin.add(card);
+                }
+            }
+
+            if (!myCardsToWin.isEmpty())
+                return myCardsToWin.get(0);
+            return ourCards.get(0);
+        }
+        if(ourCards.get(2).isManilha(vira))
+            return ourCards.get(1);
+        return ourCards.get(2);
     }
 
     public int numberOfStrongCards(GameIntel intel) {
