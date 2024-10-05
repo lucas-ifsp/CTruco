@@ -89,8 +89,15 @@ public class Armageddon implements BotServiceProvider {
                 if (optOpponentCard.isPresent()){
                     TrucoCard opponentCard = optOpponentCard.get();
 
-                    if (opponentCard.compareValueTo(strongest,vira) > 0){
+                    if (!canWin(botCards,vira,opponentCard)){
                         return CardToPlay.of(weakest);
+                    }
+
+                    if (canDraw(botCards,vira,opponentCard)){
+                        Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
+                        if (equalCard.isPresent() && hasZap(botCards,vira)){
+                            return CardToPlay.of(equalCard.get());
+                        }
                     }
 
                     if (hasHigherCouple(botCards,vira)){
@@ -104,20 +111,14 @@ public class Armageddon implements BotServiceProvider {
                         return CardToPlay.of(strongest);
                     }
 
-                    Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
-                    if (equalCard.isPresent() && hasZap(botCards, vira)){
-                        return CardToPlay.of(equalCard.get());
+                    if (opponentCard.compareValueTo(middle,vira) < 0){
+                        if (opponentCard.compareValueTo(weakest,vira) < 0){
+                            return CardToPlay.of(weakest);
+                        }
+                        return CardToPlay.of(middle);
                     }
 
-                    if (opponentCard.compareValueTo(strongest,vira) < 0){
-                      if (opponentCard.compareValueTo(middle,vira) < 0){
-                          if (opponentCard.compareValueTo(weakest,vira) < 0){
-                              return CardToPlay.of(weakest);
-                          }
-                          return CardToPlay.of(middle);
-                      }
-                      return CardToPlay.of(strongest);
-                    }
+                    return CardToPlay.of(strongest);
                 }
             }
         }
@@ -220,5 +221,12 @@ public class Armageddon implements BotServiceProvider {
             if (card.relativeValue(vira) == opponentCard.relativeValue(vira)) return Optional.of(card);
         }
         return Optional.empty();
+    }
+    private boolean canWin(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+        return strongestCard(cards,vira).compareValueTo(opponentCard,vira) > 0;
+    }
+
+    private boolean canDraw(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
+        return relativelyEqualCard(cards,vira,opponentCard).isPresent();
     }
 }
