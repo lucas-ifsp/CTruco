@@ -265,5 +265,26 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
                             TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
         }
+
+        @Test
+        @DisplayName("Return who won the round")
+        void returnWhoWonTheRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+            );
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(opponentCard), vira, 1)
+                    .botInfo(ourCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+
+            assertThat(octopus.whoWonTheRound(stepBuilder.build())).isEqualTo(GameIntel.RoundResult.WON);
+        }
     }
 }
