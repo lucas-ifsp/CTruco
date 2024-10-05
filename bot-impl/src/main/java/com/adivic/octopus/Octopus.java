@@ -15,6 +15,11 @@ public class Octopus implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(numberOfStrongCards(intel) > 1 || hasManilha(intel))
+            return true;
+        else if(!hasManilha(intel) && intel.getOpponentScore() < 7 && numberOfStrongCards(intel) > 0)
+            return true;
+
         return false;
     }
 
