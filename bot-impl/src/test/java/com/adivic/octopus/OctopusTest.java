@@ -244,4 +244,26 @@ public class OctopusTest {
             assertThat(octopus.chooseBetterCardToWinFirstRound(step.build())).isEqualTo(ourCards.get(1));
         }
     }
+    @Nested
+    @DisplayName("Testing the functions to choose better plays")
+    class ChooseBetterPlays{
+        @Test
+        @DisplayName("Return an array with our cards sorted in ascending order")
+        void ReturnAnArrayWithOurCardsSortedInAscendingOrder() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+            );
+
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 1, 4, 1);
+
+            assertThat(octopus.sortCards(step.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+        }
+    }
 }
