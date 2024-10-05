@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -327,6 +328,25 @@ public class CamaleaoTruqueiroTest {
                 .opponentScore(1);
 
         assertTrue(camaleao.theBotPlaysFirst(builder.build()));
+    }
+
+    @Test
+    @DisplayName("should return if is the first round")
+    void shouldReturnIfIsTheFirstRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(),openCards,vira,1)
+                .botInfo(myCards,0)
+                .opponentScore(1);
+
+        assertTrue(camaleao.isTheFirstRound(builder.build()));
     }
 
 
