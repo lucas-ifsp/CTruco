@@ -522,6 +522,25 @@ public class TheRoverTest {
                         TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
                 );
             }
+
+            @Test
+            @DisplayName("When no card beat opponent card should play first card on hand")
+            void WhenNoCardBeatOpponentCardShouldPlayFirstCardOnHand() {
+                TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+                );
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertEquals(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),theRover.chooseCardSecondHand(stepBuilder.build()));
+            }
         }
     }
 }
