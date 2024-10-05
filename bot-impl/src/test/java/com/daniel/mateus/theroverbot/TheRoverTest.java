@@ -398,6 +398,22 @@ public class TheRoverTest {
                     TrucoCard.of(CardRank.SIX,CardSuit.SPADES)
             );
         }
+
+        @Test
+        @DisplayName("When theres only one card in hand should return that card")
+        void WhenTheresOnlyOneCardInHandShouldReturnThatCard () {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SEVEN,CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), theRover.getLowestCardInHand(stepBuilder.build()));
+        }
     }
 
 }
