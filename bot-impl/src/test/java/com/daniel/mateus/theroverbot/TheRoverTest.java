@@ -648,5 +648,24 @@ public class TheRoverTest {
 
             assertFalse(theRover.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When in first hand should return false")
+        void WhenInFirstHandShouldReturnFalse() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN,CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertFalse(theRover.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
