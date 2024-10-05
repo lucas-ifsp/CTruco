@@ -336,5 +336,23 @@ public class TheRoverTest {
                     TrucoCard.of(CardRank.THREE,CardSuit.SPADES)
             );
         }
+
+        @Test
+        @DisplayName("When opponent does not play card should return null")
+        void WhenOpponentDoesNotPlayCardShouldReturnNull () {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertNull(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
+        }
     }
 }
