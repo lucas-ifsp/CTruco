@@ -313,5 +313,28 @@ public class TheRoverTest {
 
             assertNull(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When two cards that tie beat opponent card should return either")
+        void WhenTwoCardsThatTieBeatOpponentCardShouldReturnEither () {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+
+            assertThat(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build())).isIn(
+                    TrucoCard.of(CardRank.THREE,CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE,CardSuit.SPADES)
+            );
+        }
     }
 }
