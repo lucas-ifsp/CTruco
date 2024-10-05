@@ -393,7 +393,7 @@ public class TheRoverTest {
                     .botInfo(cards, 0)
                     .opponentScore(0);
 
-            assertThat(theRover.getLowestCardInHandThatBeatOpponentCard(stepBuilder.build())).isIn(
+            assertThat(theRover.getLowestCardInHand(stepBuilder.build())).isIn(
                     TrucoCard.of(CardRank.SIX,CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SIX,CardSuit.SPADES)
             );
