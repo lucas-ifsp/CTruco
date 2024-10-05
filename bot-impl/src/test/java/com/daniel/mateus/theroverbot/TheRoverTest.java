@@ -460,6 +460,28 @@ public class TheRoverTest {
 
         }
 
-    }
+        @Nested
+        @DisplayName("Playing second")
+        class PlayingSecond {
 
+            @Test
+            @DisplayName("")
+            void WhenOnlyOneCardBeatOpponentCardShouldPlayThatCard () {
+                TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+                List<TrucoCard> cards = List.of(
+                        TrucoCard.of(CardRank.THREE,CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                );
+
+                stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES),theRover.chooseCardSecondHand(stepBuilder.build()));
+            }
+        }
+    }
 }
