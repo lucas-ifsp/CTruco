@@ -33,6 +33,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -59,6 +60,20 @@ public class ArmageddonTest {
 
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
                 .botInfo(botCards,1).opponentScore(1).opponentCard(opponentCard);
+    }
+
+    private GameIntel.StepBuilder secondRoundWonFirstRound(
+            List<TrucoCard> botCards, List<TrucoCard> openCards, TrucoCard vira){
+
+        return GameIntel.StepBuilder.with().gameInfo(List.of(WON),openCards,vira,1)
+                .botInfo(botCards,0).opponentScore(0);
+    }
+
+    private GameIntel.StepBuilder secondRoundLostFirstRound(
+            List<TrucoCard> botCards, List<TrucoCard> openCards, TrucoCard vira, TrucoCard opponentCard){
+
+        return GameIntel.StepBuilder.with().gameInfo(List.of(LOST),openCards,vira,1)
+                .botInfo(botCards,0).opponentScore(0).opponentCard(opponentCard);
     }
 
     @BeforeEach
@@ -402,6 +417,17 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
+            }
+        }
+
+        @Nested
+        @DisplayName("Tests to implement logic of choose card in the second round")
+        class SecondRoundChoose{
+
+            @Nested
+            @DisplayName("Tests to implement logic of choose card in the second round when won the first round")
+            class SecondRoundWonFirstRoundChoose{
+
             }
         }
     }
