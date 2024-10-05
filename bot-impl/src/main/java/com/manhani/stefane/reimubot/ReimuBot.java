@@ -33,5 +33,10 @@ public class ReimuBot implements BotServiceProvider {
     private int getHandValue(GameIntel intel) {
         return intel.getCards().stream().mapToInt(c -> c.relativeValue(intel.getVira())).sum();
     }
+    
+    //should only be called after checking if you're not first
+    private boolean canDefeatOpponentCard(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(c -> c.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0);
+    }
 
 }
