@@ -146,8 +146,16 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public int getNumberOfMediumCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfMediumCards = 0;
         for (TrucoCard handCard : handCards) {
-            if(handCard.getRank().value()<=7 && handCard.getRank().value()>4) numberOfMediumCards++;
+            if(handCard.getRank().value()<=7 && handCard.getRank().value()>4 && !handCard.isManilha(vira)) numberOfMediumCards++;
         }
         return numberOfMediumCards;
+    }
+
+    public int getNumberOfLowCards(List<TrucoCard> handCards, TrucoCard vira) {
+        int numberOfLowCards = 0;
+        for (TrucoCard handCard : handCards) {
+            if(handCard.getRank().value()<=4 && !handCard.isManilha(vira)) numberOfLowCards++;
+        }
+        return numberOfLowCards;
     }
 }
