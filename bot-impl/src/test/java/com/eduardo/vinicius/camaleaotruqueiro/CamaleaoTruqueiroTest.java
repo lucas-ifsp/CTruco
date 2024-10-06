@@ -550,7 +550,7 @@ public class CamaleaoTruqueiroTest {
     class DecideIfRaises{
 
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         @Nested @DisplayName("When is first round and bot don´t play first and...")
         class DecideIfRaisesWhenIsFirstRoundAndBotPlaysFirst{
             List<TrucoCard> openCards = Arrays.asList(
@@ -563,7 +563,7 @@ public class CamaleaoTruqueiroTest {
                 @DisplayName("Number of high cards is greater then one")
                 void NumberOfHighCardsIsGreaterThenOne() {
                     List<TrucoCard> cards = Arrays.asList(
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
                     );
@@ -579,15 +579,15 @@ public class CamaleaoTruqueiroTest {
                 @DisplayName("has one high card and more then zero median cards")
                 void HasOneHighCardAndMoreThenZeroMedianCards() {
                     List<TrucoCard> cards = Arrays.asList(
-                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
                     );
                     GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
                             .gameInfo(List.of(),openCards,vira,1)
                             .botInfo(cards,0)
-                            .opponentScore(0)
-                            .opponentCard(opponentCard);
+                            .opponentScore(0);
+                    builder.opponentCard(opponentCard);
                     assertTrue(camaleao.decideIfRaises(builder.build()));
                 }
             }
