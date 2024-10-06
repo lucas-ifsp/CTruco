@@ -930,6 +930,23 @@ class LgtbotTest {
                     assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
                 }
 
+                @Test
+                @DisplayName("No primeiro round, com uma manilha e cartas fracas, deve jogar a carta mais fraca")
+                void testPlayWeakCardInFirstRoundWithOneManilhaAndWeakCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+                    List<TrucoCard> myCards = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), // manilha
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), List.of(vira), vira, 1)
+                            .botInfo(myCards, 3)
+                            .opponentScore(4);
+
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+
             }
         }
     }
