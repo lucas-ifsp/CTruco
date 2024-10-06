@@ -51,7 +51,20 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        if(numberOfManilhas(cards,vira)>1){
+            return 1;
+        }
+        if(getNumberOfHighCards(cards,vira)>=2){
+            return 0;
+        }
+        else if(!isWinning(intel.getScore(), intel.getOpponentScore()) && getNumberOfHighCards(cards,vira)==1){
+            return 0;
+        }
+        else {
+            return -1;
+        }
     }
 
     @Override
