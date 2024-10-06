@@ -417,7 +417,24 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                             TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+        }
 
+        @Test
+        @DisplayName("Return case two when one of the cards is strong and we lose the first round")
+        void returnCaseTwoWhenOneOfTheCardsIsStrongAndWeLoseTheFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
+            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(step.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
         }
     }
 }
