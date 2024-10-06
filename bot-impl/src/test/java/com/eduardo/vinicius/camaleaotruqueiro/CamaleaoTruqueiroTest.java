@@ -30,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -501,9 +503,22 @@ public class CamaleaoTruqueiroTest {
         assertTrue(camaleao.lostSecondRound(builder.build()));
     }
 
+    @Test
+    @DisplayName("Should accept maoDeOnze whit high cards")
+    void shouldAcceptMaoDeOnzeWhitHighCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(),openCards,vira,3)
+                .botInfo(cards,0)
+                .opponentScore(0);
 
-    //estamos ganhando
-
-    //estamos perdendo
+        assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
+    }
 
 }
