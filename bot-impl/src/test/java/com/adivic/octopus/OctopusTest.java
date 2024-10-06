@@ -480,5 +480,29 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                             TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
         }
+
+        @Test
+        @DisplayName("Return case three when two of the cards are trumps and we win the first round")
+        void returnCaseThreeWhenTwoOfTheCardsAreTrumpsAndWeWinFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+            );
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(ourCards, 2)
+                    .opponentScore(1);
+
+            assertThat(octopus.caseRhreeWhenTwoOfTheCardsAreManilha(stepBuilder.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+        }
     }
 }
