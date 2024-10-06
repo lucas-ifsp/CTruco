@@ -45,7 +45,7 @@ public class kwtrucoTest {
         }
         @Test
         @Tag("MaoDeOnze")
-        @DisplayName("Return false when bot has Zap")
+        @DisplayName("Return true when bot has Zap")
         void shouldReturnTrueWhenHasZap() {
 
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
@@ -105,6 +105,25 @@ public class kwtrucoTest {
             boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(response);
         }
+        @Test
+        @Tag("MaoDeOnze")
+        @DisplayName("Return false when bot has manilha but no high rank card")
+        void shouldReturnFalseWhenBotHasManilhaButNoHighRankCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES), // Manilha
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8);
+
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(response);
+        }
+
     }
 
     @Nested
