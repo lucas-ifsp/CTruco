@@ -94,12 +94,12 @@ public class TrucoMarreco implements BotServiceProvider {
             forca += carta.relativeValue(vira);
         }
 
-     /*
-         Considerar se precisa de um ajuste extra fixo para as manilhas
+
+
         if (temManilhas(intel)) {
-            forca += 5;
+            forca += 10;
         }
-       */
+
         return forca;
     }
 
