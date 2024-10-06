@@ -685,5 +685,22 @@ public class TheRoverTest {
 
             assertTrue(theRover.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When in third round should return false")
+        void WhenInThirdRoundShouldReturnFalse() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertFalse(theRover.decideIfRaises(stepBuilder.build()));
+        }
     }
 }
