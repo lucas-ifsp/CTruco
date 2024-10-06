@@ -345,5 +345,20 @@ public class OctopusTest {
             assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(1);
         }
 
+        @Test
+        @DisplayName("Test getRaiseResponse with one strong card or three-point advantage")
+        void testGetRaiseResponseWithOneStrongCardOrThreePointAdvantage() {
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS), 6, 3, 1);
+
+            assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(0);
+        }
+
+
     }
 }
