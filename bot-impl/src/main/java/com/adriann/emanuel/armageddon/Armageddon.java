@@ -147,7 +147,10 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> botCards = intel.getCards();
 
+        if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return -1;
 
         return 0;
     }
