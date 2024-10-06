@@ -455,7 +455,6 @@ public class ArmageddonTest {
                         TrucoCard.of(FOUR, CLUBS)
                 );
 
-                List<TrucoCard> openCards = List.of(opponentCard);
 
                 intel = firstRoundFirstToPlay(botCards, vira);
 
