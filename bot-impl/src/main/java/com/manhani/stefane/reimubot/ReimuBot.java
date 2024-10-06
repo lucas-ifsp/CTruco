@@ -48,7 +48,7 @@ public class ReimuBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if((isFirstRound(intel) || isSecondRound(intel)) && hasBothMaior(intel))
             return true;
-        if(isSecondRound(intel) && wonFirstRound(intel) && hasTwoManilhas(intel))
+        if(isSecondRound(intel) && hasTwoManilhas(intel))
             return true;
         return false;
     }
@@ -94,6 +94,7 @@ public class ReimuBot implements BotServiceProvider {
     }
     
     private boolean wonFirstRound(GameIntel intel){
+        if(intel.getRoundResults().isEmpty()) return false;
         return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
     }
     
@@ -103,6 +104,10 @@ public class ReimuBot implements BotServiceProvider {
     
     private boolean isThirdRound(GameIntel intel){
         return intel.getCards().size() == 1;
+    }
+    
+    private boolean opponentHasMaoDeOnze(GameIntel intel){
+        return intel.getOpponentScore() == 11;
     }
     
     private TrucoCard getWeakestCard(GameIntel intel){
