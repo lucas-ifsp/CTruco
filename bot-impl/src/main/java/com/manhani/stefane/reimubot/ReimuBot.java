@@ -55,7 +55,11 @@ public class ReimuBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(hasTwoManilhas(intel))
+            return RERAISE;
+        if(wonFirstRound(intel) && hasMaior(intel))
+            return RERAISE;
+        return REFUSE;
     }
     
     private int getHandValue(GameIntel intel) {
@@ -76,6 +80,10 @@ public class ReimuBot implements BotServiceProvider {
     
     private boolean isFirstRound(GameIntel intel){
         return intel.getCards().size() == 3;
+    }
+    
+    private boolean wonFirstRound(GameIntel intel){
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
     }
     
     private boolean isSecondRound(GameIntel intel){
@@ -110,6 +118,14 @@ public class ReimuBot implements BotServiceProvider {
     //should only be called after checking if you're not first
     private boolean canWinWithoutMaior(GameIntel intel){
         return canDefeatOpponentCard(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
+    }
+    
+    private boolean hasTwoManilhas(GameIntel intel){
+        return intel.getCards().stream().filter(c->c.isManilha(intel.getVira())).count() == 2;
+    }
+    
+    private boolean hasMaior(GameIntel intel){
+        return intel.getCards().stream().anyMatch(c->c.isZap(intel.getVira()) || c.isCopas(intel.getVira()));
     }
     
     //returns a list, check if empty to know if any are not maior
