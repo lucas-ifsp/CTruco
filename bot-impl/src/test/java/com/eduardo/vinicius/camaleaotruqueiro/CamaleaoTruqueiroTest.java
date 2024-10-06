@@ -551,12 +551,12 @@ public class CamaleaoTruqueiroTest {
 
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
         TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        List<TrucoCard> openCards = Arrays.asList(
+                vira,
+                opponentCard
+        );
         @Nested @DisplayName("When is first round and bot don´t play first and...")
         class DecideIfRaisesWhenIsFirstRoundAndBotPlaysFirst{
-            List<TrucoCard> openCards = Arrays.asList(
-                    vira,
-                    opponentCard
-                    );
             @Nested @DisplayName("Bot has the strongest card than the opponent")
             class BotHasTheStrongestCardThanTheOpponent {
                 @Test
@@ -596,9 +596,9 @@ public class CamaleaoTruqueiroTest {
             @DisplayName("When has two or more high cards")
             void whenHasTwoOrMoreHighCards() {
                 List<TrucoCard> cards = Arrays.asList(
-                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
                         TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
                 );
                 GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
                         .gameInfo(List.of(),openCards,vira,1)
@@ -607,15 +607,37 @@ public class CamaleaoTruqueiroTest {
                         .opponentCard(opponentCard);
                 assertTrue(camaleao.decideIfRaises(builder.build()));
             }
-
         }
 
-        @Test @DisplayName("When number of high cards are greater or equal then 2")
-        void NumberOfHighCardsAreGreaterOrEqualThenTwo() {
-        }
 
+        @Test
+        @DisplayName("When has two or more high cards")
+        void whenHasTwoOrMoreHighCards() {
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+            GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1)
+                    .botInfo(cards,0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+            assertTrue(camaleao.decideIfRaises(builder.build()));
+        }
         @Test @DisplayName("When number of high cards are equal then one")
         void NumberOfHighCardsAreGreaterOrEqualThenOne() {
+            List<TrucoCard> cards = Arrays.asList(
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+            GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1)
+                    .botInfo(cards,0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard);
+            assertTrue(camaleao.decideIfRaises(builder.build()));
         }
 
         @Test
