@@ -52,14 +52,8 @@ public class TheRover implements BotServiceProvider {
     public TrucoCard chooseCardFirstHand (GameIntel intel) {
 
         if (isPlayingFirst(intel)) {
-            int manilhaQtd = 0;
-            for(int i = 0; i < intel.getCards().size(); i++) {
-                if(intel.getCards().get(i).isManilha(intel.getVira())) {
-                    manilhaQtd++;
-                }
-            }
 
-            if(manilhaQtd >= 2) {
+            if(countManilhasInHand(intel) >= 2) {
                 TrucoCard lowestManilha = intel.getCards().get(0);
                 for(int i = 0; i < intel.getCards().size(); i++) {
                     TrucoCard currentCard = intel.getCards().get(i);
