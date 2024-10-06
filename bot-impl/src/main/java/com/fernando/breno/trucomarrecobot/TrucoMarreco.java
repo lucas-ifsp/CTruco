@@ -25,6 +25,7 @@ package com.fernando.breno.trucomarrecobot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class TrucoMarreco implements BotServiceProvider {
@@ -48,6 +49,31 @@ public class TrucoMarreco implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+
+    private boolean CasalMaior(GameIntel intel) {
+        TrucoCard cardVira = intel.getVira();
+        boolean encontrouZap = false;
+        boolean encontrouCopas = false;
+
+        // Itera sobre as cartas para verificar se tem Zap e Copas
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(cardVira)) {
+                encontrouZap = true;
+            } else if (card.isCopas(cardVira)) {
+                encontrouCopas = true;
+            }
+
+            // Se encontrar ambos, já pode retornar true
+            if (encontrouZap && encontrouCopas) {
+                return true;
+            }
+        }
+
+        // Se não encontrou as duas cartas fortes, retorna false
+        return false;
+    }
+
 
 
 }
