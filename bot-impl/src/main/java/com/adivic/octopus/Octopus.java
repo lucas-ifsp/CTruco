@@ -47,7 +47,11 @@ public class Octopus implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(numberOfStrongCards(intel) >= 2 || (numberOfStrongCards(intel) >= 1 && hasSixPointAdvantage(intel)))
+            return 1;
+        else if(numberOfStrongCards(intel) >=1 || hasThreePointAdvantage(intel))
+            return 0;
+        return -1;
     }
 
     public boolean hasManilha(GameIntel intel) {
