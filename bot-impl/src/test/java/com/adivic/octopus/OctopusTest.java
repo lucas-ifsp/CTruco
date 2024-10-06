@@ -1,9 +1,6 @@
 package com.adivic.octopus;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -576,6 +573,25 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                             TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+        }
+    }
+    @Nested
+    @DisplayName("Testing choose card for first round")
+    class ChooseCardForFirstRound{
+        @Test
+        @DisplayName("Return card to play in first round when have zero strong cards")
+        void returnCardToPlayInFirstRoundWhenHaveZeroStrongCards(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(),
+                    vira, 2, 5, 1);
+            assertThat(octopus.cardToPlayFirstRoundWhenZeroStrongCards(step.build()))
+                    .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)));
         }
     }
 }
