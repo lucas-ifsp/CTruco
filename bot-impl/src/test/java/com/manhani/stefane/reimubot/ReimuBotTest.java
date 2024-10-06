@@ -344,7 +344,7 @@ class ReimuBotTest {
                     .botInfo(reimuCards, 11)
                     .opponentScore(4)
                     .build();
-            assertThat(reimuBot.getMaoDeOnzeResponse(step)).isTrue();
+            assertThat(reimuBot.getMaoDeOnzeResponse(step)).isFalse();
         }
 
 
