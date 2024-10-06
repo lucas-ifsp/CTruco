@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,6 +113,24 @@ public class kwtrucoTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES), // Manilha
                     TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8);
+
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(response);
+        }
+        @Test
+        @Tag("MaoDeOnze")
+        @DisplayName("Return false when bot has high rank cards but no manilha")
+        void shouldReturnFalseWhenBotHasHighRankCardsButNoManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES), // Manilha
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
