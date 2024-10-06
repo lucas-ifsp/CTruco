@@ -95,7 +95,7 @@ public class Octopus implements BotServiceProvider {
         return playSequence;
     }
 
-    public List<TrucoCard> caseRhreeWhenTwoOfTheCardsAreManilha(GameIntel intel){
+    public List<TrucoCard> caseThreeWhenTwoOfTheCardsAreManilha(GameIntel intel){
         List<TrucoCard> cards = sortCards(intel);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> playSequence = new ArrayList<>();
