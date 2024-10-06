@@ -109,5 +109,11 @@ public class TrucoMarreco implements BotServiceProvider {
 
         return forcaMao >= 21 || temManilhas(intel);
     }
-
+    private Boolean temZap(GameIntel intel){
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira())) // verifica zap
+                return true;
+        }
+        return false;
+    }
 }
