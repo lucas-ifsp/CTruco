@@ -763,4 +763,29 @@ public class TheRoverTest {
             assertEquals(2,theRover.countManilhasInHand(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("get lowest manilha in hand test")
+    class getLowestManilhaInHandTest{
+
+        @Test
+        @DisplayName("When has three manilhas in hand sould return lowest")
+        void WhenHasThreeManilhasInHandSouldReturnLowest(){
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),theRover.getLowestManilhaInHand(stepBuilder.build()));
+        }
+
+    }
 }
