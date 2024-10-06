@@ -502,6 +502,26 @@ public class ArmageddonTest {
                 assertThat(armageddon.decideIfRaises(intel)).isTrue();
             }
 
+            @Test
+            @DisplayName("Should ask for truco with two manilhas in the first round")
+            void shouldAskTrucoWithTwoManilhasFirstRound() {
+                TrucoCard vira = TrucoCard.of(SIX, DIAMONDS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN, SPADES),
+                        TrucoCard.of(SEVEN, CLUBS),
+                        TrucoCard.of(TWO, HEARTS)
+                );
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                assertThat(armageddon.decideIfRaises(intel)).isTrue();
+            }
+
+
 
 
         }
