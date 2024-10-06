@@ -699,6 +699,24 @@ class LgtbotTest {
                 }
 
                 @Test
+                @DisplayName("Deve jogar a carta mais fraca se perdeu a primeira rodada e tem cartas fracas")
+                public void testShouldPlayWeakestCard_AfterLosingFirstRoundWithWeakCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+                    List<TrucoCard> weakCards = List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                            .botInfo(weakCards, 9)
+                            .opponentScore(6);
+
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+
+
+                @Test
                 @DisplayName("Deve fugir se tiver 2 cartas ruins")
                 void shouldRunIfHasTwoBadCards() {
                     TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
