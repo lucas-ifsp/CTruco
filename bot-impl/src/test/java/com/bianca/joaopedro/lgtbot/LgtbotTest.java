@@ -898,6 +898,21 @@ class LgtbotTest {
                     assertTrue(shouldBluff, "O bot deveria blefar.");
                 }
 
+                @Test
+                @DisplayName("Bot deve aceitar mão de onze com mãos médias")
+                public void testAcceptMaoDeOnze_WithAverageHand() {
+                    List<TrucoCard> hand = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+                    );
+
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getOpponentScore()).thenReturn(4); // O adversário tem menos de 5 pontos
+
+                    boolean response = lgtbot.getMaoDeOnzeResponse(hand, intel.getOpponentScore());
+                    assertTrue(response, "O bot deveria aceitar a mão de onze com mãos médias.");
+                }
+
 
             }
         }
