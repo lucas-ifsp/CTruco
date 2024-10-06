@@ -35,7 +35,12 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
                     TrucoCard playCard = getLowestCard(cards, vira);
                     return CardToPlay.of(playCard);
                 }
-            } else {
+            }
+            else if(haveStrongestCard(intel,cards).size()>=2){
+                TrucoCard playCard = getLowestCard(haveStrongestCard(intel,cards),vira);
+                return CardToPlay.of(playCard);
+            }
+            else {
                 TrucoCard card = getGreatestCard(cards, vira);
                 return CardToPlay.of(card);
             }
