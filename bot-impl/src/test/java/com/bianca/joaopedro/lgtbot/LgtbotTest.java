@@ -913,6 +913,22 @@ class LgtbotTest {
                     assertTrue(response, "O bot deveria aceitar a mão de onze com mãos médias.");
                 }
 
+                @Test
+                @DisplayName("Deve recusar truco com mão fraca estando a 2 pontos de vencer")
+                void testRefuseTrucoWithWeakHandAndCloseToWin() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                    List<TrucoCard> weakHand = List.of(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), List.of(vira), vira, 1)
+                            .botInfo(weakHand, 10)
+                            .opponentScore(8);
+
+                    assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+                }
 
             }
         }
