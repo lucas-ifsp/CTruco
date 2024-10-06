@@ -46,6 +46,8 @@ public class ReimuBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if((isFirstRound(intel) || isSecondRound(intel)) && hasBothMaior(intel))
+            return true;
         return false;
     }
 
@@ -133,6 +135,10 @@ public class ReimuBot implements BotServiceProvider {
     
     private boolean hasMaior(GameIntel intel){
         return intel.getCards().stream().anyMatch(c->c.isZap(intel.getVira()) || c.isCopas(intel.getVira()));
+    }
+    
+    private boolean hasBothMaior(GameIntel intel){
+        return intel.getCards().stream().filter(c->c.isZap(intel.getVira()) || c.isCopas(intel.getVira())).count() == 2;
     }
     
     private int amountOfThreesInHand(GameIntel intel){
