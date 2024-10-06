@@ -436,7 +436,6 @@ public class ArmageddonTest {
     }
 
     // Comecei aqui ----------------------------------------------------------------------
-
     @Nested
     @DisplayName("Tests to decide if raises")
     class DecideIfRaise {
@@ -481,9 +480,30 @@ public class ArmageddonTest {
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .build();
-
                 assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
             }
+
+            @Test
+            @DisplayName("Should ask for truco with one manilha in the first round")
+            void shouldAskTrucoWithOneManilhaFirstRound() {
+                TrucoCard vira = TrucoCard.of(ACE, HEARTS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(ACE, SPADES),
+                        TrucoCard.of(TWO, SPADES),
+                        TrucoCard.of(FIVE, CLUBS)
+                );
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), List.of(), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                assertThat(armageddon.decideIfRaises(intel)).isTrue();
+            }
+
+
+
         }
 
         // Second round won first round  ------------------------------------------------------------------------------
