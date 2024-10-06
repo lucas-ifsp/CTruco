@@ -96,7 +96,20 @@ public class Octopus implements BotServiceProvider {
     }
 
     public List<TrucoCard> caseRhreeWhenTwoOfTheCardsAreManilha(GameIntel intel){
-        return  sortCards(intel);
+        List<TrucoCard> cards = sortCards(intel);
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        List<TrucoCard> playSequence = new ArrayList<>();
+        playSequence.add(cards.get(2));
+
+        if (roundResults.get(0) == WON) {
+            playSequence.add(cards.get(0));
+            playSequence.add(cards.get(1));
+        }
+        else if (roundResults.get(0) == LOST) {
+            playSequence.add(cards.get(1));
+            playSequence.add(cards.get(0));
+        }
+        return playSequence;
     }
 
     public boolean hasManilha(GameIntel intel) {
