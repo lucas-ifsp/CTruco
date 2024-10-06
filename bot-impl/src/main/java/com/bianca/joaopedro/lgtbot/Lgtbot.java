@@ -226,6 +226,42 @@ public class Lgtbot implements BotServiceProvider{
         return false;
     }
 
+    public boolean shouldBluff(GameIntel intel) {
+        int myScore = intel.getScore();
+        int opponentScore = intel.getOpponentScore();
+        List<TrucoCard> myCards = intel.getCards();
+
+        // Contar cartas fracas
+        List<CardRank> weakRanks = List.of(CardRank.FIVE, CardRank.SIX, CardRank.SEVEN, CardRank.QUEEN);
+        int weakCardsCount = (int) myCards.stream()
+                .filter(card -> weakRanks.contains(card.getRank()))
+                .count();
+
+        // Se o bot está perdendo por pouco, pode blefar
+        if (myScore < opponentScore && (opponentScore - myScore) <= 3) {
+            // Se o bot tiver muitas cartas fracas, mas a diferença de pontuação é pequena, considera blefar
+            if (weakCardsCount >= 2) {
+                return true; // Blefar, pois o bot está perdendo e tem cartas fracas
+            }
+        }
+
+        // Se o bot estiver quase empatado ou a 1 ponto da vitória, pode arriscar blefar
+        if (myScore >= 9 && myScore < 12) {
+            int goodCardsCount = (int) myCards.stream()
+                    .filter(card -> List.of(CardRank.ACE, CardRank.KING, CardRank.JACK).contains(card.getRank()))
+                    .count();
+
+            // Se o bot tem pelo menos uma carta boa, pode blefar
+            if (goodCardsCount >= 1) {
+                return true;
+            }
+        }
+
+        // Caso contrário, não blefa
+        return false;
+    }
+
+
     private boolean isAverageHand(List<TrucoCard> hand) {
 
         return hand.contains(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)) &&
