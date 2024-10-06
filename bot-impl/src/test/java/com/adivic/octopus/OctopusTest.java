@@ -528,5 +528,25 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
                     );
         }
+        @Test
+        @DisplayName("Return case four when all of the cards are strong and we win first round")
+        void returnCaseFourWhenAllOfTheCardsAreStrongAndWeWinFirstRound(){
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(ourCards, 6)
+                    .opponentScore(7);
+            assertThat(octopus.caseFourWhenAllOfTheCardsAreStrong(stepBuilder.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS));
+        }
     }
 }
