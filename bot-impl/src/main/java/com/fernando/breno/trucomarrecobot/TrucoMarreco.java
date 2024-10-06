@@ -28,6 +28,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -156,4 +157,35 @@ public class TrucoMarreco implements BotServiceProvider {
 
         return melhorCarta;
     }
+
+    /*
+    private List<Integer> encontrarRanksDasManilhas(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        List<Integer> ranksDasManilhas = new ArrayList<>();
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard carta : cartas) {
+            // Verifica se a carta é uma manilha
+            if (carta.isManilha(vira)) {
+                // Adiciona o rank relativo da manilha à lista
+                int rankRelativo = carta.relativeValue(vira);
+                ranksDasManilhas.add(rankRelativo);
+            }
+        }
+
+        return ranksDasManilhas; // Retorna a lista de ranks das manilhas
+    }
+   */
+
+    private int contarManilhas(List<TrucoCard> cartas, TrucoCard vira) {
+        int qtdManilha = 0;
+
+        for (TrucoCard carta : cartas) {
+            if (carta.isManilha(vira)) qtdManilha++; // Incrementa se for manilha
+        }
+
+        return qtdManilha;
+    }
+
+
 }
