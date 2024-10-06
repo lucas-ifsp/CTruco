@@ -90,7 +90,13 @@ public class TheRover implements BotServiceProvider {
     }
 
     public int countManilhasInHand(GameIntel intel){
-        return 0;
+        int manilhaQtd = 0;
+        for(int i = 0; i < intel.getCards().size(); i++) {
+            if(intel.getCards().get(i).isManilha(intel.getVira())) {
+                manilhaQtd++;
+            }
+        }
+        return manilhaQtd;
     }
 
     public TrucoCard getLowestCardInHandThatBeatOpponentCard (GameIntel intel) {
