@@ -743,5 +743,24 @@ public class TheRoverTest {
 
             assertEquals(1,theRover.countManilhasInHand(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When has two manilha should return two")
+        void WhenHasTwoManilhaShouldReturnTwo(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(2,theRover.countManilhasInHand(stepBuilder.build()));
+        }
     }
 }
