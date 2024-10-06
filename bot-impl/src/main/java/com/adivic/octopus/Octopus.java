@@ -78,6 +78,10 @@ public class Octopus implements BotServiceProvider {
         return playSequence;
     }
 
+    public List<TrucoCard> caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(GameIntel intel){
+        return sortCards(intel);
+    }
+
         public boolean hasManilha(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
