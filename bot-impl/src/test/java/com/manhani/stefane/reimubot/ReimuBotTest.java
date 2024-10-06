@@ -355,7 +355,7 @@ class ReimuBotTest {
     class GetRaiseResponseTests {
         @Test
         @DisplayName("Should re-raise if has two manilhas")
-        void acceptsIfTwoManilhas(){
+        void reraiseIfTwoManilhas(){
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             List<TrucoCard> reimuCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
@@ -372,8 +372,8 @@ class ReimuBotTest {
         }
 
         @Test
-        @DisplayName("Should accept raise if has manilha of hearts and won the first round")
-        void acceptsIfHasManilhaHeartsAndWonFirstRound() {
+        @DisplayName("Should reraise if has manilha of hearts and won the first round")
+        void reraiseIfHasManilhaHeartsAndWonFirstRound() {
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
             List<TrucoCard> reimuCards = List.of(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
@@ -387,12 +387,12 @@ class ReimuBotTest {
                     .botInfo(reimuCards, 1)
                     .opponentScore(0).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
                     .build();
-            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(RERAISE);
         }
 
         @Test
-        @DisplayName("Should accept raise if has manilha of clubs and won the first round")
-        void acceptsIfHasManilhaClubsAndWonFirstRound() {
+        @DisplayName("Should reraise if has manilha of clubs and won the first round")
+        void reraiseIfHasManilhaClubsAndWonFirstRound() {
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
             List<TrucoCard> reimuCards = List.of(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
@@ -406,27 +406,7 @@ class ReimuBotTest {
                     .botInfo(reimuCards, 1)
                     .opponentScore(0).opponentCard(TrucoCard.of(CardRank.KING, CardSuit.CLUBS))
                     .build();
-            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
-        }
-
-        @Test
-        @DisplayName("Should accept raise if has more than one manilha in hand")
-        void acceptsIfHasMoreThanOneManilha() {
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
-            List<TrucoCard> reimuCards = List.of(
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
-            );
-            var step = GameIntel.StepBuilder.with()
-                    .gameInfo(
-                            List.of(),
-                            List.of(),
-                            vira, 1)
-                    .botInfo(reimuCards, 0)
-                    .opponentScore(0).opponentCard(null)
-                    .build();
-            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(ACCEPT);
+            assertThat(reimuBot.getRaiseResponse(step)).isEqualTo(RERAISE);
         }
 
         @Test
