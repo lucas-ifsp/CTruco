@@ -10,7 +10,10 @@ import java.util.List;
 public class CamaleaoTruqueiro implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        if(getNumberOfHighCards(cards,vira) >= 2 && numberOfManilhas(cards,vira) >= 1) return true;
+        else return false;
     }
 
     @Override
