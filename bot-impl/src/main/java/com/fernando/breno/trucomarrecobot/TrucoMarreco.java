@@ -103,4 +103,11 @@ public class TrucoMarreco implements BotServiceProvider {
         return forca;
     }
 
+    private boolean deveAceitarTruco(GameIntel intel) {
+        int forcaMao = avaliarForcaDaMao(intel);
+
+
+        return forcaMao >= 21 || temManilhas(intel);
+    }
+
 }
