@@ -48,6 +48,8 @@ public class ReimuBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if((isFirstRound(intel) || isSecondRound(intel)) && hasBothMaior(intel))
             return true;
+        if(isSecondRound(intel) && wonFirstRound(intel) && hasTwoManilhas(intel))
+            return true;
         return false;
     }
 
