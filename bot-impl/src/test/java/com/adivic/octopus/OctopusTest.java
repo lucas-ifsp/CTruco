@@ -593,5 +593,23 @@ public class OctopusTest {
             assertThat(octopus.cardToPlayFirstRoundWhenZeroStrongCards(step.build()))
                     .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
         }
+        @Test
+        @DisplayName("Return card to play in first round when have one strong cards")
+        void returnCardToPlayInFirstRoundWhenHaveOneStrongCards(){
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.CLUBS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(ourCards, 1)
+                    .opponentScore(2);
+
+            assertThat(octopus.cardToPlayFirstRoundWhenOneStrongCard(stepBuilder.build()))
+                    .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)));
+        }
     }
 }
