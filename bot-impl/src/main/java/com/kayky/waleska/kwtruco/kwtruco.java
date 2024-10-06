@@ -2,7 +2,6 @@
 
 import com.bueno.spi.service.BotServiceProvider;
 import com.bueno.spi.model.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -160,8 +159,12 @@ public class kwtruco implements BotServiceProvider {
         // Inicializa a carta com o menor valor relativo em relação à carta vira.
         TrucoCard smallestCard = null;
         TrucoCard vira = intel.getVira();
+
         for (TrucoCard card : intel.getCards()) {
-            if (smallestCard == null || card.relativeValue(vira) < smallestCard.relativeValue(vira)) {
+            if (smallestCard == null) {
+                smallestCard = card;
+            }
+            if ( card.relativeValue(vira) < smallestCard.relativeValue(vira)){
                 smallestCard = card;
             }
         }
@@ -170,10 +173,34 @@ public class kwtruco implements BotServiceProvider {
     }
 
 
-
-
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if (hasManilha(intel) && has3(intel))
+            return 1;
+        if(hasZap(intel))
+            return 1;
+        if (hasManilhaAndHighRank(intel))
+            return 1;
+        if (hasZapAndTree(intel))
+            return 1;
+        if (oponnentHasZap(intel))
+            return 0;
+        if (oponnentHasManilha(intel) && !(hasManilhaAndHighRank(intel)))
+            return 0;
+        if (oponnentHasManilha( intel) && !(hasManilha(intel)))
+            return 0;
+        if (oponnentHasManilha(intel) && (hasManilhaAndHighRank(intel)))
+            return 1;
+        if (oponnentHasManilha(intel) && hasZapAndTree(intel))
+            return 1;
+        if (intel.getScore() == 9 && intel.getOpponentScore() == 9)
+            return 0;
+        if (intel.getScore() >= intel.getOpponentScore() && hasManilhaAndHighRank(intel))
+            return 1;
+        if (intel.getScore() <  intel.getOpponentScore() && hasManilhaAndHighRank(intel)){
+            return 1;
+        }
+
         return 0;
     }
 
@@ -191,6 +218,15 @@ public class kwtruco implements BotServiceProvider {
     }
     private boolean oponnentHasZap(GameIntel intel) {
         return intel.getOpponentCard().stream().anyMatch(card -> card.isZap(intel.getVira()));
+    }
+    private boolean oponnentHasManilha(GameIntel intel) {
+        return  intel.getOpponentCard().stream().anyMatch(card -> card.isManilha(intel.getVira()));
+    }
+    private boolean has3(GameIntel intel){
+        return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+    }
+    private boolean hasZapAndTree(GameIntel intel){
+        return has3(intel) && hasZap(intel);
     }
 
 }
