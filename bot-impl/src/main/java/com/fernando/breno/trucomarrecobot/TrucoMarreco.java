@@ -70,10 +70,19 @@ public class TrucoMarreco implements BotServiceProvider {
             }
         }
 
-        // Se não encontrou as duas cartas fortes, retorna false
+
         return false;
     }
 
+    boolean temManilhas(GameIntel intel) {
 
+        for (TrucoCard carta : intel.getCards()) {
+            // Verifica se a carta atual é uma manilha em relação à carta vira
+            if (carta.isManilha(intel.getVira())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
