@@ -9,7 +9,7 @@ import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
-import com.francisco.pernalonga.Pernalonga;
+import com.francisco.pernalonga.PernalongaBot;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
@@ -130,7 +130,7 @@ module bot.impl {
             CaipirasBot,
             LazyBot,
             PauladaSecaBot,
-            Pernalonga,
+            PernalongaBot,
             MinePowerBot,
             JormungandrBot,
             Akkosocorrompido,
