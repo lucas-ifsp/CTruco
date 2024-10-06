@@ -154,6 +154,8 @@ public class Armageddon implements BotServiceProvider {
 
         if (hasTwoManilhas(botCards, vira) && (!hasHigherCouple(botCards, vira))) return 1;
 
+        if (hasHigherCouple(botCards, vira)) return 1;
+
         return 0;
     }
 

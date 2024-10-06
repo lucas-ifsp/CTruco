@@ -531,7 +531,7 @@ public class ArmageddonTest {
 
                 List<TrucoCard> openCards = List.of(opponentCard);
 
-                GameIntel.StepBuilder intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+                GameIntel.StepBuilder intel = firstRoundSecondToPlay(botCards, vira, opponentCard);
 
                 int response = armageddon.getRaiseResponse(intel.build());
 
@@ -552,7 +552,7 @@ public class ArmageddonTest {
 
                 List<TrucoCard> openCards = List.of(opponentCard);
 
-                GameIntel.StepBuilder intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+                GameIntel.StepBuilder intel = firstRoundSecondToPlay(botCards, vira, opponentCard);
 
                 int response = armageddon.getRaiseResponse(intel.build());
 
@@ -574,13 +574,16 @@ public class ArmageddonTest {
 
                 List<TrucoCard> openCards = List.of(opponentCard);
 
-                intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+                intel = firstRoundSecondToPlay(botCards, vira, opponentCard);
 
                 int response = armageddon.getRaiseResponse(intel.build());
 
                 assertThat(response).isEqualTo(1);
 
             }
+
+
+
 
 
 
