@@ -660,6 +660,25 @@ class LgtbotTest {
                     assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar aumentar os pontos com cartas medianas e oponente com alta pontuação.");
                 }
 
+                @Test
+                @DisplayName("Bot deve recusar aumentar os pontos com mão fraca")
+                public void testShouldNotRaisePoints_WithWeakHand() {
+                    List<TrucoCard> weakCards = List.of(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                    );
+
+                    List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS), 1)
+                            .botInfo(weakCards, 5)
+                            .opponentScore(3);
+
+                    assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deve recusar aumentar os pontos com uma mão fraca.");
+                }
+
 
                 @Test
                 @DisplayName("Deve aceitar se tiver duas cartas fortes")
