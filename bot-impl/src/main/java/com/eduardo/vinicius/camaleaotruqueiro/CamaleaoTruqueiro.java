@@ -3,6 +3,7 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import javax.smartcardio.Card;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,33 +34,19 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     }
 
     public TrucoCard getGreatestCard(List<TrucoCard> cards, TrucoCard vira) {
-
-        int compareCard01WithCard02 = cards.get(0).compareValueTo(cards.get(1), vira);
-
-        if (compareCard01WithCard02 <= 0) {
-            int compareCard02WithCard03 = cards.get(1).compareValueTo(cards.get(2), vira);
-            if (compareCard02WithCard03 <= 0) return cards.get(2);
-            else return cards.get(1);
-        } else {
-            int compareCard01WithCard03 = cards.get(0).compareValueTo(cards.get(2), vira);
-            if (compareCard01WithCard03 <= 0) return cards.get(2);
-            else return cards.get(0);
+        TrucoCard greatestCard = cards.get(0);
+        for (TrucoCard card : cards ) {
+            if (card.compareValueTo(greatestCard, vira) > 0) greatestCard = card;
         }
+        return greatestCard;
     }
 
     public TrucoCard getLowestCard(List<TrucoCard> cards, TrucoCard vira) {
-
-        int compareCard01WithCard02 = cards.get(0).compareValueTo(cards.get(1), vira);
-        int compareCard02WithCard03 = cards.get(1).compareValueTo(cards.get(2), vira);
-        int compareCard01WithCard03 = cards.get(0).compareValueTo(cards.get(2), vira);
-
-        if (compareCard01WithCard02 > 0) {
-            if (compareCard02WithCard03 > 0) return cards.get(2);
-            else return cards.get(1);
+        TrucoCard lowestCard = cards.get(0);
+        for (TrucoCard card : cards ) {
+            if (card.compareValueTo(lowestCard, vira) < 0) lowestCard = card;
         }
-        if (compareCard01WithCard03 > 0) return cards.get(2);
-
-        return cards.get(0);
+        return lowestCard;
     }
 
     public int numberOfManilhas(List<TrucoCard> cards, TrucoCard vira) {
