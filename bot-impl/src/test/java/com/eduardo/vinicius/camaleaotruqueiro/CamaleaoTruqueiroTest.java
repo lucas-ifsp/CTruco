@@ -826,6 +826,53 @@ public class CamaleaoTruqueiroTest {
                     assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
                 }
             }
+            @Nested
+            @DisplayName("When the bot plays later")
+            class TheBotPlaysLater {
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and has two strongest cards")
+                void shouldChooseLowestCardWhenBotDoesNotPlayFirstAndHasTwoOrMoreStrongestCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    builder.opponentCard(opponentCard);
+
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+                }
+
+                @Test
+                @DisplayName("Should choose the greatest card when bot does not play first and has one high card better than opponent card")
+                void shouldChooseGreatestCardWhenBotDoesNotPlayFirstAndHasOneHighCardBetterThanOpponentCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+            }
         }
     }
 }
