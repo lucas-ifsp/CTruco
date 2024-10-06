@@ -643,6 +643,25 @@ class LgtbotTest {
                 }
 
                 @Test
+                @DisplayName("Bot deve recusar truco com cartas medianas e oponente com alta pontuação")
+                public void testShouldNotRaisePoints_WithAverageCardsAgainstHighOpponentScore() {
+                    List<TrucoCard> averageCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                    );
+
+                    List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), 1)
+                            .botInfo(averageCards, 10)
+                            .opponentScore(10);
+
+                    assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar aumentar os pontos com cartas medianas e oponente com alta pontuação.");
+                }
+
+
+                @Test
                 @DisplayName("Deve aceitar se tiver duas cartas fortes")
                 void shoulReturnZeroIfHasTwoStrongCards() {
                     TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
