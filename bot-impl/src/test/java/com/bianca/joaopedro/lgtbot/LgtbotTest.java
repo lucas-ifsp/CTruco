@@ -357,8 +357,6 @@ class LgtbotTest {
             }
 
 
-
-
             @Nested
             @DisplayName("First Round")
             class FirstRoundTest {
@@ -598,6 +596,24 @@ class LgtbotTest {
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)), lgtbot.chooseCard(stepBuilder.build()));
                 }
             }
+        }
+
+        @Test
+        @DisplayName("Bot deve aumentar truco na rodada final com boa pontuação")
+        public void testShouldRaisePoints_InFinalRoundWithGoodCards() {
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),  // Ás
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)    // Rei
+            );
+
+            List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), 2)
+                    .botInfo(goodCards, 10)
+                    .opponentScore(5);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria aumentar os pontos na rodada final com boas cartas.");
         }
 
         @Nested
