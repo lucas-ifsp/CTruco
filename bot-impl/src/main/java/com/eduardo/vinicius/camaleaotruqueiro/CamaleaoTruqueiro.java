@@ -19,7 +19,29 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> lowerCard = List.of(getLowestCard(cards,vira));
+        if(isTheFirstRound(intel) && !theBotPlaysFirst(intel)){
+            if((getNumberOfHighCards(cards,vira)>1 || (getNumberOfHighCards(cards,vira)==1 && getNumberOfMediumCards(cards,vira)>0) )  && !haveStrongestCard(intel,lowerCard).isEmpty()){
+                return true;
+            }
+            else if(getNumberOfHighCards(cards,vira)>=2){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else if(getNumberOfHighCards(cards,vira)>=2){
+            return true;
+        }
+        else if(getNumberOfHighCards(cards,vira)==1){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
