@@ -36,15 +36,16 @@ public class OctopusTest {
     }
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         octopus = new Octopus();
     }
+
     @Nested
     @DisplayName("Testing the functions to identify manilhas")
-    class ManilhaCardsTest{
+    class ManilhaCardsTest {
         @Test
         @DisplayName("Return if the hand contains manilhas")
-        void returnIfTheHandContainsManilha(){
+        void returnIfTheHandContainsManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -58,7 +59,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return the number of manilhas in the hand")
-        void returnTheNumberOfManilhasInTheHand(){
+        void returnTheNumberOfManilhasInTheHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
@@ -72,7 +73,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return which manilhas have in hand")
-        void returnWhichManilhasHaveInHand(){
+        void returnWhichManilhasHaveInHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
@@ -81,7 +82,7 @@ public class OctopusTest {
 
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 4, 4, 1);
 
-            List <TrucoCard> expectedManilhas = List.of(
+            List<TrucoCard> expectedManilhas = List.of(
                     TrucoCard.of(vira.getRank().next(), CardSuit.DIAMONDS),
                     TrucoCard.of(vira.getRank().next(), CardSuit.SPADES),
                     TrucoCard.of(vira.getRank().next(), CardSuit.HEARTS),
@@ -93,10 +94,10 @@ public class OctopusTest {
 
     @Nested
     @DisplayName("Testing the functions to identify strongest cards")
-    class StrongestCardsTest{
+    class StrongestCardsTest {
         @Test
         @DisplayName("Return if the hand contains THREE")
-        void returnIfTheHandContainsThree(){
+        void returnIfTheHandContainsThree() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -110,7 +111,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return the number of three cards in the hand")
-        void returnTheNumberOfThreeCardsInTheHand(){
+        void returnTheNumberOfThreeCardsInTheHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -121,9 +122,10 @@ public class OctopusTest {
 
             assertThat(octopus.numberOfThreeCards(step.build())).isEqualTo(3);
         }
+
         @Test
         @DisplayName("Return if the hand contains TWO")
-        void returnIfTheHandContainsTwo(){
+        void returnIfTheHandContainsTwo() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
@@ -137,7 +139,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return the number of two cards in the hand")
-        void returnTheNumberOfTwoCardsInTheHand(){
+        void returnTheNumberOfTwoCardsInTheHand() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
@@ -151,7 +153,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return if the hand contains ACE")
-        void returnIfTheHandContainsAce(){
+        void returnIfTheHandContainsAce() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
@@ -165,7 +167,7 @@ public class OctopusTest {
 
         @Test
         @DisplayName("Return the number of ace cards in the hand")
-        void returnTheNumberOfAceCardsInTheHand(){
+        void returnTheNumberOfAceCardsInTheHand() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
@@ -194,10 +196,10 @@ public class OctopusTest {
 
     @Nested
     @DisplayName("Testing the functions to identify game advantages")
-    class AdvantagesGameTest{
+    class AdvantagesGameTest {
         @Test
         @DisplayName("Returns if there is at least a three-point advantage")
-        void returnsIfThereIsAtLeastAThreePointAdvantage(){
+        void returnsIfThereIsAtLeastAThreePointAdvantage() {
 
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
@@ -209,10 +211,10 @@ public class OctopusTest {
 
             assertThat(octopus.hasThreePointAdvantage(step.build())).isTrue();
         }
+
         @Test
         @DisplayName("Returns if there is at least a six-point advantage")
-
-        void returnsIfThereIsAtLeastASixPointAdvantage(){
+        void returnsIfThereIsAtLeastASixPointAdvantage() {
 
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
@@ -225,12 +227,13 @@ public class OctopusTest {
             assertThat(octopus.hasSixPointAdvantage(step.build())).isTrue();
         }
     }
+
     @Nested
     @DisplayName("Testing the methods to win the first round")
-    class WinFirstRound{
+    class WinFirstRound {
         @Test
         @DisplayName("Return the better card to win the first round")
-        void returnTheBetterCardToWinTheFirstRound(){
+        void returnTheBetterCardToWinTheFirstRound() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
             List<TrucoCard> openCards = new ArrayList<>();
@@ -244,9 +247,10 @@ public class OctopusTest {
             assertThat(octopus.chooseBetterCardToWinFirstRound(step.build())).isEqualTo(ourCards.get(1));
         }
     }
+
     @Nested
     @DisplayName("Testing the functions to choose better plays")
-    class ChooseBetterPlays{
+    class ChooseBetterPlays {
         @Test
         @DisplayName("Return an array with our cards sorted in ascending order")
         void returnAnArrayWithOurCardsSortedInAscendingOrder() {
@@ -287,12 +291,13 @@ public class OctopusTest {
             assertThat(octopus.whoWonTheRound(stepBuilder.build())).isEqualTo(GameIntel.RoundResult.WON);
         }
     }
+
     @Nested
     @DisplayName("Testing override methods")
-    class OverrideMethods{
+    class OverrideMethods {
         @Test
         @DisplayName("Return getMaoDeOnzeResnponse")
-        void returnGetMaoDeOnzeResponse(){
+        void returnGetMaoDeOnzeResponse() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -301,9 +306,10 @@ public class OctopusTest {
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
             assertThat(octopus.getMaoDeOnzeResponse(step.build())).isTrue();
         }
+
         @Test
         @DisplayName("Return decideIfRaises")
-        void returnDecideIfRaises(){
+        void returnDecideIfRaises() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -373,12 +379,13 @@ public class OctopusTest {
             assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(-1);
         }
     }
+
     @Nested
     @DisplayName("Testing choose cards methods")
-    class ChooseCardsMethods{
+    class ChooseCardsMethods {
         @Test
         @DisplayName("Return case one when none of the cards are strong in the hand")
-        void returnCaseOneWhenNoneOfTheCardsAreStrongInTheHand(){
+        void returnCaseOneWhenNoneOfTheCardsAreStrongInTheHand() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -391,6 +398,26 @@ public class OctopusTest {
                             TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                             TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
         }
+        @Test
+        @DisplayName("Return case two when one of the cards is strong and we win the first round")
+        void returnCaseTwoWhenOneOfTheCardsIsStrongAndWeWinTheFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(ourCards, 9)
+                    .opponentScore(8);
+            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(stepBuilder.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+
+        }
     }
 }
