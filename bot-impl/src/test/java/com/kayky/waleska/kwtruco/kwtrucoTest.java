@@ -140,6 +140,24 @@ public class kwtrucoTest {
             boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
             assertFalse(response);
         }
+        @Test
+        @Tag("MaoDeOnze")
+        @DisplayName("Return false when bot has no manilha and no high card rank")
+        void shouldReturnFalseWhenBotHasNoManilhaAndNoHighRankCardRank() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+            List<TrucoCard> badCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(badCards, 11)
+                    .opponentScore(8);
+
+            boolean response = kwtrucoBot.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(response);
+        }
 
     }
 
