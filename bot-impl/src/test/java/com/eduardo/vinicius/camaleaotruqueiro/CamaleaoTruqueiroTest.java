@@ -6,14 +6,19 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -646,6 +651,103 @@ public class CamaleaoTruqueiroTest {
 
         }
 
+    }
+
+    @Nested @DisplayName("Raise Response Method:")
+    class RaiseResponseMethod {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+       @Nested @DisplayName("Should responde raise proposal")
+       class ShouldRespondeRaiseProposal {
+            @Test
+            @DisplayName("when having more then one manilhas")
+            void WhenHavingMoreThenOneManilhas() {
+
+                List<TrucoCard> cards = Arrays.asList(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                );
+                GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                        .botInfo(cards,0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+                assertThat(camaleao.getRaiseResponse(builder.build())).isEqualTo(1);
+
+            }
+       }
+        @Nested @DisplayName("Should only accept raise proposal when:")
+        class ShouldOnlyAcceptRaiseProposal{
+
+            @Test
+            @DisplayName("bot have more then one high cards")
+            void botHaveMoreThenOneHighCards() {
+                List<TrucoCard> cards = Arrays.asList(
+                        TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                );
+                GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                        .botInfo(cards,0)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+                assertThat(camaleao.getRaiseResponse(builder.build())).isEqualTo(0);
+            }
+
+            @Test
+            @DisplayName("bot is losing and have one high card")
+            void botIsLosingAndHaveOneHighCard() {
+                SoftAssertions softly = new SoftAssertions();
+                List<TrucoCard> cards01 = Arrays.asList(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                );
+                GameIntel.StepBuilder builder01 = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                        .botInfo(cards01,1)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+                List<TrucoCard> cards02 = Arrays.asList(
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                );
+                GameIntel.StepBuilder builder02 = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                        .botInfo(cards02,1)
+                        .opponentScore(0)
+                        .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+                softly.assertThat(camaleao.getRaiseResponse(builder01.build())).isEqualTo(0);
+                softly.assertThat(camaleao.getRaiseResponse(builder02.build())).isEqualTo(0);
+            }
+        }
+
+        @Test
+        @DisplayName("should deny proposal in any other conditions")
+        void shouldDenyProposalInAnyOtherConditions() {
+            SoftAssertions softly = new SoftAssertions();
+            List<TrucoCard> cards01 = Arrays.asList(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+            );
+            GameIntel.StepBuilder builder01 = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                    .botInfo(cards01,1)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+            List<TrucoCard> cards02 = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+            GameIntel.StepBuilder builder02 = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW),List.of(),vira,1)
+                    .botInfo(cards02,1)
+                    .opponentScore(0)
+                    .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN));
+            softly.assertThat(camaleao.getRaiseResponse(builder01.build())).isEqualTo(-1);
+            softly.assertThat(camaleao.getRaiseResponse(builder02.build())).isEqualTo(-1);
+        }
     }
 
 
