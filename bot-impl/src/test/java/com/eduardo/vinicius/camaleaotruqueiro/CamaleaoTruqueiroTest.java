@@ -557,8 +557,8 @@ public class CamaleaoTruqueiroTest {
                     vira,
                     opponentCard
                     );
-            @Nested @DisplayName("Bot has the Strongest card")
-            class BotHasTheStrongestCard {
+            @Nested @DisplayName("Bot has the strongest card than the opponent")
+            class BotHasTheStrongestCardThanTheOpponent {
                 @Test
                 @DisplayName("Number of high cards is greater then one")
                 void NumberOfHighCardsIsGreaterThenOne() {
@@ -595,8 +595,17 @@ public class CamaleaoTruqueiroTest {
             @Test
             @DisplayName("When has two or more high cards")
             void whenHasTwoOrMoreHighCards() {
-
-                org.junit.jupiter.api.Assertions.fail();
+                List<TrucoCard> cards = Arrays.asList(
+                        TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                );
+                GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),openCards,vira,1)
+                        .botInfo(cards,0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+                assertTrue(camaleao.decideIfRaises(builder.build()));
             }
 
         }
