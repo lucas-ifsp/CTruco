@@ -150,7 +150,10 @@ public class Armageddon implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
 
+
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return -1;
+
+
 
         if (hasTwoManilhas(botCards, vira) && (!hasHigherCouple(botCards, vira))) return 1;
 

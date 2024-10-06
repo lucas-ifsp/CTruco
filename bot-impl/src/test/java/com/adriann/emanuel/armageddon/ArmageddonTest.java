@@ -589,6 +589,31 @@ public class ArmageddonTest {
 
 
         }
+
+        @Nested
+        @DisplayName("Tests to implement logic of second round won first round to decideIfNotRaises")
+        class secondRoundWonFirstRoundTests {
+
+            @Test
+            @DisplayName("Should refuse when all two cards are weak")
+            void shouldRefuseWhenAllTwoCardsAreWeak() {
+                TrucoCard vira = TrucoCard.of(FOUR, DIAMONDS);
+                TrucoCard opponentCard = TrucoCard.of(FIVE, CLUBS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN, DIAMONDS),
+                        TrucoCard.of(SEVEN, HEARTS)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel.StepBuilder intel = secondRoundWonFirstRound(botCards, openCards, vira);
+
+                int response = armageddon.getRaiseResponse(intel.build());
+
+                assertThat(response).isEqualTo(-1);
+            }
+
+        }
     }
 }
 
