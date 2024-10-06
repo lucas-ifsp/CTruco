@@ -418,7 +418,7 @@ public class OctopusTest {
                     .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
                     .botInfo(ourCards, 9)
                     .opponentScore(8);
-            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(stepBuilder.build()))
+            assertThat(octopus.caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                             TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
@@ -439,7 +439,7 @@ public class OctopusTest {
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
                     .botInfo(ourCards, 9)
                     .opponentScore(8);
-            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(stepBuilder.build()))
+            assertThat(octopus.caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
@@ -459,7 +459,7 @@ public class OctopusTest {
                     .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
                     .botInfo(ourCards, 1)
                     .opponentScore(2);
-            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(stepBuilder.build()))
+            assertThat(octopus.caseTwoWhenOneOrTwoCardsAreStrongAndIsManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
                             TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
@@ -480,7 +480,7 @@ public class OctopusTest {
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
                     .botInfo(ourCards, 1)
                     .opponentScore(2);
-            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(stepBuilder.build()))
+            assertThat(octopus.caseTwoWhenOneOrTwoCardsAreStrongAndIsManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
                             TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),

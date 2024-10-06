@@ -65,7 +65,7 @@ public class Octopus implements BotServiceProvider {
     }
 
 
-    public List<TrucoCard> caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(GameIntel intel) {
+    public List<TrucoCard> caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> cards = sortCards(intel);
         List<TrucoCard> playSequence = new ArrayList<>();
@@ -85,12 +85,17 @@ public class Octopus implements BotServiceProvider {
         return playSequence;
     }
 
-    public List<TrucoCard> caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(GameIntel intel){
+    public List<TrucoCard> caseTwoWhenOneOrTwoCardsAreStrongAndIsManilha(GameIntel intel){
         List<TrucoCard> cards = sortCards(intel);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> playSequence = new ArrayList<>();
         playSequence.add(cards.get(1));
-        if (roundResults.get(0) == WON) {
+
+        if(roundResults.isEmpty()){
+            playSequence.add(cards.get(2));
+            playSequence.add(cards.get(0));
+        }
+        else if (roundResults.get(0) == WON) {
             playSequence.add(cards.get(0));
             playSequence.add(cards.get(2));
         }
@@ -108,7 +113,11 @@ public class Octopus implements BotServiceProvider {
         List<TrucoCard> playSequence = new ArrayList<>();
         playSequence.add(cards.get(2));
 
-        if (roundResults.get(0) == WON) {
+        if(roundResults.isEmpty()){
+            playSequence.add(cards.get(2));
+            playSequence.add(cards.get(0));
+        }
+        else if (roundResults.get(0) == WON) {
             playSequence.add(cards.get(0));
             playSequence.add(cards.get(1));
         }
@@ -124,7 +133,12 @@ public class Octopus implements BotServiceProvider {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> playSequence = new ArrayList<>();
         playSequence.add(cards.get(2));
-        if (roundResults.get(0) == WON) {
+
+        if(roundResults.isEmpty()){
+            playSequence.add(cards.get(2));
+            playSequence.add(cards.get(0));
+        }
+        else if (roundResults.get(0) == WON) {
             playSequence.add(cards.get(0));
             playSequence.add(cards.get(1));
         }
@@ -142,8 +156,16 @@ public class Octopus implements BotServiceProvider {
 
     public CardToPlay cardToPlayFirstRoundWhenOneStrongCard(GameIntel intel) {
         return hasManilha(intel)
-                ? CardToPlay.of(caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(intel).get(0))
-                : CardToPlay.of(caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(intel).get(0));
+                ? CardToPlay.of(caseTwoWhenOneOrTwoCardsAreStrongAndIsManilha(intel).get(0))
+                : CardToPlay.of(caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(intel).get(0));
+    }
+
+    public CardToPlay cardToPlayFirstRoundWhenTwoStrongCards(GameIntel intel) {
+        return CardToPlay.of(
+                numberOfManilhas(intel) == 1 ? caseTwoWhenOneOrTwoCardsAreStrongAndIsManilha(intel).get(0) :
+                        numberOfManilhas(intel) == 2 ? caseThreeWhenTwoOfTheCardsAreManilha(intel).get(0) :
+                                caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(intel).get(0)
+        );
     }
 
     public boolean hasManilha(GameIntel intel) {
