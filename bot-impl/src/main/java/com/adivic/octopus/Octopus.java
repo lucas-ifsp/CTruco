@@ -141,7 +141,9 @@ public class Octopus implements BotServiceProvider {
     }
 
     public CardToPlay cardToPlayFirstRoundWhenOneStrongCard(GameIntel intel) {
-        return null;
+        return hasManilha(intel)
+                ? CardToPlay.of(caseTwoWhenOneOfTheCardsAreStrongAndIsManilha(intel).get(0))
+                : CardToPlay.of(caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(intel).get(0));
     }
 
     public boolean hasManilha(GameIntel intel) {
