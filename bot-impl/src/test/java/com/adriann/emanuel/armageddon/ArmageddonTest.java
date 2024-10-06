@@ -476,8 +476,8 @@ public class ArmageddonTest {
             TrucoCard vira = TrucoCard.of(ACE, HEARTS);
 
             List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(TWO, DIAMONDS),
-                    TrucoCard.of(THREE, SPADES)
+                    TrucoCard.of(THREE, DIAMONDS),
+                    TrucoCard.of(TWO, SPADES)
             );
 
             List<TrucoCard> openCards = List.of(
@@ -492,9 +492,55 @@ public class ArmageddonTest {
             assertThat(shouldCallTruco).isTrue();
         }
 
+        @Test
+        @DisplayName("Should raise when the hand contains two strong cards after losing the first round")
+        void shouldRaiseWithTwoStrongCardsAfterLosingFirstRound() {
+            vira = TrucoCard.of(JACK, HEARTS);
+            opponentCard = TrucoCard.of(THREE, SPADES);
+            botCards = List.of(
+                    TrucoCard.of(ACE, DIAMONDS),
+                    TrucoCard.of(KING, CLUBS),
+                    TrucoCard.of(TWO, HEARTS)
+            );
+            intel = secondRoundLostFirstRound(botCards, List.of(), vira, opponentCard);
+
+            assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Tests to decide if not raises")
+    class DecideIfNotRaises {
+
+        @Nested
+        @DisplayName("Tests to implement logic of first round to decideIfNotRaises")
+        class FirstRound{
+
+
+            @Test
+            @DisplayName("Should refuse when all three cards are weak")
+            void shouldRefuseWhenAllThreeCardsAreWeak() {
+                TrucoCard vira = TrucoCard.of(FOUR, DIAMONDS);
+                TrucoCard opponentCard = TrucoCard.of(FIVE, CLUBS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN, DIAMONDS),
+                        TrucoCard.of(SEVEN, HEARTS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel.StepBuilder intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+
+                int response = armageddon.getRaiseResponse(intel.build());
+
+                assertThat(response).isEqualTo(-1);
+            }
 
 
 
+        }
 
     }
 }

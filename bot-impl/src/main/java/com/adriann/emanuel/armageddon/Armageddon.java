@@ -147,6 +147,8 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+
+
         return 0;
     }
 
@@ -259,17 +261,19 @@ public class Armageddon implements BotServiceProvider {
             if (card.isManilha(vira)) {
                 hasManilha = true;
             }
-            if (isThree(card)) {
+            if (card.getRank() == CardRank.THREE) {
                 hasThree = true;
             }
-        }
 
+            if (hasManilha && hasThree) {
+                return true;
+            }
+        }
         return hasManilha && hasThree;
     }
 
     public boolean shouldRequestTruco(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-
         if (roundResults.size() >= 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
             if (roundResults.size() == 1) {
                 return true;
@@ -278,6 +282,9 @@ public class Armageddon implements BotServiceProvider {
 
         return false;
     }
+
+
+
 
 
 
