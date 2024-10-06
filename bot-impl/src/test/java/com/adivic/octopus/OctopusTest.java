@@ -684,7 +684,7 @@ public class OctopusTest {
                         .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
                         .botInfo(ourCards, 1)
                         .opponentScore(2);
-                assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
+                assertThat(octopus.cardToPlaySecondRoundWhenOneOrTwoStrongCards(stepBuilder.build()))
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)));
             }
 
@@ -702,7 +702,7 @@ public class OctopusTest {
                         .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
                         .botInfo(ourCards, 1)
                         .opponentScore(2);
-                assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
+                assertThat(octopus.cardToPlaySecondRoundWhenOneOrTwoStrongCards(stepBuilder.build()))
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)));
             }
 
@@ -720,7 +720,7 @@ public class OctopusTest {
                         .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
                         .botInfo(ourCards, 1)
                         .opponentScore(2);
-                assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
+                assertThat(octopus.cardToPlaySecondRoundWhenOneOrTwoStrongCards(stepBuilder.build()))
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
             }
 
@@ -738,7 +738,7 @@ public class OctopusTest {
                         .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
                         .botInfo(ourCards, 1)
                         .opponentScore(2);
-                assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
+                assertThat(octopus.cardToPlaySecondRoundWhenOneOrTwoStrongCards(stepBuilder.build()))
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)));
             }
 
