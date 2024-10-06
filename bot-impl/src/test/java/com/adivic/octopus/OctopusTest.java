@@ -316,5 +316,19 @@ public class OctopusTest {
                     .opponentScore(8);
             assertThat(octopus.decideIfRaises(stepBuilder.build())).isTrue();
         }
+
+        @Test
+        @DisplayName("Test getRaiseResponse with two or more strong cards")
+        void testGetRaiseResponseWithTwoOrMoreStrongcards() {
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), 5, 5, 1);
+
+            assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(1);
+        }
     }
 }
