@@ -441,72 +441,88 @@ public class ArmageddonTest {
     @DisplayName("Tests to decide if raises")
     class DecideIfRaise {
 
-        @Test
-        @DisplayName("Should raise when the hand contains only one strong card")
-        void shouldRaiseWithOneStrongCard() {
-            vira = TrucoCard.of(ACE, HEARTS);
-            botCards = List.of(
-                    TrucoCard.of(FIVE, DIAMONDS),
-                    TrucoCard.of(TWO, SPADES),
-                    TrucoCard.of(FOUR, CLUBS)
-            );
-            intel = maoDeOnze(botCards, vira);
+        @Nested
+        @DisplayName("Tests to implement logic of second round to decideIfRaises")
+        class FirstRound {
 
-            assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+            @Test
+            @DisplayName("Should raise when the hand contains only one strong card")
+            void shouldRaiseWithOneStrongCard() {
+                vira = TrucoCard.of(ACE, HEARTS);
+                botCards = List.of(
+                        TrucoCard.of(FIVE, DIAMONDS),
+                        TrucoCard.of(TWO, SPADES),
+                        TrucoCard.of(FOUR, CLUBS)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                intel = maoDeOnze(botCards, vira);
+
+                assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+            }
+
+            @Test
+            @DisplayName("Should raise when the hand contains two strong cards: one manilha and one three")
+            void shouldRaiseWithTwoStrongCards() {
+                TrucoCard vira = TrucoCard.of(ACE, HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(TWO, HEARTS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, DIAMONDS),
+                        TrucoCard.of(TWO, SPADES),
+                        TrucoCard.of(ACE, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 2)
+                        .botInfo(botCards, 1)
+                        .opponentScore(1)
+                        .build();
+
+                assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
+            }
+
+
+
+            @Test
+            @DisplayName("Should call truco in the second round after winning the first round")
+            void shouldCallTrucoInSecondRoundAfterWinningFirst() {
+                TrucoCard vira = TrucoCard.of(ACE, HEARTS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, DIAMONDS),
+                        TrucoCard.of(TWO, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(
+                        TrucoCard.of(FOUR, CLUBS),
+                        TrucoCard.of(FIVE, HEARTS)
+                );
+
+                GameIntel intel = secondRoundWonFirstRound(botCards, openCards, vira).build();
+
+                boolean shouldCallTruco = armageddon.shouldRequestTruco(intel);
+
+                assertThat(shouldCallTruco).isTrue();
+            }
+
+            @Test
+            @DisplayName("Should raise when the hand contains two strong cards after losing the first round")
+            void shouldRaiseWithTwoStrongCardsAfterLosingFirstRound() {
+                vira = TrucoCard.of(JACK, HEARTS);
+                opponentCard = TrucoCard.of(THREE, SPADES);
+                botCards = List.of(
+                        TrucoCard.of(ACE, DIAMONDS),
+                        TrucoCard.of(KING, CLUBS),
+                        TrucoCard.of(TWO, HEARTS)
+                );
+                intel = secondRoundLostFirstRound(botCards, List.of(), vira, opponentCard);
+
+                assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+            }
         }
-
-        @Test
-        @DisplayName("Should raise when the hand contains two strong cards: one manilha and one three")
-        void shouldRaiseWithTwoStrongCards() {
-            vira = TrucoCard.of(ACE, HEARTS);
-            botCards = List.of(
-                    TrucoCard.of(THREE, DIAMONDS),
-                    TrucoCard.of(FOUR, SPADES),
-                    TrucoCard.of(TWO, SPADES)
-            );
-            intel = maoDeOnze(botCards, vira);
-
-            assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
-        }
-
-
-        @Test
-        @DisplayName("Should call truco in the second round after winning the first round")
-        void shouldCallTrucoInSecondRoundAfterWinningFirst() {
-            TrucoCard vira = TrucoCard.of(ACE, HEARTS);
-
-            List<TrucoCard> botCards = List.of(
-                    TrucoCard.of(THREE, DIAMONDS),
-                    TrucoCard.of(TWO, SPADES)
-            );
-
-            List<TrucoCard> openCards = List.of(
-                    TrucoCard.of(FOUR, CLUBS),
-                    TrucoCard.of(FIVE, HEARTS)
-            );
-
-            GameIntel intel = secondRoundWonFirstRound(botCards, openCards, vira).build();
-
-            boolean shouldCallTruco = armageddon.shouldRequestTruco(intel);
-
-            assertThat(shouldCallTruco).isTrue();
-        }
-
-        @Test
-        @DisplayName("Should raise when the hand contains two strong cards after losing the first round")
-        void shouldRaiseWithTwoStrongCardsAfterLosingFirstRound() {
-            vira = TrucoCard.of(JACK, HEARTS);
-            opponentCard = TrucoCard.of(THREE, SPADES);
-            botCards = List.of(
-                    TrucoCard.of(ACE, DIAMONDS),
-                    TrucoCard.of(KING, CLUBS),
-                    TrucoCard.of(TWO, HEARTS)
-            );
-            intel = secondRoundLostFirstRound(botCards, List.of(), vira, opponentCard);
-
-            assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
-        }
-
     }
 
     @Nested
@@ -582,12 +598,6 @@ public class ArmageddonTest {
 
             }
 
-
-
-
-
-
-
         }
 
         @Nested
@@ -612,6 +622,8 @@ public class ArmageddonTest {
 
                 assertThat(response).isEqualTo(-1);
             }
+
+
 
         }
     }
