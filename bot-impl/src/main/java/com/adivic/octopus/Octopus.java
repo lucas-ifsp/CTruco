@@ -284,14 +284,15 @@ public class Octopus implements BotServiceProvider {
         return 0;
     }
 
-    public TrucoCard chooseBetterCardToWinFirstRound(GameIntel intel) {
+    public TrucoCard chooseBetterCardToWinTheRound(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> ourCards = sortCards(intel);
         List<TrucoCard> openCards = intel.getOpenCards();
         List<TrucoCard> myCardsToWin = new ArrayList<>();
         TrucoCard vira = intel.getVira();
 
         if (!openCards.isEmpty()) {
-            TrucoCard opponentCard = openCards.get(0);
+            TrucoCard opponentCard = openCards.get(openCards.size() - 1);
             for (TrucoCard card : ourCards) {
                 if (card.compareValueTo(opponentCard, vira) > 0) {
                     myCardsToWin.add(card);
@@ -338,7 +339,7 @@ public class Octopus implements BotServiceProvider {
         if (hasManilha(intel) && opponentCard.equals(vira.getRank().next()))
             return DREW;
 
-        TrucoCard bestCard = chooseBetterCardToWinFirstRound(intel);
+        TrucoCard bestCard = chooseBetterCardToWinTheRound(intel);
         int comparison = bestCard.compareValueTo(opponentCard, vira);
 
         if (comparison > 0)
