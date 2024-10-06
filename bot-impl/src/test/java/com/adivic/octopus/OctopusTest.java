@@ -241,7 +241,7 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
 
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.of(openCards), vira, 1, 4, 1);
-            assertThat(octopus.chooseBetterCardToWinFirstRound(step.build())).isEqualTo(ourCards.get(1));
+            assertThat(octopus.chooseBetterCardToWinTheRound(step.build())).isEqualTo(ourCards.get(1));
         }
     }
 
@@ -295,6 +295,25 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN),6,
                     4, 1);
             assertThat(octopus.checkIfWeAreFirstToPlay(step.build())).isTrue();
+        }
+
+        @Test
+        @DisplayName("Returns the better card to win the rounds if opponent play first")
+        void returnBetterCardToPlayIfOpponentPlayFirst(){
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+            );
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(opponentCard), vira, 1)
+                    .botInfo(ourCards, 1)
+                    .opponentScore(1)
+                    .opponentCard(opponentCard);
+            assertThat(octopus.cardToPlayFirstRoundIfOpponentPlayFirst(stepBuilder.build()))
+                    .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)));
         }
     }
 
