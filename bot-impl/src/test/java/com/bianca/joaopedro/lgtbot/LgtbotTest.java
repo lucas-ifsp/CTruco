@@ -732,6 +732,23 @@ class LgtbotTest {
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
                 }
 
+                @Test
+                @DisplayName("Bot aumenta os pontos quando oponente está a um ponto de vencer e tem cartas fortes")
+                public void testBotRaisesPoints_WhenOpponentIsOnePointFromWinning_WithStrongCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+                    List<TrucoCard> strongCards = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), List.of(vira), vira, 1)
+                            .botInfo(strongCards, 9)
+                            .opponentScore(11);  // Oponente está a um ponto de vencer.
+
+                    assertTrue(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria aumentar os pontos com cartas fortes.");
+                }
 
 
                 @Test
