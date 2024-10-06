@@ -28,6 +28,8 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
+
 public class TrucoMarreco implements BotServiceProvider {
 
     @Override
@@ -116,4 +118,23 @@ public class TrucoMarreco implements BotServiceProvider {
         }
         return false;
     }
+
+    private TrucoCard cartaMaisForteSemManilha(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        TrucoCard melhorCarta = null; // Inicializa a melhor carta como null
+
+        for (TrucoCard carta : cartas) {
+            // Ignora cartas que são manilhas
+            if (!carta.isManilha(intel.getVira())) {
+                // Se não houver melhor carta ou a carta atual tiver um rank maior, atualiza
+                if (melhorCarta == null || carta.getRank().value() > melhorCarta.getRank().value()) {
+                    melhorCarta = carta;
+                }
+            }
+        }
+
+        return melhorCarta;
+
+    }
+
 }
