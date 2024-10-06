@@ -85,4 +85,22 @@ public class TrucoMarreco implements BotServiceProvider {
         return false;
     }
 
+    private int avaliarForcaDaMao(GameIntel intel) {
+        int forca = 0;
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard carta : intel.getCards()) {
+            // Adiciona a força da carta com base no valor relativo em relação à vira
+            forca += carta.relativeValue(vira);
+        }
+
+     /*
+         Considerar se precisa de um ajuste extra fixo para as manilhas
+        if (temManilhas(intel)) {
+            forca += 5;
+        }
+       */
+        return forca;
+    }
+
 }
