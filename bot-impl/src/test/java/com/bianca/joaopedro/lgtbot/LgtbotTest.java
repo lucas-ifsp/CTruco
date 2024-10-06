@@ -861,6 +861,25 @@ class LgtbotTest {
                             .opponentScore(7);
                     assertEquals(-1, lgtbot.getRaiseResponse(stepBuilder.build()));
                 }
+
+                @Test
+                @DisplayName("Bot recusa truco com todas as cartas fracas e oponente com pontuação alta")
+                public void testShouldRefuseRaise_WithAllWeakCardsAndOpponentHasHighScore() {
+                    TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), List.of(vira), vira, 1)
+                            .botInfo(botCards, 9)
+                            .opponentScore(10);
+
+                    assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar truco com todas as cartas fracas.");
+                }
+
             }
         }
     }
