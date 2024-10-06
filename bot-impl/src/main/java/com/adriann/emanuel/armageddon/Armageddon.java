@@ -152,8 +152,11 @@ public class Armageddon implements BotServiceProvider {
 
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return -1;
 
+
         return 0;
     }
+
+
 
     private boolean hasManilha(List<TrucoCard> cards,TrucoCard vira){
         for (TrucoCard card:cards){

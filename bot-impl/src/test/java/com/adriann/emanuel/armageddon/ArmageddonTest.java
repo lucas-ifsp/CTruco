@@ -538,10 +538,31 @@ public class ArmageddonTest {
                 assertThat(response).isEqualTo(-1);
             }
 
+            @Test
+            @DisplayName("should accept when have two manilhas")
+            void shouldAceptWhenHaveTwoManilhas() {
+                TrucoCard vira = TrucoCard.of(FIVE, DIAMONDS);
+                TrucoCard opponentCard = TrucoCard.of(SIX, CLUBS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SIX, DIAMONDS),
+                        TrucoCard.of(SEVEN, HEARTS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel.StepBuilder intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+
+                int response = armageddon.getRaiseResponse(intel.build());
+
+                assertThat(response).isEqualTo(1);
+
+            }
+
 
 
         }
-
     }
 }
 
