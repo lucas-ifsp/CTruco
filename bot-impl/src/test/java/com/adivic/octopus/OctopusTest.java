@@ -497,7 +497,7 @@ public class OctopusTest {
                     .botInfo(ourCards, 2)
                     .opponentScore(1);
 
-            assertThat(octopus.caseRhreeWhenTwoOfTheCardsAreManilha(stepBuilder.build()))
+            assertThat(octopus.caseThreeWhenTwoOfTheCardsAreManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                             TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
@@ -521,7 +521,7 @@ public class OctopusTest {
                     .botInfo(ourCards, 1)
                     .opponentScore(3);
 
-            assertThat(octopus.caseRhreeWhenTwoOfTheCardsAreManilha(stepBuilder.build()))
+            assertThat(octopus.caseThreeWhenTwoOfTheCardsAreManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                             TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
