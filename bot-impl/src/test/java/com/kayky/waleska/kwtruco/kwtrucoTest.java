@@ -3,6 +3,7 @@ package com.kayky.waleska.kwtruco;
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
 
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -471,6 +472,7 @@ public class kwtrucoTest {
             assertFalse(botCards.stream().anyMatch(card -> card.isManilha(vira)));
         }
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Should not raise if player has only one strong card")
         public void shouldNotRaiseIfPlayerHasOnlyOneStrongCard() {
             TrucoCard goodCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
@@ -499,6 +501,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return True if player has more the one strong card")
         public void returnTrueIfPlayerHasMoreTheOneStrongCard() {
             TrucoCard goodCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
@@ -527,6 +530,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return False When Have Only Low Rank Cards")
         public void returnFalseWhenHaveOnlyLowRankCards() {
 
@@ -548,6 +552,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return false when opponent has strong cards")
         public void returnFalseWhenOpponentHasStrongCards() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
@@ -568,6 +573,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return false when 1 point is missing to win")
         public void returnFalseWhen1PointIsMissingToWin() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
@@ -585,6 +591,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return true if bot have zap")
         void returnTrueIfBotHaveZap() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
@@ -605,6 +612,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return false if Opponent have zap")
         void returnFalseIfOpponentHaveZap() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
@@ -625,6 +633,7 @@ public class kwtrucoTest {
         }
 
         @Test
+        @Tag("DecideIfRaises")
         @DisplayName("Return false if Opponent have more 9 points")
         void returnFalseIfOpponentHaveMore9points() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
@@ -643,6 +652,26 @@ public class kwtrucoTest {
 
             assertFalse(kwtrucoBot.decideIfRaises(stepBuilder.build()));
         }
+        @Test
+        @Tag("getRaiseResponseTests")
+        @DisplayName("Return 1 when bot has manilha and 3")
+        void shouldReturnOneWhenHasManilhaAndHas3() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            List<TrucoCard> one3WithManilhaCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+            );
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(one3WithManilhaCards, 11)
+                    .opponentScore(8);
+
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(1, result);
+        }
+
 
     }
 
