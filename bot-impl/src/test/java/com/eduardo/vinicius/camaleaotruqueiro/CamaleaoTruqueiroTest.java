@@ -760,6 +760,27 @@ public class CamaleaoTruqueiroTest {
                     CardToPlay chosenCard = camaleao.chooseCard(builder.build());
                     assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
                 }
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and does not have high cards")
+                void shouldChooseTheLowestCardWhenBotDoesNotPlayFirstAndDoesNotHaveHighCards(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                }
             }
         }
     }
