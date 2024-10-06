@@ -1,9 +1,6 @@
 package com.eduardo.vinicius.camaleaotruqueiro;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 
@@ -616,6 +613,35 @@ public class CamaleaoTruqueiroTest {
         }
 
     }
+    @Nested
+    @DisplayName("Choose Card")
+    class ChooseCard {
+        @Nested
+        @DisplayName("When is the first round")
+        class IsTheFirstRound {
+            @Nested
+            @DisplayName("When the bot plays first")
+            class TheBotPlaysFirst {
+                @Test
+                @DisplayName("Should choose the greatest card when bot plays first and has two or more high cards")
+                void shouldChooseGreatestCardWhenBotPlaysFirstAndHasTwoOrMoreHighCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
 
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
 
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+            }
+        }
+    }
 }
