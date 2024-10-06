@@ -290,6 +290,15 @@ public class OctopusTest {
 
             assertThat(octopus.whoWonTheRound(stepBuilder.build())).isEqualTo(GameIntel.RoundResult.WON);
         }
+
+        @Test
+        @DisplayName("Returns the first player")
+        void returnsTheFirstPlayer() {
+            GameIntel.StepBuilder step = createStepBuilder(List.of(), Optional.empty(),
+                    TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN),6,
+                    4, 1);
+            assertThat(octopus.checkWithWeAreFirstToPlay(step.build())).isTrue();
+        }
     }
 
     @Nested
