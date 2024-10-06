@@ -1,48 +1,16 @@
 package com.eduardo.vinicius.camaleaotruqueiro;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -653,11 +621,12 @@ public class CamaleaoTruqueiroTest {
 
     }
 
+
     @Nested @DisplayName("Raise Response Method:")
     class RaiseResponseMethod {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-       @Nested @DisplayName("Should responde raise proposal")
-       class ShouldRespondeRaiseProposal {
+        @Nested @DisplayName("Should responde raise proposal")
+        class ShouldRespondeRaiseProposal {
             @Test
             @DisplayName("when having more then one manilhas")
             void WhenHavingMoreThenOneManilhas() {
@@ -675,7 +644,7 @@ public class CamaleaoTruqueiroTest {
                 assertThat(camaleao.getRaiseResponse(builder.build())).isEqualTo(1);
 
             }
-       }
+        }
         @Nested @DisplayName("Should only accept raise proposal when:")
         class ShouldOnlyAcceptRaiseProposal{
 
@@ -751,4 +720,300 @@ public class CamaleaoTruqueiroTest {
     }
 
 
+    @Nested
+    @DisplayName("Choose Card")
+    class ChooseCard {
+        @Nested
+        @DisplayName("When is the first round")
+        class IsTheFirstRound {
+            @Nested
+            @DisplayName("When the bot plays first")
+            class TheBotPlaysFirst {
+                @Test
+                @DisplayName("Should choose the greatest card when bot plays first and has two or more high cards")
+                void shouldChooseGreatestCardWhenBotPlaysFirstAndHasTwoOrMoreHighCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+                @Test
+                @DisplayName("Should choose the lowest card when bot plays first and has less than two high cards")
+                void shouldChooseLowestCardWhenBotPlaysFirstAndHasLessThanTwoHighCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+                }
+            }
+            @Nested
+            @DisplayName("When the bot plays later")
+            class TheBotPlaysLater {
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and has two or more strongest cards")
+                void shouldChooseLowestCardWhenBotDoesNotPlayFirstAndHasTwoOrMoreStrongestCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    builder.opponentCard(opponentCard);
+
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
+                }
+                @Test
+                @DisplayName("Should choose the greatest card when bot does not play first and has one high card better than opponent card")
+                void shouldChooseGreatestCardWhenBotDoesNotPlayFirstAndHasOneHighCardBetterThanOpponentCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+                @Test
+                @DisplayName("Should choose the lowes card when bot does not play first and has one high card weakness than opponent card")
+                void shouldChooseTheLowesCardWhenBotDoesNotPlayFirstAndHasOneHighCardWeaknessThanOpponentCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                }
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and does not have high cards")
+                void shouldChooseTheLowestCardWhenBotDoesNotPlayFirstAndDoesNotHaveHighCards(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                }
+            }
+        }
+        @Nested
+        @DisplayName("When is the second round")
+        class IsTheSecondRound {
+            @Nested
+            @DisplayName("When the bot plays first")
+            class TheBotPlaysFirst {
+                @Test
+                @DisplayName("Should choose the greatest card when bot plays first and has two or more high cards")
+                void shouldChooseGreatestCardWhenBotPlaysFirstAndHasTwoOrMoreHighCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+                @Test
+                @DisplayName("Should choose the lowest card when bot plays first and has less than two high cards")
+                void shouldChooseLowestCardWhenBotPlaysFirstAndHasLessThanTwoHighCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+                }
+            }
+            @Nested
+            @DisplayName("When the bot plays later")
+            class TheBotPlaysLater {
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and has two strongest cards")
+                void shouldChooseLowestCardWhenBotDoesNotPlayFirstAndHasTwoOrMoreStrongestCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    builder.opponentCard(opponentCard);
+
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+                }
+
+                @Test
+                @DisplayName("Should choose the greatest card when bot does not play first and has one high card better than opponent card")
+                void shouldChooseGreatestCardWhenBotDoesNotPlayFirstAndHasOneHighCardBetterThanOpponentCard() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+                @Test
+                @DisplayName("Should choose the lowes card when bot does not play first and has one high card weakness than opponent card")
+                void shouldChooseTheLowesCardWhenBotDoesNotPlayFirstAndHasOneHighCardWeaknessThanOpponentCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                }
+                @Test
+                @DisplayName("Should choose the lowest card when bot does not play first and does not have high cards")
+                void shouldChooseTheLowestCardWhenBotDoesNotPlayFirstAndDoesNotHaveHighCards(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
+                    );
+                    List<TrucoCard> openCards = Arrays.asList(vira, opponentCard);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+                }
+            }
+        }
+        @Nested
+        @DisplayName("When is the third round")
+        class IsTheThirdRound{
+            @Nested
+            @DisplayName("The bot plays the last card")
+            class TheLastCard{
+                @Test
+                @DisplayName("should return the last card")
+                void shouldReturnTheLastCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    List<TrucoCard> cards = List.of(
+                            TrucoCard.of(CardRank.ACE,CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON,GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                }
+            }
+        }
+    }
 }
