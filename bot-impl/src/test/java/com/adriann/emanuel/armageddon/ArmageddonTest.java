@@ -444,7 +444,7 @@ public class ArmageddonTest {
         // Fist round --------------------------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of first round to decideIfRaises")
-        class FirstRound {
+        class FirstRoundFirstToPlayTest {
 
             @Test
             @DisplayName("Should raise when the hand contains only one strong card")
