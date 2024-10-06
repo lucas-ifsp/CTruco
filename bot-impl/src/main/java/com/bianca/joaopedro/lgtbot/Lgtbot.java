@@ -213,6 +213,30 @@ public class Lgtbot implements BotServiceProvider{
                 .orElseThrow();
     }
 
+    public TrucoCard getBestCardToPlay(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+
+        List<CardRank> rankOrder = List.of(CardRank.ACE, CardRank.KING, CardRank.QUEEN, CardRank.JACK,
+                CardRank.TWO, CardRank.THREE, CardRank.FOUR,
+                CardRank.FIVE, CardRank.SIX, CardRank.SEVEN);
+
+        TrucoCard bestCard = null;
+        int highestRankIndex = -1;
+
+        for (TrucoCard card : myCards) {
+            int currentRankIndex = rankOrder.indexOf(card.getRank());
+
+            if (currentRankIndex > highestRankIndex) {
+                highestRankIndex = currentRankIndex;
+                bestCard = card;
+            }
+        }
+
+        return bestCard;
+    }
+
+
+
     // Método que verifica se o bot deve aceitar a mão de onze
     public boolean getMaoDeOnzeResponse(List<TrucoCard> hand, int opponentScore) {
 
@@ -226,6 +250,7 @@ public class Lgtbot implements BotServiceProvider{
         return false;
     }
 
+    //Blefe
     public boolean shouldBluff(GameIntel intel) {
         int myScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
