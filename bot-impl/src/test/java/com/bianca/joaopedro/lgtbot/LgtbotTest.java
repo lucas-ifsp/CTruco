@@ -715,6 +715,24 @@ class LgtbotTest {
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)), lgtbot.chooseCard(stepBuilder.build()));
                 }
 
+                @Test
+                @DisplayName("Deve jogar a carta mais forte se empatou a primeira rodada e tem cartas fortes")
+                public void testShouldPlayStrongestCard_IfDrewFirstRoundWithTwoStrongCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+                    List<TrucoCard> strongCards = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.DREW), List.of(vira), vira, 1)
+                            .botInfo(strongCards, 9)
+                            .opponentScore(7);
+
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+
+
 
                 @Test
                 @DisplayName("Deve fugir se tiver 2 cartas ruins")
