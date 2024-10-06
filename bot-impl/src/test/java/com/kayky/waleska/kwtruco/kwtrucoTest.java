@@ -657,7 +657,7 @@ public class kwtrucoTest {
         @DisplayName("Return 1 when bot has manilha and 3")
         void shouldReturnOneWhenHasManilhaAndHas3() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-            List<TrucoCard> one3WithManilhaCards = Arrays.asList(
+            List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
@@ -665,13 +665,30 @@ public class kwtrucoTest {
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
-                    .botInfo(one3WithManilhaCards, 11)
+                    .botInfo(botCards, 11)
                     .opponentScore(8);
 
             int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
             assertEquals(1, result);
         }
+        @Test
+        @Tag("getRaiseResponseTests")
+        @DisplayName("Return 1 when bot has Zap")
+        void shouldReturnOneWhenHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
 
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8);
+
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(1, result);
+        }
 
     }
 
