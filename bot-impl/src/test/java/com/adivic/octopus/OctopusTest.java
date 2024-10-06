@@ -297,7 +297,7 @@ public class OctopusTest {
             GameIntel.StepBuilder step = createStepBuilder(List.of(), Optional.empty(),
                     TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN),6,
                     4, 1);
-            assertThat(octopus.checkWithWeAreFirstToPlay(step.build())).isTrue();
+            assertThat(octopus.checkIfWeAreFirstToPlay(step.build())).isTrue();
         }
     }
 
