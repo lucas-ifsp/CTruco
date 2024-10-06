@@ -750,6 +750,23 @@ class LgtbotTest {
                     assertTrue(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria aumentar os pontos com cartas fortes.");
                 }
 
+                @Test
+                @DisplayName("Bot joga carta mais fraca após perder primeira rodada com cartas medianas")
+                public void testBotPlaysWeakestCard_AfterLosingFirstRound_WithAverageCards() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+                    List<TrucoCard> averageCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                            .botInfo(averageCards, 9)
+                            .opponentScore(6);
+
+                    assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
+                }
+
 
                 @Test
                 @DisplayName("Deve fugir se tiver 2 cartas ruins")
