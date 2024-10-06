@@ -32,6 +32,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CamaleaoTruqueiroTest {
 
@@ -539,5 +545,77 @@ public class CamaleaoTruqueiroTest {
 
         assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
     }
+
+    @Nested @DisplayName("Decides If Raises")
+    class DecideIfRaises{
+
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        @Nested @DisplayName("When is first round and bot don´t play first and...")
+        class DecideIfRaisesWhenIsFirstRoundAndBotPlaysFirst{
+            List<TrucoCard> openCards = Arrays.asList(
+                    vira,
+                    opponentCard
+                    );
+            @Nested @DisplayName("Bot has the Strongest card")
+            class BotHasTheStrongestCard {
+                @Test
+                @DisplayName("Number of high cards is greater then one")
+                void NumberOfHighCardsIsGreaterThenOne() {
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                    );
+                    GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(),openCards,vira,1)
+                            .botInfo(cards,0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+                    assertTrue(camaleao.decideIfRaises(builder.build()));
+                }
+
+                @Test
+                @DisplayName("has one high card and more then zero median cards")
+                void HasOneHighCardAndMoreThenZeroMedianCards() {
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+                    );
+                    GameIntel.StepBuilder builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(),openCards,vira,1)
+                            .botInfo(cards,0)
+                            .opponentScore(0)
+                            .opponentCard(opponentCard);
+                    assertTrue(camaleao.decideIfRaises(builder.build()));
+                }
+            }
+
+            @Test
+            @DisplayName("When has two or more high cards")
+            void whenHasTwoOrMoreHighCards() {
+
+                org.junit.jupiter.api.Assertions.fail();
+            }
+
+        }
+
+        @Test @DisplayName("When number of high cards are greater or equal then 2")
+        void NumberOfHighCardsAreGreaterOrEqualThenTwo() {
+        }
+
+        @Test @DisplayName("When number of high cards are equal then one")
+        void NumberOfHighCardsAreGreaterOrEqualThenOne() {
+        }
+
+        @Test
+        @DisplayName("When any the other conditions were valid")
+        void whenAnyTheOtherConditionsWereValid() {
+
+        }
+
+    }
+
 
 }
