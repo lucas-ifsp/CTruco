@@ -769,7 +769,7 @@ public class TheRoverTest {
     class getLowestManilhaInHandTest{
 
         @Test
-        @DisplayName("When has three manilhas in hand sould return lowest")
+        @DisplayName("When has three manilhas in hand should return lowest")
         void WhenHasThreeManilhasInHandSouldReturnLowest(){
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
@@ -788,8 +788,8 @@ public class TheRoverTest {
         }
 
         @Test
-        @DisplayName("When has one manilha in hand sould return that manilha")
-        void WhenHasOneManilhaInHandSouldReturnThatManilha(){
+        @DisplayName("When has one manilha in hand should return that manilha")
+        void WhenHasOneManilhaInHandShouldReturnThatManilha(){
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
             List<TrucoCard> cards = List.of(
@@ -804,6 +804,25 @@ public class TheRoverTest {
                     .opponentScore(0);
 
             assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),theRover.getLowestManilhaInHand(stepBuilder.build()));
+        }
+
+        @Test
+        @DisplayName("When has no manilha in hand should return null")
+        void WhenHasNoManilhaInHandShouldReturnNull(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertNull(theRover.getLowestManilhaInHand(stepBuilder.build()));
         }
 
     }
