@@ -560,6 +560,29 @@ public class ArmageddonTest {
 
             }
 
+            @Test
+            @DisplayName("should accept when have has higher couple")
+            void shouldAceptWhenHaveHasHigherCouple() {
+                TrucoCard vira = TrucoCard.of(JACK, CLUBS);
+                TrucoCard opponentCard = TrucoCard.of(QUEEN, DIAMONDS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(KING, CLUBS),
+                        TrucoCard.of(KING, HEARTS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                intel = secondRoundLostFirstRound(botCards, openCards, vira, opponentCard);
+
+                int response = armageddon.getRaiseResponse(intel.build());
+
+                assertThat(response).isEqualTo(1);
+
+            }
+
+
 
 
         }
