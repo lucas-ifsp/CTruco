@@ -373,4 +373,24 @@ public class OctopusTest {
             assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(-1);
         }
     }
+    @Nested
+    @DisplayName("Testing choose cards methods")
+    class ChooseCardsMethods{
+        @Test
+        @DisplayName("Return case one when none of the cards are strong in the hand")
+        void returnCaseOneWhenNoneOfTheCardsAreStrongInTheHand(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES));
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
+            assertThat(octopus.caseOneWhenNoneOfTheCardsAreStrong(step.build()))
+                    .containsExactly(
+                            TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+        }
+
+    }
 }
