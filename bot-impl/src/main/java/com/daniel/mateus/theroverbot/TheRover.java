@@ -89,6 +89,10 @@ public class TheRover implements BotServiceProvider {
         return cardToPlay;
     }
 
+    public int countManilhasInHand(GameIntel intel){
+        return 0;
+    }
+
     public TrucoCard getLowestCardInHandThatBeatOpponentCard (GameIntel intel) {
 
         if(intel.getOpponentCard().isEmpty()) {
