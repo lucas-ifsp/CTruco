@@ -149,11 +149,16 @@ public class Armageddon implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> botCards = intel.getCards();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
 
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return -1;
 
-
+        if (roundResults.size() >= 1 && roundResults.get(0) == GameIntel.RoundResult.WON) {
+            if (!hasTwoManilhas(botCards, vira) && !hasHigherCouple(botCards, vira)) {
+                return -1;
+            }
+        }
 
         if (hasTwoManilhas(botCards, vira) && (!hasHigherCouple(botCards, vira))) return 1;
 
