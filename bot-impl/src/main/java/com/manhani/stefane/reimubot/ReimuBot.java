@@ -49,8 +49,8 @@ public class ReimuBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         if(isFirstToPlayRound(intel))
-            return CardToPlay.of(FirstToPlayStrategy(intel));
-        return CardToPlay.of(LastToPlayStrategy(intel));
+            return CardToPlay.of(FirstToPlayChooseCardStrategy(intel));
+        return CardToPlay.of(LastToPlayChooseCardStrategy(intel));
     }
 
     @Override
@@ -111,18 +111,18 @@ public class ReimuBot implements BotServiceProvider {
     private boolean canWinWithoutMaior(GameIntel intel){
         return canDefeatOpponentCard(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
     }
-    //return a list, check if empty to know if any are not maior
+    
+    //returns a list, check if empty to know if any are not maior
     private List<TrucoCard> tryGetCardsThatAreNotMaior(GameIntel intel){
         return intel.getCards().stream().filter(c-> !c.isZap(intel.getVira())&&!c.isCopas(intel.getVira())).toList();
     }
     
-    
-    private TrucoCard FirstToPlayStrategy(GameIntel intel){
+    private TrucoCard FirstToPlayChooseCardStrategy(GameIntel intel){
         if(isFirstRound(intel)) return getWeakestCard(tryGetCardsThatAreNotMaior(intel), intel.getVira());
         return getWeakestCard(intel);
     }
     
-    private TrucoCard LastToPlayStrategy(GameIntel intel) {
+    private TrucoCard LastToPlayChooseCardStrategy(GameIntel intel) {
         if (canDefeatOpponentCard(intel)){
             if (isFirstRound(intel) && canWinWithoutMaior(intel))
                 return getWeakestCardThatWins(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
