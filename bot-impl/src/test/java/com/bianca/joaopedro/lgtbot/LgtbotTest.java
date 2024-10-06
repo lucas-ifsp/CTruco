@@ -880,6 +880,25 @@ class LgtbotTest {
                     assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar truco com todas as cartas fracas.");
                 }
 
+                @Test
+                @DisplayName("Bot deve blefar quando está perdendo por pouco e tem cartas fracas")
+                public void testShouldBluff() {
+                    List<TrucoCard> botCards = List.of(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+                    );
+
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getScore()).thenReturn(8);
+                    when(intel.getOpponentScore()).thenReturn(10);
+                    when(intel.getCards()).thenReturn(botCards);
+
+                    boolean shouldBluff = lgtbot.shouldBluff(intel);
+                    assertTrue(shouldBluff, "O bot deveria blefar.");
+                }
+
+
             }
         }
     }
