@@ -947,6 +947,23 @@ class LgtbotTest {
                     assertEquals(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)), lgtbot.chooseCard(stepBuilder.build()));
                 }
 
+                @Test
+                @DisplayName("Bot deve aceitar truco com mão forte e oponente com 9 pontos")
+                void testAcceptTrucoWithStrongHandAndOpponentScore9() {
+                    TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+                    List<TrucoCard> strongHand = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+                    );
+
+                    stepBuilder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), List.of(vira), vira, 1)
+                            .botInfo(strongHand, 9)
+                            .opponentScore(9);
+
+                    assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
+                }
+
             }
         }
     }
