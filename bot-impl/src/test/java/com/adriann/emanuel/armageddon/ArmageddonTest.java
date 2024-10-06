@@ -441,6 +441,8 @@ public class ArmageddonTest {
     @DisplayName("Tests to decide if raises")
     class DecideIfRaise {
 
+
+        // Fist round --------------------------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of first round to decideIfRaises")
         class FirstRound {
@@ -482,8 +484,12 @@ public class ArmageddonTest {
 
                 assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
             }
+        }
 
-
+        // Second round won first round  ------------------------------------------------------------------------------
+        @Nested
+        @DisplayName("Tests to implement logic of second round won first round to decideIfRaises")
+        class SecondRoundWonFirstRoundTest {
 
             @Test
             @DisplayName("Should call truco in the second round after winning the first round")
@@ -528,6 +534,7 @@ public class ArmageddonTest {
     @DisplayName("Tests to decide if not raises")
     class DecideIfNotRaises {
 
+        // Fist round --------------------------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of first round to decideIfNotRaises")
         class FirstRound{
@@ -599,6 +606,7 @@ public class ArmageddonTest {
 
         }
 
+        // Second round won first round --------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of second round won first round to decideIfNotRaises")
         class secondRoundWonFirstRoundTests {
@@ -621,8 +629,6 @@ public class ArmageddonTest {
 
                 assertThat(response).isEqualTo(-1);
             }
-
-
 
         }
     }
