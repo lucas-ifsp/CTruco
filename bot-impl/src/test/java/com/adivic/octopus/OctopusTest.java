@@ -760,6 +760,23 @@ public class OctopusTest {
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)));
             }
 
+            @Test
+            @DisplayName("Return the card to be played in the second round when there is three strong cards and when LOST in the first round")
+            void returnCardToPlayInSecondRoundWhenHaveThreeStrongCardsAndLostInTheFirstRound() {
+                TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+
+                List<TrucoCard> ourCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
+                        .botInfo(ourCards, 1)
+                        .opponentScore(2);
+                assertThat(octopus.cardToPlaySecondRoundWhenThreeStrongCards(stepBuilder.build()))
+                        .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.SPADES)));
+            }
         }
     }
 }
