@@ -308,31 +308,25 @@ class LgtbotTest {
         }
 
         @Test
-        @DisplayName("Bot recusa truco quando tem cartas fracas")
-        public void testShouldNotRaisePoints_WhenBotHasWeakCards() {
-            // Define a "vira" (carta virada na mesa)
-            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        @DisplayName("Bot deve aumentar truco com cartas que considera boas")
+        public void testShouldRaisePoints_WithGoodCards() {
 
-            // Define as cartas fracas do bot
-            List<TrucoCard> weakCards = List.of(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),  // Dama de Ouros
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),    // Três de Copas
-                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)      // Quatro de Espadas
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
             );
 
-            // Cartas abertas no jogo
-            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> openCards = List.of(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
 
-            // Configura o estado do jogo
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), openCards, vira, 1)  // Informações do jogo
-                    .botInfo(weakCards, 10)  // Cartas e pontuação do bot
-                    .opponentScore(9);       // Pontuação do oponente
+                    .gameInfo(List.of(), openCards, TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), 1)
+                    .botInfo(goodCards, 10)
+                    .opponentScore(9);
 
-            // Verifica se o bot NÃO decide aumentar os pontos (esperado: false)
-            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()), "O bot deveria recusar aumentar os pontos com cartas fracas.");
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()),
+                    "O bot deveria aumentar os pontos com essas cartas que ele considera boas.");
         }
-
 
 
         @Nested
