@@ -14,7 +14,7 @@ public class TheRover implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return getCurrentRound(intel) == 2 && isPlayingFirst(intel) && handHasCardOverRelativeValue(intel, 8);
     }
 
     @Override
