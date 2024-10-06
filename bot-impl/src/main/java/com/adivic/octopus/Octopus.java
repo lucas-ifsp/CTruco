@@ -168,6 +168,10 @@ public class Octopus implements BotServiceProvider {
         );
     }
 
+    public CardToPlay cardToPlayFirstRoundWhenThreeStrongCards(GameIntel intel){
+        return null;
+    }
+
     public boolean hasManilha(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
