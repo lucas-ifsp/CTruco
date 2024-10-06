@@ -521,4 +521,23 @@ public class CamaleaoTruqueiroTest {
         assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
     }
 
+    @Test
+    @DisplayName("Should accept maoDeOnze when opponent score is less then 9 points and has one strong card")
+    void shouldAcceptMaoDeOnzeWhenOpponentScoreIsLessThen9PointsAndHasOneStrongCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        List<TrucoCard> cards = Arrays.asList(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        builder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(),openCards,vira,3)
+                .botInfo(cards,0)
+                .opponentScore(8);
+
+        assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
+    }
+
 }
