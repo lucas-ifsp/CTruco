@@ -28,6 +28,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class TrucoMarreco implements BotServiceProvider {
@@ -124,7 +125,7 @@ public class TrucoMarreco implements BotServiceProvider {
         TrucoCard melhorCarta = null; // Inicializa a melhor carta como null
 
         for (TrucoCard carta : cartas) {
-            // Ignora cartas que são manilhas
+
             if (!carta.isManilha(intel.getVira())) {
                 // Se não houver melhor carta ou a carta atual tiver um rank maior, atualiza
                 if (melhorCarta == null || carta.getRank().value() > melhorCarta.getRank().value()) {
@@ -137,4 +138,48 @@ public class TrucoMarreco implements BotServiceProvider {
 
     }
 
+
+
+    private TrucoCard cartaMaisFracaSemManilha(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        TrucoCard cartaMaisFraca = null;
+        int menorValor = Integer.MAX_VALUE;
+
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard carta : cartas) {
+
+            if (!carta.isManilha(vira)) {
+                int valorRelativo = carta.relativeValue(vira); // Obtém o valor relativo da carta
+
+                // Verifica se o valor relativo é menor que o menor valor encontrado
+                if (valorRelativo < menorValor) {
+                    menorValor = valorRelativo;
+                    cartaMaisFraca = carta;
+                }
+            }
+        }
+
+        return cartaMaisFraca;
+    }
+
+
+     private TrucoCard encontrarCarta(GameIntel intel, Comparator<TrucoCard> comparador) {
+        List<TrucoCard> cartas = intel.getCards();
+        TrucoCard melhorCarta = null; // Inicializa a melhor carta como null
+
+        TrucoCard vira = intel.getVira(); // Obtenha a carta vira
+
+        for (TrucoCard carta : cartas) {
+            // Ignora cartas que são manilhas
+            if (!carta.isManilha(vira)) {
+                // Se não houver melhor carta ou a carta atual satisfaz o comparador, atualiza
+                if (melhorCarta == null || comparador.compare(carta, melhorCarta) > 0) {
+                    melhorCarta = carta; // Atualiza a melhor carta
+                }
+            }
+        }
+
+        return melhorCarta; // Retorna a melhor carta encontrada ou null se não houver
+    }
 }
