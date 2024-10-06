@@ -703,4 +703,27 @@ public class TheRoverTest {
             assertFalse(theRover.decideIfRaises(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("count manilhas in hand")
+    class countManilhasInHandTest{
+
+        @Test
+        @DisplayName("When has no manilha should return zero")
+        void WhenHasNoManilhaShouldReturnZero(){
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.countManilhasInHand(stepBuilder.build()));
+        }
+    }
 }
