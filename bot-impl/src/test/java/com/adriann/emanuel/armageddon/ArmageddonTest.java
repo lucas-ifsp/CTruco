@@ -442,7 +442,7 @@ public class ArmageddonTest {
     class DecideIfRaise {
 
         @Nested
-        @DisplayName("Tests to implement logic of second round to decideIfRaises")
+        @DisplayName("Tests to implement logic of first round to decideIfRaises")
         class FirstRound {
 
             @Test
@@ -457,7 +457,7 @@ public class ArmageddonTest {
 
                 List<TrucoCard> openCards = List.of(opponentCard);
 
-                intel = maoDeOnze(botCards, vira);
+                intel = firstRoundFirstToPlay(botCards, vira);
 
                 assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
             }
@@ -477,8 +477,8 @@ public class ArmageddonTest {
 
                 GameIntel intel = GameIntel.StepBuilder.with()
                         .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 2)
-                        .botInfo(botCards, 1)
-                        .opponentScore(1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
                         .build();
 
                 assertThat(armageddon.hasManilhaAndThree(botCards, vira)).isTrue();
