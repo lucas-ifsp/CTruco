@@ -429,8 +429,11 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES));
 
-            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
-            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(step.build()))
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
+                    .botInfo(ourCards, 9)
+                    .opponentScore(8);
+            assertThat(octopus.caseTwoWhenOneOfTheCardsAreStrongAndIsNotManilha(stepBuilder.build()))
                     .containsExactly(
                             TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
