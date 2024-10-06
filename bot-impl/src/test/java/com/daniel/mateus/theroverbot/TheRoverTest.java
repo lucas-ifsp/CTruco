@@ -849,5 +849,23 @@ public class TheRoverTest {
 
             assertEquals(TrucoCard.of(CardRank.THREE, CardSuit.SPADES),theRover.getHighestCardInHand(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("When has two cards should return highest")
+        void WhenHasTwoCardsShouldReturnHighest(){
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.SPADES),theRover.getHighestCardInHand(stepBuilder.build()));
+        }
     }
 }
