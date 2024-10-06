@@ -914,5 +914,30 @@ public class CamaleaoTruqueiroTest {
                 }
             }
         }
+        @Nested
+        @DisplayName("When is the third round")
+        class IsTheThirdRound{
+            @Nested
+            @DisplayName("The bot plays the last card")
+            class TheLastCard{
+                @Test
+                @DisplayName("should return the last card")
+                void shouldReturnTheLastCard(){
+                    TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+                    List<TrucoCard> cards = List.of(
+                            TrucoCard.of(CardRank.ACE,CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.WON,GameIntel.RoundResult.WON), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+                }
+            }
+        }
     }
 }
