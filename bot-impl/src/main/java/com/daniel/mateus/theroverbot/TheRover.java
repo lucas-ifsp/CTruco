@@ -54,16 +54,7 @@ public class TheRover implements BotServiceProvider {
         if (isPlayingFirst(intel)) {
 
             if(countManilhasInHand(intel) >= 2) {
-                TrucoCard lowestManilha = intel.getCards().get(0);
-                for(int i = 0; i < intel.getCards().size(); i++) {
-                    TrucoCard currentCard = intel.getCards().get(i);
-                    if ((currentCard.relativeValue(intel.getVira()) < lowestManilha.relativeValue(intel.getVira()) &&
-                            currentCard.isManilha(intel.getVira())) || !lowestManilha.isManilha(intel.getVira()) )  {
-                        lowestManilha = currentCard;
-                    }
-
-                }
-                return lowestManilha;
+               return getLowestManilhaInHand(intel);
             }
 
             TrucoCard highestCard = intel.getCards().get(0);
@@ -103,6 +94,10 @@ public class TheRover implements BotServiceProvider {
 
         }
         return lowestManilha;
+    }
+
+    public TrucoCard getHighestCardInHand() {
+        return null;
     }
 
     public TrucoCard getLowestCardInHandThatBeatOpponentCard (GameIntel intel) {
