@@ -932,5 +932,24 @@ public class TheRoverTest {
 
             assertTrue(theRover.getMaoDeOnzeResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should Not Play With Low Cards And Opponent Score Higher Than Five")
+        void ShouldNotPlayWithLowCardsAndOpponentScoreHigherThanFive() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(6);
+
+            assertFalse(theRover.getMaoDeOnzeResponse(stepBuilder.build()));
+        }
     }
 }
