@@ -636,8 +636,8 @@ public class TheRoverTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
             TrucoCard opponentCard = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN,CardSuit.SPADES)
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
             );
 
             stepBuilder = GameIntel.StepBuilder.with()
@@ -655,9 +655,9 @@ public class TheRoverTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
 
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN,CardSuit.SPADES)
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
             );
 
             stepBuilder = GameIntel.StepBuilder.with()
@@ -674,9 +674,8 @@ public class TheRoverTest {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE,CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.THREE,CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN,CardSuit.SPADES)
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)
             );
 
             stepBuilder = GameIntel.StepBuilder.with()
@@ -686,7 +685,5 @@ public class TheRoverTest {
 
             assertTrue(theRover.decideIfRaises(stepBuilder.build()));
         }
-
-
     }
 }
