@@ -687,6 +687,25 @@ public class OctopusTest {
                 assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
                         .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)));
             }
+
+            @Test
+            @DisplayName("Return the card to be played in the second round when there is one or two strong card and when there is not manilha and WON in the first round")
+            void returnCardToPlayInSecondRoundWhenHaveOneOrTwoStrongCardsAndNotManilhaAndWonInTheFirstRound() {
+                TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+
+                List<TrucoCard> ourCards = List.of(
+                        TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+
+                GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                        .botInfo(ourCards, 1)
+                        .opponentScore(2);
+                assertThat(octopus.cardToPlaySecondRoundWhenOneStrongCards(stepBuilder.build()))
+                        .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)));
+            }
+
         }
     }
 }
