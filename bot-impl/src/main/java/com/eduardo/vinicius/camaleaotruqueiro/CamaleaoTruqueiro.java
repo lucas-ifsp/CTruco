@@ -13,6 +13,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
         if(getNumberOfHighCards(cards,vira) >= 2 && numberOfManilhas(cards,vira) >= 1) return true;
+        else if (intel.getOpponentScore() < 9 && getNumberOfHighCards(cards,vira) >= 1) return true;
         else return false;
     }
 
