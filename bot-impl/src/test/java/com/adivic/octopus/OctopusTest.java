@@ -591,7 +591,7 @@ public class OctopusTest {
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(),
                     vira, 2, 5, 1);
             assertThat(octopus.cardToPlayFirstRoundWhenZeroStrongCards(step.build()))
-                    .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)));
+                    .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)));
         }
     }
 }
