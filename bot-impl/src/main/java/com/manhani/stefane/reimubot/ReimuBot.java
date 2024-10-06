@@ -23,6 +23,7 @@
 
 package com.manhani.stefane.reimubot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -35,6 +36,8 @@ public class ReimuBot implements BotServiceProvider {
     public static final int REFUSE = -1;
     public static final int ACCEPT = 0;
     public static final int RERAISE = 1;
+    
+    public static final int TWO_STRONG_CARDS_VALUE_LIMIT = 18;
     
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -57,8 +60,12 @@ public class ReimuBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         if(hasTwoManilhas(intel))
             return RERAISE;
-        if(wonFirstRound(intel) && hasMaior(intel))
+        if(getHandValue(intel) >= TWO_STRONG_CARDS_VALUE_LIMIT)
+            return ACCEPT;
+        if(isSecondRound(intel) && wonFirstRound(intel) && hasMaior(intel)) 
             return RERAISE;
+        if(isSecondRound(intel) && wonFirstRound(intel) && amountOfThreesInHand(intel) >= 1)
+            return ACCEPT;
         return REFUSE;
     }
     
@@ -126,6 +133,10 @@ public class ReimuBot implements BotServiceProvider {
     
     private boolean hasMaior(GameIntel intel){
         return intel.getCards().stream().anyMatch(c->c.isZap(intel.getVira()) || c.isCopas(intel.getVira()));
+    }
+    
+    private int amountOfThreesInHand(GameIntel intel){
+        return (int) intel.getCards().stream().filter(c->c.getRank() == CardRank.THREE).count();
     }
     
     //returns a list, check if empty to know if any are not maior
