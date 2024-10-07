@@ -35,7 +35,32 @@ public class Octopus implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        try {
+            switch (intel.getRoundResults().size() + 1) {
+                case 1 -> {
+                    if(checkIfWeAreFirstToPlay(intel))
+                        return chooseFirstRoundPlay(intel);
+                    else
+                        return CardToPlay.of(chooseBetterCardToWinTheRound(intel));
+                }
+                case 2 -> {
+                    if(checkIfWeAreFirstToPlay(intel))
+                        return chooseSecondRoundPlay(intel);
+                    else
+                        return CardToPlay.of(chooseBetterCardToWinTheRound(intel));
+                }
+                case 3 -> {
+                    return chooseLastRoundPlay(intel);
+                }
+                default -> {
+                    List<TrucoCard> cards = sortCards(intel);
+                    return CardToPlay.of(cards.get(cards.size() - 1));
+                }
+            }
+        } catch (Exception e) {
+            List<TrucoCard> cards = sortCards(intel);
+            return CardToPlay.of(cards.get(cards.size() - 1));
+        }
     }
 
     @Override
