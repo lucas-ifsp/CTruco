@@ -1060,7 +1060,7 @@ public class TheRoverTest {
         @Test
         @DisplayName("Should accept when won one hand and has card with relative value greater than eight")
         void ShouldAcceptWhenWonOneHandAndHasCardWithRelativeValueGreaterThanEight() {
-            List<GameIntel.RoundResult> results = List.of();
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.WON);
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
             List<TrucoCard> cards = List.of(
@@ -1079,7 +1079,7 @@ public class TheRoverTest {
         @Test
         @DisplayName("Should rise when won one hand and has two card with relative value greater than eight")
         void ShouldRiseWhenWonOneHandAndHasTwoCardWithRelativeValueGreaterThanEight() {
-            List<GameIntel.RoundResult> results = List.of();
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.WON);
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
             List<TrucoCard> cards = List.of(
