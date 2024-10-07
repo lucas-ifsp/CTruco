@@ -151,6 +151,12 @@ public class TheRover implements BotServiceProvider {
     }
 
     public int countCardsInHandOverRelativeValue (GameIntel intel, int relativeValue) {
-        return 0;
+        int cardQtd = 0;
+        for(int i = 0; i < intel.getCards().size(); i++) {
+            if(intel.getCards().get(i).relativeValue(intel.getVira()) > relativeValue) {
+                cardQtd++;
+            }
+        }
+        return cardQtd;
     }
 }
