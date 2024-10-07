@@ -59,4 +59,24 @@ public class BotEcoTest {
         CardToPlay selectedCard = botEco.chooseCard(step);
         assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
     }
+
+    @Test
+    @DisplayName("Should avoid using manilhas in the first round")
+    void avoidUsingManilhasFirstRound() {
+        List<TrucoCard> botEcoHand = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+        );
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        GameIntel step = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botEcoHand, 0)
+                .opponentScore(0).opponentCard(opponentCard)
+                .build();
+
+        CardToPlay selectedCard = botEco.chooseCard(step);
+        assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
+    }
 }
