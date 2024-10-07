@@ -306,5 +306,38 @@ public class Armageddon implements BotServiceProvider {
         return false;
     }
 
+    public TrucoCard playBestCard(GameIntel intel) {
+        List<TrucoCard> playerHand = intel.getCards();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        TrucoCard vira = intel.getVira();
+
+        TrucoCard strongestCard = playerHand.get(0);
+        for (TrucoCard card : playerHand) {
+            if (card.compareValueTo(strongestCard, vira) > 0) {
+                strongestCard = card;
+            }
+        }
+
+        if (opponentCard.isPresent()) {
+            TrucoCard opponent = opponentCard.get();
+            if (strongestCard.compareValueTo(opponent, vira) > 0) {
+                return strongestCard;
+            } else {
+                TrucoCard weakestCard = playerHand.get(0);
+                for (TrucoCard card : playerHand) {
+                    if (card.compareValueTo(weakestCard, vira) < 0) {
+                        weakestCard = card;
+                    }
+                }
+                return weakestCard;
+            }
+        }
+
+        return strongestCard;
+    }
+
+
+
+
 
 }
