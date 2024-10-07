@@ -198,6 +198,21 @@ public class ArmageddonTest {
 
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isFalse();
         }
+
+        @Test
+        @DisplayName("should acept mao de onze with three cards three")
+        void shouldAceptMaoDeOnzeWithThreeCardsThree(){
+            vira = TrucoCard.of(JACK,SPADES);
+            botCards = List.of(
+                    TrucoCard.of(THREE,SPADES),
+                    TrucoCard.of(THREE,HEARTS),
+                    TrucoCard.of(THREE,DIAMONDS)
+            );
+            intel = maoDeOnze(botCards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+        }
+
     }
 
     @Nested
@@ -751,7 +766,7 @@ public class ArmageddonTest {
 
                 TrucoCard playedCard = armageddon.playBestCard(intel);
 
-                assertThat(playedCard).isEqualTo(TrucoCard.of(SEVEN, CLUBS));
+                assertThat(playedCard).isEqualTo(TrucoCard.of(SIX, DIAMONDS));
             }
 
         }
