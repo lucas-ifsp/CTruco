@@ -21,5 +21,42 @@
 
 package com.brito.macena.boteco;
 
+import com.bueno.spi.model.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+
 public class BotEcoTest {
+
+    private BotEco botEco;
+
+    @BeforeEach
+    void setUp() {
+        botEco = new BotEco();
+    }
+
+    @Test
+    @DisplayName("Should select the smallest card necessary to win")
+    void selectSmallestCardToWin() {
+        List<TrucoCard> botEcoHand = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        GameIntel step = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botEcoHand, 0)
+                .opponentScore(0).opponentCard(opponentCard)
+                .build();
+
+        CardToPlay selectedCard = botEco.chooseCard(step);
+        assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+    }
 }
