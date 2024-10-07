@@ -701,6 +701,25 @@ public class kwtrucoTest {
             int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
             assertEquals(0, result);
         }
+        @Test
+        @DisplayName("Return 0 when opponent has Manilha and bot doesn't have Manilha or high rank")
+        void shouldReturnZeroWhenOpponentHasManilhaAndBotDoesNotHaveManilhaOrHighRank() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8)
+                    .opponentCard(TrucoCard.of(CardRank.KING, CardSuit.HEARTS));
+
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(0, result);
+        }
+
     }
 
 }
