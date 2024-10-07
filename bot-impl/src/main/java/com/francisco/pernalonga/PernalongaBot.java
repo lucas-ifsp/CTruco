@@ -6,6 +6,11 @@ import com.bueno.spi.service.BotServiceProvider;
 
 public class PernalongaBot implements BotServiceProvider {
     @Override
+    public String getName() {
+        return "PernalongaBot";
+    }
+
+    @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
     }
