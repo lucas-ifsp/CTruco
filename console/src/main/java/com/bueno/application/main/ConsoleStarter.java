@@ -44,7 +44,9 @@ public class ConsoleStarter {
                 api,
                 provider,
                 getMatchUseCase,
-                updateTournamentUseCase);
+                updateTournamentUseCase,
+                updateMatchUseCase);
+
         RefreshTournamentUseCase refreshUseCase = new RefreshTournamentUseCase(tournamentRepository,
                 getMatchUseCase,
                 updateTournamentUseCase,

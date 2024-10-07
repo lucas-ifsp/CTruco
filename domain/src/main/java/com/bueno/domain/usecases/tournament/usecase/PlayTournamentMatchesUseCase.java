@@ -26,14 +26,13 @@ public class PlayTournamentMatchesUseCase {
     private final GetMatchUseCase getMatchUseCase;
     private final UpdateTournamentUseCase updateTournamentUseCase;
     private final UpdateMatchUseCase updateMatchUseCase;
-    private final RefreshTournamentUseCase refreshTournamentUseCase;
 
     public PlayTournamentMatchesUseCase(TournamentRepository tournamentRepository,
                                         RemoteBotRepository remoteBotRepository,
                                         RemoteBotApi api,
                                         BotManagerService botManagerService,
                                         GetMatchUseCase getMatchUseCase,
-                                        UpdateTournamentUseCase updateTournamentUseCase, UpdateMatchUseCase updateMatchUseCase, RefreshTournamentUseCase refreshTournamentUseCase) {
+                                        UpdateTournamentUseCase updateTournamentUseCase, UpdateMatchUseCase updateMatchUseCase) {
         this.tournamentRepository = tournamentRepository;
         this.remoteBotRepository = remoteBotRepository;
         this.api = api;
@@ -41,7 +40,6 @@ public class PlayTournamentMatchesUseCase {
         this.getMatchUseCase = getMatchUseCase;
         this.updateTournamentUseCase = updateTournamentUseCase;
         this.updateMatchUseCase = updateMatchUseCase;
-        this.refreshTournamentUseCase = refreshTournamentUseCase;
     }
 
 //    public TournamentDTO playAll(TournamentDTO dto) {
