@@ -9,7 +9,7 @@ import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
-import com.francisco.pernalonga.PernalongaBot;
+import com.francisco.pedrohenriquebot.PedroHenriqueBot;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
@@ -74,7 +74,7 @@ module bot.impl {
     exports com.silvabrufato.impl.silvabrufatobot;
     exports com.everton.ronaldo.arrebentabot;
     exports com.yuri.impl;
-    exports com.francisco.pernalonga;
+    exports com.francisco.pedrohenriquebot;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
     exports com.fabio.bruno.minepowerbot;
@@ -130,7 +130,7 @@ module bot.impl {
             CaipirasBot,
             LazyBot,
             PauladaSecaBot,
-            PernalongaBot,
+            PedroHenriqueBot,
             MinePowerBot,
             JormungandrBot,
             Akkosocorrompido,
