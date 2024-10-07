@@ -159,4 +159,8 @@ public class TheRover implements BotServiceProvider {
         }
         return cardQtd;
     }
+
+    public boolean wonFirstRound(GameIntel intel) {
+        return true;
+    }
 }
