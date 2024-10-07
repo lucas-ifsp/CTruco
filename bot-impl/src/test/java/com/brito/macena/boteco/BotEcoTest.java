@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class BotEcoTest {
@@ -84,13 +85,16 @@ public class BotEcoTest {
     @DisplayName("Should increase truco when hand power is 17 or more and score difference is greater than 6")
     void shouldIncreaseTrucoWhenHandPowerIsSufficientAndScoreDifferenceIsHigh() {
         List<TrucoCard> botEcoHand = List.of(
-                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
         );
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
         GameIntel intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(), vira, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.WON),
+                        List.of(
+                                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                        ), vira, 1)
                 .botInfo(botEcoHand, 2)
                 .opponentScore(9)
                 .build();
