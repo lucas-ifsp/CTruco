@@ -50,7 +50,67 @@ public class TrucoMarreco implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
 
 
-        return null;
+        TrucoCard vira = intel.getVira();
+
+        int qtdManilha = contarManilhas(intel.getCards(), intel.getVira());
+
+
+        //tenta matar manilha se não der joga mais fraca
+        if (intel.getOpponentCard().get().isManilha(intel.getVira())){
+            return CardToPlay.of(cartaMaisFracaSemManilha(intel));
+        }
+
+
+
+        // Verifica o número de manilhas
+        int qtdManilhas = contarManilhas(intel.getCards(), vira);
+        List<Integer> ranksDasManilhas = encontrarRanksDasManilhas(intel);
+
+        // Verifica se o bot ganhou a primeira rodada
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+
+
+        }
+
+
+        if (intel.getOpponentCard().isPresent()) {
+            // Verifica se o oponente já jogou uma carta
+            // Tenta amarrar
+            if (qtdManilhas == 1 && temZap(intel)) {
+                //    primeira rodada
+                if (intel.getRoundResults().isEmpty()) {
+
+                    for (TrucoCard card : intel.getCards()) {
+                        // Se a carta do jogador tiver o mesmo rank que a carta do oponente
+                        // e não for uma manilha
+                        if (card.getRank() == intel.getOpponentCard().get().getRank() && !card.isManilha(vira)) {
+                            //não é manilha, então a rodada empataria (amarraria)
+                            return CardToPlay.of(card);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        if (qtdManilhas>0){
+            // joga fora
+            for (TrucoCard card : intel.getCards()) {
+                if (card.isOuros(intel.getVira()))
+                    return CardToPlay.of(card);
+            }
+            //  A amarrado joga maior manilha
+            if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+                return CardToPlay.of(cartaForte(intel));
+            }
+            // casal maior joga nada na primeira
+            if (CasalMaior(intel) && intel.getRoundResults().isEmpty()){
+                return CardToPlay.of(cartaFraca(intel));
+            }
+        }
+
     }
 
     @Override
