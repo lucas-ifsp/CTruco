@@ -9,48 +9,84 @@ import com.bueno.domain.usecases.tournament.converter.MatchConverter;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
+import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class PlayTournamentMatchesUseCase {
-    private final TournamentConverter tournamentConverter;
+    private final TournamentRepository tournamentRepository;
     private final RemoteBotRepository remoteBotRepository;
     private final RemoteBotApi api;
     private final BotManagerService provider;
-    private final MatchConverter matchConverter;
+    private final GetMatchUseCase getMatchUseCase;
+    private final UpdateTournamentUseCase updateTournamentUseCase;
+    private final UpdateMatchUseCase updateMatchUseCase;
+    private final RefreshTournamentUseCase refreshTournamentUseCase;
 
-    public PlayTournamentMatchesUseCase(TournamentConverter tournamentConverter, RemoteBotRepository remoteBotRepository, RemoteBotApi api, BotManagerService botManagerService, MatchConverter matchConverter) {
-        this.tournamentConverter = tournamentConverter;
+    public PlayTournamentMatchesUseCase(TournamentRepository tournamentRepository,
+                                        RemoteBotRepository remoteBotRepository,
+                                        RemoteBotApi api,
+                                        BotManagerService botManagerService,
+                                        GetMatchUseCase getMatchUseCase,
+                                        UpdateTournamentUseCase updateTournamentUseCase, UpdateMatchUseCase updateMatchUseCase, RefreshTournamentUseCase refreshTournamentUseCase) {
+        this.tournamentRepository = tournamentRepository;
         this.remoteBotRepository = remoteBotRepository;
         this.api = api;
         this.provider = botManagerService;
-        this.matchConverter = matchConverter;
+        this.getMatchUseCase = getMatchUseCase;
+        this.updateTournamentUseCase = updateTournamentUseCase;
+        this.updateMatchUseCase = updateMatchUseCase;
+        this.refreshTournamentUseCase = refreshTournamentUseCase;
     }
 
-    public TournamentDTO playAll(TournamentDTO dto) {
-        Tournament tournament = tournamentConverter.fromDTO(dto);
-        tournament.playAllAvailable(api, remoteBotRepository, provider);
-        tournament.setAvailableMatches();
-        return tournamentConverter.toDTO(tournament);
-    }
+//    public TournamentDTO playAll(TournamentDTO dto) {
+//        Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
+//        tournament.playAllAvailable(api, remoteBotRepository, provider);
+//        tournament.setAvailableMatches();
+//        return TournamentConverter.toDTO(tournament);
+//    }
 
     // TODO - colocar este método no findMatchUseCase
     public List<MatchDTO> getAllAvailableMatches(TournamentDTO dto) {
-        Tournament tournament = tournamentConverter.fromDTO(dto);
+        Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
         tournament.setAvailableMatches();
         return tournament.getMatches().stream()
                 .filter(Match::isAvailable)
-                .map(matchConverter::toDTO)
+                .map(MatchConverter::toDTO)
                 .toList();
     }
 
-    public TournamentDTO playOne(TournamentDTO dto, UUID matchUuuid) {
-        Tournament tournament = tournamentConverter.fromDTO(dto);
-        tournament.playByMatchUuid(matchUuuid, api, provider, remoteBotRepository);
-        tournament.setAvailableMatches();
-        return tournamentConverter.toDTO(tournament);
+    public void playOne(UUID uuid, int chosenMatchNumber) {
+        Optional<TournamentDTO> dto = tournamentRepository.findTournamentById(uuid);
+
+
+        if (dto.isEmpty()) throw new EntityNotFoundException("tournament doesn't exist");
+        Optional<MatchDTO> chosenMatch = dto.get()
+                .matchUUIDs()
+                .stream()
+                .map(mUuid -> getMatchUseCase.byUuid(mUuid)
+                        .orElseThrow(() -> new EntityNotFoundException("match uuid not found")))
+                .filter(matchDTO -> matchDTO.matchNumber() == chosenMatchNumber).findFirst();
+
+        if (chosenMatch.isEmpty()) throw new EntityNotFoundException("the chosenMatch doesn't exist");
+        UUID chosenMatchId = chosenMatch.get().uuid();
+
+        Tournament tournament = playChosenMatch(dto.get(), chosenMatchId);
+        TournamentDTO updatedDto = TournamentConverter.toDTO(tournament);
+        updateTournamentUseCase.updateFromDTO(updatedDto);
+        updateMatchUseCase.updateAll(tournament.getMatches().stream().map(MatchConverter::toDTO).toList());
     }
+
+    private Tournament playChosenMatch(TournamentDTO dto, UUID chosenMatchId) {
+        Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
+        tournament.playByMatchUuid(chosenMatchId, api, provider, remoteBotRepository);
+        tournament.setAvailableMatches();
+        return tournament;
+    }
+
 }

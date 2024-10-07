@@ -27,4 +27,29 @@ public class FakeMatchRepository implements MatchRepository {
     public void save(MatchDTO matchDTO) {
         matches.put(matchDTO.uuid(), matchDTO);
     }
+
+    @Override
+    public void saveAll(List<MatchDTO> dtos) {
+        dtos.forEach(dto -> matches.put(dto.uuid(), dto));
+    }
+
+    @Override
+    public void deleteAll() {
+        matches.clear();
+    }
+
+    @Override
+    public void deleteByUuid(UUID uuid) {
+
+    }
+
+    @Override
+    public List<MatchDTO> findMatchesByTournamentId(UUID uuid) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteByUuidList(List<UUID> uuidList) {
+
+    }
 }

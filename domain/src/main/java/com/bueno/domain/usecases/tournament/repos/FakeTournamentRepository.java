@@ -18,11 +18,6 @@ public class FakeTournamentRepository implements TournamentRepository {
         return Optional.of(tournaments.get(uuid));
     }
 
-    @Override
-    public List<MatchDTO> findMatchesByTournamentId(UUID uuid) {
-        return List.of();
-    }
-
     public List<TournamentDTO> findAll() {
         return tournaments.values().stream().toList();
     }

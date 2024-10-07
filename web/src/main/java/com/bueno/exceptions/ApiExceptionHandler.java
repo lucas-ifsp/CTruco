@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.EntityExistsException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -145,14 +146,14 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = UserNotAllowedException.class)
     public ResponseEntity<?> handleUserNotAllowedException(UserNotAllowedException e) {
-        final HttpStatus notFound = BAD_REQUEST;
+        final HttpStatus badRequest = BAD_REQUEST;
         final ApiException apiException = ApiException.builder()
-                .status(notFound)
+                .status(badRequest)
                 .message(e.getMessage())
                 .developerMessage(e.getClass().getName())
                 .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
                 .build();
-        return new ResponseEntity<>(apiException, notFound);
+        return new ResponseEntity<>(apiException, badRequest);
     }
 
     @ExceptionHandler(value = InvalidRequestException.class)
@@ -165,5 +166,17 @@ public class ApiExceptionHandler {
                 .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
                 .build();
         return new ResponseEntity<>(apiException, badRequest);
+    }
+
+    @ExceptionHandler(value = EntityExistsException.class)
+    public ResponseEntity<?> handleEntityExistsException(EntityExistsException e) {
+        final HttpStatus internalError = INTERNAL_SERVER_ERROR;
+        final ApiException apiException = ApiException.builder()
+                .status(internalError)
+                .message(e.getMessage())
+                .developerMessage("probably an error on update a object")
+                .timestamp(ZonedDateTime.now(ZoneId.of("Z")))
+                .build();
+        return new ResponseEntity<>(apiException, internalError);
     }
 }

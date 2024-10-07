@@ -16,7 +16,7 @@ import java.util.UUID;
 public class TournamentEntity {
     private UUID uuid;
     private List<String> participantsNames;
-    private List<MatchEntity> matches;
+    private List<UUID> matchUUIDs;
     private int size;
     private int times;
     private String winnerName;
@@ -25,7 +25,7 @@ public class TournamentEntity {
         return TournamentEntity.builder()
                 .uuid(dto.uuid())
                 .participantsNames(dto.participantsNames())
-                .matches(dto.matchesDTO().stream().map(MatchEntity::from).toList())
+                .matchUUIDs(dto.matchUUIDs())
                 .size(dto.size())
                 .times(dto.times())
                 .winnerName(dto.winnerName())
@@ -35,7 +35,7 @@ public class TournamentEntity {
     public TournamentDTO toDto() {
         return new TournamentDTO(uuid,
                 participantsNames,
-                matches.stream().map(MatchEntity::toDto).toList(),
+                matchUUIDs,
                 size,
                 times,
                 winnerName);

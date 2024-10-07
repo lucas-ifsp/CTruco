@@ -7,5 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MatchDao extends MongoRepository<MatchEntity, UUID> {
+
     Optional<MatchEntity> findMatchEntityByUuid(UUID uuid);
+
+    void deleteMatchEntityByUuid(UUID uuid);
 }

@@ -25,6 +25,7 @@ import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
@@ -55,9 +56,10 @@ public class WebApp {
                           GameResultRepository gameResultRepository,
                           PasswordEncoder encoder,
                           RemoteBotRepository botRepository,
-                          TournamentRepository tournamentRepository) {
+                          TournamentRepository tournamentRepository, MatchRepository matchRepository) {
         return args -> {
             tournamentRepository.deleteAll();
+            matchRepository.deleteAll();
             final String encodedPassword = encoder.encode("123123");
             final RegisterUserRequestDto defaultUser = new RegisterUserRequestDto("Lucas", encodedPassword, "lucas.ruas@gmail.com");
             final RegisterUserRequestDto user1 = new RegisterUserRequestDto("User 1", encodedPassword, "user1@gmail.com");
