@@ -213,13 +213,13 @@ public class kwtruco implements BotServiceProvider {
         return intel.getCards().stream().anyMatch(card -> card.isManilha(intel.getVira()));
     }
 
-    private boolean hasZap(GameIntel intel) {
+    public boolean hasZap(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
-    private boolean oponnentHasZap(GameIntel intel) {
+    public boolean oponnentHasZap(GameIntel intel) {
         return intel.getOpponentCard().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
-    private boolean oponnentHasManilha(GameIntel intel) {
+    public boolean oponnentHasManilha(GameIntel intel) {
         return  intel.getOpponentCard().stream().anyMatch(card -> card.isManilha(intel.getVira()));
     }
     private boolean has3(GameIntel intel){
