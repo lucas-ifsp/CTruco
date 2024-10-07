@@ -213,6 +213,20 @@ public class ArmageddonTest {
             assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
         }
 
+        @Test
+        @DisplayName("should acept mao de onze with Minor Couple")
+        void shouldAcceptMaoDeOnzeWithMinorCouple(){
+            vira = TrucoCard.of(ACE,SPADES);
+            botCards = List.of(
+                    TrucoCard.of(TWO,DIAMONDS),
+                    TrucoCard.of(TWO,SPADES),
+                    TrucoCard.of(SIX,CLUBS)
+            );
+            intel = maoDeOnze(botCards,vira);
+
+            assertThat(armageddon.getMaoDeOnzeResponse(intel.build())).isTrue();
+        }
+
     }
 
     @Nested
