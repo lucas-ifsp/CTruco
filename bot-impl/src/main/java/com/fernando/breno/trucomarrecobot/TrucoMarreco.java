@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+
 public class TrucoMarreco implements BotServiceProvider {
 
     @Override
@@ -46,12 +48,84 @@ public class TrucoMarreco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+
+
         return null;
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        boolean temManilhas = temManilhas(intel);
+     /*
+        // Se tiver um casal maior
+        if (CasalMaior(intel)) return 1;
+
+        // Se já houve uma rodada e o bot ganhou ou empatou com uma carta Zap
+        if (!intel.getRoundResults().isEmpty()) {
+            if (temZap(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) return 1;
+            if (temZap(intel) && intel.getRoundResults().get(0) == DREW) return 1;
+        }
+
+        // Se tem manilhas e carta forte tem
+        if (temManilhas && cartaMaisForteSemManilha(intel).relativeValue(intel.getVira()) >= 11) return 1;
+
+        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0) == DREW) return 1;
+
+
+
+        if(!t
+        // Se nenhuma condição for satisfeita
+        return -1;
+
+      */
+
+
+        int qtdManilha = contarManilhas(intel.getCards(), intel.getVira());
+
+        // Se tem um Casal Maior, aumentar
+        if (CasalMaior(intel)) return 1;
+
+        // Se o bot ganhou a última rodada e tem Zap, aumentar
+        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0)
+                == GameIntel.RoundResult.WON) {
+            return 1;
+        }
+
+        // Se a última rodada empatou e tem Zap, aumentar
+        if (!intel.getRoundResults().isEmpty() && temZap(intel) && intel.getRoundResults().get(0)
+                == GameIntel.RoundResult.DREW) {
+            return 1;
+        }
+
+        // Se tem manilhas e a carta mais forte for maior ou igual a 11, aumentar
+        if (qtdManilha > 0 && cartaMaisForteSemManilha(intel).relativeValue(intel.getVira()) >= 11) {
+            return 1;
+        }
+
+        // Se o bot ganhou a última rodada e tem manilha rank 12
+        if (!intel.getRoundResults().isEmpty() && encontrarRanksDasManilhas(intel).contains(12) &&
+                intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+
+            return 1;
+        }
+
+        // Se o bot ganhou a última rodada e tem manilha rank 11
+        if (!intel.getRoundResults().isEmpty() && encontrarRanksDasManilhas(intel).contains(11) &&
+                intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+
+            return 1;
+        }
+
+
+        // Se tem 1 manilhas não, aceitar
+        if (qtdManilha  <= 1  ) {
+            return 0;
+        }
+
+
+
+        //  correr
+        return -1;
     }
 
 
@@ -158,7 +232,7 @@ public class TrucoMarreco implements BotServiceProvider {
         return melhorCarta;
     }
 
-    /*
+
     private List<Integer> encontrarRanksDasManilhas(GameIntel intel) {
         List<TrucoCard> cartas = intel.getCards();
         List<Integer> ranksDasManilhas = new ArrayList<>();
@@ -175,17 +249,41 @@ public class TrucoMarreco implements BotServiceProvider {
 
         return ranksDasManilhas; // Retorna a lista de ranks das manilhas
     }
-   */
+
 
     private int contarManilhas(List<TrucoCard> cartas, TrucoCard vira) {
         int qtdManilha = 0;
-
         for (TrucoCard carta : cartas) {
             if (carta.isManilha(vira)) qtdManilha++; // Incrementa se for manilha
         }
-
         return qtdManilha;
     }
+
+    private TrucoCard cartaFraca(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        TrucoCard cartaFraca = null;
+        int minValue = Integer.MAX_VALUE;
+
+        for (TrucoCard carta : cartas) {
+            int valorRelativo;
+
+            // Calcula o valor relativo da carta considerando se é manilha ou não
+            if (carta.isManilha(intel.getVira())) {
+                valorRelativo = carta.relativeValue(intel.getVira()); // Obtém o valor relativo da manilha
+            } else {
+                valorRelativo = carta.getRank().value();
+            }
+
+            // Verifica se o valor relativo da carta é menor que o menor valor encontrado até agora
+            if (valorRelativo < minValue) {
+                minValue = valorRelativo;
+               cartaFraca= carta;
+            }
+        }
+
+        return cartaFraca;
+    }
+
 
 
 }
