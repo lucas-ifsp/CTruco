@@ -958,7 +958,7 @@ public class TheRoverTest {
     class countCardsInHandOverRelativeValueTest {
 
         @Test
-        @DisplayName("")
+        @DisplayName("When Has Three Low Cards In Hand Should Return Zero")
         void WhenHasThreeLowCardsInHandShouldReturnZero() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
 
@@ -974,6 +974,25 @@ public class TheRoverTest {
                     .opponentScore(0);
 
             assertEquals(0,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 9));
+        }
+
+        @Test
+        @DisplayName("When Has Two Cards In Hand Over Relative Value Should Return Two")
+        void WhenHasTwoCardsInHandOverRelativeValueShouldReturnTwo() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(2,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 7));
         }
 
     }
