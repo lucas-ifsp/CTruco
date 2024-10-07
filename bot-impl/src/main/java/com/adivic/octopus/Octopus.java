@@ -322,14 +322,12 @@ public class Octopus implements BotServiceProvider {
 
     public CardToPlay chooseSecondRoundPlay(GameIntel intel){
         int strongCards = numberOfStrongCards(intel);
-        boolean firstToPlay = checkIfWeAreFirstToPlay(intel);
 
-        return strongCards == 0
-                ? cardToPlayFirstRoundWhenZeroStrongCards(intel)
-                : firstToPlay
-                ? (strongCards == 1 ? cardToPlayFirstRoundWhenOneStrongCard(intel)
-                : cardToPlayFirstRoundWhenTwoStrongCards(intel))
-                : CardToPlay.of(chooseBetterCardToWinTheRound(intel));
+        return switch (strongCards) {
+            case 0 -> cardToPlaySecondRoundWhenZeroStrongCards(intel);
+            case 1 -> cardToPlaySecondRoundWhenOneOrTwoStrongCards(intel);
+            default -> cardToPlaySecondRoundWhenThreeStrongCards(intel);
+        };
     }
     public CardToPlay chooseLastRoundPlay(GameIntel intel){
         return cardToPlayLastRound(intel);
