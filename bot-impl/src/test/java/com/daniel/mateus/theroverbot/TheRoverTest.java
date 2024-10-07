@@ -995,6 +995,25 @@ public class TheRoverTest {
             assertEquals(2,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 7));
         }
 
+        @Test
+        @DisplayName("When Has Three Cards In Hand Over Relative Value Should Return Three")
+        void WhenHasThreeCardsInHandOverRelativeValueShouldReturnThree() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(3,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 6));
+        }
+
     }
 
 }
