@@ -92,7 +92,26 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
     }
 
+    //5
+    @Test
+    @DisplayName("Should return false if copas not exits")
+    void returnsFalseIfCopasNotExists() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), myCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+        assertTrue(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
+    }
 
 
 
