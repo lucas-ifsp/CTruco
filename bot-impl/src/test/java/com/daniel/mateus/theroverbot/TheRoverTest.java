@@ -1205,5 +1205,20 @@ public class TheRoverTest {
 
             assertFalse(theRover.wonFirstRound(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should return true if won first round")
+        void ShouldReturnTrueIfWonFirstRound() {
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.WON);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
+
+            assertTrue(theRover.wonFirstRound(stepBuilder.build()));
+        }
     }
 }
