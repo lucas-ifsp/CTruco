@@ -885,6 +885,21 @@ public class kwtrucoTest {
             boolean result = kwtrucoBot.oponnentHasZap(stepBuilder.build());
             assertTrue(result);
         }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return false when oponnent has zap")
+        void shouldReturnFalseWhenOponnentHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7)
+                    .opponentCard(TrucoCard.of(CardRank.FOUR,CardSuit.CLUBS));
+
+            boolean result = kwtrucoBot.oponnentHasZap(stepBuilder.build());
+            assertFalse(result);
+        }
 
     }
 
