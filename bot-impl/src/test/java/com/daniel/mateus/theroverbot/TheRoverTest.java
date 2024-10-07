@@ -1186,4 +1186,24 @@ public class TheRoverTest {
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Tests for wonFirstRound()")
+    class wonFirstRoundTest {
+
+        @Test
+        @DisplayName("Should return false if loses first round")
+        void ShouldReturnFalseIfLosesFirstRound() {
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.LOST);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0);
+
+            assertFalse(theRover.wonFirstRound(stepBuilder.build()));
+        }
+    }
 }
