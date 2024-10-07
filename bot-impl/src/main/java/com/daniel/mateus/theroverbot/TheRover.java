@@ -29,7 +29,25 @@ public class TheRover implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        switch (getCurrentRound(intel)) {
+            case 1:
+                if(countManilhasInHand(intel) >= 2) return 1;
+                if (countCardsInHandOverRelativeValue(intel, 8) >= 2) return 0;
+                break;
+            case 2:
+                if(wonFirstRound(intel)) {
+                    if (countCardsInHandOverRelativeValue(intel, 8) >= 2) return 1;
+                    if (countCardsInHandOverRelativeValue(intel, 8) == 1) return 0;
+                } else {
+                    if (countCardsInHandOverRelativeValue(intel, 8) >= 2) return 0;
+                }
+                break;
+            case 3:
+                if(countManilhasInHand(intel) == 1) return 1;
+                if (countCardsInHandOverRelativeValue(intel, 8) == 1) return 0;
+                break;
+        }
+        return -1;
     }
 
     @Override
