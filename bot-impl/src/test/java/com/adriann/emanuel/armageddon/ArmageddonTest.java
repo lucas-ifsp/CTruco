@@ -228,7 +228,7 @@ public class ArmageddonTest {
         }
 
         @Test
-        @DisplayName("should acept mao de onze with Minor Couple")
+        @DisplayName("should refuse mao de onze with three aces")
         void shouldRefuseMaoDeOnzeWithThreeAces(){
             vira = TrucoCard.of(ACE,SPADES);
             botCards = List.of(
@@ -664,6 +664,35 @@ public class ArmageddonTest {
                 intel = secondRoundLostFirstRound(botCards, List.of(), vira, opponentCard);
 
                 assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
+            }
+        }
+
+
+        @Nested
+        @DisplayName("Tests to implement logic of second round drew first round")
+        class SecondRoundDrewFirstRound {
+
+            @Test
+            @DisplayName("Should request truco if I drew the first round")
+            void shouldRequestTrucoIfIDrewTheFirstRound() {
+                TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, SPADES)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.shouldRequestTruco(intel);
+
+                assertTrue(result);
             }
         }
     }
