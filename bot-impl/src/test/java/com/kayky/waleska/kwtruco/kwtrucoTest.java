@@ -827,7 +827,7 @@ public class kwtrucoTest {
         }
         @Test
         @Tag("kwTrucoTests")
-        @DisplayName("Return false when the bot didn't has a manilha")
+        @DisplayName("Return false when the bot not has a manilha")
         void shouldReturnFalseWhenBotDidntHasAManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
             List<TrucoCard> botCards = Arrays.asList(
@@ -856,6 +856,19 @@ public class kwtrucoTest {
 
             boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
             assertTrue(result);
+        }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return true when the bot not has zap")
+        void shouldReturnTrueWhenBotNotHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
+            assertFalse(result);
         }
 
     }
