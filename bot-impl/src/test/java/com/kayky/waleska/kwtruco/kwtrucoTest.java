@@ -808,6 +808,7 @@ public class kwtrucoTest {
     @Nested
     class kwTrucoTests {
         @Test
+        @Tag("kwTrucoTests")
         @DisplayName("Return true when the bot has a manilha")
         void shouldReturnTrueWhenBotHasManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
@@ -823,6 +824,24 @@ public class kwtrucoTest {
 
             boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
             assertTrue(result);
+        }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return false when the bot didn't has a manilha")
+        void shouldReturnFalseWhenBotDidntHasAManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+            );
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+
+            boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
+            assertFalse(result);
         }
 
     }
