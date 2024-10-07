@@ -982,7 +982,7 @@ public class TheRoverTest {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
             List<TrucoCard> cards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
                     TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
             );
