@@ -1058,8 +1058,8 @@ public class TheRoverTest {
         }
 
         @Test
-        @DisplayName("Should accept when won one hand and has card with relative value greater than eight")
-        void ShouldAcceptWhenWonOneHandAndHasCardWithRelativeValueGreaterThanEight() {
+        @DisplayName("Should accept when won first hand and has card with relative value greater than eight")
+        void ShouldAcceptWhenWonFirstHandAndHasCardWithRelativeValueGreaterThanEight() {
             List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.WON);
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
@@ -1070,15 +1070,15 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(results, List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
         }
 
         @Test
-        @DisplayName("Should rise when won one hand and has two card with relative value greater than eight")
-        void ShouldRiseWhenWonOneHandAndHasTwoCardWithRelativeValueGreaterThanEight() {
+        @DisplayName("Should rise when won first hand and has two card with relative value greater than eight")
+        void ShouldRiseWhenWonFirstHandAndHasTwoCardWithRelativeValueGreaterThanEight() {
             List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.WON);
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
@@ -1089,7 +1089,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(results, List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
@@ -1108,7 +1108,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
@@ -1127,7 +1127,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
@@ -1144,7 +1144,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
@@ -1161,7 +1161,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
@@ -1180,7 +1180,7 @@ public class TheRoverTest {
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(results, List.of(), vira, 1)
-                    .botInfo(cards, 1)
+                    .botInfo(cards, 0)
                     .opponentScore(0);
 
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
