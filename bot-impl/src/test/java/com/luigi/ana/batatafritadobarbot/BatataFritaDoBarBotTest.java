@@ -245,7 +245,25 @@ public class BatataFritaDoBarBotTest {
     }
 
 
+    //12
+    @Test
+    @DisplayName("make sure not play casal maior in first round")
+    void returnsTrueIfCasalMaiorExist(){
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
 
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
+    }
 
 
 }

@@ -40,6 +40,18 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return intel.getOpponentCard().isEmpty();
     }
 
+    public TrucoCard getHighestCard(GameIntel intel) {
+        TrucoCard highestCard = intel.getCards().get(0);
+
+        return highestCard;
+    }
+
+    public TrucoCard getLowestCard(GameIntel intel) {
+        TrucoCard lowestCard = intel.getCards().get(0);
+
+        return lowestCard;
+    }
+
     boolean hasZap(GameIntel intel) {
         return false;
     }
