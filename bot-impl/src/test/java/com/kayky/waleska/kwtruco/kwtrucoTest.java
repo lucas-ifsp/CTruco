@@ -690,6 +690,7 @@ public class kwtrucoTest {
             assertEquals(1, result);
         }
         @Test
+        @Tag("getRaiseResponseTests")
         @DisplayName("Return 0 when opponent has Zap")
         void shouldReturnZeroWhenOpponentHasZap() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
@@ -702,6 +703,7 @@ public class kwtrucoTest {
             assertEquals(0, result);
         }
         @Test
+        @Tag("getRaiseResponseTests")
         @DisplayName("Return 0 when opponent has Manilha and bot doesn't have Manilha or high rank")
         void shouldReturnZeroWhenOpponentHasManilhaAndBotDoesNotHaveManilhaOrHighRank() {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
@@ -720,6 +722,7 @@ public class kwtrucoTest {
             assertEquals(0, result);
         }
         @Test
+        @Tag("getRaiseResponseTests")
         @DisplayName("Return 1 when bot has Manilha and high rank and opponent has Manilha")
         void shouldReturnOneWhenBotHasManilhaAndHighRankAndOpponentHasManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
@@ -738,6 +741,7 @@ public class kwtrucoTest {
             assertEquals(1, result);
         }
         @Test
+        @Tag("getRaiseResponseTests")
         @DisplayName("Return 0 when both scores are 9")
         void shouldReturnZeroWhenBothScoresAreNine() {
             TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
@@ -750,6 +754,26 @@ public class kwtrucoTest {
             int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
             assertEquals(0, result);
         }
+        @Test
+        @Tag("getRaiseResponseTests")
+        @DisplayName("Return 1 when bot has Manilha and high rank and score is greater than or equal to opponent's")
+        void shouldReturnOneWhenBotHasManilhaAndHighRankAndScoreIsGreaterOrEqualToOpponent() {
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 8)
+                    .opponentScore(8);
+
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(1, result);
+        }
+
 
     }
 
