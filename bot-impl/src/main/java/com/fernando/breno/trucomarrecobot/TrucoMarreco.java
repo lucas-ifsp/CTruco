@@ -262,27 +262,23 @@ public class TrucoMarreco implements BotServiceProvider {
     private TrucoCard cartaFraca(GameIntel intel) {
         List<TrucoCard> cartas = intel.getCards();
         TrucoCard cartaFraca = null;
-        int minValue = Integer.MAX_VALUE;
+        int minValue = Integer.MAX_VALUE; // Define o valor mínimo como o maior inteiro possível
 
         for (TrucoCard carta : cartas) {
-            int valorRelativo;
+            int valorRelativo = carta.isManilha(intel.getVira()) ?
+                    carta.relativeValue(intel.getVira()) :
+                    carta.getRank().value();
 
-            // Calcula o valor relativo da carta considerando se é manilha ou não
-            if (carta.isManilha(intel.getVira())) {
-                valorRelativo = carta.relativeValue(intel.getVira()); // Obtém o valor relativo da manilha
-            } else {
-                valorRelativo = carta.getRank().value();
-            }
-
-            // Verifica se o valor relativo da carta é menor que o menor valor encontrado até agora
+            // Atualiza a carta mais fraca se o valor atual for menor
             if (valorRelativo < minValue) {
                 minValue = valorRelativo;
-               cartaFraca= carta;
+                cartaFraca = carta;
             }
         }
 
         return cartaFraca;
     }
+
 
 
 
