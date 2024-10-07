@@ -148,7 +148,7 @@ public class Octopus implements BotServiceProvider {
         return CardToPlay.of(caseFourWhenAllOfTheCardsAreStrong(intel).get(1));
     }
 
-    public CardToPlay cardToPlayFirstRoundIfOpponentPlayFirst(GameIntel intel){
+    public CardToPlay cardToPlayIfOpponentPlayFirst(GameIntel intel){
         TrucoCard card = chooseBetterCardToWinTheRound(intel);
         return CardToPlay.of(card);
     }

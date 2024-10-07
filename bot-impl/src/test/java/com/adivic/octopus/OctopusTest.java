@@ -312,7 +312,7 @@ public class OctopusTest {
                     .botInfo(ourCards, 1)
                     .opponentScore(1)
                     .opponentCard(opponentCard);
-            assertThat(octopus.cardToPlayFirstRoundIfOpponentPlayFirst(stepBuilder.build()))
+            assertThat(octopus.cardToPlayIfOpponentPlayFirst(stepBuilder.build()))
                     .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)));
         }
 
