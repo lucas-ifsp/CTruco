@@ -2,6 +2,7 @@ package com.francisco.pernalonga;
 
 import com.bueno.spi.model.GameIntel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +16,14 @@ class PernalongaBotTest {
     void setUp() {
         sut = new PernalongaBot();
     }
+
+
+    @Test
+    @DisplayName("Should return correct bot name")
+    void shouldReturnCorrectBotName() {
+        assertEquals("PernalongaBot", sut.getName());
+    }
+
 
     @Test
     void getMaoDeOnzeResponse() {
