@@ -1056,5 +1056,24 @@ public class TheRoverTest {
 
             assertEquals(-1,theRover.getRaiseResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should accept when won one hand and has card with relative value greater than eight")
+        void ShouldAcceptWhenWonOneHandAndHasCardWithRelativeValueGreaterThanEight() {
+            List<GameIntel.RoundResult> results = List.of();
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(cards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
+        }
     }
 }
