@@ -1094,5 +1094,24 @@ public class TheRoverTest {
 
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should accept in first hand if has two high cards")
+        void ShouldAcceptInFirstHandIfHasTwoHighCards(){
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
+        }
     }
 }
