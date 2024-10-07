@@ -79,4 +79,24 @@ public class BotEcoTest {
         CardToPlay selectedCard = botEco.chooseCard(step);
         assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
     }
+
+    @Test
+    @DisplayName("Should increase truco when hand power is 17 or more and score difference is greater than 6")
+    void shouldIncreaseTrucoWhenHandPowerIsSufficientAndScoreDifferenceIsHigh() {
+        List<TrucoCard> botEcoHand = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botEcoHand, 2)
+                .opponentScore(9)
+                .build();
+
+        int response = botEco.getRaiseResponse(intel);
+
+        assertThat(response).isEqualTo(1);
+    }
 }
