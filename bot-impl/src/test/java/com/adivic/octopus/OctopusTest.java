@@ -315,6 +315,21 @@ public class OctopusTest {
             assertThat(octopus.cardToPlayFirstRoundIfOpponentPlayFirst(stepBuilder.build()))
                     .isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES)));
         }
+
+        @Test
+        @DisplayName("Return the card to play in the last round")
+        void returnTheCardToPlayInTheLastRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> myCards = List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(myCards, 1)
+                    .opponentScore(1);
+            assertThat(octopus.cardToPlayLastRound(stepBuilder.build())).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)));
+        }
     }
 
     @Nested
