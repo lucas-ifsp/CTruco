@@ -280,6 +280,25 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
 
+    private TrucoCard cartaForte(GameIntel intel) {
+        List<TrucoCard> cartas = intel.getCards();
+        int maior = Integer.MIN_VALUE;
+        TrucoCard cartaForte = null;
+
+        for (TrucoCard carta : cartas) {
+            int valorRelativo = carta.isManilha(intel.getVira()) ?
+                    carta.relativeValue(intel.getVira()) :
+                    carta.getRank().value();
+
+            // Atualiza a carta mais forte se o valor atual for maior
+            if (valorRelativo > maior) {
+                maior = valorRelativo;
+                cartaForte = carta;
+            }
+        }
+
+        return cartaForte;
+    }
 
 
 }
