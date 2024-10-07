@@ -161,6 +161,6 @@ public class TheRover implements BotServiceProvider {
     }
 
     public boolean wonFirstRound(GameIntel intel) {
-        return true;
+        return !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
     }
 }
