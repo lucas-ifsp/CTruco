@@ -31,6 +31,9 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return 0;
     }
 
+    int getNumberOfManilhas(GameIntel intel){
+        return 0;
+    }
 
 
     boolean checkIfIsTheFirstToPlay(GameIntel intel){

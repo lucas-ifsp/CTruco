@@ -200,6 +200,28 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.hasOuros(stepBuilder.build()));
     }
 
+    //10
+    @Test
+    @DisplayName("2 manilhas on 2H, 3C, 2S")
+    void shouldReturn2manilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertEquals(2, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
+    }
+
 
 
 }
