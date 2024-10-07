@@ -689,7 +689,18 @@ public class kwtrucoTest {
             int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
             assertEquals(1, result);
         }
-
+        @Test
+        @DisplayName("Return 0 when opponent has Zap")
+        void shouldReturnZeroWhenOpponentHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(8)
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(0, result);
+        }
     }
 
 }
