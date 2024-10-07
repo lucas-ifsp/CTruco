@@ -252,21 +252,19 @@ public class Octopus implements BotServiceProvider {
     }
 
     public TrucoCard chooseBetterCardToWinTheRound(GameIntel intel) {
-        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         List<TrucoCard> ourCards = sortCards(intel);
-        List<TrucoCard> openCards = intel.getOpenCards();
         List<TrucoCard> myCardsToWin = new ArrayList<>();
         TrucoCard vira = intel.getVira();
 
-        if (!openCards.isEmpty()) {
-            TrucoCard opponentCard = openCards.get(openCards.size() - 1);
-            myCardsToWin.addAll(ourCards.stream()
-                    .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
-                    .toList());
-
-            return !myCardsToWin.isEmpty() ? myCardsToWin.get(0) : ourCards.get(0);
-        }
-        return ourCards.get(2).isManilha(vira) ? ourCards.get(1) : ourCards.get(2);
+        opponentCard.ifPresent(opponentCards -> {
+            myCardsToWin.addAll(
+                    ourCards.stream()
+                            .filter(card -> card.compareValueTo(opponentCards, vira) > 0)
+                            .toList()
+            );
+        });
+        return !myCardsToWin.isEmpty() ? myCardsToWin.get(0) : ourCards.get(0);
     }
 
     public int numberOfStrongCards(GameIntel intel) {
