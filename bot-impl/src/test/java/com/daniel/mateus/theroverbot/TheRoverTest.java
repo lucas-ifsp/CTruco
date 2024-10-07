@@ -1132,5 +1132,23 @@ public class TheRoverTest {
 
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Should Accept in third hand if has one high card")
+        void ShouldAcceptInThirdHandIfHasOneHighCard(){
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
+        }
+
     }
 }
