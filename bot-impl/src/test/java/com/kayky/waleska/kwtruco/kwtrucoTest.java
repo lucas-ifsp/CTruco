@@ -843,6 +843,20 @@ public class kwtrucoTest {
             boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
             assertFalse(result);
         }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return true when the bot has zap")
+        void shouldReturnTrueWhenBotHasZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+
+            boolean result = kwtrucoBot.hasManilha(stepBuilder.build());
+            assertTrue(result);
+        }
 
     }
 
