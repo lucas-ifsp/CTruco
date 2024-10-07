@@ -730,6 +730,30 @@ public class ArmageddonTest {
                 assertThat(response).isEqualTo(-1);
             }
 
+            @Test
+            @DisplayName("Choose the weakest card when opponents card is stronger")
+            void chooseTheWeakestCardWhenOpponentsCardIsStronger() {
+                TrucoCard vira = TrucoCard.of(FIVE, HEARTS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SEVEN, CLUBS),
+                        TrucoCard.of(SIX, DIAMONDS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(SIX, SPADES);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                TrucoCard playedCard = armageddon.playBestCard(intel);
+
+                assertThat(playedCard).isEqualTo(TrucoCard.of(SEVEN, CLUBS));
+            }
+
         }
     }
 }
