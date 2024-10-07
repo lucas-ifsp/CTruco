@@ -305,6 +305,7 @@ public class Armageddon implements BotServiceProvider {
             return true;
         }
 
+        return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.DREW;
     }
 
 
