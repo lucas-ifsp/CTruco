@@ -421,8 +421,8 @@ public class OctopusTest {
     }
 
     @Nested
-    @DisplayName("Testing choose cards methods")
-    class ChooseCardsMethods {
+    @DisplayName("Testing play cases for the rounds")
+    class PlayCasesCardsMethods {
         @Test
         @DisplayName("Return case one when none of the cards are strong in the hand")
         void returnCaseOneWhenNoneOfTheCardsAreStrongInTheHand() {
