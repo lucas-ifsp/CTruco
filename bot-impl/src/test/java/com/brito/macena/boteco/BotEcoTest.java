@@ -24,6 +24,7 @@ package com.brito.macena.boteco;
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -41,87 +42,106 @@ public class BotEcoTest {
         botEco = new BotEco();
     }
 
-    @Test
-    @DisplayName("Should select the smallest card necessary to win")
-    void selectSmallestCardToWin() {
-        List<TrucoCard> botEcoHand = List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
-        );
-        TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
-        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        GameIntel step = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(), vira, 1)
-                .botInfo(botEcoHand, 0)
-                .opponentScore(0).opponentCard(opponentCard)
-                .build();
+    @Nested
+    @DisplayName("Mão de Onze tests")
+    class MaoDeOnzeTests {
 
-        CardToPlay selectedCard = botEco.chooseCard(step);
-        assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+        @Test
+        @DisplayName("Should accept hand of eleven when two better cards is greater 17")
+        void shouldAcceptMaoDeOnzeWhenHandIsGreater20() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .build();
+
+            boolean response = botEco.getMaoDeOnzeResponse(intel);
+
+            assertTrue(response);
+        }
     }
 
-    @Test
-    @DisplayName("Should avoid using manilhas in the first round")
-    void avoidUsingManilhasFirstRound() {
-        List<TrucoCard> botEcoHand = List.of(
-                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
-        );
-        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        GameIntel step = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(), vira, 1)
-                .botInfo(botEcoHand, 0)
-                .opponentScore(0).opponentCard(opponentCard)
-                .build();
+    @Nested
+    @DisplayName("Decide if raises tests")
+    class DecideIfRaisesTests {
 
-        CardToPlay selectedCard = botEco.chooseCard(step);
-        assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
     }
 
-    @Test
-    @DisplayName("Should increase truco when hand power is 17 or more and score difference is greater than 6")
-    void shouldIncreaseTrucoWhenHandPowerIsSufficientAndScoreDifferenceIsHigh() {
-        List<TrucoCard> botEcoHand = List.of(
-                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
-        );
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-        GameIntel intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON),
-                        List.of(
-                                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
-                        ), vira, 1)
-                .botInfo(botEcoHand, 2)
-                .opponentScore(9)
-                .build();
+    @Nested
+    @DisplayName("Raise response tests")
+    class RaiseResponseTests {
+        @Test
+        @DisplayName("Should increase truco when hand power is 17 or more and score difference is greater than 6")
+        void shouldIncreaseTrucoWhenHandPowerIsSufficientAndScoreDifferenceIsHigh() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON),
+                            List.of(
+                                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                            ), vira, 1)
+                    .botInfo(botEcoHand, 2)
+                    .opponentScore(9)
+                    .build();
 
-        int response = botEco.getRaiseResponse(intel);
+            int response = botEco.getRaiseResponse(intel);
 
-        assertThat(response).isEqualTo(1);
+            assertThat(response).isEqualTo(1);
+        }
     }
 
-    @Test
-    @DisplayName("Should accept hand of eleven when two better cards is greater 17")
-    void shouldAcceptMaoDeOnzeWhenHandIsGreater20() {
-        List<TrucoCard> botEcoHand = List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
-        );
-        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+    @Nested
+    @DisplayName("Choose card tests")
+    class ChooseCard {
+        @Test
+        @DisplayName("Should select the smallest card necessary to win")
+        void selectSmallestCardToWin() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            );
+            TrucoCard opponentCard = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0).opponentCard(opponentCard)
+                    .build();
 
-        GameIntel intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(), vira, 1)
-                .botInfo(botEcoHand, 0)
-                .opponentScore(0)
-                .build();
+            CardToPlay selectedCard = botEco.chooseCard(step);
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)));
+        }
 
-        boolean response = botEco.getMaoDeOnzeResponse(intel);
+        @Test
+        @DisplayName("Should avoid using manilhas in the first round")
+        void avoidUsingManilhasFirstRound() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+            TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0).opponentCard(opponentCard)
+                    .build();
 
-        assertTrue(response);
+            CardToPlay selectedCard = botEco.chooseCard(step);
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
+        }
     }
 }
