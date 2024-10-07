@@ -41,4 +41,16 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return false;
     }
 
+    boolean hasCopas(GameIntel intel) {
+        return false;
+    }
+
+    boolean hasEspadilha(GameIntel intel) {
+        return false;
+    }
+
+    boolean hasOuros(GameIntel intel) {
+        return false;
+    }
+
 }

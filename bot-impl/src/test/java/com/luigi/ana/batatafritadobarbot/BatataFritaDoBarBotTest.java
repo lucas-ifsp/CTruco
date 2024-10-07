@@ -71,4 +71,28 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.hasZap(stepBuilder.build()));
     }
 
+    //4
+    @Test
+    @DisplayName("Should return true if copas exits")
+    void returnsTrueIfCopasExists() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        // cria uma cópia para nao vazar dados
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+        assertTrue(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
+    }
+
+
+
 }
