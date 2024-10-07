@@ -40,11 +40,10 @@ public class Octopus implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(numberOfStrongCards(intel) >= 2 || (numberOfStrongCards(intel) >= 1 && hasSixPointAdvantage(intel)))
-            return 1;
-        else if(numberOfStrongCards(intel) >=1 || hasThreePointAdvantage(intel))
-            return 0;
-        return -1;
+        return (numberOfStrongCards(intel) >= 2 ||
+                (numberOfStrongCards(intel) >= 1 && hasSixPointAdvantage(intel))) ? 1 :
+                (numberOfStrongCards(intel) >= 1 || hasThreePointAdvantage(intel)) ? 0 :
+                        -1;
     }
 
     public boolean checkIfWeAreFirstToPlay(GameIntel intel){
