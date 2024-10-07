@@ -737,6 +737,19 @@ public class kwtrucoTest {
             int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
             assertEquals(1, result);
         }
+        @Test
+        @DisplayName("Return 0 when both scores are 9")
+        void shouldReturnZeroWhenBothScoresAreNine() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 9)
+                    .opponentScore(9);
+
+            int result = kwtrucoBot.getRaiseResponse(stepBuilder.build());
+            assertEquals(0, result);
+        }
 
     }
 
