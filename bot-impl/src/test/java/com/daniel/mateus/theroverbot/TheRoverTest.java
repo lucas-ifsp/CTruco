@@ -1167,5 +1167,23 @@ public class TheRoverTest {
             assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should Accept when lost first hand and has two card with relative value greater than eight")
+        void ShouldAcceptWhenLostFirstHandAndHasTwoCardWithRelativeValueGreaterThanEight() {
+            List<GameIntel.RoundResult> results = List.of(GameIntel.RoundResult.LOST);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(results, List.of(), vira, 1)
+                    .botInfo(cards, 1)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
+        }
     }
 }
