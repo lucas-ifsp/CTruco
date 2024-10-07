@@ -149,4 +149,8 @@ public class TheRover implements BotServiceProvider {
         }
         return false;
     }
+
+    public int countCardsInHandOverRelativeValue (GameIntel intel, int relativeValue) {
+        return 0;
+    }
 }
