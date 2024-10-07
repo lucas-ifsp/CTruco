@@ -1150,5 +1150,22 @@ public class TheRoverTest {
             assertEquals(0,theRover.getRaiseResponse(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Should Accept in third hand if has one manilha")
+        void ShouldRiseInThirdHandIfHasOneManilha(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 1)
+                    .opponentScore(0);
+
+            assertEquals(1,theRover.getRaiseResponse(stepBuilder.build()));
+        }
+
     }
 }
