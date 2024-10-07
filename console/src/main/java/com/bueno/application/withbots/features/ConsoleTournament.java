@@ -8,17 +8,14 @@ import java.util.*;
 
 public class ConsoleTournament {
     private final CreateTournamentUseCase tournamentProvider;
-    private final PrepareTournamentUseCase prepareTournament;
     private final PlayTournamentMatchesUseCase playUseCase;
     private final RefreshTournamentUseCase refreshUseCase;
     private TournamentDTO dto;
 
     public ConsoleTournament(CreateTournamentUseCase tournamentProvider,
-                             PrepareTournamentUseCase prepareTournament,
                              PlayTournamentMatchesUseCase playUseCase,
                              RefreshTournamentUseCase refreshUseCase) {
         this.tournamentProvider = tournamentProvider;
-        this.prepareTournament = prepareTournament;
         this.playUseCase = playUseCase;
         this.refreshUseCase = refreshUseCase;
     }
@@ -31,7 +28,6 @@ public class ConsoleTournament {
         List<String> participants = new ArrayList<>(bots);
         Collections.shuffle(participants);
         dto = tournamentProvider.createTournament(participants, participants.size(), times);
-        dto = prepareTournament.prepareMatches(dto);
         System.out.println("ALL Matches: ");
         dto.matchesDTO().forEach((matchDTO) -> System.out.println("Match number: " +
                                                                   matchDTO.matchNumber() +
@@ -57,9 +53,10 @@ public class ConsoleTournament {
                                                                  matchDTO.p1Name() +
                                                                  " VS " +
                                                                  matchDTO.p2Name()));
-            final UUID matchUUID = chooseMatch(dto);
-            dto = playUseCase.playOne(dto, matchUUID);
-            dto = refreshUseCase.refresh(dto);
+            final int matchNumber = chooseMatch();
+            playUseCase.playOne(dto.uuid(), matchNumber);
+            refreshUseCase.refresh(dto.uuid());
+
 
             finalMatch = dto.matchesDTO()
                     .stream()
@@ -68,14 +65,9 @@ public class ConsoleTournament {
         System.out.println("Ganhador: " + finalMatch.winnerName());
     }
 
-    private UUID chooseMatch(TournamentDTO dto) {
+    private int chooseMatch() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the match number: ");
-        int nextMatchNumber = scan.nextInt();
-        return dto.matchesDTO().stream()
-                .filter(matchDTO -> matchDTO.matchNumber() == nextMatchNumber)
-                .findFirst()
-                .orElseThrow()
-                .uuid();
+        return scan.nextInt();
     }
 }

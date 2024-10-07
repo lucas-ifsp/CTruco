@@ -7,6 +7,7 @@ import com.bueno.persistence.dao.TournamentDao;
 import com.bueno.persistence.dto.TournamentEntity;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,15 +26,6 @@ public class TournamentRepositoryMongoImpl implements TournamentRepository {
         return getTournamentDTO(entity);
     }
 
-    @Override
-    public List<MatchDTO> findMatchesByTournamentId(UUID uuid) {
-        TournamentEntity entity = tournamentDao.findTournamentEntityByUuid(uuid).orElse(null);
-        Optional<TournamentDTO> dto = getTournamentDTO(entity);
-        if (dto.isPresent()) {
-            return dto.get().matchesDTO();
-        }
-        return List.of();
-    }
 
     @Override
     public List<TournamentDTO> findAll() {
@@ -48,9 +40,10 @@ public class TournamentRepositoryMongoImpl implements TournamentRepository {
 
     @Override
     public void update(TournamentDTO dto) {
+        //TODO - a as partidas ficam com o next null aqui
         tournamentDao.deleteTournamentEntityByUuid(dto.uuid());
         if (tournamentDao.findTournamentEntityByUuid(dto.uuid()).isPresent()) {
-            throw new RuntimeException("Objeto não deletado");
+            throw new EntityExistsException("Objeto não deletado");
         }
         TournamentEntity entity = TournamentEntity.from(dto);
         tournamentDao.save(entity);
@@ -64,7 +57,7 @@ public class TournamentRepositoryMongoImpl implements TournamentRepository {
         tournamentDao.deleteAll();
     }
 
-    private Optional<TournamentDTO> getTournamentDTO(TournamentEntity entity) {
+    static Optional<TournamentDTO> getTournamentDTO(TournamentEntity entity) {
         if (entity == null || entity.getUuid() == null) {
             return Optional.empty();
         }

@@ -33,20 +33,35 @@ public class ConsoleStarter {
         RemoteBotApi api = new RemoteBotApiAdapter();
         BotManagerService provider = new BotManagerService(remoteBotRepository, api);
 
-        MatchConverter matchConverter = new MatchConverter(matchRepository);
-        TournamentConverter tournamentConverter = new TournamentConverter(matchConverter);
-
-        CreateTournamentUseCase tournamentProvider = new CreateTournamentUseCase(tournamentConverter);
-        PrepareTournamentUseCase prepareTournamentUseCase = new PrepareTournamentUseCase(tournamentConverter);
-        PlayTournamentMatchesUseCase playUseCase = new PlayTournamentMatchesUseCase(tournamentConverter, remoteBotRepository, api, provider, matchConverter);
-        RefreshTournamentUseCase refreshUseCase = new RefreshTournamentUseCase(tournamentConverter, matchConverter);
+        GetMatchUseCase getMatchUseCase = new GetMatchUseCase(matchRepository);
+        UpdateMatchUseCase updateMatchUseCase = new UpdateMatchUseCase(matchRepository);
+        UpdateTournamentUseCase updateTournamentUseCase = new UpdateTournamentUseCase(tournamentRepository, matchRepository, updateMatchUseCase);
+        SaveTournamentUseCase saveTournamentUseCase = new SaveTournamentUseCase(tournamentRepository);
+        SaveMatchUseCase saveMatchUseCase = new SaveMatchUseCase(matchRepository);
+        CreateTournamentUseCase tournamentProvider = new CreateTournamentUseCase(saveTournamentUseCase, saveMatchUseCase);
+        PlayTournamentMatchesUseCase playUseCase = new PlayTournamentMatchesUseCase(tournamentRepository,
+                remoteBotRepository,
+                api,
+                provider,
+                getMatchUseCase,
+                updateTournamentUseCase);
+        RefreshTournamentUseCase refreshUseCase = new RefreshTournamentUseCase(tournamentRepository,
+                getMatchUseCase,
+                updateTournamentUseCase,
+                updateMatchUseCase);
 
 
         ConsoleTournament consoleTournament = new ConsoleTournament(tournamentProvider,
-                prepareTournamentUseCase,
                 playUseCase,
                 refreshUseCase);
-        consoleTournament.startTournament(List.of("LazyBot", "DummyBot", "MineiroByBueno", "VapoBot", "UncleBobBot", "SkolTable", "VeioDoBarBot", "W'rkncacnter"), 31);
+        consoleTournament.startTournament(List.of("LazyBot",
+                "DummyBot",
+                "MineiroByBueno",
+                "VapoBot",
+                "UncleBobBot",
+                "SkolTable",
+                "VeioDoBarBot",
+                "W'rkncacnter"), 31);
         consoleTournament.tournamentMenu();
 
 

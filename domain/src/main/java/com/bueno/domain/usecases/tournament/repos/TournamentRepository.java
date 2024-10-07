@@ -11,8 +11,6 @@ public interface TournamentRepository {
 
     Optional<TournamentDTO> findTournamentById(UUID uuid);
 
-    List<MatchDTO> findMatchesByTournamentId(UUID uuid);
-
     List<TournamentDTO> findAll();
 
     void save(TournamentDTO dto);

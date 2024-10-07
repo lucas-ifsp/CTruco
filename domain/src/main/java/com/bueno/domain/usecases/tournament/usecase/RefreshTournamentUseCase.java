@@ -5,46 +5,43 @@ import com.bueno.domain.entities.tournament.Tournament;
 import com.bueno.domain.usecases.tournament.converter.MatchConverter;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
+import com.bueno.domain.usecases.tournament.repos.MatchRepository;
+import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RefreshTournamentUseCase {
-    private final TournamentConverter tournamentConverter;
-    private final MatchConverter matchConverter;
+    private final TournamentRepository tournamentRepository;
+    private final GetMatchUseCase getMatchUseCase;
+    private final UpdateTournamentUseCase updateTournamentUseCase;
+    private final UpdateMatchUseCase updateMatchUseCase;
 
-    public RefreshTournamentUseCase(TournamentConverter tournamentConverter, MatchConverter matchConverter) {
-        this.tournamentConverter = tournamentConverter;
-        this.matchConverter = matchConverter;
+    public RefreshTournamentUseCase(TournamentRepository tournamentRepository,
+                                    GetMatchUseCase getMatchUseCase,
+                                    UpdateTournamentUseCase updateTournamentUseCase, UpdateMatchUseCase updateMatchUseCase) {
+        this.tournamentRepository = tournamentRepository;
+        this.getMatchUseCase = getMatchUseCase;
+        this.updateTournamentUseCase = updateTournamentUseCase;
+        this.updateMatchUseCase = updateMatchUseCase;
     }
 
-    public TournamentDTO refresh(TournamentDTO dto) {
-        Tournament tournament = tournamentConverter.fromDTO(dto);
-        List<Match> matches = dto.matchesDTO().stream().map(matchConverter::fromDTO).sorted().toList();
-        refreshMatches(matches);
-        tournament.setMatches(matches);
-        System.out.println(tournament);
-        return tournamentConverter.toDTO(tournament);
+    public void refresh(UUID tournamentUuid) {
+        Optional<TournamentDTO> dto = tournamentRepository.findTournamentById(tournamentUuid);
+        if (dto.isEmpty()) throw new EntityNotFoundException("invalid tournament uuid");
+        updateTournamentUseCase.updateFromDTO(refreshMatches(dto.get()));
     }
 
-    // logica de passar os vencedores de uma partida para os participantes da outra
-    public static List<Match> refreshMatches(List<Match> matches) {
-        for (Match match : matches) {
-            if (match.getNext() != null && match.getWinnerName() != null) {
-                Match next = matches.stream().filter(m -> m.getId() == match.getNext().getId()).findFirst().orElseThrow();
-                if (next.getP1Name() == null && match.getMatchNumber() % 2 != 0) {
-                    next.setP1Name(match.getWinnerName());
-                    continue;
-                }
-                if (next.getP2Name() == null && match.getMatchNumber() % 2 == 0) {
-                    next.setP2Name(match.getWinnerName());
-                }
-            }
-            if (match.getWinnerName() == null && match.getP1Name() != null && match.getP2Name() != null) {
-                match.setAvailable(true);
-            }
-        }
-        return matches;
+    private TournamentDTO refreshMatches(TournamentDTO dto) {
+        Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
+        Map<UUID, Match> cacheUpdatedMatches = tournament.refreshMatches();
+        updateMatchUseCase.updateAll(cacheUpdatedMatches.values().stream().map(MatchConverter::toDTO).toList());
+
+        return TournamentConverter.toDTO(tournament);
     }
+
 }
