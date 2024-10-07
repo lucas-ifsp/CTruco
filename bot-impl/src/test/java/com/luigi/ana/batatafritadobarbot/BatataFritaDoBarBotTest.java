@@ -84,14 +84,15 @@ public class BatataFritaDoBarBotTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         );
 
-        // cria uma cópia para nao vazar dados
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.WON), myCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(0);
 
         assertTrue(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
     }
+
+
 
 
 
