@@ -864,6 +864,24 @@ public class CamaleaoTruqueiroTest {
             @DisplayName("When the bot plays first")
             class TheBotPlaysFirst {
                 @Test
+                @DisplayName("Should choose the greatest card when bot drew the first round")
+                void shouldChooseGreatestCardWhenBotDrewTheFirstRound() {
+                    TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+                    List<TrucoCard> cards = Arrays.asList(
+                            TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    );
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    builder = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                            .botInfo(cards, 0)
+                            .opponentScore(0);
+
+                    CardToPlay chosenCard = camaleao.chooseCard(builder.build());
+                    assertEquals(chosenCard.content(), TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+                }
+                @Test
                 @DisplayName("Should choose the greatest card when bot plays first and has two or more high cards")
                 void shouldChooseGreatestCardWhenBotPlaysFirstAndHasTwoOrMoreHighCards() {
                     TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
@@ -874,7 +892,7 @@ public class CamaleaoTruqueiroTest {
                     List<TrucoCard> openCards = List.of(vira);
 
                     builder = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                            .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                             .botInfo(cards, 0)
                             .opponentScore(0);
 
