@@ -80,20 +80,10 @@ public class Octopus implements BotServiceProvider {
         List<TrucoCard> cards = sortCards(intel);
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
         List<TrucoCard> playSequence = new ArrayList<>();
-        playSequence.add(cards.get(1));
 
-        if(roundResults.isEmpty()){
-            playSequence.add(cards.get(2));
-            playSequence.add(cards.get(0));
-        }
-        else if (roundResults.get(0) == WON) {
-            playSequence.add(cards.get(0));
-            playSequence.add(cards.get(2));
-        }
-        else if (roundResults.get(0) == LOST) {
-            playSequence.add(cards.get(2));
-            playSequence.add(cards.get(0));
-        }
+        playSequence.add(cards.get(1));
+        playSequence.add(roundResults.isEmpty() ? cards.get(2) : (roundResults.get(0) == WON ? cards.get(0) : cards.get(2)));
+        playSequence.add(roundResults.isEmpty() ? cards.get(0) : (roundResults.get(0) == WON ? cards.get(2) : cards.get(0)));
 
         return playSequence;
     }
