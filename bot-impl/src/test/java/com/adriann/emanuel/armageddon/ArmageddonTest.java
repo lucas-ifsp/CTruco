@@ -678,14 +678,15 @@ public class ArmageddonTest {
                 TrucoCard vira = TrucoCard.of(THREE, HEARTS);
 
                 List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(THREE, SPADES)
+                        TrucoCard.of(THREE, SPADES),
+                        TrucoCard.of(SEVEN, SPADES)
                 );
 
                 TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
                 List<TrucoCard> openCards = List.of(opponentCard);
 
                 GameIntel intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), openCards, vira, 1)
+                        .gameInfo(List.of(DREW), openCards, vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0)
                         .build();
