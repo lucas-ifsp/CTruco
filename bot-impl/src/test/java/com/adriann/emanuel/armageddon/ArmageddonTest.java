@@ -521,6 +521,12 @@ public class ArmageddonTest {
                 assertThat(armageddon.decideIfRaises(intel)).isTrue();
             }
 
+        }
+
+        // First rouand second to play ---------------------------------------------------------------------------------
+        @Nested
+        @DisplayName("Tests to implement logic of first round second to play to decideIfRaises")
+        class FirstRoundSecondToPlayTest {
 
 
 
@@ -669,6 +675,32 @@ public class ArmageddonTest {
 
                 assertThat(response).isEqualTo(-1);
             }
+
+            @Test
+            @DisplayName("Choose Strongest Card Agains Opponent")
+            void chooseStrongestCardAgainstOpponent() {
+                TrucoCard vira = TrucoCard.of(TWO, HEARTS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, SPADES),
+                        TrucoCard.of(FOUR, CLUBS),
+                        TrucoCard.of(FIVE, DIAMONDS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(TWO, SPADES);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                TrucoCard playedCard = armageddon.playBestCard(intel);
+
+                assertThat(playedCard).isEqualTo(TrucoCard.of(THREE, SPADES));
+            }
+
 
         }
     }
