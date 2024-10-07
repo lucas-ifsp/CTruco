@@ -29,4 +29,25 @@ public class BatataFritaDoBarBotTest {
         assertThat(batataFritaDoBarBot.checkIfIsTheFirstToPlay(intel));
     }
 
+    //2
+    @Test
+    @DisplayName("Should return true if zap exits")
+    void returnsTrueIfZapExists() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), myCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+        assertTrue(batataFritaDoBarBot.hasZap(stepBuilder.build()));
+    }
+
 }

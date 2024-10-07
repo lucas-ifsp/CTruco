@@ -37,5 +37,8 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return intel.getOpponentCard().isEmpty();
     }
 
+    boolean hasZap(GameIntel intel) {
+        return false;
+    }
 
 }
