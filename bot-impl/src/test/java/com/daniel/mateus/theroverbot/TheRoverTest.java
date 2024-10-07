@@ -952,4 +952,30 @@ public class TheRoverTest {
             assertFalse(theRover.getMaoDeOnzeResponse(stepBuilder.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Count cards in hand over relative value tests")
+    class countCardsInHandOverRelativeValueTest {
+
+        @Test
+        @DisplayName("")
+        void WhenHasThreeLowCardsInHandShouldReturnZero() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(0,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 9));
+        }
+
+    }
+
 }
