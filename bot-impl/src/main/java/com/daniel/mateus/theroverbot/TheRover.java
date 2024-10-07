@@ -9,7 +9,7 @@ public class TheRover implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return countCardsInHandOverRelativeValue(intel, 8) >= 2 || intel.getOpponentScore() < 5;
     }
 
     @Override
