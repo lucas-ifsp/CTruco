@@ -64,6 +64,9 @@ public class Octopus implements BotServiceProvider {
         return playSequence;
     }
 
+    public CardToPlay cardToPlayLastRound(GameIntel intel){
+        return null;
+    }
 
     public List<TrucoCard> caseTwoWhenOneOrTwoCardsAreStrongAndIsNotManilha(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
