@@ -103,4 +103,25 @@ public class BotEcoTest {
 
         assertThat(response).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Should accept hand of eleven when two better cards is greater 17")
+    void shouldAcceptMaoDeOnzeWhenHandIsGreater20() {
+        List<TrucoCard> botEcoHand = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botEcoHand, 0)
+                .opponentScore(0)
+                .build();
+
+        boolean response = botEco.getMaoDeOnzeResponse(intel);
+
+        assertTrue(response);
+    }
 }
