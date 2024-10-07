@@ -311,4 +311,31 @@ public class Octopus implements BotServiceProvider {
         else
             return DREW;
     }
+    public CardToPlay chooseFirstRoundPlay(GameIntel intel) {
+        int strongCards = numberOfStrongCards(intel);
+        boolean firstToPlay = checkIfWeAreFirstToPlay(intel);
+
+        return strongCards == 0
+                ? cardToPlayFirstRoundWhenZeroStrongCards(intel)
+                : firstToPlay
+                ? (strongCards == 1 ? cardToPlayFirstRoundWhenOneStrongCard(intel)
+                : strongCards == 2 ? cardToPlayFirstRoundWhenTwoStrongCards(intel)
+                : cardToPlayFirstRoundWhenThreeStrongCards(intel))
+                : CardToPlay.of(chooseBetterCardToWinTheRound(intel));
+    }
+
+    public CardToPlay chooseSecondRoundPlay(GameIntel intel){
+        int strongCards = numberOfStrongCards(intel);
+        boolean firstToPlay = checkIfWeAreFirstToPlay(intel);
+
+        return strongCards == 0
+                ? cardToPlayFirstRoundWhenZeroStrongCards(intel)
+                : firstToPlay
+                ? (strongCards == 1 ? cardToPlayFirstRoundWhenOneStrongCard(intel)
+                : cardToPlayFirstRoundWhenTwoStrongCards(intel))
+                : CardToPlay.of(chooseBetterCardToWinTheRound(intel));
+    }
+    public CardToPlay chooseLastRoundPlay(GameIntel intel){
+        return cardToPlayLastRound(intel);
+    }
 }
