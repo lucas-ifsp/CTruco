@@ -111,7 +111,7 @@ public class CamaleaoTruqueiroTest {
     void shouldReturnTwoHighCards(){
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
         TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
         List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
@@ -125,9 +125,9 @@ public class CamaleaoTruqueiroTest {
     void shouldReturnThreeHighCards(){
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+        TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         TrucoCard card2 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
-        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+        TrucoCard card3 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
         List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
 
         int numberOfHighCard = camaleao.getNumberOfHighCards(handCards,vira);
@@ -373,8 +373,6 @@ public class CamaleaoTruqueiroTest {
         builder.opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
 
         List<TrucoCard> cards = camaleao.haveStrongestCard(builder.build(), myCards);
-
-        System.out.println(cards);
 
         assertEquals(1, cards.size());
     }
@@ -894,7 +892,7 @@ public class CamaleaoTruqueiroTest {
                     List<TrucoCard> openCards = List.of(vira);
 
                     builder = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                            .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                             .botInfo(cards, 0)
                             .opponentScore(0);
 
