@@ -1,10 +1,20 @@
 package com.francisco.pernalonga;
 
+import com.bueno.spi.model.GameIntel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PernalongaBotTest {
+
+    private PernalongaBot sut;
+    private GameIntel.StepBuilder intel;
+
+    @BeforeEach
+    void setUp() {
+        sut = new PernalongaBot();
+    }
 
     @Test
     void getMaoDeOnzeResponse() {
