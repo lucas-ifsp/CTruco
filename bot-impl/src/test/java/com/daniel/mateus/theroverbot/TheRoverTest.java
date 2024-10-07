@@ -1033,4 +1033,28 @@ public class TheRoverTest {
             assertEquals(0,theRover.countCardsInHandOverRelativeValue(stepBuilder.build(), 7));
         }
     }
+
+    @Nested
+    @DisplayName("Get raise response tests")
+    class getRaiseResponseTest {
+
+        @Test
+        @DisplayName("Should refused when all cards have relative values less than nine")
+        void ShouldRefusedWhenAllCardsHaveRelativeValueLessThanNine() {
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(cards, 0)
+                    .opponentScore(0);
+
+            assertEquals(-1,theRover.getRaiseResponse(stepBuilder.build()));
+        }
+    }
 }
