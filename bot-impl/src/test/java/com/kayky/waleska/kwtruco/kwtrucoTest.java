@@ -900,6 +900,22 @@ public class kwtrucoTest {
             boolean result = kwtrucoBot.oponnentHasZap(stepBuilder.build());
             assertFalse(result);
         }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return true when oponnent has manilha")
+        void shouldReturnTrueWhenOponnentHasManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7)
+                    .opponentCard(TrucoCard.of(CardRank.JACK,CardSuit.HEARTS));
+
+            boolean result = kwtrucoBot.oponnentHasManilha(stepBuilder.build());
+            assertTrue(result);
+        }
+
 
     }
 
