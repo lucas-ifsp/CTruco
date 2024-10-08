@@ -143,13 +143,7 @@ public class Armageddon implements BotServiceProvider {
             }
             case 1 -> {
                 if (hasZap(botCards,vira)){
-                    if (hasHigherCouple(botCards,vira)){
-                        return CardToPlay.discard(weakest);
-                    }
-                    if (hasThree(botCards, vira)){
-                        return CardToPlay.discard(weakest);
-                    }
-                    if (hasTwoManilhas(botCards,vira)){
+                    if (hasTwoManilhas(botCards,vira) || hasThree(botCards,vira)) {
                         return CardToPlay.discard(weakest);
                     }
                     return CardToPlay.of(weakest);
@@ -157,9 +151,10 @@ public class Armageddon implements BotServiceProvider {
                 if (hasTwoManilhas(botCards,vira)){
                     return CardToPlay.of(weakest);
                 }
-                if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 6){
+                if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 12){
                     return CardToPlay.of(strongest);
                 }
+                return CardToPlay.of(weakest);
             }
         }
         return CardToPlay.of(botCards.get(0));
