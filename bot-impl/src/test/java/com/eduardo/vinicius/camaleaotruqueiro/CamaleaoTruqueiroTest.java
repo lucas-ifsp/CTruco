@@ -4,7 +4,6 @@ import com.bueno.spi.model.*;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Arrays;
@@ -123,7 +122,7 @@ public class CamaleaoTruqueiroTest {
                 TrucoCard.of(card2Rank, card2Suit),
                 TrucoCard.of(card3Rank, card3Suit)
         );
-        assertThat(camaleao.getNumberOfHighCards(cards, vira))
+        assertThat(camaleao.getNumberOfHighRankCards(cards, vira))
                 .as("Expected high cards count")
                 .isEqualTo(numberOfManilhas);
     }
@@ -364,41 +363,63 @@ public class CamaleaoTruqueiroTest {
         assertTrue(camaleao.isTheSecondRound(builder.build()));
     }
 
-    @Test
-    @DisplayName("Should return One card strongest than the opponent")
-    void shouldReturnOneCardStrongestThanTheOpponent(){
-        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+    @ParameterizedTest
+    @CsvSource({
+            "TWO, HEARTS, FOUR, HEARTS, THREE, SPADES, SEVEN, HEARTS, THREE, DIAMONDS, 1",
+            "FOUR, DIAMONDS, ACE, CLUBS, JACK, HEARTS, SEVEN, CLUBS, QUEEN, HEARTS, 2",
+            "TWO, CLUBS, FOUR, CLUBS, FIVE, SPADES, SIX, DIAMONDS, SEVEN, HEARTS, 0",
+            "KING, SPADES, QUEEN, CLUBS, QUEEN, SPADES, ACE, DIAMONDS, KING, CLUBS, 1",
+            "SEVEN, HEARTS, ACE, SPADES, KING, DIAMONDS, QUEEN, CLUBS, JACK, SPADES, 3"
+    })
+    @DisplayName("Should return correct number of cards stronger than the opponent")
+    void shouldReturnCorrectNumberOfCardsStrongerThanTheOpponent(CardRank viraRank, CardSuit viraSuit,
+                                                                 CardRank myCard1Rank, CardSuit myCard1Suit,
+                                                                 CardRank myCard2Rank, CardSuit myCard2Suit,
+                                                                 CardRank myCard3Rank, CardSuit myCard3Suit,
+                                                                 CardRank opponentCardRank, CardSuit opponentCardSuit,
+                                                                 int expectedStrongestCardCount) {
+        TrucoCard vira = TrucoCard.of(viraRank, viraSuit);
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                TrucoCard.of(myCard1Rank, myCard1Suit),
+                TrucoCard.of(myCard2Rank, myCard2Suit),
+                TrucoCard.of(myCard3Rank, myCard3Suit)
         );
-        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        List<TrucoCard> openCards = List.of(vira);
 
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1)
                 .botInfo(myCards,0)
-                .opponentScore(1);
+                .opponentScore(0);
 
-        builder.opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+        builder.opponentCard(TrucoCard.of(opponentCardRank, opponentCardSuit));
 
         List<TrucoCard> cards = camaleao.haveStrongestCard(builder.build(), myCards);
 
-        assertEquals(1, cards.size());
+        assertEquals(expectedStrongestCardCount, cards.size());
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({
+            "ACE, SPADES, THREE, CLUBS, TWO, SPADES, FOUR, HEARTS, 0",
+            "QUEEN, HEARTS, FIVE, DIAMONDS, QUEEN, HEARTS, THREE, CLUBS, 1",
+            "QUEEN, DIAMONDS, JACK, CLUBS, KING, DIAMONDS, QUEEN, HEARTS, 2",
+            "ACE, DIAMONDS, JACK, CLUBS, KING, DIAMONDS, QUEEN, HEARTS, 3",
+    })
     @DisplayName("should return one medium cards")
-    void shouldReturnOneMediumCard(){
-        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+    void shouldReturnOneMediumCard( CardRank viraCardRank, CardSuit viraCardSuit,
+                                    CardRank card1Rank, CardSuit card1Suit,
+                                    CardRank card2Rank, CardSuit card2Suit,
+                                    CardRank card3Rank, CardSuit card3Suit,
+                                    int expectedMedianRankCardCount){
+        TrucoCard vira = TrucoCard.of(viraCardRank, viraCardSuit);
 
-        TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
-        TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard card1 = TrucoCard.of(card1Rank, card1Suit);
+        TrucoCard card2 = TrucoCard.of(card2Rank, card2Suit);
+        TrucoCard card3 = TrucoCard.of(card3Rank, card3Suit);
         List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
 
-        int numberOfMediumCard = camaleao.getNumberOfMediumCards(handCards,vira);
-        assertEquals(1, numberOfMediumCard);
+        int numberOfMediumCard = camaleao.getNumberOfMediumRankCards(handCards,vira);
+        assertEquals(expectedMedianRankCardCount, numberOfMediumCard);
     }
 
     @Test
@@ -411,7 +432,7 @@ public class CamaleaoTruqueiroTest {
         TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
         List<TrucoCard> handCards = Arrays.asList(card1, card2, card3);
 
-        int numberOfLowCard = camaleao.getNumberOfLowCards(handCards,vira);
+        int numberOfLowCard = camaleao.getNumberOfLowRankCards(handCards,vira);
         assertEquals(1, numberOfLowCard);
     }
 
