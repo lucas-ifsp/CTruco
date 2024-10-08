@@ -572,6 +572,26 @@ public class ArmageddonTest {
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(0)));
                 }
             }
+
+            @Nested
+            @DisplayName("Tests to implement logic of choose card in the second round when lost the first round")
+            class SecondRoundLostFirstRoundChoose{
+
+                @Test
+                @DisplayName("Should play the weakest card when opponent discard")
+                void shouldPlayWeakestOpponentDiscard(){
+                    vira = TrucoCard.of(ACE,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SIX,HEARTS),
+                            TrucoCard.of(JACK,CLUBS));
+                    opponentCard = TrucoCard.closed();
+                    openCards = List.of(vira,opponentCard);
+
+                    intel = secondRoundLostFirstRound(botCards,openCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+            }
         }
     }
 
