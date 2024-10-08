@@ -142,6 +142,13 @@ public class Armageddon implements BotServiceProvider {
                 }
             }
             case 1 -> {
+                if (optOpponentCard.isPresent()){
+                    TrucoCard opponentCard = optOpponentCard.get();
+
+                    if (opponentCard.equals(TrucoCard.closed())){
+                        return CardToPlay.of(weakest);
+                    }
+                }
                 if (hasZap(botCards,vira)){
                     if (hasTwoManilhas(botCards,vira) || hasThree(botCards,vira)) {
                         return CardToPlay.discard(weakest);
