@@ -88,59 +88,7 @@ public class Armageddon implements BotServiceProvider {
 
         switch (rounds) {
             case 0 -> {
-                TrucoCard middle = middleCard(botCards,vira);
-
-                if (optOpponentCard.isEmpty()){
-                    if (hasHigherCouple(botCards, vira)) {
-                        return CardToPlay.of(weakest);
-                    }
-                    if (hasManilha(botCards, vira)){
-                        return CardToPlay.of(middle);
-                    }
-                    if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(strongest);
-                    }
-                    if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(middle);
-                    }
-                }
-                if (optOpponentCard.isPresent()){
-                    opponentCard = optOpponentCard.get();
-
-                    if (!canWin(botCards,vira,opponentCard)){
-                        return CardToPlay.of(weakest);
-                    }
-
-                    if (canDraw(botCards,vira,opponentCard)){
-                        Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
-                        if (equalCard.isPresent() && hasManilha(botCards,vira)){
-                            if (hasZap(botCards,vira)){
-                                return CardToPlay.of(equalCard.get());
-                            }
-                            return CardToPlay.of(middle);
-                        }
-                    }
-
-                    if (hasHigherCouple(botCards,vira)){
-                        return CardToPlay.of(weakest);
-                    }
-
-                    if (hasTwoManilhas(botCards,vira)){
-                        if (middle.compareValueTo(opponentCard,vira) > 0){
-                            return CardToPlay.of(middle);
-                        }
-                        return CardToPlay.of(strongest);
-                    }
-
-                    if (opponentCard.compareValueTo(middle,vira) < 0){
-                        if (opponentCard.compareValueTo(weakest,vira) < 0){
-                            return CardToPlay.of(weakest);
-                        }
-                        return CardToPlay.of(middle);
-                    }
-
-                    return CardToPlay.of(strongest);
-                }
+                return firstRoundChoose(intel);
             }
             case 1 -> {
                 if (optOpponentCard.isPresent()){
@@ -164,6 +112,71 @@ public class Armageddon implements BotServiceProvider {
                 }
                 return CardToPlay.of(weakest);
             }
+        }
+        return CardToPlay.of(botCards.get(0));
+    }
+
+    private CardToPlay firstRoundChoose(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> botCards = intel.getCards();
+        TrucoCard weakest = weakestCard(botCards,vira);
+        TrucoCard middle = middleCard(botCards,vira);
+        TrucoCard strongest = strongestCard(botCards,vira);
+
+        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
+        TrucoCard opponentCard;
+
+        if (optOpponentCard.isEmpty()){
+            if (hasHigherCouple(botCards, vira)) {
+                return CardToPlay.of(weakest);
+            }
+            if (hasManilha(botCards, vira)){
+                return CardToPlay.of(middle);
+            }
+            if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
+                return CardToPlay.of(strongest);
+            }
+            if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
+                return CardToPlay.of(middle);
+            }
+        }
+        if (optOpponentCard.isPresent()){
+            opponentCard = optOpponentCard.get();
+
+            if (!canWin(botCards,vira,opponentCard)){
+                return CardToPlay.of(weakest);
+            }
+
+            if (canDraw(botCards,vira,opponentCard)){
+                Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
+                if (equalCard.isPresent() && hasManilha(botCards,vira)){
+                    if (hasZap(botCards,vira)){
+                        return CardToPlay.of(equalCard.get());
+                    }
+                    return CardToPlay.of(middle);
+                }
+            }
+
+            if (hasHigherCouple(botCards,vira)){
+                return CardToPlay.of(weakest);
+            }
+
+            if (hasTwoManilhas(botCards,vira)){
+                if (middle.compareValueTo(opponentCard,vira) > 0){
+                    return CardToPlay.of(middle);
+                }
+                return CardToPlay.of(strongest);
+            }
+
+            if (opponentCard.compareValueTo(middle,vira) < 0){
+                if (opponentCard.compareValueTo(weakest,vira) < 0){
+                    return CardToPlay.of(weakest);
+                }
+                return CardToPlay.of(middle);
+            }
+
+            return CardToPlay.of(strongest);
         }
         return CardToPlay.of(botCards.get(0));
     }
