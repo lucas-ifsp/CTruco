@@ -75,42 +75,15 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
         int rounds = intel.getRoundResults().size();
-        TrucoCard vira = intel.getVira();
-
-        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
-        TrucoCard opponentCard;
-
         List<TrucoCard> botCards = intel.getCards();
-        TrucoCard strongest = strongestCard(botCards,vira);
-        TrucoCard weakest = weakestCard(botCards,vira);
 
         switch (rounds) {
             case 0 -> {
                 return firstRoundChoose(intel);
             }
             case 1 -> {
-                if (optOpponentCard.isPresent()){
-                    opponentCard = optOpponentCard.get();
-
-                    if (opponentCard.equals(TrucoCard.closed()) || opponentCard.compareValueTo(weakest,vira) < 0){
-                        return CardToPlay.of(weakest);
-                    }
-                }
-                if (hasZap(botCards,vira)){
-                    if (hasTwoManilhas(botCards,vira) || hasThree(botCards,vira)) {
-                        return CardToPlay.discard(weakest);
-                    }
-                    return CardToPlay.of(weakest);
-                }
-                if (hasTwoManilhas(botCards,vira)){
-                    return CardToPlay.of(weakest);
-                }
-                if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 12){
-                    return CardToPlay.of(strongest);
-                }
-                return CardToPlay.of(weakest);
+                return secondRoundChoose(intel);
             }
         }
         return CardToPlay.of(botCards.get(0));
@@ -179,6 +152,39 @@ public class Armageddon implements BotServiceProvider {
             return CardToPlay.of(strongest);
         }
         return CardToPlay.of(botCards.get(0));
+    }
+
+    private CardToPlay secondRoundChoose(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+
+        List<TrucoCard> botCards = intel.getCards();
+        TrucoCard weakest = weakestCard(botCards,vira);
+        TrucoCard middle = middleCard(botCards,vira);
+        TrucoCard strongest = strongestCard(botCards,vira);
+
+        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
+        TrucoCard opponentCard;
+
+        if (optOpponentCard.isPresent()){
+            opponentCard = optOpponentCard.get();
+
+            if (opponentCard.equals(TrucoCard.closed()) || opponentCard.compareValueTo(weakest,vira) < 0){
+                return CardToPlay.of(weakest);
+            }
+        }
+        if (hasZap(botCards,vira)){
+            if (hasTwoManilhas(botCards,vira) || hasThree(botCards,vira)) {
+                return CardToPlay.discard(weakest);
+            }
+            return CardToPlay.of(weakest);
+        }
+        if (hasTwoManilhas(botCards,vira)){
+            return CardToPlay.of(weakest);
+        }
+        if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 12){
+            return CardToPlay.of(strongest);
+        }
+        return CardToPlay.of(weakest);
     }
 
     @Override
