@@ -34,6 +34,11 @@ public class BotEcoTest {
 
     private BotEco botEco;
 
+    @BeforeAll
+    static void setUpAll() {
+        System.out.println("Starting BotEco tests.");
+    }
+
     @AfterAll
     static void tearDown() {
         System.out.println("All BotEco tests finished.");
