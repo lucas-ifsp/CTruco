@@ -964,6 +964,27 @@ class LgtbotTest {
                     assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
                 }
 
+                @Test
+                @DisplayName("Deve blefar quando está em desvantagem e com cartas fracas")
+                public void testShouldBluff_WhenLosingWithWeakCards() {
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getScore()).thenReturn(7);
+                    when(intel.getOpponentScore()).thenReturn(9); // Bot está perdendo por pouco
+
+                    // Cartas fracas do bot
+                    List<TrucoCard> weakCards = List.of(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                    );
+                    when(intel.getCards()).thenReturn(weakCards);
+
+                    Lgtbot bot = new Lgtbot();
+
+                    boolean result = bot.shouldBluff(intel);
+                    assertTrue(result, "O bot deveria blefar em situação de desvantagem com cartas fracas.");
+                }
+
+
             }
         }
     }
