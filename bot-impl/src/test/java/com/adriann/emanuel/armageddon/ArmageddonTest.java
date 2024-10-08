@@ -543,6 +543,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(1)));
                 }
+
+                @Test
+                @DisplayName("Should play the weakest of two manilhas when not having zap")
+                void shouldPlayWeakestManilhaWhenNotZap(){
+                    vira = TrucoCard.of(ACE,HEARTS);
+                    botCards = List.of(
+                            TrucoCard.of(TWO,HEARTS),
+                            TrucoCard.of(TWO,DIAMONDS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
