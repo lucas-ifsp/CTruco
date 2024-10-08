@@ -529,6 +529,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+
+                @Test
+                @DisplayName("Should discard three when has zap")
+                void shouldDiscardThreeWhenZap(){
+                    vira = TrucoCard.of(JACK,SPADES);
+                    botCards = List.of(
+                            TrucoCard.of(KING,CLUBS),
+                            TrucoCard.of(THREE,DIAMONDS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(1)));
+                }
             }
         }
     }
