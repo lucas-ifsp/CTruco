@@ -151,6 +151,9 @@ public class Armageddon implements BotServiceProvider {
                     }
                     return CardToPlay.of(weakest);
                 }
+                if (hasTwoManilhas(botCards,vira)){
+                    return CardToPlay.of(weakest);
+                }
                 if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 6){
                     return CardToPlay.of(strongest);
                 }
