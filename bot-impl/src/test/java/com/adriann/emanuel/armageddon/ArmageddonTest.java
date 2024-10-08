@@ -501,6 +501,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+
+                @Test
+                @DisplayName("Should discard hearts when has higher couple")
+                void shouldDiscardHeartsWhenHigherCouple(){
+                    vira = TrucoCard.of(ACE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(TWO,HEARTS),
+                            TrucoCard.of(TWO,CLUBS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(0)));
+                }
             }
         }
     }
