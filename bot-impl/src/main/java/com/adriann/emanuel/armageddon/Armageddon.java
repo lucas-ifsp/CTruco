@@ -146,6 +146,9 @@ public class Armageddon implements BotServiceProvider {
                     if (hasHigherCouple(botCards,vira)){
                         return CardToPlay.discard(weakest);
                     }
+                    if (hasThree(botCards, vira)){
+                        return CardToPlay.discard(weakest);
+                    }
                     return CardToPlay.of(weakest);
                 }
                 if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 6){
