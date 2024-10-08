@@ -486,6 +486,20 @@ public class ArmageddonTest {
 
                     assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
                 }
+
+                @Test
+                @DisplayName("Should play the strongest card when has bad cards")
+                void shouldPlayStrongestCardWhenHasBadCards(){
+                    vira = TrucoCard.of(SEVEN,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SIX,SPADES),
+                            TrucoCard.of(FOUR,CLUBS));
+                    List<TrucoCard> openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }
