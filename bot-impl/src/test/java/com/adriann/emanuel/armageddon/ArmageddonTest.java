@@ -47,6 +47,7 @@ public class ArmageddonTest {
     private TrucoCard vira;
     private TrucoCard opponentCard;
     private List<TrucoCard> botCards;
+    private List<TrucoCard> openCards;
 
     private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
@@ -480,7 +481,7 @@ public class ArmageddonTest {
                     botCards = List.of(
                             TrucoCard.of(THREE,CLUBS),
                             TrucoCard.of(FIVE,HEARTS));
-                    List<TrucoCard> openCards = List.of(vira);
+                    openCards = List.of(vira);
 
                     intel = secondRoundWonFirstRound(botCards,openCards,vira);
 
@@ -494,7 +495,7 @@ public class ArmageddonTest {
                     botCards = List.of(
                             TrucoCard.of(SIX,SPADES),
                             TrucoCard.of(FOUR,CLUBS));
-                    List<TrucoCard> openCards = List.of(vira);
+                    openCards = List.of(vira);
 
                     intel = secondRoundWonFirstRound(botCards,openCards,vira);
 
