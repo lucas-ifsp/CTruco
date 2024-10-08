@@ -3,8 +3,6 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
-import java.util.Arrays;
 import java.util.List;
 
 public class CamaleaoTruqueiro implements BotServiceProvider {
@@ -12,8 +10,8 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        if(getNumberOfHighCards(cards,vira) >= 2 && numberOfManilhas(cards,vira) >= 1) return true;
-        else if (intel.getOpponentScore() < 9 && getNumberOfHighCards(cards,vira) >= 1) return true;
+        if(getNumberOfHighRankCards(cards,vira) >= 2 && numberOfManilhas(cards,vira) >= 1) return true;
+        else if (intel.getOpponentScore() < 9 && getNumberOfHighRankCards(cards,vira) >= 1) return true;
         else return false;
     }
 
@@ -23,20 +21,20 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> lowerCard = List.of(getLowestCard(cards,vira));
         if(isTheFirstRound(intel) && !theBotPlaysFirst(intel)){
-            if((getNumberOfHighCards(cards,vira)>1 || (getNumberOfHighCards(cards,vira)==1 && getNumberOfMediumCards(cards,vira)>0) )  && !haveStrongestCard(intel,lowerCard).isEmpty()){
+            if((getNumberOfHighRankCards(cards,vira)>1 || (getNumberOfHighRankCards(cards,vira)==1 && getNumberOfMediumRankCards(cards,vira)>0) )  && !haveStrongestCard(intel,lowerCard).isEmpty()){
                 return true;
             }
-            else if(getNumberOfHighCards(cards,vira)>=2){
+            else if(getNumberOfHighRankCards(cards,vira)>=2){
                 return true;
             }
             else{
                 return false;
             }
         }
-        else if(getNumberOfHighCards(cards,vira)>=2){
+        else if(getNumberOfHighRankCards(cards,vira)>=2){
             return true;
         }
-        else if(getNumberOfHighCards(cards,vira)==1){
+        else if(getNumberOfHighRankCards(cards,vira)==1){
             return true;
         }
         else {
@@ -50,7 +48,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         if(isTheFirstRound(intel)) {
             if (theBotPlaysFirst(intel)) {
-                if (getNumberOfHighCards(cards, vira) >= 2) {
+                if (getNumberOfHighRankCards(cards, vira) >= 2) {
                     TrucoCard playCard = getGreatestCard(cards, vira);
                     return CardToPlay.of(playCard);
                 } else {
@@ -62,7 +60,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
                 TrucoCard playCard = getLowestCard(haveStrongestCard(intel,cards),vira);
                 return CardToPlay.of(playCard);
             }
-            else if(getNumberOfHighCards(cards,vira)==1){
+            else if(getNumberOfHighRankCards(cards,vira)==1){
                 if(!haveStrongestCard(intel, cards).isEmpty()){
                     TrucoCard playCard = getGreatestCard(cards,vira);
                     return  CardToPlay.of(playCard);
@@ -83,7 +81,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
                 return CardToPlay.of(playCard);
             }
             else if(theBotPlaysFirst(intel)){
-                if(getNumberOfHighCards(cards,vira)==2){
+                if(getNumberOfHighRankCards(cards,vira)==2){
                     TrucoCard playCard = getGreatestCard(cards,vira);
                     return CardToPlay.of(playCard);
                 }
@@ -92,7 +90,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
                     return CardToPlay.of(playCard);
                 }
             }
-            else if(getNumberOfHighCards(cards,vira)==1){
+            else if(getNumberOfHighRankCards(cards,vira)==1){
                 if(!haveStrongestCard(intel, cards).isEmpty()){
                     TrucoCard playCard = getGreatestCard(cards,vira);
                     return  CardToPlay.of(playCard);
@@ -120,10 +118,10 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         if(numberOfManilhas(cards,vira)>1){
             return 1;
         }
-        if(getNumberOfHighCards(cards,vira)>=2){
+        if(getNumberOfHighRankCards(cards,vira)>=2){
             return 0;
         }
-        else if(!isWinning(intel.getScore(), intel.getOpponentScore()) && getNumberOfHighCards(cards,vira)==1){
+        else if(!isWinning(intel.getScore(), intel.getOpponentScore()) && getNumberOfHighRankCards(cards,vira)==1){
             return 0;
         }
         else {
@@ -158,7 +156,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return numberOfManilhas;
     }
 
-    public int getNumberOfHighCards(List<TrucoCard> handCards, TrucoCard vira) {
+    public int getNumberOfHighRankCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfHighCards = 0;
         for (TrucoCard handCard : handCards) {
             if(handCard.getRank().value()>8 || handCard.isManilha(vira)) numberOfHighCards++;
@@ -233,7 +231,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return strongestCards;
     }
 
-    public int getNumberOfMediumCards(List<TrucoCard> handCards, TrucoCard vira) {
+    public int getNumberOfMediumRankCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfMediumCards = 0;
         for (TrucoCard handCard : handCards) {
             if(handCard.getRank().value()<=7 && handCard.getRank().value()>4 && !handCard.isManilha(vira)) numberOfMediumCards++;
@@ -241,7 +239,7 @@ public class CamaleaoTruqueiro implements BotServiceProvider {
         return numberOfMediumCards;
     }
 
-    public int getNumberOfLowCards(List<TrucoCard> handCards, TrucoCard vira) {
+    public int getNumberOfLowRankCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfLowCards = 0;
         for (TrucoCard handCard : handCards) {
             if(handCard.getRank().value()<=4 && !handCard.isManilha(vira)) numberOfLowCards++;
