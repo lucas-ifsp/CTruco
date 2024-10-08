@@ -141,6 +141,17 @@ public class Armageddon implements BotServiceProvider {
                     return CardToPlay.of(strongest);
                 }
             }
+            case 1 -> {
+                TrucoCard strongest = strongestCard(botCards,vira);
+                TrucoCard weakest = weakestCard(botCards,vira);
+
+                if (hasZap(botCards,vira)){
+                    return CardToPlay.of(weakest);
+                }
+                if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 6){
+                    return CardToPlay.of(strongest);
+                }
+            }
         }
         return CardToPlay.of(botCards.get(0));
     }
