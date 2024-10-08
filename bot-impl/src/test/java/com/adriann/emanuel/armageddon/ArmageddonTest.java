@@ -473,7 +473,19 @@ public class ArmageddonTest {
             @Nested
             @DisplayName("Tests to implement logic of choose card in the second round when won the first round")
             class SecondRoundWonFirstRoundChoose{
+                @Test
+                @DisplayName("Should play the weakest card when has zap")
+                void shouldPlayWeakestCardWhenHasZap(){
+                    vira = TrucoCard.of(TWO,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(THREE,CLUBS),
+                            TrucoCard.of(FIVE,HEARTS));
+                    List<TrucoCard> openCards = List.of(vira);
 
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
