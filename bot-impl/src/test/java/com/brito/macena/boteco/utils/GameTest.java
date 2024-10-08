@@ -7,9 +7,11 @@ import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.List;
 
+@DisplayName("Game Tests")
 public class GameTest {
 
     private GameIntel intel;
