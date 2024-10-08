@@ -22,10 +22,7 @@
 package com.brito.macena.boteco;
 
 import com.bueno.spi.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -36,6 +33,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BotEcoTest {
 
     private BotEco botEco;
+
+    @AfterAll
+    static void tearDown() {
+        System.out.println("All BotEco tests finished.");
+    }
 
     @BeforeEach
     void setUp() {
