@@ -276,6 +276,29 @@ public class BatataFritaDoBarBotTest {
 
     }
 
+    //14
+    @Test
+    @DisplayName("make sure throw the lowest card to win")
+    void makeSureThrowTheLowestCardToWin(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+        );
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+        when(opponentCard.equals(TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestToWin(stepBuilder.build()));
+
+    }
+
 
 
 
