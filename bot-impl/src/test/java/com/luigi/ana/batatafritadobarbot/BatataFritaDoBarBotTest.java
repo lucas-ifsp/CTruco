@@ -329,6 +329,27 @@ public class BatataFritaDoBarBotTest {
         assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should return the lowest manilha to win")
+    void shouldReturnTheLowestManilhaToWin() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)), batataFritaDoBarBot.getLowestToWin(stepBuilder.build()));
+    }
 
 
 }
