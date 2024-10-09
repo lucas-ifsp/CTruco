@@ -32,10 +32,15 @@ import static com.bueno.spi.model.CardRank.*;
 
 public class Armageddon implements BotServiceProvider {
     private static final int GOOD_HAND_STRENGTH = 25;
+    private TrucoCard vira;
+    private List<TrucoCard> botCards;
+    private TrucoCard weakest;
+    private TrucoCard strongest;
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> botCards = intel.getCards();
+        vira = intel.getVira();
+        botCards = intel.getCards();
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return false;
 
         int goodCard = 0;
@@ -56,7 +61,7 @@ public class Armageddon implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
-        TrucoCard vira = intel.getVira();
+        vira = intel.getVira();
 
         for (TrucoCard card : playerHand) {
             if (card.isManilha(vira)) {
@@ -76,7 +81,7 @@ public class Armageddon implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         int rounds = intel.getRoundResults().size();
-        List<TrucoCard> botCards = intel.getCards();
+        botCards = intel.getCards();
 
         switch (rounds) {
             case 0 -> {
@@ -90,12 +95,12 @@ public class Armageddon implements BotServiceProvider {
     }
 
     private CardToPlay firstRoundChoose(GameIntel intel){
-        TrucoCard vira = intel.getVira();
+        vira = intel.getVira();
+        botCards = intel.getCards();
+        weakest = weakestCard(botCards,vira);
+        strongest = strongestCard(botCards,vira);
 
-        List<TrucoCard> botCards = intel.getCards();
-        TrucoCard weakest = weakestCard(botCards,vira);
         TrucoCard middle = middleCard(botCards,vira);
-        TrucoCard strongest = strongestCard(botCards,vira);
 
         Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
         TrucoCard opponentCard;
@@ -155,12 +160,11 @@ public class Armageddon implements BotServiceProvider {
     }
 
     private CardToPlay secondRoundChoose(GameIntel intel){
-        TrucoCard vira = intel.getVira();
+        vira = intel.getVira();
 
-        List<TrucoCard> botCards = intel.getCards();
-        TrucoCard weakest = weakestCard(botCards,vira);
-        TrucoCard middle = middleCard(botCards,vira);
-        TrucoCard strongest = strongestCard(botCards,vira);
+        botCards = intel.getCards();
+        weakest = weakestCard(botCards,vira);
+        strongest = strongestCard(botCards,vira);
 
         Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
         TrucoCard opponentCard;
@@ -189,8 +193,8 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> botCards = intel.getCards();
+        vira = intel.getVira();
+        botCards = intel.getCards();
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
         if (!hasThree(botCards, vira) && !hasManilha(botCards, vira)) {
