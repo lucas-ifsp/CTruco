@@ -299,7 +299,12 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-
+    @Test
+    @DisplayName("Sure not to ask for truco if opponent is in hand of eleven")
+    void sureNotToAskForTrucoIfOpponentIsInHandOfEleven () {
+        when(intel.getOpponentScore()).thenReturn(11);
+        assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
+    }
 
 
 
