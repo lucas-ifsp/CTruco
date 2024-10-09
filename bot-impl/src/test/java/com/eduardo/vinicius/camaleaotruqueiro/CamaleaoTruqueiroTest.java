@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -1063,5 +1064,38 @@ public class CamaleaoTruqueiroTest {
                 }
             }
         }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            //Round number    ||   className expected   ||
+            "1, FirstRoundStrategy",
+            "2, SecondRoundStrategy",
+            "3,ThirdRoundStrategy"
+    })
+    @DisplayName("Creating Round Strategy based on actual round number")
+    void CreatingRoundStrategy(int roundNumber, String expectedStrategyClassName) {
+        //When
+        List<GameIntel.RoundResult> roundResults = new ArrayList<>();
+        switch (roundNumber) {
+            case 2: roundResults.add(GameIntel.RoundResult.DREW);
+                break;
+            case 3:
+            {
+                roundResults.add(GameIntel.RoundResult.DREW);
+                roundResults.add(GameIntel.RoundResult.DREW);
+            };
+                break;
+        }
+        //Then
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults,List.of(),TrucoCard.of(CardRank.KING, CardSuit.HEARTS),1)
+                .botInfo(List.of(),0)
+                .opponentScore(0)
+                .opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN)).build();
+
+        RoundStrategy strategy = RoundStrategy.of(intel);
+
+        assertThat(strategy.getClass().getSimpleName()).isEqualTo(expectedStrategyClassName);
     }
 }
