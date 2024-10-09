@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class BatataFritaDoBarBotTest {
@@ -264,6 +263,21 @@ public class BatataFritaDoBarBotTest {
 
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
     }
+
+
+    //13
+    @Test
+    @DisplayName("make sure blefe is working")
+    void makeSureBlefeIsWorking(){
+        when(intel.getOpponentScore() == 9 && intel.getScore() == 2);
+        int dif = intel.getOpponentScore() - intel.getScore();
+
+        assertEquals(7, dif);
+
+    }
+
+
+
 
 
 }
