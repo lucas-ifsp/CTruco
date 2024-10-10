@@ -44,6 +44,10 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public CardToPlay chooseCard(GameIntel intel)
     {
+        //deve escolher a carta menor primeiro, caso tiver zap em maos
+        //se nao tiver manilha deve abrir o jogo com a carta mais forte
+        //se tiver feito um ponto, jogar a carta mais forte
+
         return null;
     }
 
@@ -53,7 +57,7 @@ public class Zetruquero implements BotServiceProvider
         return 0;
     }
 
-    public Boolean strongCardInHand(List<TrucoCard> cards)
+    public Boolean strongCardInHand(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se de fato na mao do bot tem alguma carta considerada forte (sem considerar manilha)
         // A, 2, 3

@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ZeTruqueroTests
 {
@@ -58,7 +59,125 @@ public class ZeTruqueroTests
     @DisplayName("chooseCard")
     class chooseCardTests
     {
+        @DisplayName("Escolhe a carta menor para o primeiro round caso tenha zap")
+        @Test
+        public void shouldChooseWeakestCard()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
 
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 0)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            final CardToPlay card = zetruquero.chooseCard(intel);
+            assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), card.content());
+        }
+
+        @DisplayName("Se nao tiver manilha deve abrir o jogo com a carta mais forte")
+        @Test
+        public void shouldChooseStrongCardWithoutManilha()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 0)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            final CardToPlay card = zetruquero.chooseCard(intel);
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), card.content());
+        }
+
+        @DisplayName("Se tiver feito um ponto, jogar a carta mais forte (para o caso sem zap)")
+        @Test
+        public void shouldChooseStrongCardWithoutZap()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            final CardToPlay card = zetruquero.chooseCard(intel);
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), card.content());
+        }
+
+        @DisplayName("Se tiver feito um ponto, jogar a carta mais fraca (para o caso de ter zap)")
+        @Test
+        public void shouldChooseWeakCardWithZap()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            final CardToPlay card = zetruquero.chooseCard(intel);
+            assertEquals(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), card.content());
+        }
+
+        @DisplayName("Se tiver em maos o casal maior, comecar com a mais fraca")
+        @Test
+        public void shouldChooseWeakCardWithTwoStrongest()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 0)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            final CardToPlay card = zetruquero.chooseCard(intel);
+            assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), card.content());
+        }
     }
 
     @Nested
@@ -111,6 +230,34 @@ public class ZeTruqueroTests
 
             assertThat(zetruquero.strongHand(trucoCards, vira)).isTrue();
             assertThat(zetruquero.strongHand(trucoCards, vira2)).isFalse();
+        }
+
+        @DisplayName("Deve retornar que a a mao atual do bot tem uma carta fote, caso sem manilha")
+        @Test
+        public void ShouldReturnTrueForGoodCards()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+            assertThat(zetruquero.strongCardInHand(trucoCards, vira)).isTrue();
+        }
+
+        @DisplayName("Deve retornar que a a mao atual do bot tem o casal maior")
+        @Test
+        public void ShouldReturnTrueForTwoStrongest()
+        {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+            assertThat(zetruquero.twoStrongestManilhas(trucoCards, vira)).isTrue();
         }
     }
 
