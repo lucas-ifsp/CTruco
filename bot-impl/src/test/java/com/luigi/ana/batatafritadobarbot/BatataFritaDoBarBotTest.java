@@ -375,4 +375,30 @@ public class BatataFritaDoBarBotTest {
         assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), batataFritaDoBarBot.getHighestCard(stepBuilder.build()));
     }
 
+
+    //19
+    @Test
+    @DisplayName("Should return WON the last round")
+    void shouldReturnWonTheLastRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertTrue(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
+
+    }
+
+
+
+
+
 }
