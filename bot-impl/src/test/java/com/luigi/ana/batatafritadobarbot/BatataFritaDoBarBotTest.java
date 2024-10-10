@@ -397,7 +397,25 @@ public class BatataFritaDoBarBotTest {
 
     }
 
+    //20
+    @Test
+    @DisplayName("Should return LOST the last round")
+    void shouldReturnLostTheLastRound(){
+        TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
+    }
 
 
 
