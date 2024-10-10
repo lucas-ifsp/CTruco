@@ -49,7 +49,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
-import com.Selin.Bonelli.zetruquero.zetruquero;
+import com.Selin.Bonelli.zetruquero.Zetruquero;
 
 module bot.impl {
     requires bot.spi;
@@ -157,5 +157,5 @@ module bot.impl {
             BeepBot,
             Zeusbot,
             ReiDoZap,
-            zetruquero;
+            Zetruquero;
 }
