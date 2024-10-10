@@ -49,6 +49,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
+import com.Selin.Bonelli.zetruquero.zetruquero;
 
 module bot.impl {
     requires bot.spi;
@@ -101,6 +102,7 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+    exports com.Selin.Bonelli.zetruquero;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -154,5 +156,6 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-            ReiDoZap;
+            ReiDoZap,
+            zetruquero;
 }

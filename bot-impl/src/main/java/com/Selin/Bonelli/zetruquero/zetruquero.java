@@ -20,13 +20,38 @@
 
 /* 'zeTruquero' bot with didactic propose. Code by Lucas Selin and Pedro Bonelli */
 
-package com.Selin.Bonelli;
+package com.Selin.Bonelli.zetruquero;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class zetruquero
+public class zetruquero implements BotServiceProvider
 {
+    @Override
+    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public boolean decideIfRaises(GameIntel intel) {
+        return false;
+    }
+
+    @Override
+    public CardToPlay chooseCard(GameIntel intel) {
+        return null;
+    }
+
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
+    }
+
+    @Override
+    public String getName() {
+        return BotServiceProvider.super.getName();
+    }
 }
+
