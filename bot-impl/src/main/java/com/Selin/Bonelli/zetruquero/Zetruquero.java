@@ -48,7 +48,6 @@ public class Zetruquero implements BotServiceProvider
         //se nao tiver manilha deve abrir o jogo com a carta mais forte
         //se tiver feito um ponto, jogar a carta mais forte
         //se tiver casal maior, jogar sempre a mais fraca
-
         return null;
     }
 
