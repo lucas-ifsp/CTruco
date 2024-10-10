@@ -63,6 +63,28 @@ public class ZeTruqueroTests
     @DisplayName("chooseCard")
     class chooseCardTests
     {
+        @DisplayName("Deve escolher a carta mais forte ao jogar primeiro")
+        @Test
+        public void shouldChooseStrongestCardWhenPlayingFirst() {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+            // O bot deve escolher o Rei de Espadas
+            TrucoCard expectedCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            assertThat(zetruquero.chooseCard(mockIntel(trucoCards, vira))).isEqualTo(CardToPlay.of(expectedCard));
+        }
+
+        private GameIntel mockIntel(List<TrucoCard> trucoCards, TrucoCard vira) {
+            GameIntel intel = mock(GameIntel.class);
+            when(intel.getCards()).thenReturn(trucoCards);
+            when(intel.getVira()).thenReturn(vira);
+            return intel;
+        }
+
         @DisplayName("Escolhe a carta menor para o primeiro round caso tenha zap")
         @Test
         public void shouldChooseWeakestCard()
@@ -263,48 +285,46 @@ public class ZeTruqueroTests
 
             assertThat(zetruquero.twoStrongestManilhas(trucoCards, vira)).isTrue();
         }
+
+        @DisplayName("Deve escolher a carta mais forte ao jogar primeiro")
+        @Test
+        public void shouldChooseStrongestCardWhenPlayingFirst() {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+            // O bot deve escolher o Rei de Espadas
+            TrucoCard expectedCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            assertThat(zetruquero.chooseCard(mockIntel(trucoCards, vira))).isEqualTo(CardToPlay.of(expectedCard));
+        }
+    
+        private GameIntel mockIntel(List<TrucoCard> trucoCards, TrucoCard vira) {
+            GameIntel intel = mock(GameIntel.class);
+            when(intel.getCards()).thenReturn(trucoCards);
+            when(intel.getVira()).thenReturn(vira);
+            return intel;
+        }
+
+        @DisplayName("Deve escolher a carta mais fraca quando o adversário jogou uma carta forte")
+        @Test
+        public void shouldChooseWeakestCardWhenOpponentPlaysStrongCard() {
+            List<TrucoCard> trucoCards = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            GameIntel intel = mockIntel(trucoCards, vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
+
+            // Ecolhe a carta mais fraca como descarte
+            TrucoCard expectedCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+            assertThat(zetruquero.chooseCard(intel)).isEqualTo(CardToPlay.of(expectedCard));
+        }
     }
-
-    @DisplayName("Deve escolher a carta mais forte ao jogar primeiro")
-    @Test
-    public void shouldChooseStrongestCardWhenPlayingFirst() {
-        List<TrucoCard> trucoCards = List.of(
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.KING, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
-
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
-
-        // O bot deve escolher o Rei de Espadas
-        TrucoCard expectedCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-        assertThat(zetruquero.chooseCard(mockIntel(trucoCards, vira))).isEqualTo(CardToPlay.of(expectedCard));
-    }
-
-    private GameIntel mockIntel(List<TrucoCard> trucoCards, TrucoCard vira) {
-        GameIntel intel = mock(GameIntel.class);
-        when(intel.getCards()).thenReturn(trucoCards);
-        when(intel.getVira()).thenReturn(vira);
-        return intel;
-    }
-
-    @DisplayName("Deve escolher a carta mais fraca quando o adversário jogou uma carta forte")
-    @Test
-    public void shouldChooseWeakestCardWhenOpponentPlaysStrongCard() {
-        List<TrucoCard> trucoCards = List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
-
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
-
-        GameIntel intel = mockIntel(trucoCards, vira);
-        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
-
-        // Ecolhe a carta mais fraca como descarte
-        TrucoCard expectedCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        assertThat(zetruquero.chooseCard(intel)).isEqualTo(CardToPlay.of(expectedCard));
-    }
-
-
 }
