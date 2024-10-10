@@ -44,6 +44,8 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public CardToPlay chooseCard(GameIntel intel)
     {
+
+        //Escolha de cartas para cada situação
         return null;
     }
 
