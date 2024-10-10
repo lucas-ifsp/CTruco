@@ -329,6 +329,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
+    //17
     @Test
     @DisplayName("Should return the lowest manilha to win")
     void shouldReturnTheLowestManilhaToWin() {
@@ -351,5 +352,27 @@ public class BatataFritaDoBarBotTest {
         assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)), batataFritaDoBarBot.getLowestToWin(stepBuilder.build()));
     }
 
+
+    //18
+    @Test
+    @DisplayName("make sure zap is the highest manilha")
+    void makeSureZapIsTheHighestManilha () {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertEquals(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), batataFritaDoBarBot.getHighestCard(stepBuilder.build()));
+    }
 
 }
