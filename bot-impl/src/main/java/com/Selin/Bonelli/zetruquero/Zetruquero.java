@@ -32,12 +32,17 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel)
     {
+        //decidir jogar para 2 manilhas
+        //decidir jogar com zap
+        //decidir jogar com 1 manilha e duas cartas fortes
         return false;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel)
     {
+        //deve aumentar a pedida de pontos caso tenha ganho um round e seja o ultimo, com carta forte
+        //deve nao aumentar a pedida de pontos caso nao tenha cartas fortes ou manilhas
         return false;
     }
 
@@ -54,6 +59,11 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public int getRaiseResponse(GameIntel intel)
     {
+        //nao deve aceitar o aumento de pontos para caso nao tenha uma manilha ou 2 cartas bem fortes
+        //nao aceitar a pedida se ja tenha perdido o primeiro round
+        //nao aceitar a pedida se perdeu um round e o oponente jogou uma carta fraca em seguida
+        //aumentar a pedida caso tenha uma vitoria e o zap
+        //aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas
         return 0;
     }
 
@@ -105,6 +115,11 @@ public class Zetruquero implements BotServiceProvider
         //funcao ira analisar se na mao do bot ta perfeita - CHAMAR TUDO
         // pelo menos 2 manilha ou 1 zap ou duas cartas acima de K
         return false;
+    }
+
+    @Override
+    public String getName() {
+        return BotServiceProvider.super.getName();
     }
 }
 
