@@ -639,5 +639,77 @@ public class ZeTruqueroTests
         assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS));
     }
 
+    @DisplayName("Deve escolher a carta mais baixa com cartas medianas e sem manilha")
+    @Test
+    public void shouldChooseLowestCardWithNoManilhaAndMediumCards() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        TrucoCard expectedCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(expectedCard);
+    }
+
+    @DisplayName("Deve aumentar a pedida com um Zap e uma carta forte")
+    @Test
+    public void shouldRaiseWithZapAndStrongCard() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        assertThat(zetruquero.getRaiseResponse(intel)).isGreaterThan(0);
+    }
+
+    @DisplayName("Deve recusar mão de onze com uma carta baixa e uma manilha fraca")
+    @Test
+    public void shouldRejectMaoDeOnzeWithLowCardAndWeakManilha() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isFalse();
+    }
+
+    @DisplayName("Deve aceitar mão de onze com duas manilhas fortes e uma carta alta")
+    @Test
+    public void shouldAcceptMaoDeOnzeWithTwoStrongManilhasAndHighCard() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS), // Manilha
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS), // Manilha
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isTrue();
+    }
+
+    @DisplayName("Deve jogar a carta intermediária com uma manilha fraca e uma carta alta")
+    @Test
+    public void shouldPlayMiddleCardWithWeakManilhaAndHighCard() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        TrucoCard expectedCard = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(expectedCard);
+    }
+
 
 }
