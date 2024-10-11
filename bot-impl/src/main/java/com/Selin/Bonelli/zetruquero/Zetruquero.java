@@ -35,6 +35,7 @@ public class Zetruquero implements BotServiceProvider
         //decidir jogar para 2 manilhas
         //decidir jogar com zap
         //decidir jogar com 1 manilha e duas cartas fortes
+        //Deve recusar mão de onze se tiver duas cartas fracas
         return false;
     }
 
@@ -43,6 +44,7 @@ public class Zetruquero implements BotServiceProvider
     {
         //deve aumentar a pedida de pontos caso tenha ganho um round e seja o ultimo, com carta forte
         //deve nao aumentar a pedida de pontos caso nao tenha cartas fortes ou manilhas
+        //Deve aumentar a pedida se tiver uma manilha e uma carta alta
         return false;
     }
 
@@ -53,6 +55,9 @@ public class Zetruquero implements BotServiceProvider
         //se nao tiver manilha deve abrir o jogo com a carta mais forte
         //se tiver feito um ponto, jogar a carta mais forte
         //se tiver casal maior, jogar sempre a mais fraca
+        //Deve escolher a carta intermediária se for a segunda rodada e tiver ganho a primeira
+        //Deve jogar a carta mais forte se não houver manilha e tiver duas cartas fortes
+        //Deve jogar a manilha mais fraca se tiver as duas manilhas mais fortes
         return null;
     }
 
@@ -63,6 +68,8 @@ public class Zetruquero implements BotServiceProvider
         //nao aceitar a pedida se ja tenha perdido o primeiro round
         //aumentar a pedida caso tenha uma vitoria e o zap
         //aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas
+        // Deve recusar aumentar a pedida com cartas medianas e já perdeu o primeiro round
+        //Deve aceitar aumentar a pedida se tiver zap e manilha
         return 0;
     }
 
