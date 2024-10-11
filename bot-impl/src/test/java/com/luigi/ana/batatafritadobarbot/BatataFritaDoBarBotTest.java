@@ -446,7 +446,29 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
 
     }
-    
+
+    //23
+    @Test
+    @DisplayName("Ask for truco if you have 3 manilhas")
+    void askForTrucoIfYouHave3Manilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+    }
+
 
 
 
