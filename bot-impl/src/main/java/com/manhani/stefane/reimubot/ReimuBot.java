@@ -109,6 +109,11 @@ public class ReimuBot implements BotServiceProvider {
         return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
     }
     
+    private boolean drewFirstRound(GameIntel intel){
+        if(intel.getRoundResults().isEmpty()) return false;
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW;
+    }
+    
     private boolean isSecondRound(GameIntel intel){
         return intel.getCards().size() == 2;
     }
@@ -127,6 +132,10 @@ public class ReimuBot implements BotServiceProvider {
     
     private TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira){
         return cards.stream().min(Comparator.comparingInt(c->c.relativeValue(vira))).get();
+    }
+
+    private TrucoCard getStrongestCard(GameIntel intel) {
+        return intel.getCards().stream().max(Comparator.comparingInt(r->r.relativeValue(intel.getVira()))).get();
     }
 
     //should only be called after checking if you're not first
@@ -169,18 +178,23 @@ public class ReimuBot implements BotServiceProvider {
     }
     
     private TrucoCard FirstToPlayChooseCardStrategy(GameIntel intel){
-        if(isFirstRound(intel)) return getWeakestCard(tryGetCardsThatAreNotMaior(intel), intel.getVira());
+        if(isFirstRound(intel)) 
+            return getWeakestCard(tryGetCardsThatAreNotMaior(intel), intel.getVira());
+        if(isSecondRound(intel) && drewFirstRound(intel))
+            return getStrongestCard(intel);
         return getWeakestCard(intel);
     }
     
     private TrucoCard LastToPlayChooseCardStrategy(GameIntel intel) {
+        if(isSecondRound(intel) && drewFirstRound(intel))
+            return getStrongestCard(intel);
         if (canDefeatOpponentCard(intel)){
             if (isFirstRound(intel) && canWinWithoutMaior(intel))
                 return getWeakestCardThatWins(tryGetCardsThatAreNotMaior(intel), intel.getVira(), intel.getOpponentCard().get());
             if(isFirstRound(intel))
                 return getWeakestCard(intel);
-        return getWeakestCardThatWins(intel);
-    }
+            return getWeakestCardThatWins(intel);
+        }
         return getWeakestCard(intel);
     }
 
