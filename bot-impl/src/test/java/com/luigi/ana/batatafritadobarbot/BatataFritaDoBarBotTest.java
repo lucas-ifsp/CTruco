@@ -466,8 +466,31 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(1);
 
-        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+        assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
+
+    //24
+    @Test
+    @DisplayName("Ask truco when avg is higher then 7")
+    void askTrucoWhenAvgIsHigherThan7(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+    }
+
 
 
 
