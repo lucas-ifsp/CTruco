@@ -41,6 +41,13 @@ public class ReimuBot implements BotServiceProvider {
     
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int handPoints = getHandValue(intel);
+        int distance = getOpponentDistance(intel);
+        if(intel.getOpponentScore() >= 9 && handPoints <= 19) return false;
+        if(handPoints >= 20) return true;
+        if(handPoints < 19) return false;
+        if(distance <= -4) return true;
+
         return false;
     }
 
@@ -76,7 +83,11 @@ public class ReimuBot implements BotServiceProvider {
     private int getHandValue(GameIntel intel) {
         return intel.getCards().stream().mapToInt(c -> c.relativeValue(intel.getVira())).sum();
     }
-    
+
+    private int getOpponentDistance(GameIntel intel) {
+        return intel.getOpponentScore()-intel.getScore();
+    }
+
     //should only be called after checking if you're not first
     private boolean canDefeatOpponentCard(GameIntel intel) {
         return canDefeatOpponentCard(intel.getCards(), intel.getVira(), intel.getOpponentCard().get());
