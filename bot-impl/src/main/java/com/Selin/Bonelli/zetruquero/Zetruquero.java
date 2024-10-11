@@ -61,7 +61,6 @@ public class Zetruquero implements BotServiceProvider
     {
         //nao deve aceitar o aumento de pontos para caso nao tenha uma manilha ou 2 cartas bem fortes
         //nao aceitar a pedida se ja tenha perdido o primeiro round
-        //nao aceitar a pedida se perdeu um round e o oponente jogou uma carta fraca em seguida
         //aumentar a pedida caso tenha uma vitoria e o zap
         //aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas
         return 0;

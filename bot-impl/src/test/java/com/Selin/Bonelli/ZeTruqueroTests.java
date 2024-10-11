@@ -49,14 +49,125 @@ public class ZeTruqueroTests
     @DisplayName("getMaoDeOnzeResponse")
     class getMaoDeOnzeResponseTests
     {
+        @DisplayName("Decidir jogar para 2 manilhas")
+        @Test
+        public void ShouldPlayTwoManilhas()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
 
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
+        @DisplayName("Decidir jogar com zap")
+        @Test
+        public void ShouldPlayWithZap()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
+        @DisplayName("Decidir jogar com 1 manilha e duas cartas fortes")
+        @Test
+        public void ShouldPlayWithManilhaStrong()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of();
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isTrue();
+        }
     }
 
     @Nested
     @DisplayName("decideIfRaises")
     class decideIfRaisesTests
     {
+        @DisplayName("Deve aumentar a pedida de pontos caso tenha ganho um round e seja o ultimo, com carta forte")
+        @Test
+        public void ShouldCallWithStrongCard()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON);
 
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isTrue();
+        }
+
+        @DisplayName("Deve nao aumentar a pedida de pontos caso nao tenha cartas fortes ou manilhas")
+        @Test
+        public void ShouldNotCallWithWeakCards()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isFalse();
+        }
     }
 
     @Nested
@@ -100,7 +211,7 @@ public class ZeTruqueroTests
             );
 
             GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResults, openCards, vira, 0)
+                    .gameInfo(roundResults, openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0)
                     .build();
@@ -124,7 +235,7 @@ public class ZeTruqueroTests
             );
 
             GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResults, openCards, vira, 0)
+                    .gameInfo(roundResults, openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0)
                     .build();
@@ -196,7 +307,7 @@ public class ZeTruqueroTests
             );
 
             GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(roundResults, openCards, vira, 0)
+                    .gameInfo(roundResults, openCards, vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(0)
                     .build();
@@ -210,7 +321,97 @@ public class ZeTruqueroTests
     @DisplayName("getRaiseResponse")
     class getRaiseResponseTests
     {
+        @DisplayName("Nao deve aceitar o aumento de pontos para caso nao tenha uma manilha ou 2 cartas bem fortes")
+        @Test
+        public void shouldNotAcceptWithWeakHand()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of();
 
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getRaiseResponse(intel)).isZero();
+        }
+
+        @DisplayName("Nao aceitar a pedida se ja tenha perdido o primeiro round")
+        @Test
+        public void shouldNotAcceptWithLost()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getRaiseResponse(intel)).isZero();
+        }
+
+        @DisplayName("Aumentar a pedida caso tenha uma vitoria e o zap")
+        @Test
+        public void shouldNotAcceptWithWinAndZap()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getRaiseResponse(intel)).isOne();
+        }
+
+        @DisplayName("Aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas")
+        @Test
+        public void shouldNotAcceptWithWinAndTwoManilha()
+        {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+            List<TrucoCard> openCards = List.of(vira);
+            List<TrucoCard> botCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+            );
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, openCards, vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(zetruquero.getRaiseResponse(intel)).isOne();
+        }
     }
 
     @Nested
