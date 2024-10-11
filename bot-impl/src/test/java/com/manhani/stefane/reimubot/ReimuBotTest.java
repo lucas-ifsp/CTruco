@@ -43,6 +43,23 @@ class ReimuBotTest {
         }
 
         @Test
+        @DisplayName("Should select weakest card if opponent card is hidden")
+        void selectWeakestIfHidden() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.HIDDEN, CardSuit.HIDDEN))
+                    .build();
+            var selectedCard = reimuBot.chooseCard(step).content();
+            assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS));
+        }
+
+        @Test
         @DisplayName("Should play the smallest card necessary to win the round")
         void selectSmallestCardToWin() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
