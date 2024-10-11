@@ -425,8 +425,27 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
     }
 
+    //22
+    @Test
+    @DisplayName("Make sure not ask truco when lost the first and avg less then 9")
+    void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen9(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
 
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+
+    }
     
 
 
