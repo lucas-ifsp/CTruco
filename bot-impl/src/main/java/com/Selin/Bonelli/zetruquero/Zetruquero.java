@@ -21,9 +21,7 @@
 /* 'zeTruquero' bot with didactic propose. Code by Lucas Selin and Pedro Bonelli */
 
 package com.Selin.Bonelli.zetruquero;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 import java.util.List;
 
@@ -38,6 +36,7 @@ public class Zetruquero implements BotServiceProvider
         //Deve recusar mão de onze se tiver duas cartas fracas
         //Deve recusar mão de onze com uma carta baixa e uma manilha fraca
         //Deve aceitar mão de onze com duas manilhas fortes e uma carta alta
+        //Deve recusar mão de onze com duas cartas medianas e sem manilha
         return false;
     }
 
@@ -62,6 +61,8 @@ public class Zetruquero implements BotServiceProvider
         //Deve jogar a manilha mais fraca se tiver as duas manilhas mais fortes
         //Deve escolher a carta mais baixa com cartas medianas e sem manilha
         //Deve jogar a carta intermediária com uma manilha fraca e uma carta alta
+        //Deve jogar o 3 no primeiro round
+        //Deve jogar carta intermediária quando o adversário joga manilha
         return null;
     }
 
@@ -75,6 +76,8 @@ public class Zetruquero implements BotServiceProvider
         // Deve recusar aumentar a pedida com cartas medianas e já perdeu o primeiro round
         //Deve aceitar aumentar a pedida se tiver zap e manilha
         //Deve aumentar a pedida com um Zap e uma carta forte
+        //Deve aceitar truco no último round com um 3
+        //Deve aceitar aumento com manilhas fracas e uma carta alta
         return 0;
     }
 
@@ -127,6 +130,7 @@ public class Zetruquero implements BotServiceProvider
         // pelo menos 2 manilha ou 1 zap ou duas cartas acima de K
         return false;
     }
+
 
     @Override
     public String getName() {

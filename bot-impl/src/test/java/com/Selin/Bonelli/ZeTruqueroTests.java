@@ -711,5 +711,82 @@ public class ZeTruqueroTests
         assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(expectedCard);
     }
 
+    @DisplayName("Deve aceitar truco no último round com um 3")
+    @Test
+    public void shouldAcceptTrucoWithThreeOnLastRound() {
+        TrucoCard card = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<TrucoCard> botCards = List.of(card, TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), List.of(vira), vira, 2)
+                .botInfo(botCards, 1)
+                .opponentScore(1)
+                .build();
+
+        assertThat(zetruquero.getRaiseResponse(intel)).isOne();
+    }
+
+    @DisplayName("Deve jogar o 3 no primeiro round")
+    @Test
+    public void shouldPlayThreeOnFirstRound() {
+        TrucoCard card = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<TrucoCard> botCards = List.of(card, TrucoCard.of(CardRank.FIVE, CardSuit.SPADES), TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 1)
+                .opponentScore(0)
+                .build();
+
+        assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(card);
+    }
+
+    @DisplayName("Deve recusar mão de onze com duas cartas medianas e sem manilha")
+    @Test
+    public void shouldRejectMaoDeOnzeWithMediumCardsAndNoManilha() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        assertThat(zetruquero.getMaoDeOnzeResponse(intel)).isFalse();
+    }
+
+    @DisplayName("Deve aceitar aumento com manilhas fracas e uma carta alta")
+    @Test
+    public void shouldAcceptRaiseWithWeakManilhaAndHighCard() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        GameIntel intel = mockIntel(botCards, vira);
+
+        assertThat(zetruquero.getRaiseResponse(intel)).isGreaterThan(0);
+    }
+
+    @DisplayName("Deve jogar carta intermediária quando o adversário joga manilha")
+    @Test
+    public void shouldPlayMiddleCardWhenOpponentPlaysManilha() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = mockIntel(botCards, vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
+
+        assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
+    }
+
 
 }
