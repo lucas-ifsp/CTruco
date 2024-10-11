@@ -60,6 +60,23 @@ class ReimuBotTest {
         }
 
         @Test
+        @DisplayName("Should select strongest card if drew first round")
+        void selectStrongestIfDrew() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
+                    .build();
+            var selectedCard = reimuBot.chooseCard(step).content();
+            assertThat(selectedCard).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+        }
+
+        @Test
         @DisplayName("Should play the smallest card necessary to win the round")
         void selectSmallestCardToWin() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
