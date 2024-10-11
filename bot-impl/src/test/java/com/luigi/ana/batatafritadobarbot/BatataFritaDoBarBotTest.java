@@ -417,6 +417,19 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
     }
 
+    //21
+    @Test
+    @DisplayName("Make sure the enemy's score doesn't go above or equal 12 if they ask for truco")
+    void makeSureTheEnemySScoreDoesnTGoAboveOrEqual12IfTheyAskForTruco () {
+        when(intel.getOpponentScore()).thenReturn(9);
+        assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
+    }
+
+
+
+    
+
+
 
 
 }
