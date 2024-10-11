@@ -476,8 +476,8 @@ public class BatataFritaDoBarBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
         );
 
@@ -491,6 +491,27 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
+    //25
+    @Test
+    @DisplayName("Ask truco when avg is equal then 7")
+    void askTrucoWhenAvgIsEqualThen7(){
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+    }
 
 
 
