@@ -64,12 +64,12 @@ class ReimuBotTest {
         void selectStrongestIfDrew() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             List<TrucoCard> reimuCards = List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
             );
             var step = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1).botInfo(reimuCards, 0)
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), List.of(), vira, 1)
+                    .botInfo(reimuCards, 0)
                     .opponentScore(0).opponentCard(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS))
                     .build();
             var selectedCard = reimuBot.chooseCard(step).content();
