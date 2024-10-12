@@ -31,7 +31,9 @@ import java.util.List;
 public class BotEco implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        List<TrucoCard> hand = intel.getCards();
+        int handPower = calculateHandPower(hand);
+        return handPower >= 17;
     }
 
     @Override
