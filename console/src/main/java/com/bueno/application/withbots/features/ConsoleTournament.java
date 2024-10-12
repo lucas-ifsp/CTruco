@@ -30,11 +30,11 @@ public class ConsoleTournament {
         dto = tournamentProvider.createTournament(participants, participants.size(), times);
         System.out.println("ALL Matches: ");
         dto.matchesDTO().forEach((matchDTO) -> System.out.println("Match number: " +
-                                                                  matchDTO.matchNumber() +
-                                                                  " " +
-                                                                  matchDTO.p1Name() +
-                                                                  " VS " +
-                                                                  matchDTO.p2Name()
+                matchDTO.matchNumber() +
+                " " +
+                matchDTO.p1Name() +
+                " VS " +
+                matchDTO.p2Name()
         ));
     }
 
@@ -48,13 +48,13 @@ public class ConsoleTournament {
             List<MatchDTO> availableOnes = playUseCase.getAllAvailableMatches(dto);
             System.out.println("Available matches: " + availableOnes.size());
             availableOnes.forEach(matchDTO -> System.out.println("Match number: " +
-                                                                 matchDTO.matchNumber() +
-                                                                 "  " +
-                                                                 matchDTO.p1Name() +
-                                                                 " VS " +
-                                                                 matchDTO.p2Name()));
+                    matchDTO.matchNumber() +
+                    "  " +
+                    matchDTO.p1Name() +
+                    " VS " +
+                    matchDTO.p2Name()));
             final int matchNumber = chooseMatch();
-            playUseCase.playOne(dto.uuid(), matchNumber);
+            playUseCase.playOne(dto.uuid(), matchNumber, dto.times());
             refreshUseCase.refresh(dto.uuid());
 
 

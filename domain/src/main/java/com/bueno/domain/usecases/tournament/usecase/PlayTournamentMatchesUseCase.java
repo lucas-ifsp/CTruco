@@ -59,7 +59,7 @@ public class PlayTournamentMatchesUseCase {
                 .toList();
     }
 
-    public void playOne(UUID uuid, int chosenMatchNumber) {
+    public void playOne(UUID uuid, int chosenMatchNumber, int numberOfSimulations) {
         Optional<TournamentDTO> dto = tournamentRepository.findTournamentById(uuid);
 
         if (dto.isEmpty()) throw new EntityNotFoundException("tournament doesn't exist");
@@ -73,16 +73,17 @@ public class PlayTournamentMatchesUseCase {
 
         UUID chosenMatchId = chosenMatch.get().uuid();
 
-        Tournament tournament = playChosenMatch(dto.get(), chosenMatchId);
+        Tournament tournament = playChosenMatch(dto.get(), chosenMatchId, numberOfSimulations);
         TournamentDTO updatedDto = TournamentConverter.toDTO(tournament);
         updateTournamentUseCase.updateFromDTO(updatedDto);
         updateMatchUseCase.updateAll(tournament.getMatches().stream().map(MatchConverter::toDTO).toList());
     }
 
-    private Tournament playChosenMatch(TournamentDTO dto, UUID chosenMatchId) {
+    private Tournament playChosenMatch(TournamentDTO dto, UUID chosenMatchId, int numberOfSimulations) {
         Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
-        tournament.playByMatchUuid(chosenMatchId, api, provider, remoteBotRepository);
+        tournament.playByMatchUuid(chosenMatchId, api, provider, remoteBotRepository, numberOfSimulations);
         return tournament;
     }
+
 
 }

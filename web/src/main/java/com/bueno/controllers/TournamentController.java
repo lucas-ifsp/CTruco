@@ -92,14 +92,14 @@ public class TournamentController {
     }
 
     // TODO - Resolver problema de persistencia
-    @PostMapping("{tournamentUuid}/match/{chosenMatchNumber}")
-    public ResponseEntity<?> playMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber) {
+    @PostMapping("{tournamentUuid}/match/{chosenMatchNumber}/{numberOfSimulations}")
+    public ResponseEntity<?> playMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber, @PathVariable int numberOfSimulations) {
         if (tournamentUuid == null) return new ResponseBuilder(HttpStatus.BAD_REQUEST)
                 .addEntry(new ResponseEntry("payload", "invalid tournament uuid"))
                 .addTimestamp()
                 .build();
 
-        playTournamentMatchesUseCase.playOne(tournamentUuid, chosenMatchNumber);
+        playTournamentMatchesUseCase.playOne(tournamentUuid, chosenMatchNumber, numberOfSimulations);
         refreshUseCase.refresh(tournamentUuid);
 
         TournamentDTO dto = getTournamentUseCase.byUuid(tournamentUuid);
