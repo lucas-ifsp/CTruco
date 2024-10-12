@@ -168,5 +168,15 @@ public class BotEcoTest {
 
             assertThat(handPower).isEqualTo(2 + 3 + 11);
         }
+
+        @Test
+        @DisplayName("Should return zero for an empty hand")
+        void returnZeroForEmptyHand() {
+            List<TrucoCard> hand = List.of();
+
+            int handPower = botEco.calculateHandPower(hand);
+
+            assertThat(handPower).isEqualTo(0);
+        }
     }
 }
