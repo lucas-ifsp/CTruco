@@ -45,6 +45,12 @@ public class MyCards {
     }
 
     public TrucoCard getWorstCard() {
-        return null;
+
+        Integer worstCardValue = myHandValuesSorted.get(0);
+
+        return myHand.stream()
+                .filter(trucoCard -> trucoCard.relativeValue(vira) == worstCardValue)
+                .findAny()
+                .orElse(myHand.get(0));
     }
 }
