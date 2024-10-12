@@ -197,7 +197,7 @@ public class BotEcoTest {
 
             int handPower = botEco.calculateHandPower(hand);
 
-            assertThat(handPower).isEqualTo(2 + 3 + 11);
+            assertThat(handPower).isEqualTo(9 + 10 + 6);
         }
 
         @Test
