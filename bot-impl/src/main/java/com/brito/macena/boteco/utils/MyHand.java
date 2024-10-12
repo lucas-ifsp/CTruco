@@ -4,14 +4,14 @@ import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
 
-public class MyCards {
+public class MyHand {
 
     List<TrucoCard> myHand;
     List<Integer> myHandValuesSorted;
     TrucoCard vira;
 
 
-    public MyCards(List<TrucoCard> myHand, TrucoCard vira) {
+    public MyHand(List<TrucoCard> myHand, TrucoCard vira) {
         this.myHand = myHand;
         this.vira = vira;
         myHandValuesSorted = this.myHand.stream()

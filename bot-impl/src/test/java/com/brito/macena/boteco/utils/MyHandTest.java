@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class MyCardsTest {
+public class MyHandTest {
     @Test
     @DisplayName("Should return the best card when the hand has 3 cards")
     void testGetBestCardWithThreeCards() {
@@ -19,7 +19,7 @@ public class MyCardsTest {
         TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+        MyHand myCards = new MyHand(List.of(card1, card2, card3), vira);
 
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card1);
@@ -32,7 +32,7 @@ public class MyCardsTest {
         TrucoCard card2 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1, card2), vira);
+        MyHand myCards = new MyHand(List.of(card1, card2), vira);
 
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card1);
@@ -44,7 +44,7 @@ public class MyCardsTest {
         TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1), vira);
+        MyHand myCards = new MyHand(List.of(card1), vira);
 
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card1);
@@ -58,7 +58,7 @@ public class MyCardsTest {
         TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+        MyHand myCards = new MyHand(List.of(card1, card2, card3), vira);
 
         TrucoCard worstCard = myCards.getWorstCard();
         assertThat(worstCard).isEqualTo(card2);
@@ -72,7 +72,7 @@ public class MyCardsTest {
         TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
         TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+        MyHand myCards = new MyHand(List.of(card1, card2, card3), vira);
 
         TrucoCard secondBestCard = myCards.getSecondBestCard();
         assertThat(secondBestCard).isEqualTo(card3);
@@ -86,7 +86,7 @@ public class MyCardsTest {
         TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
 
-        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+        MyHand myCards = new MyHand(List.of(card1, card2, card3), vira);
 
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card2);
