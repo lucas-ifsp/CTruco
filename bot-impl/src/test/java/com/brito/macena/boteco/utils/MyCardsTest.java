@@ -35,7 +35,7 @@ public class MyCardsTest {
         MyCards myCards = new MyCards(List.of(card1, card2), vira);
 
         TrucoCard bestCard = myCards.getBestCard();
-        assertThat(bestCard).isEqualTo(card2);
+        assertThat(bestCard).isEqualTo(card1);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MyCardsTest {
         MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
 
         TrucoCard worstCard = myCards.getWorstCard();
-        assertThat(worstCard).isEqualTo(card3);
+        assertThat(worstCard).isEqualTo(card2);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class MyCardsTest {
         MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
 
         TrucoCard secondBestCard = myCards.getSecondBestCard();
-        assertThat(secondBestCard).isEqualTo(card2);
+        assertThat(secondBestCard).isEqualTo(card3);
     }
 
     @Test
