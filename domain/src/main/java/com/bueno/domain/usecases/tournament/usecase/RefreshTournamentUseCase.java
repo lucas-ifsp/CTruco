@@ -5,11 +5,11 @@ import com.bueno.domain.entities.tournament.Tournament;
 import com.bueno.domain.usecases.tournament.converter.MatchConverter;
 import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
-import com.bueno.domain.usecases.tournament.repos.MatchRepository;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +38,8 @@ public class RefreshTournamentUseCase {
 
     private TournamentDTO refreshMatches(TournamentDTO dto) {
         Tournament tournament = TournamentConverter.fromDTO(dto, getMatchUseCase);
-        Map<UUID, Match> cacheUpdatedMatches = tournament.refreshMatches();
+        Map<UUID, Match> cacheUpdatedMatches = new HashMap<>();
+        tournament.refreshMatches(cacheUpdatedMatches);
         updateMatchUseCase.updateAll(cacheUpdatedMatches.values().stream().map(MatchConverter::toDTO).toList());
 
         return TournamentConverter.toDTO(tournament);

@@ -5,8 +5,6 @@ import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Tournament {
     private final UUID tournamentUUID;
@@ -88,26 +86,27 @@ public class Tournament {
         }
     }
 
-    public Map<UUID, Match> refreshMatches() {
-        //TODO - somente os objetos next contidos dentro de uma match estão sendo mudados
-        // o ideal era que todos os objetos com o mesmo uuid mudassem juntos
-        Map<UUID, Match> cacheMatches = matches.stream().collect(Collectors.toMap(Match::getId, Function.identity()));
+    public void refreshMatches(Map<UUID, Match> cacheMatches) {
         matches.forEach(m -> {
                     m.setAvailableState();
-                    m.setWinnerToNextBracket();
-                    addToCache(m, cacheMatches);
+                    boolean nextMatchChanged = m.setWinnerToNextBracket();
+                    addToCache(m, cacheMatches, nextMatchChanged);
                 }
         );
-        return cacheMatches;
     }
 
-    private void addToCache(Match match, Map<UUID, Match> cacheMatches) {
-        if (cacheMatches.containsKey(match.getId())) {
-            if (match.getNext() == null) return;
-            addToCache(match.getNext(), cacheMatches);
-        } else {
-            cacheMatches.put(match.getId(), match);
+    public void setAvailableOnes() {
+        matches.forEach(Match::setAvailableState);
+    }
+
+    private void addToCache(Match match, Map<UUID, Match> cacheMatches, boolean nextMatchChanged) {
+        if (nextMatchChanged) {
+            nextMatchChanged = false;
+            addToCache(match.getNext(), cacheMatches, nextMatchChanged);
         }
+        if (!cacheMatches.containsKey(match.getId()))
+            cacheMatches.put(match.getId(), match);
+        else cacheMatches.get(match.getId()).setAvailableState();
     }
 
     public int getSize() {

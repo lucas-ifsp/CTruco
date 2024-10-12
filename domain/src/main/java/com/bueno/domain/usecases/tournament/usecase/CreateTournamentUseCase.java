@@ -34,7 +34,7 @@ public class CreateTournamentUseCase {
         tournament.insertMatches();
         tournament.insertParticipants();
         tournament.setNextMatches();
-        tournament.refreshMatches();
+        tournament.setAvailableOnes();
         TournamentDTO dto = TournamentConverter.toDTO(tournament);
         if (dto == null) throw new EntityNotFoundException("fail to convert to DTO");
         saveTournamentUseCase.save(dto);
