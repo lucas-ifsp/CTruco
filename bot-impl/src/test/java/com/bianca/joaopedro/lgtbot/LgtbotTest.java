@@ -1030,9 +1030,29 @@ class LgtbotTest {
                     assertFalse(result, "O bot não deve pedir truco com cartas fracas e oponente com vantagem.");
                 }
 
+                @Test
+                @DisplayName("Bot deve pedir truco com cartas fortes e estando próximo da vitória")
+                public void testShouldRaisePoints_WithStrongCardsAndBotCloseToWinning() {
 
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getScore()).thenReturn(10);
+                    when(intel.getOpponentScore()).thenReturn(7);
 
+                    List<TrucoCard> strongCards = List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                            TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+                    );
+                    when(intel.getCards()).thenReturn(strongCards);
 
+                    TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+                    when(intel.getVira()).thenReturn(vira);
+
+                    Lgtbot bot = new Lgtbot();
+                    boolean result = bot.decideIfRaises(intel);
+
+                    assertTrue(result, "O bot deve pedir truco com cartas fortes e estando próximo da vitória.");
+                }
 
 
 
