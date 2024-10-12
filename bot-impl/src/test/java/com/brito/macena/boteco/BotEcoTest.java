@@ -27,6 +27,7 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -90,6 +91,18 @@ public class BotEcoTest {
             boolean response = botEco.getMaoDeOnzeResponse(intel);
 
             assertTrue(response);
+        }
+
+        @Test
+        @DisplayName("Should handle empty hand gracefully")
+        void handleEmptyHandGracefully() {
+            GameIntel intel = mock(GameIntel.class);
+            List<TrucoCard> hand = List.of();
+            when(intel.getCards()).thenReturn(hand);
+
+            boolean response = botEco.getMaoDeOnzeResponse(intel);
+
+            assertFalse(response);
         }
     }
 
