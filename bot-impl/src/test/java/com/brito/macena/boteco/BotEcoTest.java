@@ -57,12 +57,12 @@ public class BotEcoTest {
     class MaoDeOnzeTests {
 
         @Test
-        @DisplayName("Should accept hand of eleven when two better cards is greater 17")
-        void shouldAcceptMaoDeOnzeWhenHandIsGreater20() {
+        @DisplayName("Should accept hand of eleven when hand power is greater or equal to 17")
+        void shouldAcceptMaoDeOnzeWhenHandPowerIsGreaterOrEqual17() {
             List<TrucoCard> botEcoHand = List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
             );
             TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
 
