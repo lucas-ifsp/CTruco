@@ -58,7 +58,19 @@ public class BotEco implements BotServiceProvider {
         return hand.stream().mapToInt(this::getCardValue).sum();
     }
 
-    private int getCardValue(TrucoCard card) {
-        return card.getRank().value();
+    public int getCardValue(TrucoCard card) {
+        return switch (card.getRank()) {
+            case ACE -> 14;
+            case KING -> 13;
+            case QUEEN -> 12;
+            case JACK -> 11;
+            case SEVEN -> 7;
+            case SIX -> 6;
+            case FIVE -> 5;
+            case FOUR -> 4;
+            case THREE -> 3;
+            case TWO -> 2;
+            default -> 0;
+        };
     }
 }
