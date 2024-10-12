@@ -151,4 +151,22 @@ public class BotEcoTest {
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
         }
     }
+
+    @Nested
+    @DisplayName("Calculate hand power tests")
+    class CalculateHandPowerTests {
+        @Test
+        @DisplayName("Should calculate hand power correctly for a given hand")
+        void calculateHandPowerCorrectly() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+            );
+
+            int handPower = botEco.calculateHandPower(hand);
+
+            assertThat(handPower).isEqualTo(2 + 3 + 11);
+        }
+    }
 }
