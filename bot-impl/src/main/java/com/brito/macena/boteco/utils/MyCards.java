@@ -22,7 +22,6 @@ public class MyCards {
 
 
     public TrucoCard getBestCard() {
-
         Integer valueOfBestCard;
         if (myHand.size() == 3) valueOfBestCard = myHandValuesSorted.get(2);
         else if (myHand.size() == 2) valueOfBestCard = myHandValuesSorted.get(1);
@@ -35,7 +34,14 @@ public class MyCards {
     }
 
     public TrucoCard getSecondBestCard() {
-        return null;
+        Integer valueOfSecondBestCard;
+        if (myHand.size() == 3) valueOfSecondBestCard = myHandValuesSorted.get(1);
+        else valueOfSecondBestCard = myHandValuesSorted.get(0);
+
+        return myHand.stream()
+                .filter(trucoCard -> trucoCard.relativeValue(vira) == valueOfSecondBestCard)
+                .findAny()
+                .orElse(myHand.get(0));
     }
 
     public TrucoCard getWorstCard() {
