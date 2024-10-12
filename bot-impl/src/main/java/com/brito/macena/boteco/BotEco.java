@@ -23,7 +23,10 @@ package com.brito.macena.boteco;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
 
 public class BotEco implements BotServiceProvider {
     @Override
@@ -49,5 +52,9 @@ public class BotEco implements BotServiceProvider {
     @Override
     public String getName() {
         return "BotEco :)";
+    }
+
+    private int calculateHandPower(List<TrucoCard> hand) {
+        return hand.stream().mapToInt(this::getCardValue).sum();
     }
 }
