@@ -28,6 +28,8 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class BotEcoTest {
@@ -68,6 +70,22 @@ public class BotEcoTest {
                     .botInfo(botEcoHand, 0)
                     .opponentScore(0)
                     .build();
+
+            boolean response = botEco.getMaoDeOnzeResponse(intel);
+
+            assertTrue(response);
+        }
+
+        @Test
+        @DisplayName("Should accept Mão de Onze when hand power is 20 or more")
+        void acceptMaoDeOnzeWhenHandPowerIs20OrMore() {
+            GameIntel intel = mock(GameIntel.class);
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+            when(intel.getCards()).thenReturn(hand);
 
             boolean response = botEco.getMaoDeOnzeResponse(intel);
 
