@@ -984,6 +984,27 @@ class LgtbotTest {
                     assertTrue(result, "O bot deveria blefar em situação de desvantagem com cartas fracas.");
                 }
 
+                @Test
+                @DisplayName("Deve recusar aumentar pontos com cartas medianas e oponente em vantagem")
+                public void testShouldRejectRaise_WithMediumCardsAndOpponentLeading() {
+
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getScore()).thenReturn(7);
+                    when(intel.getOpponentScore()).thenReturn(10);
+                    List<TrucoCard> mediumCards = List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+                    );
+                    when(intel.getCards()).thenReturn(mediumCards);
+
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                    when(intel.getVira()).thenReturn(vira);
+
+                    Lgtbot bot = new Lgtbot();
+                    int raiseResponse = bot.getRaiseResponse(intel);
+
+                    assertEquals(-1, raiseResponse, "O bot deveria recusar aumentar os pontos com cartas medianas e oponente em vantagem.");
+                }
 
             }
         }
