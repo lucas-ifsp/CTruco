@@ -37,4 +37,16 @@ public class MyCardsTest {
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card2);
     }
+
+    @Test
+    @DisplayName("Should return the best card when the hand has 1 card")
+    void testGetBestCardWithOneCard() {
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+        MyCards myCards = new MyCards(List.of(card1), vira);
+
+        TrucoCard bestCard = myCards.getBestCard();
+        assertThat(bestCard).isEqualTo(card1);
+    }
 }
