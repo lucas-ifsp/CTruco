@@ -63,4 +63,18 @@ public class MyCardsTest {
         TrucoCard worstCard = myCards.getWorstCard();
         assertThat(worstCard).isEqualTo(card3);
     }
+
+    @Test
+    @DisplayName("Should return the second-best card when the hand has 3 cards")
+    void testGetSecondBestCardWithThreeCards() {
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+
+        TrucoCard secondBestCard = myCards.getSecondBestCard();
+        assertThat(secondBestCard).isEqualTo(card2);
+    }
 }
