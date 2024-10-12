@@ -178,5 +178,17 @@ public class BotEcoTest {
 
             assertThat(handPower).isEqualTo(0);
         }
+
+        @Test
+        @DisplayName("Should calculate hand power correctly for a hand with one card")
+        void calculateHandPowerForSingleCardHand() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
+            );
+
+            int handPower = botEco.calculateHandPower(hand);
+
+            assertThat(handPower).isEqualTo(13);
+        }
     }
 }
