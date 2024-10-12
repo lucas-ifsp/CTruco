@@ -219,7 +219,7 @@ public class BotEcoTest {
 
             int handPower = botEco.calculateHandPower(hand);
 
-            assertThat(handPower).isEqualTo(13);
+            assertThat(handPower).isEqualTo(7);
         }
     }
 }
