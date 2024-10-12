@@ -1006,6 +1006,37 @@ class LgtbotTest {
                     assertEquals(-1, raiseResponse, "O bot deveria recusar aumentar os pontos com cartas medianas e oponente em vantagem.");
                 }
 
+                @Test
+                @DisplayName("Bot não deve pedir truco com cartas fracas e oponente com vantagem")
+                public void testShouldNotRaisePoints_WithWeakCardsAndOpponentLeading() {
+
+                    GameIntel intel = mock(GameIntel.class);
+                    when(intel.getScore()).thenReturn(6);
+                    when(intel.getOpponentScore()).thenReturn(9);
+
+                    List<TrucoCard> weakCards = List.of(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                    );
+                    when(intel.getCards()).thenReturn(weakCards);
+
+                    TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                    when(intel.getVira()).thenReturn(vira);
+
+                    Lgtbot bot = new Lgtbot();
+                    boolean result = bot.decideIfRaises(intel);
+
+                    assertFalse(result, "O bot não deve pedir truco com cartas fracas e oponente com vantagem.");
+                }
+
+
+
+
+
+
+
+
             }
         }
     }
