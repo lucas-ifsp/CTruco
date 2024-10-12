@@ -54,7 +54,7 @@ public class BotEco implements BotServiceProvider {
         return "BotEco :)";
     }
 
-    private int calculateHandPower(List<TrucoCard> hand) {
+    public int calculateHandPower(List<TrucoCard> hand) {
         return hand.stream().mapToInt(this::getCardValue).sum();
     }
 
