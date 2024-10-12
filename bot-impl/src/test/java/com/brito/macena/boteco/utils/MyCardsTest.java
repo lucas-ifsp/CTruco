@@ -77,4 +77,18 @@ public class MyCardsTest {
         TrucoCard secondBestCard = myCards.getSecondBestCard();
         assertThat(secondBestCard).isEqualTo(card2);
     }
+
+    @Test
+    @DisplayName("Should return the best card when the hand has mixed cards and a vira")
+    void testGetBestCardWithVira() {
+        TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        TrucoCard card2 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card3 = TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+        MyCards myCards = new MyCards(List.of(card1, card2, card3), vira);
+
+        TrucoCard bestCard = myCards.getBestCard();
+        assertThat(bestCard).isEqualTo(card2);
+    }
 }
