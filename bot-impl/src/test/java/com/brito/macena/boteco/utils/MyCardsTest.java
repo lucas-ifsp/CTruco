@@ -24,4 +24,17 @@ public class MyCardsTest {
         TrucoCard bestCard = myCards.getBestCard();
         assertThat(bestCard).isEqualTo(card1);
     }
+
+    @Test
+    @DisplayName("Should return the best card when the hand has 2 cards")
+    void testGetBestCardWithTwoCards() {
+        TrucoCard card1 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+        MyCards myCards = new MyCards(List.of(card1, card2), vira);
+
+        TrucoCard bestCard = myCards.getBestCard();
+        assertThat(bestCard).isEqualTo(card2);
+    }
 }
