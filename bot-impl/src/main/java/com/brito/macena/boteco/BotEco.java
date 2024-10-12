@@ -62,16 +62,16 @@ public class BotEco implements BotServiceProvider {
 
     public int getCardValue(TrucoCard card) {
         return switch (card.getRank()) {
-            case ACE -> 14;
-            case KING -> 13;
-            case QUEEN -> 12;
-            case JACK -> 11;
-            case SEVEN -> 7;
-            case SIX -> 6;
-            case FIVE -> 5;
-            case FOUR -> 4;
-            case THREE -> 3;
-            case TWO -> 2;
+            case FOUR -> 1;
+            case FIVE -> 2;
+            case SIX -> 3;
+            case SEVEN -> 4;
+            case QUEEN -> 5;
+            case JACK -> 6;
+            case KING -> 7;
+            case ACE -> 8;
+            case TWO -> 9;
+            case THREE -> 10;
             default -> 0;
         };
     }
