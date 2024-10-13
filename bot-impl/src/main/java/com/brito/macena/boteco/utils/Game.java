@@ -14,6 +14,7 @@ public class Game {
     }
 
     public static boolean hasManilha(GameIntel intel) {
-        return false;
+        return intel.getCards().stream()
+                .anyMatch(card -> card.isManilha(intel.getVira()));
     }
 }
