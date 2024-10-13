@@ -4,11 +4,11 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Game Tests")
 public class GameTest {
@@ -21,5 +21,10 @@ public class GameTest {
     @AfterAll
     static void tearDownAll() {
         System.out.println("Finishing Game tests...");
+    }
+
+    @Nested
+    @DisplayName("Tests for wonFirstRound method")
+    class WonFirstRoundTests {
     }
 }
