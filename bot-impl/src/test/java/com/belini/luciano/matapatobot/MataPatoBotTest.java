@@ -8,6 +8,8 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class MataPatoBotTest {
@@ -17,9 +19,10 @@ class MataPatoBotTest {
     @Test
     @DisplayName("If opponent plays first return true")
     void shouldReturnTrueForOpponentPlayFirst() {
+        mataPatoBot = new MataPatoBot();
         TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         boolean opponentPlay = true;
-        assertThat(mataPatoBot.checkFirstPlay(opponentCard).equals(opponentPlay));
+        assertThat(mataPatoBot.checkFirstPlay(Optional.ofNullable(opponentCard)).equals(opponentPlay));
     }
 
 }
