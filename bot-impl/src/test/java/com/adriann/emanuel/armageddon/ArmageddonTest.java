@@ -640,13 +640,13 @@ public class ArmageddonTest {
         }
     }
 
-    // Comecei aqui ----------------------------------------------------------------------
+    // Comecei aqui ----------------------------------------------------------------------------------------------------
     @Nested
     @DisplayName("Tests to decide if raises")
     class DecideIfRaise {
 
 
-        // Fist round --------------------------------------------------------------------------------------------------
+        // Fist round first to play ------------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of first round to decideIfRaises")
         class FirstRoundFirstToPlayTest {
@@ -752,7 +752,7 @@ public class ArmageddonTest {
 
         }
 
-        // First round second to play ---------------------------------------------------------------------------------
+        // First round second to play ----------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of first round second to play to decideIfRaises")
         class FirstRoundSecondToPlayTest {
@@ -879,7 +879,41 @@ public class ArmageddonTest {
             }
         }
 
+        // Second round lose first round  ------------------------------------------------------------------------------
+        @Nested
+        @DisplayName("Tests to implement logic of second round lose first round to decideIfRaises")
+        class SecondRoundLoseFirstRoundTest {
 
+            @Test
+            @DisplayName("Should not raise with weak cards after losing the first round")
+            void shouldNotRaiseWithWeakCardsAfterLosingFirstRound() {
+                TrucoCard vira = TrucoCard.of(TWO, HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(ACE, SPADES);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, DIAMONDS),
+                        TrucoCard.of(FOUR, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(LOST), openCards, vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.decideIfRaises(intel);
+
+                assertFalse(result);
+            }
+
+
+
+        }
+
+
+        // Second round drew first round ------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of second round drew first round")
         class SecondRoundDrewFirstRound {
@@ -910,6 +944,8 @@ public class ArmageddonTest {
 
         }
 
+
+        // Third round win first round ---------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of third round win first round")
         class thirdRoundWinFirstRound {
