@@ -917,7 +917,8 @@ public class ArmageddonTest {
 
                 List<TrucoCard> botCards = List.of(
                         TrucoCard.of(FOUR, DIAMONDS),
-                        TrucoCard.of(FOUR, SPADES)
+                        TrucoCard.of(FOUR, SPADES),
+                        TrucoCard.of(THREE, HEARTS)
                 );
 
                 List<TrucoCard> openCards = List.of(opponentCard);

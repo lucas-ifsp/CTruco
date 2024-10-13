@@ -59,16 +59,35 @@ public class Armageddon implements BotServiceProvider {
 
 
     // FAZENDO AQUI -----------------------------------------
-    @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
-        vira = intel.getVira();
+        TrucoCard vira = intel.getVira();
 
         boolean lostFirstRound = !intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
 
         if (lostFirstRound) {
             if (!hasManilha(playerHand, vira) && handStrength(playerHand, vira) < GOOD_HAND_STRENGTH) {
                 return false;
+            }
+
+            int weakCardCount = 0;
+
+            List<TrucoCard> weakCards = List.of(
+                    TrucoCard.of(FOUR, CardSuit.DIAMONDS),
+                    TrucoCard.of(FOUR, CardSuit.SPADES),
+                    TrucoCard.of(FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(SIX, CardSuit.HEARTS)
+            );
+
+            for (TrucoCard card : playerHand) {
+                if (weakCards.contains(card)) {
+                    weakCardCount++;
+                }
+            }
+
+            if (weakCardCount >= 2) {
+                return true;
             }
         }
 
@@ -79,12 +98,9 @@ public class Armageddon implements BotServiceProvider {
         }
 
         int handStrength = handStrength(playerHand, vira);
-        if (handStrength >= GOOD_HAND_STRENGTH) {
-            return true;
-        }
-
-        return false;
+        return handStrength >= GOOD_HAND_STRENGTH;
     }
+
 
 
     @Override
