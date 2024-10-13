@@ -199,13 +199,14 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.hasOuros(stepBuilder.build()));
     }
 
+    // 10
     @Test
     @DisplayName("Should return zero when there are no manilha")
     void shouldReturnZeroWhenNoManilha() {
 
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
 
-        List <TrucoCard> listOfViras = List.of(vira);
+        List<TrucoCard> listOfViras = List.of(vira);
 
 
         List<TrucoCard> playerCards = List.of(
@@ -224,7 +225,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(intel));
     }
 
-    //10
+    //11
     @Test
     @DisplayName("2 manilhas on 2H, 3C, 2S")
     void shouldReturn2manilhas() {
@@ -246,7 +247,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(2, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
-    //11
+    //12
     @Test
     @DisplayName("3 manilhas on 2H, 2C, 2S")
     void shouldReturn3manilhas() {
@@ -268,7 +269,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(3, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
-
+    // 13
     @Test
     @DisplayName("Should return the lowest card based on vira")
     void shouldReturnLowestCardBasedOnVira() {
@@ -292,13 +293,13 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-
         assertEquals(expectedLowestCard, batataFritaDoBarBot.getLowestCard(intel));
     }
 
+    //14
     @Test
     @DisplayName("Should return the highest card based on vira")
-    void shouldReturnHighestCardBasedOnVira(){
+    void shouldReturnHighestCardBasedOnVira() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
         List<TrucoCard> listOfViras = List.of(vira);
@@ -321,6 +322,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
+    // 15
     @Test
     @DisplayName("Should return the highest normal card excluding manilhas")
     void shouldReturnHighestNormalCard() {
@@ -346,11 +348,10 @@ public class BatataFritaDoBarBotTest {
         assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestNormalCard(intel));
     }
 
-    //12
-
+    //16
     @Test
     @DisplayName("make sure not play casal maior in first round")
-    void returnsTrueIfCasalMaiorExist(){
+    void returnsTrueIfCasalMaiorExist() {
         TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
 
         List<TrucoCard> myCards = List.of(
@@ -367,22 +368,21 @@ public class BatataFritaDoBarBotTest {
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
     }
 
-    //13
-
+    //17
     @Test
     @DisplayName("make sure blefe is working")
-    void makeSureBlefeIsWorking(){
+    void makeSureBlefeIsWorking() {
         when(intel.getOpponentScore() == 9 && intel.getScore() == 2);
         int dif = intel.getOpponentScore() - intel.getScore();
 
         assertEquals(7, dif);
 
     }
-    //14
 
+    //18
     @Test
     @DisplayName("make sure throw the lowest card to win")
-    void makeSureThrowTheLowestCardToWin(){
+    void makeSureThrowTheLowestCardToWin() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
@@ -402,15 +402,15 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //15
+    //19
     @Test
     @DisplayName("Sure not to ask for truco if opponent is in hand of eleven")
-    void sureNotToAskForTrucoIfOpponentIsInHandOfEleven () {
+    void sureNotToAskForTrucoIfOpponentIsInHandOfEleven() {
         when(intel.getOpponentScore()).thenReturn(11);
         assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
     }
 
-    //16
+    //20
     @Test
     @DisplayName("0 manilhas on 4H, 5C, 7S")
     void shouldReturn0manilhas() {
@@ -432,7 +432,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
-    //17
+    //21
     @Test
     @DisplayName("Should return the lowest manilha to win")
     void shouldReturnTheLowestManilhaToWin() {
@@ -456,10 +456,10 @@ public class BatataFritaDoBarBotTest {
     }
 
 
-    //18
+    //22
     @Test
     @DisplayName("make sure zap is the highest manilha")
-    void makeSureZapIsTheHighestManilha () {
+    void makeSureZapIsTheHighestManilha() {
         TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -479,10 +479,10 @@ public class BatataFritaDoBarBotTest {
     }
 
 
-    //19
+    //23
     @Test
     @DisplayName("Should return WON the last round")
-    void shouldReturnWonTheLastRound(){
+    void shouldReturnWonTheLastRound() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -500,10 +500,10 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //20
+    //24
     @Test
     @DisplayName("Should return LOST the last round")
-    void shouldReturnLostTheLastRound(){
+    void shouldReturnLostTheLastRound() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -520,18 +520,18 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
     }
 
-    //21
+    //25
     @Test
     @DisplayName("Make sure the enemy's score doesn't go above or equal 12 if they ask for truco")
-    void makeSureTheEnemySScoreDoesnTGoAboveOrEqual12IfTheyAskForTruco () {
+    void makeSureTheEnemySScoreDoesnTGoAboveOrEqual12IfTheyAskForTruco() {
         when(intel.getOpponentScore()).thenReturn(9);
         assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
     }
 
-    //22
+    //26
     @Test
     @DisplayName("Make sure not ask truco when lost the first and avg less then 9")
-    void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen9(){
+    void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen9() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -550,7 +550,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //23
+    //27
     @Test
     @DisplayName("Ask for truco if you have 3 manilhas")
     void askForTrucoIfYouHave3Manilhas() {
@@ -572,10 +572,10 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    //24
+    //28
     @Test
     @DisplayName("Ask truco when avg is higher then 7")
-    void askTrucoWhenAvgIsHigherThan7(){
+    void askTrucoWhenAvgIsHigherThan7() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -594,10 +594,10 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    //25
+    //29
     @Test
     @DisplayName("Ask truco when avg is equal then 7")
-    void askTrucoWhenAvgIsEqualThen7(){
+    void askTrucoWhenAvgIsEqualThen7() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
@@ -616,13 +616,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    // 26
-
-
-
-
-
-
+    // 30
 
 
 }
