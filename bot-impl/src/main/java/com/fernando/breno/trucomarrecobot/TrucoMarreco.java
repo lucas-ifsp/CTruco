@@ -49,9 +49,12 @@ public class TrucoMarreco implements BotServiceProvider {
         if (handStrong(intel) && wonFirstRound(intel)) {
             return true;
         }
-        if(!intel.getRoundResults().isEmpty() && biggestCouple(intel)){
+        if( biggestCouple(intel)){
             return true;
-        };
+        }
+        if(wonFirstRound(intel) && hasZap(intel)){
+            return  true;
+        }
         return  false;
     }
 
