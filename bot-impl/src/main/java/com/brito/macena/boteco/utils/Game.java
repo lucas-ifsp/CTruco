@@ -12,4 +12,8 @@ public class Game {
         if (!intel.getRoundResults().isEmpty()) return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
         return false;
     }
+
+    public static boolean hasManilha(GameIntel intel) {
+        return false;
+    }
 }
