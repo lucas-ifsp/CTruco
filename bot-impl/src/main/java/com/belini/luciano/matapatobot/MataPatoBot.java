@@ -38,16 +38,25 @@ public class MataPatoBot implements BotServiceProvider{
         TrucoCard vira = intel.getVira();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
         TrucoCard cardToPlay = null;
+
         if (!opponentCard.isPresent()) {
             return null;
         }
+
+        TrucoCard lowestCard = intel.getCards().get(0);
+
         for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(lowestCard, vira) < 0) {
+                lowestCard = card;
+            }
             if (card.compareValueTo(opponentCard.get(), vira) > 0) {
                 if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
                     cardToPlay = card;
                 }
             }
         }
-        return cardToPlay != null ? cardToPlay : intel.getCards().get(0);
+
+        return cardToPlay != null ? cardToPlay : lowestCard;
     }
+
 }
