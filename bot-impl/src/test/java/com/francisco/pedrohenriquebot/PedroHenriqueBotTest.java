@@ -13,8 +13,6 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
-import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PedroHenriqueBotTest {
@@ -31,14 +29,14 @@ class PedroHenriqueBotTest {
     @Test
     @DisplayName("Should return correct bot name")
     void shouldReturnCorrectBotName() {
-        assertEquals("PedroHenriqueBot", sut.getName());
+        assertEquals("PedroHenrique", sut.getName());
     }
 
     @Nested
     @DisplayName("Testing getMaoDeOnzeResponse")
     class GetMaoDeOnzeResponseTest {
         @Test
-        @DisplayName("Should accept mao de onze with 2 manilhas")
+        @DisplayName("Should accept Mao de Onze with 2 manilhas")
         void shouldAcceptMaoDeOnzeWith2Manilhas() {
             TrucoCard vira = TrucoCard.of(ACE, SPADES);
             List<TrucoCard> botCards = Arrays.asList(
@@ -70,6 +68,24 @@ class PedroHenriqueBotTest {
                     .opponentScore(6);
 
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+
+        @Test
+        @DisplayName("Accept Mao de Onze when opponent is close to winning")
+        void acceptMaoDeOnzeWhenOpponentIsCloseToWinning() {
+            TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(JACK, HEARTS),
+                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(ACE, DIAMONDS)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira),vira,0)
+                    .botInfo(botCards, 11)
+                    .opponentScore(10);
+
+            assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
 
     }
