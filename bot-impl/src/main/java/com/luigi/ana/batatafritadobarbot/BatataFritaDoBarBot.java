@@ -52,6 +52,12 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return lowestCard;
     }
 
+    public TrucoCard getHighestNormalCard(GameIntel intel) {
+        TrucoCard lowestNormalCard = intel.getCards().get(0);
+
+        return lowestNormalCard;
+    }
+
     public Optional<TrucoCard> getLowestToWin(GameIntel intel) {
         TrucoCard lowestCard = intel.getCards().get(0);
 
@@ -82,5 +88,4 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     boolean hasOuros(GameIntel intel) {
         return false;
     }
-
 }
