@@ -41,5 +41,17 @@ public class GameTest {
             boolean result = Game.wonFirstRound(intel);
             assertThat(result).isTrue();
         }
+
+        @Test
+        @DisplayName("Test wonFirstRound when first round is lost")
+        public void testWonFirstRoundWhenFirstRoundIsLost() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), null, 0)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .build();
+            boolean result = Game.wonFirstRound(intel);
+            assertThat(result).isFalse();
+        }
     }
 }
