@@ -36,8 +36,14 @@ public class TrucoMarreco implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        var hasManilha = numberOfManilhas(intel) >= 2;
-        return hasManilha;
+       if( numberOfManilhas(intel) >= 2){
+          return  true;
+       }
+
+       if(biggestCouple(intel)){
+            return  true;
+       }
+        return  false;
     }
 
     public long numberOfManilhas(GameIntel intel) {
@@ -59,6 +65,8 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
     public boolean wonFirstRound(GameIntel intel){
+        // BRENO NÃO DEVERIA TER UM IF ANTES PARA VERIFICAR SE A LISTA NÃO ESTA VAZIO PARA ? O METODO PODE LANCAR UM EXCEÇAO CASO A LISTA ESTEJA VAZIA.
+        // if (intel.getRoundResults().isEmpty())
         return intel.getRoundResults().getFirst().equals(GameIntel.RoundResult.WON);
 
     }
