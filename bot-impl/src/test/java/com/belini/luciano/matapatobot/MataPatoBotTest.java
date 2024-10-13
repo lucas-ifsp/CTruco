@@ -59,7 +59,7 @@ class MataPatoBotTest {
         when(intel.getVira()).thenReturn(vira);
         when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
 
-        assertThat(mataPatoBot.KillingOpponeCard(intel)).isEqualTo(expected);
+        assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
     }
 
 

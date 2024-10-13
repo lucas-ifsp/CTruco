@@ -4,6 +4,7 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+import javax.lang.model.type.NullType;
 
 import java.util.Optional;
 
@@ -33,4 +34,20 @@ public class MataPatoBot implements BotServiceProvider{
         return opponentCard.isPresent();
     }
 
+    public TrucoCard KillingOpponentCard(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        TrucoCard cardToPlay = null;
+        if (!opponentCard.isPresent()) {
+            return null;
+        }
+        for (TrucoCard card : intel.getCards()) {
+            if (card.compareValueTo(opponentCard.get(), vira) > 0) {
+                if (cardToPlay == null || card.compareValueTo(cardToPlay, vira) < 0) {
+                    cardToPlay = card;
+                }
+            }
+        }
+        return cardToPlay != null ? cardToPlay : intel.getCards().get(0);
+    }
 }
