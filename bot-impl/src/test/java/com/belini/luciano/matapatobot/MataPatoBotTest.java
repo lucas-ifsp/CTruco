@@ -62,5 +62,26 @@ class MataPatoBotTest {
         assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Play the lowest card if no card can defeat opponent")
+    public void shouldPlayLowestCardIfNoCardCanDefeatOpponent() {
+        GameIntel intel  = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+        TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+    }
+
 
 }
