@@ -1,7 +1,9 @@
 package com.francisco.pedrohenriquebot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class PedroHenriqueBot implements BotServiceProvider {
@@ -12,6 +14,10 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int manilhas = countManilhas(intel);
+
+
+
         return true;
     }
 
@@ -28,5 +34,27 @@ public class PedroHenriqueBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 1;
+    }
+
+    public int countManilhas(GameIntel intel){
+        return (int) intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
+    }
+
+    private int countHighCards(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return (int) intel.getCards().stream()
+                .filter(card -> !card.isManilha(vira))
+                .filter(card -> card.getRank() == CardRank.THREE ||
+                        card.getRank() == CardRank.TWO ||
+                        card.getRank() == CardRank.ACE)
+                .count();
+    }
+
+    private double handStrengthAverage(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        return intel.getCards().stream()
+                .mapToInt(card -> card.relativeValue(vira))
+                .average()
+                .orElse(0);
     }
 }

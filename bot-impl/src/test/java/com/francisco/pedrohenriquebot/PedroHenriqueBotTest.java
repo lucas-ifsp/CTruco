@@ -55,11 +55,6 @@ class PedroHenriqueBotTest {
 
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
-
-    }
-
-    @Test
-    void getMaoDeOnzeResponse() {
     }
 
     @Test
