@@ -695,6 +695,39 @@ public class ArmageddonTest {
 
                 assertTrue(result);
             }
+
+        }
+
+        @Nested
+        @DisplayName("Tests to implement logic of third round win first round")
+        class thirdRoundWinFirstRound {
+
+            @Test
+            @DisplayName("Should play best card if it's stronger than opponent's last card")
+            void shouldPlayBestCardIfStrongerThanOpponent() {
+                TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, SPADES),
+                        TrucoCard.of(KING, SPADES),
+                        TrucoCard.of(ACE, HEARTS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(JACK, HEARTS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.DREW, GameIntel.RoundResult.WON), openCards, vira, 3)
+                        .botInfo(botCards, 2)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.shouldRequestTruco(intel);
+
+                assertTrue(result);
+            }
+
+
         }
     }
 
