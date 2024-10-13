@@ -30,6 +30,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
@@ -37,8 +38,7 @@ import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArmageddonTest {
 
@@ -783,6 +783,31 @@ public class ArmageddonTest {
                 assertThat(playedCard).isEqualTo(TrucoCard.of(THREE, SPADES));
             }
 
+            @Test
+            @DisplayName("Should play the middle value card from player's hand")
+            void shouldPlayMiddleValueCardFromPlayersHand() {
+                TrucoCard vira = TrucoCard.of(QUEEN, DIAMONDS);
+
+                List<TrucoCard> playerHand = List.of(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(KING, CLUBS),
+                        TrucoCard.of(SEVEN, SPADES)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(SEVEN, HEARTS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(playerHand, 0)
+                        .opponentScore(0)
+                        .build();
+
+                TrucoCard result = armageddon.playMiddleValueCard(intel);
+
+                assertEquals(TrucoCard.of(SEVEN, SPADES), result);
+            }
+
 
         }
 
@@ -888,7 +913,6 @@ public class ArmageddonTest {
 
                 assertTrue(result);
             }
-
 
         }
     }
