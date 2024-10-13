@@ -891,7 +891,7 @@ public class ArmageddonTest {
                 TrucoCard opponentCard = TrucoCard.of(ACE, SPADES);
 
                 List<TrucoCard> botCards = List.of(
-                        TrucoCard.of(THREE, DIAMONDS),
+                        TrucoCard.of(FIVE, DIAMONDS),
                         TrucoCard.of(FOUR, SPADES)
                 );
 
@@ -906,6 +906,7 @@ public class ArmageddonTest {
                 boolean result = armageddon.decideIfRaises(intel);
 
                 assertFalse(result);
+
             }
 
 
