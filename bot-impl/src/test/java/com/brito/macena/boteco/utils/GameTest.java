@@ -118,4 +118,9 @@ public class GameTest {
             assertThat(result).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("Tests for hasManilha method")
+    class HasManilhaTests {
+    }
 }
