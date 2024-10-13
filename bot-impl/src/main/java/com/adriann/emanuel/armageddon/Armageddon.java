@@ -24,6 +24,7 @@ package com.adriann.emanuel.armageddon;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -393,6 +394,21 @@ public class Armageddon implements BotServiceProvider {
 
         return strongestCard;
     }
+
+    public TrucoCard playMiddleValueCard(GameIntel intel) {
+        List<TrucoCard> playerHand = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+
+        playerHand.sort((card1, card2) -> card1.compareValueTo(card2, vira));
+
+        if (playerHand.size() == 3) {
+            return playerHand.get(1);
+        }
+
+        return playerHand.get(playerHand.size() - 1);
+    }
+
+
 
 
 
