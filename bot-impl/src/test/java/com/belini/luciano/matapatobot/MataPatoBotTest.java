@@ -25,4 +25,12 @@ class MataPatoBotTest {
         assertThat(mataPatoBot.checkFirstPlay(Optional.ofNullable(opponentCard)).equals(opponentPlay));
     }
 
+    @Test
+    @DisplayName("Should return false if we play firt")
+    void shouldReturnFalseIfWePlayFirts(){
+        mataPatoBot = new MataPatoBot();
+        boolean opponentPlay = false;
+        assertThat(mataPatoBot.checkFirstPlay(Optional.empty()).equals(opponentPlay));
+    }
+
 }
