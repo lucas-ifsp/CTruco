@@ -103,6 +103,15 @@ public class TrucoMarreco implements BotServiceProvider {
         return intel.getCards().stream().max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
+    private Boolean hasZap(GameIntel intel){
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(intel.getVira()))
+                return true;
+        }
+        return false;
+
+    }
+
     @Override
     public String getName() { return "Truco Marreco!"; }
 }
