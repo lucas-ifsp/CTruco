@@ -909,6 +909,31 @@ public class ArmageddonTest {
 
             }
 
+            @Test
+            @DisplayName("Should raise ask for Trucoin the second round after losing the first round")
+            void shouldRaiseInSecondRoundAfterLosingFirstRound() {
+                TrucoCard vira = TrucoCard.of(TWO, HEARTS);
+                TrucoCard opponentCard = TrucoCard.of(ACE, SPADES);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(FOUR, DIAMONDS),
+                        TrucoCard.of(FOUR, SPADES)
+                );
+
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(LOST), openCards, vira, 2)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.decideIfRaises(intel);
+
+                assertTrue(result);
+            }
+
+
 
 
         }
