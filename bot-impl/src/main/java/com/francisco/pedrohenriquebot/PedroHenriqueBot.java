@@ -9,16 +9,15 @@ import com.bueno.spi.service.BotServiceProvider;
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
     public String getName() {
-        return "PedroHenriqueBot";
+        return "PedroHenrique";
     }
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         int manilhas = countManilhas(intel);
+        int highCards = countHighCards(intel);
 
-
-
-        return true;
+        return (manilhas >= 2 || (manilhas == 1 && highCards >= 2) || highCards == 3);
     }
 
     @Override
