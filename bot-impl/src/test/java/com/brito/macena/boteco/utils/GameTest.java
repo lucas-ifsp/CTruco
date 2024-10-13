@@ -122,5 +122,20 @@ public class GameTest {
     @Nested
     @DisplayName("Tests for hasManilha method")
     class HasManilhaTests {
+        @Test
+        @DisplayName("Test hasManilha when there is no manilha")
+        public void testHasManilhaWhenThereIsNoManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(card1, card2, card3), vira, 2)
+                    .botInfo(List.of(card1, card2, card3), 0)
+                    .opponentScore(0)
+                    .build();
+            boolean result = Game.hasManilha(intel);
+            assertThat(result).isFalse();
+        }
     }
 }
