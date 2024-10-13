@@ -256,6 +256,11 @@ public class Armageddon implements BotServiceProvider {
 
 
     private boolean hasManilha(List<TrucoCard> cards,TrucoCard vira){
+
+        if (vira == null) {
+            throw new IllegalArgumentException("TrucoCard representing the vira must not be null -----.");
+        }
+
         for (TrucoCard card:cards){
             if (card.isManilha(vira)) return true;
         }
@@ -388,7 +393,6 @@ public class Armageddon implements BotServiceProvider {
         return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.DREW;
     }
 
-
     public TrucoCard playBestCard(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
@@ -439,6 +443,37 @@ public class Armageddon implements BotServiceProvider {
         playerHand.sort((card1, card2) -> card1.compareValueTo(card2, vira));
 
         return playerHand.get(0);
+    }
+
+
+    public boolean shouldRequestSix(GameIntel intel, boolean opponentRequestedTruco) {
+        if (!opponentRequestedTruco) {
+            return false;
+        }
+
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        boolean wonFirstRound = !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON;
+
+        if (!wonFirstRound) {
+            return false;
+        }
+
+        TrucoCard vira = intel.getVira();
+        if (vira == null) {
+            throw new IllegalArgumentException();
+        }
+
+        List<TrucoCard> botCards = intel.getCards();
+        boolean hasManilhaOrThree = false;
+
+        for (TrucoCard card : botCards) {
+            if (card.isManilha(vira) || card.getRank() == THREE) {
+                hasManilhaOrThree = true;
+                break;
+            }
+        }
+
+        return hasManilhaOrThree;
     }
 
 
