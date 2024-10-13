@@ -46,11 +46,18 @@ public class TrucoMarreco implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return handStrong(intel) && wonFirstRound(intel);
+        if (handStrong(intel) && wonFirstRound(intel)) {
+            return true;
+        }
+        if(!intel.getRoundResults().isEmpty() && biggestCouple(intel)){
+            return true;
+        };
+        return  false;
     }
 
     public boolean wonFirstRound(GameIntel intel){
         return intel.getRoundResults().getFirst().equals(GameIntel.RoundResult.WON);
+
     }
 
     public boolean handStrong(GameIntel intel){
