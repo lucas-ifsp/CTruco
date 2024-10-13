@@ -66,4 +66,9 @@ public class GameTest {
             assertThat(result).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("Tests for lostFirstRound method")
+    class LostFirstRoundTests {
+    }
 }
