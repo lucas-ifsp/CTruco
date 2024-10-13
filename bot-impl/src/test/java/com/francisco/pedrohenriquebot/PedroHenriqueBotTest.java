@@ -15,8 +15,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PedroHenriqueBotTest {
 
@@ -55,6 +54,24 @@ class PedroHenriqueBotTest {
 
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
+
+        @Test
+        @DisplayName("Decline Mao de Onze with weak hand")
+        void declineMaoDeOnzeWithWeakHand() {
+            TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(FIVE, CLUBS),
+                    TrucoCard.of(SIX, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,0)
+                    .botInfo(botCards,11)
+                    .opponentScore(6);
+
+            assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+
     }
 
     @Test
