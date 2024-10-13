@@ -269,7 +269,35 @@ public class BatataFritaDoBarBotTest {
     }
 
 
+    @Test
+    @DisplayName("Should return the lowest card based on vira")
+    void shouldReturnLowestCardBasedOnVira() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+
+        List<TrucoCard> listOfViras = List.of(vira);
+
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        TrucoCard expectedLowestCard = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), listOfViras, vira, 1)
+                .botInfo(playerCards, 1)
+                .opponentScore(0);
+
+
+
+        assertEquals(expectedLowestCard, batataFritaDoBarBot.getLowestCard(intel));
+    }
+
     //12
+
     @Test
     @DisplayName("make sure not play casal maior in first round")
     void returnsTrueIfCasalMaiorExist(){
@@ -289,8 +317,8 @@ public class BatataFritaDoBarBotTest {
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
     }
 
-
     //13
+
     @Test
     @DisplayName("make sure blefe is working")
     void makeSureBlefeIsWorking(){
@@ -300,8 +328,8 @@ public class BatataFritaDoBarBotTest {
         assertEquals(7, dif);
 
     }
-
     //14
+
     @Test
     @DisplayName("make sure throw the lowest card to win")
     void makeSureThrowTheLowestCardToWin(){
