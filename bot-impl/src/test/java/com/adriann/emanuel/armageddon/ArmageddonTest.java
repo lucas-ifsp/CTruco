@@ -852,6 +852,31 @@ public class ArmageddonTest {
 
                 assertThat(armageddon.decideIfRaises(intel.build())).isTrue();
             }
+
+            @Test
+            @DisplayName("Should play the weakest card from player's hand")
+            void shouldPlayWeakestCard() {
+                TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+
+                List<TrucoCard> playerHand = List.of(
+                        TrucoCard.of(KING, HEARTS),
+                        TrucoCard.of(SEVEN, SPADES),
+                        TrucoCard.of(FOUR, CLUBS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(KING, HEARTS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), openCards, vira, 1)
+                        .botInfo(playerHand, 0)
+                        .opponentScore(0)
+                        .build();
+
+                TrucoCard result = armageddon.playWeakestCard(intel);
+
+                assertEquals(TrucoCard.of(FOUR, CLUBS), result);
+            }
         }
 
 
