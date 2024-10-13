@@ -47,6 +47,7 @@ public class ArmageddonTest {
     private TrucoCard vira;
     private TrucoCard opponentCard;
     private List<TrucoCard> botCards;
+    private List<TrucoCard> openCards;
 
     private GameIntel.StepBuilder maoDeOnze(List<TrucoCard> botCards, TrucoCard vira){
         return GameIntel.StepBuilder.with().gameInfo(List.of(),List.of(),vira,1)
@@ -473,7 +474,168 @@ public class ArmageddonTest {
             @Nested
             @DisplayName("Tests to implement logic of choose card in the second round when won the first round")
             class SecondRoundWonFirstRoundChoose{
+                @Test
+                @DisplayName("Should play the weakest card when has zap")
+                void shouldPlayWeakestCardWhenHasZap(){
+                    vira = TrucoCard.of(TWO,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(THREE,CLUBS),
+                            TrucoCard.of(FIVE,HEARTS));
+                    openCards = List.of(vira);
 
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
+
+                @Test
+                @DisplayName("Should play the strongest card when has bad cards")
+                void shouldPlayStrongestCardWhenHasBadCards(){
+                    vira = TrucoCard.of(SEVEN,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SIX,SPADES),
+                            TrucoCard.of(FOUR,CLUBS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should discard hearts when has higher couple")
+                void shouldDiscardHeartsWhenHigherCouple(){
+                    vira = TrucoCard.of(ACE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(TWO,HEARTS),
+                            TrucoCard.of(TWO,CLUBS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should play the strongest card when has middle cards")
+                void shouldPlayStrongestWhenHasMiddle(){
+                    vira = TrucoCard.of(FIVE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(QUEEN,HEARTS),
+                            TrucoCard.of(SEVEN,CLUBS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should discard three when has zap")
+                void shouldDiscardThreeWhenZap(){
+                    vira = TrucoCard.of(JACK,SPADES);
+                    botCards = List.of(
+                            TrucoCard.of(KING,CLUBS),
+                            TrucoCard.of(THREE,DIAMONDS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(1)));
+                }
+
+                @Test
+                @DisplayName("Should play the weakest of two manilhas when not having zap")
+                void shouldPlayWeakestManilhaWhenNotZap(){
+                    vira = TrucoCard.of(ACE,HEARTS);
+                    botCards = List.of(
+                            TrucoCard.of(TWO,HEARTS),
+                            TrucoCard.of(TWO,DIAMONDS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
+
+                @Test
+                @DisplayName("Should discard weakest manilha when haz zap")
+                void shouldDiscardManilhaWhenZap(){
+                    vira = TrucoCard.of(FIVE,HEARTS);
+                    botCards = List.of(
+                            TrucoCard.of(SIX,DIAMONDS),
+                            TrucoCard.of(SIX,CLUBS));
+                    openCards = List.of(vira);
+
+                    intel = secondRoundWonFirstRound(botCards,openCards,vira);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.discard(botCards.get(0)));
+                }
+            }
+
+            @Nested
+            @DisplayName("Tests to implement logic of choose card in the second round when lost the first round")
+            class SecondRoundLostFirstRoundChoose{
+
+                @Test
+                @DisplayName("Should play the weakest card when opponent discard")
+                void shouldPlayWeakestOpponentDiscard(){
+                    vira = TrucoCard.of(ACE,DIAMONDS);
+                    botCards = List.of(
+                            TrucoCard.of(SIX,HEARTS),
+                            TrucoCard.of(JACK,CLUBS));
+                    opponentCard = TrucoCard.closed();
+                    openCards = List.of(vira,opponentCard);
+
+                    intel = secondRoundLostFirstRound(botCards,openCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should play the weakest card when the two cards beat the opponent")
+                void shouldPlayWeakestWhenBeatOpponent(){
+                    vira = TrucoCard.of(THREE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(FOUR,SPADES),
+                            TrucoCard.of(ACE,DIAMONDS));
+                    opponentCard = TrucoCard.of(KING,HEARTS);
+                    openCards = List.of(vira,opponentCard);
+
+                    intel = secondRoundLostFirstRound(botCards,openCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
+
+                @Test
+                @DisplayName("Should play the strongest card when the weakest card can't beat the opponent")
+                void shouldPlayStrongestWhenBeatOpponent(){
+                    vira = TrucoCard.of(ACE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(ACE,DIAMONDS),
+                            TrucoCard.of(SEVEN,SPADES));
+                    opponentCard = TrucoCard.of(JACK,HEARTS);
+                    openCards = List.of(vira,opponentCard);
+
+                    intel = secondRoundLostFirstRound(botCards,openCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+
+                @Test
+                @DisplayName("Should play weakest manilha when have two and can beat the opponent")
+                void shouldPlayWeakestManilhaWhenCanBeatOpponent(){
+                    vira = TrucoCard.of(THREE,CLUBS);
+                    botCards = List.of(
+                            TrucoCard.of(FOUR,DIAMONDS),
+                            TrucoCard.of(FOUR,HEARTS));
+                    opponentCard = TrucoCard.of(THREE,SPADES);
+                    openCards = List.of(vira,opponentCard);
+
+                    intel = secondRoundLostFirstRound(botCards,openCards,vira,opponentCard);
+
+                    assertThat(armageddon.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
             }
         }
     }

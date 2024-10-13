@@ -32,10 +32,15 @@ import static com.bueno.spi.model.CardRank.*;
 
 public class Armageddon implements BotServiceProvider {
     private static final int GOOD_HAND_STRENGTH = 25;
+    private TrucoCard vira;
+    private List<TrucoCard> botCards;
+    private TrucoCard weakest;
+    private TrucoCard strongest;
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> botCards = intel.getCards();
+        vira = intel.getVira();
+        botCards = intel.getCards();
         if (!hasThree(botCards,vira) && !hasManilha(botCards,vira)) return false;
 
         int goodCard = 0;
@@ -56,7 +61,7 @@ public class Armageddon implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
-        TrucoCard vira = intel.getVira();
+        vira = intel.getVira();
 
         for (TrucoCard card : playerHand) {
             if (card.isManilha(vira)) {
@@ -75,80 +80,130 @@ public class Armageddon implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
         int rounds = intel.getRoundResults().size();
-        TrucoCard vira = intel.getVira();
-
-        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
-
-        List<TrucoCard> botCards = intel.getCards();
+        botCards = intel.getCards();
 
         switch (rounds) {
             case 0 -> {
-                TrucoCard middle = middleCard(botCards,vira);
-                TrucoCard strongest = strongestCard(botCards,vira);
-                TrucoCard weakest = weakestCard(botCards,vira);
-
-                if (optOpponentCard.isEmpty()){
-                    if (hasHigherCouple(botCards, vira)) {
-                        return CardToPlay.of(weakest);
-                    }
-                    if (hasManilha(botCards, vira)){
-                        return CardToPlay.of(middle);
-                    }
-                    if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(strongest);
-                    }
-                    if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
-                        return CardToPlay.of(middle);
-                    }
-                }
-                if (optOpponentCard.isPresent()){
-                    TrucoCard opponentCard = optOpponentCard.get();
-
-                    if (!canWin(botCards,vira,opponentCard)){
-                        return CardToPlay.of(weakest);
-                    }
-
-                    if (canDraw(botCards,vira,opponentCard)){
-                        Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
-                        if (equalCard.isPresent() && hasManilha(botCards,vira)){
-                            if (hasZap(botCards,vira)){
-                                return CardToPlay.of(equalCard.get());
-                            }
-                            return CardToPlay.of(middle);
-                        }
-                    }
-
-                    if (hasHigherCouple(botCards,vira)){
-                        return CardToPlay.of(weakest);
-                    }
-
-                    if (hasTwoManilhas(botCards,vira)){
-                        if (middle.compareValueTo(opponentCard,vira) > 0){
-                            return CardToPlay.of(middle);
-                        }
-                        return CardToPlay.of(strongest);
-                    }
-
-                    if (opponentCard.compareValueTo(middle,vira) < 0){
-                        if (opponentCard.compareValueTo(weakest,vira) < 0){
-                            return CardToPlay.of(weakest);
-                        }
-                        return CardToPlay.of(middle);
-                    }
-
-                    return CardToPlay.of(strongest);
-                }
+                return firstRoundChoose(intel);
+            }
+            case 1 -> {
+                return secondRoundChoose(intel);
             }
         }
         return CardToPlay.of(botCards.get(0));
     }
 
+    private CardToPlay firstRoundChoose(GameIntel intel){
+        vira = intel.getVira();
+        botCards = intel.getCards();
+        weakest = weakestCard(botCards,vira);
+        strongest = strongestCard(botCards,vira);
+
+        TrucoCard middle = middleCard(botCards,vira);
+
+        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
+        TrucoCard opponentCard;
+
+        if (optOpponentCard.isEmpty()){
+            if (hasHigherCouple(botCards, vira)) {
+                return CardToPlay.of(weakest);
+            }
+            if (hasManilha(botCards, vira)){
+                return CardToPlay.of(middle);
+            }
+            if (handStrength(botCards, vira) < GOOD_HAND_STRENGTH) {
+                return CardToPlay.of(strongest);
+            }
+            if (handStrength(botCards, vira) > GOOD_HAND_STRENGTH) {
+                return CardToPlay.of(middle);
+            }
+        }
+        if (optOpponentCard.isPresent()){
+            opponentCard = optOpponentCard.get();
+
+            if (!canWin(botCards,vira,opponentCard)){
+                return CardToPlay.of(weakest);
+            }
+
+            if (canDraw(botCards,vira,opponentCard)){
+                Optional<TrucoCard> equalCard = relativelyEqualCard(botCards,vira,opponentCard);
+                if (equalCard.isPresent() && hasManilha(botCards,vira)){
+                    if (hasZap(botCards,vira)){
+                        return CardToPlay.of(equalCard.get());
+                    }
+                    return CardToPlay.of(middle);
+                }
+            }
+
+            if (hasHigherCouple(botCards,vira)){
+                return CardToPlay.of(weakest);
+            }
+
+            if (hasTwoManilhas(botCards,vira)){
+                if (middle.compareValueTo(opponentCard,vira) > 0){
+                    return CardToPlay.of(middle);
+                }
+                return CardToPlay.of(strongest);
+            }
+
+            if (opponentCard.compareValueTo(middle,vira) < 0){
+                if (opponentCard.compareValueTo(weakest,vira) < 0){
+                    return CardToPlay.of(weakest);
+                }
+                return CardToPlay.of(middle);
+            }
+
+            return CardToPlay.of(strongest);
+        }
+        return CardToPlay.of(botCards.get(0));
+    }
+
+    private CardToPlay secondRoundChoose(GameIntel intel){
+        vira = intel.getVira();
+
+        botCards = intel.getCards();
+        weakest = weakestCard(botCards,vira);
+        strongest = strongestCard(botCards,vira);
+
+        Optional<TrucoCard> optOpponentCard = intel.getOpponentCard();
+        TrucoCard opponentCard;
+
+        if (optOpponentCard.isPresent()){
+            opponentCard = optOpponentCard.get();
+
+            if (hasTwoManilhas(botCards,vira)){
+                if (weakest.compareValueTo(opponentCard,vira) >= 0){
+                    return CardToPlay.of(weakest);
+                }
+                return CardToPlay.of(strongest);
+            }
+            if (opponentCard.equals(TrucoCard.closed()) || opponentCard.compareValueTo(weakest,vira) < 0){
+                return CardToPlay.of(weakest);
+            }
+            if (opponentCard.compareValueTo(strongest,vira) < 0){
+                return CardToPlay.of(strongest);
+            }
+        }
+        if (hasZap(botCards,vira)){
+            if (hasTwoManilhas(botCards,vira) || hasThree(botCards,vira)) {
+                return CardToPlay.discard(weakest);
+            }
+            return CardToPlay.of(weakest);
+        }
+        if (hasTwoManilhas(botCards,vira)){
+            return CardToPlay.of(weakest);
+        }
+        if (strongest.relativeValue(vira) + weakest.relativeValue(vira) < 12){
+            return CardToPlay.of(strongest);
+        }
+        return CardToPlay.of(weakest);
+    }
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> botCards = intel.getCards();
+        vira = intel.getVira();
+        botCards = intel.getCards();
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
         if (!hasThree(botCards, vira) && !hasManilha(botCards, vira)) {
