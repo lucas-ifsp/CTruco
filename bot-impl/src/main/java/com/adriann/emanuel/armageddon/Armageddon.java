@@ -408,6 +408,16 @@ public class Armageddon implements BotServiceProvider {
         return playerHand.get(playerHand.size() - 1);
     }
 
+    public TrucoCard playWeakestCard(GameIntel intel) {
+        List<TrucoCard> playerHand = new ArrayList<>(intel.getCards());
+        TrucoCard vira = intel.getVira();
+
+        playerHand.sort((card1, card2) -> card1.compareValueTo(card2, vira));
+
+        return playerHand.get(0);
+    }
+
+
 
 
 
