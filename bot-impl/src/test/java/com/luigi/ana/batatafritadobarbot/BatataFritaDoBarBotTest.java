@@ -199,6 +199,31 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.hasOuros(stepBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Should return zero when there are no manilha")
+    void shouldReturnZeroWhenNoManilha() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+
+        List <TrucoCard> listOfViras = List.of(vira);
+
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
+        );
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), listOfViras, vira, 1)
+                .botInfo(playerCards, 0)
+                .opponentScore(1);
+
+
+        assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(intel));
+    }
+
     //10
     @Test
     @DisplayName("2 manilhas on 2H, 3C, 2S")
@@ -512,6 +537,11 @@ public class BatataFritaDoBarBotTest {
 
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
+
+    // 26
+
+
+
 
 
 
