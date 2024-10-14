@@ -92,13 +92,11 @@ class MataPatoBotTest {
         TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
         TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
-        //simulando a mão do bot com 3 cartas
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
 
         //chama o método RoundCheck
         boolean hasThreeCards = mataPatoBot.RoundCheck(intel);
 
-        //verifica se o retorno é verdadeiro
         assertThat(hasThreeCards).isTrue();
     }
 

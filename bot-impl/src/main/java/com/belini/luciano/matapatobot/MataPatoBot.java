@@ -59,5 +59,7 @@ public class MataPatoBot implements BotServiceProvider{
         return cardToPlay != null ? cardToPlay : lowestCard;
     }
 
-
+    public boolean RoundCheck(GameIntel intel) {
+        return intel.getCards().size() == 3;
+    }
 }
