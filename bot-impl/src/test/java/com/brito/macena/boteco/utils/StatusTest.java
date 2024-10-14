@@ -25,5 +25,11 @@ public class StatusTest {
         void statusMediumIsDefined() {
             assertThat(Status.valueOf("MEDIUM")).isNotNull();
         }
+
+        @Test
+        @DisplayName("Status GOOD is defined")
+        void statusGoodIsDefined() {
+            assertThat(Status.valueOf("GOOD")).isNotNull();
+        }
     }
 }
