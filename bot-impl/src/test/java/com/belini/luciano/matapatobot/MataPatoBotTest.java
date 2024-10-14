@@ -21,8 +21,6 @@ import static org.mockito.Mockito.when;
 
 class MataPatoBotTest {
 
-    GameIntel.StepBuilder intel;
-
     @BeforeEach
     public void createPatoBot() {
         mataPatoBot = new MataPatoBot();
@@ -156,6 +154,23 @@ class MataPatoBotTest {
         assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Play a top 3 card against manilha")
+    public void killTheManilha() {
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+        TrucoCard card2 = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+        when(intel.getVira()).thenReturn(vira);
+        when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+        assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
+    }
 
 
 }
