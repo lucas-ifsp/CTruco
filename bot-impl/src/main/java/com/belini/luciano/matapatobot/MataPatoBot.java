@@ -62,10 +62,19 @@ public class MataPatoBot implements BotServiceProvider{
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
         TrucoCard strongestCard = null;
+        TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+
+        boolean opponentPlayedManilha = opponentCard != null && opponentCard.isManilha(vira);
 
         for (TrucoCard card : hand) {
             if (!card.isZap(vira) && !card.isCopas(vira) && !card.isEspadilha(vira)) {
                 if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                    strongestCard = card;
+                }
+            }
+
+            if (opponentPlayedManilha && card.isManilha(vira)) {
+                if (strongestCard == null || card.relativeValue(vira) > opponentCard.relativeValue(vira)) {
                     strongestCard = card;
                 }
             }
