@@ -97,4 +97,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return false;
     }
 
+    public int getAverageCardValue(GameIntel build) {
+        return 0;
+    }
 }
