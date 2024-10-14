@@ -43,6 +43,9 @@ public class TrucoMarreco implements BotServiceProvider {
        if(biggestCouple(intel)){
             return  true;
        }
+       if(handStrong(intel)){
+           return true;
+       }
        return  false;
     }
 
