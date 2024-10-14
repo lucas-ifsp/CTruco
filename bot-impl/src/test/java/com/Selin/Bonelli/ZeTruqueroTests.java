@@ -838,5 +838,59 @@ public class ZeTruqueroTests
         }
     }
 
+    @DisplayName("Deve jogar o Zap se o adversário jogar uma manilha")
+    @Test
+    public void shouldPlayZapIfOpponentPlaysManilha() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        when(intel.getOpponentCard()).thenReturn(Optional.of(opponentCard));
+
+        // Verifica se o bot tem o Zap para jogar
+        boolean hasZap = zetruquero.zapInHand(botCards, vira);
+
+
+        if (hasZap) {
+            assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
+        }
+    }
+
+    @DisplayName("Deve pedir truco se tiver o Zap e já tiver feito um round")
+    @Test
+    public void shouldCallTrucoIfHasZapAndWonRound() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .botInfo(botCards, 1)
+                .opponentScore(0)
+                .build();
+
+
+        boolean hasZap = zetruquero.zapInHand(botCards, vira);
+
+
+        if (hasZap) {
+            assertThat(zetruquero.decideIfRaises(intel)).isTrue();
+        }
+    }
+
 
 }

@@ -99,6 +99,8 @@ public class Zetruquero implements BotServiceProvider
     public Boolean zapInHand(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao tem o ZAPZAO
+        //Deve jogar o Zap se o adversário jogar uma manilha
+        //Devie pedir truco se tiver o Zap e já tiver feito um round
         return false;
     }
 
@@ -122,7 +124,7 @@ public class Zetruquero implements BotServiceProvider
 
     public Boolean weakHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot ta horrivel - FUGIR DE TUDO
+
         return false;
     }
 
