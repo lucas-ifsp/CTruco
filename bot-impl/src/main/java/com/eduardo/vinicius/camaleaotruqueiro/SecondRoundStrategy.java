@@ -33,6 +33,13 @@ public class SecondRoundStrategy implements RoundStrategy{
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return 1;
         else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return 0;
+        else if(winFistRound(intel) || drewFistRound(intel)){
+            if(isWinning(intel.getScore(),intel.getOpponentScore())
+                    && situation == HandsCardSituation.BLUFF_TO_GET_POINTS) return 0;
+            else if(isWinning(intel.getScore(),intel.getOpponentScore())
+                    && situation == HandsCardSituation.BLUFF_TO_INTIMIDATE) return 0;
+            else return -1;
+        }
         else return -1;
     }
 }
