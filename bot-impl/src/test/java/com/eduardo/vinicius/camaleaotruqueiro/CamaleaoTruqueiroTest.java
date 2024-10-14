@@ -1197,5 +1197,95 @@ public class CamaleaoTruqueiroTest {
                 assertThat(handsCardSituation).isEqualTo(situationExpected);
             }
         }
+
+        @Nested @DisplayName("First Round Strategy")
+        class FirstRoundStrategy {
+
+            @ParameterizedTest
+            @CsvSource({
+                    // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | cardRank3 | cardSuit3 | willCallTruco | choosenCardRank | choosenCardSuit | highChangesOpponentRunFromTruco
+                    //almost absolute victory
+                    "FOUR, CLUBS, FOUR, HEARTS, SEVEN, SPADES, true, FOUR, CLUBS, false",
+                    //almost certain victory
+                    "FOUR, CLUBS, TWO, HEARTS, TWO, SPADES, false, TWO, HEARTS, false",
+
+                    //bluff to get points
+                    "FOUR, CLUBS, TWO, HEARTS, KING, SPADES, false, KING, SPADES, false",
+                    "FOUR, CLUBS, TWO, HEARTS, SIX, SPADES, false, SIX, SPADES, false",
+
+                    //bluff to intimidate
+                    "FOUR, CLUBS, KING, HEARTS, KING, SPADES, false, FOUR, CLUBS, false",
+                    "FOUR, CLUBS, KING, HEARTS, SIX, SPADES, false, FOUR, CLUBS, false",
+                    //almost certain defeat
+                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, false, KING, CLUBS, false",
+                    "KING, CLUBS, SIX, HEARTS, SIX, SPADES, false, KING, CLUBS, false",
+                    "SIX, CLUBS, SIX, HEARTS, SIX, SPADES, false, SIX, CLUBS, false",
+                    //high changes opponent runs from truco
+                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, true, KING, CLUBS, true",
+            })
+            @DisplayName("When bot opens hand")
+            void whenBotOpensHand (CardRank cardRank1, CardSuit cardSuit1, CardRank cardRank2, CardSuit cardSuit2, CardRank cardRank3, CardSuit cardSuit3,Boolean willCallTruco, CardRank cardChosenRank, CardSuit cardChosenSuit, Boolean highChangesOpponentRunFromTruco) {
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(cardRank1,cardSuit1),
+                        TrucoCard.of(cardRank2,cardSuit2),
+                        TrucoCard.of(cardRank3,cardSuit3)
+                );
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),List.of(vira),vira,1)
+                        .botInfo(botCards,0)
+                        .opponentScore(0)
+                        .build();
+
+                boolean botDecideIfRaises =  camaleao.decideIfRaises(intel);
+                TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                SoftAssertions softly = new SoftAssertions();
+                softly.assertThat(botDecideIfRaises).isEqualTo(willCallTruco);
+                softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                if(!camaleao.decideIfRaises(intel)) softly.assertThat(botChosenCard).isEqualTo(TrucoCard.of(cardChosenRank,cardChosenSuit));
+                softly.assertAll();
+            }
+
+            @ParameterizedTest
+            @CsvSource({
+                    // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | cardRank3 | cardSuit3 | willCallTruco | choosenCardRank | choosenCardSuit | highChangesOpponentRunFromTruco | oppentCallsTruco | opennentCardRank | opennentCardSuit
+                    //almost absolute victory
+                    "FOUR, CLUBS, FOUR, HEARTS, SEVEN, SPADES, true, FOUR, CLUBS, false",
+                    //almost certain victory
+                    "FOUR, CLUBS, TWO, HEARTS, TWO, SPADES, false, TWO, SPADES, false",
+
+                    //bluff to get points
+                    "FOUR, CLUBS, TWO, HEARTS, KING, SPADES, false, KING, SPADES, false",
+                    "FOUR, CLUBS, TWO, HEARTS, SIX, SPADES, false, SIX, SPADES, false",
+
+                    //bluff to intimidate
+                    "FOUR, CLUBS, KING, HEARTS, KING, SPADES, false, KING, SPADES, false",
+                    "FOUR, CLUBS, KING, HEARTS, SIX, SPADES, false, KING, SPADES, false",
+                    //almost certain defeat
+                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, false, KING, SPADES, false",
+                    "KING, CLUBS, SIX, HEARTS, SIX, SPADES, false, KING, SPADES, false",
+                    "SIX, CLUBS, SIX, HEARTS, SIX, SPADES, false, KING, SPADES, false",
+                    //high changes opponent runs from truco
+                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, true, KING, SPADES, true",
+            })
+            @DisplayName("When bot is second to play")
+            void whenBotIsSecondToPlay(CardRank cardRank1, CardSuit cardSuit1, CardRank cardRank2, CardSuit cardSuit2, CardRank cardRank3, CardSuit cardSuit3, Boolean willCallTruco, CardRank cardChosenRank, CardSuit cardChosenSuit, Boolean highChangesOpponentRunFromTruco) {
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(cardRank1,cardSuit1),
+                        TrucoCard.of(cardRank2,cardSuit2),
+                        TrucoCard.of(cardRank3,cardSuit3)
+                );
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),List.of(vira),vira,1)
+                        .botInfo(botCards,0)
+                        .opponentScore(0)
+                        .build();
+
+                SoftAssertions softly = new SoftAssertions();
+
+            }
+
+        }
     }
 }
