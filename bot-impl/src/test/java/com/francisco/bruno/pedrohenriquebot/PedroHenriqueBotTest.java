@@ -25,7 +25,6 @@ class PedroHenriqueBotTest {
         sut = new PedroHenriqueBot();
     }
 
-
     @Test
     @DisplayName("Should return correct bot name")
     void shouldReturnCorrectBotName() {
@@ -41,7 +40,7 @@ class PedroHenriqueBotTest {
             TrucoCard vira = TrucoCard.of(ACE, SPADES);
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(TWO, HEARTS),
-                    TrucoCard.of(THREE, CLUBS),
+                    TrucoCard.of(TWO, CLUBS),
                     TrucoCard.of(ACE, DIAMONDS)
             );
 
@@ -86,6 +85,17 @@ class PedroHenriqueBotTest {
                     .opponentScore(10);
 
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Testing chooseCard")
+    class ChooseCardTest {
+        @Test
+        @DisplayName("Should Return Card")
+        void shouldReturnCard() {
+
         }
 
     }
