@@ -100,4 +100,20 @@ class MataPatoBotTest {
         assertThat(hasThreeCards).isTrue();
     }
 
+    @Test
+    @DisplayName("Should return true if the bot has two cards in hand")
+    public void shouldReturnFalseIfBotHasTwoCards() {
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
+
+        boolean hasThreeCards = mataPatoBot.RoundCheck(intel);
+
+        assertThat(hasThreeCards).isTrue();
+    }
+
+
 }
