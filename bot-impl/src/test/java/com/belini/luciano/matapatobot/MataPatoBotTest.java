@@ -84,44 +84,54 @@ class MataPatoBotTest {
     }
 
     @Test
-    @DisplayName("Should return true if the bot has three cards in hand")
-    public void shouldReturnTrueIfBotHasThreeCards() {
+    @DisplayName("Should return Round 1 if the bot has three cards in hand")
+    public void shouldReturnRound1IfBotHasThreeCards() {
         GameIntel intel = mock(GameIntel.class);
 
         TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
         TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
         TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
 
-        //chama o método RoundCheck
-        boolean hasThreeCards = mataPatoBot.RoundCheck(intel);
+        String round = mataPatoBot.RoundCheck(intel);
 
-        assertThat(hasThreeCards).isTrue();
+        assertThat(round).isEqualTo("Round 1");
     }
 
     @Test
-    @DisplayName("Should return true if the bot has two cards in hand")
-    public void shouldReturnTrueIfBotHasTwoCards() {
+    @DisplayName("Should return Round 2 if the bot has two cards in hand")
+    public void shouldReturnRound2IfBotHasTwoCards() {
         GameIntel intel = mock(GameIntel.class);
 
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
-        TrucoCard card2 = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
 
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
 
-        boolean hasTwoCards = mataPatoBot.RoundCheck(intel);
-        assertThat(hasTwoCards).isTrue();
+        String round = mataPatoBot.RoundCheck(intel);
+        assertThat(round).isEqualTo("Round 2");
     }
 
     @Test
-    @DisplayName("Should return true if the bot has one card in hand")
-    public void shouldReturnTrueIfBotHasOneCard() {
+    @DisplayName("Should return Round 3 if the bot has one card in hand")
+    public void shouldReturnRound3IfBotHasOneCard() {
         GameIntel intel = mock(GameIntel.class);
-        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
         when(intel.getCards()).thenReturn(Arrays.asList(card1));
-        boolean hasOneCard = mataPatoBot.RoundCheck(intel);
-        assertThat(hasOneCard).isTrue();
+        String round = mataPatoBot.RoundCheck(intel);
+
+        assertThat(round).isEqualTo("Round 3");
+    }
+
+    @Test
+    @DisplayName("Should return 'No cards' if the bot has no cards in hand")
+    public void shouldReturnNoCardsIfBotHasNoCards() {
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getCards()).thenReturn(Arrays.asList());
+        String round = mataPatoBot.RoundCheck(intel);
+
+        assertThat(round).isEqualTo("No cards");
     }
 }
