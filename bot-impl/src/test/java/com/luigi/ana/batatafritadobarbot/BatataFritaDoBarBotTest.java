@@ -764,9 +764,39 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(11);
 
 
-
         assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
     }
+
+    //36
+    @Test
+    @DisplayName("Should return true when opponent's score is greater than 7, has manilha, and avg cards greater than seven")
+    void shouldReturnTrueWhenOpponentScoreGreaterThan7AndHasManilhaAndAVGGreaterThan7() {
+
+
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 9)
+                .opponentScore(8);
+
+
+        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+
+
+
+
 
 
 
