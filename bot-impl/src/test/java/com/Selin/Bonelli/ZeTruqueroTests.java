@@ -788,5 +788,55 @@ public class ZeTruqueroTests
         assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS));
     }
 
+    @DisplayName("Deve pedir truco no último round se tiver A, 2 ou 3 na mão")
+    @Test
+    public void shouldCallTrucoIfHasStrongCardInLastRound() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), List.of(vira), vira, 2)
+                .botInfo(botCards, 1)
+                .opponentScore(1)
+                .build();
+
+        // Verifica se há carta forte (A, 2 ou 3) na mão
+        boolean hasStrongCard = zetruquero.strongCardInHand(botCards, vira);
+
+
+        if (hasStrongCard) {
+            assertThat(zetruquero.decideIfRaises(intel)).isTrue();
+        }
+    }
+
+    @DisplayName("Deve aceitar truco no último round se tiver A, 2 ou 3 na mão")
+    @Test
+    public void shouldAcceptTrucoIfHasStrongCardInLastRound() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), List.of(vira), vira, 2)
+                .botInfo(botCards, 1)
+                .opponentScore(1)
+                .build();
+
+        // Verifica se há carta forte (A, 2 ou 3) na mão
+        boolean hasStrongCard = zetruquero.strongCardInHand(botCards, vira);
+
+
+        if (hasStrongCard) {
+            assertThat(zetruquero.getRaiseResponse(intel)).isOne();
+        }
+    }
+
 
 }

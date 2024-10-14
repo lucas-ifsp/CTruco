@@ -85,6 +85,8 @@ public class Zetruquero implements BotServiceProvider
     {
         //funcao ira analisar se de fato na mao do bot tem alguma carta considerada forte (sem considerar manilha)
         // A, 2, 3
+        //Deve pedir truco no último round se tiver A, 2 ou 3 na mão
+        //Deve aceitar truco no último round se tiver A, 2 ou 3 na mão
         return false;
     }
 
