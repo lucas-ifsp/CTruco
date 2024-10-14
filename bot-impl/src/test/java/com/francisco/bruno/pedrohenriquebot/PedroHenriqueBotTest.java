@@ -1,4 +1,4 @@
-package com.francisco.pedrohenriquebot;
+package com.francisco.bruno.pedrohenriquebot;
 
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
