@@ -4,8 +4,8 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-import javax.lang.model.type.NullType;
 
+import java.util.List;
 import java.util.Optional;
 
 public class MataPatoBot implements BotServiceProvider{
@@ -59,7 +59,19 @@ public class MataPatoBot implements BotServiceProvider{
         return cardToPlay != null ? cardToPlay : lowestCard;
     }
 
-    public boolean RoundCheck(GameIntel intel) {
-        return intel.getCards().size() == 3;
+    public String RoundCheck(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        int cardCount = cards.size();
+
+        switch (cardCount) {
+            case 3:
+                return "Round 1";
+            case 2:
+                return "Round 2";
+            case 1:
+                return "Round 3";
+            default:
+                return "No cards";
+        }
     }
 }
