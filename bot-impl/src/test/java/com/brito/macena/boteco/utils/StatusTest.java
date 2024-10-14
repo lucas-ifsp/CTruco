@@ -31,5 +31,11 @@ public class StatusTest {
         void statusGoodIsDefined() {
             assertThat(Status.valueOf("GOOD")).isNotNull();
         }
+
+        @Test
+        @DisplayName("Status EXCELLENT is defined")
+        void statusExcellentIsDefined() {
+            assertThat(Status.valueOf("EXCELLENT")).isNotNull();
+        }
     }
 }
