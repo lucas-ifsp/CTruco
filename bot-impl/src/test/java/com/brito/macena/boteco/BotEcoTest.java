@@ -201,6 +201,28 @@ public class BotEcoTest {
             CardToPlay selectedCard = botEco.chooseCard(step);
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
         }
+
+        @Test
+        @DisplayName("Should play worst card if it beats opponent's card in first round with 3 cards")
+        void shouldPlayWorstCardIfItBeatsOpponentsCardWithThreeCards() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+            );
+            TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
+
+            CardToPlay selectedCard = botEco.chooseCard(step);
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
+        }
     }
 
     @Nested
