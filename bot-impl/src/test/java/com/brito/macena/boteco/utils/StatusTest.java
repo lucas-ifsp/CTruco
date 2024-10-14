@@ -42,5 +42,15 @@ public class StatusTest {
     @Nested
     @DisplayName("Status Values Tests")
     class StatusValuesTests {
+        @Test
+        @DisplayName("Status values contain all statuses")
+        void statusValuesContainsAllStatuses() {
+            Status[] statuses = Status.values();
+            assertThat(statuses).containsExactly(
+                    Status.BAD,
+                    Status.MEDIUM,
+                    Status.GOOD,
+                    Status.EXCELLENT);
+        }
     }
 }
