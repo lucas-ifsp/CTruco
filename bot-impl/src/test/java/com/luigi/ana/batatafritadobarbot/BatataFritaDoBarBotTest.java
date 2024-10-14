@@ -793,6 +793,34 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
+    // 37
+    @Test
+    @DisplayName("Should return false when has no manilha and avg cards less than seven")
+    void shouldReturnFalseWhenNoManilhaAndAVGNotGreaterThan7() {
+
+
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 9)
+                .opponentScore(8);
+
+
+        assertFalse(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+
 
 
 
