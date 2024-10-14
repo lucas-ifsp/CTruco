@@ -5,11 +5,38 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TrucoUtils {
 
     public static boolean isHighChangesOpponentRunFromTruco(GameIntel intel) {
         return false;
+    }
+
+    public static boolean opponentPlayedInvincibleCard(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        if (intel.getOpponentCard().isPresent()) {
+            Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+            return !cards.stream()
+                    .filter(
+                         card -> card.getRank().value() > opponentCard.get().getRank().value()
+                    )
+                    .toList().isEmpty();
+        }
+        return false;
+    }
+
+    public static TrucoCard getLowestCardToWinHand(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        if (opponentPlayedInvincibleCard(intel)) return null;
+        List<TrucoCard> possibleCardsToWin = cards.stream()
+                .filter(
+                        card -> card.getRank().value() > opponentCard.get().getRank().value()
+                )
+                .toList();
+        return getLowestCard(possibleCardsToWin, vira);
     }
 
     public static TrucoCard getGreatestCard(List<TrucoCard> cards, TrucoCard vira) {
