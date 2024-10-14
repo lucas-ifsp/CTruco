@@ -134,6 +134,8 @@ public class Zetruquero implements BotServiceProvider
     {
         //funcao ira analisar se na mao do bot ta perfeita - CHAMAR TUDO
         // pelo menos 2 manilha ou 1 zap ou duas cartas acima de K
+        //Deve chamar truco na primeira rodada se a mão for muito boa TRUCO MARRECO
+        //Deve pedir 6 se a mão for muito boa e o adversário pedir truco
         return false;
     }
 

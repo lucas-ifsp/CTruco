@@ -933,12 +933,57 @@ public class ZeTruqueroTests
                 .opponentScore(0)
                 .build();
 
-        
+
         boolean hasWeakHand = zetruquero.weakHand(botCards, vira);
 
         // Se a mão for fraca, o bot deve jogar a carta mais forte no primeiro round
         if (hasWeakHand) {
             assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        }
+    }
+
+
+    @DisplayName("Deve chamar truco na primeira rodada se a mão for muito boa")
+    @Test
+    public void shouldCallTrucoOnFirstRoundIfStrongHand() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+
+        if (zetruquero.strongHand(botCards, vira)) {
+            assertThat(zetruquero.getRaiseResponse(intel)).isGreaterThan(0);
+        }
+    }
+
+    @DisplayName("Deve pedir 6 se a mão for muito boa e o adversário pedir truco")
+    @Test
+    public void shouldRaiseToSixIfStrongHandAndOpponentCallsTruco() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(vira), vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(1)
+                .build();
+
+
+        if (zetruquero.strongHand(botCards, vira)) {
+            assertThat(zetruquero.getRaiseResponse(intel)).isEqualTo(2);
         }
     }
 
