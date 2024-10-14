@@ -59,4 +59,5 @@ public class MataPatoBot implements BotServiceProvider{
         return cardToPlay != null ? cardToPlay : lowestCard;
     }
 
+
 }

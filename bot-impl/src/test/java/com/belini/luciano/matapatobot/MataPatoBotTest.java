@@ -83,5 +83,23 @@ class MataPatoBotTest {
         assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Should return true if the bot has three cards in hand")
+    public void shouldReturnTrueIfBotHasThreeCards() {
+        GameIntel intel = mock(GameIntel.class);
+
+        TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+        //simulando a mão do bot com 3 cartas
+        when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+
+        //chama o método RoundCheck
+        boolean hasThreeCards = mataPatoBot.RoundCheck(intel);
+
+        //verifica se o retorno é verdadeiro
+        assertThat(hasThreeCards).isTrue();
+    }
 
 }
