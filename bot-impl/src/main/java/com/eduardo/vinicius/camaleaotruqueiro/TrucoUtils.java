@@ -4,6 +4,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,19 +25,6 @@ public class TrucoUtils {
                     .toList().isEmpty();
         }
         return false;
-    }
-
-    public static TrucoCard getLowestCardToWinHand(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        if (opponentPlayedInvincibleCard(intel)) return null;
-        List<TrucoCard> possibleCardsToWin = cards.stream()
-                .filter(
-                        card -> card.getRank().value() > opponentCard.get().getRank().value()
-                )
-                .toList();
-        return getLowestCard(possibleCardsToWin, vira);
     }
 
     public static TrucoCard getGreatestCard(List<TrucoCard> cards, TrucoCard vira) {
@@ -129,7 +117,7 @@ public class TrucoUtils {
     public static List<TrucoCard> haveStrongestCard(GameIntel intel, List<TrucoCard> myCards) {
         TrucoCard opponentCard = intel.getOpponentCard().get();
         TrucoCard vira = intel.getVira();
-        List<TrucoCard> strongestCards = new java.util.ArrayList<>(List.of());
+        List<TrucoCard> strongestCards = new ArrayList<>(List.of());
         for (TrucoCard myCard : myCards) {
             if(myCard.compareValueTo(opponentCard, vira) > 0) strongestCards.add(myCard);
         }
