@@ -181,6 +181,26 @@ public class BotEcoTest {
             CardToPlay selectedCard = botEco.chooseCard(step);
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)));
         }
+
+        @Test
+        @DisplayName("Should play best card when no opponent card and hand is medium")
+        void shouldPlayBestCardWhenNoOpponentCardAndMediumHand() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .build();
+
+            CardToPlay selectedCard = botEco.chooseCard(step);
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
+        }
     }
 
     @Nested
