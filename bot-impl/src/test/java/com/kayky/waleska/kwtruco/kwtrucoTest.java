@@ -917,8 +917,8 @@ public class kwtrucoTest {
         }
         @Test
         @Tag("kwTrucoTests")
-        @DisplayName("Return false when oponnent has manilha")
-        void shouldReturnFalseWhenOponnentHasManilha() {
+        @DisplayName("Return false when oponnent not has manilha")
+        void shouldReturnFalseWhenOponnentNotHasManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
@@ -933,11 +933,4 @@ public class kwtrucoTest {
 
 
     }
-
-
 }
-
-
-
-
-
