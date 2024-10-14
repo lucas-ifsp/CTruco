@@ -1,4 +1,9 @@
 package com.brito.macena.boteco.interfaces;
 
-public class Analyzer {
+import com.brito.macena.boteco.utils.Status;
+
+public abstract class Analyzer {
+    public abstract Status threeCardsHandler();
+    public abstract Status twoCardsHandler();
+    public abstract Status oneCardHandler();
 }
