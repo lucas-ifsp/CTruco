@@ -611,8 +611,8 @@ public class CamaleaoTruqueiroTest {
                     "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, ACE, HEARTS, ALMOST_ABSOLUTE_VICTORY",
                     "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, FOUR, HEARTS, ALMOST_ABSOLUTE_VICTORY",
 
-                    "FOUR, CLUBS, FIVE, CLUBS, ACE, SPADES, ACE, HEARTS, ALMOST_CERTAIN_VICTORY",
-                    "FOUR, CLUBS, ACE, CLUBS, ACE, SPADES, ACE, HEARTS, ALMOST_CERTAIN_VICTORY",
+                    "FOUR, CLUBS, FIVE, CLUBS, TWO, SPADES, ACE, HEARTS, ALMOST_CERTAIN_VICTORY",
+                    "FOUR, CLUBS, TWO, CLUBS, TWO, SPADES, TWO, HEARTS, ALMOST_CERTAIN_VICTORY",
 
                     "FOUR, CLUBS, TWO, CLUBS, TWO, SPADES, QUEEN, HEARTS, BLUFF_TO_GET_POINTS",
                     "FOUR, CLUBS, TWO, CLUBS, TWO, SPADES, FOUR, HEARTS, BLUFF_TO_GET_POINTS",
@@ -694,7 +694,6 @@ public class CamaleaoTruqueiroTest {
                 boolean botDecideIfRaises =  camaleao.decideIfRaises(intel);
                 TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                 SoftAssertions softly = new SoftAssertions();
                 softly.assertThat(botDecideIfRaises).isEqualTo(willCallTruco);
                 softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
