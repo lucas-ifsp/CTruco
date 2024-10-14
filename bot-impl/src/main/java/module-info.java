@@ -17,6 +17,7 @@ import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
+import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
