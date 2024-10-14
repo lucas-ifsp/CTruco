@@ -844,7 +844,7 @@ public class ZeTruqueroTests
         List<TrucoCard> botCards = List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS)
         );
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
@@ -871,7 +871,7 @@ public class ZeTruqueroTests
     @Test
     public void shouldCallTrucoIfHasZapAndWonRound() {
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
         );
@@ -984,6 +984,57 @@ public class ZeTruqueroTests
 
         if (zetruquero.strongHand(botCards, vira)) {
             assertThat(zetruquero.getRaiseResponse(intel)).isEqualTo(2);
+        }
+    }
+
+    @DisplayName("Deve jogar a carta mais fraca no primeiro round e depois pedir truco com o casal maior")
+    @Test
+    public void shouldPlayWeakestCardAndCallTrucoWithTwoStrongestManilhas() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+
+        if (zetruquero.twoStrongestManilhas(botCards, vira)) {
+
+            TrucoCard weakestCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+            assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(weakestCard);
+
+
+            assertThat(zetruquero.getRaiseResponse(intel)).isGreaterThan(0);
+        }
+    }
+
+    @DisplayName("Deve jogar a carta mais fraca com duas manilhas mais fracas")
+    @Test
+    public void shouldPlayWeakestCardWithTwoWeakerManilhas() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        // Verifica se o bot tem as duas manilhas mais fracas
+        if (zetruquero.twoweakerManilhas(botCards, vira)) {
+
+            TrucoCard weakestCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(weakestCard);
         }
     }
 

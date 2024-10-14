@@ -113,12 +113,14 @@ public class Zetruquero implements BotServiceProvider
     public Boolean twoStrongestManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao do bot temos o casal maior
+        //Deve jogar a carta mais fraca no primeiro round e depois pedir truco com o casal maior
         return false;
     }
 
     public Boolean twoweakerManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao do bot temos o casal menor
+        //Deve jogar a carta mais fraca com duas manilhas mais fracas
         return false;
     }
 
