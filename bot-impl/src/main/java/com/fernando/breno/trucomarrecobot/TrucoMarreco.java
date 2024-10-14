@@ -43,7 +43,7 @@ public class TrucoMarreco implements BotServiceProvider {
        if(biggestCouple(intel)){
             return  true;
        }
-        return  false;
+       return  false;
     }
 
     public long numberOfManilhas(GameIntel intel) {
