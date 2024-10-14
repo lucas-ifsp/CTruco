@@ -10,9 +10,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.eduardo.vinicius.camaleaotruqueiro.HandsCardSituation.evaluateHandSituation;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 import static com.eduardo.vinicius.camaleaotruqueiro.TrucoUtils.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class CamaleaoTruqueiroTest {
@@ -1097,5 +1104,98 @@ public class CamaleaoTruqueiroTest {
         RoundStrategy strategy = RoundStrategy.of(intel);
 
         assertThat(strategy.getClass().getSimpleName()).isEqualTo(expectedStrategyClassName);
+    }
+
+
+
+    @Nested @DisplayName("Test of actions for when bots in each round possible")
+    class TestOfBotActionInAnySituation {
+
+        /*
+    vitória quase absoluta
+		pelo menos duas manilhas de 3
+		duas manilhas de 2
+		1 manilha de 1
+
+	vitória quase certa -> pedir truco de
+	    1 manilha e 2 fortes
+		3 cartas fortes de 3
+		2 cartas fortes de 2
+		1 forte de 1 carta
+
+	blefe pra arrancar pontos -> jogar menor e pedir truco na segunda
+		duas cartas fortes e uma média
+		duas cartas fortes e uma fraca
+		1 forte e 1 media de 2 cartas
+		1 forte e 1 fraca de 2 cartas
+		??
+
+	blefe pra intimidar -> jogar maior e trucar na segunda se ganhar
+		uma forte e duas médias
+		uma forte e uma média e uma fraca
+		um forte e duas fracas
+
+		??
+		*/
+        //almost absolute victory
+        //almost certain victory
+        //bluff to get points
+        //bluff to intimidate
+        //almost certain defeat
+
+
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+        @Nested @DisplayName("Hand´s Cards Situation Test")
+        class HandsCardsSituation {
+
+            @ParameterizedTest
+            @CsvSource({
+                    "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, FIVE, HEARTS,ALMOST_ABSOLUTE_VICTORY",
+                    "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, TWO, HEARTS, ALMOST_ABSOLUTE_VICTORY",
+                    "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, ACE, HEARTS, ALMOST_ABSOLUTE_VICTORY",
+                    "FOUR, CLUBS, FIVE, CLUBS, FIVE, SPADES, FOUR, HEARTS, ALMOST_ABSOLUTE_VICTORY",
+
+                    "FOUR, CLUBS, FIVE, CLUBS, ACE, SPADES, ACE, HEARTS, ALMOST_CERTAIN_VICTORY",
+                    "FOUR, CLUBS, ACE, CLUBS, ACE, SPADES, ACE, HEARTS, ALMOST_CERTAIN_VICTORY",
+
+                    "FOUR, CLUBS, TWO, CLUBS, TWO, SPADES, QUEEN, HEARTS, BLUFF_TO_GET_POINTS",
+                    "FOUR, CLUBS, TWO, CLUBS, TWO, SPADES, FOUR, HEARTS, BLUFF_TO_GET_POINTS",
+
+                    "FOUR, CLUBS, TWO, CLUBS, QUEEN, SPADES, QUEEN, HEARTS, BLUFF_TO_INTIMIDATE",
+                    "FOUR, CLUBS, TWO, CLUBS, QUEEN, SPADES, FOUR, HEARTS, BLUFF_TO_INTIMIDATE",
+
+                    "FOUR, CLUBS, QUEEN, CLUBS, QUEEN, SPADES, QUEEN, HEARTS, ALMOST_CERTAIN_DEFEAT",
+                    "FOUR, CLUBS, QUEEN, CLUBS, QUEEN, SPADES, FOUR, HEARTS, ALMOST_CERTAIN_DEFEAT",
+                    "FOUR, CLUBS, QUEEN, CLUBS, FOUR, SPADES, FOUR, HEARTS, ALMOST_CERTAIN_DEFEAT",
+                    "FOUR, CLUBS, FOUR, CLUBS, FOUR, SPADES, FOUR, HEARTS, ALMOST_CERTAIN_DEFEAT",
+            })
+            @DisplayName("Should return the right type of hand cards situation when it´s 3 cards")
+            void shouldReturnTheRightTypeOfHandCardsSituationWhenItsThreeCards(CardRank viraRank, CardSuit viraSuit, CardRank cardRank1, CardSuit cardSuit1, CardRank cardRank2, CardSuit cardSuit2, CardRank cardRank3, CardSuit cardSuit3, HandsCardSituation situationExpected) {
+
+
+
+                TrucoCard vira = TrucoCard.of(viraRank, viraSuit);
+                TrucoCard card1 = TrucoCard.of(cardRank1, cardSuit1);
+                TrucoCard card2 = TrucoCard.of(cardRank2, cardSuit2);
+                TrucoCard card3 = TrucoCard.of(cardRank3, cardSuit3);
+
+                List<TrucoCard> cards = Arrays.asList(
+                        TrucoCard.of(cardRank1, cardSuit1),
+                        TrucoCard.of(cardRank2, cardSuit2),
+                        TrucoCard.of(cardRank3, cardSuit3)
+                );
+
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),List.of(), vira, 0)
+                        .botInfo(cards, 0)
+                        .opponentScore(0)
+                        .build();
+
+                HandsCardSituation handsCardSituation = evaluateHandSituation(intel);
+                assertThat(handsCardSituation).isEqualTo(situationExpected);
+            }
+        }
     }
 }
