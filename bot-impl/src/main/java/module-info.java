@@ -1,4 +1,5 @@
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
+import com.belini.luciano.matapatobot.MataPatoBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bruno.tiago.jeckiechanbot.JackieChanBot;
@@ -49,6 +50,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
+import com.belini.luciano.matapatobot.MataPatoBot;
 
 module bot.impl {
     requires bot.spi;
@@ -101,6 +103,7 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+    exports com.belini.luciano.matapatobot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -140,7 +143,7 @@ module bot.impl {
             SlayerBot,
             TeitasBot,
             MalasiaBot,
-
+            MataPatoBot,
             FernasBot,
             NewBot,
             AtrasaBot,
