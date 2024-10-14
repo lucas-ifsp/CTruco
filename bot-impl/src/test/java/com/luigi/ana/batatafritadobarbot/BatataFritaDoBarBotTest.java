@@ -867,6 +867,29 @@ public class BatataFritaDoBarBotTest {
         assertEquals(8,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
+    // 40
+    @Test
+    @DisplayName("Should return average when player only manilhas")
+    void shouldReturnAverageWhenPlayerOnlyManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 9)
+                .opponentScore(8);
+
+        assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
+    }
+
 
 
 
