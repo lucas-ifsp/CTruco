@@ -8,6 +8,10 @@ import java.util.List;
 
 public class TrucoUtils {
 
+    public static boolean isHighChangesOpponentRunFromTruco(GameIntel intel) {
+        return false;
+    }
+
     public static TrucoCard getGreatestCard(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard greatestCard = cards.get(0);
         for (TrucoCard card : cards ) {
