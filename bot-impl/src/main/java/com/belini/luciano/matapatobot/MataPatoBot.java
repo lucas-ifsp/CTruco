@@ -58,6 +58,21 @@ public class MataPatoBot implements BotServiceProvider{
 
         return cardToPlay != null ? cardToPlay : lowestCard;
     }
+    public TrucoCard shouldPlayStrongCard(GameIntel intel) {
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        TrucoCard strongestCard = null;
+
+        for (TrucoCard card : hand) {
+            if (!card.isZap(vira) && !card.isCopas(vira) && !card.isEspadilha(vira)) {
+                if (strongestCard == null || card.relativeValue(vira) > strongestCard.relativeValue(vira)) {
+                    strongestCard = card;
+                }
+            }
+        }
+
+        return strongestCard;
+    }
 
     public String RoundCheck(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
