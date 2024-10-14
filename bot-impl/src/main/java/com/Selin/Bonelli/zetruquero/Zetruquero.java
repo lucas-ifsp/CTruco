@@ -124,7 +124,9 @@ public class Zetruquero implements BotServiceProvider
 
     public Boolean weakHand(List<TrucoCard> cards, TrucoCard vira)
     {
-
+        //funcao ira analisar se na mao do bot ta horrivel - FUGIR DE TUDO
+        //Deve recusar truco se a mão for fraca CORRE
+        //Deve jogar a carta mais forte no primeiro round se a mão for fraca
         return false;
     }
 

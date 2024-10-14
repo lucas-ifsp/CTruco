@@ -892,5 +892,55 @@ public class ZeTruqueroTests
         }
     }
 
+    @DisplayName("Deve recusar truco se a mão for fraca")
+    @Test
+    public void shouldRefuseTrucoIfWeakHand() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+
+        boolean hasWeakHand = zetruquero.weakHand(botCards, vira);
+
+        // Se a mão for fraca e o adversário pedir truco, o bot deve recusar, CORRE
+        if (hasWeakHand) {
+            assertThat(zetruquero.getRaiseResponse(intel)).isZero();
+        }
+    }
+
+    @DisplayName("Deve jogar a carta mais forte no primeiro round se a mão for fraca")
+    @Test
+    public void shouldPlayStrongestCardInFirstRoundIfWeakHand() {
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.SPADES)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(vira), vira, 0)
+                .botInfo(botCards, 0)
+                .opponentScore(0)
+                .build();
+
+        
+        boolean hasWeakHand = zetruquero.weakHand(botCards, vira);
+
+        // Se a mão for fraca, o bot deve jogar a carta mais forte no primeiro round
+        if (hasWeakHand) {
+            assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
+        }
+    }
+
 
 }
