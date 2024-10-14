@@ -21,9 +21,7 @@
 /* 'zeTruquero' bot with didactic propose. Code by Lucas Selin and Pedro Bonelli */
 
 package com.Selin.Bonelli.zetruquero;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 import java.util.List;
 
@@ -35,6 +33,10 @@ public class Zetruquero implements BotServiceProvider
         //decidir jogar para 2 manilhas
         //decidir jogar com zap
         //decidir jogar com 1 manilha e duas cartas fortes
+        //Deve recusar mão de onze se tiver duas cartas fracas
+        //Deve recusar mão de onze com uma carta baixa e uma manilha fraca
+        //Deve aceitar mão de onze com duas manilhas fortes e uma carta alta
+        //Deve recusar mão de onze com duas cartas medianas e sem manilha
         return false;
     }
 
@@ -46,6 +48,7 @@ public class Zetruquero implements BotServiceProvider
         //deve nao aumentar a pedida para o caso de uma mao fraca demais
         //deve so pedir truco quando tenha uma vitoria e uma boa mao (sem pensar na manilha)
         //deve so pedir truco quando tenha duas manilhas
+        //Deve aumentar a pedida se tiver uma manilha e uma carta alta
         return false;
     }
 
@@ -58,6 +61,14 @@ public class Zetruquero implements BotServiceProvider
         //se tiver casal maior, jogar sempre a mais fraca primeiro
         //se a carta do oponente for maior que todas na mao, jogar a mais fraca
         //escolher a menor carta que vence a do oponente
+        //se tiver casal maior, jogar sempre a mais fraca
+        //Deve escolher a carta intermediária se for a segunda rodada e tiver ganho a primeira
+        //Deve jogar a carta mais forte se não houver manilha e tiver duas cartas fortes
+        //Deve jogar a manilha mais fraca se tiver as duas manilhas mais fortes
+        //Deve escolher a carta mais baixa com cartas medianas e sem manilha
+        //Deve jogar a carta intermediária com uma manilha fraca e uma carta alta
+        //Deve jogar o 3 no primeiro round
+        //Deve jogar carta intermediária quando o adversário joga manilha
         return null;
     }
 
@@ -69,6 +80,11 @@ public class Zetruquero implements BotServiceProvider
         //aumentar a pedida caso tenha uma vitoria e o zap
         //aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas
         //aceitar a pedida caso de um round ganho, e uma manilha
+        // Deve recusar aumentar a pedida com cartas medianas e já perdeu o primeiro round
+        //Deve aceitar aumentar a pedida se tiver zap e manilha
+        //Deve aumentar a pedida com um Zap e uma carta forte
+        //Deve aceitar truco no último round com um 3
+        //Deve aceitar aumento com manilhas fracas e uma carta alta
         return 0;
     }
 
@@ -76,6 +92,8 @@ public class Zetruquero implements BotServiceProvider
     {
         //funcao ira analisar se de fato na mao do bot tem alguma carta considerada forte (sem considerar manilha)
         // A, 2, 3
+        //Deve pedir truco no último round se tiver A, 2 ou 3 na mão
+        //Deve aceitar truco no último round se tiver A, 2 ou 3 na mão
         return false;
     }
 
@@ -88,6 +106,8 @@ public class Zetruquero implements BotServiceProvider
     public Boolean zapInHand(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao tem o ZAPZAO
+        //Deve jogar o Zap se o adversário jogar uma manilha
+        //Devie pedir truco se tiver o Zap e já tiver feito um round
         return false;
     }
 
@@ -100,18 +120,22 @@ public class Zetruquero implements BotServiceProvider
     public Boolean twoStrongestManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao do bot temos o casal maior
+        //Deve jogar a carta mais fraca no primeiro round e depois pedir truco com o casal maior
         return false;
     }
 
     public Boolean twoweakerManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao do bot temos o casal menor
+        //Deve jogar a carta mais fraca com duas manilhas mais fracas
         return false;
     }
 
     public Boolean weakHand(List<TrucoCard> cards, TrucoCard vira)
     {
         //funcao ira analisar se na mao do bot ta horrivel - FUGIR DE TUDO
+        //Deve recusar truco se a mão for fraca CORRE
+        //Deve jogar a carta mais forte no primeiro round se a mão for fraca
         return false;
     }
 
@@ -119,8 +143,11 @@ public class Zetruquero implements BotServiceProvider
     {
         //funcao ira analisar se na mao do bot ta perfeita - CHAMAR TUDO
         // pelo menos 2 manilha ou 1 zap ou duas cartas acima de K
+        //Deve chamar truco na primeira rodada se a mão for muito boa TRUCO MARRECO
+        //Deve pedir 6 se a mão for muito boa e o adversário pedir truco
         return false;
     }
+
 
     @Override
     public String getName() {
