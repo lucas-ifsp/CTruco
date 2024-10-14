@@ -38,4 +38,9 @@ public class StatusTest {
             assertThat(Status.valueOf("EXCELLENT")).isNotNull();
         }
     }
+
+    @Nested
+    @DisplayName("Status Values Tests")
+    class StatusValuesTests {
+    }
 }
