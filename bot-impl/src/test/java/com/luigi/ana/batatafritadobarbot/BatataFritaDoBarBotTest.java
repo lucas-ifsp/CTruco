@@ -691,6 +691,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.isMaoDeOnze(stepBuilder.build()));
     }
 
+    // 33
     @Test
     @DisplayName("Should return false if not Mao de Onze")
     void returnsFalseIfNotMaoDeOnze() {
@@ -713,6 +714,32 @@ public class BatataFritaDoBarBotTest {
 
 
         assertFalse(batataFritaDoBarBot.isMaoDeOnze(stepBuilder.build()));
+    }
+
+    //34
+    @Test
+    @DisplayName("Should return true to ask for mao de onze when having Zap and manilha")
+    void shouldReturnTrueAskMaoDeOnzeWhenHasZapAndManilha() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 9)
+                .opponentScore(11);
+
+
+
+        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
     }
 
 
