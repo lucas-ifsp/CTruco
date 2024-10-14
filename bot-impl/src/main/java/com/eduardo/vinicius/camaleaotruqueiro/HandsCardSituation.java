@@ -39,12 +39,12 @@ public enum HandsCardSituation {
         }
 
         // Vitória quase certa
-        if (mediumRankCards == 0 && lowRankCards == 0) {
+        else if ((manilhas == 1 && highRankCards >= 2 || highRankCards == 3)) {
             return ALMOST_CERTAIN_VICTORY;
         }
 
         // Blefe para arrancar pontos
-        if (    (highRankCards == 2 && mediumRankCards == 1) ||
+        else if (    (highRankCards == 2 && mediumRankCards == 1) ||
                 (highRankCards == 2 && lowRankCards == 1) ||
                 (cards.size() == 2 && highRankCards == 1 && mediumRankCards == 1) ||
                 (cards.size() == 2 && highRankCards == 1 && lowRankCards == 1)) {
@@ -52,13 +52,13 @@ public enum HandsCardSituation {
         }
 
         // Blefe para intimidar
-        if (    (highRankCards == 1 && mediumRankCards == 2) ||
+        else if (    (highRankCards == 1 && mediumRankCards == 2) ||
                 (highRankCards == 1 && mediumRankCards == 1 && lowRankCards == 1) ||
                 (highRankCards == 1 && lowRankCards == 2) ) {
             return BLUFF_TO_INTIMIDATE;
         }
         // Caso nenhuma condição seja satisfeita, assumir derrota quase certa por padrão
-        return ALMOST_CERTAIN_DEFEAT;
+        else return ALMOST_CERTAIN_DEFEAT;
     }
 
     public String getDescription() {

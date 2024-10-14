@@ -16,7 +16,11 @@ public class SecondRoundStrategy implements RoundStrategy{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
+        else if((winFistRound(intel) || drewFistRound(intel)) &&
+                situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
+        else return false;
     }
 
     @Override
@@ -26,6 +30,9 @@ public class SecondRoundStrategy implements RoundStrategy{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return 1;
+        else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return 0;
+        else return -1;
     }
 }

@@ -14,10 +14,12 @@ public class FirstRoundStrategy implements RoundStrategy{
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        List<TrucoCard> cards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        if(getNumberOfHighRankCards(cards,vira) >= 2 && numberOfManilhas(cards,vira) >= 1) return true;
-        else return intel.getOpponentScore() < 9 && getNumberOfHighRankCards(cards, vira) >= 1;
+        HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        System.out.println(situation);
+        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
+        else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
+        else if(intel.getOpponentScore()<9 && getNumberOfHighRankCards(intel.getCards(),intel.getVira())>0) return true;
+        else return false;
     }
 
     @Override
@@ -56,6 +58,9 @@ public class FirstRoundStrategy implements RoundStrategy{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return 1;
+        else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return 0;
+        else return -1;
     }
 }
