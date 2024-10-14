@@ -6,4 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 public class StatusTest {
     @BeforeAll
     static void setupAll() { System.out.println("Starting Status tests..."); }
+
+    @AfterAll
+    static void tearDownAll() { System.out.println("Finishing Status tests..."); }
 }
