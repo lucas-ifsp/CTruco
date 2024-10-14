@@ -223,6 +223,26 @@ public class BotEcoTest {
             CardToPlay selectedCard = botEco.chooseCard(step);
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)));
         }
+
+        @Test
+        @DisplayName("Should play second best card and not play manilha in first round if hand has multiple strong cards")
+        void shouldPlaySecondBestCardAndNotPlayManilhaInFirstRoundIfMultipleStrongCards() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .build();
+
+            CardToPlay selectedCard = botEco.chooseCard(step);
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)));
+        }
     }
 
     @Nested
