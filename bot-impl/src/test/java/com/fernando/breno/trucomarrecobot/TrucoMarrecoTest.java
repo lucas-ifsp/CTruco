@@ -61,6 +61,21 @@ class TrucoMarrecoTest {
 
         }
 
+        @Test
+        @DisplayName("Testa se recusa mão de onze com uma  manilha")
+        void testMaoDeOnzeOneManilha() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
+                    botInfo(hand,11).opponentScore(7);
+            Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(refusalMaoDeOnze);
+
+        }
+
      }
     @Test
     void decideIfRaises() {
