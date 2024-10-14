@@ -64,6 +64,9 @@ public class TrucoMarreco implements BotServiceProvider {
         if(wonFirstRound(intel) && hasZap(intel)){
             return  true;
         }
+        if(wonFirstRound(intel) && hasZap(intel)){
+           return  true;
+        }
         return  false;
     }
 
