@@ -890,6 +890,29 @@ public class BatataFritaDoBarBotTest {
         assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
+    // 41
+    @Test
+    @DisplayName("Should return average card value is 1")
+    void shouldReturnAverageCardsIs1() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+
+        List<TrucoCard> openCards = List.of(vira);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 9)
+                .opponentScore(8);
+
+        assertEquals(1, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
+    }
+
 
 
 
