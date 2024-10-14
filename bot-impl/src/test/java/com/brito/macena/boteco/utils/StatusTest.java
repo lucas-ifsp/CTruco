@@ -1,7 +1,8 @@
 package com.brito.macena.boteco.utils;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class StatusTest {
     @BeforeAll
@@ -9,4 +10,9 @@ public class StatusTest {
 
     @AfterAll
     static void tearDownAll() { System.out.println("Finishing Status tests..."); }
+
+    @Nested
+    @DisplayName("Status Definition Tests")
+    class StatusDefinitionTests {
+    }
 }
