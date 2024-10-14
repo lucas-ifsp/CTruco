@@ -87,15 +87,11 @@ public class MataPatoBot implements BotServiceProvider{
         List<TrucoCard> cards = intel.getCards();
         int cardCount = cards.size();
 
-        switch (cardCount) {
-            case 3:
-                return "Round 1";
-            case 2:
-                return "Round 2";
-            case 1:
-                return "Round 3";
-            default:
-                return "No cards";
-        }
+        return switch (cardCount) {
+            case 3 -> "Round 1";
+            case 2 -> "Round 2";
+            case 1 -> "Round 3";
+            default -> "No cards";
+        };
     }
 }
