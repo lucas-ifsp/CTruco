@@ -2,6 +2,7 @@ package com.brito.macena.boteco.interfaces;
 
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,19 @@ public class AnalyzerTest {
             Status result = analyzer.myHand(intel);
 
             assertThat(result).isEqualTo(Status.EXCELLENT);
+        }
+
+        @Test
+        @DisplayName("Returns threeCardsHandler when three cards")
+        void returnsThreeCardsHandlerWhenThreeCards() {
+            GameIntel intel = mock(GameIntel.class);
+            List<TrucoCard> cards = List.of(mock(TrucoCard.class), mock(TrucoCard.class), mock(TrucoCard.class));
+            when(intel.getCards()).thenReturn(cards);
+
+            Analyzer analyzer = new AnalyzerImpl();
+            Status result = analyzer.myHand(intel);
+
+            assertThat(result).isEqualTo(Status.GOOD);
         }
     }
 
