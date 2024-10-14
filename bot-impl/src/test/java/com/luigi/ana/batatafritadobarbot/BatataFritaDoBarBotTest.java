@@ -642,6 +642,30 @@ public class BatataFritaDoBarBotTest {
     }
 
     // 31
+    @Test
+    @DisplayName("Should return false if not Mao de ferro")
+    void returnsFalseIfNotMaoDeFerro() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 10)
+                .opponentScore(11);
+
+
+        assertFalse(batataFritaDoBarBot.isMaoDeFerro(stepBuilder.build()));
+    }
+
 
 
 }
