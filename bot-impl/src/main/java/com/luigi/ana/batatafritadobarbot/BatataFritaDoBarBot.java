@@ -92,4 +92,9 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     public boolean isMaoDeFerro(GameIntel intel) {
         return false;
     }
+
+    public boolean isMaoDeOnze(GameIntel intel){
+        return false;
+    }
+
 }
