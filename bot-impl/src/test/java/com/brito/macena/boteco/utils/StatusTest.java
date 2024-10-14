@@ -14,5 +14,10 @@ public class StatusTest {
     @Nested
     @DisplayName("Status Definition Tests")
     class StatusDefinitionTests {
+        @Test
+        @DisplayName("Status BAD is defined")
+        void statusBadIsDefined() {
+            assertThat(Status.valueOf("BAD")).isNotNull();
+        }
     }
 }
