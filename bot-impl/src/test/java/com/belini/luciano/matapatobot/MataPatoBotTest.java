@@ -93,7 +93,7 @@ class MataPatoBotTest {
         TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
 
-        String round = mataPatoBot.RoundCheck(intel);
+        String round = String.valueOf(mataPatoBot.RoundCheck(intel));
 
         assertThat(round).isEqualTo("Round 1");
     }
@@ -108,7 +108,7 @@ class MataPatoBotTest {
 
         when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
 
-        String round = mataPatoBot.RoundCheck(intel);
+        String round = String.valueOf(mataPatoBot.RoundCheck(intel));
         assertThat(round).isEqualTo("Round 2");
     }
 
@@ -120,7 +120,7 @@ class MataPatoBotTest {
         TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
 
         when(intel.getCards()).thenReturn(Arrays.asList(card1));
-        String round = mataPatoBot.RoundCheck(intel);
+        String round = String.valueOf(mataPatoBot.RoundCheck(intel));
 
         assertThat(round).isEqualTo("Round 3");
     }
@@ -130,7 +130,7 @@ class MataPatoBotTest {
     public void shouldReturnNoCardsIfBotHasNoCards() {
         GameIntel intel = mock(GameIntel.class);
         when(intel.getCards()).thenReturn(Arrays.asList());
-        String round = mataPatoBot.RoundCheck(intel);
+        String round = String.valueOf(mataPatoBot.RoundCheck(intel));
 
         assertThat(round).isEqualTo("No cards");
     }
