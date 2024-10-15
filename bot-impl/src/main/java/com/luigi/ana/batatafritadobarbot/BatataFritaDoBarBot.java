@@ -61,6 +61,30 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return 0;
     }
 
+
+    private CardToPlay chooseCardSecondRound(GameIntel intel){
+
+        if(getlastRoundResult(intel).equals(GameIntel.RoundResult.WON)){
+
+            if (getNumberOfManilhas(intel) == 1) {
+                if(hasZap(intel) || hasCopas(intel)) return CardToPlay.of(getHighestNormalCard(intel));
+                if(hasOuros(intel) || hasEspadilha(intel)) return CardToPlay.of(getHighestCard(intel));
+            }
+            if(getNumberOfManilhas(intel) > 1){
+                return CardToPlay.discard(getLowestCard(intel));
+
+            }else{
+                if(getAverageCardValue(intel) > 8){
+                    return CardToPlay.of(getLowestCard(intel));
+                }else return CardToPlay.of(getHighestCard(intel));
+            }
+
+        }else{
+            return CardToPlay.of(getHighestCard(intel));
+        }
+
+    }
+
     int getNumberOfManilhas(GameIntel intel){
         return 0;
     }
