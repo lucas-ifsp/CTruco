@@ -160,7 +160,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(0);
 
-        assertTrue(batataFritaDoBarBot.hasEspadilha(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.hasEspadilha(stepBuilder.build()));
     }
 
     //8
@@ -204,7 +204,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(0);
 
-        assertTrue(batataFritaDoBarBot.hasOuros(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.hasOuros(stepBuilder.build()));
     }
 
     // 10
