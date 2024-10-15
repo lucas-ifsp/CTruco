@@ -53,7 +53,12 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        return switch (intel.getRoundResults().size() + 1) {
+            case 1 -> chooseCardFirstRound(intel);
+            case 2 -> chooseCardSecondRound(intel);
+            case 3 -> chooseCardThirdRound(intel);
+            default -> CardToPlay.of(intel.getCards().get(0));
+        };
     }
 
     GameIntel.RoundResult getlastRoundResult(GameIntel intel){
@@ -64,6 +69,42 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+
+    private CardToPlay chooseCardFirstRound(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        if(hasZap(intel) && hasCopas(intel)){
+            return CardToPlay.of(getLowestCard(intel));
+        }
+
+        if(checkIfIsTheFirstToPlay(intel)){
+
+            if(getNumberOfManilhas(intel) > 0){
+                if (hasOuros(intel) || hasEspadilha(intel))
+                    return CardToPlay.of(intel.getCards().stream()
+                            .filter(trucoCard -> trucoCard.isOuros(vira) || trucoCard.isEspadilha(vira))
+                            .findFirst()
+                            .orElseGet(() -> getHighestNormalCard(intel)));
+
+                if (hasZap(intel) || hasCopas(intel))
+                    return CardToPlay.of( getHighestNormalCard(intel));
+
+                else{
+                    return CardToPlay.of(getHighestNormalCard(intel));
+                }
+            }
+
+        }else{
+            return getLowestToWin(intel)
+                    .map(CardToPlay::of)
+                    .orElseGet(() -> CardToPlay.of(getLowestCard(intel)));
+        }
+
+        return CardToPlay.of(getHighestCard(intel));
+
+    }
+
+
     private CardToPlay chooseCardSecondRound(GameIntel intel){
 
         if(getlastRoundResult(intel).equals(GameIntel.RoundResult.WON)){
