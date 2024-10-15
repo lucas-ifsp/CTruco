@@ -87,6 +87,15 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     }
 
+    double getAverageCardValue(GameIntel intel) {
+
+        return intel.getCards().stream()
+                .mapToInt(card -> card.relativeValue(intel.getVira()))
+                .average()
+                .orElse(0.0);
+
+    }
+
     private CardToPlay chooseCardThirdRound(GameIntel intel){
         return CardToPlay.of(intel.getCards().get(0));
     }
@@ -133,6 +142,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
 
 
+
     boolean isLastRoundWinner(GameIntel intel){
         return(GameIntel.RoundResult.WON).equals(getlastRoundResult(intel));
 
@@ -162,7 +172,5 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return false;
     }
 
-    public int getAverageCardValue(GameIntel build) {
-        return 0;
-    }
+
 }
