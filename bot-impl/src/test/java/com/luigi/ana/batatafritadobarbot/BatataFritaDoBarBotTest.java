@@ -230,7 +230,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(1);
 
 
-        assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(intel));
+        assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
     //11
@@ -301,7 +301,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-        assertEquals(expectedLowestCard, batataFritaDoBarBot.getLowestCard(intel));
+        assertEquals(expectedLowestCard, batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
     }
 
     // 14
@@ -382,7 +382,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(intel));
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(stepBuilder.build()));
 
     }
 
@@ -408,7 +408,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(intel));
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(stepBuilder.build()));
 
     }
 
@@ -434,7 +434,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(intel));
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(stepBuilder.build()));
 
     }
 
@@ -461,7 +461,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(0);
 
 
-        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestNormalCard(intel));
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestNormalCard(stepBuilder.build()));
     }
 
     //20
