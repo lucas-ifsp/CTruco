@@ -486,12 +486,30 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(TWO, HEARTS),
                         TrucoCard.of(THREE, CLUBS)
                 );
+
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(WON),Collections.singletonList(vira),vira,3)
-                        .botInfo(botCards,0)
-                        .opponentScore(0);
+                        .gameInfo(List.of(WON), Collections.singletonList(vira), vira, 2)
+                        .botInfo(botCards, 0)
+                        .opponentScore(7);
 
                 assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Should not raise if score is high and is far winning")
+            void shouldNotRaiseIfScoreIsHighAndIsFarWinning() {
+                TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(KING, SPADES),
+                        TrucoCard.of(ACE, CLUBS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(WON), Collections.singletonList(vira), vira, 2)
+                        .botInfo(botCards, 10)
+                        .opponentScore(8);
+
+                assertFalse(sut.decideIfRaises(intel.build()));
             }
 
         }
