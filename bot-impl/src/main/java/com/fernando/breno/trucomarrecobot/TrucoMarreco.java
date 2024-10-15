@@ -119,9 +119,10 @@ public class TrucoMarreco implements BotServiceProvider {
         if (wonFirstRound(intel) && numberOfManilhas(intel) >= 1) {
             return 1; }
 
-        if(numberOfManilhas(intel) < 1) {
+        if (numberOfManilhas(intel) < 1 && evaluateHandStrength(intel) > 15) {
             return 0;
         }
+
 
         if(hasZap(intel)) {
             return 1;

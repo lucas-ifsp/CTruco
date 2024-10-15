@@ -277,5 +277,22 @@ class TrucoMarrecoTest {
 
         }
 
+        @Test
+        @DisplayName("Teste aceita o aumento se  não tiver manilha mas a mão e forte")
+        void testNoHasShackleButMaostrong() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
+                    botInfo(hand,10).opponentScore(5);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isPositive();
+
+        }
+
+
+
     }
 }
