@@ -406,6 +406,32 @@ public class BatataFritaDoBarBotTest {
 
     // 18
     @Test
+    @DisplayName("Should return the highest card based on vira when no has manilhas")
+    void shouldReturnHighestCardBasedOnViraWhenNoHasManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> listOfViras = List.of(vira);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard expectedHighestCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), listOfViras, vira, 1)
+                .botInfo(playerCards, 1)
+                .opponentScore(0);
+
+
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(intel));
+
+    }
+
+    // 19
+    @Test
     @DisplayName("Should return the highest normal card excluding manilhas")
     void shouldReturnHighestNormalCard() {
 
@@ -430,7 +456,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestNormalCard(intel));
     }
 
-    //19
+    //20
     @Test
     @DisplayName("make sure not play casal maior in first round")
     void returnsTrueIfCasalMaiorExist() {
@@ -450,7 +476,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), batataFritaDoBarBot.getLowestCard(stepBuilder.build()));
     }
 
-    //20
+    //21
     @Test
     @DisplayName("make sure blefe is working")
     void makeSureBlefeIsWorking() {
@@ -461,7 +487,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //21
+    //22
     @Test
     @DisplayName("make sure throw the lowest card to win")
     void makeSureThrowTheLowestCardToWin() {
@@ -484,7 +510,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //22
+    //23
     @Test
     @DisplayName("Sure not to ask for truco if opponent is in hand of eleven")
     void sureNotToAskForTrucoIfOpponentIsInHandOfEleven() {
@@ -492,7 +518,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
     }
 
-    //23
+    //24
     @Test
     @DisplayName("0 manilhas on 4H, 5C, 7S")
     void shouldReturn0manilhas() {
@@ -514,7 +540,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(0, batataFritaDoBarBot.getNumberOfManilhas(stepBuilder.build()));
     }
 
-    //24
+    //25
     @Test
     @DisplayName("Should return the lowest manilha to win")
     void shouldReturnTheLowestManilhaToWin() {
@@ -538,7 +564,7 @@ public class BatataFritaDoBarBotTest {
     }
 
 
-    //25
+    //26
     @Test
     @DisplayName("make sure zap is the highest manilha")
     void makeSureZapIsTheHighestManilha() {
@@ -561,7 +587,7 @@ public class BatataFritaDoBarBotTest {
     }
 
 
-    //26
+    //27
     @Test
     @DisplayName("Should return WON the last round")
     void shouldReturnWonTheLastRound() {
@@ -582,7 +608,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //27
+    //28
     @Test
     @DisplayName("Should return LOST the last round")
     void shouldReturnLostTheLastRound() {
@@ -602,7 +628,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
     }
 
-    //28
+    //29
     @Test
     @DisplayName("Make sure the enemy's score doesn't go above or equal 12 if they ask for truco")
     void makeSureTheEnemySScoreDoesnTGoAboveOrEqual12IfTheyAskForTruco() {
@@ -610,7 +636,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
     }
 
-    //29
+    //30
     @Test
     @DisplayName("Make sure not ask truco when lost the first and avg less then 9")
     void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen9() {
@@ -632,7 +658,7 @@ public class BatataFritaDoBarBotTest {
 
     }
 
-    //30
+    //31
     @Test
     @DisplayName("Ask for truco if you have 3 manilhas")
     void askForTrucoIfYouHave3Manilhas() {
@@ -654,7 +680,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    //31
+    //32
     @Test
     @DisplayName("Ask truco when avg is higher then 7")
     void askTrucoWhenAvgIsHigherThan7() {
@@ -676,7 +702,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    //32
+    //33
     @Test
     @DisplayName("Ask truco when avg is equal then 7")
     void askTrucoWhenAvgIsEqualThen7() {
@@ -698,7 +724,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    // 33
+    // 34
     @Test
     @DisplayName("Should return true if Mao de ferro")
     void returnsTrueIfMaoDeFerro() {
@@ -723,7 +749,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.isMaoDeFerro(stepBuilder.build()));
     }
 
-    // 34
+    // 35
     @Test
     @DisplayName("Should return false if not Mao de ferro")
     void returnsFalseIfNotMaoDeFerro() {
@@ -748,7 +774,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.isMaoDeFerro(stepBuilder.build()));
     }
 
-    // 35
+    // 36
     @Test
     @DisplayName("Should return true if Mao de Onze")
     void returnsTrueIfMaoDeOnze() {
@@ -773,7 +799,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.isMaoDeOnze(stepBuilder.build()));
     }
 
-    // 36
+    // 37
     @Test
     @DisplayName("Should return false if not Mao de Onze")
     void returnsFalseIfNotMaoDeOnze() {
@@ -798,7 +824,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.isMaoDeOnze(stepBuilder.build()));
     }
 
-    //37
+    //38
     @Test
     @DisplayName("Should return true to ask for mao de onze when having Zap and manilha")
     void shouldReturnTrueAskMaoDeOnzeWhenHasZapAndManilha() {
@@ -824,7 +850,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
     }
 
-    // 38
+    // 39
     @Test
     @DisplayName("Should return true to ask for mao de onze when having manilha and avg cards greater than seven")
     void shouldReturnTrueAskMaoDeOnzeWhenHasManilhaAndAVGGreaterThan7() {
@@ -849,7 +875,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
     }
 
-    //39
+    //40
     @Test
     @DisplayName("Should return true when opponent's score is greater than 7, has manilha, and avg cards greater than seven")
     void shouldReturnTrueWhenOpponentScoreGreaterThan7AndHasManilhaAndAVGGreaterThan7() {
@@ -875,7 +901,7 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
-    // 40
+    // 41
     @Test
     @DisplayName("Should return false when has no manilha and avg cards less than seven")
     void shouldReturnFalseWhenNoManilhaAndAVGNotGreaterThan7() {
@@ -902,7 +928,7 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
-    // 41
+    // 42
     @Test
     @DisplayName("Should return an average card value is 4")
     void shouldReturnAverageCardsIs4() {
@@ -926,7 +952,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(4,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 42
+    // 43
     @Test
     @DisplayName("Should return an average card value is 8")
     void shouldReturnAverageCardsIs8() {
@@ -949,7 +975,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(8,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 43
+    // 44
     @Test
     @DisplayName("Should return average when player only manilhas")
     void shouldReturnAverageWhenPlayerOnlyManilhas() {
@@ -972,7 +998,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 44
+    // 45
     @Test
     @DisplayName("Should return average card value is 1")
     void shouldReturnAverageCardsIs1() {
@@ -995,7 +1021,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(1, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 45
+    // 46
 
 
 
