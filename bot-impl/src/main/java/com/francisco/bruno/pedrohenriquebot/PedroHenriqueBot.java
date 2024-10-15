@@ -6,13 +6,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
@@ -24,6 +20,11 @@ public class PedroHenriqueBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         int manilhas = countManilhas(intel);
         int highCards = countHighCards(intel);
+        double handStrengthAvg = handStrengthAverage(intel);
+
+        if (intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11) {
+            return handStrengthAvg >= 8;
+        }
 
         return (manilhas >= 2 || (manilhas == 1 && highCards >= 2) || highCards == 3);
     }

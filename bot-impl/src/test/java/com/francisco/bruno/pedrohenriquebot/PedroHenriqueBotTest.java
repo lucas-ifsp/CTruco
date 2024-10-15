@@ -74,8 +74,8 @@ class PedroHenriqueBotTest {
         void acceptMaoDeOnzeWhenOpponentIsCloseToWinning() {
             TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(JACK, HEARTS),
-                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
                     TrucoCard.of(ACE, DIAMONDS)
             );
 
@@ -318,6 +318,25 @@ class PedroHenriqueBotTest {
         @Nested
         @DisplayName("Third Round")
         class ThirdRound {
+            @Test
+            @DisplayName("Should play last card")
+            void shouldPlayLastCard() {
+                TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+                List<TrucoCard> botCards = Collections.singletonList(
+                        TrucoCard.of(TWO, HEARTS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(WON, LOST), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+                TrucoCard expectedCard = TrucoCard.of(TWO, HEARTS);
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
+
         }
 
     }
