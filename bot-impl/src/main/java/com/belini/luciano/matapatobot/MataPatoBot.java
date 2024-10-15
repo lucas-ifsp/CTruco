@@ -54,8 +54,12 @@ public class MataPatoBot implements BotServiceProvider{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (intel.getRoundResults().isEmpty()) {
+        }
+
+        return -1;
     }
+
 
     public Boolean checkFirstPlay (Optional<TrucoCard> opponentCard){
         return opponentCard.isPresent();
@@ -121,21 +125,11 @@ public class MataPatoBot implements BotServiceProvider{
             default -> "No cards";
         };
     }
-    public boolean verifyHandToRaise(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        TrucoCard cardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
-        List<TrucoCard> cards = intel.getCards();
-        int count = 0;
-        for (TrucoCard card : cards) {
-            if (card.isManilha(vira) || card.compareValueTo(cardToCompare, vira) >= 0) {
-                count++;
-            }
-        }
-        return (cards.size() == 3) ? count >= 2 : count >= 1;
-    }
 
     public int getNumberOfCardsInHand(GameIntel intel) {
         List <TrucoCard> cards = intel.getCards();
-        return cards.size(); //retorna tamanho da mão
+        return cards.size();
     }
+
+
 }

@@ -215,43 +215,7 @@ class MataPatoBotTest {
     @DisplayName("Raise Tests")
     class RaiseTests {
 
-        @Test
-        @DisplayName("Should raise if manilha on last round")
-        public void shouldRaiseIfManilhaOnLastRound() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
-            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
 
-            when(intel.getCards()).thenReturn(Arrays.asList(card1));
-            when(intel.getVira()).thenReturn(vira);
-
-            assertTrue(mataPatoBot.verifyHandToRaise(intel));
-        }
-
-        @Test
-        @DisplayName("Should Raise when holding Manilha and Two")
-        public void shouldRaiseWhenHoldingManilhaAndTwo(){
-            GameIntel intel = mock((GameIntel.class));
-            TrucoCard card1 = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
-            TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS);
-            TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
-            TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
-            when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
-            when(intel.getVira()).thenReturn(vira);
-            assertTrue(mataPatoBot.verifyHandToRaise(intel));
-        }
-
-        @Test
-        @DisplayName("Shouldn't raise if there is only bad cards in hand")
-        public void shouldNotRaiseIfOnlyBadCardsInHand() {
-            GameIntel intel = mock((GameIntel.class));
-            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
-            assertFalse(mataPatoBot.verifyHandToRaise(intel));
-        }
     }
     @Nested
     class GetMaoDeOnzeResponseTests {
