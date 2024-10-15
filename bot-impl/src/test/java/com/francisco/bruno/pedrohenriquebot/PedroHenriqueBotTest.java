@@ -104,7 +104,6 @@ class PedroHenriqueBotTest {
 
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
-
     }
 
     @Nested
@@ -119,9 +118,9 @@ class PedroHenriqueBotTest {
             void shouldUseIntermediateCardWhenFirstToPlay() {
                 TrucoCard vira = TrucoCard.of(ACE, SPADES);
                 List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(FOUR, HEARTS),   // Weak card
-                        TrucoCard.of(SEVEN, CLUBS),   // Intermediate card
-                        TrucoCard.of(THREE, DIAMONDS) // Strong card
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(SEVEN, CLUBS),
+                        TrucoCard.of(THREE, DIAMONDS)
                 );
                 intel = GameIntel.StepBuilder.with()
                         .gameInfo(List.of(), Collections.singletonList(vira),vira,1)
@@ -130,8 +129,19 @@ class PedroHenriqueBotTest {
                 CardToPlay chosenCard = sut.chooseCard(intel.build());
                 assertEquals(CardToPlay.of(botCards.get(1)), chosenCard);
             }
+        }
+        @Nested
+        @DisplayName("Second Round")
+        class SecondRound {
 
         }
+
+        @Nested
+        @DisplayName("Second Round")
+        class ThirdRound {
+
+        }
+
     }
 
     @Nested
