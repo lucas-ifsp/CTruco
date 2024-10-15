@@ -348,8 +348,8 @@ public class OctopusTest {
         }
 
         @Test
-        @DisplayName("Return decideIfRaises")
-        void returnDecideIfRaises() {
+        @DisplayName("Return decideIfRaises with true response")
+        void returnDecideIfRaisesWithTrueResponse() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -363,6 +363,21 @@ public class OctopusTest {
             assertThat(octopus.decideIfRaises(stepBuilder.build())).isTrue();
         }
 
+        @Test
+        @DisplayName("Return decideIfRaises with false response")
+        void returnDecideIfRaisesWithFalseResponse() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
+                    .botInfo(ourCards, 9)
+                    .opponentScore(8);
+            assertThat(octopus.decideIfRaises(stepBuilder.build())).isFalse();
+        }
         @Test
         @DisplayName("Test getRaiseResponse with two or more strong cards")
         void testGetRaiseResponseWithTwoOrMoreStrongcards() {
