@@ -45,6 +45,9 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
             return (getNumberOfManilhas(intel) > 0 && getAverageCardValue(intel) > 7);
         }
         if (intel.getOpponentScore() > 6) {
+            return (getAverageCardValue(intel) > 7);
+        }
+        if(intel.getOpponentScore() <= 6){
             return (getAverageCardValue(intel) >= 7);
         }
 
