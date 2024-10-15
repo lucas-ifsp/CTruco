@@ -57,6 +57,10 @@ public class MyHand {
     }
 
     public long powerOfCard(GameIntel intel, int index) {
-        return 0L;
+        return intel.getCards().stream()
+                .map(card -> card.relativeValue(intel.getVira()))
+                .sorted(Comparator.reverseOrder())
+                .toList()
+                .get(index);
     }
 }
