@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import javax.smartcardio.Card;
 import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
@@ -177,6 +178,29 @@ class PedroHenriqueBotTest {
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
 
+            @Test
+            @DisplayName("Should choose weakest card if cannot win opponent")
+            void shouldChooseWeakestCardIfCannotWinOpponent() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(FIVE, CLUBS),
+                        TrucoCard.of(SIX, DIAMONDS)
+                );
+                TrucoCard opponentCard = TrucoCard.of(THREE, CLUBS);
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+
+                TrucoCard expectedCard = botCards.stream()
+                        .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(0));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
         }
         @Nested
         @DisplayName("Second Round")
