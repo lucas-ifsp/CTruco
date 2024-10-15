@@ -41,8 +41,9 @@ public class Agressive extends ProfileBot {
 
     @Override
     public CardToPlay thirdRoundChoose() {
-        return null;
+        return CardToPlay.of(bestCard);
     }
+
 
     private boolean haveAtLeastTwoManilhas() {
         return getManilhaAmount() >= 2;
