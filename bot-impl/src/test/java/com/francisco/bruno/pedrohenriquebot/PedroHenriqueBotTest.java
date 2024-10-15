@@ -216,6 +216,30 @@ class PedroHenriqueBotTest {
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
+
+            @Test
+            @DisplayName("Should play Strongest Card when strong hand")
+            void shouldPlayStrongestCardWhenStrongHand() {
+                TrucoCard vira = TrucoCard.of(FOUR, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(ACE, SPADES),
+                        TrucoCard.of(TWO, CLUBS),
+                        TrucoCard.of(THREE, DIAMONDS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+
+                TrucoCard expectedCard = botCards.stream()
+                        .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(0));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
+
         }
         @Nested
         @DisplayName("Second Round")
