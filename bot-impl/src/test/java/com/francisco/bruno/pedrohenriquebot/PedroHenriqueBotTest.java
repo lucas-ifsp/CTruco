@@ -468,5 +468,23 @@ class PedroHenriqueBotTest {
             int response = sut.getRaiseResponse(intel.build());
             assertEquals(-1, response); // Fold
         }
+
+        @Test
+        @DisplayName("Accept raise with one manilha in hand")
+        void acceptRaiseWithOneManilha() {
+            TrucoCard vira = TrucoCard.of(KING, HEARTS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(SEVEN, CLUBS),
+                    TrucoCard.of(SIX, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(7);
+
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(0, response); // Accept
+        }
     }
 }
