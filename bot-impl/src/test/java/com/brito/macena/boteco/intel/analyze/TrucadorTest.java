@@ -125,6 +125,20 @@ public class TrucadorTest {
             Trucador trucador = new Trucador(intel);
             assertEquals(Status.EXCELLENT, trucador.oneCardHandler());
         }
+
+        @Test
+        @DisplayName("Returns BAD when lost first round and best card value is less than 3 with one card")
+        void returnsBadWhenLostFirstRoundAndBestCardValueIsLessThanThreeWithOneCard() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+            Trucador trucador = new Trucador(intel);
+            assertEquals(Status.BAD, trucador.oneCardHandler());
+        }
     }
 }
 
