@@ -144,6 +144,12 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return intel.getRoundResults().get(0);
     }
 
+    boolean isLastRoundWinner(GameIntel intel){
+        return(GameIntel.RoundResult.WON).equals(getlastRoundResult(intel));
+
+    }
+
+
 
     double getAverageCardValue(GameIntel intel) {
 
@@ -197,10 +203,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
 
 
-    boolean isLastRoundWinner(GameIntel intel){
-        return(GameIntel.RoundResult.WON).equals(getlastRoundResult(intel));
 
-    }
 
     boolean hasZap(GameIntel intel) {
         return false;
