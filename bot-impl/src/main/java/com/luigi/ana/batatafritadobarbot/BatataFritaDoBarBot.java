@@ -13,9 +13,12 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        if(hasZap(intel) && getNumberOfManilhas(intel) > 1) return true;
+
         if(intel.getOpponentScore() == 11) return true;
 
         if(hasZap(intel) && hasCopas(intel)) return true;
+
 
         if(hasEspadilha(intel) && hasCopas(intel)) return true;
 

@@ -959,12 +959,12 @@ public class BatataFritaDoBarBotTest {
 
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
-                .botInfo(playerCards, 9)
-                .opponentScore(11);
+                .botInfo(playerCards, 11)
+                .opponentScore(9);
 
 
 
-        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
+        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     // 43
@@ -985,11 +985,11 @@ public class BatataFritaDoBarBotTest {
 
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
-                .botInfo(playerCards, 9)
-                .opponentScore(11);
+                .botInfo(playerCards, 11)
+                .opponentScore(9);
 
 
-        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(intel));
+        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     //44
