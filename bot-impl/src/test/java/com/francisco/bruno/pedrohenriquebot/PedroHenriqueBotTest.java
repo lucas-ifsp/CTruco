@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PedroHenriqueBotTest {
@@ -231,6 +232,23 @@ class PedroHenriqueBotTest {
                     .opponentScore(5);
 
             assertTrue(sut.decideIfRaises(intel.build()));
+        }
+
+        @Test
+        @DisplayName("Do not raise when own score is high and ahead")
+        void doNotRaiseWhenBotAhead() {
+            TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(TWO, HEARTS),
+                    TrucoCard.of(THREE, CLUBS),
+                    TrucoCard.of(ACE, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .botInfo(botCards, 10)
+                    .opponentScore(8);
+
+            assertFalse(sut.decideIfRaises(intel.build()));
         }
     }
 }
