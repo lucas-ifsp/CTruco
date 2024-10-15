@@ -1,7 +1,9 @@
 package com.brito.macena.boteco.utils;
 
+import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class MyHand {
@@ -52,5 +54,9 @@ public class MyHand {
                 .filter(trucoCard -> trucoCard.relativeValue(vira) == worstCardValue)
                 .findAny()
                 .orElse(myHand.get(0));
+    }
+
+    public long powerOfCard(GameIntel intel, int index) {
+        return 0L;
     }
 }
