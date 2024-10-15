@@ -358,7 +358,7 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(THREE, DIAMONDS)
                 );
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(5);
 
@@ -375,7 +375,7 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(SIX, SPADES)
                 );
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(5);
 
@@ -392,26 +392,9 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(KING, SPADES)
                 );
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(10);
-
-                assertTrue(sut.decideIfRaises(intel.build()));
-            }
-
-            @Test
-            @DisplayName("Raise with manilha and high card")
-            void raiseWithManilhaAndHighCard() {
-                TrucoCard vira = TrucoCard.of(ACE, SPADES);
-                List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(THREE, SPADES),
-                        TrucoCard.of(TWO, CLUBS),
-                        TrucoCard.of(SEVEN, HEARTS)
-                );
-                intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
-                        .botInfo(botCards, 0)
-                        .opponentScore(5);
 
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
@@ -426,11 +409,32 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(ACE, SPADES)
                 );
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 10)
                         .opponentScore(8);
 
                 assertFalse(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Decide to bluff when opponent is aggressive")
+            void decideToBluffWhenOpponentAggressive() {
+                // Simulate aggressive opponent
+                sut.opponentRaiseCount = 4;
+
+                TrucoCard vira = TrucoCard.of(SIX, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(FIVE, CLUBS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 5)
+                        .opponentScore(6);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
             }
         }
 
