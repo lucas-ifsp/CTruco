@@ -435,6 +435,44 @@ class PedroHenriqueBotTest {
 
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
+
+            @Test
+            @DisplayName("Should not raise when opponent is not aggressive")
+            void shouldNotRaiseWhenOpponentNotAggressive() {
+
+                sut.opponentRaiseCount = 1;
+
+                TrucoCard vira = TrucoCard.of(SIX, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(FIVE, CLUBS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 5)
+                        .opponentScore(6);
+
+                assertFalse(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Should aise with manilha and high card")
+            void shouldAiseWithManilhaAndHighCard() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(ACE, SPADES),
+                        TrucoCard.of(TWO, CLUBS),
+                        TrucoCard.of(SEVEN, HEARTS)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(5);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
         }
 
         @Nested
