@@ -34,7 +34,7 @@ class TrucoMarrecoTest {
      class GetMaoDeOnzeResponse {
           @Test
           @DisplayName("Testa se aceita mão de onze  com duas manilhas ou mais")
-          void TestMaoDeOnzeWithTwoOrMoreManilhas() {
+          void testMaoDeOnzeWithTwoOrMoreManilhas() {
               hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(SIX, HEARTS), TrucoCard.of(THREE, SPADES));
               vira = TrucoCard.of(FIVE, HEARTS);
               openCards = List.of(vira);
@@ -181,8 +181,5 @@ class TrucoMarrecoTest {
         }
     }
 
-    @Test
-    void chooseCard() {
-    }
 
 }
