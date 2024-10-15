@@ -7,6 +7,8 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.List;
+
 
 public class Passive extends ProfileBot {
     private final GameIntel intel;
@@ -56,6 +58,11 @@ public class Passive extends ProfileBot {
     }
 
     private long powerOfTheTwoBestCards() {
-        return 0L;
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .mapToLong(card -> card.relativeValue(intel.getVira()))
+                .sorted()
+                .limit(2)
+                .sum();
     }
 }
