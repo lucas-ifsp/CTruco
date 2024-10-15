@@ -377,15 +377,40 @@ public class Armageddon implements BotServiceProvider {
     public boolean shouldRequestTruco(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
+        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.LOST) {
+            List<TrucoCard> botCards = intel.getCards();
+
+            if (hasCasalMaior(botCards)) {
+                return true;
+            }
+        }
+
         if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
             if (roundResults.size() == 1) {
                 return true;
             }
-            return true;
         }
 
-        return !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.DREW;
+        return false;
     }
+
+    private boolean hasCasalMaior(List<TrucoCard> botCards) {
+        for (int i = 0; i < botCards.size(); i++) {
+            TrucoCard card1 = botCards.get(i);
+            for (int j = i + 1; j < botCards.size(); j++) {
+                TrucoCard card2 = botCards.get(j);
+                if (card1.getRank() == card2.getRank() && isStrongCard(card1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isStrongCard(TrucoCard card) {
+        return card.getRank() == THREE || card.getRank() == KING || card.getRank() == QUEEN || card.getRank() == JACK;
+    }
+
 
     public TrucoCard playBestCard(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
