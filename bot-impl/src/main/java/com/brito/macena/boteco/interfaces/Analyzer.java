@@ -16,7 +16,7 @@ public abstract class Analyzer {
         return Status.EXCELLENT;
     }
 
-    public abstract Status threeCardsHandler();
-    public abstract Status twoCardsHandler();
+    public abstract Status threeCardsHandler(List<TrucoCard> myCards);
+    public abstract Status twoCardsHandler(List<TrucoCard> myCards);
     public abstract Status oneCardHandler();
 }
