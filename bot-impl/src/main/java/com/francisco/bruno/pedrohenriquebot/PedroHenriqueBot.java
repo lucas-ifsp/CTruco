@@ -86,7 +86,13 @@ public class PedroHenriqueBot implements BotServiceProvider {
     }
 
     private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        return true;
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+
+        if (highCards >= 1) {
+            return true;
+        }
+        return false;
     }
 
     @Override
