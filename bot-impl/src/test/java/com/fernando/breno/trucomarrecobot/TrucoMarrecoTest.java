@@ -76,7 +76,23 @@ class TrucoMarrecoTest {
 
         }
 
-     }
+        @Test
+        @DisplayName("Testa se recusa mão de onze com uma manilha e carta alta, mas considerada fraca")
+        void testMaoDeOnzeWithOneManilhaAndHighCard() {
+            hand = List.of(TrucoCard.of(FIVE, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(QUEEN, DIAMONDS));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(hand, 11)
+                    .opponentScore(6);
+            Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(refusalMaoDeOnze);
+        }
+
+    }
+
     @Nested
     @DisplayName("getRaiseResponse")
     class getRaiseResponse {
@@ -169,7 +185,4 @@ class TrucoMarrecoTest {
     void chooseCard() {
     }
 
-    @Test
-    void getRaiseResponse() {
-    }
 }
