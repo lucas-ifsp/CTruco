@@ -104,4 +104,9 @@ public class MataPatoBot implements BotServiceProvider{
         }
         return (cards.size() == 3) ? count >= 2 : count >= 1;
     }
+
+    public int getNumberOfCardsInHand(GameIntel intel) {
+        List <TrucoCard> cards = intel.getCards();
+        return cards.size(); //retorna tamanho da mão
+    }
 }
