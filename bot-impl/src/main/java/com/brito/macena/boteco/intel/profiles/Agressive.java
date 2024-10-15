@@ -7,6 +7,8 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.List;
+
 public class Agressive extends ProfileBot {
     private final GameIntel intel;
     private final Status status;
@@ -40,5 +42,29 @@ public class Agressive extends ProfileBot {
     @Override
     public CardToPlay thirdRoundChoose() {
         return null;
+    }
+
+    private boolean haveAtLeastTwoManilhas() {
+        return getManilhaAmount() >= 2;
+    }
+
+    private boolean haveAtLeastOneManilha() {
+        return getManilhaAmount() >= 1;
+    }
+
+    private long getManilhaAmount() {
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
+    }
+
+    private long powerOfTheTwoBestCards() {
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .mapToLong(card -> card.relativeValue(intel.getVira()))
+                .sorted()
+                .limit(2)
+                .sum();
     }
 }
