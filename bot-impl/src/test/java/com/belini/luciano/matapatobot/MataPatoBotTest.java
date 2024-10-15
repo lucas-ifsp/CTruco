@@ -353,7 +353,7 @@ class MataPatoBotTest {
             TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
             when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
-            int countManilha = mataPatoBot.handSValue(intel);
+            int countManilha = mataPatoBot.countManilha(intel);
             assertThat(countManilha).isEqualTo(2);
         }
     }
