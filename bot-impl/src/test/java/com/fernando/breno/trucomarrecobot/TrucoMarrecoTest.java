@@ -135,6 +135,18 @@ class TrucoMarrecoTest {
             Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(acceptMaoDeOnze);
         }
+        @Test
+        @DisplayName(" teste mao de 3A ")
+        void testHandOfThreeestou() {
+            hand = List.of(TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(THREE, CLUBS));
+            vira = TrucoCard.of(JACK, HEARTS);
+            openCards = List.of();
+            result =List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(9);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(acceptMaoDeOnze);
+        }
 
      }
 
