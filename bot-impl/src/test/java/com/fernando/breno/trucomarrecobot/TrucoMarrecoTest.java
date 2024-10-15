@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrucoMarrecoTest {
     private List<TrucoCard> hand;
     private List<TrucoCard> openCards;
+    private List<GameIntel.RoundResult> result;
 
     private TrucoCard vira;
 
@@ -113,12 +114,26 @@ class TrucoMarrecoTest {
             vira = TrucoCard.of(FIVE, HEARTS);
             openCards = List.of(vira);
 
+
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
                     .botInfo(hand, 11)
                     .opponentScore(6);
             Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
             assertFalse(refusalMaoDeOnze);
+        }
+
+        @Test
+        @DisplayName(" Teste se ambos estão na mão de onze")
+        void testBothInTheHandOfEleven() {
+            hand = List.of(TrucoCard.of(FIVE, HEARTS), TrucoCard.of(FIVE, CLUBS), TrucoCard.of(THREE, CLUBS));
+            vira = TrucoCard.of(JACK, HEARTS);
+            openCards = List.of();
+            result =List.of();
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(11);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(acceptMaoDeOnze);
         }
 
      }
