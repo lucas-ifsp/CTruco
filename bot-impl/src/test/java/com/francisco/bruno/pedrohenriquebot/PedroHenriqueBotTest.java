@@ -216,12 +216,4 @@ class PedroHenriqueBotTest {
             assertTrue(sut.decideIfRaises(intel.build()));
         }
     }
-
-    @Test
-    void chooseCard() {
-    }
-
-    @Test
-    void getRaiseResponse() {
-    }
 }
