@@ -74,6 +74,27 @@ public class TrucoCallerTest {
 
             assertTrue(shouldCall);
         }
+
+        @Test
+        @DisplayName("Should dont call truco if status is excellent and there are 2 cards")
+        void shouldDontCallTrucoWhenStatusIsExcellentAndTwoCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            PassiveTrucoCaller trucoCaller = new PassiveTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertFalse(shouldCall);
+        }
     }
 
     @Nested
