@@ -57,7 +57,9 @@ public class ReimuBot implements BotServiceProvider {
             return true;
         if(isSecondRound(intel) && hasTwoManilhas(intel))
             return true;
-
+        if(isSecondRound(intel) && wonFirstRound(intel) && hasThree(intel)){
+            return true;
+        }
         return false;
     }
 
