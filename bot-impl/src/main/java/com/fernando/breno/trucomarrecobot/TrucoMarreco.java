@@ -118,12 +118,7 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
     private Boolean hasZap(GameIntel intel){
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isZap(intel.getVira()))
-                return true;
-        }
-        return false;
-
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
     }
 
     @Override
