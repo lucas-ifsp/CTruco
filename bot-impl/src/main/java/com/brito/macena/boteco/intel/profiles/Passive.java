@@ -50,7 +50,7 @@ public class Passive extends ProfileBot {
     }
 
     private boolean haveAtLeastOneManilha() {
-        return false;
+        return getManilhaAmount() >= 1;
     }
 
     private long getManilhaAmount() {
