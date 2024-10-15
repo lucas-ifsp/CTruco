@@ -54,11 +54,19 @@ public class MataPatoBot implements BotServiceProvider{
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty()) {
+        if (intel.getCards().size() == 3) {
             if (countManilha(intel) >= 2 ){
                 return 1;
             }
-            if (countManilha(intel) >= 1 && handSValue(intel) >= 24) {
+            if (countManilha(intel) >= 1 && handValue(intel) >= 24) {
+                return 0;
+            }
+        }
+        if (intel.getCards().size() == 2) {
+            if (countManilha(intel) == 2) {
+                return 1;
+            }
+            if (countManilha(intel) >= 1 || handValue(intel) >= 17) {
                 return 0;
             }
         }
@@ -120,7 +128,7 @@ public class MataPatoBot implements BotServiceProvider{
         return strongestCard;
     }
 
-    public String RoundCheck(GameIntel intel) {
+    public String roundCheck(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         int cardCount = cards.size();
 
@@ -137,7 +145,7 @@ public class MataPatoBot implements BotServiceProvider{
         return cards.size();
     }
 
-    public int handSValue (GameIntel intel){
+    public int handValue(GameIntel intel){
         int handSValue = 0;
         for (TrucoCard card : intel.getCards()){
             handSValue += card.relativeValue(intel.getVira());
