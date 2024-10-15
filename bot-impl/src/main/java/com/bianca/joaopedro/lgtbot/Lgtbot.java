@@ -76,7 +76,7 @@ public class Lgtbot implements BotServiceProvider{
                     return CardToPlay.of(weakestCard);
                 }
             }
-            else{
+            else {
                 Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
                 if (opponentCardOpt.isPresent()) {
                     TrucoCard opponentCard = opponentCardOpt.get();
@@ -247,6 +247,4 @@ public class Lgtbot implements BotServiceProvider{
         List<TrucoCard> badCards = getBadCards(intel);
         return badCards.size();
     }
-
-
 }
