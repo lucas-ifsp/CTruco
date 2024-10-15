@@ -1140,7 +1140,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(playerCards, 9)
                 .opponentScore(8);
 
-        assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
+        assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()), 0.0001 );
     }
 
     // 50
