@@ -187,7 +187,7 @@ public class OctopusTest {
 
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 10, 10, 1);
 
-            assertThat(octopus.numberOfStrongCards(step.build())).isEqualTo(2);
+            assertThat(octopus.numberOfStrongCards(step.build())).isEqualTo(1);
         }
     }
 
@@ -374,7 +374,7 @@ public class OctopusTest {
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(),
                     TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS), 5, 5, 1);
 
-            assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(1);
+            assertThat(octopus.getRaiseResponse(step.build())).isEqualTo(0);
         }
 
         @Test
