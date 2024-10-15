@@ -5,10 +5,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -18,6 +15,9 @@ public class AnalyzerTest {
 
     @BeforeAll
     static void setUpAll() { System.out.println("Starting Analyzer tests..."); }
+
+    @AfterAll
+    static void tearDownAll() { System.out.println("Finishing Analyzer tests..."); }
 
     @Nested
     @DisplayName("myHand method tests")
