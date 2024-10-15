@@ -129,6 +129,17 @@ class TrucoMarrecoTest {
             assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Recusa aumento se oponente está ganhando")
+        void testDecideIfRaisesWhenOpponentWinning() {
+            hand = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(hand, 8).opponentScore(12);
+            assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
     }
 
     @Test
