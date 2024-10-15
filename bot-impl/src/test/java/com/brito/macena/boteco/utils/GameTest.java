@@ -147,7 +147,7 @@ public class GameTest {
         void returnsTrueWhenScoreDifferenceIsSixOrMore() {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), null, 0)
-                    .botInfo(List.of(), 4)  // Correct method to set the score
+                    .botInfo(List.of(), 4)  
                     .opponentScore(10)
                     .build();
 
@@ -164,6 +164,18 @@ public class GameTest {
                     .build();
 
             assertThat(Game.isCriticalSituation(intel)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Returns false when score difference and hand points are less than 6")
+        void returnsFalseWhenScoreDifferenceAndHandPointsAreLessThanSix() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 5)
+                    .botInfo(List.of(), 5)
+                    .opponentScore(10)
+                    .build();
+
+            assertThat(Game.isCriticalSituation(intel)).isFalse();
         }
     }
 }
