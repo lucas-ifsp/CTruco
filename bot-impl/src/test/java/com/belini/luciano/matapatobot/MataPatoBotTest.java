@@ -361,7 +361,7 @@ class MataPatoBotTest {
     class getRaiseResponse{
 
         @Test
-        @DisplayName("ShouldAcceptTruco")
+        @DisplayName("ShouldAsk")
         public void shouldAsk6() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
@@ -392,5 +392,21 @@ class MataPatoBotTest {
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(0);
         }
+        @Test
+        @DisplayName("ShouldAsk")
+        public void shouldAsk6SecondRound() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            when(intel.getRoundResults()).thenReturn(List.of());
+            when(intel.getCards()).thenReturn(List.of(card1, card2));
+
+            int response = mataPatoBot.getRaiseResponse(intel);
+            assertThat(response).isEqualTo(1);
+        }
+
     }
 }
