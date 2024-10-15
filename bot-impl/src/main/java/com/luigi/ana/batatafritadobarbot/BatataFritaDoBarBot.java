@@ -56,6 +56,10 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return null;
     }
 
+    GameIntel.RoundResult getlastRoundResult(GameIntel intel){
+        return intel.getRoundResults().get(0);
+    }
+
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
@@ -120,9 +124,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         return Optional.ofNullable(lowestCard);
     }
 
-    GameIntel.RoundResult getlastRoundResult(GameIntel intel){
-        return intel.getRoundResults().get(0);
-    }
+
 
     boolean isLastRoundWinner(GameIntel intel){
         return(GameIntel.RoundResult.WON).equals(getlastRoundResult(intel));
