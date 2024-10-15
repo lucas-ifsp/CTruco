@@ -192,16 +192,20 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
     public TrucoCard getHighestNormalCard(GameIntel intel) {
-        TrucoCard highestNormalCard = intel.getCards().get(0);
         TrucoCard vira = intel.getVira();
+        TrucoCard highestNormalCard = null;
 
-        for (TrucoCard card : intel.getCards())
-            if(!card.isManilha(vira)) {
-                if (card.relativeValue(intel.getVira()) > highestNormalCard.relativeValue(intel.getVira()))
+        for (TrucoCard card : intel.getCards()) {
+            if (!card.isManilha(vira)) {
+                if (highestNormalCard == null || card.relativeValue(vira) > highestNormalCard.relativeValue(vira)) {
                     highestNormalCard = card;
+                }
             }
+        }
+
         return highestNormalCard;
     }
+
 
     public Optional<TrucoCard> getLowestToWin(GameIntel intel) {
         TrucoCard vira = intel.getVira();
