@@ -222,11 +222,19 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
 
 
-
-
-
     boolean hasZap(GameIntel intel) {
-        return false;
+        List<TrucoCard> myCards = intel.getCards();
+
+        TrucoCard vira = intel.getVira();
+
+        boolean zap = false;
+
+        for (TrucoCard card : myCards){
+
+            if (card.isZap(vira)) zap = true;
+        }
+
+        return zap;
     }
 
     boolean hasCopas(GameIntel intel) {
