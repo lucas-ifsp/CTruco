@@ -9,9 +9,6 @@ import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
-
-import java.util.Collections;
-import java.util.List;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -30,6 +27,50 @@ class MataPatoBotTest {
     }
 
     @Nested
+    @DisplayName("Card to Play")
+    class CardToPlayTests {
+
+        @Test
+        @DisplayName("Play the lowest card that kills opponent card")
+        public void shouldPlayLowestWinningCardIfCanDefeatOpponent() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+            TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("Play the lowest card if no card can defeat opponent")
+        public void shouldPlayLowestCardIfNoCardCanDefeatOpponent() {
+            GameIntel intel = mock(GameIntel.class);
+
+            TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS);
+
+            TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+
+            TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
+    }
+
+        @Nested
     @DisplayName("First Round Tests")
     class FirstRoundTests {
 
@@ -56,6 +97,41 @@ class MataPatoBotTest {
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
             String round = String.valueOf(mataPatoBot.RoundCheck(intel));
             assertThat(round).isEqualTo("Round 1");
+        }
+        @Test
+        @DisplayName("Play a strong card, excluding top 3")
+        public void shouldPlayStrongCard() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+            TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("Play a top 3 card against manilha")
+        public void killTheManilha() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
         }
     }
 
@@ -98,41 +174,6 @@ class MataPatoBotTest {
             assertThat(round).isEqualTo("No cards");
         }
 
-        @Test
-        @DisplayName("Play a strong card, excluding top 3")
-        public void shouldPlayStrongCard() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
-            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
-            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
-            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
-            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
-            TrucoCard expected = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
-
-            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-
-            assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("Play a top 3 card against manilha")
-        public void killTheManilha() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
-            TrucoCard card2 = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-            TrucoCard card3 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
-            TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
-            TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
-
-            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-            when(intel.getVira()).thenReturn(vira);
-            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
-
-            assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
-        }
     }
 
     @Nested
