@@ -46,7 +46,7 @@ public class Passive extends ProfileBot {
     }
 
     private boolean haveAtLeastTwoManilhas() {
-        return false;
+        return getManilhaAmount() >= 2;
     }
 
     private boolean haveAtLeastOneManilha() {
