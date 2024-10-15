@@ -107,4 +107,24 @@ public class TrucadorTest {
             assertEquals(Status.MEDIUM, trucador.twoCardsHandler(intel.getCards()));
         }
     }
+
+    @Nested
+    @DisplayName("One Card Handler Tests")
+    class OneCardHandlerTests {
+
+        @Test
+        @DisplayName("Returns EXCELLENT when won first round and my card is higher than opponent's card with one card")
+        void returnsExcellentWhenWonFirstRoundAndMyCardIsHigherThanOpponentsCardWithOneCard() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+            Trucador trucador = new Trucador(intel);
+            assertEquals(Status.EXCELLENT, trucador.oneCardHandler());
+        }
+    }
 }
+
