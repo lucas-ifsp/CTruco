@@ -56,23 +56,23 @@ class TrucoMarrecoTest {
 
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
                     botInfo(hand,11).opponentScore(7);
-            Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
-            assertFalse(refusalMaoDeOnze);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(acceptMaoDeOnze);
 
         }
 
         @Test
         @DisplayName("Testa se recusa mão de onze com uma  manilha")
         void testMaoDeOnzeOneManilha() {
-            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES));
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, SPADES));
             vira = TrucoCard.of(FIVE, HEARTS);
             openCards = List.of(vira);
 
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
-                    botInfo(hand,11).opponentScore(7);
-            Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
-            assertFalse(refusalMaoDeOnze);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.LOST),openCards,vira,1).
+                    botInfo(hand,11).opponentScore(8);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertFalse(acceptMaoDeOnze);
 
         }
         @Test
@@ -85,16 +85,35 @@ class TrucoMarrecoTest {
 
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
                     botInfo(hand,11).opponentScore(5);
-            Boolean refusalMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
-            assertTrue(refusalMaoDeOnze);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(acceptMaoDeOnze);
 
         }
 
 
+        @Test
+        @DisplayName("Testa se aceita mão de onze  se ganhou a primeira rodada e tem zap")
+        void testMaoDeOnzeWonFirstRoundAndHasZap() {
+            hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
+                    botInfo(hand,11).opponentScore(5);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(acceptMaoDeOnze);
+
+        }
+
      }
-    @Test
-    void decideIfRaises() {
-    }
+     @Nested
+     @DisplayName("decideIfRaises")
+     class DecideIfRaises{
+
+
+     }
+
 
     @Test
     void chooseCard() {

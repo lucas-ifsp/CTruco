@@ -43,9 +43,10 @@ public class TrucoMarreco implements BotServiceProvider {
        if(biggestCouple(intel)){
             return  true;
        }
-       if(handStrong(intel)){
-           return true;
-       }
+
+        if(handStrong(intel)){
+            return true;
+        }
        return  false;
     }
 
@@ -55,18 +56,14 @@ public class TrucoMarreco implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (handStrong(intel) && wonFirstRound(intel)) {
-            return true;
-        }
+
         if( biggestCouple(intel)){
             return true;
         }
         if(wonFirstRound(intel) && hasZap(intel)){
             return  true;
         }
-        if(wonFirstRound(intel) && hasZap(intel)){
-           return  true;
-        }
+
         return  false;
     }
 
@@ -78,9 +75,11 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
     public boolean handStrong(GameIntel intel){
-        var hasManilha = numberOfManilhas(intel) >= 1;
-        var containsThree = intel.getCards().contains(3);
-        return hasManilha || containsThree;
+        var hasManilha = numberOfManilhas(intel)  >= 1;
+       var containsThree = intel.getCards().contains(3);
+       // var containsThree = intel.getCards().stream().anyMatch(card -> card.getRank().value() == 3);
+
+        return hasManilha && containsThree;
     }
 
     public boolean biggestCouple(GameIntel intel){
@@ -102,13 +101,42 @@ public class TrucoMarreco implements BotServiceProvider {
         if (intel.getRoundResults().equals(DREW) || wonFirstRound(intel)) {
             return CardToPlay.of(strongCard(intel).orElse(null));
         }
+
+
+
         return null;
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if (biggestCouple(intel) || handStrong(intel)) { return 1; }
-        if (wonFirstRound(intel) && numberOfManilhas(intel) >= 1) { return 1; }
+        if (biggestCouple(intel) ) return 1;
+
+        if(handStrong(intel)) {
+            return 1;
+        }
+
+        if (wonFirstRound(intel) && numberOfManilhas(intel) >= 1) {
+            return 1; }
+
+        if(numberOfManilhas(intel) < 1) {
+            return 0;
+        }
+
+        if( wonFirstRound(intel) && hasZap(intel)) {
+            return 1;
+        }
+
+        if ((hasZap(intel)) && strongCard(intel).isPresent()) {
+            return 1;
+        }
+
+        if ((hasZap(intel)) && weakCard(intel).isPresent()) {
+            return 1;
+        }
+
+
+
+
         return 0;
     }
 
@@ -123,11 +151,18 @@ public class TrucoMarreco implements BotServiceProvider {
     private Boolean hasZap(GameIntel intel){
         for (TrucoCard card : intel.getCards()) {
             if (card.isZap(intel.getVira()))
-                return true;
+                return  true;
         }
         return false;
 
     }
+    /*
+        private Boolean hasZap(GameIntel intel){
+        var zap = intel.getCards().stream().filter(card -> card.isZap(intel.getVira())).count() > 0;
+       return  zap;
+    }
+     */
+
 
     @Override
     public String getName() { return "Truco Marreco!"; }
