@@ -384,5 +384,23 @@ class PedroHenriqueBotTest {
             int response = sut.getRaiseResponse(intel.build());
             assertEquals(1, response);
         }
+
+        @Test
+        @DisplayName("Decline raise with weak hand in first round")
+        void declineRaiseWeakHandFirstRound() {
+            TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(FIVE, CLUBS),
+                    TrucoCard.of(SIX, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(5);
+
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(-1, response); // Fold
+        }
     }
 }
