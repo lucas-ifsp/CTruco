@@ -72,6 +72,9 @@ public class TrucoMarreco implements BotServiceProvider {
             return  true;
         }
 
+        if(handStrong(intel)){
+            return  true;
+        }
 
 
         return  false;
