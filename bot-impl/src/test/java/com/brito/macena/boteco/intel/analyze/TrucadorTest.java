@@ -90,5 +90,21 @@ public class TrucadorTest {
             Trucador trucador = new Trucador(intel);
             assertEquals(Status.EXCELLENT, trucador.twoCardsHandler(intel.getCards()));
         }
+
+
+        @Test
+        @DisplayName("Returns MEDIUM when lost first round and second best card value is 7 with two cards")
+        void returnsMediumWhenLostFirstRoundAndSecondBestCardValueIsSevenWithTwoCards() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+            Trucador trucador = new Trucador(intel);
+            assertEquals(Status.MEDIUM, trucador.twoCardsHandler(intel.getCards()));
+        }
     }
 }
