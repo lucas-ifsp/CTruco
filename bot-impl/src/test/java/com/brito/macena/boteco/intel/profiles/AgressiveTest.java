@@ -70,5 +70,27 @@ public class AgressiveTest {
     @DisplayName("Second Round")
     class SecondRoundTests {
 
+        @Test
+        @DisplayName("Should play the weakest if you've won the first round and your hand is good")
+        void shouldPlayWeakestCardIfWonFirstRoundAndHandIsGood() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
+
+            ProfileBot agressive = new Agressive(intel, Status.GOOD);
+
+            CardToPlay selectedCard = agressive.secondRoundChoose();
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+        }
     }
 }
