@@ -117,6 +117,18 @@ class TrucoMarrecoTest {
             assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
 
+        @Test
+        @DisplayName("Aceita aumento com maior dupla")
+        void testDecideIfRaisesWithHighestPair() {
+            hand = List.of(TrucoCard.of(FIVE, SPADES), TrucoCard.of(FIVE, HEARTS));
+            vira = TrucoCard.of(FOUR, DIAMONDS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(hand, 10).opponentScore(6);
+            assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 
     @Test
