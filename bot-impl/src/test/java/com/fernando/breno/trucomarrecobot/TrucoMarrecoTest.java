@@ -76,6 +76,18 @@ class TrucoMarrecoTest {
 
         }
 
+        @Test
+        @DisplayName("Recusa aumento com mão fraca")
+        void testDecideIfRaisesWithWeakHand() {
+            hand = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(hand, 9).opponentScore(7);
+            assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
+
      }
     @Test
     void decideIfRaises() {
