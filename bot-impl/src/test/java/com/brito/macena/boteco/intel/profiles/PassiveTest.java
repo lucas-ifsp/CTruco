@@ -93,6 +93,27 @@ public class PassiveTest {
             CardToPlay selectedCard = passive.secondRoundChoose();
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
         }
+
+        @Test
+        @DisplayName("should try to secure the second if in passive mode")
+        void shouldPlayWeakestCardIfNoTrumpCard() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(0)
+                    .build();
+
+            ProfileBot passive = new Passive(intel, Status.MEDIUM);
+
+            CardToPlay selectedCard = passive.secondRoundChoose();
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+        }
     }
 
     @Nested
