@@ -20,6 +20,11 @@ public class PedroHenriqueBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         int manilhas = countManilhas(intel);
         int highCards = countHighCards(intel);
+        double handStrengthAvg = handStrengthAverage(intel);
+
+        if (intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11) {
+            return handStrengthAvg >= 8;
+        }
 
         return (manilhas >= 2 || (manilhas == 1 && highCards >= 2) || highCards == 3);
     }
