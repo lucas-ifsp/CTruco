@@ -129,7 +129,7 @@ public class Pattern extends Analyzer {
             return Status.GOOD;
         }
         if (bestCardValue == 8) {
-            return Status.GOOD;
+            return Status.BAD;
         }
         if (bestCardValue >= 6) {
             return Status.MEDIUM;
