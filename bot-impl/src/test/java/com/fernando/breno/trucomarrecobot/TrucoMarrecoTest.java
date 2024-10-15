@@ -152,6 +152,17 @@ class TrucoMarrecoTest {
                     .botInfo(hand, 11).opponentScore(5);
             assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Recusa aumento se a mão não é boa o suficiente")
+        void testDecideIfRaisesWhenHandIsNotGood() {
+            hand = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(TWO, HEARTS), TrucoCard.of(ACE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, DIAMONDS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
+                    .botInfo(hand, 6).opponentScore(10);
+        }
     }
 
     @Test
