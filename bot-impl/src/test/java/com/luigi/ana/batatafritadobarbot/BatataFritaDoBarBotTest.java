@@ -680,6 +680,28 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
+    // 32
+    @Test
+    @DisplayName("Ask for truco when has 3 three")
+    void askForTrucoWhenHas3Tree() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+    }
+
     //32
     @Test
     @DisplayName("Ask truco when avg is higher then 7")
@@ -1050,6 +1072,7 @@ public class BatataFritaDoBarBotTest {
     }
 
     // 47
+
 
 
 
