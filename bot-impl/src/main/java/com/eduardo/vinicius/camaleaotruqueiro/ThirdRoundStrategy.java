@@ -27,9 +27,6 @@ public class ThirdRoundStrategy implements RoundStrategy{
         else if((winFistRound(intel) || drewFistRound(intel)) &&
                 situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
         else return false;
-        //todo
-        // pedir truco quando tem carta forte, mesmo não ganhando ou empatando a primeira
-        // não pedir quando carta é invencível (mesma ganhando primeiro round)
     }
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
