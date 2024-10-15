@@ -357,4 +357,24 @@ class MataPatoBotTest {
             assertThat(countManilha).isEqualTo(2);
         }
     }
+    @Nested
+    class getRaiseResponse{
+
+        @Test
+        @DisplayName("ShouldAcceptTruco")
+        void handValue() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+            when(intel.getRoundResults()).thenReturn(List.of());
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            int response = mataPatoBot.getRaiseResponse(intel);
+            assertThat(response).isEqualTo(1);
+        }
+    }
 }
