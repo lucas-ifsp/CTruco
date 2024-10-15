@@ -223,7 +223,20 @@ class MataPatoBotTest {
             when(intel.getCards()).thenReturn(Arrays.asList(card1));
             when(intel.getVira()).thenReturn(vira);
 
-            assertTrue(mataPatoBot.verifyGreatHand(intel));
+            assertTrue(mataPatoBot.verifyHandToRaise(intel));
+        }
+
+        @Test
+        @DisplayName("Should Raise when holding Manilha and Two")
+        public void shouldRaiseWhenHoldingManilhaAndTwo(){
+            GameIntel intel = mock((GameIntel.class));
+            TrucoCard card1 = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.TWO,CardSuit.DIAMONDS);
+            TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of (CardRank.KING, CardSuit.SPADES);
+            when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
+            when(intel.getVira()).thenReturn(vira);
+            assertTrue(mataPatoBot.verifyHandToRaise(intel));
         }
     }
 }

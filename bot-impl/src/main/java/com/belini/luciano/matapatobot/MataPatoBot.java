@@ -92,7 +92,7 @@ public class MataPatoBot implements BotServiceProvider{
             default -> "No cards";
         };
     }
-    public boolean verifyGreatHand(GameIntel intel) {
+    public boolean verifyHandToRaise(GameIntel intel) {
         TrucoCard vira = intel.getVira();
         TrucoCard cardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
         List<TrucoCard> cards = intel.getCards();
