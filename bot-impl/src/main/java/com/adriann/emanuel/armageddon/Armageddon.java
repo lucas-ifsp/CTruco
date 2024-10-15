@@ -477,6 +477,37 @@ public class Armageddon implements BotServiceProvider {
         return hasManilhaOrThree;
     }
 
+    public boolean shouldNotAcceptSix(GameIntel intel, boolean opponentRequestedTruco) {
+        if (!opponentRequestedTruco) {
+            return false;
+        }
+
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        boolean didNotWinFirstRound = roundResults.isEmpty() || roundResults.get(0) != GameIntel.RoundResult.WON;
+
+        if (didNotWinFirstRound) {
+            return true;
+        }
+
+        TrucoCard vira = intel.getVira();
+        if (vira == null) {
+            throw new IllegalArgumentException();
+        }
+
+        List<TrucoCard> botCards = intel.getCards();
+        boolean hasManilhaOrThree = false;
+
+        for (TrucoCard card : botCards) {
+            if (card.isManilha(vira) || card.getRank() == THREE) {
+                hasManilhaOrThree = true;
+                break;
+            }
+        }
+
+        return !hasManilhaOrThree;
+    }
+
+
 
 
 
