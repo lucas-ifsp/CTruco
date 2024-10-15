@@ -268,7 +268,18 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
     boolean hasOuros(GameIntel intel) {
-        return false;
+        List<TrucoCard> myCards = intel.getCards();
+
+        TrucoCard vira = intel.getVira();
+
+        boolean ouros = false;
+
+        for (TrucoCard card : myCards){
+
+            if (card.isOuros(vira)) ouros = true;
+        }
+
+        return ouros;
     }
 
     public boolean isMaoDeFerro(GameIntel intel) {
