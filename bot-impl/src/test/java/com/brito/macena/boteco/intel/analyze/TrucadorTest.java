@@ -38,5 +38,21 @@ public class TrucadorTest {
             Trucador trucador = new Trucador(intel);
             assertEquals(Status.EXCELLENT, trucador.threeCardsHandler(intel.getCards()));
         }
+
+        @Test
+        @DisplayName("Returns GOOD when having one manilha and second best card value is 9 with three cards")
+        void returnsGoodWhenHavingOneManilhaAndSecondBestCardValueIsNineWithThreeCards() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+            Trucador trucador = new Trucador(intel);
+            assertEquals(Status.GOOD, trucador.threeCardsHandler(intel.getCards()));
+        }
     }
 }
