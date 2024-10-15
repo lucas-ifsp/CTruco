@@ -115,4 +115,26 @@ public class MyHandTest {
 
         assertEquals(1, myHand.powerOfCard(intel, 2));
     }
+
+    @Test
+    @DisplayName("Should return power of strong card")
+    void shouldReturnPowerOfStrongCard() {
+        List<TrucoCard> botHand = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botHand, 0)
+                .opponentScore(0)
+                .build();
+
+        MyHand myHand = new MyHand(intel.getCards(), intel.getVira());
+
+        assertEquals(13, myHand.powerOfCard(intel, 0));
+    }
 }
