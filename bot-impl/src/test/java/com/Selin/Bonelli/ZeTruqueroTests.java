@@ -443,12 +443,14 @@ public class ZeTruqueroTests
         @Test
         public void ShouldReturnRoyaltyInHands()
         {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
             List<TrucoCard> trucoCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.KING, CardSuit.SPADES),
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
 
-            assertThat(zetruquero.royaltyCardInHand(trucoCards)).isTrue();
+            assertThat(zetruquero.royaltyCardInHand(trucoCards, vira)).isTrue();
         }
 
         @DisplayName("Deve retornar que a mao atual do bot tem alguma carta considerada forte")
@@ -804,9 +806,7 @@ public class ZeTruqueroTests
                 .opponentScore(1)
                 .build();
 
-        // Verifica se há carta forte (A, 2 ou 3) na mão
         boolean hasStrongCard = zetruquero.strongCardInHand(botCards, vira);
-
 
         if (hasStrongCard) {
             assertThat(zetruquero.decideIfRaises(intel)).isTrue();
@@ -831,7 +831,6 @@ public class ZeTruqueroTests
 
         // Verifica se há carta forte (A, 2 ou 3) na mão
         boolean hasStrongCard = zetruquero.strongCardInHand(botCards, vira);
-
 
         if (hasStrongCard) {
             assertThat(zetruquero.getRaiseResponse(intel)).isOne();
@@ -861,7 +860,6 @@ public class ZeTruqueroTests
         // Verifica se o bot tem o Zap para jogar
         boolean hasZap = zetruquero.zapInHand(botCards, vira);
 
-
         if (hasZap) {
             assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.ACE, CardSuit.CLUBS));
         }
@@ -883,9 +881,7 @@ public class ZeTruqueroTests
                 .opponentScore(0)
                 .build();
 
-
         boolean hasZap = zetruquero.zapInHand(botCards, vira);
-
 
         if (hasZap) {
             assertThat(zetruquero.decideIfRaises(intel)).isTrue();
@@ -911,7 +907,6 @@ public class ZeTruqueroTests
 
         boolean hasWeakHand = zetruquero.weakHand(botCards, vira);
 
-        // Se a mão for fraca e o adversário pedir truco, o bot deve recusar, CORRE
         if (hasWeakHand) {
             assertThat(zetruquero.getRaiseResponse(intel)).isZero();
         }
@@ -936,7 +931,6 @@ public class ZeTruqueroTests
 
         boolean hasWeakHand = zetruquero.weakHand(botCards, vira);
 
-        // Se a mão for fraca, o bot deve jogar a carta mais forte no primeiro round
         if (hasWeakHand) {
             assertThat(zetruquero.chooseCard(intel).content()).isEqualTo(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
         }

@@ -24,6 +24,7 @@ package com.Selin.Bonelli.zetruquero;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class Zetruquero implements BotServiceProvider
 {
@@ -43,109 +44,252 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public boolean decideIfRaises(GameIntel intel)
     {
-        //deve aumentar a pedida de pontos caso tenha ganho um round e seja o ultimo, com carta forte
-        //deve nao aumentar a pedida de pontos caso nao tenha cartas fortes ou manilhas
-        //deve nao aumentar a pedida para o caso de uma mao fraca demais
-        //deve so pedir truco quando tenha uma vitoria e uma boa mao (sem pensar na manilha)
-        //deve so pedir truco quando tenha duas manilhas
-        //Deve aumentar a pedida se tiver uma manilha e uma carta alta
+        int currentRound = intel.getRoundResults().size() + 1;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
+
+        if(strongHand(cards, vira) && manilhaInHand(cards, vira))
+        {
+            return true;
+        }
+
+        if (currentRound == 1 && (strongHand(cards, vira) ||  manilhaInHand(cards, vira)))
+        {
+            return true;
+        }
+
+        if (currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.LOST))
+        {
+            return zapInHand(cards, vira);
+        }
+
+        if (currentRound == 3 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        {
+            return strongHand(cards, vira);
+        }
+
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel)
     {
-        //deve escolher a carta menor primeiro, caso tiver zap em maos
-        //se nao tiver manilha deve abrir o jogo com a carta mais forte
-        //se tiver feito um ponto, jogar a carta mais forte
-        //se tiver casal maior, jogar sempre a mais fraca primeiro
-        //se a carta do oponente for maior que todas na mao, jogar a mais fraca
-        //escolher a menor carta que vence a do oponente
-        //se tiver casal maior, jogar sempre a mais fraca
-        //Deve escolher a carta intermediária se for a segunda rodada e tiver ganho a primeira
-        //Deve jogar a carta mais forte se não houver manilha e tiver duas cartas fortes
-        //Deve jogar a manilha mais fraca se tiver as duas manilhas mais fortes
-        //Deve escolher a carta mais baixa com cartas medianas e sem manilha
-        //Deve jogar a carta intermediária com uma manilha fraca e uma carta alta
-        //Deve jogar o 3 no primeiro round
-        //Deve jogar carta intermediária quando o adversário joga manilha
-        return null;
+        Boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
+        int currentRound = intel.getRoundResults().size() + 1;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
+
+        if(isFirstToPlay && zapInHand(cards, vira))
+        {
+            return CardToPlay.of(weakerCardtoUse(cards, vira));
+        }
+
+        if(!manilhaInHand(cards, vira) && isFirstToPlay)
+        {
+            return CardToPlay.of(strongestCardtoUse(cards, vira));
+        }
+
+        if (currentRound == 1 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        {
+            return CardToPlay.of(strongestCardtoUse(cards, vira));
+        }
+
+        if (currentRound == 3 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        {
+            return CardToPlay.of(strongestCardtoUse(cards, vira));
+        }
+
+        if(twoStrongestManilhas(cards, vira) && currentRound == 1)
+        {
+            return CardToPlay.of(weakerCardtoUse(cards, vira));
+        }
+
+        if(isStrongerThanAll(opponentCard.get(), cards, vira))
+        {
+            return CardToPlay.of(weakerCardtoUse(cards, vira));
+        }
+
+        if (currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        {
+            return CardToPlay.of(weakerCardtoUse(cards, vira));
+        }
+
+        if (manilhaInHand(cards, vira) && currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        {
+            return CardToPlay.of(weakerCardtoUse(cards, vira));
+        }
+
+        if (twoStrongestManilhas(cards,vira))
+        {
+            return CardToPlay.of(getWeakCardThatWin(opponentCard.get(), cards, vira));
+
+        }
+
+        if(!isFirstToPlay)
+        {
+            return CardToPlay.of(getWeakCardThatWin(opponentCard.get(), cards, vira));
+        }
+
+        return CardToPlay.of(weakerCardtoUse(cards, vira));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel)
     {
-        //nao deve aceitar o aumento de pontos para caso nao tenha uma manilha ou 2 cartas bem fortes
-        //nao aceitar a pedida se ja tenha perdido o primeiro round e nao tenha mais cartas fortes
-        //aumentar a pedida caso tenha uma vitoria e o zap
-        //aumentar a pedida caso seja round 2 e tenha uma vitoria e duas manilhas
-        //aceitar a pedida caso de um round ganho, e uma manilha
-        // Deve recusar aumentar a pedida com cartas medianas e já perdeu o primeiro round
-        //Deve aceitar aumentar a pedida se tiver zap e manilha
-        //Deve aumentar a pedida com um Zap e uma carta forte
-        //Deve aceitar truco no último round com um 3
-        //Deve aceitar aumento com manilhas fracas e uma carta alta
+        int currentRound = intel.getRoundResults().size() + 1;
+        List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
+
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCards = intel.getOpponentCard();
+        List<TrucoCard> cards = intel.getCards();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        if(isStrongerThanAll(opponentCard.get(), cards, vira))
+        {
+            return -1;
+        }
+
+        if(strongHand(cards, vira) && manilhaInHand(cards, vira))
+        {
+            return 0;
+        }
+
+        if(zapInHand(cards, vira) && strongHand(cards, vira))
+        {
+            return 0;
+        }
+
+        if(currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.LOST) && (!manilhaInHand(cards, vira) || weakHand(cards, vira)))
+        {
+            return -1;
+        }
+
+        if(currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.WON) && (zapInHand(cards, vira) || manilhaInHand(cards, vira)))
+        {
+            return 1;
+        }
+
+        if(twoweakerManilhas(cards, vira) || strongHand(cards, vira))
+        {
+            return 0;
+        }
+
         return 0;
     }
 
     public Boolean strongCardInHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se de fato na mao do bot tem alguma carta considerada forte (sem considerar manilha)
-        // A, 2, 3
-        //Deve pedir truco no último round se tiver A, 2 ou 3 na mão
-        //Deve aceitar truco no último round se tiver A, 2 ou 3 na mão
+        boolean hasManilha =  manilhaInHand(cards, vira);
+        boolean twoStrongestManilhas =  twoStrongestManilhas(cards, vira);
+        boolean zap =  zapInHand(cards, vira);
+
+        boolean superStrongHand =  manilhaInHand(cards, vira) & strongHand(cards, vira);
+
+        if(zap)
+            return true;
+
+        if (hasManilha || twoStrongestManilhas)
+            return true;
+
+        if(superStrongHand)
+            return true;
+
         return false;
     }
 
-    public Boolean royaltyCardInHand(List<TrucoCard> cards)
+    static TrucoCard weakerCardtoUse(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot tem alguma carta rei, rainha ou valete
-        return false;
+        TrucoCard wekeastCard = cards.get(0);
+        for (TrucoCard card : cards)
+        {
+            if (card.compareValueTo(wekeastCard, vira) < 0) wekeastCard = card;
+        }
+
+        return wekeastCard;
+    }
+
+    static TrucoCard strongestCardtoUse(List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard strongestCard = cards.get(0);
+
+        for (TrucoCard card : cards)
+        {
+            if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
+        }
+
+        return strongestCard;
+    }
+
+    static TrucoCard getWeakCardThatWin(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
+        TrucoCard weakCardThatWin = null;
+
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(opponentCard, vira) > 0) {
+                if (weakCardThatWin == null || card.compareValueTo(weakCardThatWin, vira) < 0) {
+                    weakCardThatWin = card;
+                }
+            }
+        }
+
+        return weakCardThatWin;
+    }
+
+    static boolean isStrongerThanAll(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
+        for (TrucoCard card : cards) {
+            if (card.compareValueTo(opponentCard, vira) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean royaltyCardInHand(List<TrucoCard> cards, TrucoCard vira)
+    {
+        return cards.stream().anyMatch(card -> card.getRank() == CardRank.KING || card.getRank() == CardRank.QUEEN);
     }
 
     public Boolean zapInHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao tem o ZAPZAO
-        //Deve jogar o Zap se o adversário jogar uma manilha
-        //Devie pedir truco se tiver o Zap e já tiver feito um round
-        return false;
+        return cards.stream().anyMatch(card -> card.isZap(vira));
     }
 
     public Boolean manilhaInHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot tem alguma manilha
-        return false;
+        return cards.stream().anyMatch(card -> card.isManilha(vira));
     }
 
     public Boolean twoStrongestManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot temos o casal maior
-        //Deve jogar a carta mais fraca no primeiro round e depois pedir truco com o casal maior
-        return false;
+        boolean hasCopasManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isCopas(vira));
+        boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
+
+        return hasCopasManilha && hasZap;
     }
 
     public Boolean twoweakerManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot temos o casal menor
-        //Deve jogar a carta mais fraca com duas manilhas mais fracas
-        return false;
+        boolean hasEspadilhaManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isEspadilha(vira));
+        boolean hasOurosManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isOuros(vira));
+
+        return hasEspadilhaManilha && hasOurosManilha;
     }
 
     public Boolean weakHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot ta horrivel - FUGIR DE TUDO
-        //Deve recusar truco se a mão for fraca CORRE
-        //Deve jogar a carta mais forte no primeiro round se a mão for fraca
-        return false;
+        boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
+
+        return !strongCardInHand(cards, vira) && !hasZap && royaltyCardInHand(cards, vira);
     }
 
     public Boolean strongHand(List<TrucoCard> cards, TrucoCard vira)
     {
-        //funcao ira analisar se na mao do bot ta perfeita - CHAMAR TUDO
-        // pelo menos 2 manilha ou 1 zap ou duas cartas acima de K
-        //Deve chamar truco na primeira rodada se a mão for muito boa TRUCO MARRECO
-        //Deve pedir 6 se a mão for muito boa e o adversário pedir truco
-        return false;
+        boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
+
+        return strongCardInHand(cards, vira) || hasZap;
     }
 
 
