@@ -26,6 +26,8 @@ public class ThirdRoundStrategy implements RoundStrategy{
         else if((winFistRound(intel) || drewFistRound(intel)) &&
                 situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
         else return false;
+        //todo pedir truco quando oponent jogar carta vencível, não pedir quando carta é invencível (mesma ganhando primeiro round)
+        // pedir truco quando tem carta forte, mesmo não ganhando ou empatando a primeira
     }
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -43,5 +45,6 @@ public class ThirdRoundStrategy implements RoundStrategy{
         else if(isWinning(intel.getScore(),intel.getOpponentScore()) && situation == HandsCardSituation.BLUFF_TO_GET_POINTS) return 0;
         else if(isWinning(intel.getScore(),intel.getOpponentScore()) && situation == HandsCardSituation.BLUFF_TO_INTIMIDATE) return 0;
         else return -1;
+        //todo nunca ocorrerá situacao de Bluff_to_get_points ou Bluff_to_intimidate
     }
 }
