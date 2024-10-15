@@ -238,7 +238,18 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
     boolean hasCopas(GameIntel intel) {
-        return false;
+        List<TrucoCard> myCards = intel.getCards();
+
+        TrucoCard vira = intel.getVira();
+
+        boolean copas = false;
+
+        for (TrucoCard card : myCards){
+
+            if (card.isCopas(vira)) copas = true;
+        }
+
+        return copas;
     }
 
     boolean hasEspadilha(GameIntel intel) {
