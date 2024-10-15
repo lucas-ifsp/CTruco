@@ -1,14 +1,9 @@
 package com.belini.luciano.matapatobot;
-
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -24,6 +19,23 @@ class MataPatoBotTest {
     @BeforeEach
     public void createPatoBot() {
         mataPatoBot = new MataPatoBot();
+    }
+
+    @Nested
+    @DisplayName("Number of cards in hand")
+    class CountNumberOfCards {
+
+        @Test
+        @DisplayName("Should return 1 if there is 1 card in hand")
+        void shouldReturnOneIfOneCardInHand(){
+            int numberOfCards = 1;
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            when(intel.getCards()).thenReturn(Arrays.asList(card1));
+            assertThat(mataPatoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+        }
+
+
     }
 
     @Nested
