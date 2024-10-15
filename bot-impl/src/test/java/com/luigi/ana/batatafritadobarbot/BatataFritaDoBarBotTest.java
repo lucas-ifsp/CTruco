@@ -1077,11 +1077,11 @@ public class BatataFritaDoBarBotTest {
     @Test
     @DisplayName("Should return an average card value is 4")
     void shouldReturnAverageCardsIs4() {
-        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
         List<TrucoCard> playerCards = List.of(
                 TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
         );
 
@@ -1094,7 +1094,7 @@ public class BatataFritaDoBarBotTest {
 
 
 
-        assertEquals(4,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
+        assertEquals(4.0, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()), 0.0001);
     }
 
     // 48
