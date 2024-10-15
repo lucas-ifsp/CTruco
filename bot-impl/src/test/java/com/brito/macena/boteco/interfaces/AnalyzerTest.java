@@ -5,6 +5,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnalyzerTest {
+
+    @BeforeAll
+    static void setUpAll() { System.out.println("Starting Analyzer tests..."); }
 
     @Nested
     @DisplayName("myHand method tests")
