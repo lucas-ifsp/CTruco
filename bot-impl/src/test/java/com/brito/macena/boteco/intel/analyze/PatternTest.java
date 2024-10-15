@@ -59,4 +59,23 @@ public class PatternTest {
 
         assertThat(result).isEqualTo(Status.GOOD);
     }
+
+    @Test
+    @DisplayName("Returns BAD when hand power is less than 10")
+    void returnsBadWhenHandPowerIsLessThan10() {
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 0)
+                .botInfo(List.of(
+                        TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                        TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                        TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+                ), 0)
+                .opponentScore(0)
+                .build();
+
+        Pattern pattern = new Pattern(intel);
+        Status result = pattern.threeCardsHandler(intel.getCards());
+
+        assertThat(result).isEqualTo(Status.BAD);
+    }
 }
