@@ -10,6 +10,35 @@ public class MataPatoBot implements BotServiceProvider{
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        int opponentScore = intel.getOpponentScore();
+        long playableCards;
+        if(opponentScore <= 3){
+            return intel.getCards().stream().anyMatch(trucoCard -> trucoCard.isManilha(vira));
+        }
+        if(opponentScore < 6){
+            playableCards = intel.getCards().stream()
+                    .filter(card -> card.relativeValue(vira) >= 7)
+                    .count();
+
+            return playableCards >= 2;
+
+        }
+        if (opponentScore <= 8) {
+            playableCards = intel.getCards().stream()
+                    .filter(card -> card.relativeValue(vira) >= 8)
+                    .count();
+
+            return playableCards >= 2;
+
+        }
+        if (opponentScore < 11) {
+            playableCards = intel.getCards().stream()
+                    .filter(card -> card.relativeValue(vira) > 9)
+                    .count();
+
+            return playableCards >= 1 && intel.getCards().stream().anyMatch(card -> card.relativeValue(vira) > 6);
+        }
         return false;
     }
 
