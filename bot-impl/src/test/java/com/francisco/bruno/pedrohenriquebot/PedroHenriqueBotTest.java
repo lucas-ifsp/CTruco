@@ -76,7 +76,7 @@ class PedroHenriqueBotTest {
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(THREE, HEARTS),
                     TrucoCard.of(TWO, SPADES),
-                    TrucoCard.of(ACE, DIAMONDS)
+                    TrucoCard.of(JACK, DIAMONDS)
             );
 
             intel = GameIntel.StepBuilder.with()

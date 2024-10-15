@@ -23,7 +23,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         double handStrengthAvg = handStrengthAverage(intel);
 
         if (intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11) {
-            return handStrengthAvg >= 8;
+            return handStrengthAvg >= 9;
         }
 
         return (manilhas >= 2 || (manilhas == 1 && highCards >= 2) || highCards == 3);
