@@ -1158,6 +1158,32 @@ public class ArmageddonTest {
                 assertTrue(result);
             }
 
+            @Test
+            @DisplayName("Should request Truco in the second round after winning the first round if bot has a Three or Manilha")
+            void shouldRequestTrucoInSecondRoundIfHasThreeOrManilha() {
+
+                TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(THREE, SPADES),
+                        TrucoCard.of(JACK, HEARTS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(FOUR, DIAMONDS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 2)
+                        .botInfo(botCards, 1)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.shouldRequestTruco(intel);
+
+                assertTrue(result);
+            }
+
+
         }
 
 
