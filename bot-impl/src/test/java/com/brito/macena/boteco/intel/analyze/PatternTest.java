@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Pattern Tests")
 public class PatternTest {
     @BeforeAll
     static void setupAll() { System.out.println("Starting Pattern tests..."); }
