@@ -60,6 +60,7 @@ public class ReimuBot implements BotServiceProvider {
         if(isSecondRound(intel) && wonFirstRound(intel) && hasThree(intel)){
             return true;
         }
+
         return false;
     }
 
@@ -166,6 +167,10 @@ public class ReimuBot implements BotServiceProvider {
 
     private boolean hasThree(GameIntel intel) {
         return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+    }
+
+    private boolean hasTwoTwos(GameIntel intel) {
+        return intel.getCards().stream().filter(card -> card.getRank() == CardRank.TWO).count() == 2;
     }
 
     private boolean hasMaior(GameIntel intel){
