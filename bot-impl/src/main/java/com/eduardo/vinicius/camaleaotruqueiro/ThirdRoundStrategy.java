@@ -21,14 +21,14 @@ public class ThirdRoundStrategy implements RoundStrategy{
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
-        if(winFistRound(intel)) return true;
+        boolean certainVictory = !haveStrongestCard(intel, intel.getCards()).isEmpty();
+        if(winFistRound(intel) || certainVictory) return true;
         else if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if((winFistRound(intel) || drewFistRound(intel)) &&
                 situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
         else return false;
         //todo
         // pedir truco quando tem carta forte, mesmo não ganhando ou empatando a primeira
-        // pedir truco quando oponent jogar carta vencível,
         // não pedir quando carta é invencível (mesma ganhando primeiro round)
     }
     @Override
