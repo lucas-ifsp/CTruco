@@ -1,12 +1,16 @@
 package com.brito.macena.boteco.intel.trucoCaller;
 
-import com.brito.macena.boteco.intel.profiles.Agressive;
+import com.brito.macena.boteco.utils.MyHand;
 import com.brito.macena.boteco.utils.Status;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("TrucoCaller tests")
@@ -49,12 +53,115 @@ public class TrucoCallerTest {
     @Nested
     @DisplayName("PassiveTrucoCaller method tests")
     class PassiveTrucoCallerMethodTests {
+        @Test
+        @DisplayName("Should call truco if losing by 9 or more and status is medium or bad with 3 cards")
+        void shouldCallTrucoWhenLosingByNineOrMoreAndStatusIsMediumOrBad() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(9)
+                    .build();
+
+            PassiveTrucoCaller trucoCaller = new PassiveTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertTrue(shouldCall);
+        }
+
+        @Test
+        @DisplayName("Should dont call truco if status is excellent and there are 2 cards")
+        void shouldDontCallTrucoWhenStatusIsExcellentAndTwoCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            PassiveTrucoCaller trucoCaller = new PassiveTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertFalse(shouldCall);
+        }
     }
 
     @Nested
     @DisplayName("SneakyTrucoCaller method tests")
     class SneakyTrucoCallerMethodTests {
+        @Test
+        @DisplayName("Should call truco if status is medium or good with 3 cards")
+        void shouldCallTrucoWhenStatusIsMediumOrGoodAndThreeCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            SneakyTrucoCaller trucoCaller = new SneakyTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertTrue(shouldCall);
+        }
+
+        @Test
+        @DisplayName("Should dont call truco if status is excellent with 2 cards")
+        void shouldDontCallTrucoWhenStatusIsExcellentAndTwoOrFewerCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(6)
+                    .build();
+
+            SneakyTrucoCaller trucoCaller = new SneakyTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertFalse(shouldCall);
+        }
+
+        @Test
+        @DisplayName("Should not call truco if status is good and second card power is less than 8")
+        void shouldNotCallTrucoWhenStatusIsGoodAndSecondCardPowerLessThanEight() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(4)
+                    .build();
+
+            SneakyTrucoCaller trucoCaller = new SneakyTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertFalse(shouldCall);
+        }
     }
 }
