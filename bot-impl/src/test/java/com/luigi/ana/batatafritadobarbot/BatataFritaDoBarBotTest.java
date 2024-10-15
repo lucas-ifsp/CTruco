@@ -4,6 +4,8 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.casal.impl.vapobot.VapoBot;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,12 @@ public class BatataFritaDoBarBotTest {
     private GameIntel.StepBuilder stepBuilder;
     private GameIntel intel;
 
+    @BeforeEach
+    public void config() {
+        batataFritaDoBarBot = new BatataFritaDoBarBot();
+
+
+    }
 
     //1
     @Test
