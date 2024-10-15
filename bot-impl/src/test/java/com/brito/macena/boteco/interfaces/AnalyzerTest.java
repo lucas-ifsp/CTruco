@@ -38,9 +38,16 @@ public class AnalyzerTest {
         @Test
         @DisplayName("Returns threeCardsHandler when three cards")
         void returnsThreeCardsHandlerWhenThreeCards() {
-            GameIntel intel = mock(GameIntel.class);
-            List<TrucoCard> cards = List.of(mock(TrucoCard.class), mock(TrucoCard.class), mock(TrucoCard.class));
-            when(intel.getCards()).thenReturn(cards);
+            List<TrucoCard> cards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+            );
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), cards, TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), 0)
+                    .botInfo(cards, 0)
+                    .opponentScore(0)
+                    .build();
 
             Analyzer analyzer = new AnalyzerImpl();
             Status result = analyzer.myHand(intel);
