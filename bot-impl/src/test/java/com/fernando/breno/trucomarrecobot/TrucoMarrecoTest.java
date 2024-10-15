@@ -14,6 +14,7 @@ import java.util.List;
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TrucoMarrecoTest {
@@ -168,8 +169,6 @@ class TrucoMarrecoTest {
 
 
 
-
-
     @Nested
     @DisplayName("decideIfRaises")
     class DecideIfRaises {
@@ -259,4 +258,22 @@ class TrucoMarrecoTest {
     }
 
 
+    @Nested
+    @DisplayName("getRaiseResponse")
+    class GetRaiseResponse{
+
+        @Test
+        @DisplayName("Testa aceita aumento se tiver uma manilha ou mais")
+        void testWhichcceptsTrucocomAManilhaorMORE() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of( THREE, CLUBS), TrucoCard.of(ACE, CLUBS));
+            vira = TrucoCard.of(TWO, SPADES);
+            openCards = List.of();
+            result = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo( result,openCards, vira, 1).botInfo(hand, 1).opponentScore(0);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isPositive();
+        }
+
+
+    }
 }
