@@ -1,8 +1,6 @@
 package com.belini.luciano.matapatobot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
@@ -93,5 +91,17 @@ public class MataPatoBot implements BotServiceProvider{
             case 1 -> "Round 3";
             default -> "No cards";
         };
+    }
+    public boolean verifyGreatHand(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        TrucoCard cardToCompare = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        List<TrucoCard> cards = intel.getCards();
+        int count = 0;
+        for (TrucoCard card : cards) {
+            if (card.isManilha(vira) || card.compareValueTo(cardToCompare, vira) >= 0) {
+                count++;
+            }
+        }
+        return (cards.size() == 3) ? count >= 2 : count >= 1;
     }
 }
