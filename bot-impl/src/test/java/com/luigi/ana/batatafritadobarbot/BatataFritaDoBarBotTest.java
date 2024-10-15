@@ -928,7 +928,35 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
-    // 42
+    //42
+    @Test
+    @DisplayName("Should return true to mao de onze response when mao de ferro")
+    void shouldReturnTrueToMaoDeOnzeResponseWhenMaoDeFerro() {
+
+
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+
+        List<TrucoCard> openCards = List.of(vira);
+
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 0)
+                .botInfo(playerCards, 11)
+                .opponentScore(11);
+
+
+        assertFalse(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
+    }
+
+
+    // 43
     @Test
     @DisplayName("Should return an average card value is 4")
     void shouldReturnAverageCardsIs4() {
@@ -952,7 +980,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(4,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 43
+    // 44
     @Test
     @DisplayName("Should return an average card value is 8")
     void shouldReturnAverageCardsIs8() {
@@ -975,7 +1003,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(8,batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 44
+    // 45
     @Test
     @DisplayName("Should return average when player only manilhas")
     void shouldReturnAverageWhenPlayerOnlyManilhas() {
@@ -998,7 +1026,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(11, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 45
+    // 46
     @Test
     @DisplayName("Should return average card value is 1")
     void shouldReturnAverageCardsIs1() {
@@ -1021,7 +1049,7 @@ public class BatataFritaDoBarBotTest {
         assertEquals(1, batataFritaDoBarBot.getAverageCardValue(stepBuilder.build()) );
     }
 
-    // 46
+    // 47
 
 
 
