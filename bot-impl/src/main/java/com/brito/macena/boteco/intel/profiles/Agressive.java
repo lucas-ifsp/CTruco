@@ -31,7 +31,30 @@ public class Agressive extends ProfileBot {
 
     @Override
     public CardToPlay firstRoundChoose() {
-        return null;
+
+        if (intel.getOpponentCard().isPresent()) {
+            int opponentCardOnTableValue = intel.getOpponentCard().get().relativeValue(vira);
+            if (status == Status.EXCELLENT || status == Status.GOOD) {
+                return CardToPlay.of(worstCard);
+            }
+            if (worstCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(worstCard);
+            if (secondBestCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) > opponentCardOnTableValue) return CardToPlay.of(bestCard);
+        }
+
+        if (haveAtLeastTwoManilhas()) {
+            return CardToPlay.of(worstCard);
+        }
+
+        if (haveAtLeastOneManilha()) {
+            if (bestCard.relativeValue(vira) >= 11) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) == 10) return CardToPlay.of(bestCard);
+
+        }
+        long handPower = powerOfTheTwoBestCards();
+
+        if (handPower >= 12 && secondBestCard.relativeValue(vira) >= 5) return CardToPlay.of(secondBestCard);
+        return CardToPlay.of(bestCard);
     }
 
     @Override
