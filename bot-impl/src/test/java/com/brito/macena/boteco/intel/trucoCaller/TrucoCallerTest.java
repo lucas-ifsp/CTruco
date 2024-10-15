@@ -22,7 +22,7 @@ public class TrucoCallerTest {
     @DisplayName("AggressiveTrucoCaller method tests")
     class AgessiveTrucoCallerMethodTests {
         @Test
-        @DisplayName("should call truco when status is excellent")
+        @DisplayName("Should call truco when status is excellent")
         void shouldCallTrucoWhenStatusIsExcellent() {
             AggressiveTrucoCaller caller = new AggressiveTrucoCaller();
             GameIntel intel = GameIntel.StepBuilder.with()
@@ -31,6 +31,18 @@ public class TrucoCallerTest {
                     .opponentScore(0)
                     .build();
             assertTrue(caller.shouldCallTruco(intel, Status.EXCELLENT));
+        }
+
+        @Test
+        @DisplayName("Should call truco when status is good")
+        void shouldCallTrucoWhenStatusIsExcellent() {
+            AggressiveTrucoCaller caller = new AggressiveTrucoCaller();
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 0)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .build();
+            assertTrue(caller.shouldCallTruco(intel, Status.GOOD));
         }
     }
 
