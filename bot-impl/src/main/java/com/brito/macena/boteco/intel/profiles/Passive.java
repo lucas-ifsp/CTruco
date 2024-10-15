@@ -54,7 +54,10 @@ public class Passive extends ProfileBot {
     }
 
     private long getManilhaAmount() {
-        return 0L;
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
     }
 
     private long powerOfTheTwoBestCards() {
