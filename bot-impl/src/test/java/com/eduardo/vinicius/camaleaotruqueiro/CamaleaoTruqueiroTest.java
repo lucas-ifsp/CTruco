@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class CamaleaoTruqueiroTest {
@@ -1874,5 +1876,477 @@ public class CamaleaoTruqueiroTest {
 
             }
         }
+
+        @Nested
+        @DisplayName("Thrid Round Strategy")
+        class thridRoundStrategy{
+
+
+            int winningScore = 6;
+            int losingScore = 4;
+
+            @Nested
+            @DisplayName("bot is winngin game")
+            class botIsWinnginGame{
+
+                @Nested
+                @DisplayName("bot won first hand and lost in second")
+                class botWonFirstHandAndLostInSecond{
+
+                    List<GameIntel.RoundResult> roundResults = List.of(
+                            GameIntel.RoundResult.WON,
+                            GameIntel.RoundResult.LOST
+                    );
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | expectedRaiseResponse
+                            //almost absolute victory
+                            "FOUR, CLUBS,  1",
+                            //almost certain victory
+                            "TWO, CLUBS, 0",
+                            //almost certain defeat
+                            "KING, CLUBS, -1",
+                            "FIVE, CLUBS, -1",
+                    })
+                    @DisplayName("opponent calls truco")
+                    void OppenentCallsTruco(
+                            CardRank cardRank1, CardSuit cardSuit1,
+                            int expectedResponse
+                    ) {
+                        List<TrucoCard> cards = Arrays.asList(
+                                TrucoCard.of(cardRank1, cardSuit1)
+                        );
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira), vira, 3)
+                                .botInfo(cards, winningScore)
+                                .opponentScore(losingScore).build();
+
+                        int response = camaleao.getRaiseResponse(intel);
+
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        assertEquals(expectedResponse, response);
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | decideIfRaise | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, CLUBS, true",
+                            //almost certain victory
+                            "TWO, CLUBS, true",
+
+                            //almost certain defeat
+                            "KING, CLUBS, true",
+                            "FIVE, CLUBS, true",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played vincible card")
+                    void opponentPlayedVincibleCard(CardRank cardRank1, CardSuit cardSuit1, boolean expectedDecideIfRaises) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+                        CardRank oppenentCardRank;
+                        CardSuit oppenentCardSuit;
+                        if (getGreatestCard(botCards, vira).getRank().value() == 1) {
+                            oppenentCardRank = CardRank.THREE;
+                            oppenentCardSuit = CardSuit.DIAMONDS;
+                        } else {
+                            oppenentCardRank = CardRank.values()[getGreatestCard(botCards, vira).getRank().value()-1];
+                            oppenentCardSuit = CardSuit.values()[getGreatestCard(botCards, vira).getSuit().ordinal()-1];
+                        }
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira,vira,vira, TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                )),vira,1)
+                                .botInfo(botCards,winningScore)
+                                .opponentScore(losingScore)
+                                .opponentCard(TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                ))
+                                .build();
+
+                        boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
+                        TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | responseToTruco | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, HEARTS, false",
+                            //almost certain victory
+                            "TWO, HEARTS, false",
+
+                            //almost certain defeat
+                            "KING, HEARTS, false",
+                            "FIVE, HEARTS, false",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played invincible card")
+                    void opponentPlayedInvincibleCard(CardRank cardRank1, CardSuit cardSuit1, boolean expectedDecideIfRaises) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+                        CardRank oppenentCardRank;
+                        CardSuit oppenentCardSuit;
+                        if (getGreatestCard(botCards, vira).isCopas(vira)) {
+                            oppenentCardRank = CardRank.FOUR;
+                            oppenentCardSuit = CardSuit.CLUBS;
+                        } else {
+                            oppenentCardRank = CardRank.values()[getGreatestCard(botCards, vira).getRank().value()+1];
+                            oppenentCardSuit = CardSuit.values()[getGreatestCard(botCards, vira).getSuit().ordinal()+1];
+                        }
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira,vira,vira, TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                )),vira,1)
+                                .botInfo(botCards,winningScore)
+                                .opponentScore(losingScore)
+                                .opponentCard(TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                ))
+                                .build();
+
+                        boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
+                        TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                }
+
+                @Nested
+                @DisplayName("bot lost first hand and won in second")
+                class botLostFirstHandAndWonInSecond{
+
+                    List<GameIntel.RoundResult> roundResults = List.of(
+                            GameIntel.RoundResult.LOST,
+                            GameIntel.RoundResult.WON
+                    );
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | expectedRaiseResponse
+                            //almost absolute victory
+                            "FOUR, CLUBS,  true",
+                            //almost certain victory
+                            "TWO, CLUBS, true",
+                            //almost certain defeat
+                            "KING, CLUBS, false",
+                            "FIVE, CLUBS, false",
+                    })
+                    @DisplayName("bot thinks if calls truco")
+                    void botThinksIfCallsTruco(
+                            CardRank cardRank1, CardSuit cardSuit1,
+                            boolean expectedDecideIfRaises
+                    ) {
+                        List<TrucoCard> cards = Arrays.asList(
+                                TrucoCard.of(cardRank1, cardSuit1)
+                        );
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira), vira, 1)
+                                .botInfo(cards, winningScore)
+                                .opponentScore(losingScore).build();
+
+                        boolean response = camaleao.decideIfRaises(intel);
+
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        assertEquals(expectedDecideIfRaises, response);
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | decideIfRaise | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, CLUBS, 1",
+                            //almost certain victory
+                            "TWO, CLUBS, 0",
+
+                            //almost certain defeat
+                            "KING, CLUBS, -1",
+                            "FIVE, CLUBS, -1",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played vincible card")
+                    void opponentCallsTruco(CardRank cardRank1, CardSuit cardSuit1, int expectedGetRaiseResponse) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira),vira,1)
+                                .botInfo(botCards,winningScore)
+                                .opponentScore(losingScore)
+                                .build();
+
+                        int botGetRaiseResponse =  camaleao.getRaiseResponse(intel);
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botGetRaiseResponse).isEqualTo(expectedGetRaiseResponse);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                }
+            }
+
+            @Nested
+            @DisplayName("bot is lossing game")
+            class botIsLossingGame{
+
+                @Nested
+                @DisplayName("bot won first hand and lost in second")
+                class botWonFirstHandAndLostInSecond{
+
+                    List<GameIntel.RoundResult> roundResults = List.of(
+                            GameIntel.RoundResult.WON,
+                            GameIntel.RoundResult.LOST
+                    );
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | expectedRaiseResponse
+                            //almost absolute victory
+                            "FOUR, CLUBS,  1",
+                            //almost certain victory
+                            "TWO, CLUBS, 0",
+                            //almost certain defeat
+                            "KING, CLUBS, -1",
+                            "FIVE, CLUBS, -1",
+                    })
+                    @DisplayName("opponent calls truco")
+                    void OppenentCallsTruco(
+                            CardRank cardRank1, CardSuit cardSuit1,
+                            int expectedResponse
+                    ) {
+                        List<TrucoCard> cards = Arrays.asList(
+                                TrucoCard.of(cardRank1, cardSuit1)
+                        );
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira), vira, 3)
+                                .botInfo(cards, losingScore)
+                                .opponentScore(winningScore).build();
+
+                        int response = camaleao.getRaiseResponse(intel);
+
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        assertEquals(expectedResponse, response);
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | decideIfRaise | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, CLUBS, true",
+                            //almost certain victory
+                            "TWO, CLUBS, true",
+
+                            //almost certain defeat
+                            "KING, CLUBS, true",
+                            "FIVE, CLUBS, true",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played vincible card")
+                    void opponentPlayedVincibleCard(CardRank cardRank1, CardSuit cardSuit1, boolean expectedDecideIfRaises) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+                        CardRank oppenentCardRank;
+                        CardSuit oppenentCardSuit;
+                        if (getGreatestCard(botCards, vira).getRank().value() == 1) {
+                            oppenentCardRank = CardRank.THREE;
+                            oppenentCardSuit = CardSuit.DIAMONDS;
+                        } else {
+                            oppenentCardRank = CardRank.values()[getGreatestCard(botCards, vira).getRank().value()-1];
+                            oppenentCardSuit = CardSuit.values()[getGreatestCard(botCards, vira).getSuit().ordinal()-1];
+                        }
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira,vira,vira, TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                )),vira,1)
+                                .botInfo(botCards,losingScore)
+                                .opponentScore(winningScore)
+                                .opponentCard(TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                ))
+                                .build();
+
+                        boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
+                        TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | responseToTruco | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, HEARTS, false",
+                            //almost certain victory
+                            "TWO, HEARTS, false",
+
+                            //almost certain defeat
+                            "KING, HEARTS, false",
+                            "FIVE, HEARTS, false",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played invincible card")
+                    void opponentPlayedInvincibleCard(CardRank cardRank1, CardSuit cardSuit1, boolean expectedDecideIfRaises) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+                        CardRank oppenentCardRank;
+                        CardSuit oppenentCardSuit;
+                        if (getGreatestCard(botCards, vira).isCopas(vira)) {
+                            oppenentCardRank = CardRank.FOUR;
+                            oppenentCardSuit = CardSuit.CLUBS;
+                        } else {
+                            oppenentCardRank = CardRank.values()[getGreatestCard(botCards, vira).getRank().value()+1];
+                            oppenentCardSuit = CardSuit.values()[getGreatestCard(botCards, vira).getSuit().ordinal()+1];
+                        }
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira,vira,vira, TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                )),vira,1)
+                                .botInfo(botCards,losingScore)
+                                .opponentScore(winningScore)
+                                .opponentCard(TrucoCard.of(
+                                        oppenentCardRank,
+                                        oppenentCardSuit
+                                ))
+                                .build();
+
+                        boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
+                        TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                }
+
+                @Nested
+                @DisplayName("bot lost first hand and won in second")
+                class botLostFirstHandAndWonInSecond{
+
+                    List<GameIntel.RoundResult> roundResults = List.of(
+                            GameIntel.RoundResult.LOST,
+                            GameIntel.RoundResult.WON
+                    );
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | expectedRaiseResponse
+                            //almost absolute victory
+                            "FOUR, CLUBS,  true",
+                            //almost certain victory
+                            "TWO, CLUBS, true",
+                            //almost certain defeat
+                            "KING, CLUBS, false",
+                            "FIVE, CLUBS, false",
+                    })
+                    @DisplayName("bot thinks if calls truco")
+                    void botThinksIfCallsTruco(
+                            CardRank cardRank1, CardSuit cardSuit1,
+                            boolean expectedDecideIfRaises
+                    ) {
+                        List<TrucoCard> cards = Arrays.asList(
+                                TrucoCard.of(cardRank1, cardSuit1)
+                        );
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira), vira, 1)
+                                .botInfo(cards, losingScore)
+                                .opponentScore(winningScore).build();
+
+                        boolean response = camaleao.decideIfRaises(intel);
+
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        assertEquals(expectedDecideIfRaises, response);
+                    }
+
+                    @ParameterizedTest
+                    @CsvSource({
+                            // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | decideIfRaise | expectedCardRank | expectedCardSuit
+                            //almost absolute victory
+                            "FOUR, CLUBS, 1",
+                            //almost certain victory
+                            "TWO, CLUBS, 0",
+
+                            //almost certain defeat
+                            "KING, CLUBS, -1",
+                            "FIVE, CLUBS, -1",
+
+                            //high changes opponent runs from truco
+                            //"KING, CLUBS, KING, HEARTS, true, true",
+                    })
+                    @DisplayName("opponent played vincible card")
+                    void opponentCallsTruco(CardRank cardRank1, CardSuit cardSuit1, int expectedGetRaiseResponse) {
+                        List<TrucoCard> botCards = List.of(
+                                TrucoCard.of(cardRank1,cardSuit1)
+                        );
+
+                        GameIntel intel = GameIntel.StepBuilder.with()
+                                .gameInfo(roundResults,List.of(vira),vira,1)
+                                .botInfo(botCards,losingScore)
+                                .opponentScore(winningScore)
+                                .build();
+
+                        int botGetRaiseResponse =  camaleao.getRaiseResponse(intel);
+
+                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                        SoftAssertions softly = new SoftAssertions();
+                        softly.assertThat(botGetRaiseResponse).isEqualTo(expectedGetRaiseResponse);
+                        //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                        softly.assertAll();
+                    }
+
+                }
+            }
+        }
+
     }
 }
