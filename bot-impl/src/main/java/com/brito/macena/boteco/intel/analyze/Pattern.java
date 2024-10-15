@@ -52,6 +52,13 @@ public class Pattern extends Analyzer {
         return Status.BAD;
     }
 
+    private long getManilhaAmount() {
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
+    }
+
     private long powerOfTheTwoBestCards() {
         List<TrucoCard> myCards = intel.getCards();
         return myCards.stream()
