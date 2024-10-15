@@ -29,7 +29,31 @@ public class Pattern extends Analyzer {
 
     @Override
     public Status threeCardsHandler(List<TrucoCard> myCards) {
-        return null;
+        if (haveAtLeastTwoManilhas()) {
+            return Status.EXCELLENT;
+        }
+        if (haveAtLeastOneManilha()) {
+            if (intel.getOpponentCard().isPresent()) {
+                TrucoCard oppCard = intel.getOpponentCard().get();
+                if (myCards
+                        .stream()
+                        .filter(card -> card.compareValueTo(oppCard, vira) > 0)
+                        .count() == 3) {
+                    return Status.EXCELLENT;
+                }
+            }
+
+            if (secondBestCardValue >= 5) return Status.GOOD;
+            return Status.MEDIUM;
+        }
+        long handPower = powerOfTheTwoBestCards();
+        if (handPower >= 17) {
+            return Status.GOOD;
+        }
+        if (handPower >= 10) {
+            return Status.MEDIUM;
+        }
+        return Status.BAD;
     }
 
     @Override
