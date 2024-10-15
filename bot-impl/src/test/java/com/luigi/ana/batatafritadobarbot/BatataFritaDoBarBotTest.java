@@ -702,7 +702,8 @@ public class BatataFritaDoBarBotTest {
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
-    //32
+    //33
+
     @Test
     @DisplayName("Ask truco when avg is higher then 7")
     void askTrucoWhenAvgIsHigherThan7() {
@@ -744,6 +745,27 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(1);
 
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("No Ask truco when avg is 5")
+    void NoAskTrucoWhenAVGis4() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
     // 34
