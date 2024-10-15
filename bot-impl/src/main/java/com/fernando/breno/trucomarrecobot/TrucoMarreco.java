@@ -98,10 +98,18 @@ public class TrucoMarreco implements BotServiceProvider {
     public boolean handStrong(GameIntel intel){
         var hasManilha = numberOfManilhas(intel)  >= 1;
         var containsThree = intel.getCards().contains(3);
-       // var containsThree = intel.getCards().stream().anyMatch(card -> card.getRank().value() == 3);
 
         return hasManilha && containsThree;
     }
+    public boolean countTheeHand(GameIntel intel) {
+        var countThree = intel.getCards().stream()
+                .filter(card -> card.getRank().value() == 3)
+                .count();
+
+
+        return countThree >= 3;
+    }
+
 
     public boolean biggestCouple(GameIntel intel){
         var hasZap = intel.getCards().stream().filter(card -> card.isZap(intel.getVira())).count() > 0;
