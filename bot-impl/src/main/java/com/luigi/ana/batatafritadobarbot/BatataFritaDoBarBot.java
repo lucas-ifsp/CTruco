@@ -203,8 +203,20 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
     public Optional<TrucoCard> getLowestToWin(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
+        TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+
+        if (opponentCard == null) {
+            return Optional.empty();
+        }
+
         TrucoCard lowestCard = intel.getCards().get(0);
 
+        for (TrucoCard card : intel.getCards()){
+            if (lowestCard.relativeValue(vira) > card.relativeValue(vira)
+                    && card.relativeValue(vira) > opponentCard.relativeValue(vira))
+                lowestCard = card;
+        }
         return Optional.ofNullable(lowestCard);
     }
 
