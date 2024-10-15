@@ -103,15 +103,7 @@ class PedroHenriqueBotTest {
 
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
-
-
-
-
     }
-
-
-
-
 
     @Nested
     @DisplayName("Testing chooseCard")
@@ -121,7 +113,6 @@ class PedroHenriqueBotTest {
         void shouldReturnCard() {
 
         }
-
     }
 
     @Nested
