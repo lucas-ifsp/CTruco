@@ -764,7 +764,7 @@ public class BatataFritaDoBarBotTest {
         List<TrucoCard> myCards = List.of(
                 TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS)
+                TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS)
         );
 
         List<TrucoCard> openCards = List.of();
@@ -773,6 +773,7 @@ public class BatataFritaDoBarBotTest {
                 .gameInfo(List.of(), openCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(1);
+
 
         assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
