@@ -172,5 +172,18 @@ class MataPatoBotTest {
         assertThat(mataPatoBot.shouldPlayStrongCard(intel)).isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("Should raise if manilha on last round")
+    public void shouldRaiseIfManilhaOnLastRound() {
+        GameIntel intel = mock(GameIntel.class);
+        TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+
+        when(intel.getCards()).thenReturn(Arrays.asList(card1));
+        when(intel.getVira()).thenReturn(vira);
+
+        assertTrue(mataPatoBot.verifyGreatHand(intel));
+    }
+
 
 }
