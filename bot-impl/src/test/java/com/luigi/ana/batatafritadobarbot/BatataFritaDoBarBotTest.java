@@ -740,7 +740,7 @@ public class BatataFritaDoBarBotTest {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
         );
