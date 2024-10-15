@@ -1,5 +1,6 @@
 package com.brito.macena.boteco.intel.analyze;
 
+import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
@@ -181,7 +182,7 @@ public class PatternTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 4)
                     .botInfo(List.of(
-                            TrucoCard.of(CardRank.EIGHT, CardSuit.CLUBS)
+                            TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)
                     ), 0)
                     .opponentScore(0)
                     .build();
