@@ -1,0 +1,39 @@
+package com.brito.macena.boteco.intel.profiles;
+
+import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.utils.Status;
+import com.bueno.spi.model.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+
+public class PassiveTest {
+
+    @Test
+    @DisplayName("should kill the opponent's card if you have a medium hand")
+    void shouldPlayStrongestCardIfItWins() {
+        List<TrucoCard> botHand = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+        );
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(botHand, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard)
+                .build();
+
+        ProfileBot passive = new Passive(intel, Status.MEDIUM);
+
+        CardToPlay selectedCard = passive.firstRoundChoose();
+        assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+    }
+}
