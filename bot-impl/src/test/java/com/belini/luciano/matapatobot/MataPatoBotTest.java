@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -18,7 +19,7 @@ class MataPatoBotTest {
     MataPatoBot mataPatoBot;
 
     @BeforeEach
-    public void createPatoBot() {
+    public void setup() {
         mataPatoBot = new MataPatoBot();
     }
 
@@ -250,6 +251,25 @@ class MataPatoBotTest {
             when(intel.getVira()).thenReturn(vira);
             when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
             assertFalse(mataPatoBot.verifyHandToRaise(intel));
+        }
+    }
+    @Nested
+    class GetMaoDeOnzeResponseTests {
+
+        @Test
+        void whenOpponentScoreIsLessOrEqual3_andHasAtLeastManilha() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            when(intel.getOpponentScore()).thenReturn(2);
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
+            assertTrue(response);
         }
     }
 }
