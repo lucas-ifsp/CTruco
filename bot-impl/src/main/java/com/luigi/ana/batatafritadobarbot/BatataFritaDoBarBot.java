@@ -176,6 +176,9 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     public TrucoCard getHighestCard(GameIntel intel) {
         TrucoCard highestCard = intel.getCards().get(0);
 
+        for (TrucoCard card : intel.getCards())
+            if (card.relativeValue(intel.getVira()) > highestCard.relativeValue(intel.getVira()))
+                highestCard = card;
         return highestCard;
     }
 
