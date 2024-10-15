@@ -138,4 +138,20 @@ public class GameTest {
             assertThat(result).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("Tests for isCriticalSituation method")
+    class IsCriticalSituationTests {
+        @Test
+        @DisplayName("Returns true when score difference is 6 or more")
+        void returnsTrueWhenScoreDifferenceIsSixOrMore() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 0)
+                    .botInfo(List.of(), 4)  // Correct method to set the score
+                    .opponentScore(10)
+                    .build();
+
+            assertThat(Game.isCriticalSituation(intel)).isTrue();
+        }
+    }
 }
