@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -237,6 +238,18 @@ class MataPatoBotTest {
             when(intel.getCards()).thenReturn(Arrays.asList(card1,card2,card3));
             when(intel.getVira()).thenReturn(vira);
             assertTrue(mataPatoBot.verifyHandToRaise(intel));
+        }
+
+        @Test
+        @DisplayName("Shouldn't raise if there is only bad cards in hand")
+        public void shouldNotRaiseIfOnlyBadCardsInHand() {
+            GameIntel intel = mock((GameIntel.class));
+            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getCards()).thenReturn(Arrays.asList(card1,card2));
+            assertFalse(mataPatoBot.verifyHandToRaise(intel));
         }
     }
 }
