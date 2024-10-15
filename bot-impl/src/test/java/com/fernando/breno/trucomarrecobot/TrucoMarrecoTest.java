@@ -171,8 +171,8 @@ class TrucoMarrecoTest {
 
 
     @Nested
-    @DisplayName("getRaiseResponse")
-    class getRaiseResponse {
+    @DisplayName("decideIfRaises")
+    class DecideIfRaises {
 
         @Test
         @DisplayName("Recusa aumento com mão fraca")
