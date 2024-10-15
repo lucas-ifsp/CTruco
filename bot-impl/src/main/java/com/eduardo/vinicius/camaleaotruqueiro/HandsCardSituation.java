@@ -39,7 +39,9 @@ public enum HandsCardSituation {
         }
 
         // Vitória quase certa
-        else if ((manilhas == 1 && highRankCards >= 2 || highRankCards == cards.size())) {
+        else if ((manilhas == 1 && highRankCards >= 2 ||
+                (manilhas == 1 && cards.size() == 2) ||
+                highRankCards == cards.size())) {
             return ALMOST_CERTAIN_VICTORY;
         }
 
