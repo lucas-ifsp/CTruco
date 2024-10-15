@@ -2,6 +2,7 @@ package com.francisco.bruno.pedrohenriquebot;
 
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.CardToPlay;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -109,9 +110,26 @@ class PedroHenriqueBotTest {
     @Nested
     @DisplayName("Testing chooseCard")
     class ChooseCardTest {
-        @Test
-        @DisplayName("Should Return Card")
-        void shouldReturnCard() {
+
+        @Nested
+        @DisplayName("First Round")
+        class FirstRound {
+            @Test
+            @DisplayName("Should use intermediate Card when first to play")
+            void shouldUseIntermediateCardWhenFirstToPlay() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),   // Weak card
+                        TrucoCard.of(SEVEN, CLUBS),   // Intermediate card
+                        TrucoCard.of(THREE, DIAMONDS) // Strong card
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira),vira,1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+                assertEquals(CardToPlay.of(botCards.get(1)), chosenCard);
+            }
 
         }
     }
