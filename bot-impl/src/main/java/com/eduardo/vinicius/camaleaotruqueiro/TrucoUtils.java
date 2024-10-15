@@ -124,6 +124,16 @@ public class TrucoUtils {
         return strongestCards;
     }
 
+    public static List<TrucoCard> haveEqualCard(GameIntel intel, List<TrucoCard> myCards) {
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> equalCards = new ArrayList<>(List.of());
+        for (TrucoCard myCard : myCards) {
+            if(myCard.compareValueTo(opponentCard, vira) == 0) equalCards.add(myCard);
+        }
+        return equalCards;
+    }
+
     public static int getNumberOfMediumRankCards(List<TrucoCard> handCards, TrucoCard vira) {
         int numberOfMediumCards = 0;
         for (TrucoCard handCard : handCards) {

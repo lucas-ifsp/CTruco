@@ -39,7 +39,7 @@ public enum HandsCardSituation {
         }
 
         // Vitória quase certa
-        else if ((manilhas == 1 && highRankCards >= 2 || highRankCards == 3)) {
+        else if ((manilhas == 1 && highRankCards >= 2 || highRankCards == cards.size())) {
             return ALMOST_CERTAIN_VICTORY;
         }
 
@@ -52,9 +52,10 @@ public enum HandsCardSituation {
         }
 
         // Blefe para intimidar
-        else if (    (highRankCards == 1 && mediumRankCards == 2) ||
-                (highRankCards == 1 && mediumRankCards == 1 && lowRankCards == 1) ||
-                (highRankCards == 1 && lowRankCards == 2) ) {
+        else if ((highRankCards == 1 && mediumRankCards == 2) ||
+        (highRankCards == 1 && mediumRankCards == 1 && lowRankCards == 1) ||
+        (highRankCards == 1 && lowRankCards == 2) ||
+                (cards.size() == 2 && mediumRankCards == 2)) {
             return BLUFF_TO_INTIMIDATE;
         }
         // Caso nenhuma condição seja satisfeita, assumir derrota quase certa por padrão

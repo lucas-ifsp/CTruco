@@ -17,7 +17,7 @@ public class FirstRoundStrategy implements RoundStrategy{
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
-        else if(intel.getOpponentScore()<9 && getNumberOfHighRankCards(intel.getCards(),intel.getVira())>0) return true;
+        else if(intel.getOpponentScore()<7 && getNumberOfHighRankCards(intel.getCards(),intel.getVira())>0) return true;
         else return false;
     }
 
@@ -26,8 +26,9 @@ public class FirstRoundStrategy implements RoundStrategy{
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
+        else if(situation == HandsCardSituation.BLUFF_TO_GET_POINTS) return true;
         else if(isWinning(intel.getScore(),intel.getOpponentScore())){
-            return situation == HandsCardSituation.BLUFF_TO_GET_POINTS;
+            return situation == HandsCardSituation.BLUFF_TO_INTIMIDATE;
         }
         else return false;
     }
@@ -49,11 +50,15 @@ public class FirstRoundStrategy implements RoundStrategy{
             }
         }
         else {
-            if(opponentPlayedInvincibleCard(intel)) selectedCard = getLowestCard(cards, vira);
-            else if(!(haveStrongestCard(intel, cards).isEmpty())){
+            if(!(haveStrongestCard(intel, cards).isEmpty())){
                 selectedCard = getLowestCard(haveStrongestCard(intel, cards), vira);
             }
-            else selectedCard = getLowestCard(cards, vira);
+            else if(!haveEqualCard(intel, cards).isEmpty()){
+                selectedCard = getLowestCard(haveEqualCard(intel, cards), vira);
+            }
+            else {
+                selectedCard = getLowestCard(cards, vira);
+            }
         }
         return CardToPlay.of(selectedCard);
     }

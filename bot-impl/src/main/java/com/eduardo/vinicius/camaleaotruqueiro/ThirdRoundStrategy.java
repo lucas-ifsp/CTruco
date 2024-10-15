@@ -21,7 +21,10 @@ public class ThirdRoundStrategy implements RoundStrategy{
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
-        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
+        if(winFistRound(intel)) return true;
+        else if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
+        else if((winFistRound(intel) || drewFistRound(intel)) &&
+                situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
         else return false;
     }
     @Override

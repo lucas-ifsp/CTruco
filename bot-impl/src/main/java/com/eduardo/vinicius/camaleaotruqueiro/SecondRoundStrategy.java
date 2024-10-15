@@ -21,6 +21,7 @@ public class SecondRoundStrategy implements RoundStrategy{
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        if(isWinning(intel.getScore(),intel.getOpponentScore()) && winFistRound(intel) || drewFistRound(intel)) return true;
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if((winFistRound(intel) || drewFistRound(intel)) &&
                 situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
@@ -37,8 +38,7 @@ public class SecondRoundStrategy implements RoundStrategy{
             selectedCard = getGreatestCard(cards, vira);
         }
         else {
-            if(opponentPlayedInvincibleCard(intel)) selectedCard = getLowestCard(cards, vira);
-            else if(!(haveStrongestCard(intel, cards).isEmpty())){
+            if(!(haveStrongestCard(intel, cards).isEmpty())){
                 selectedCard = getLowestCard(haveStrongestCard(intel, cards), vira);
             }
             else selectedCard = getLowestCard(cards, vira);
