@@ -768,6 +768,26 @@ public class BatataFritaDoBarBotTest {
         assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
+    @Test
+    @DisplayName("Ask truco when the last card is a three")
+    void AskTrucoWhenTheLastCardIsAThree() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+        );
+
+        List<TrucoCard> openCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(1);
+
+        assertTrue(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
+
+    }
+
     // 34
     @Test
     @DisplayName("Should return true if Mao de ferro")
