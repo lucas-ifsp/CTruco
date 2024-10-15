@@ -6,6 +6,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
     public String getName() {
@@ -27,12 +30,28 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(intel.getCards().get(0));
+        int roundNumber = intel.getRoundResults().size();
+        List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
+
+        switch (roundNumber) {
+            case 0:
+                return CardToPlay.of(sortedCards.get(1));
+            case 1:
+                return CardToPlay.of(sortedCards.get(0));
+            default:
+                return CardToPlay.of(sortedCards.get(0));
+        }
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 1;
+    }
+
+    private List<TrucoCard> sortCardsByStrength(List<TrucoCard> cards, TrucoCard vira) {
+        List<TrucoCard> sortedCards = new ArrayList<>(cards);
+        sortedCards.sort((card1, card2) -> Integer.compare(card2.relativeValue(vira), card1.relativeValue(vira)));
+        return sortedCards;
     }
 
     public int countManilhas(GameIntel intel){
