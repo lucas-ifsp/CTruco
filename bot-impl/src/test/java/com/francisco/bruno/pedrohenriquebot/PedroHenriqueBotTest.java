@@ -215,5 +215,22 @@ class PedroHenriqueBotTest {
 
             assertTrue(sut.decideIfRaises(intel.build()));
         }
+
+        @Test
+        @DisplayName("Raise with manilha and high card")
+        void raiseWithManilhaAndHighCard() {
+            TrucoCard vira = TrucoCard.of(ACE, SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(TWO, CLUBS),
+                    TrucoCard.of(SEVEN, HEARTS)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .botInfo(botCards, 0)
+                    .opponentScore(5);
+
+            assertTrue(sut.decideIfRaises(intel.build()));
+        }
     }
 }
