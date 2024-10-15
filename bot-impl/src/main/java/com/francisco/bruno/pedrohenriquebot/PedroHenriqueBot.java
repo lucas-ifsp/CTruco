@@ -75,7 +75,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && highCards >= 1) {
             return true;
         }
-        if (manilhas >= 1 || highCards >= 2) {
+        if (manilhas >= 1 || highCards >= 1) {
             return true;
         }
         if (opponentScore >= 10) {
