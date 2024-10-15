@@ -316,5 +316,20 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+        @Test
+        void whenOpponentScoreMoreThan3andManilha() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+
+            when(intel.getOpponentScore()).thenReturn(5);
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isFalse();
+        }
     }
 }
