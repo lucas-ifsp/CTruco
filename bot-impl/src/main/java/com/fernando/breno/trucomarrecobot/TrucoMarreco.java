@@ -48,6 +48,12 @@ public class TrucoMarreco implements BotServiceProvider {
             return true;
         }
 
+        if(intel.getOpponentScore() == 11 && intel.getScore() == 11){
+            return true;
+        }
+
+
+
 
        return  false;
     }
