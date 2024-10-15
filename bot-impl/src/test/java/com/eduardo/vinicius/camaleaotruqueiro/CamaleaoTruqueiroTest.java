@@ -15,20 +15,6 @@ import static com.eduardo.vinicius.camaleaotruqueiro.HandsCardSituation.evaluate
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 import static com.eduardo.vinicius.camaleaotruqueiro.TrucoUtils.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class CamaleaoTruqueiroTest {
@@ -553,8 +539,8 @@ public class CamaleaoTruqueiroTest {
         assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
     }
 
-    @Test @DisplayName("Should accept maoDeOnze when opponent score is less then 9 points and has one strong card")
-    void shouldAcceptMaoDeOnzeWhenOpponentScoreIsLessThen9PointsAndHasOneStrongCard() {
+    @Test @DisplayName("Should accept maoDeOnze when opponent score is less then 7 points and has one strong card")
+    void shouldAcceptMaoDeOnzeWhenOpponentScoreIsLessThen7PointsAndHasOneStrongCard() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
         List<TrucoCard> cards = Arrays.asList(
                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
@@ -566,7 +552,7 @@ public class CamaleaoTruqueiroTest {
         builder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(),openCards,vira,3)
                 .botInfo(cards,0)
-                .opponentScore(8);
+                .opponentScore(6);
 
         assertTrue(camaleao.getMaoDeOnzeResponse(builder.build()));
     }
@@ -669,20 +655,20 @@ public class CamaleaoTruqueiroTest {
             @CsvSource({
                     // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | cardRank3 | cardSuit3 | willCallTruco | choosenCardRank | choosenCardSuit | highChangesOpponentRunFromTruco
                     //almost absolute victory
-                    "FOUR, CLUBS, FOUR, HEARTS, SEVEN, SPADES, true, FOUR, CLUBS, false",
+                    "FOUR, CLUBS, FOUR, HEARTS, SEVEN, SPADES, true, SEVEN, SPADES, false",
                     //almost certain victory
-                    "FOUR, CLUBS, TWO, HEARTS, TWO, SPADES, false, TWO, HEARTS, false",
+                    "FOUR, CLUBS, TWO, HEARTS, TWO, SPADES, true, FOUR, CLUBS, false",
 
                     //bluff to get points
-                    "FOUR, CLUBS, TWO, HEARTS, KING, SPADES, false, KING, SPADES, false",
-                    "FOUR, CLUBS, TWO, HEARTS, SIX, SPADES, false, SIX, SPADES, false",
+                    "FOUR, CLUBS, TWO, HEARTS, KING, SPADES, true, FOUR, CLUBS, false",
+                    "FOUR, CLUBS, TWO, HEARTS, SIX, SPADES, true, FOUR, CLUBS, false",
 
                     //bluff to intimidate
-                    "FOUR, CLUBS, KING, HEARTS, KING, SPADES, false, FOUR, CLUBS, false",
-                    "FOUR, CLUBS, KING, HEARTS, SIX, SPADES, false, FOUR, CLUBS, false",
+                    "FOUR, CLUBS, KING, HEARTS, KING, SPADES, false, KING, HEARTS, false",
+                    "FOUR, CLUBS, KING, HEARTS, SIX, SPADES, false, SIX, SPADES, false",
                     //almost certain defeat
-                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, false, KING, CLUBS, false",
-                    "KING, CLUBS, SIX, HEARTS, SIX, SPADES, false, KING, CLUBS, false",
+                    "KING, CLUBS, KING, HEARTS, SIX, SPADES, false, SIX, SPADES, false",
+                    "KING, CLUBS, SIX, HEARTS, SIX, SPADES, false, SIX, HEARTS, false",
                     "SIX, CLUBS, SIX, HEARTS, SIX, SPADES, false, SIX, CLUBS, false",
                     //high changes opponent runs from truco
                     //"KING, CLUBS, KING, HEARTS, SIX, SPADES, true, KING, CLUBS, true",
@@ -706,7 +692,7 @@ public class CamaleaoTruqueiroTest {
                 SoftAssertions softly = new SoftAssertions();
                 softly.assertThat(botDecideIfRaises).isEqualTo(willCallTruco);
                 softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
-                if(!camaleao.decideIfRaises(intel)) softly.assertThat(botChosenCard).isEqualTo(TrucoCard.of(cardChosenRank,cardChosenSuit));
+                softly.assertThat(botChosenCard).isEqualTo(TrucoCard.of(cardChosenRank,cardChosenSuit));
                 softly.assertAll();
             }
 
@@ -1986,13 +1972,13 @@ public class CamaleaoTruqueiroTest {
                     @CsvSource({
                             // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | responseToTruco | expectedCardRank | expectedCardSuit
                             //almost absolute victory
-                            "FOUR, HEARTS, false",
+                            "FOUR, HEARTS, true",
                             //almost certain victory
-                            "TWO, HEARTS, false",
+                            "TWO, HEARTS, true",
 
                             //almost certain defeat
-                            "KING, HEARTS, false",
-                            "FIVE, HEARTS, false",
+                            "KING, HEARTS, true",
+                            "FIVE, HEARTS, true",
 
                             //high changes opponent runs from truco
                             //"KING, CLUBS, KING, HEARTS, true, true",
@@ -2052,7 +2038,7 @@ public class CamaleaoTruqueiroTest {
                             //almost absolute victory
                             "FOUR, CLUBS,  true",
                             //almost certain victory
-                            "TWO, CLUBS, true",
+                            "TWO, CLUBS, false",
                             //almost certain defeat
                             "KING, CLUBS, false",
                             "FIVE, CLUBS, false",
@@ -2217,13 +2203,13 @@ public class CamaleaoTruqueiroTest {
                     @CsvSource({
                             // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | responseToTruco | expectedCardRank | expectedCardSuit
                             //almost absolute victory
-                            "FOUR, HEARTS, false",
+                            "FOUR, HEARTS, true",
                             //almost certain victory
-                            "TWO, HEARTS, false",
+                            "TWO, HEARTS, true",
 
                             //almost certain defeat
-                            "KING, HEARTS, false",
-                            "FIVE, HEARTS, false",
+                            "KING, HEARTS, true",
+                            "FIVE, HEARTS, true",
 
                             //high changes opponent runs from truco
                             //"KING, CLUBS, KING, HEARTS, true, true",
@@ -2283,7 +2269,7 @@ public class CamaleaoTruqueiroTest {
                             //almost absolute victory
                             "FOUR, CLUBS,  true",
                             //almost certain victory
-                            "TWO, CLUBS, true",
+                            "TWO, CLUBS, false",
                             //almost certain defeat
                             "KING, CLUBS, false",
                             "FIVE, CLUBS, false",
