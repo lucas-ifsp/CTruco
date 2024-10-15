@@ -792,6 +792,49 @@ public class CamaleaoTruqueiroTest {
                 //if(!camaleao.decideIfRaises(intel)) softly.assertThat(botChosenCard).isEqualTo(TrucoCard.of(expectedCardRank,expectedCardSuit));
                 softly.assertAll();
             }
+
+            @ParameterizedTest
+            @CsvSource({
+                    // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | FirstRoundResult | expectedResponse
+                    //almost absolute victory
+                    "FOUR, CLUBS, FOUR, HEARTS,  1",
+
+                    //almost certain victory
+                    "FOUR, CLUBS, TWO, HEARTS, 0",
+                    "FOUR, CLUBS, QUEEN, HEARTS, 0",
+                    "FOUR, CLUBS, FIVE, HEARTS, 0",
+                    "TWO, CLUBS, FIVE, HEARTS, 0",
+
+                    //bluff to get points
+                    "TWO, CLUBS, KING, HEARTS, 0",
+                    "TWO, CLUBS, FIVE, HEARTS, 0",
+
+                    //bluff to intimidate
+                    "KING, CLUBS, KING, HEARTS, -1",
+
+                    //almost certain defeat
+                    "KING, CLUBS, FIVE, HEARTS, -1",
+                    "FIVE, CLUBS, FIVE, HEARTS, -1",
+            })
+            @DisplayName("When bot is second to play and opponent calls truco")
+            void whenBotIsSecondToPlayAndOppenentCallsTruco(
+                    CardRank cardRank1, CardSuit cardSuit1,
+                    CardRank cardRank2, CardSuit cardSuit2,
+                    int expectedResponse
+            ) {
+                List<TrucoCard> cards = Arrays.asList(
+                        TrucoCard.of(cardRank1, cardSuit1),
+                        TrucoCard.of(cardRank2, cardSuit2)
+                );
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),List.of(vira), vira, 3)
+                        .botInfo(cards, 0)
+                        .opponentScore(0).build();
+                int response = camaleao.getRaiseResponse(intel);
+
+                System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                assertEquals(expectedResponse, response);
+            }
         }
     }
 }
