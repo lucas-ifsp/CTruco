@@ -45,6 +45,18 @@ class MataPatoBotTest {
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
             assertThat(mataPatoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
         }
+
+        @Test
+        @DisplayName("Should return 3 if there is 3 cards in hand")
+        void shouldReturnThreeIfThreeCardsInHand(){
+            int numberOfCards = 3;
+            GameIntel intel  = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+            TrucoCard card2 =  TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
+            TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            assertThat(mataPatoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
+        }
     }
 
     @Nested
