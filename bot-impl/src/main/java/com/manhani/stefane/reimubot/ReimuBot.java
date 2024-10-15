@@ -57,6 +57,7 @@ public class ReimuBot implements BotServiceProvider {
             return true;
         if(isSecondRound(intel) && hasTwoManilhas(intel))
             return true;
+
         return false;
     }
 
@@ -79,7 +80,8 @@ public class ReimuBot implements BotServiceProvider {
             return ACCEPT;
         return REFUSE;
     }
-    
+
+
     private int getHandValue(GameIntel intel) {
         return intel.getCards().stream().mapToInt(c -> c.relativeValue(intel.getVira())).sum();
     }
@@ -159,7 +161,11 @@ public class ReimuBot implements BotServiceProvider {
     private boolean hasTwoManilhas(GameIntel intel){
         return intel.getCards().stream().filter(c->c.isManilha(intel.getVira())).count() == 2;
     }
-    
+
+    private boolean hasThree(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.THREE);
+    }
+
     private boolean hasMaior(GameIntel intel){
         return intel.getCards().stream().anyMatch(c->c.isZap(intel.getVira()) || c.isCopas(intel.getVira()));
     }
