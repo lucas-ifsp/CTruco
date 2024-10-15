@@ -8,4 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 public class TrucadorTest {
     @BeforeAll
     static void setupAll() { System.out.println("Starting Trucador tests..."); }
+
+    @AfterAll
+    static void tearDownAll() { System.out.println("Finishing Trucador tests..."); }
 }
