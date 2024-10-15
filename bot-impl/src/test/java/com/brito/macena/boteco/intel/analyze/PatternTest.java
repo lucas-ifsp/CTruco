@@ -118,6 +118,24 @@ public class PatternTest {
 
             assertThat(result).isEqualTo(Status.BAD);
         }
+
+        @Test
+        @DisplayName("Returns MEDIUM when hand power is between 14 and 17")
+        void returnsMediumWhenHandPowerIsBetween14And17() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+
+            Pattern pattern = new Pattern(intel);
+            Status result = pattern.twoCardsHandler(intel.getCards());
+
+            assertThat(result).isEqualTo(Status.MEDIUM);
+        }
     }
 }
 
