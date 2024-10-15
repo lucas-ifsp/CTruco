@@ -89,10 +89,16 @@ public class PedroHenriqueBot implements BotServiceProvider {
         int opponentScore = intel.getOpponentScore();
         int botScore = intel.getScore();
 
+        if (botScore >= 10) {
+            return false;
+        }
         if (highCards >= 1) {
             return true;
         }
-        return false;
+        if (opponentScore >= 10) {
+            return true;
+        }
+        return decideToBluff(intel, handStrengthAvg);
     }
 
     @Override
