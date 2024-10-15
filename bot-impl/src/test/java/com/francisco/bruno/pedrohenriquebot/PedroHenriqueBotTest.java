@@ -123,6 +123,23 @@ class PedroHenriqueBotTest {
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
 
+        @Test
+        @DisplayName("Decline Mão de Onze when hand strength average is low")
+        void declineMaoDeOnzeWithLowHandStrengthAverage() {
+            TrucoCard vira = TrucoCard.of(KING, SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(SEVEN, HEARTS),
+                    TrucoCard.of(FIVE, CLUBS),
+                    TrucoCard.of(SIX, DIAMONDS)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(9);
+
+            assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+
     }
 
     @Nested
