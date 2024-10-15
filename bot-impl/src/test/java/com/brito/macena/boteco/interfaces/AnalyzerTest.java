@@ -1,6 +1,8 @@
 package com.brito.macena.boteco.interfaces;
 
 import com.brito.macena.boteco.utils.Status;
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +23,11 @@ public class AnalyzerTest {
         @Test
         @DisplayName("Returns EXCELLENT when no cards")
         void returnsExcellentWhenNoCards() {
-            GameIntel intel = mock(GameIntel.class);
-            when(intel.getCards()).thenReturn(List.of());
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.HEARTS), 0)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .build();
 
             Analyzer analyzer = new AnalyzerImpl();
             Status result = analyzer.myHand(intel);
