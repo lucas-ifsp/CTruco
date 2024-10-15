@@ -452,6 +452,7 @@ public class Armageddon implements BotServiceProvider {
         }
 
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
         boolean wonFirstRound = !roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON;
 
         if (!wonFirstRound) {
@@ -475,6 +476,8 @@ public class Armageddon implements BotServiceProvider {
 
         return hasManilhaOrThree;
     }
+
+
 
 
 

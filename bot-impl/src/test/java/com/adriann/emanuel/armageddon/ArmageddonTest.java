@@ -1053,6 +1053,7 @@ public class ArmageddonTest {
 
 
         }
+
     }
 
     @Nested
@@ -1182,6 +1183,37 @@ public class ArmageddonTest {
                 TrucoCard playedCard = armageddon.playBestCard(intel);
 
                 assertThat(playedCard).isEqualTo(TrucoCard.of(SIX, DIAMONDS));
+            }
+
+        }
+
+
+        // Third round lose first round ---------------------------------------------------------------------------------
+        @Nested
+        @DisplayName("Tests to implement logic of third round lose first round")
+        class thirdRoundLoseFirstRound {
+
+            @Test
+            @DisplayName("Should refuse request for 6 if the opponent requests truco in the third round after winning the first round and bot does not have a manilha")
+            void shouldRefuseSixIfOpponentRequestsTrucoInThirdRoundAndBotHasNoManilha() {
+
+                TrucoCard vira = TrucoCard.of(THREE, HEARTS);
+                List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, SPADES));
+
+                boolean opponentRequestedTruco = true;
+
+                TrucoCard opponentCard = TrucoCard.of(JACK, HEARTS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.DREW), openCards, vira, 3)
+                        .botInfo(botCards, 2)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.shouldNotAcceptSix(intel, opponentRequestedTruco);
+
+                assertFalse(result);
             }
 
         }
