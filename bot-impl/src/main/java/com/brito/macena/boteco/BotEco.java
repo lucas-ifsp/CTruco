@@ -21,15 +21,15 @@
 
 package com.brito.macena.boteco;
 
-import com.brito.macena.boteco.utils.MyHand;
+import com.brito.macena.boteco.factories.InstanceFactory;
+import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-import com.contiero.lemes.atrasabot.services.utils.MyCards;
 
 import java.util.List;
-import java.util.Optional;
 
 public class BotEco implements BotServiceProvider {
     @Override
@@ -46,33 +46,8 @@ public class BotEco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        List<TrucoCard> botHand = intel.getCards();
-        TrucoCard vira = intel.getVira();
-
-        MyCards myCards = new MyCards(botHand, vira);
-
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-
-        if(opponentCard.isPresent()) {
-            TrucoCard secondBestCard = myCards.getSecondBestCard();
-            TrucoCard worstCard = myCards.getWorstCard();
-
-            if(worstCard.relativeValue(vira) > opponentCard.get().relativeValue(vira)) {
-                return CardToPlay.of(worstCard);
-            }
-
-            if(secondBestCard.relativeValue(vira) > opponentCard.get().relativeValue(vira)) {
-                return CardToPlay.of(secondBestCard);
-            }
-
-            return CardToPlay.of(myCards.getBestCard());
-        }
-
-        if(botHand.size() == 3) {
-            return CardToPlay.of(myCards.getSecondBestCard());
-        }
-
-        return CardToPlay.of(myCards.getBestCard());
+        ProfileBot profileBot = InstanceFactory.createProfileBot(intel, Status.MEDIUM);
+        return profileBot.choose(intel, Status.MEDIUM);
     }
 
     @Override
