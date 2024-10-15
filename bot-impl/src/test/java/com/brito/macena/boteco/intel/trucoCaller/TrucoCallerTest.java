@@ -35,7 +35,7 @@ public class TrucoCallerTest {
 
         @Test
         @DisplayName("Should call truco when status is good")
-        void shouldCallTrucoWhenStatusIsExcellent() {
+        void shouldCallTrucoWhenStatusIsGood() {
             AggressiveTrucoCaller caller = new AggressiveTrucoCaller();
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), null, 0)
