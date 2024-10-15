@@ -62,5 +62,26 @@ public class InstanceFactoryTest {
 
             assertThat(bot).isInstanceOf(Agressive.class);
         }
+
+        @Test
+        @DisplayName("should create Aggressive bot when scores are equal")
+        void shouldCreateAggressiveBotWhenScoresAreEqual() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 9)
+                    .opponentScore(9)
+                    .build();
+
+            ProfileBot bot = InstanceFactory.createProfileBot(step, Status.GOOD);
+
+            assertThat(bot).isInstanceOf(Agressive.class);
+        }
     }
 }
