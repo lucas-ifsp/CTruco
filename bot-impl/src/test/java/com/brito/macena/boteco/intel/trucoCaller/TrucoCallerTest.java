@@ -19,4 +19,10 @@ public class TrucoCallerTest {
     class AgessiveTrucoCallerMethodTests {
 
     }
+
+    @Nested
+    @DisplayName("PassiveTrucoCaller method tests")
+    class PassiveTrucoCallerMethodTests {
+
+    }
 }
