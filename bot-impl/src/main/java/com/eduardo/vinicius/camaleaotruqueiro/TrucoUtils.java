@@ -115,12 +115,16 @@ public class TrucoUtils {
     }
 
     public static List<TrucoCard> haveStrongestCard(GameIntel intel, List<TrucoCard> myCards) {
-        TrucoCard opponentCard = intel.getOpponentCard().get();
         TrucoCard vira = intel.getVira();
         List<TrucoCard> strongestCards = new ArrayList<>(List.of());
-        for (TrucoCard myCard : myCards) {
-            if(myCard.compareValueTo(opponentCard, vira) > 0) strongestCards.add(myCard);
+        TrucoCard opponentCard;
+        if (intel.getOpponentCard().isPresent()) {
+            opponentCard = intel.getOpponentCard().get();
+            for (TrucoCard myCard : myCards) {
+                if(myCard.compareValueTo(opponentCard, vira) > 0) strongestCards.add(myCard);
+            }
         }
+
         return strongestCards;
     }
 
