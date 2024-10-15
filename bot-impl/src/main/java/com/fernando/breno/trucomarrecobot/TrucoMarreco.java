@@ -65,6 +65,14 @@ public class TrucoMarreco implements BotServiceProvider {
         if(wonFirstRound(intel) && hasZap(intel)){
             return  true;
         }
+        if(evaluateHandStrength(intel) > 15 && hasZap(intel)) {
+            return  true;
+        }
+        if(numberOfManilhas(intel) > 0 && evaluateHandStrength(intel) >= 10){
+            return  true;
+        }
+
+
 
         return  false;
     }
@@ -78,7 +86,7 @@ public class TrucoMarreco implements BotServiceProvider {
 
     public boolean handStrong(GameIntel intel){
         var hasManilha = numberOfManilhas(intel)  >= 1;
-       var containsThree = intel.getCards().contains(3);
+        var containsThree = intel.getCards().contains(3);
        // var containsThree = intel.getCards().stream().anyMatch(card -> card.getRank().value() == 3);
 
         return hasManilha && containsThree;
@@ -173,11 +181,8 @@ public class TrucoMarreco implements BotServiceProvider {
             strength += card.relativeValue(vira);
         }
 
-        if (hasZap(intel)) {
-            strength += 13;
-        }
 
-        return strength;
+      return  strength;
     }
 
 
