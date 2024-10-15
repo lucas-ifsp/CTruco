@@ -1,11 +1,9 @@
 package com.bianca.joaopedro.lgtbot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 public class Lgtbot implements BotServiceProvider{
@@ -45,9 +43,8 @@ public class Lgtbot implements BotServiceProvider{
 
         if (opponentScore != 11) {
             if (round == 1) {
-                if (strongCardsPlusManilhaCount >= 2) {
+                if (strongCardsPlusManilhaCount >= 2)
                     return true;
-                }
             }
             if (round == 2) {
                 if (didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 1) {
@@ -96,22 +93,21 @@ public class Lgtbot implements BotServiceProvider{
         }
         if (round == 2){
             if (isFirstToPlay(intel)) {
-                if (didIWinFirstRound(intel)) {
+                if (didIWinFirstRound(intel))
                     return CardToPlay.of(theWeakestCard);
-                } else {
+                else
                     return CardToPlay.of(theBestCard);
-                }
-            } else {
+            }
+            else {
                 Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
                 if (opponentCardOpt.isPresent()) {
                     TrucoCard opponentCard = opponentCardOpt.get();
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
 
-                    if (winningCardOpt.isPresent()) {
+                    if (winningCardOpt.isPresent())
                         return CardToPlay.of(winningCardOpt.get());
-                    } else {
+                    else
                         return CardToPlay.of(theWeakestCard);
-                    }
                 }
             }
         }
@@ -121,26 +117,17 @@ public class Lgtbot implements BotServiceProvider{
     @Override
     public int getRaiseResponse(GameIntel intel) {
         int round = getRoundNumber(intel);
-        List<TrucoCard> strongCards = getStrongCards(intel);
         List<TrucoCard> manilhas = getManilhas(intel);
 
         int goodCardsCount = getGoodCardsCount(intel);
         int strongCardsPlusManilhaCount = getStrongCardsCount(intel);
         int manilhasCount = manilhas.size();
 
-        System.out.println("Strong Cards: " + strongCards);
-        System.out.println("Manilhas: " + manilhas);
-        System.out.println("Strong Cards Count: " + goodCardsCount);
-        System.out.println("Get strong cards: " + strongCards);
-        System.out.println("Contando boas cartas: " + goodCardsCount);
-
         if (round == 1){
-            if (manilhasCount >= 2 && goodCardsCount >= 1){
+            if (manilhasCount >= 2 && goodCardsCount >= 1)
                 return 1;
-            }
-            else if (strongCardsPlusManilhaCount == 2){
+            else if (strongCardsPlusManilhaCount == 2)
                 return 0;
-            }
         }
         if (round == 2){
             if (!didIWinFirstRound(intel)) {
@@ -233,21 +220,6 @@ public class Lgtbot implements BotServiceProvider{
         }
 
         return bestCard;
-    }
-
-
-
-    // Método que verifica se o bot deve aceitar a mão de onze
-    public boolean getMaoDeOnzeResponse(List<TrucoCard> hand, int opponentScore) {
-
-        if (opponentScore < 5) {
-
-            if (isAverageHand(hand)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     //Blefe
