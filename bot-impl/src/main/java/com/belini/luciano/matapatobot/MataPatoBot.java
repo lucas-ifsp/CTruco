@@ -55,6 +55,12 @@ public class MataPatoBot implements BotServiceProvider{
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if (intel.getRoundResults().isEmpty()) {
+            if (countManilha(intel) >= 2 ){
+                return 1;
+            }
+            if (countManilha(intel) >= 1 && handSValue(intel) >= 24) {
+                return 0;
+            }
         }
 
         return -1;
