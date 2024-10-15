@@ -1,6 +1,7 @@
 package com.brito.macena.boteco.intel.profiles;
 
 import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.utils.Game;
 import com.brito.macena.boteco.utils.MyHand;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardToPlay;
@@ -8,6 +9,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Agressive extends ProfileBot {
     private final GameIntel intel;
@@ -59,7 +61,21 @@ public class Agressive extends ProfileBot {
 
     @Override
     public CardToPlay secondRoundChoose() {
-        return null;
+        if (Game.wonFirstRound(intel)) {
+            if (status == Status.EXCELLENT) return CardToPlay.discard(worstCard);
+            if (status == Status.GOOD) return CardToPlay.of(worstCard);
+            return CardToPlay.of(bestCard);
+        }
+
+        if (Game.lostFirstRound(intel)) {
+            Optional<TrucoCard> oppCard = intel.getOpponentCard();
+            if (oppCard.isPresent()) {
+                if (worstCard.compareValueTo(oppCard.get(), vira) > 0) return CardToPlay.of(worstCard);
+            }
+            return CardToPlay.of(bestCard);
+        }
+
+        return CardToPlay.of(bestCard);
     }
 
     @Override
