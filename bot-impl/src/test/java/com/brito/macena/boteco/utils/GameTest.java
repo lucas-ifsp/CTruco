@@ -147,7 +147,7 @@ public class GameTest {
         void returnsTrueWhenScoreDifferenceIsSixOrMore() {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), null, 0)
-                    .botInfo(List.of(), 4)  
+                    .botInfo(List.of(), 4)
                     .opponentScore(10)
                     .build();
 
@@ -176,6 +176,18 @@ public class GameTest {
                     .build();
 
             assertThat(Game.isCriticalSituation(intel)).isFalse();
+        }
+
+        @Test
+        @DisplayName("Returns true when score difference is exactly 6")
+        void returnsTrueWhenScoreDifferenceIsExactlySix() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 0)
+                    .botInfo(List.of(), 4)
+                    .opponentScore(10)
+                    .build();
+
+            assertThat(Game.isCriticalSituation(intel)).isTrue();
         }
     }
 }
