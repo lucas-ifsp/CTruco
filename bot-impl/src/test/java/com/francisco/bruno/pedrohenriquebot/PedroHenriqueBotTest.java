@@ -74,8 +74,8 @@ class PedroHenriqueBotTest {
         void acceptMaoDeOnzeWhenOpponentIsCloseToWinning() {
             TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(JACK, HEARTS),
-                    TrucoCard.of(THREE, SPADES),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
                     TrucoCard.of(ACE, DIAMONDS)
             );
 
