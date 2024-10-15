@@ -78,5 +78,10 @@ public class PatternTest {
             assertThat(result).isEqualTo(Status.BAD);
         }
     }
+
+    @Nested
+    @DisplayName("twoCardsHandler method tests")
+    class TwoCardsHandlerMethodTests {
+    }
 }
 
