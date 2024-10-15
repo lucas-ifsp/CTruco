@@ -138,4 +138,10 @@ public class MataPatoBot implements BotServiceProvider{
         }
         return handSValue;
     }
+    public long countManilha (GameIntel intel) {
+        long count = intel.getCards().stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
+        return count;
+    }
 }
