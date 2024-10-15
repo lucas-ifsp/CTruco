@@ -1017,15 +1017,16 @@ public class ArmageddonTest {
                 List<TrucoCard> openCards = List.of(opponentCard);
 
                 GameIntel intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.DREW), openCards, vira, 3)
+                        .gameInfo(List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.LOST), openCards, vira, 3)
                         .botInfo(botCards, 2)
                         .opponentScore(0)
                         .build();
 
-                boolean result = armageddon.shouldRequestTruco(intel);
+                boolean result = armageddon.shouldRequestTrucoThirdRound(intel);
 
                 assertTrue(result);
             }
+
 
             @Test
             @DisplayName("Should request 6 if the opponent requests truco in the third round after winning the first round and bot has a manilha or a three")

@@ -398,6 +398,18 @@ public class Armageddon implements BotServiceProvider {
         return false;
     }
 
+    public boolean shouldRequestTrucoThirdRound(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+
+        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.WON) {
+            if (roundResults.size() == 2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     private boolean hasCasalMaior(List<TrucoCard> botCards) {
         for (int i = 0; i < botCards.size(); i++) {
@@ -415,7 +427,6 @@ public class Armageddon implements BotServiceProvider {
     private boolean isStrongCard(TrucoCard card) {
         return card.getRank() == THREE || card.getRank() == KING || card.getRank() == QUEEN || card.getRank() == JACK;
     }
-
 
     public TrucoCard playBestCard(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
