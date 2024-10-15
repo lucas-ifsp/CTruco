@@ -1069,7 +1069,7 @@ public class BatataFritaDoBarBotTest {
                 .opponentScore(11);
 
 
-        assertFalse(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
+        assertTrue(batataFritaDoBarBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
 
