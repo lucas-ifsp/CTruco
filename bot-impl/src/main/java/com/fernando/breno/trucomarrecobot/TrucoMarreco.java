@@ -63,9 +63,6 @@ public class TrucoMarreco implements BotServiceProvider {
        return  false;
     }
 
-    public long numberOfManilhas(GameIntel intel) {
-        return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
-    }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
@@ -91,34 +88,6 @@ public class TrucoMarreco implements BotServiceProvider {
         return  false;
     }
 
-    public boolean wonFirstRound(GameIntel intel){
-        if (intel.getRoundResults() == null || intel.getRoundResults().size() <= 1) {
-           throw new IllegalArgumentException("A lista de resultados da rodada está vazia ou não tem elementos suficientes.");
-        }
-        return intel.getRoundResults().get(1).equals(GameIntel.RoundResult.WON);
-    }
-
-    public boolean handStrong(GameIntel intel){
-        var hasManilha = numberOfManilhas(intel)  >= 1;
-        var containsThree = intel.getCards().contains(3);
-
-        return hasManilha && containsThree;
-    }
-    public boolean countTheeHand(GameIntel intel) {
-        var countThree = intel.getCards().stream()
-                .filter(card -> card.getRank().value() == 3)
-                .count();
-
-
-        return countThree >= 3;
-    }
-
-
-    public boolean biggestCouple(GameIntel intel){
-        var hasZap = intel.getCards().stream().filter(card -> card.isZap(intel.getVira())).count() > 0;
-        var hasCopas = intel.getCards().stream().filter(card -> card.isCopas(intel.getVira())).count() > 0;
-        return hasZap && hasCopas;
-    }
 
     @Override
     public CardToPlay chooseCard (GameIntel intel) {
@@ -172,6 +141,37 @@ public class TrucoMarreco implements BotServiceProvider {
         return 0;
     }
 
+
+
+    public boolean wonFirstRound(GameIntel intel){
+        if (intel.getRoundResults() == null || intel.getRoundResults().size() <= 1) {
+            throw new IllegalArgumentException("A lista de resultados da rodada está vazia ou não tem elementos suficientes.");
+        }
+        return intel.getRoundResults().get(1).equals(GameIntel.RoundResult.WON);
+    }
+
+    public boolean handStrong(GameIntel intel){
+        var hasManilha = numberOfManilhas(intel)  >= 1;
+        var containsThree = intel.getCards().contains(3);
+
+        return hasManilha && containsThree;
+    }
+    public boolean countTheeHand(GameIntel intel) {
+        var countThree = intel.getCards().stream()
+                .filter(card -> card.getRank().value() == 3)
+                .count();
+
+
+        return countThree >= 3;
+    }
+
+
+    public boolean biggestCouple(GameIntel intel){
+        var hasZap = intel.getCards().stream().filter(card -> card.isZap(intel.getVira())).count() > 0;
+        var hasCopas = intel.getCards().stream().filter(card -> card.isCopas(intel.getVira())).count() > 0;
+        return hasZap && hasCopas;
+    }
+
     public Optional<TrucoCard> weakCard(GameIntel intel) {
         return intel.getCards().stream().min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
@@ -186,6 +186,10 @@ public class TrucoMarreco implements BotServiceProvider {
     public Boolean hasZap(GameIntel intel){
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
 
+    }
+
+    public long numberOfManilhas(GameIntel intel) {
+        return intel.getCards().stream().filter(card -> card.isManilha(intel.getVira())).count();
     }
 
 

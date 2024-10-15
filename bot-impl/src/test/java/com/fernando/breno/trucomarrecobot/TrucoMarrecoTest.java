@@ -131,7 +131,8 @@ class TrucoMarrecoTest {
             openCards = List.of();
             result =List.of();
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(11);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).
+                    botInfo(hand, 11).opponentScore(11);
             Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(acceptMaoDeOnze);
         }
@@ -143,7 +144,8 @@ class TrucoMarrecoTest {
             openCards = List.of();
             result =List.of();
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(9);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).
+                    botInfo(hand, 11).opponentScore(9);
             Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(acceptMaoDeOnze);
         }
@@ -155,7 +157,8 @@ class TrucoMarrecoTest {
             vira = TrucoCard.of(JACK, HEARTS);
             openCards = List.of();
             result =List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(5);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).
+                    botInfo(hand, 11).opponentScore(5);
             Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
             assertTrue(acceptMaoDeOnze);
         }
