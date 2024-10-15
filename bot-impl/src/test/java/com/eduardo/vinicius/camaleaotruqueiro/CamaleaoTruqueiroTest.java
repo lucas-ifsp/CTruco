@@ -778,8 +778,6 @@ public class CamaleaoTruqueiroTest {
 
                 boolean botDecideIfRaises =  camaleao.decideIfRaises(intel);
                 //TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
-
-                System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                 SoftAssertions softly = new SoftAssertions();
                 softly.assertThat(botDecideIfRaises).isEqualTo(willCallTruco);
                 //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -841,7 +839,6 @@ public class CamaleaoTruqueiroTest {
                             int response = camaleao.getRaiseResponse(intel);
 
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -900,7 +897,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -963,7 +959,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1017,7 +1012,6 @@ public class CamaleaoTruqueiroTest {
                             int response = camaleao.getRaiseResponse(intel);
 
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -1076,7 +1070,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1139,7 +1132,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1193,7 +1185,6 @@ public class CamaleaoTruqueiroTest {
                             int response = camaleao.getRaiseResponse(intel);
 
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -1252,7 +1243,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1315,7 +1305,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1375,8 +1364,6 @@ public class CamaleaoTruqueiroTest {
 
                             int response = camaleao.getRaiseResponse(intel);
 
-
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -1435,7 +1422,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1498,7 +1484,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1550,8 +1535,6 @@ public class CamaleaoTruqueiroTest {
 
                             int response = camaleao.getRaiseResponse(intel);
 
-
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -1610,7 +1593,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1673,7 +1655,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1726,8 +1707,6 @@ public class CamaleaoTruqueiroTest {
 
                             int response = camaleao.getRaiseResponse(intel);
 
-
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             assertEquals(expectedResponse, response);
                         }
 
@@ -1786,7 +1765,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1849,7 +1827,6 @@ public class CamaleaoTruqueiroTest {
                             boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                             TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                            System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                             SoftAssertions softly = new SoftAssertions();
                             softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                             //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -1910,8 +1887,6 @@ public class CamaleaoTruqueiroTest {
 
                         int response = camaleao.getRaiseResponse(intel);
 
-
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         assertEquals(expectedResponse, response);
                     }
 
@@ -1961,7 +1936,6 @@ public class CamaleaoTruqueiroTest {
                         boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                         TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -2014,7 +1988,6 @@ public class CamaleaoTruqueiroTest {
                         boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                         TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -2058,8 +2031,6 @@ public class CamaleaoTruqueiroTest {
 
                         boolean response = camaleao.decideIfRaises(intel);
 
-
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         assertEquals(expectedDecideIfRaises, response);
                     }
 
@@ -2092,7 +2063,6 @@ public class CamaleaoTruqueiroTest {
 
                         int botGetRaiseResponse =  camaleao.getRaiseResponse(intel);
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botGetRaiseResponse).isEqualTo(expectedGetRaiseResponse);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -2141,8 +2111,6 @@ public class CamaleaoTruqueiroTest {
 
                         int response = camaleao.getRaiseResponse(intel);
 
-
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         assertEquals(expectedResponse, response);
                     }
 
@@ -2192,7 +2160,6 @@ public class CamaleaoTruqueiroTest {
                         boolean botDecidesIfRaises =  camaleao.decideIfRaises(intel);
                         TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botDecidesIfRaises).isEqualTo(expectedDecideIfRaises);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -2245,7 +2212,6 @@ public class CamaleaoTruqueiroTest {
                         boolean botRaiseResponse =  camaleao.decideIfRaises(intel);
                         TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botRaiseResponse).isEqualTo(expectedDecideIfRaises);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
@@ -2290,7 +2256,6 @@ public class CamaleaoTruqueiroTest {
                         boolean response = camaleao.decideIfRaises(intel);
 
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         assertEquals(expectedDecideIfRaises, response);
                     }
 
@@ -2323,7 +2288,6 @@ public class CamaleaoTruqueiroTest {
 
                         int botGetRaiseResponse =  camaleao.getRaiseResponse(intel);
 
-                        System.out.println(HandsCardSituation.evaluateHandSituation(intel));
                         SoftAssertions softly = new SoftAssertions();
                         softly.assertThat(botGetRaiseResponse).isEqualTo(expectedGetRaiseResponse);
                         //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
