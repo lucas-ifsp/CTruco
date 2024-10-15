@@ -142,5 +142,26 @@ public class TrucoCallerTest {
 
             assertFalse(shouldCall);
         }
+
+        @Test
+        @DisplayName("Should not call truco if status is good and second card power is less than 8")
+        void shouldNotCallTrucoWhenStatusIsGoodAndSecondCardPowerLessThanEight() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(4)
+                    .build();
+
+            SneakyTrucoCaller trucoCaller = new SneakyTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertFalse(shouldCall);
+        }
     }
 }
