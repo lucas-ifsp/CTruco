@@ -44,6 +44,10 @@ public class Pattern extends Analyzer {
 
     private boolean haveAtLeastTwoManilhas() { return getManilhaAmount() >= 2; }
 
+    private boolean haveAtLeastOneManilha() {
+        return getManilhaAmount() >= 1;
+    }
+
     private Status oneCardHandlerWinningFirstRound(TrucoCard oppCard, TrucoCard myCard) {
         if (intel.getHandPoints() <= 3) {
             return Status.EXCELLENT;
