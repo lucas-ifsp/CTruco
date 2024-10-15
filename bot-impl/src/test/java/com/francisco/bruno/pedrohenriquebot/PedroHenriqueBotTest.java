@@ -437,6 +437,21 @@ class PedroHenriqueBotTest {
         @Nested
         @DisplayName("Second Round")
         class SecondRound {
+            @Test
+            @DisplayName("Should Raise if won forst Round with high cards")
+            void shouldRaiseIfWonForstRoundWithHighCards() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(TWO, HEARTS),
+                        TrucoCard.of(THREE, CLUBS)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(WON),Collections.singletonList(vira),vira,3)
+                        .botInfo(botCards,0)
+                        .opponentScore(0);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
 
         }
 
