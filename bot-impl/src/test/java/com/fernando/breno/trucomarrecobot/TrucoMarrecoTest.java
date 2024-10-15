@@ -140,6 +140,18 @@ class TrucoMarrecoTest {
                     .botInfo(hand, 8).opponentScore(12);
             assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Aceita aumento se oponente tem mão fraca")
+        void testDecideIfRaisesWhenOpponentHasWeakHand() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(SIX, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(hand, 11).opponentScore(5);
+            assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
     }
 
     @Test
