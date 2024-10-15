@@ -92,7 +92,11 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
     int getNumberOfManilhas(GameIntel intel){
-        return 0;
+        int quantityOfManilhas = 0;
+        for (TrucoCard card: intel.getCards())
+            if(card.isManilha(intel.getVira()))
+                quantityOfManilhas += 1;
+        return quantityOfManilhas;
     }
 
 
