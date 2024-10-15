@@ -41,4 +41,13 @@ public class Pattern extends Analyzer {
     public Status oneCardHandler() {
         return null;
     }
+
+    private long powerOfTheTwoBestCards() {
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream()
+                .mapToLong(card -> card.relativeValue(vira))
+                .sorted()
+                .limit(2)
+                .sum();
+    }
 }
