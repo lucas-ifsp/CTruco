@@ -89,10 +89,10 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
     public boolean wonFirstRound(GameIntel intel){
-        // BRENO NÃO DEVERIA TER UM IF ANTES PARA VERIFICAR SE A LISTA NÃO ESTA VAZIO PARA ? O METODO PODE LANCAR UM EXCEÇAO CASO A LISTA ESTEJA VAZIA.
-        // if (intel.getRoundResults().isEmpty())
+        if (intel.getRoundResults() == null || intel.getRoundResults().size() <= 1) {
+           throw new IllegalArgumentException("A lista de resultados da rodada está vazia ou não tem elementos suficientes.");
+        }
         return intel.getRoundResults().get(1).equals(GameIntel.RoundResult.WON);
-
     }
 
     public boolean handStrong(GameIntel intel){
@@ -161,28 +161,22 @@ public class TrucoMarreco implements BotServiceProvider {
         return 0;
     }
 
-    private Optional<TrucoCard> weakCard(GameIntel intel) {
+    public Optional<TrucoCard> weakCard(GameIntel intel) {
         return intel.getCards().stream().min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
-    private Optional<TrucoCard> strongCard(GameIntel intel) {
+    public Optional<TrucoCard> strongCard(GameIntel intel) {
         return intel.getCards().stream().max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
     }
 
-    private Boolean hasZap(GameIntel intel){
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isZap(intel.getVira()))
-                return  true;
-        }
-        return false;
+
+
+
+    public Boolean hasZap(GameIntel intel){
+        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
 
     }
-    /*
-        private Boolean hasZap(GameIntel intel){
-        var zap = intel.getCards().stream().filter(card -> card.isZap(intel.getVira())).count() > 0;
-       return  zap;
-    }
-     */
+
 
     private int evaluateHandStrength(GameIntel intel) {
         int strength = 0;
