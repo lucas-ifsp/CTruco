@@ -29,8 +29,26 @@ public class BatataFritaDoBarBotTest {
     @Test
     @DisplayName("Make sure the bot is the first to play")
     void makeSureTheBotIsTheFirstToPlay() {
-        when(intel.getOpponentCard()).thenReturn(Optional.empty());
-        assertThat(batataFritaDoBarBot.checkIfIsTheFirstToPlay(intel));
+
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+
+        List<TrucoCard> myCards = List.of(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+
+
+        List<TrucoCard> opponentCards = List.of();
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), opponentCards, vira, 1)
+                .botInfo(myCards, 1)
+                .opponentScore(0);
+
+
+        assertTrue(batataFritaDoBarBot.checkIfIsTheFirstToPlay(stepBuilder.build()));
     }
 
     //2
