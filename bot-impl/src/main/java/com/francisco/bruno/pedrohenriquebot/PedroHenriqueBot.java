@@ -6,13 +6,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
