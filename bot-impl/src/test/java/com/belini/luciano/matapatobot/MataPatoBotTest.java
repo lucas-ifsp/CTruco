@@ -309,7 +309,7 @@ class MataPatoBotTest {
     }
 
     @Nested
-    class GetHandValueTests {
+    class counters {
 
 
         @Test
@@ -341,6 +341,20 @@ class MataPatoBotTest {
 
             int handSValue = mataPatoBot.handSValue(intel);
             assertThat(handSValue).isEqualTo(35);
+        }
+        @Test
+        @DisplayName("CountHowManyManilhasInHand")
+        void countManilhas() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+            int countManilha = mataPatoBot.handSValue(intel);
+            assertThat(countManilha).isEqualTo(2);
         }
     }
 }
