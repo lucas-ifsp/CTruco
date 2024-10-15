@@ -60,8 +60,16 @@ public class PedroHenriqueBot implements BotServiceProvider {
         int score = intel.getScore();
         if ((opScore - score) >= 8) return true;
         if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
-
-
+        if (handStrengthAvg >= 9) return true;
+        if (manilhas >= 1 && highCards >= 1) {
+            return true;
+        }
+        if (opScore >= 10) {
+            return true;
+        }
+        if (score >= 10) {
+            return false;
+        }
         return decideToBluff(intel, handStrengthAvg);
     }
 
