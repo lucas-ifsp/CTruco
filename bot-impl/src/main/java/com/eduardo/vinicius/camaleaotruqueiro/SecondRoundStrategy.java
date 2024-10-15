@@ -7,6 +7,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.List;
 
 import static com.eduardo.vinicius.camaleaotruqueiro.TrucoUtils.*;
+import static com.eduardo.vinicius.camaleaotruqueiro.TrucoUtils.winFistRound;
 
 
 public class SecondRoundStrategy implements RoundStrategy{
@@ -21,7 +22,7 @@ public class SecondRoundStrategy implements RoundStrategy{
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
-        if(isWinning(intel.getScore(),intel.getOpponentScore()) && winFistRound(intel) || drewFistRound(intel)) return true;
+        if(isWinning(intel.getScore(),intel.getOpponentScore()) && (winFistRound(intel) || drewFistRound(intel))) return true;
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if((winFistRound(intel) || drewFistRound(intel)) &&
                 situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
