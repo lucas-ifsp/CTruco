@@ -419,7 +419,6 @@ class PedroHenriqueBotTest {
             @Test
             @DisplayName("Decide to bluff when opponent is aggressive")
             void decideToBluffWhenOpponentAggressive() {
-                // Simulate aggressive opponent
                 sut.opponentRaiseCount = 4;
 
                 TrucoCard vira = TrucoCard.of(SIX, HEARTS);

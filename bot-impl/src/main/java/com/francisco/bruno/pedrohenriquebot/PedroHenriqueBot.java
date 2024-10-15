@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class PedroHenriqueBot implements BotServiceProvider {
+
+    protected int opponentRaiseCount = 0;
+
     @Override
     public String getName() {
         return "PedroHenrique";
@@ -119,6 +122,18 @@ public class PedroHenriqueBot implements BotServiceProvider {
     private CardToPlay chooseCardThirdRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
         return CardToPlay.of(sortedCards.get(0));
+    }
+
+    private boolean decideToBluff(GameIntel intel, double handStrengthAvg) {
+        return opponentIsAggressive() && intel.getScore() <= 8 && handStrengthAvg < 7;
+    }
+
+    private void incrementOpponentRaiseCount() {
+        opponentRaiseCount++;
+    }
+
+    private boolean opponentIsAggressive() {
+        return opponentRaiseCount > 3;
     }
 
     private CardToPlay playMinCardToWin(GameIntel intel, List<TrucoCard> sortedCards) {
