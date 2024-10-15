@@ -137,5 +137,9 @@ public class PatternTest {
             assertThat(result).isEqualTo(Status.MEDIUM);
         }
     }
+
+    @Nested
+    @DisplayName("oneCardHandler method tests")
+    class OneCardHandlerMethodTests {}
 }
 
