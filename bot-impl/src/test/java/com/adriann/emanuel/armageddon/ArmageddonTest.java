@@ -1135,7 +1135,30 @@ public class ArmageddonTest {
         // Second round won first round --------------------------------------------------------------------------------
         @Nested
         @DisplayName("Tests to implement logic of second round won first round to decideIfNotRaises")
-        class secondRoundWonFirstRoundTests { }
+        class secondRoundWonFirstRoundTests {
+            @Test
+            @DisplayName("Should refuse truco if bot has only weak cards in hand")
+            void shouldRefuseTrucoIfBotHasOnlyWeakCards() {
+                TrucoCard vira = TrucoCard.of(FOUR, HEARTS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(SIX, SPADES),
+                        TrucoCard.of(FOUR, DIAMONDS)
+                );
+
+                boolean opponentRequestedTruco = true;
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                        .botInfo(botCards, 1)
+                        .opponentScore(0)
+                        .build();
+
+                boolean result = armageddon.shouldNotAcceptTruco(intel, opponentRequestedTruco);
+
+                assertTrue(result);
+            }
+
+        }
 
 
         @Nested

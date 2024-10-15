@@ -57,7 +57,6 @@ public class Armageddon implements BotServiceProvider {
         return goodCard >=2;
     }
 
-
     // FAZENDO AQUI -----------------------------------------
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> playerHand = intel.getCards();
@@ -100,8 +99,6 @@ public class Armageddon implements BotServiceProvider {
         int handStrength = handStrength(playerHand, vira);
         return handStrength >= GOOD_HAND_STRENGTH;
     }
-
-
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
@@ -251,9 +248,6 @@ public class Armageddon implements BotServiceProvider {
 
         return 0;
     }
-
-
-
 
     private boolean hasManilha(List<TrucoCard> cards,TrucoCard vira){
 
@@ -444,7 +438,6 @@ public class Armageddon implements BotServiceProvider {
 
         return playerHand.get(0);
     }
-
 
     public boolean shouldRequestSix(GameIntel intel, boolean opponentRequestedTruco) {
         if (!opponentRequestedTruco) {
