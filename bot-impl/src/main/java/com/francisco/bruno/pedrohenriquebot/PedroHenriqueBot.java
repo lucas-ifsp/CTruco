@@ -22,6 +22,10 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        int opScore= intel.getOpponentScore();
+        int score = intel.getScore();
+        if ((opScore - score) >= 8) return true;
+
         return (handStrengthAverage(intel) >= 9 );
     }
 
