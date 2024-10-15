@@ -53,11 +53,18 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        int manilhas = countManilhas(intel);
+        int highCards = countHighCards(intel);
+        double handStrengthAvg = handStrengthAverage(intel);
         if (countHighCards(intel) == 0 && countManilhas(intel) == 0)
             return -1;
 
         if (countManilhas(intel) == 1)
             return 0;
+
+        if (manilhas >= 2 || handStrengthAvg >= 10) {
+            return 1;
+        }
 
         return 1;
     }
