@@ -8,9 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.smartcardio.Card;
+import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
@@ -164,6 +163,60 @@ class PedroHenriqueBotTest {
                         .opponentScore(0);
                 CardToPlay chosenCard = sut.chooseCard(intel.build());
                 assertEquals(CardToPlay.of(botCards.get(1)), chosenCard);
+            }
+
+            @Test
+            @DisplayName("Should play minimal card to win when opponent plays first")
+            void shouldPlayMinimalCardToWinWhenOpponentPlaysFirst() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(SEVEN, CLUBS),
+                        TrucoCard.of(THREE, DIAMONDS)
+                );
+                TrucoCard opponentCard = TrucoCard.of(FIVE, CLUBS);
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(Collections.emptyList(), new ArrayList<>(), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+
+                Optional<TrucoCard> expectedCardOptional = botCards.stream()
+                        .filter(card -> card.relativeValue(vira) > opponentCard.relativeValue(vira))
+                        .min(Comparator.comparingInt(card -> card.relativeValue(vira)));
+
+                TrucoCard expectedCard = expectedCardOptional
+                        .orElseGet(() -> botCards.stream()
+                                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                                .orElseThrow(() -> new IllegalStateException("Sem cartas disponíveis")));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
+
+            @Test
+            @DisplayName("Should choose weakest card if cannot win opponent")
+            void shouldChooseWeakestCardIfCannotWinOpponent() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(FIVE, CLUBS),
+                        TrucoCard.of(SIX, DIAMONDS)
+                );
+                TrucoCard opponentCard = TrucoCard.of(THREE, CLUBS);
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(),Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+
+                TrucoCard expectedCard = botCards.stream()
+                        .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(0));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
         }
         @Nested

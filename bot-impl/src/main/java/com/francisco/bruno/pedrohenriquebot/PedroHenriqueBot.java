@@ -8,6 +8,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
@@ -56,7 +57,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         if (intel.getOpponentCard().isEmpty()) {
             return CardToPlay.of(sortedCards.get(1));
         } else {
-            return CardToPlay.of(sortedCards.get(1));
+            return playMinCardToWin(intel, sortedCards);
         }
     }
 
@@ -68,6 +69,23 @@ public class PedroHenriqueBot implements BotServiceProvider {
     private CardToPlay chooseCardThirdRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
         return CardToPlay.of(sortedCards.get(0));
+    }
+
+    private CardToPlay playMinCardToWin(GameIntel intel, List<TrucoCard> sortedCards) {
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        if (opponentCard.isPresent()) {
+            for (int i = sortedCards.size() - 1; i >= 0; i--) {
+                TrucoCard card = sortedCards.get(i);
+                if (card.compareValueTo(opponentCard.get(), vira) > 0) {
+                    return CardToPlay.of(card);
+                }
+            }
+            return CardToPlay.of(sortedCards.get(sortedCards.size() - 1));
+        } else {
+            return CardToPlay.of(sortedCards.get(0));
+        }
     }
 
     private List<TrucoCard> sortCardsByStrength(List<TrucoCard> cards, TrucoCard vira) {
