@@ -95,6 +95,7 @@ public class MyHandTest {
     }
 
     @Test
+    @DisplayName("Should return power of worst card")
     void shouldReturnPowerOfWorstCard() {
         List<TrucoCard> botHand = List.of(
                 TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
