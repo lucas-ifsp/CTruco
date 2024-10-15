@@ -1,9 +1,13 @@
 package com.brito.macena.boteco.intel.trucoCaller;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+import com.brito.macena.boteco.intel.profiles.Agressive;
+import com.brito.macena.boteco.utils.Status;
+import com.bueno.spi.model.GameIntel;
+import org.junit.jupiter.api.*;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("TrucoCaller tests")
 public class TrucoCallerTest {
@@ -17,7 +21,17 @@ public class TrucoCallerTest {
     @Nested
     @DisplayName("AggressiveTrucoCaller method tests")
     class AgessiveTrucoCallerMethodTests {
-
+        @Test
+        @DisplayName("should call truco when status is excellent")
+        void shouldCallTrucoWhenStatusIsExcellent() {
+            AggressiveTrucoCaller caller = new AggressiveTrucoCaller();
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 0)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .build();
+            assertTrue(caller.shouldCallTruco(intel, Status.EXCELLENT));
+        }
     }
 
     @Nested
