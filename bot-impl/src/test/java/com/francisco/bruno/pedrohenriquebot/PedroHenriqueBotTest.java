@@ -45,7 +45,7 @@ class PedroHenriqueBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,0)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
                     .botInfo(botCards,11)
                     .opponentScore(8);
 
@@ -62,7 +62,7 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(SIX, SPADES)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,0)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
                     .botInfo(botCards,11)
                     .opponentScore(6);
 
@@ -80,14 +80,38 @@ class PedroHenriqueBotTest {
             );
 
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira),vira,0)
+                    .gameInfo(List.of(), Collections.singletonList(vira),vira,1)
                     .botInfo(botCards, 11)
                     .opponentScore(10);
 
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
 
+        @Test
+        @DisplayName("Decline Mão de Onze when hand strength is low even if opponent is close to winning")
+        void declineMaoDeOnzeWithWeakHandEvenIfOpponentClose() {
+            TrucoCard vira = TrucoCard.of(KING, CLUBS);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(FIVE, CLUBS),
+                    TrucoCard.of(SIX, SPADES)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(10);
+
+            assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+
+
+
+
     }
+
+
+
+
 
     @Nested
     @DisplayName("Testing chooseCard")
@@ -100,8 +124,24 @@ class PedroHenriqueBotTest {
 
     }
 
-    @Test
-    void decideIfRaises() {
+    @Nested
+    class decideIfRaises {
+        @Test
+        @DisplayName("Raise when has strong hand in first round")
+        void raiseFirstRoundStrongHand() {
+            TrucoCard vira = TrucoCard.of(THREE, SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(TWO, CLUBS),
+                    TrucoCard.of(THREE, DIAMONDS)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .botInfo(botCards, 0)
+                    .opponentScore(5);
+
+            assertTrue(sut.decideIfRaises(intel.build()));
+        }
     }
 
     @Test
