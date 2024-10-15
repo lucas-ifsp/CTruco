@@ -8,6 +8,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Pattern extends Analyzer {
 
@@ -98,7 +99,20 @@ public class Pattern extends Analyzer {
 
     @Override
     public Status oneCardHandler() {
-        return null;
+        TrucoCard myCard = intel.getCards().get(0);
+        Optional<TrucoCard> oppCard = intel.getOpponentCard();
+
+        if (Game.wonFirstRound(intel)) {
+            if (oppCard.isPresent()) return oneCardHandlerWinningFirstRound(oppCard.get(), myCard);
+        }
+
+        if (Game.lostFirstRound(intel)) {
+            return oneCardHandlerLosingFirstRound();
+        }
+
+        if (intel.getHandPoints() <= 3) return Status.EXCELLENT;
+        if (bestCardValue >= 5) return Status.GOOD;
+        return Status.BAD;
     }
 
     private Status oneCardHandlerLosingFirstRound() {
