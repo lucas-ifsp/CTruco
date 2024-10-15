@@ -31,13 +31,34 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        int manilhas = countManilhas(intel);
+        int highCards = countHighCards(intel);
+        double handStrengthAvg = handStrengthAverage(intel);
+
         int opScore= intel.getOpponentScore();
         int score = intel.getScore();
         if ((opScore - score) >= 8) return true;
 
         if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
+        int roundNumber = intel.getRoundResults().size();
 
-        return (handStrengthAverage(intel) >= 9 );
+        return switch (roundNumber) {
+            case 0 -> decideIfRaisesFirstRound(intel, manilhas, highCards, handStrengthAvg);
+            case 1 -> decideIfRaisesSecondRound(intel, manilhas, highCards, handStrengthAvg);
+            default -> decideIfRaisesThirdRound(intel, manilhas, highCards, handStrengthAvg);
+        };
+    }
+
+    private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
+        return true;
+    }
+
+    private boolean decideIfRaisesSecondRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
+        return true;
+    }
+
+    private boolean decideIfRaisesFirstRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
+        return true;
     }
 
     @Override
