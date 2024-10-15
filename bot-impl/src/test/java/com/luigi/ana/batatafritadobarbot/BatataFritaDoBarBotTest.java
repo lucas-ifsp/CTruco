@@ -4,7 +4,6 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.casal.impl.vapobot.VapoBot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,6 @@ public class BatataFritaDoBarBotTest {
     @BeforeEach
     public void config() {
         batataFritaDoBarBot = new BatataFritaDoBarBot();
-
-
     }
 
     //1
@@ -440,8 +437,8 @@ public class BatataFritaDoBarBotTest {
 
     // 19
     @Test
-    @DisplayName("Should return the highest normal card excluding manilhas")
-    void shouldReturnHighestNormalCard() {
+    @DisplayName("Should return the highest normal card excluding manilhas when manilha is first card")
+    void  shouldReturnHighestNormalCardWhenManilhaIsFirstCard() {
 
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
@@ -450,6 +447,31 @@ public class BatataFritaDoBarBotTest {
         List<TrucoCard> playerCards = List.of(
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
+        );
+
+        TrucoCard expectedHighestCard = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), listOfViras, vira, 1)
+                .botInfo(playerCards, 1)
+                .opponentScore(0);
+
+
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestNormalCard(stepBuilder.build()));
+    }
+
+    @Test
+    @DisplayName("Should return the highest normal card excluding manilhas")
+    void shouldReturnHighestNormalCard() {
+
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> listOfViras = List.of(vira);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
         );
 
