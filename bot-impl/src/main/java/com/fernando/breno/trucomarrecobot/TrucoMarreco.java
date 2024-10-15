@@ -148,6 +148,7 @@ public class TrucoMarreco implements BotServiceProvider {
         return intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
     }
 
+
     public boolean handStrong(GameIntel intel){
         var hasManilha = numberOfManilhas(intel)  >= 1;
         var containsThree = intel.getCards().contains(3);
