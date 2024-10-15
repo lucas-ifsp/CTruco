@@ -42,6 +42,28 @@ public class Pattern extends Analyzer {
         return null;
     }
 
+    private Status oneCardHandlerLosingFirstRound() {
+        if (haveAtLeastOneManilha()) {
+            return Status.EXCELLENT;
+        }
+        if (bestCardValue == 9) {
+            long numberOfCardsBetterThanThree = intel.getOpenCards().stream()
+                    .filter(card -> card.isManilha(vira) || card.relativeValue(vira) == 9)
+                    .count();
+            if (numberOfCardsBetterThanThree >= 2) {
+                return Status.EXCELLENT;
+            }
+            return Status.GOOD;
+        }
+        if (bestCardValue == 8) {
+            return Status.GOOD;
+        }
+        if (bestCardValue >= 6) {
+            return Status.MEDIUM;
+        }
+        return Status.BAD;
+    }
+
     private boolean haveAtLeastTwoManilhas() { return getManilhaAmount() >= 2; }
 
     private boolean haveAtLeastOneManilha() {
