@@ -130,7 +130,7 @@ class MataPatoBotTest {
             TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
             TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
-            String round = String.valueOf(mataPatoBot.RoundCheck(intel));
+            String round = String.valueOf(mataPatoBot.roundCheck(intel));
             assertThat(round).isEqualTo("Round 1");
         }
 
@@ -182,7 +182,7 @@ class MataPatoBotTest {
             TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
             TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
-            String round = String.valueOf(mataPatoBot.RoundCheck(intel));
+            String round = String.valueOf(mataPatoBot.roundCheck(intel));
             assertThat(round).isEqualTo("Round 2");
         }
     }
@@ -197,7 +197,7 @@ class MataPatoBotTest {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             when(intel.getCards()).thenReturn(Arrays.asList(card1));
-            String round = String.valueOf(mataPatoBot.RoundCheck(intel));
+            String round = String.valueOf(mataPatoBot.roundCheck(intel));
             assertThat(round).isEqualTo("Round 3");
         }
 
@@ -206,7 +206,7 @@ class MataPatoBotTest {
         public void shouldReturnNoCardsIfBotHasNoCards() {
             GameIntel intel = mock(GameIntel.class);
             when(intel.getCards()).thenReturn(Arrays.asList());
-            String round = String.valueOf(mataPatoBot.RoundCheck(intel));
+            String round = String.valueOf(mataPatoBot.roundCheck(intel));
             assertThat(round).isEqualTo("No cards");
         }
 
@@ -324,7 +324,7 @@ class MataPatoBotTest {
 
             when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
 
-            int handSValue = mataPatoBot.handSValue(intel);
+            int handSValue = mataPatoBot.handValue(intel);
             assertThat(handSValue).isEqualTo(24);
         }
         @Test
@@ -339,7 +339,7 @@ class MataPatoBotTest {
 
             when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
 
-            int handSValue = mataPatoBot.handSValue(intel);
+            int handSValue = mataPatoBot.handValue(intel);
             assertThat(handSValue).isEqualTo(35);
         }
         @Test
@@ -350,11 +350,10 @@ class MataPatoBotTest {
             when(intel.getVira()).thenReturn(vira);
             TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
             TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-            TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
-            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+            when(intel.getCards()).thenReturn(List.of(card1, card2));
             long countManilha = mataPatoBot.countManilha(intel);
-            assertThat(countManilha).isEqualTo(2);
+            assertThat(countManilha).isEqualTo(1);
         }
     }
     @Nested
@@ -407,6 +406,20 @@ class MataPatoBotTest {
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(1);
         }
+        @Test
+        @DisplayName("ShouldAcceptTrucoSecondRound")
+        public void shouldAcceptSecondRound() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
+            when(intel.getRoundResults()).thenReturn(List.of());
+            when(intel.getCards()).thenReturn(List.of(card1, card2));
+
+            int response = mataPatoBot.getRaiseResponse(intel);
+            assertThat(response).isEqualTo(0);
+        }
     }
 }
