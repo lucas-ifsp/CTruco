@@ -1,6 +1,7 @@
 package com.brito.macena.boteco.intel.analyze;
 
 import com.brito.macena.boteco.interfaces.Analyzer;
+import com.brito.macena.boteco.utils.Game;
 import com.brito.macena.boteco.utils.MyHand;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
@@ -58,7 +59,41 @@ public class Pattern extends Analyzer {
 
     @Override
     public Status twoCardsHandler(List<TrucoCard> myCards) {
-        return null;
+        if (Game.wonFirstRound(intel)) {
+            if (haveAtLeastOneManilha()) return Status.EXCELLENT;
+            if (bestCardValue >= 8) return Status.GOOD;
+            if (bestCardValue >= 4) return Status.MEDIUM;
+            return Status.BAD;
+        }
+        if (Game.lostFirstRound(intel)) {
+
+            if (intel.getOpponentCard().isPresent()) {
+                TrucoCard oppCard = intel.getOpponentCard().get();
+                if (myCards
+                        .stream()
+                        .filter(card -> card.compareValueTo(oppCard, vira) > 0)
+                        .count() == 2) {
+                    return Status.MEDIUM;
+                }
+                return Status.BAD;
+            }
+
+            if (haveAtLeastTwoManilhas()) return Status.EXCELLENT;
+
+            if (haveAtLeastOneManilha()) {
+                if (secondBestCardValue >= 8) return Status.EXCELLENT;
+                if (secondBestCardValue >= 6) return Status.GOOD;
+                return Status.MEDIUM;
+            }
+            if (powerOfTheTwoBestCards() >= 17) return Status.GOOD;
+            if (powerOfTheTwoBestCards() >= 14) return Status.MEDIUM;
+            return Status.BAD;
+        }
+
+        if (haveAtLeastOneManilha()) return Status.EXCELLENT;
+        if (bestCardValue == 9) return Status.GOOD;
+        if (bestCardValue >= 6) return Status.MEDIUM;
+        return Status.BAD;
     }
 
     @Override
