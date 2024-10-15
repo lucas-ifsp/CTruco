@@ -39,17 +39,37 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
         switch (roundNumber) {
             case 0:
-                return CardToPlay.of(sortedCards.get(1));
+                return chooseCardFirstRound(intel);
             case 1:
-                return CardToPlay.of(sortedCards.get(0));
+                return chooseCardSecondRound(intel);
             default:
-                return CardToPlay.of(sortedCards.get(0));
+                return chooseCardThirdRound(intel);
         }
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 1;
+    }
+
+    private CardToPlay chooseCardFirstRound(GameIntel intel) {
+        List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
+
+        if (intel.getOpponentCard().isEmpty()) {
+            return CardToPlay.of(sortedCards.get(1));
+        } else {
+            return CardToPlay.of(sortedCards.get(1));
+        }
+    }
+
+    private CardToPlay chooseCardSecondRound(GameIntel intel) {
+        List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
+        return CardToPlay.of(sortedCards.get(0));
+    }
+
+    private CardToPlay chooseCardThirdRound(GameIntel intel) {
+        List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
+        return CardToPlay.of(sortedCards.get(0));
     }
 
     private List<TrucoCard> sortCardsByStrength(List<TrucoCard> cards, TrucoCard vira) {
