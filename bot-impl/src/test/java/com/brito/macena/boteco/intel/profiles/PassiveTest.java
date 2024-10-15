@@ -66,4 +66,38 @@ public class PassiveTest {
             assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)));
         }
     }
+
+    @Nested
+    @DisplayName("Second Round")
+    class SecondRoundTests {
+
+        @Test
+        @DisplayName("should guarantee the second round if he loses the first round")
+        void shouldPlayTrumpCardIfAvailable() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
+
+            ProfileBot passive = new Passive(intel, Status.GOOD);
+
+            CardToPlay selectedCard = passive.secondRoundChoose();
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+        }
+    }
+
+    @Nested
+    @DisplayName("Third Round")
+    class ThirdRoundTests {
+
+    }
 }
