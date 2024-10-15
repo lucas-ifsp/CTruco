@@ -548,6 +548,22 @@ class PedroHenriqueBotTest {
                 assertTrue(sut.decideIfRaises(intel.build()));
             }
 
+            @Test
+            @DisplayName("Should not raise if far winning")
+            void shouldNotRaiseIfFarWinning() {
+                TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+                List<TrucoCard> botCards = Collections.singletonList(
+                        TrucoCard.of(ACE, HEARTS)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(LOST, WON), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 10)
+                        .opponentScore(8);
+
+                assertFalse(sut.decideIfRaises(intel.build()));
+            }
+
         }
     }
 
