@@ -52,7 +52,9 @@ public class TrucoMarreco implements BotServiceProvider {
             return true;
         }
 
-
+        if(intel.getOpponentScore() <= 10 && (evaluateHandStrength(intel) >= 21)){
+            return true;
+        }
 
 
        return  false;
