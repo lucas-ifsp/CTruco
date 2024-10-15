@@ -386,4 +386,26 @@ class PedroHenriqueBotTest {
             assertFalse(sut.decideIfRaises(intel.build()));
         }
     }
+
+    @Nested
+    @DisplayName("Testing getRaiseResponse")
+    class getRaiseResponse {
+        @Test
+        @DisplayName("Accept raise with strong hand in first round")
+        void acceptRaiseStrongHandFirstRound() {
+            TrucoCard vira = TrucoCard.of(THREE, SPADES);
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(TWO, CLUBS),
+                    TrucoCard.of(THREE, DIAMONDS)
+            );
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(5);
+
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(1, response);
+        }
+    }
 }

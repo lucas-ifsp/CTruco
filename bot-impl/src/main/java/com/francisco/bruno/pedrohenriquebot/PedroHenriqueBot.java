@@ -55,6 +55,8 @@ public class PedroHenriqueBot implements BotServiceProvider {
         return 1;
     }
 
+
+
     private CardToPlay chooseCardFirstRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
 
