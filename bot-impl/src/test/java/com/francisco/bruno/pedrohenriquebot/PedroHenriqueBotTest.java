@@ -274,16 +274,40 @@ class PedroHenriqueBotTest {
                         TrucoCard.of(SEVEN, HEARTS),
                         TrucoCard.of(SIX, SPADES)
                 );
+                TrucoCard opponentCard = TrucoCard.of(FIVE, DIAMONDS);
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(LOST), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0)
+                        .opponentCard(opponentCard);
+
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+                TrucoCard expectedCard = botCards.stream()
+                        .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(1));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
+
+            @Test
+            @DisplayName("Should play strongest card if opponent did not play")
+            void shouldPlayStrongestCardIfOpponentDidNotPlay() {
+                TrucoCard vira = TrucoCard.of(KING, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(TWO, SPADES),
+                        TrucoCard.of(ACE, CLUBS)
+                );
 
                 intel = GameIntel.StepBuilder.with()
                         .gameInfo(List.of(LOST), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
-
                 CardToPlay chosenCard = sut.chooseCard(intel.build());
+
                 TrucoCard expectedCard = botCards.stream()
                         .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                        .orElse(botCards.get(1));
+                        .orElse(botCards.get(0));
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }

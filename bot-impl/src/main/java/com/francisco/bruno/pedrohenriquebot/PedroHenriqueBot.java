@@ -76,7 +76,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
 
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            return CardToPlay.of(sortedCards.get(1));
+            return CardToPlay.of(sortedCards.get(sortedCards.size() - 1));
         } else {
             return playMinCardToWin(intel, sortedCards);
         }
