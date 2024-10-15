@@ -75,7 +75,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(0);
 
-        assertTrue(batataFritaDoBarBot.hasZap(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.hasZap(stepBuilder.build()));
     }
 
     //4
