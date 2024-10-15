@@ -500,6 +500,29 @@ public class Armageddon implements BotServiceProvider {
         return !hasManilhaOrThree;
     }
 
+    public boolean shouldNotAcceptTruco(GameIntel intel, boolean opponentRequestedTruco) {
+        if (!opponentRequestedTruco) {
+            return false;
+        }
+
+        List<TrucoCard> botCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        if (vira == null) {
+            throw new IllegalArgumentException();
+        }
+
+        boolean allCardsAreWeak = true;
+
+        for (TrucoCard card : botCards) {
+            if (card.isManilha(vira) || card.getRank() == THREE || card.getRank() == TWO) {
+                allCardsAreWeak = false;
+                break;
+            }
+        }
+
+        return allCardsAreWeak;
+    }
 
 
 
