@@ -33,6 +33,21 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        int blefe = intel.getOpponentScore() - intel.getScore();
+
+        if(intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+
+        if(blefe > 7) return true;
+
+        if(getNumberOfManilhas(intel) > 1) return true;
+
+        if(intel.getOpponentScore() > 7) {
+            return (getNumberOfManilhas(intel) > 0 && getAverageCardValue(intel) > 7);
+        }
+        if (intel.getOpponentScore() > 6) {
+            return (getAverageCardValue(intel) >= 7);
+        }
+
         return false;
     }
 
