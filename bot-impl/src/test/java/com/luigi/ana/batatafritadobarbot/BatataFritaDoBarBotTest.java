@@ -348,6 +348,31 @@ public class BatataFritaDoBarBotTest {
 
     }
 
+    @Test
+    @DisplayName("Should return the highest card based on vira when all manilhas")
+    void shouldReturnHighestCardBasedOnViraWhenAllManilhas() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        List<TrucoCard> listOfViras = List.of(vira);
+
+        List<TrucoCard> playerCards = List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+
+        TrucoCard expectedHighestCard = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), listOfViras, vira, 1)
+                .botInfo(playerCards, 1)
+                .opponentScore(0);
+
+
+        assertEquals(expectedHighestCard, batataFritaDoBarBot.getHighestCard(intel));
+
+    }
+
     // 15
     @Test
     @DisplayName("Should return the highest normal card excluding manilhas")
