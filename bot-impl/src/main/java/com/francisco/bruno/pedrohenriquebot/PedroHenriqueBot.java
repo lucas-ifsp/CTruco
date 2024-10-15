@@ -35,11 +35,6 @@ public class PedroHenriqueBot implements BotServiceProvider {
         int highCards = countHighCards(intel);
         double handStrengthAvg = handStrengthAverage(intel);
 
-        int opScore= intel.getOpponentScore();
-        int score = intel.getScore();
-        if ((opScore - score) >= 8) return true;
-
-        if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
         int roundNumber = intel.getRoundResults().size();
 
         return switch (roundNumber) {
@@ -58,7 +53,13 @@ public class PedroHenriqueBot implements BotServiceProvider {
     }
 
     private boolean decideIfRaisesFirstRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        return true;
+        int opScore = intel.getOpponentScore();
+        int score = intel.getScore();
+        if ((opScore - score) >= 8) return true;
+        if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
+
+        return (handStrengthAverage(intel) >= 9 );
+
     }
 
     @Override
