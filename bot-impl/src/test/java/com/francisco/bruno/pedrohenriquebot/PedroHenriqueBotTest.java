@@ -103,6 +103,7 @@ class PedroHenriqueBotTest {
 
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
+
     }
 
     @Nested
