@@ -11,6 +11,7 @@ import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -265,12 +266,34 @@ class PedroHenriqueBotTest {
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
 
+            @Test
+            @DisplayName("Should play min card to win when lost first round")
+            void shouldPlayMinCardToWinWhenLostFirstRound() {
+                TrucoCard vira = TrucoCard.of(KING, CLUBS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(SEVEN, HEARTS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(LOST), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+                TrucoCard expectedCard = botCards.stream()
+                        .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(1));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
+
+
         }
 
         @Nested
-        @DisplayName("Second Round")
+        @DisplayName("Third Round")
         class ThirdRound {
-
         }
 
     }
