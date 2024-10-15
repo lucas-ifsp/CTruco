@@ -174,6 +174,23 @@ public class PatternTest {
 
             assertThat(result).isEqualTo(Status.BAD);
         }
+
+        @Test
+        @DisplayName("Returns GOOD when hand points are greater than 3 and best card value is 8")
+        void returnsGoodWhenHandPointsAreGreaterThan3AndBestCardValueIs8() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 4)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.EIGHT, CardSuit.CLUBS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+
+            Pattern pattern = new Pattern(intel);
+            Status result = pattern.oneCardHandler();
+
+            assertThat(result).isEqualTo(Status.GOOD);
+        }
     }
 }
 
