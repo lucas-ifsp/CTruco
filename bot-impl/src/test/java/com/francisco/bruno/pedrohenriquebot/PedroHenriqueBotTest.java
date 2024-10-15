@@ -433,6 +433,18 @@ class PedroHenriqueBotTest {
                 assertFalse(sut.decideIfRaises(intel.build()));
             }
         }
+
+        @Nested
+        @DisplayName("Second Round")
+        class SecondRound {
+
+        }
+
+        @Nested
+        @DisplayName("Third Round")
+        class ThirdRound {
+
+        }
     }
 
     @Nested
