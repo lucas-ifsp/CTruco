@@ -76,7 +76,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
             return CardToPlay.of(sortedCards.get(1));
         } else {
-            return CardToPlay.of(sortedCards.get(1));
+            return playMinCardToWin(intel, sortedCards);
         }
     }
 
