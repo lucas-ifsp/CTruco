@@ -78,8 +78,8 @@ class TrucoMarrecoTest {
 
      }
     @Nested
-    @DisplayName("geDdecideIfRaises")
-    class geDdecideIfRaises {
+    @DisplayName("getRaiseResponse")
+    class getRaiseResponse {
 
         @Test
         @DisplayName("Recusa aumento com mão fraca")
@@ -104,6 +104,19 @@ class TrucoMarrecoTest {
                     .botInfo(hand, 11).opponentScore(5);
             assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
+
+        @Test
+        @DisplayName("Recusa aumento após perder rodada")
+        void testDecideIfRaisesAfterLosingRound() {
+            hand = List.of(TrucoCard.of(THREE, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
+                    .botInfo(hand, 9).opponentScore(8);
+            assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
+
     }
 
     @Test
