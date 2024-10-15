@@ -22,7 +22,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return true;
+        return (handStrengthAverage(intel) >= 9 );
     }
 
     @Override
