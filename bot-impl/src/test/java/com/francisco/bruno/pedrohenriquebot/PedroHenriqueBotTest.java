@@ -104,14 +104,7 @@ class PedroHenriqueBotTest {
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
 
-
-
-
     }
-
-
-
-
 
     @Nested
     @DisplayName("Testing chooseCard")
@@ -121,10 +114,10 @@ class PedroHenriqueBotTest {
         void shouldReturnCard() {
 
         }
-
     }
 
     @Nested
+    @DisplayName("Testing decideIfRaises")
     class decideIfRaises {
         @Test
         @DisplayName("Raise when has strong hand in first round")
@@ -142,13 +135,5 @@ class PedroHenriqueBotTest {
 
             assertTrue(sut.decideIfRaises(intel.build()));
         }
-    }
-
-    @Test
-    void chooseCard() {
-    }
-
-    @Test
-    void getRaiseResponse() {
     }
 }
