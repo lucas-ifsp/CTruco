@@ -76,6 +76,11 @@ class TrucoMarrecoTest {
 
         }
 
+     }
+    @Nested
+    @DisplayName("geDdecideIfRaises")
+    class geDdecideIfRaises {
+
         @Test
         @DisplayName("Recusa aumento com mão fraca")
         void testDecideIfRaisesWithWeakHand() {
@@ -88,9 +93,17 @@ class TrucoMarrecoTest {
             assertFalse(trucoMarreco.decideIfRaises(stepBuilder.build()));
         }
 
-     }
-    @Test
-    void decideIfRaises() {
+        @Test
+        @DisplayName("Aceita aumento após ganhar rodada")
+        void testDecideIfRaisesAfterWinningRound() {
+            hand = List.of(TrucoCard.of(FOUR, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(FIVE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, DIAMONDS);
+            openCards = List.of(vira);
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
+                    .botInfo(hand, 11).opponentScore(5);
+            assertTrue(trucoMarreco.decideIfRaises(stepBuilder.build()));
+        }
     }
 
     @Test
