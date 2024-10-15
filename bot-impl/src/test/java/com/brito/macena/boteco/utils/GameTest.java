@@ -189,5 +189,17 @@ public class GameTest {
 
             assertThat(Game.isCriticalSituation(intel)).isTrue();
         }
+
+        @Test
+        @DisplayName("Returns true when hand points are exactly 6")
+        void returnsTrueWhenHandPointsAreExactlySix() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), null, 6)
+                    .botInfo(List.of(), 0)
+                    .opponentScore(0)
+                    .build();
+
+            assertThat(Game.isCriticalSituation(intel)).isTrue();
+        }
     }
 }
