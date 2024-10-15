@@ -15,7 +15,6 @@ public class FirstRoundStrategy implements RoundStrategy{
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
-        System.out.println(situation);
         if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
         else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
         else if(intel.getOpponentScore()<9 && getNumberOfHighRankCards(intel.getCards(),intel.getVira())>0) return true;
@@ -24,12 +23,13 @@ public class FirstRoundStrategy implements RoundStrategy{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (theBotPlaysFirst(intel)) {
-            HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
-            return situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY ||
-                    isHighChangesOpponentRunFromTruco(intel);
+        HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
+        if(situation == HandsCardSituation.ALMOST_ABSOLUTE_VICTORY) return true;
+        else if(situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY) return true;
+        else if(isWinning(intel.getScore(),intel.getOpponentScore())){
+            return situation == HandsCardSituation.BLUFF_TO_GET_POINTS;
         }
-        return false;
+        else return false;
     }
 
     @Override
@@ -42,17 +42,19 @@ public class FirstRoundStrategy implements RoundStrategy{
             HandsCardSituation situation = HandsCardSituation.evaluateHandSituation(intel);
             if (situation == HandsCardSituation.ALMOST_CERTAIN_VICTORY ||
                     situation == HandsCardSituation.BLUFF_TO_GET_POINTS) {
-                selectedCard = getLowestCard(cards, vira);
-            } else {
                 selectedCard = getGreatestCard(cards, vira);
+            } else {
+                selectedCard = getLowestCard(cards, vira);
 
             }
         }
         else {
             if(opponentPlayedInvincibleCard(intel)) selectedCard = getLowestCard(cards, vira);
-            else selectedCard = getLowestCard(haveStrongestCard(intel, cards), vira);
+            else if(!(haveStrongestCard(intel, cards).isEmpty())){
+                selectedCard = getLowestCard(haveStrongestCard(intel, cards), vira);
+            }
+            else selectedCard = getLowestCard(cards, vira);
         }
-
         return CardToPlay.of(selectedCard);
     }
 

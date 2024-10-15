@@ -2,6 +2,10 @@ package com.eduardo.vinicius.camaleaotruqueiro;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
+
+import java.util.List;
+
 import static com.eduardo.vinicius.camaleaotruqueiro.TrucoUtils.*;
 
 
@@ -22,7 +26,10 @@ public class ThirdRoundStrategy implements RoundStrategy{
     }
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        TrucoCard card = getGreatestCard(cards,vira);
+        return CardToPlay.of(card);
     }
 
     @Override
