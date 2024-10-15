@@ -32,7 +32,29 @@ public class Passive extends ProfileBot {
 
     @Override
     public CardToPlay firstRoundChoose() {
-        return null;
+
+        if (intel.getOpponentCard().isPresent()) {
+            int opponentCardOnTableValue = intel.getOpponentCard().get().relativeValue(vira);
+
+            if (worstCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(worstCard);
+            if (secondBestCard.relativeValue(vira) >= opponentCardOnTableValue) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) > opponentCardOnTableValue) return CardToPlay.of(bestCard);
+        }
+
+        if (haveAtLeastTwoManilhas()) {
+            if (secondBestCard.relativeValue(vira) == 10) return CardToPlay.of(secondBestCard);
+            if (secondBestCard.relativeValue(vira) >= 11) return CardToPlay.of(worstCard);
+        }
+
+        if (haveAtLeastOneManilha()) {
+            if (bestCard.relativeValue(vira) >= 11) return CardToPlay.of(secondBestCard);
+            if (bestCard.relativeValue(vira) == 10) return CardToPlay.of(bestCard);
+
+        }
+        long handPower = powerOfTheTwoBestCards();
+
+        if (handPower >= 15 && secondBestCard.relativeValue(vira) >= 7) return CardToPlay.of(secondBestCard);
+        return CardToPlay.of(bestCard);
     }
 
     @Override
