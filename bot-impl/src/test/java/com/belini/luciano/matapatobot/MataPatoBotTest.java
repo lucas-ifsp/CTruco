@@ -327,5 +327,20 @@ class MataPatoBotTest {
             int handSValue = mataPatoBot.handSValue(intel);
             assertThat(handSValue).isEqualTo(24);
         }
+        @Test
+        @DisplayName("ShoulCountHandValueWithManilha")
+        void handValueManilha() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            int handSValue = mataPatoBot.handSValue(intel);
+            assertThat(handSValue).isEqualTo(35);
+        }
     }
 }
