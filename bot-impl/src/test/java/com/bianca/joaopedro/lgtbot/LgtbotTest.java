@@ -169,6 +169,22 @@ class LgtbotTest {
         }
 
         @Test
+        @DisplayName("Não deve pedir truco no início do jogo com cartas medianas e oponente com 0 pontos")
+        public void testShouldNotRaiseAtStart_WithAverageCardsAndOpponentZeroPoints() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+            List<TrucoCard> averageCards = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(averageCards, 9)
+                    .opponentScore(0);
+
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
+        }
+
+        @Test
         @DisplayName("Não deve pedir truco quando tem cartas fracas e oponente tem menos de 6 pontos")
         public void testShouldNotRaise_WhenHasWeakCardsAndOpponentScoreLessThan6() {
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
@@ -211,11 +227,11 @@ class LgtbotTest {
                     TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
             );
             stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(vira), vira, 1) // Configura as informações do jogo
-                    .botInfo(weakCards, 9) // Configura as informações do bot
-                    .opponentScore(5); // Configura a pontuação do oponente
+                    .gameInfo(List.of(), List.of(vira), vira, 1)
+                    .botInfo(weakCards, 9)
+                    .opponentScore(5);
 
-            assertFalse(lgtbot.decideIfRaises(stepBuilder.build())); // Verifica se não deve pedir truco
+            assertFalse(lgtbot.decideIfRaises(stepBuilder.build()));
         }
 
 
@@ -322,6 +338,22 @@ class LgtbotTest {
 
             assertTrue(lgtbot.decideIfRaises(stepBuilder.build()),
                     "O bot deveria aumentar os pontos com essas cartas que ele considera boas.");
+        }
+
+        @Test
+        @DisplayName("Deve pedir truco se faltam 2 pontos para ganhar a partida")
+        public void testShouldRaise_WhenTwoPointsToWin() {
+            TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            List<TrucoCard> goodCards = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
+            );
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(vira), vira, 2)
+                    .botInfo(goodCards, 10)
+                    .opponentScore(8);
+
+            assertTrue(lgtbot.decideIfRaises(stepBuilder.build()));
         }
     }
 
