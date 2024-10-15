@@ -42,6 +42,16 @@ public class Pattern extends Analyzer {
         return null;
     }
 
+    private Status oneCardHandlerWinningFirstRound(TrucoCard oppCard, TrucoCard myCard) {
+        if (intel.getHandPoints() <= 3) {
+            return Status.EXCELLENT;
+        }
+        if (myCard.compareValueTo(oppCard, vira) > 0) {
+            return Status.EXCELLENT;
+        }
+        return Status.BAD;
+    }
+
     private long powerOfTheTwoBestCards() {
         List<TrucoCard> myCards = intel.getCards();
         return myCards.stream()
