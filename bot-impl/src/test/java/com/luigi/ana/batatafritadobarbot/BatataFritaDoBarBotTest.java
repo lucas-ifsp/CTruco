@@ -117,7 +117,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(0);
 
-        assertTrue(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.hasCopas(stepBuilder.build()));
     }
 
     //6
