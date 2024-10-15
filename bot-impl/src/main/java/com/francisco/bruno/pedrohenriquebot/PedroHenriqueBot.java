@@ -61,8 +61,8 @@ public class PedroHenriqueBot implements BotServiceProvider {
         if ((opScore - score) >= 8) return true;
         if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
 
-        return (handStrengthAverage(intel) >= 9 );
 
+        return decideToBluff(intel, handStrengthAvg);
     }
 
     @Override
