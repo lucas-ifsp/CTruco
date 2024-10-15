@@ -157,6 +157,23 @@ public class PatternTest {
 
             assertThat(result).isEqualTo(Status.EXCELLENT);
         }
+
+        @Test
+        @DisplayName("Returns BAD when lost first round and no manilhas")
+        void returnsBadWhenLostFirstRoundAndNoManilhas() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+
+            Pattern pattern = new Pattern(intel);
+            Status result = pattern.oneCardHandler();
+
+            assertThat(result).isEqualTo(Status.BAD);
+        }
     }
 }
 
