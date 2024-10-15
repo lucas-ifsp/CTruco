@@ -82,6 +82,23 @@ public class PatternTest {
     @Nested
     @DisplayName("twoCardsHandler method tests")
     class TwoCardsHandlerMethodTests {
+        @Test
+        @DisplayName("Returns EXCELLENT when won first round and have at least one manilha")
+        void returnsExcellentWhenWonFirstRoundAndHaveAtLeastOneManilha() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+
+            Pattern pattern = new Pattern(intel);
+            Status result = pattern.twoCardsHandler(intel.getCards());
+
+            assertThat(result).isEqualTo(Status.EXCELLENT);
+        }
     }
 }
 
