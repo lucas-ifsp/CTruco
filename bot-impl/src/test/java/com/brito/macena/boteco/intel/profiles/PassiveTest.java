@@ -120,5 +120,26 @@ public class PassiveTest {
     @DisplayName("Third Round")
     class ThirdRoundTests {
 
+        @Test
+        @DisplayName("should must play the last card")
+        void shouldPlayBestCardIfStrongHand() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(0)
+                    .opponentCard(opponentCard)
+                    .build();
+
+            ProfileBot passive = new Passive(intel, Status.EXCELLENT);
+
+            CardToPlay selectedCard = passive.thirdRoundChoose();
+            assertThat(selectedCard).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
+        }
     }
 }
