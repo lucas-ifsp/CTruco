@@ -226,10 +226,10 @@ public class OctopusTest {
     }
 
     @Nested
-    @DisplayName("Testing the methods to win the first round")
+    @DisplayName("Testing the methods to win the round")
     class WinFirstRound {
         @Test
-        @DisplayName("Return the better card to win the first round")
+        @DisplayName("Return the better card to win the round")
         void returnTheBetterCardToWinTheFirstRound() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
             TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
@@ -336,8 +336,8 @@ public class OctopusTest {
     @DisplayName("Testing override methods")
     class OverrideMethods {
         @Test
-        @DisplayName("Return getMaoDeOnzeResnponse")
-        void returnGetMaoDeOnzeResponse() {
+        @DisplayName("Return getMaoDeOnzeResnponse with true response")
+        void returnGetMaoDeOnzeResponseWhenTrue() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
             List<TrucoCard> ourCards = List.of(
                     TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
@@ -345,6 +345,18 @@ public class OctopusTest {
                     TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
             GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
             assertThat(octopus.getMaoDeOnzeResponse(step.build())).isTrue();
+        }
+
+        @Test
+        @DisplayName("Return getMaoDeOnzeResnponse with false response")
+        void returnGetMaoDeOnzeResponseWhenFalse() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+            List<TrucoCard> ourCards = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS));
+            GameIntel.StepBuilder step = createStepBuilder(ourCards, Optional.empty(), vira, 11, 8, 3);
+            assertThat(octopus.getMaoDeOnzeResponse(step.build())).isFalse();
         }
 
         @Test
