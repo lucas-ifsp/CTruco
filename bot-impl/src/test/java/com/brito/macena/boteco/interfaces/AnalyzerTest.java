@@ -42,6 +42,19 @@ public class AnalyzerTest {
 
             assertThat(result).isEqualTo(Status.GOOD);
         }
+
+        @Test
+        @DisplayName("Returns twoCardsHandler when two cards")
+        void returnsTwoCardsHandlerWhenTwoCards() {
+            GameIntel intel = mock(GameIntel.class);
+            List<TrucoCard> cards = List.of(mock(TrucoCard.class), mock(TrucoCard.class));
+            when(intel.getCards()).thenReturn(cards);
+
+            Analyzer analyzer = new AnalyzerImpl();
+            Status result = analyzer.myHand(intel);
+
+            assertThat(result).isEqualTo(Status.MEDIUM);
+        }
     }
 
     private static class AnalyzerImpl extends Analyzer {
