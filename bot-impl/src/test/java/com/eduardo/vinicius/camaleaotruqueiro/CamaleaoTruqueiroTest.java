@@ -741,5 +741,57 @@ public class CamaleaoTruqueiroTest {
             }
 
         }
+
+
+        @Nested @DisplayName("Second Round Strategy")
+        class SecondRoundStrategy{
+
+
+            @ParameterizedTest
+            @CsvSource({
+                    // cardRank1 | cardSuit1 | cardRank2 | cardSuit2 | willCallTruco | expectedCardRank | expectedCardSuit
+                    //almost absolute victory
+                    "FOUR, CLUBS, FOUR, HEARTS, true, DREW, FOUR, CLUBS",
+                    //almost certain victory
+                    "FOUR, CLUBS, TWO, HEARTS, true, DREW, FOUR, CLUBS",
+                    "TWO, CLUBS, TWO, HEARTS, true, WON, TWO, CLUBS",
+
+                    //bluff to get points
+                    "TWO, CLUBS, KING, HEARTS, false, DREW, TWO, CLUBS",
+                    "TWO, CLUBS, FIVE, HEARTS, false, DREW, TWO, CLUBS",
+
+                    //bluff to intimidate
+                    "KING, CLUBS, KING, HEARTS, false, DREW, KING, CLUBS",
+
+                    //almost certain defeat
+                    "KING, CLUBS, FIVE, HEARTS, false, DREW, KING, CLUBS",
+                    "FIVE, CLUBS, FIVE, HEARTS, false, DREW, FIVE, CLUBS",
+
+                    //high changes opponent runs from truco
+                    //"KING, CLUBS, KING, HEARTS, true, true",
+            })
+            @DisplayName("When bot opens hand")
+            void whenBotOpensHand (CardRank cardRank1, CardSuit cardSuit1, CardRank cardRank2, CardSuit cardSuit2, Boolean willCallTruco, GameIntel.RoundResult roundResult, CardRank expectedCardRank, CardSuit expectedCardSuit) {
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(cardRank1,cardSuit1),
+                        TrucoCard.of(cardRank2,cardSuit2)
+                );
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(roundResult),List.of(vira),vira,1)
+                        .botInfo(botCards,0)
+                        .opponentScore(0)
+                        .build();
+
+                boolean botDecideIfRaises =  camaleao.decideIfRaises(intel);
+                //TrucoCard botChosenCard = camaleao.chooseCard(intel).content();
+
+                System.out.println(HandsCardSituation.evaluateHandSituation(intel));
+                SoftAssertions softly = new SoftAssertions();
+                softly.assertThat(botDecideIfRaises).isEqualTo(willCallTruco);
+                //softly.assertThat(isHighChangesOpponentRunFromTruco(intel)).isEqualTo(highChangesOpponentRunFromTruco);
+                //if(!camaleao.decideIfRaises(intel)) softly.assertThat(botChosenCard).isEqualTo(TrucoCard.of(expectedCardRank,expectedCardSuit));
+                softly.assertAll();
+            }
+        }
     }
 }
