@@ -47,6 +47,8 @@ public class TrucoMarreco implements BotServiceProvider {
         if(handStrong(intel)){
             return true;
         }
+
+
        return  false;
     }
 
@@ -89,7 +91,7 @@ public class TrucoMarreco implements BotServiceProvider {
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
+    public CardToPlay chooseCard (GameIntel intel) {
 
         if (intel.getOpponentCard().get().isManilha(intel.getVira())){
             return CardToPlay.of(weakCard(intel).orElse(null));
@@ -162,6 +164,22 @@ public class TrucoMarreco implements BotServiceProvider {
        return  zap;
     }
      */
+
+    private int evaluateHandStrength(GameIntel intel) {
+        int strength = 0;
+        TrucoCard vira = intel.getVira();
+        for (TrucoCard card : intel.getCards()) {
+
+            strength += card.relativeValue(vira);
+        }
+
+        if (hasZap(intel)) {
+            strength += 13;
+        }
+
+        return strength;
+    }
+
 
 
     @Override
