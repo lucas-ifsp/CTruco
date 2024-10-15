@@ -1234,6 +1234,30 @@ public class ArmageddonTest {
                 assertThat(playedCard).isEqualTo(TrucoCard.of(SIX, DIAMONDS));
             }
 
+            @Test
+            @DisplayName("Should request Truco in the second round after losing the first round if bot has a Casal Maior")
+            void shouldRequestTrucoInSecondRoundIfHasCasalMaior() {
+                TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(KING, SPADES),
+                        TrucoCard.of(KING, DIAMONDS)
+                );
+
+                TrucoCard opponentCard = TrucoCard.of(SIX, HEARTS);
+                List<TrucoCard> openCards = List.of(opponentCard);
+
+                GameIntel intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 2)
+                        .botInfo(botCards, 0)
+                        .opponentScore(1)
+                        .build();
+
+                boolean result = armageddon.shouldRequestTruco(intel);
+
+                assertTrue(result);
+            }
+
+
         }
 
 
