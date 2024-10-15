@@ -175,6 +175,8 @@ class ReimuBotTest {
         }
 
 
+
+
     }
 
     @Nested
@@ -231,6 +233,25 @@ class ReimuBotTest {
                             List.of(GameIntel.RoundResult.WON),
                             List.of(TrucoCard.of(CardRank.THREE, CardSuit.HEARTS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
                             vira, 1)
+                    .botInfo(reimuCards, 1)
+                    .opponentScore(0).opponentCard(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                    .build();
+            assertThat(reimuBot.decideIfRaises(step)).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should raise on second round if won first round and has a three")
+        void raiseIfWinsFirstAndHasThree() {
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            List<TrucoCard> reimuCards = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+            );
+            var step = GameIntel.StepBuilder.with()
+                    .gameInfo(
+                            List.of(GameIntel.RoundResult.WON),
+                            List.of(TrucoCard.of(CardRank.KING, CardSuit.HEARTS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                            vira, 2)
                     .botInfo(reimuCards, 1)
                     .opponentScore(0).opponentCard(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
                     .build();
