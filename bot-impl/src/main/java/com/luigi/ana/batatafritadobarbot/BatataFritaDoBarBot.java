@@ -61,9 +61,6 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
         };
     }
 
-    GameIntel.RoundResult getlastRoundResult(GameIntel intel){
-        return intel.getRoundResults().get(0);
-    }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
@@ -133,6 +130,21 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     }
 
+    private CardToPlay chooseCardThirdRound(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
+
+    boolean checkIfIsTheFirstToPlay(GameIntel intel){
+        return intel.getOpponentCard().isEmpty();
+    }
+
+
+    GameIntel.RoundResult getlastRoundResult(GameIntel intel){
+        return intel.getRoundResults().get(0);
+    }
+
+
     double getAverageCardValue(GameIntel intel) {
 
         return intel.getCards().stream()
@@ -142,9 +154,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     }
 
-    private CardToPlay chooseCardThirdRound(GameIntel intel){
-        return CardToPlay.of(intel.getCards().get(0));
-    }
+
 
     int getNumberOfManilhas(GameIntel intel){
         int quantityOfManilhas = 0;
@@ -155,9 +165,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     }
 
 
-    boolean checkIfIsTheFirstToPlay(GameIntel intel){
-        return intel.getOpponentCard().isEmpty();
-    }
+
 
     public TrucoCard getHighestCard(GameIntel intel) {
         TrucoCard highestCard = intel.getCards().get(0);
