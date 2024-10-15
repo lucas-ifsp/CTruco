@@ -113,6 +113,9 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     public TrucoCard getLowestCard(GameIntel intel) {
         TrucoCard lowestCard = intel.getCards().get(0);
 
+        for (TrucoCard card : intel.getCards())
+            if (lowestCard.relativeValue(intel.getVira()) > card.relativeValue(intel.getVira()))
+                lowestCard = card;
         return lowestCard;
     }
 
