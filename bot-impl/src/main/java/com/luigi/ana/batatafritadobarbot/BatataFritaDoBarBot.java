@@ -60,8 +60,6 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
-
-
     private CardToPlay chooseCardSecondRound(GameIntel intel){
 
         if(getlastRoundResult(intel).equals(GameIntel.RoundResult.WON)){
@@ -83,6 +81,10 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
             return CardToPlay.of(getHighestCard(intel));
         }
 
+    }
+
+    private CardToPlay chooseCardThirdRound(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     int getNumberOfManilhas(GameIntel intel){
