@@ -100,6 +100,26 @@ public class TrucoCallerTest {
     @Nested
     @DisplayName("SneakyTrucoCaller method tests")
     class SneakyTrucoCallerMethodTests {
+        @Test
+        @DisplayName("Should call truco if status is medium or good with 3 cards")
+        void shouldCallTrucoWhenStatusIsMediumOrGoodAndThreeCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            SneakyTrucoCaller trucoCaller = new SneakyTrucoCaller();
+            boolean shouldCall = trucoCaller.shouldCallTruco(intel, Status.MEDIUM);
+
+            assertTrue(shouldCall);
+        }
     }
 }
