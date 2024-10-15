@@ -17,4 +17,11 @@ public class Game {
         return intel.getCards().stream()
                 .anyMatch(card -> card.isManilha(intel.getVira()));
     }
+
+    public static boolean isCriticalSituation(GameIntel intel) {
+        int scoreDifference = intel.getOpponentScore() - intel.getScore();
+        int handPoints = intel.getHandPoints();
+
+        return scoreDifference >= 6 || handPoints >= 6;
+    }
 }
