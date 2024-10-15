@@ -6,6 +6,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,9 @@ public class PedroHenriqueBot implements BotServiceProvider {
     private CardToPlay chooseCardFirstRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
 
+        if (handStrengthAverage(intel) >= 8) {
+            return CardToPlay.of(sortedCards.get(0));
+        }
         if (intel.getOpponentCard().isEmpty()) {
             return CardToPlay.of(sortedCards.get(1));
         } else {
