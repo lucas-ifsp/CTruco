@@ -9,7 +9,10 @@ import com.bueno.spi.service.BotServiceProvider;
 import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class PedroHenriqueBot implements BotServiceProvider {
     @Override
@@ -67,7 +70,12 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
     private CardToPlay chooseCardSecondRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
-        return CardToPlay.of(sortedCards.get(0));
+
+        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+            return CardToPlay.of(sortedCards.get(1));
+        } else {
+            return CardToPlay.of(sortedCards.get(1));
+        }
     }
 
     private CardToPlay chooseCardThirdRound(GameIntel intel) {
