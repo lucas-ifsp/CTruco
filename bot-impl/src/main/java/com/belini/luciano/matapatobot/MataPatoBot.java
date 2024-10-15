@@ -131,5 +131,11 @@ public class MataPatoBot implements BotServiceProvider{
         return cards.size();
     }
 
-
+    public int handSValue (GameIntel intel){
+        int handSValue = 0;
+        for (TrucoCard card : intel.getCards()){
+            handSValue += card.relativeValue(intel.getVira());
+        }
+        return handSValue;
+    }
 }
