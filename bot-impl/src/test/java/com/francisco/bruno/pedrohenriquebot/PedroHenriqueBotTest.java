@@ -344,9 +344,103 @@ class PedroHenriqueBotTest {
     @Nested
     @DisplayName("Testing decideIfRaises")
     class decideIfRaises {
+
+        @Nested
+        @DisplayName("First Round")
+        class FirstRound {
+            @Test
+            @DisplayName("Raise when has strong hand in first round")
+            void raiseFirstRoundStrongHand() {
+                TrucoCard vira = TrucoCard.of(THREE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(ACE, HEARTS),
+                        TrucoCard.of(TWO, CLUBS),
+                        TrucoCard.of(THREE, DIAMONDS)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 0)
+                        .opponentScore(5);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Do not raise with weak hand in first round")
+            void doNotRaiseFirstRoundWeakHand() {
+                TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(FIVE, CLUBS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 0)
+                        .opponentScore(5);
+
+                assertFalse(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Raise when opponent is close to winning")
+            void raiseFirstRoundOpponentCloseToWinning() {
+                TrucoCard vira = TrucoCard.of(KING, CLUBS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(QUEEN, HEARTS),
+                        TrucoCard.of(JACK, CLUBS),
+                        TrucoCard.of(KING, SPADES)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 0)
+                        .opponentScore(10);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Raise with manilha and high card")
+            void raiseWithManilhaAndHighCard() {
+                TrucoCard vira = TrucoCard.of(ACE, SPADES);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(THREE, SPADES),
+                        TrucoCard.of(TWO, CLUBS),
+                        TrucoCard.of(SEVEN, HEARTS)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 0)
+                        .opponentScore(5);
+
+                assertTrue(sut.decideIfRaises(intel.build()));
+            }
+
+            @Test
+            @DisplayName("Do not raise when own score is high and ahead")
+            void doNotRaiseWhenBotAhead() {
+                TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(TWO, HEARTS),
+                        TrucoCard.of(THREE, CLUBS),
+                        TrucoCard.of(ACE, SPADES)
+                );
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 3)
+                        .botInfo(botCards, 10)
+                        .opponentScore(8);
+
+                assertFalse(sut.decideIfRaises(intel.build()));
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Testing getRaiseResponse")
+    class getRaiseResponse {
         @Test
-        @DisplayName("Raise when has strong hand in first round")
-        void raiseFirstRoundStrongHand() {
+        @DisplayName("Accept raise with strong hand in first round")
+        void acceptRaiseStrongHandFirstRound() {
             TrucoCard vira = TrucoCard.of(THREE, SPADES);
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(ACE, HEARTS),
@@ -354,16 +448,17 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(THREE, DIAMONDS)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
                     .botInfo(botCards, 0)
                     .opponentScore(5);
 
-            assertTrue(sut.decideIfRaises(intel.build()));
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(1, response);
         }
 
         @Test
-        @DisplayName("Do not raise with weak hand in first round")
-        void doNotRaiseFirstRoundWeakHand() {
+        @DisplayName("Decline raise with weak hand in first round")
+        void declineRaiseWeakHandFirstRound() {
             TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(FOUR, HEARTS),
@@ -371,107 +466,48 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(SIX, SPADES)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
                     .botInfo(botCards, 0)
                     .opponentScore(5);
 
-            assertFalse(sut.decideIfRaises(intel.build()));
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(-1, response); // Fold
         }
 
         @Test
-        @DisplayName("Raise when opponent is close to winning")
-        void raiseFirstRoundOpponentCloseToWinning() {
-            TrucoCard vira = TrucoCard.of(KING, CLUBS);
+        @DisplayName("Accept raise with one manilha in hand")
+        void acceptRaiseWithOneManilha() {
+            TrucoCard vira = TrucoCard.of(KING, HEARTS);
             List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(QUEEN, HEARTS),
-                    TrucoCard.of(JACK, CLUBS),
-                    TrucoCard.of(KING, SPADES)
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(SEVEN, CLUBS),
+                    TrucoCard.of(SIX, SPADES)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
                     .botInfo(botCards, 0)
-                    .opponentScore(10);
+                    .opponentScore(7);
 
-            assertTrue(sut.decideIfRaises(intel.build()));
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(0, response); // Accept
         }
 
         @Test
-        @DisplayName("Raise with manilha and high card")
-        void raiseWithManilhaAndHighCard() {
-            TrucoCard vira = TrucoCard.of(ACE, SPADES);
-            List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(THREE, SPADES),
-                    TrucoCard.of(TWO, CLUBS),
-                    TrucoCard.of(SEVEN, HEARTS)
-            );
-            intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
-                    .botInfo(botCards, 0)
-                    .opponentScore(5);
-
-            assertTrue(sut.decideIfRaises(intel.build()));
-        }
-
-        @Test
-        @DisplayName("Do not raise when own score is high and ahead")
-        void doNotRaiseWhenBotAhead() {
-            TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
+        @DisplayName("Re-raise when have two manilhas")
+        void reRaiseWithTwoManilhas() {
+            TrucoCard vira = TrucoCard.of(ACE, HEARTS);
             List<TrucoCard> botCards = Arrays.asList(
                     TrucoCard.of(TWO, HEARTS),
-                    TrucoCard.of(THREE, CLUBS),
-                    TrucoCard.of(ACE, SPADES)
+                    TrucoCard.of(TWO, CLUBS),
+                    TrucoCard.of(SEVEN, CLUBS)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,3)
-                    .botInfo(botCards, 10)
-                    .opponentScore(8);
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
+                    .botInfo(botCards, 0)
+                    .opponentScore(5);
 
-            assertFalse(sut.decideIfRaises(intel.build()));
-        }
-    }
-
-    @Nested
-    @DisplayName("Testing getRaiseResponse")
-    class getRaiseResponse {
-        @Nested
-        @DisplayName("First Round")
-        class FirstRound {
-
-            @Test
-            @DisplayName("Accept raise with one manilha in hand")
-            void acceptRaiseWithOneManilha() {
-                TrucoCard vira = TrucoCard.of(KING, HEARTS);
-                List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(ACE, HEARTS),
-                        TrucoCard.of(SEVEN, CLUBS),
-                        TrucoCard.of(SIX, SPADES)
-                );
-                intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(7);
-
-                int response = sut.getRaiseResponse(intel.build());
-                assertEquals(0, response); // Accept
-            }
-
-            @Test
-            @DisplayName("Re-raise when have two manilhas")
-            void reRaiseWithTwoManilhas() {
-                TrucoCard vira = TrucoCard.of(ACE, HEARTS);
-                List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(TWO, HEARTS),
-                        TrucoCard.of(TWO, CLUBS),
-                        TrucoCard.of(SEVEN, CLUBS)
-                );
-                intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
-                        .botInfo(botCards, 0)
-                        .opponentScore(5);
-
-                int response = sut.getRaiseResponse(intel.build());
-                assertEquals(1, response);
-            }
+            int response = sut.getRaiseResponse(intel.build());
+            assertEquals(1, response);
         }
     }
 }
