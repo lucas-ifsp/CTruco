@@ -239,11 +239,31 @@ class PedroHenriqueBotTest {
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
-
         }
         @Nested
         @DisplayName("Second Round")
         class SecondRound {
+            @Test
+            @DisplayName("Should play weak card if winner of the first round")
+            void shouldPlayWeakCardIfWinnerOfTheFirstRound() {
+                TrucoCard vira = TrucoCard.of(KING, CLUBS);
+                List<TrucoCard> botCards = Arrays.asList(
+                        TrucoCard.of(SEVEN, HEARTS),
+                        TrucoCard.of(SIX, SPADES)
+                );
+
+                intel = GameIntel.StepBuilder.with()
+                        .gameInfo(List.of(WON), Collections.singletonList(vira), vira, 1)
+                        .botInfo(botCards, 0)
+                        .opponentScore(0);
+
+                CardToPlay chosenCard = sut.chooseCard(intel.build());
+                TrucoCard expectedCard = botCards.stream()
+                        .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                        .orElse(botCards.get(0));
+
+                assertEquals(CardToPlay.of(expectedCard), chosenCard);
+            }
 
         }
 
