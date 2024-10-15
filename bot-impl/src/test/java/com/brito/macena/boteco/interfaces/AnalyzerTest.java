@@ -72,12 +72,12 @@ public class AnalyzerTest {
 
     private static class AnalyzerImpl extends Analyzer {
         @Override
-        public Status threeCardsHandler() {
+        public Status threeCardsHandler(List<TrucoCard> myCards) {
             return Status.GOOD;
         }
 
         @Override
-        public Status twoCardsHandler() {
+        public Status twoCardsHandler(List<TrucoCard> myCards) {
             return Status.MEDIUM;
         }
 
