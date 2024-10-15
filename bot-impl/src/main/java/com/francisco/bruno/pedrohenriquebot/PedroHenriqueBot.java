@@ -35,16 +35,12 @@ public class PedroHenriqueBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         int roundNumber = intel.getRoundResults().size();
-        List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
 
-        switch (roundNumber) {
-            case 0:
-                return chooseCardFirstRound(intel);
-            case 1:
-                return chooseCardSecondRound(intel);
-            default:
-                return chooseCardThirdRound(intel);
-        }
+        return switch (roundNumber) {
+            case 0 -> chooseCardFirstRound(intel);
+            case 1 -> chooseCardSecondRound(intel);
+            default -> chooseCardThirdRound(intel);
+        };
     }
 
     @Override
