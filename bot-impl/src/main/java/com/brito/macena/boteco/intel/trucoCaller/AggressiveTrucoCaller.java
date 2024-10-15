@@ -8,6 +8,9 @@ public class AggressiveTrucoCaller implements TrucoCaller {
 
     @Override
     public boolean shouldCallTruco(GameIntel intel, Status status) {
+        if (status == Status.EXCELLENT || status == Status.GOOD) {
+            return true;
+        }
         return false;
     }
 }
