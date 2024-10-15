@@ -377,6 +377,10 @@ public class Armageddon implements BotServiceProvider {
     public boolean shouldRequestTruco(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
+        if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.DREW) {
+            return true;
+        }
+
         if (!roundResults.isEmpty() && roundResults.get(0) == GameIntel.RoundResult.LOST) {
             List<TrucoCard> botCards = intel.getCards();
 
@@ -393,6 +397,7 @@ public class Armageddon implements BotServiceProvider {
 
         return false;
     }
+
 
     private boolean hasCasalMaior(List<TrucoCard> botCards) {
         for (int i = 0; i < botCards.size(); i++) {
