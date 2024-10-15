@@ -148,6 +148,18 @@ class TrucoMarrecoTest {
             assertTrue(acceptMaoDeOnze);
         }
 
+        @Test
+        @DisplayName("Testa se a mão de onze é aceita quando as cartas possuem um valor superior às do oponente")
+        void TestMaoDeOnzeRankOpponentLow (){
+            hand = List.of(TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(THREE, CLUBS));
+            vira = TrucoCard.of(JACK, HEARTS);
+            openCards = List.of();
+            result =List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards, vira, 1).botInfo(hand, 11).opponentScore(5);
+            Boolean acceptMaoDeOnze = trucoMarreco.getMaoDeOnzeResponse(stepBuilder.build());
+            assertTrue(acceptMaoDeOnze);
+        }
+
      }
 
 
