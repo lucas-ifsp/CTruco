@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import javax.smartcardio.Card;
 import java.util.*;
 
 import static com.bueno.spi.model.CardRank.*;
