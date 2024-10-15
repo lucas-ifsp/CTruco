@@ -47,14 +47,6 @@ public class PedroHenriqueBot implements BotServiceProvider {
         };
     }
 
-    private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        return true;
-    }
-
-    private boolean decideIfRaisesSecondRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        return true;
-    }
-
     private boolean decideIfRaisesFirstRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
         int opScore = intel.getOpponentScore();
         int score = intel.getScore();
@@ -71,6 +63,30 @@ public class PedroHenriqueBot implements BotServiceProvider {
             return false;
         }
         return decideToBluff(intel, handStrengthAvg);
+    }
+
+    private boolean decideIfRaisesSecondRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+
+        if (botScore >= 10) {
+            return false;
+        }
+        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && highCards >= 1) {
+            return true;
+        }
+        if (manilhas >= 1 || highCards >= 2) {
+            return true;
+        }
+        if (opponentScore >= 10) {
+            return true;
+        }
+
+        return decideToBluff(intel, handStrengthAvg);
+    }
+
+    private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
+        return true;
     }
 
     @Override
