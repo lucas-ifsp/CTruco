@@ -54,5 +54,21 @@ public class TrucadorTest {
             Trucador trucador = new Trucador(intel);
             assertEquals(Status.GOOD, trucador.threeCardsHandler(intel.getCards()));
         }
+
+        @Test
+        @DisplayName("Returns BAD when hand power is less than 11 with three cards")
+        void returnsBadWhenHandPowerIsLessThanElevenWithThreeCards() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+            Trucador trucador = new Trucador(intel);
+            assertEquals(Status.BAD, trucador.threeCardsHandler(intel.getCards()));
+        }
     }
 }
