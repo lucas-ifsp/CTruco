@@ -140,6 +140,23 @@ public class PatternTest {
 
     @Nested
     @DisplayName("oneCardHandler method tests")
-    class OneCardHandlerMethodTests {}
+    class OneCardHandlerMethodTests {
+        @Test
+        @DisplayName("Returns EXCELLENT when won first round and hand points are less than or equal to 3")
+        void returnsExcellentWhenWonFirstRoundAndHandPointsAreLessThanOrEqualTo3() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 3)
+                    .botInfo(List.of(
+                            TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)
+                    ), 0)
+                    .opponentScore(0)
+                    .build();
+
+            Pattern pattern = new Pattern(intel);
+            Status result = pattern.oneCardHandler();
+
+            assertThat(result).isEqualTo(Status.EXCELLENT);
+        }
+    }
 }
 
