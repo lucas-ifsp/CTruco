@@ -29,7 +29,7 @@ class MataPatoBotTest {
 
         @Test
         @DisplayName("Should return 1 if there is 1 card in hand")
-        void shouldReturnOneIfOneCardInHand(){
+        void shouldReturnOneIfOneCardInHand() {
             int numberOfCards = 1;
             GameIntel intel = mock(GameIntel.class);
             TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
@@ -39,23 +39,23 @@ class MataPatoBotTest {
 
         @Test
         @DisplayName("Should return 2 if there is 2 cards in hand")
-        void shouldReturnTwoIfTwoCardsInHand(){
+        void shouldReturnTwoIfTwoCardsInHand() {
             int numberOfCards = 2;
-            GameIntel intel  = mock(GameIntel.class);
+            GameIntel intel = mock(GameIntel.class);
             TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-            TrucoCard card2 =  TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2));
             assertThat(mataPatoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
         }
 
         @Test
         @DisplayName("Should return 3 if there is 3 cards in hand")
-        void shouldReturnThreeIfThreeCardsInHand(){
+        void shouldReturnThreeIfThreeCardsInHand() {
             int numberOfCards = 3;
-            GameIntel intel  = mock(GameIntel.class);
+            GameIntel intel = mock(GameIntel.class);
             TrucoCard card1 = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
-            TrucoCard card2 =  TrucoCard.of(CardRank.ACE,CardSuit.HEARTS);
-            TrucoCard card3 = TrucoCard.of(CardRank.ACE,CardSuit.CLUBS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
+            TrucoCard card3 = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
             assertThat(mataPatoBot.getNumberOfCardsInHand(intel)).isEqualTo(numberOfCards);
         }
@@ -105,7 +105,7 @@ class MataPatoBotTest {
         }
     }
 
-        @Nested
+    @Nested
     @DisplayName("First Round Tests")
     class FirstRoundTests {
 
@@ -133,6 +133,7 @@ class MataPatoBotTest {
             String round = String.valueOf(mataPatoBot.RoundCheck(intel));
             assertThat(round).isEqualTo("Round 1");
         }
+
         @Test
         @DisplayName("Play a strong card, excluding top 3")
         public void shouldPlayStrongCard() {
@@ -217,10 +218,12 @@ class MataPatoBotTest {
 
 
     }
+
     @Nested
     class GetMaoDeOnzeResponseTests {
 
         @Test
+        @DisplayName("Opponent has less than 3")
         void whenOpponentScoreIsLessOrEqual3_andHasAtLeastManilha() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
@@ -235,7 +238,9 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertTrue(response);
         }
+
         @Test
+        @DisplayName("Opponent has less than 6")
         void whenOpponentScoreIsLessThan6andHasAtLeastTwoStrongCards() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
@@ -250,7 +255,9 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+
         @Test
+        @DisplayName("Opponent has less than 8")
         void whenOpponentScoreIsBetween6And8() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
@@ -265,7 +272,9 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+
         @Test
+        @DisplayName("Opponent has less than 11")
         void whenOpponentScoreIsBetween8And11() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
@@ -280,7 +289,9 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+
         @Test
+        @DisplayName("Opponent More than 3 we had just manilha")
         void whenOpponentScoreMoreThan3andManilha() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
@@ -294,6 +305,27 @@ class MataPatoBotTest {
 
             boolean response = mataPatoBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isFalse();
+        }
+    }
+
+    @Nested
+    class GetHandValueTests {
+
+
+        @Test
+        @DisplayName("ShoulCountHandValue")
+        void handValue() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            int handSValue = mataPatoBot.handSValue(intel);
+            assertThat(handSValue).isEqualTo(24);
         }
     }
 }
