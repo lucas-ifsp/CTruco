@@ -259,6 +259,27 @@ class ReimuBotTest {
         }
 
         @Test
+        @DisplayName("Should raise on second round if won first round and has two twos")
+        void raiseIfWinsFirstAndHasTwoTwos() {
+                TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+                List<TrucoCard> botCards = List.of(
+                        TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                        TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
+                );
+                var step = GameIntel.StepBuilder.with()
+                        .gameInfo(
+                                List.of(GameIntel.RoundResult.WON),
+                                List.of(TrucoCard.of(CardRank.JACK, CardSuit.HEARTS), TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)),
+                                vira,
+                                2)
+                        .botInfo(botCards, 1)
+                        .opponentScore(0).opponentCard(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS))
+                        .build();
+                assertThat(reimuBot.decideIfRaises(step)).isTrue();
+        }
+
+
+        @Test
         @DisplayName("If the opponent has mao de onze, don't raise")
         void opponentMaoDeOnzeDontRaise() {
             TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
