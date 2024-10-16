@@ -50,6 +50,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
+import com.brito.macena.boteco.BotEco;
 
 
 import com.adriann.emanuel.armageddon.Armageddon;
@@ -110,14 +111,14 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
-  
+
+    exports com.brito.macena.boteco;
     exports com.Selin.Bonelli.zetruquero;
     exports com.luigi.ana.batatafritadobarbot;
     exports com.manhani.stefane.reimubot;
     exports com.adivic.octopus;
     exports com.eduardo.vinicius.camaleaotruqueiro;
     exports com.bianca.joaopedro.lgtbot;
-
     exports com.adriann.emanuel.armageddon;
 
     provides com.bueno.spi.service.BotServiceProvider with
@@ -171,9 +172,8 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-
-  
-
+            
+            BotEco,
             Armageddon,
             Zetruquero,
             BatataFritaDoBarBot,
