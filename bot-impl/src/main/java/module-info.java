@@ -1,4 +1,5 @@
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
+import com.belini.luciano.matapatobot.MataPatoBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bruno.tiago.jeckiechanbot.JackieChanBot;
@@ -51,9 +52,9 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
+
+import com.belini.luciano.matapatobot.MataPatoBot;
 import com.brito.macena.boteco.BotEco;
-
-
 import com.adriann.emanuel.armageddon.Armageddon;
 import com.Selin.Bonelli.zetruquero.Zetruquero;
 import com.manhani.stefane.reimubot.ReimuBot;
@@ -113,7 +114,8 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
-
+  
+    exports com.belini.luciano.matapatobot;
     exports com.brito.macena.boteco;
     exports com.Selin.Bonelli.zetruquero;
     exports com.luigi.ana.batatafritadobarbot;
@@ -176,6 +178,7 @@ module bot.impl {
             BeepBot,
             Zeusbot,
             
+            MataPatoBot,
             BotEco,
             Armageddon,
             Zetruquero,
