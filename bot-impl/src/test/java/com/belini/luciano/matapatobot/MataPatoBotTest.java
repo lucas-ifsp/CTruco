@@ -455,5 +455,22 @@ class MataPatoBotTest {
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(-1);
         }
+
+        @Test
+        @DisplayName("CheckIfRunLastRound")
+        public void checkIfRunLastRound() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            when(intel.getRoundResults()).thenReturn(List.of());
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            int response = mataPatoBot.getRaiseResponse(intel);
+            assertThat(response).isEqualTo(-1);
+        }
     }
 }
