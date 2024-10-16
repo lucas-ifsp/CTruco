@@ -526,13 +526,19 @@ public class BatataFritaDoBarBotTest {
 
     //21
     @Test
-    @DisplayName("make sure blefe is working")
+    @DisplayName("Make sure blefe is working")
     void makeSureBlefeIsWorking() {
-        when(intel.getOpponentScore() == 9 && intel.getScore() == 2);
-        int dif = intel.getOpponentScore() - intel.getScore();
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
-        assertEquals(7, dif);
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 0)
+                .botInfo(List.of(), 2)
+                .opponentScore(9);
 
+
+        int diference = stepBuilder.build().getOpponentScore() - intel.getScore();
+
+        assertEquals(7, diference);
     }
 
     //22
