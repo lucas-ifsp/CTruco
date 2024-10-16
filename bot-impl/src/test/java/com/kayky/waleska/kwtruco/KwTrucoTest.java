@@ -864,8 +864,8 @@ public class KwTrucoTest {
         }
         @Test
         @Tag("kwTrucoTests")
-        @DisplayName("Return true when the bot not has zap")
-        void shouldReturnTrueWhenBotNotHasZap() {
+        @DisplayName("Return false when the bot not has zap")
+        void shouldReturnFalseWhenBotNotHasZap() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
@@ -950,6 +950,24 @@ public class KwTrucoTest {
                     .opponentScore(7);
             boolean result = kwtrucoBot.hasZapAndTree(stepBuilder.build());
             assertTrue(result);
+        }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return false when bot has 3 and zap")
+        void shouldReturnFalseWhenBotHas3AndZap() {
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.hasZapAndTree(stepBuilder.build());
+            assertFalse(result);
         }
         @Test
         @Tag("kwTrucoTests")
