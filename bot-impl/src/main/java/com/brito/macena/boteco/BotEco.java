@@ -24,6 +24,7 @@ package com.brito.macena.boteco;
 import com.brito.macena.boteco.factories.InstanceFactory;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.utils.MyHand;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
@@ -37,7 +38,13 @@ public class BotEco implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-
+        updateStatus(intel);
+        MyHand myHand = new MyHand(intel.getCards(), intel.getVira());
+        if (status == Status.EXCELLENT) return true;
+        if (status == Status.GOOD) {
+            int scoreDistance = intel.getScore() - intel.getOpponentScore();
+            return scoreDistance == 0 || myHand.powerOfCard(intel, 0) >= 3;
+        } return false;
     }
 
     @Override
