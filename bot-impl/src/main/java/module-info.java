@@ -50,6 +50,7 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
+import com.bianca.joaopedro.lgtbot.Lgtbot;
 
 module bot.impl {
     requires bot.spi;
@@ -103,6 +104,7 @@ module bot.impl {
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
     exports com.eduardo.vinicius.camaleaotruqueiro;
+    exports com.bianca.joaopedro.lgtbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -157,5 +159,6 @@ module bot.impl {
             BeepBot,
             Zeusbot,
             CamaleaoTruqueiro,
-            ReiDoZap;
+            ReiDoZap
+            Lgtbot;
 }
