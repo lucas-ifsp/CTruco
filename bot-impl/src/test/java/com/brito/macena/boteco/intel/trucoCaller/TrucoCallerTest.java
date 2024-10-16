@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("TrucoCaller tests")
+@DisplayName("TrucoCaller Tests")
 public class TrucoCallerTest {
 
     @BeforeAll
