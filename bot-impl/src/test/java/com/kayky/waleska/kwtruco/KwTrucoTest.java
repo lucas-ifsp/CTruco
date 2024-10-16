@@ -11,8 +11,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class kwtrucoTest {
-    private kwtruco kwtrucoBot;
+public class KwTrucoTest {
+    private KwTruco kwtrucoBot;
 
     private final TrucoCard opponentCard = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
     private final List<TrucoCard> botCards = Arrays.asList(
@@ -474,13 +474,13 @@ public class kwtrucoTest {
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
-                    .botInfo(botCards, 9)
+                    .botInfo(botCards, 5)
                     .opponentScore(5)
                     .opponentCard(opponentCard);
 
             boolean shouldRaise = kwtrucoBot.decideIfRaises(stepBuilder.build());
 
-            assertFalse(botCards.stream().anyMatch(card -> card.isManilha(vira)));
+            assertFalse(shouldRaise);
         }
 
         @Test
