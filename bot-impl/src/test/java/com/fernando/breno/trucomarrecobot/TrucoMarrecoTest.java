@@ -380,4 +380,45 @@ class TrucoMarrecoTest {
             assertThat(res).isPositive();
         }
     }
+
+    @Nested
+    @DisplayName("chooseCard")
+    class ChooseCardTests{
+
+        @Test
+        @DisplayName("Testa se o bot joga a carta mais fraca quando o oponente tem uma manilha")
+        void testPlayWeakCardWhenOpponentHasManilha() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(ACE, DIAMONDS), TrucoCard.of(THREE, CLUBS));
+
+            vira = TrucoCard.of(TWO, HEARTS);
+
+            // Oponente joga uma manilha (baseada na vira)
+            TrucoCard opponentCard = TrucoCard.of(THREE, HEARTS);
+
+
+            stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(opponentCard), vira, 1)
+                    .botInfo(hand, 5)
+                    .opponentScore(6);
+
+            // Execução
+            CardToPlay cardToPlay = trucoMarreco.chooseCard(stepBuilder.build());
+
+            // Verificação: O bot deve jogar a carta mais fraca
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SIX, CLUBS));
+        }
+
+        @Test
+        @DisplayName("Testa jogar a carta mais forte quando não tem manilha")
+        void playStrongestCardWithoutManilha() {
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(KING, CLUBS));
+            vira = TrucoCard.of(KING, SPADES);
+            openCards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = trucoMarreco.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
+
+        }
+
+    }
 }
