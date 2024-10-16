@@ -121,6 +121,21 @@ public class MataPatoBot implements BotServiceProvider{
                 return CardToPlay.of(averageCard);
             }
         }
+        else if (intel.getCards().size() == 2) {
+            if (torna) {
+                if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) {
+                    return CardToPlay.of(worstCard);
+                }
+                if (bestCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) {
+                    return CardToPlay.of(bestCard);
+                }
+                return CardToPlay.discard(worstCard);
+            }
+            if (countManilha >= 1) {
+                return CardToPlay.of(bestCard);
+            }
+            return CardToPlay.of(averageCard);
+        }
 
         return CardToPlay.of(intel.getCards().get(0));
     }
