@@ -4,8 +4,11 @@ import com.brito.macena.boteco.intel.analyze.Pattern;
 import com.brito.macena.boteco.intel.analyze.Trucador;
 import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
+import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
+import com.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.interfaces.TrucoCaller;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
@@ -113,26 +116,28 @@ public class InstanceFactoryTest {
 
             assertThat(bot).isInstanceOf(Agressive.class);
         }
+    }
 
+    @Nested
+    @DisplayName("TrucoCaller Creation Tests")
+    class TrucoCallerCreationTests {
         @Test
-        @DisplayName("should create Aggressive bot when scores are equal")
-        void shouldCreateAggressiveBotWhenScoresAreEqual() {
-            List<TrucoCard> botEcoHand = List.of(
-                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)
+        @DisplayName("should create SneakyTrucoCaller when score distance is less than -4")
+        void shouldCreateSneakyTrucoCallerWhenScoreDistanceIsLessThanMinusFour() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
             );
-            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
             GameIntel step = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(), List.of(), vira, 1)
-                    .botInfo(botEcoHand, 9)
-                    .opponentScore(9)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
                     .build();
+            TrucoCaller caller = InstanceFactory.createTrucoCallerInstance(step);
 
-            ProfileBot bot = InstanceFactory.createProfileBot(step, Status.GOOD);
-
-            assertThat(bot).isInstanceOf(Agressive.class);
+            assertThat(caller).isInstanceOf(SneakyTrucoCaller.class);
         }
     }
 }
