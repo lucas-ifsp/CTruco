@@ -6,9 +6,12 @@ import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
 import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
 import com.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
+import com.brito.macena.boteco.intel.trucoResponder.PassiveTrucoResponder;
+import com.brito.macena.boteco.intel.trucoResponder.SneakyTrucoResponder;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.interfaces.TrucoCaller;
+import com.brito.macena.boteco.interfaces.TrucoResponder;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
 
@@ -47,5 +50,9 @@ public class InstanceFactory {
         } else {
             return new PassiveTrucoCaller();
         }
+    }
+
+    public static TrucoResponder createTrucoResponder(GameIntel intel) {
+        return new PassiveTrucoResponder();
     }
 }
