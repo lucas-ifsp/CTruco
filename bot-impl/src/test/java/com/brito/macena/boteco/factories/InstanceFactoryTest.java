@@ -6,9 +6,12 @@ import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
 import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
 import com.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
+import com.brito.macena.boteco.intel.trucoResponder.PassiveTrucoResponder;
+import com.brito.macena.boteco.intel.trucoResponder.SneakyTrucoResponder;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.interfaces.TrucoCaller;
+import com.brito.macena.boteco.interfaces.TrucoResponder;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
@@ -157,6 +160,30 @@ public class InstanceFactoryTest {
             TrucoCaller caller = InstanceFactory.createTrucoCallerInstance(step);
 
             assertThat(caller).isInstanceOf(PassiveTrucoCaller.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("TrucoResponder Creation Tests")
+    class TrucoResponderCreationTests {
+        @Test
+        @DisplayName("should create SneakyTrucoResponder when opponent's score is greater and score difference is less than or equal to -6")
+        void shouldCreateSneakyTrucoResponderWhenOpponentScoreIsGreaterAndScoreDifferenceIsLessThanOrEqualToMinusSix() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 5)
+                    .opponentScore(12)
+                    .build();
+
+            TrucoResponder responder = InstanceFactory.createTrucoResponder(step);
+
+            assertThat(responder).isInstanceOf(SneakyTrucoResponder.class);
         }
     }
 }
