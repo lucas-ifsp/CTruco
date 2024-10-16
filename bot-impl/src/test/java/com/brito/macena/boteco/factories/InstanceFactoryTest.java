@@ -39,6 +39,20 @@ public class InstanceFactoryTest {
 
             assertTrue(analyzer instanceof Trucador);
         }
+
+        @Test
+        @DisplayName("Should return Pattern instance when score is close")
+        void shouldReturnPatternWhenScoreIsClose() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS), 1)
+                    .botInfo(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)), 10)
+                    .opponentScore(9)
+                    .build();
+
+            Analyzer analyzer = InstanceFactory.createAnaliseInstance(intel);
+
+            assertTrue(analyzer instanceof Pattern);
+        }
     }
 
     @Nested
