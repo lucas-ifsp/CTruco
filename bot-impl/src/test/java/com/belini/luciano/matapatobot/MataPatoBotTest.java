@@ -1,5 +1,6 @@
 package com.belini.luciano.matapatobot;
 import com.bueno.spi.model.*;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -8,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardRank.SIX;
+import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,6 +100,27 @@ class MataPatoBotTest {
             TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
 
             TrucoCard expected = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("Should draw round if no better cards than opponent")
+        void ShouldDrawRoundIfNoBetterCards(){
+            GameIntel intel = mock(GameIntel.class);
+
+            TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+            TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard card3 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(THREE, HEARTS);
+
+            TrucoCard expected = TrucoCard.of(FOUR, CLUBS);
 
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
             when(intel.getVira()).thenReturn(vira);
