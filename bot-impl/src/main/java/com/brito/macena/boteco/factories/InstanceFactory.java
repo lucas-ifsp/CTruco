@@ -53,6 +53,16 @@ public class InstanceFactory {
     }
 
     public static TrucoResponder createTrucoResponder(GameIntel intel) {
+        int myScore = intel.getScore();
+        int oppScore = intel.getOpponentScore();
+        int scoreDifference = myScore - oppScore;
+
+        if (oppScore > myScore && scoreDifference <= -6) {
+            return new SneakyTrucoResponder();
+        }
+//        if (oppScore > myScore && scoreDifference <= -4) {
+//            return new AggressiveTrucoResponder();
+//        }
         return new PassiveTrucoResponder();
     }
 }
