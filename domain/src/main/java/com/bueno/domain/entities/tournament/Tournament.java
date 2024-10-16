@@ -51,18 +51,10 @@ public class Tournament {
     }
 
     // TODO - mudar p/ programação declarativa
-    // TODO - colocar 8 partidas
     public void insertMatches() {
         for (int i = 0; i < size - 1; i++)
             matches.add(new Match(UUID.randomUUID(),
-                    i + 1,
-                    null,
-                    null,
-                    false,
-                    null,
-                    0,
-                    0,
-                    null));
+                    i + 1));
     }
 
     // TODO - mudar p/ programação declarativa

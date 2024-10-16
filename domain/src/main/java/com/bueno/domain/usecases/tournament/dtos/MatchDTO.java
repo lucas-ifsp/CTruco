@@ -10,6 +10,7 @@ public record MatchDTO(UUID uuid,
                        String winnerName,
                        long p1Score,
                        long p2Score,
+                       long timeToExecute,
                        UUID next) {
 
     @Override

@@ -47,9 +47,6 @@ public class TournamentRepositoryMongoImpl implements TournamentRepository {
         }
         TournamentEntity entity = TournamentEntity.from(dto);
         tournamentDao.save(entity);
-        if (tournamentDao.findTournamentEntityByUuid(dto.uuid()).isPresent()) {
-            System.out.println("dto salvo");
-        }
     }
 
     @Override

@@ -21,6 +21,7 @@ public class MatchEntity {
     private String winnerName;
     private long p1Score;
     private long p2Score;
+    private long timeToExecute;
     private UUID next;
 
     public static MatchEntity from(MatchDTO dto) {
@@ -33,6 +34,7 @@ public class MatchEntity {
                 .winnerName(dto.winnerName())
                 .p1Score(dto.p1Score())
                 .p2Score(dto.p2Score())
+                .timeToExecute(dto.timeToExecute())
                 .next(dto.next())
                 .build();
     }
@@ -46,6 +48,7 @@ public class MatchEntity {
                 winnerName,
                 p1Score,
                 p2Score,
+                timeToExecute,
                 next);
     }
 }
