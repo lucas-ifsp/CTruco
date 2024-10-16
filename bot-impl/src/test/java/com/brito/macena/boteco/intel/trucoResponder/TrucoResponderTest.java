@@ -43,6 +43,28 @@ public class TrucoResponderTest {
 
             assertEquals(0, response);
         }
+
+        @Test
+        @DisplayName("Should reject raise when status is BAD with 3 cards")
+        void shouldRejectRaiseWhenStatusIsBadWithThreeCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            AggressiveTrucoResponder trucoResponder = new AggressiveTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.BAD);
+
+            assertEquals(-1, response);
+        }
     }
 
     @Nested
