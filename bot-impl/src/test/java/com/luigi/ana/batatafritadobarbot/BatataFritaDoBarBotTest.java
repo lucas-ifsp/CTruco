@@ -606,7 +606,7 @@ public class BatataFritaDoBarBotTest {
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), openCards, vira, 1)
                 .botInfo(myCards, 1)
-                .opponentScore(1);
+                .opponentScore(1).opponentCard(opponentCard);
 
         assertEquals(Optional.ofNullable(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)), batataFritaDoBarBot.getLowestToWin(stepBuilder.build()));
     }
