@@ -349,13 +349,14 @@ class PedroHenriqueBotTest {
         @DisplayName("First Round")
         class FirstRound {
             @Test
-            @DisplayName("Raise when has strong hand in first round")
-            void raiseFirstRoundStrongHand() {
+            @DisplayName("Should raise when has manilha in first round")
+            void shouldRaiseFirstRoundWithManilha() {
                 TrucoCard vira = TrucoCard.of(THREE, SPADES);
+
                 List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(ACE, HEARTS),
-                        TrucoCard.of(TWO, CLUBS),
-                        TrucoCard.of(THREE, DIAMONDS)
+                        TrucoCard.of(FOUR, HEARTS),
+                        TrucoCard.of(ACE, CLUBS),
+                        TrucoCard.of(SIX, DIAMONDS)
                 );
                 intel = GameIntel.StepBuilder.with()
                         .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
@@ -603,7 +604,7 @@ class PedroHenriqueBotTest {
                     .opponentScore(5);
 
             int response = sut.getRaiseResponse(intel.build());
-            assertEquals(-1, response); // Fold
+            assertEquals(-1, response);
         }
 
         @Test

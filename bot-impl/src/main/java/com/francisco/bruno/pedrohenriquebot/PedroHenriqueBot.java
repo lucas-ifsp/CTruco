@@ -48,26 +48,25 @@ public class PedroHenriqueBot implements BotServiceProvider {
     }
 
     private boolean decideIfRaisesFirstRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        int opScore = intel.getOpponentScore();
-        int score = intel.getScore();
-        if ((opScore - score) >= 8) return true;
-        if (countHighCards(intel) == 1 && countManilhas(intel) == 1) return true;
-        if (handStrengthAvg >= 9) return true;
+        int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
+
         if (manilhas >= 1 && highCards >= 1) {
             return true;
         }
-        if (opScore >= 10) {
+        if (opponentScore >= 10) {
             return true;
         }
-        if (score >= 10) {
+        if (botScore >= 10 && botScore > opponentScore) {
             return false;
         }
+
         return decideToBluff(intel, handStrengthAvg);
     }
 
     private boolean decideIfRaisesSecondRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        int opponentScore = intel.getOpponentScore();
         int botScore = intel.getScore();
+        int opponentScore = intel.getOpponentScore();
 
         if (botScore >= 10) {
             return false;
@@ -86,8 +85,8 @@ public class PedroHenriqueBot implements BotServiceProvider {
     }
 
     private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        int opponentScore = intel.getOpponentScore();
         int botScore = intel.getScore();
+        int opponentScore = intel.getOpponentScore();
 
         if (botScore >= 10) {
             return false;
@@ -116,6 +115,9 @@ public class PedroHenriqueBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         int manilhas = countManilhas(intel);
         int highCards = countHighCards(intel);
+
+        incrementOpponentRaiseCount();
+
         double handStrengthAvg = handStrengthAverage(intel);
         if (countHighCards(intel) == 0 && countManilhas(intel) == 0)
             return -1;
@@ -129,8 +131,6 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
         return 1;
     }
-
-
 
     private CardToPlay chooseCardFirstRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
