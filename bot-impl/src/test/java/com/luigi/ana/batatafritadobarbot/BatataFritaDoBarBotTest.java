@@ -641,17 +641,18 @@ public class BatataFritaDoBarBotTest {
     @DisplayName("Should return WON the last round")
     void shouldReturnWonTheLastRound() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
                 TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
         );
 
-        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+        List<TrucoCard> openCards = List.of(vira, opponentCard);
 
         stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 1)
-                .opponentScore(1);
+                .opponentScore(1).opponentCard(opponentCard);
 
         assertTrue(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
 
@@ -687,13 +688,13 @@ public class BatataFritaDoBarBotTest {
 
     //30
     @Test
-    @DisplayName("Make sure not ask truco when lost the first and avg less then 9")
-    void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen9() {
+    @DisplayName("Make sure not ask truco when lost the first and avg less then 7")
+    void makeSureNotAskTrucoWhenLostTheFirstAndAvgLessThen7() {
         TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
         );
 
         List<TrucoCard> openCards = List.of();
@@ -842,12 +843,12 @@ public class BatataFritaDoBarBotTest {
 
     // 37
     @Test
-    @DisplayName("No ask truco when lost first round and card is less then 9")
-    void NoAskTrucoWhenLostFirstRoundAndCardIsLessThen9() {
+    @DisplayName("No ask truco when lost first round and card is less then 7")
+    void NoAskTrucoWhenLostFirstRoundAndCardIsLessThen7() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS)
         );
 
         List<TrucoCard> openCards = List.of();
