@@ -112,6 +112,27 @@ public class TrucoResponderTest {
 
             assertEquals(-1, response);
         }
+
+        @Test
+        @DisplayName("Should return 0 when won first round and has 2 cards")
+        void shouldReturnZeroWhenWonFirstRoundWithTwoCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(botHand, 8)
+                    .opponentScore(6)
+                    .build();
+
+            PassiveTrucoResponder trucoResponder = new PassiveTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.BAD);
+
+            assertEquals(0, response);
+        }
     }
 
     @Nested
