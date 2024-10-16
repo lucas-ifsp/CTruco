@@ -51,6 +51,8 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 
+
+import com.adriann.emanuel.armageddon.Armageddon;
 import com.Selin.Bonelli.zetruquero.Zetruquero;
 import com.manhani.stefane.reimubot.ReimuBot;
 import com.adivic.octopus.Octopus;
@@ -116,6 +118,8 @@ module bot.impl {
     exports com.eduardo.vinicius.camaleaotruqueiro;
     exports com.bianca.joaopedro.lgtbot;
 
+    exports com.adriann.emanuel.armageddon;
+
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
             AddTheNewSoul,
@@ -167,7 +171,10 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
+
   
+
+            Armageddon,
             Zetruquero,
             BatataFritaDoBarBot,
             ReimuBot,
