@@ -187,6 +187,7 @@ public class ZeTruqueroTests
             when(intel.getCards()).thenReturn(trucoCards);
             when(intel.getVira()).thenReturn(vira);
             return intel;
+            
         }
 
         @DisplayName("Escolhe a carta menor para o primeiro round caso tenha zap")
