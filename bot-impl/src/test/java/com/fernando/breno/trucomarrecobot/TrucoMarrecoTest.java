@@ -31,6 +31,18 @@ class TrucoMarrecoTest {
     @Nested
     @DisplayName("getMaoDeOnzeResponse")
      class GetMaoDeOnzeResponse {
+
+        @Test
+        void testGetMaoDeOnzeResponseWithNoManilhas() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), 2)
+                    .botInfo(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS), TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)), 10)
+                    .opponentScore(10)
+                    .build();
+            TrucoMarreco bot = new TrucoMarreco();
+            assertFalse(bot.getMaoDeOnzeResponse(intel));
+        }
+
           @Test
           @DisplayName("Testa se aceita mão de onze  com duas manilhas ou mais")
           void testMaoDeOnzeWithTwoOrMoreManilhas() {
