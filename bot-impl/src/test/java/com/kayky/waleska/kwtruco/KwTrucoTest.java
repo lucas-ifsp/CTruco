@@ -23,7 +23,7 @@ public class kwtrucoTest {
 
     @BeforeEach
     public void setUp() {
-        kwtrucoBot = new kwtruco();
+        kwtrucoBot = new KwTruco();
     }
 
     @Nested
@@ -465,8 +465,13 @@ public class kwtrucoTest {
         public void botShouldNotRaiseIfDoesntHaveManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
             List<TrucoCard> openCards = Arrays.asList(
-                    vira,
-                    opponentCard);
+                    vira,opponentCard);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                     .botInfo(botCards, 9)

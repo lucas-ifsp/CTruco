@@ -5,7 +5,7 @@ import com.bueno.spi.model.*;
 import java.util.List;
 import java.util.Optional;
 
-public class kwtruco implements BotServiceProvider {
+public class KwTruco implements BotServiceProvider {
     private static final List<CardRank> offCards = List.of(CardRank.ACE, CardRank.TWO, CardRank.THREE);
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -83,80 +83,61 @@ public class kwtruco implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
-        // Verifica se há uma carta de ouros que seja manilha com base na vira
         for (TrucoCard card : intel.getCards()) {
             if (card.isOuros(intel.getVira())) {
-                // Retorna a carta de ouros como a jogada a ser feita
                 return CardToPlay.of(card);
             }
         }
 
-        // Se ainda não houve resultado nas rodadas anteriores
         if (intel.getRoundResults().isEmpty()) {
-            // Tenta pegar a menor carta de ataque disponível
             TrucoCard smallestAttackCard = findLowestAttackCard(intel);
             if (smallestAttackCard != null) {
                 return CardToPlay.of(smallestAttackCard);
             }
         }
 
-        // Escolhe a menor carta possível que possa vencer a carta do oponente
         TrucoCard smallestCardThatCanWin = selectSmallestCardThatCanWin(intel);
 
-        // Se não houver carta capaz de vencer, escolhe a carta de menor valor da mão
         if (smallestCardThatCanWin == null) {
             smallestCardThatCanWin = findSmallestCardInHand(intel);
         }
 
-        // Retorna a carta selecionada para ser jogada
         return CardToPlay.of(smallestCardThatCanWin);
     }
 
     private static TrucoCard findLowestAttackCard(GameIntel intel) {
-        // Filtra as cartas de ataque na mão do jogador
         List<TrucoCard> attackCards = intel.getCards().stream()
                 .filter(card -> offCards.contains(card.getRank()))
                 .toList();
 
-        // Se o jogador tiver pelo menos duas cartas de ataque, retorna a menor delas
         if (attackCards.size() >= 2) {
             return attackCards.stream()
                     .min(TrucoCard::relativeValue)
                     .orElse(null); // Usando orElse para maior clareza
         }
 
-        // Se o jogador não tiver cartas de ataque, retorna null
         return null;
     }
     private TrucoCard selectSmallestCardThatCanWin(GameIntel intel) {
-        // Obtém a carta do oponente, se houver.
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        // Se não houver carta do oponente, retorna null.
         if (opponentCard.isEmpty()) {
             return null;
         }
-
         TrucoCard vira = intel.getVira();
-
         TrucoCard smallestCardThatCanWin = null;
-
         for (TrucoCard card : intel.getCards()) {
-            // Se a carta atual for maior que a carta do oponente, atualiza a menor carta que pode vencer.
             if (card.relativeValue(vira) > opponentCard.get().relativeValue(vira)) {
-                // Se ainda não houver uma carta registrada ou se a nova carta for menor em relação à vira, atualiza.
                 if (smallestCardThatCanWin == null || card.relativeValue(vira) < smallestCardThatCanWin.relativeValue(vira)) {
                     smallestCardThatCanWin = card;
                 }
             }
         }
 
-        // Retorna a menor carta que pode vencer.
         return smallestCardThatCanWin;
     }
 
     private TrucoCard findSmallestCardInHand(GameIntel intel) {
-        // Inicializa a carta com o menor valor relativo em relação à carta vira.
         TrucoCard smallestCard = null;
         TrucoCard vira = intel.getVira();
 
@@ -168,7 +149,6 @@ public class kwtruco implements BotServiceProvider {
                 smallestCard = card;
             }
         }
-        // Retorna a carta com o menor valor relativo em relação à carta vira.
         return smallestCard;
     }
 
