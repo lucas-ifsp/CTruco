@@ -59,24 +59,4 @@ public class BotEco implements BotServiceProvider {
     public String getName() {
         return "BotEco :)";
     }
-
-    public int calculateHandPower(List<TrucoCard> hand) {
-        return hand.stream().mapToInt(this::getCardValue).sum();
-    }
-
-    public int getCardValue(TrucoCard card) {
-        return switch (card.getRank()) {
-            case FOUR -> 1;
-            case FIVE -> 2;
-            case SIX -> 3;
-            case SEVEN -> 4;
-            case QUEEN -> 5;
-            case JACK -> 6;
-            case KING -> 7;
-            case ACE -> 8;
-            case TWO -> 9;
-            case THREE -> 10;
-            default -> 0;
-        };
-    }
 }
