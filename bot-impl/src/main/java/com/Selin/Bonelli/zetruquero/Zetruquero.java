@@ -234,7 +234,7 @@ public class Zetruquero implements BotServiceProvider
         return false;
     }
 
-    static TrucoCard weakerCardtoUse(List<TrucoCard> cards, TrucoCard vira)
+    public TrucoCard weakerCardtoUse(List<TrucoCard> cards, TrucoCard vira)
     {
         TrucoCard wekeastCard = cards.get(0);
         for (TrucoCard card : cards)
@@ -248,7 +248,7 @@ public class Zetruquero implements BotServiceProvider
         return wekeastCard;
     }
 
-    static TrucoCard strongestCardtoUse(List<TrucoCard> cards, TrucoCard vira) {
+    public TrucoCard strongestCardtoUse(List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard strongestCard = cards.get(0);
 
         for (TrucoCard card : cards)
@@ -262,7 +262,7 @@ public class Zetruquero implements BotServiceProvider
         return strongestCard;
     }
 
-    static TrucoCard getWeakCardThatWin(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
+    public TrucoCard getWeakCardThatWin(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard weakCardThatWin = null;
 
         for (TrucoCard card : cards)
@@ -278,7 +278,7 @@ public class Zetruquero implements BotServiceProvider
         return weakCardThatWin;
     }
 
-    static boolean isStrongerThanAll(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
+    public boolean isStrongerThanAll(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
         for (TrucoCard card : cards)
         {
             if (card.compareValueTo(opponentCard, vira) >= 0)
