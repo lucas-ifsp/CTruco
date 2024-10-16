@@ -205,7 +205,7 @@ class MataPatoBotTest {
         @DisplayName("Should return 'No cards' if the bot has no cards in hand")
         public void shouldReturnNoCardsIfBotHasNoCards() {
             GameIntel intel = mock(GameIntel.class);
-            when(intel.getCards()).thenReturn(Arrays.asList());
+            when(intel.getCards()).thenReturn(List.of());
             String round = String.valueOf(mataPatoBot.roundCheck(intel));
             assertThat(round).isEqualTo("No cards");
         }
@@ -215,6 +215,22 @@ class MataPatoBotTest {
     @Nested
     @DisplayName("Raise Tests")
     class RaiseTests {
+
+        @Test
+        @DisplayName("Raise on First Round")
+        void DecideIfRaiseFirstRounf() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.decideIfRaises(intel);
+            assertTrue(response);
+        }
 
 
     }
@@ -446,11 +462,10 @@ class MataPatoBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
             when(intel.getVira()).thenReturn(vira);
             TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
-            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-            TrucoCard card3 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
             when(intel.getRoundResults()).thenReturn(List.of());
-            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+            when(intel.getCards()).thenReturn(List.of(card1, card2));
 
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(-1);
@@ -463,11 +478,9 @@ class MataPatoBotTest {
             TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
             when(intel.getVira()).thenReturn(vira);
             TrucoCard card1 = TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS);
-            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
-            TrucoCard card3 = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
 
             when(intel.getRoundResults()).thenReturn(List.of());
-            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+            when(intel.getCards()).thenReturn(List.of(card1));
 
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(-1);
