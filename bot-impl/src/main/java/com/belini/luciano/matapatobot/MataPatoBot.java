@@ -25,9 +25,12 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MataPatoBot implements BotServiceProvider{
+    private TrucoCard highCard;
+    private TrucoCard lowCard;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -65,17 +68,30 @@ public class MataPatoBot implements BotServiceProvider{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        TrucoCard vira = intel.getVira();
         if(intel.getCards().size() == 3){
             if (handValue(intel) == 27 ) {
                 return true;
             }
+        if (intel.getCards().size() == 2){
+            if (intel.getRoundResults().get(0).equals(GameIntel.RoundResult.DREW) ){
+                if(intel.getCards().stream().anyMatch(card -> card.isCopas(vira) ||  card.isZap(vira) ))
+                return true;
+            }
+        }
+
         }
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        TrucoCard vira = intel.getVira();
+        if (intel.getCards().size() == 3) {
+
+        }
+
+        return CardToPlay.of(intel.getCards().get(0));
     }
 
     @Override
@@ -191,5 +207,33 @@ public class MataPatoBot implements BotServiceProvider{
                 .filter(card -> card.isManilha(intel.getVira()))
                 .count();
         return count;
+    }
+    private TrucoCard setHighCard(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        this.highCard = intel.getCards().get(0);
+        for (TrucoCard card : intel.getCards()) {
+            if(card.relativeValue(vira) > highCard.relativeValue(vira)) highCard = card;
+        }
+
+        return highCard;
+    }
+    private TrucoCard setLowCard(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        this.lowCard = intel.getCards().get(0);
+        for (TrucoCard card : intel.getCards()) {
+            if(card.relativeValue(vira) < lowCard.relativeValue(vira)) lowCard = card;
+        }
+
+        return lowCard;
+    }
+
+    private TrucoCard setMidCard(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        TrucoCard midCard = intel.getCards().get(0);
+        for (TrucoCard card : intel.getCards()) {
+            if(!Objects.equals(highCard, card) && !Objects.equals(lowCard, card)) midCard = card;
+        }
+
+        return midCard;
     }
 }
