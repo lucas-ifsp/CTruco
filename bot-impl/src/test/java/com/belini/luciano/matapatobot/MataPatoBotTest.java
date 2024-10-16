@@ -128,6 +128,28 @@ class MataPatoBotTest {
 
             assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
         }
+
+        @Test
+        @DisplayName("If has manilha and good cards should kill with weakest card")
+        void IfHasManilhaAndGoodCardsKillWithWeakestCard(){
+            GameIntel intel = mock(GameIntel.class);
+
+            TrucoCard card1 = TrucoCard.of(TWO, CardSuit.CLUBS);
+            TrucoCard card2 = TrucoCard.of(ACE, CardSuit.HEARTS);
+            TrucoCard card3 = TrucoCard.of(THREE, CardSuit.DIAMONDS);
+
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(KING, HEARTS);
+
+            TrucoCard expected = TrucoCard.of(ACE, HEARTS);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
+
     }
 
     @Nested
