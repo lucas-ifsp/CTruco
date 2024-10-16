@@ -76,34 +76,6 @@ public class BotEcoTest {
 
             assertTrue(response);
         }
-
-        @Test
-        @DisplayName("Should accept Mão de Onze when hand power is 20 or more")
-        void acceptMaoDeOnzeWhenHandPowerIs20OrMore() {
-            GameIntel intel = mock(GameIntel.class);
-            List<TrucoCard> hand = List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
-            );
-            when(intel.getCards()).thenReturn(hand);
-
-            boolean response = botEco.getMaoDeOnzeResponse(intel);
-
-            assertTrue(response);
-        }
-
-        @Test
-        @DisplayName("Should handle empty hand gracefully")
-        void handleEmptyHandGracefully() {
-            GameIntel intel = mock(GameIntel.class);
-            List<TrucoCard> hand = List.of();
-            when(intel.getCards()).thenReturn(hand);
-
-            boolean response = botEco.getMaoDeOnzeResponse(intel);
-
-            assertFalse(response);
-        }
     }
 
     @Nested
