@@ -22,6 +22,7 @@
 package com.brito.macena.boteco;
 
 import com.brito.macena.boteco.factories.InstanceFactory;
+import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardToPlay;
@@ -32,11 +33,11 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.List;
 
 public class BotEco implements BotServiceProvider {
+    private Status status;
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        List<TrucoCard> hand = intel.getCards();
-        int handPower = calculateHandPower(hand);
-        return handPower >= 17;
+
     }
 
     @Override
@@ -58,5 +59,13 @@ public class BotEco implements BotServiceProvider {
     @Override
     public String getName() {
         return "BotEco :)";
+    }
+
+    private void updateStatus(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+        if (!myCards.isEmpty()){
+            Analyzer analise = InstanceFactory.createAnaliseInstance(intel);
+            status = analise.myHand(intel);
+        }
     }
 }
