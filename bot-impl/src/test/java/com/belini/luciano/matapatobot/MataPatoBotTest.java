@@ -353,6 +353,21 @@ class MataPatoBotTest {
             boolean response = mataPatoBot.decideIfRaises(intel);
             assertFalse(response);
         }
+        @Test
+        @DisplayName("Accept Truco if hand value is greater than 16")
+        void acceptTrucoIfHandValeuGreater16() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(SIX, DIAMONDS);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(JACK, SPADES);
+            TrucoCard card2 = TrucoCard.of(KING, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(ACE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.decideIfRaises(intel);
+            assertFalse(response);
+        }
 
     }
 
