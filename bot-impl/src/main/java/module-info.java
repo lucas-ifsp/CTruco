@@ -17,6 +17,7 @@ import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
+import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -105,6 +106,8 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+
+    exports com.luigi.ana.batatafritadobarbot;
     exports com.manhani.stefane.reimubot;
     exports com.adivic.octopus;
     exports com.eduardo.vinicius.camaleaotruqueiro;
@@ -161,7 +164,8 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-
+  
+            BatataFritaDoBarBot,
             ReimuBot,
             Octopus,
             CamaleaoTruqueiro,
