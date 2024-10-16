@@ -57,8 +57,9 @@ public class BotEco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        ProfileBot profileBot = InstanceFactory.createProfileBot(intel, Status.MEDIUM);
-        return profileBot.choose(intel, Status.MEDIUM);
+        updateStatus(intel);
+        ProfileBot profileBot = InstanceFactory.createProfileBot(intel, status);
+        return profileBot.choose(intel, status);
     }
 
     @Override
