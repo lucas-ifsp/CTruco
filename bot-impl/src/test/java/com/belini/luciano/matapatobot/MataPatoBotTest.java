@@ -300,6 +300,23 @@ class MataPatoBotTest {
             assertThat(round).isEqualTo("No cards");
         }
 
+        @Test
+        @DisplayName("Play weakest card if first to play")
+        void playWeakestCardIfFirstToPlay(){
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+            TrucoCard expected = TrucoCard.of(KING, SPADES);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
     }
 
     @Nested
