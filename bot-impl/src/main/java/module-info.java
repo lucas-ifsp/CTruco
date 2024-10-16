@@ -17,6 +17,7 @@ import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
+import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -50,6 +51,14 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 import com.brito.macena.boteco.BotEco;
+
+
+import com.adriann.emanuel.armageddon.Armageddon;
+import com.Selin.Bonelli.zetruquero.Zetruquero;
+import com.manhani.stefane.reimubot.ReimuBot;
+import com.adivic.octopus.Octopus;
+import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
+import com.bianca.joaopedro.lgtbot.Lgtbot;
 
 module bot.impl {
     requires bot.spi;
@@ -102,7 +111,15 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
+
     exports com.brito.macena.boteco;
+    exports com.Selin.Bonelli.zetruquero;
+    exports com.luigi.ana.batatafritadobarbot;
+    exports com.manhani.stefane.reimubot;
+    exports com.adivic.octopus;
+    exports com.eduardo.vinicius.camaleaotruqueiro;
+    exports com.bianca.joaopedro.lgtbot;
+    exports com.adriann.emanuel.armageddon;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -142,7 +159,6 @@ module bot.impl {
             SlayerBot,
             TeitasBot,
             MalasiaBot,
-
             FernasBot,
             NewBot,
             AtrasaBot,
@@ -156,6 +172,14 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
+            
+            BotEco,
+            Armageddon,
+            Zetruquero,
+            BatataFritaDoBarBot,
+            ReimuBot,
+            Octopus,
+            CamaleaoTruqueiro,
             ReiDoZap,
-            BotEco;
+            Lgtbot;
 }
