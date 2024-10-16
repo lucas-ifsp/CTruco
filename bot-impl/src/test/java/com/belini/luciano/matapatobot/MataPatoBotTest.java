@@ -36,8 +36,7 @@ import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardRank.SIX;
 import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -339,6 +338,21 @@ class MataPatoBotTest {
             assertFalse(response);
         }
 
+        @Test
+        @DisplayName("Accept Truco in Second Round if has manilha")
+        void acceptTrucoIfHasManilha() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(QUEEN, CLUBS);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(JACK, SPADES);
+            TrucoCard card2 = TrucoCard.of(KING, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(ACE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.decideIfRaises(intel);
+            assertFalse(response);
+        }
 
     }
 
