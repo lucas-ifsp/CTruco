@@ -410,43 +410,33 @@ class MataPatoBotTest {
         @DisplayName("ShouldAcceptTrucoSecondRound")
         public void shouldAcceptSecondRound() {
             GameIntel intel = mock(GameIntel.class);
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
             when(intel.getVira()).thenReturn(vira);
-            TrucoCard card1 = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
+            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
             when(intel.getRoundResults()).thenReturn(List.of());
-            when(intel.getCards()).thenReturn(List.of(card1));
+            when(intel.getCards()).thenReturn(List.of(card1, card2));
 
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(0);
         }
+
         @Test
-        @DisplayName("ShouldAsk6LastRound")
-        public void shouldAsk6LastRound() {
+        @DisplayName("CheckIfRunFirstRound")
+        public void checkIfRunFirstRound() {
             GameIntel intel = mock(GameIntel.class);
-            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
             when(intel.getVira()).thenReturn(vira);
-            TrucoCard card1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+            TrucoCard card1 = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
 
             when(intel.getRoundResults()).thenReturn(List.of());
-            when(intel.getCards()).thenReturn(List.of(card1));
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
 
             int response = mataPatoBot.getRaiseResponse(intel);
-            assertThat(response).isEqualTo(1);
-        }
-        @Test
-        @DisplayName("ShouldAcceptLastRound")
-        public void shouldAcceptLastRound() {
-            GameIntel intel = mock(GameIntel.class);
-            TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
-            when(intel.getVira()).thenReturn(vira);
-            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
-
-            when(intel.getRoundResults()).thenReturn(List.of());
-            when(intel.getCards()).thenReturn(List.of(card1));
-
-            int response = mataPatoBot.getRaiseResponse(intel);
-            assertThat(response).isEqualTo(0);
+            assertThat(response).isEqualTo(-1);
         }
     }
 }
