@@ -232,6 +232,22 @@ class MataPatoBotTest {
             assertTrue(response);
         }
 
+        @Test
+        @DisplayName("Raise on First Round")
+        void DecideIfRaiseFirstRounfFalseCase() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.decideIfRaises(intel);
+            assertFalse(response);
+        }
+
 
     }
 
