@@ -4,8 +4,10 @@ import com.brito.macena.boteco.intel.analyze.Pattern;
 import com.brito.macena.boteco.intel.analyze.Trucador;
 import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
+import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
+import com.brito.macena.boteco.interfaces.TrucoCaller;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
 
@@ -32,5 +34,9 @@ public class InstanceFactory {
         } else {
             return new Agressive(intel, status);
         }
+    }
+
+    public static TrucoCaller createTrucoCallerInstance(GameIntel intel) {
+        return new PassiveTrucoCaller();
     }
 }
