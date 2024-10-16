@@ -11,6 +11,7 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("TrucoResponder tests")
 public class TrucoResponderTest {
@@ -159,6 +160,25 @@ public class TrucoResponderTest {
     @Nested
     @DisplayName("SneakyTrucoCaller method tests")
     class SneakyTrucoCallerMethodTests {
+        @Test
+        @DisplayName("Should return 1 when status is EXCELLENT")
+        void shouldReturnOneWhenStatusIsExcellent() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 10)
+                    .opponentScore(5)
+                    .build();
+
+            SneakyTrucoResponder trucoResponder = new SneakyTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.EXCELLENT);
+
+            assertEquals(1, response);
+        }
     }
 }
