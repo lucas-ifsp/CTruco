@@ -671,8 +671,8 @@ public class BatataFritaDoBarBotTest {
                 .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(1).opponentCard(opponentCard);
-
-        assertTrue(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
+        when(TrucoCard.of(CardRank.SEVEN,CardSuit.HEARTS).relativeValue(vira) > opponentCard.relativeValue(vira));
+        assertTrue(batataFritaDoBarBot.isThirdRoundWinner(stepBuilder.build()));
 
     }
 
@@ -693,15 +693,21 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(myCards, 1)
                 .opponentScore(1);
 
-        assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.isThirdRoundWinner(stepBuilder.build()));
     }
 
     //29
     @Test
-    @DisplayName("Make sure the enemy's score doesn't go above or equal 12 if they ask for truco")
-    void makeSureTheEnemySScoreDoesnTGoAboveOrEqual12IfTheyAskForTruco() {
-        when(intel.getOpponentScore()).thenReturn(9);
-        assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
+    @DisplayName("Make sure the enemy's score doesn't go above or equal to 12 if they ask for truco")
+    void makeSureTheEnemySScoreDoesntGoAboveOrEqual12IfTheyAskForTruco() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 0)
+                .botInfo(List.of(), 7)
+                .opponentScore(9);
+
+        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
 
     //30
