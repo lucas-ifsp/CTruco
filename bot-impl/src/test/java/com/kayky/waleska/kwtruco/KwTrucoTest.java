@@ -905,6 +905,52 @@ public class KwTrucoTest {
             boolean result = kwtrucoBot.oponnentHasZap(stepBuilder.build());
             assertFalse(result);
         }
+
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return false when bot not has 3")
+        void shouldReturnFalseWhenBotNotHas3() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+
+            boolean result = kwtrucoBot.has3(stepBuilder.build());
+            assertFalse(result);
+        }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return true when bot has 3")
+        void shouldReturnTrueWhenBotHas3() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.has3(stepBuilder.build());
+            assertTrue(result);
+        }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return true when bot has 3 and zap")
+        void shouldReturnTrueWhenBotHas3AndZap() {
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.hasZapAndTree(stepBuilder.build());
+            assertTrue(result);
+        }
         @Test
         @Tag("kwTrucoTests")
         @DisplayName("Return true when oponnent has manilha")
@@ -920,56 +966,23 @@ public class KwTrucoTest {
             boolean result = kwtrucoBot.oponnentHasManilha(stepBuilder.build());
             assertTrue(result);
         }
-        @Test
-        @Tag("kwTrucoTests")
-        @DisplayName("Return false when oponnent not has 3")
-        void shouldReturnFalseWhenOponnentNotHas3() {
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
-
-            List<TrucoCard> botCards = Arrays.asList(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
-
-            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
-                    .botInfo(botCards, 5)
-                    .opponentScore(7);
-            boolean result = kwtrucoBot.has3(stepBuilder.build());
-            assertFalse(result);
-        }
-        @Test
-        @Tag("kwTrucoTests")
-        @DisplayName("Return false when oponnent has 3")
-        void shouldReturnFalseWhenOponnentHas3() {
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
-
-            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
-                    .botInfo(botCards, 5)
-                    .opponentScore(7);
-            boolean result = kwtrucoBot.has3(stepBuilder.build());
-            assertTrue(result);
-        }
-
 
         @Test
         @Tag("kwTrucoTests")
         @DisplayName("Return false when oponnent not has manilha")
         void shouldReturnFalseWhenOponnentNotHasManilha() {
-            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
                     .botInfo(botCards, 5)
                     .opponentScore(7)
-                    .opponentCard(TrucoCard.of(CardRank.KING,CardSuit.HEARTS));
-
+                    .opponentCard(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
             boolean result = kwtrucoBot.oponnentHasManilha(stepBuilder.build());
             assertFalse(result);
 
         }
-        
+
 
 
 
