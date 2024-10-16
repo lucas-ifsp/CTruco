@@ -1,9 +1,6 @@
 package com.fernando.breno.trucomarrecobot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -257,19 +254,18 @@ class TrucoMarrecoTest {
         }
     }
 
-
     @Nested
     @DisplayName("getRaiseResponse")
-    class GetRaiseResponse{
+    class GetRaiseResponse {
 
         @Test
         @DisplayName("Testa aceita aumento se tiver uma manilha ou mais")
         void testWhichcceptsTrucocomAManilhaorMORE() {
-            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of( THREE, CLUBS), TrucoCard.of(ACE, CLUBS));
+            hand = List.of(TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(ACE, CLUBS));
             vira = TrucoCard.of(TWO, SPADES);
             openCards = List.of();
             result = List.of();
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo( result,openCards, vira, 1).botInfo(hand, 1).opponentScore(0);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 1).botInfo(hand, 1).opponentScore(0);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isPositive();
         }
@@ -282,8 +278,8 @@ class TrucoMarrecoTest {
             openCards = List.of(vira);
 
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
-                    botInfo(hand,10).opponentScore(5);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(hand, 10).opponentScore(5);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isPositive();
 
@@ -297,8 +293,8 @@ class TrucoMarrecoTest {
             openCards = List.of(vira);
 
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
-                    botInfo(hand,10).opponentScore(5);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(hand, 10).opponentScore(5);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isPositive();
 
@@ -312,9 +308,8 @@ class TrucoMarrecoTest {
             openCards = List.of(vira);
 
 
-
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
-                    botInfo(hand,2).opponentScore(5);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1).
+                    botInfo(hand, 2).opponentScore(5);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isPositive();
 
@@ -326,11 +321,11 @@ class TrucoMarrecoTest {
             hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, SPADES));
             vira = TrucoCard.of(FIVE, HEARTS);
             openCards = List.of(vira);
-            result= List.of();
+            result = List.of();
 
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
-                    botInfo(hand,2).opponentScore(5);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1).
+                    botInfo(hand, 2).opponentScore(5);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isOne();
 
@@ -344,7 +339,7 @@ class TrucoMarrecoTest {
             openCards = List.of(vira);
             result = List.of(GameIntel.RoundResult.DREW);
 
-            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards,vira, 3).botInfo(hand, 1).opponentScore(3);
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 3).botInfo(hand, 1).opponentScore(3);
             int result = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(result).isPositive();
         }
@@ -352,10 +347,10 @@ class TrucoMarrecoTest {
         @Test
         @DisplayName("Testa recusar aumento tiver  carta  fraca")
         void refuseIfYouAndHaveWeakCards() {
-            hand = List.of(TrucoCard.of(FIVE,HEARTS), TrucoCard.of(ACE, SPADES));
+            hand = List.of(TrucoCard.of(FIVE, HEARTS), TrucoCard.of(ACE, SPADES));
             vira = TrucoCard.of(ACE, SPADES);
             result = List.of(GameIntel.RoundResult.LOST);
-           openCards = List.of();
+            openCards = List.of();
             stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 3).botInfo(hand, 3).opponentScore(1);
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isZero();
@@ -364,7 +359,7 @@ class TrucoMarrecoTest {
         @Test
         @DisplayName("Testa se recusa perdeu a primeira e tem uma manilhas")
         void refusesWhenHeLostFirstAndHasShackle() {
-            hand = List.of(TrucoCard.of(FIVE,DIAMONDS), TrucoCard.of(SIX, SPADES));
+            hand = List.of(TrucoCard.of(FIVE, DIAMONDS), TrucoCard.of(SIX, SPADES));
             vira = TrucoCard.of(THREE, SPADES);
             result = List.of(GameIntel.RoundResult.LOST);
             openCards = List.of();
@@ -375,8 +370,8 @@ class TrucoMarrecoTest {
 
         @Test
         @DisplayName("Testa que aceito após perder a primeira rodada, mas tem casal maio")
-        void  testsRaisingAfterLosingTheFirstRoundButHavingBiggerCouple() {
-            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(THREE, CLUBS));
+        void testsRaisingAfterLosingTheFirstRoundButHavingBiggerCouple() {
+            hand = List.of(TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, CLUBS));
             vira = TrucoCard.of(TWO, SPADES);
             result = List.of(GameIntel.RoundResult.LOST);
             openCards = List.of();
@@ -384,7 +379,5 @@ class TrucoMarrecoTest {
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isPositive();
         }
-
-
     }
 }

@@ -92,20 +92,21 @@ public class TrucoMarreco implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard (GameIntel intel) {
 
-        if (intel.getOpponentCard().get().isManilha(intel.getVira())){
-            return CardToPlay.of(weakCard(intel).orElse(null));
+        TrucoCard opponentCard = intel.getOpponentCard().orElse(null);
+
+        if (opponentCard != null && opponentCard.isManilha(intel.getVira())) {
+            return CardToPlay.of(weakCard(intel).orElseThrow(() -> new IllegalStateException("No weak card found")));
         }
 
         if (biggestCouple(intel) && intel.getRoundResults().isEmpty()) {
-            return CardToPlay.of(weakCard(intel).orElse(null));
-        }
-        if (intel.getRoundResults().equals(DREW) || wonFirstRound(intel)) {
-            return CardToPlay.of(strongCard(intel).orElse(null));
+            return CardToPlay.of(weakCard(intel).orElseThrow(() -> new IllegalStateException("No weak card found")));
         }
 
+        if (intel.getRoundResults().contains(DREW) || wonFirstRound(intel)) {
+            return CardToPlay.of(strongCard(intel).orElseThrow(() -> new IllegalStateException("No strong card found")));
+        }
 
-
-        return null;
+        return CardToPlay.of(weakCard(intel).orElseThrow(() -> new IllegalStateException("No weak card found")));
     }
 
     @Override
