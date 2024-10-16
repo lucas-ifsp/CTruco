@@ -202,10 +202,10 @@ public class KwTruco implements BotServiceProvider {
     public boolean oponnentHasManilha(GameIntel intel) {
         return  intel.getOpponentCard().stream().anyMatch(card -> card.isManilha(intel.getVira()));
     }
-    private boolean has3(GameIntel intel){
+    public boolean has3(GameIntel intel){
         return intel.getCards().stream().anyMatch(card -> card.getRank() == CardRank.THREE);
     }
-    private boolean hasZapAndTree(GameIntel intel){
+    public boolean hasZapAndTree(GameIntel intel){
         return has3(intel) && hasZap(intel);
     }
 

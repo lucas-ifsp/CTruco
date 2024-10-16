@@ -922,6 +922,25 @@ public class KwTrucoTest {
         }
         @Test
         @Tag("kwTrucoTests")
+        @DisplayName("Return false when oponnent not has 3")
+        void shouldReturnFalseWhenOponnentNotHas3() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.has3(stepBuilder.build());
+            assertFalse(result);
+        }
+
+        @Test
+        @Tag("kwTrucoTests")
         @DisplayName("Return false when oponnent not has manilha")
         void shouldReturnFalseWhenOponnentNotHasManilha() {
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
@@ -934,7 +953,10 @@ public class KwTrucoTest {
 
             boolean result = kwtrucoBot.oponnentHasManilha(stepBuilder.build());
             assertFalse(result);
+
         }
+        
+
 
 
     }
