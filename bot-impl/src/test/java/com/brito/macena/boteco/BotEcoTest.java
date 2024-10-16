@@ -76,6 +76,27 @@ public class BotEcoTest {
 
             assertTrue(response);
         }
+
+        @Test
+        @DisplayName("Should not accept hand of eleven when hand power is less than 17")
+        void shouldNotAcceptMaoDeOnzeWhenHandPowerIsLessThan17() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .build();
+
+            boolean response = botEco.getMaoDeOnzeResponse(intel);
+
+            assertFalse(response);
+        }
     }
 
     @Nested
