@@ -340,7 +340,7 @@ class TrucoMarrecoTest {
         @Test
         @DisplayName("Testa recusar aumento tiver  carta  fraca")
         void refuseIfYouAndHaveWeakCards() {
-            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(ACE, SPADES));
+            hand = List.of(TrucoCard.of(FIVE,HEARTS), TrucoCard.of(ACE, SPADES));
             vira = TrucoCard.of(ACE, SPADES);
             result = List.of(GameIntel.RoundResult.LOST);
            openCards = List.of();
@@ -348,6 +348,20 @@ class TrucoMarrecoTest {
             int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
             assertThat(res).isZero();
         }
+
+        @Test
+        @DisplayName("Testa se recusa perdeu a primeira e tem uma manilhas")
+        void refusesWhenHeLostFirstAndHasShackle() {
+            hand = List.of(TrucoCard.of(FIVE,DIAMONDS), TrucoCard.of(SIX, SPADES));
+            vira = TrucoCard.of(THREE, SPADES);
+            result = List.of(GameIntel.RoundResult.LOST);
+            openCards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 1).botInfo(hand, 3).opponentScore(3);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isZero();
+        }
+
+
 
 
     }
