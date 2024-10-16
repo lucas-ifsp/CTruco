@@ -25,6 +25,7 @@ import com.brito.macena.boteco.factories.InstanceFactory;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.interfaces.TrucoCaller;
+import com.brito.macena.boteco.interfaces.TrucoResponder;
 import com.brito.macena.boteco.utils.MyHand;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardToPlay;
@@ -64,7 +65,9 @@ public class BotEco implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        updateStatus(intel);
+        TrucoResponder trucoResponder = InstanceFactory.createTrucoResponder(intel);
+        return trucoResponder.getRaiseResponse(intel, status);
     }
 
     @Override
