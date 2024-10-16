@@ -938,6 +938,20 @@ public class KwTrucoTest {
             boolean result = kwtrucoBot.has3(stepBuilder.build());
             assertFalse(result);
         }
+        @Test
+        @Tag("kwTrucoTests")
+        @DisplayName("Return false when oponnent has 3")
+        void shouldReturnFalseWhenOponnentHas3() {
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(vira), vira, 1)
+                    .botInfo(botCards, 5)
+                    .opponentScore(7);
+            boolean result = kwtrucoBot.has3(stepBuilder.build());
+            assertTrue(result);
+        }
+
 
         @Test
         @Tag("kwTrucoTests")
