@@ -324,7 +324,18 @@ class TrucoMarrecoTest {
 
         }
 
+        @Test
+        @DisplayName("Testa pede aumento se teve empate  tem mao forte")
+        void testRaiseIfRaiseDrewHanostrength() {
+            hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+            result = List.of(GameIntel.RoundResult.DREW);
 
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result,openCards,vira, 3).botInfo(hand, 1).opponentScore(3);
+            int result = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(result).isPositive();
+        }
 
 
     }
