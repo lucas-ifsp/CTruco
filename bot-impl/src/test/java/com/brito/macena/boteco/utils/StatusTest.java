@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Status Tests")
 public class StatusTest {
     @BeforeAll
     static void setupAll() { System.out.println("Starting Status tests..."); }

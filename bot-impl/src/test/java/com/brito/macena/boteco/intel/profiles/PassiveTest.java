@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
+@DisplayName("Passive Tests")
 public class PassiveTest {
 
     @Nested

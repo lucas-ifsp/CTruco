@@ -30,8 +30,8 @@ public class TrucadorTest {
                     .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
                     .botInfo(List.of(
                             TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                            TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                            TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+                            TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                            TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)
                     ), 0)
                     .opponentScore(0)
                     .build();
@@ -98,8 +98,8 @@ public class TrucadorTest {
             GameIntel intel = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.LOST), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.CLUBS), 0)
                     .botInfo(List.of(
-                            TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
-                            TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+                            TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.THREE, CardSuit.SPADES)
                     ), 0)
                     .opponentScore(0)
                     .build();
