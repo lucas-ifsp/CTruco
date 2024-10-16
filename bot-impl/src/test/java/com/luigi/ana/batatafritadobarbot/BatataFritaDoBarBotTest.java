@@ -571,11 +571,19 @@ public class BatataFritaDoBarBotTest {
 
     //23
     @Test
-    @DisplayName("Sure not to ask for truco if opponent is in hand of eleven")
+    @DisplayName("Ensure not to ask for truco if opponent is in hand of eleven")
     void sureNotToAskForTrucoIfOpponentIsInHandOfEleven() {
-        when(intel.getOpponentScore()).thenReturn(11);
-        assertFalse(batataFritaDoBarBot.decideIfRaises(intel));
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        stepBuilder = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 0)
+                .botInfo(List.of(), 8)
+                .opponentScore(11);
+
+
+        assertFalse(batataFritaDoBarBot.decideIfRaises(stepBuilder.build()));
     }
+
 
     //24
     @Test
