@@ -44,6 +44,11 @@ public class MataPatoBot implements BotServiceProvider{
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if(intel.getCards().size() == 3){
+            if (handValue(intel) == 27 ) {
+                return true;
+            }
+        }
         return false;
     }
 
