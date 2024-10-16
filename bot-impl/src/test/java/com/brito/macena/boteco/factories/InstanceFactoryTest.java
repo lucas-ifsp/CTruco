@@ -185,5 +185,25 @@ public class InstanceFactoryTest {
 
             assertThat(responder).isInstanceOf(SneakyTrucoResponder.class);
         }
+
+        @Test
+        @DisplayName("should create PassiveTrucoResponder when opponent's score is less than or equal to player's score")
+        void shouldCreatePassiveTrucoResponderWhenOpponentScoreIsLessThanOrEqualToPlayerScore() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 8)
+                    .opponentScore(6)
+                    .build();
+
+            TrucoResponder responder = InstanceFactory.createTrucoResponder(step);
+
+            assertThat(responder).isInstanceOf(PassiveTrucoResponder.class);
+        }
     }
 }
