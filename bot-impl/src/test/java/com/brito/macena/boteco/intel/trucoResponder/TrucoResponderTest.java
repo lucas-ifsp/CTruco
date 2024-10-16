@@ -91,7 +91,27 @@ public class TrucoResponderTest {
     @Nested
     @DisplayName("PassiveTrucoCaller method tests")
     class PassiveTrucoCallerMethodTests {
+        @Test
+        @DisplayName("Should return -1 when status is BAD with 3 cards")
+        void shouldReturnMinusOneWhenStatusIsBadWithThreeCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
 
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(5)
+                    .build();
+
+            PassiveTrucoResponder trucoResponder = new PassiveTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.BAD);
+
+            assertEquals(-1, response);
+        }
     }
 
     @Nested
