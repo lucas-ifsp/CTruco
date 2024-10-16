@@ -400,6 +400,17 @@ class TrucoMarrecoTest {
             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SIX, CLUBS));
         }
 
+        @Test
+        @DisplayName("Testa jogar a carta mais forte quando não tem manilha")
+        void playStrongestCardWithoutManilha() {
+            hand = List.of(TrucoCard.of(KING, DIAMONDS), TrucoCard.of(THREE, CLUBS), TrucoCard.of(KING, CLUBS));
+            vira = TrucoCard.of(KING, SPADES);
+            openCards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 1).botInfo(hand, 3).opponentScore(0);
+            CardToPlay cardToPlay = trucoMarreco.chooseCard(stepBuilder.build());
+            assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
+
+        }
 
     }
 }
