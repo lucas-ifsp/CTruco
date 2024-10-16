@@ -5,6 +5,7 @@ import com.brito.macena.boteco.intel.analyze.Trucador;
 import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
 import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
+import com.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
 import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.interfaces.TrucoCaller;
@@ -37,6 +38,14 @@ public class InstanceFactory {
     }
 
     public static TrucoCaller createTrucoCallerInstance(GameIntel intel) {
-        return new PassiveTrucoCaller();
+        int myScore = intel.getScore();
+        int oppScore = intel.getOpponentScore();
+        int scoreDistance = myScore - oppScore;
+
+        if (scoreDistance < -4) {
+            return new SneakyTrucoCaller();
+        } else {
+            return new PassiveTrucoCaller();
+        }
     }
 }
