@@ -300,6 +300,23 @@ class MataPatoBotTest {
             assertThat(round).isEqualTo("No cards");
         }
 
+        @Test
+        @DisplayName("Play weakest card if first to play")
+        void playWeakestCardIfFirstToPlay(){
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+            TrucoCard card2 = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+            TrucoCard card3 = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(THREE, DIAMONDS);
+            TrucoCard expected = TrucoCard.of(KING, SPADES);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
     }
 
     @Nested
@@ -343,6 +360,21 @@ class MataPatoBotTest {
         void acceptTrucoIfHasManilha() {
             GameIntel intel = mock(GameIntel.class);
             TrucoCard vira = TrucoCard.of(QUEEN, CLUBS);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(JACK, SPADES);
+            TrucoCard card2 = TrucoCard.of(KING, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(ACE, CardSuit.SPADES);
+
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            boolean response = mataPatoBot.decideIfRaises(intel);
+            assertFalse(response);
+        }
+        @Test
+        @DisplayName("Accept Truco if hand value is greater than 16")
+        void acceptTrucoIfHandValeuGreater16() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(SIX, DIAMONDS);
             when(intel.getVira()).thenReturn(vira);
             TrucoCard card1 = TrucoCard.of(JACK, SPADES);
             TrucoCard card2 = TrucoCard.of(KING, CardSuit.CLUBS);
