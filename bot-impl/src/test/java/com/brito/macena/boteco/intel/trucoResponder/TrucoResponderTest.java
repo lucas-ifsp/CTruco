@@ -133,6 +133,27 @@ public class TrucoResponderTest {
 
             assertEquals(0, response);
         }
+
+        @Test
+        @DisplayName("Should return 1 when status is GOOD and score difference is -6 or worse with 2 cards")
+        void shouldReturnOneWhenStatusIsGoodAndScoreDifferenceIsMinusSixOrWorseWithTwoCards() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 6)
+                    .opponentScore(12)
+                    .build();
+
+            PassiveTrucoResponder trucoResponder = new PassiveTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.GOOD);
+
+            assertEquals(1, response);
+        }
     }
 
     @Nested
