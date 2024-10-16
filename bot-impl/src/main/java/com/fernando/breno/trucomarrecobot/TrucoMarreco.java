@@ -144,11 +144,12 @@ public class TrucoMarreco implements BotServiceProvider {
 
 
     public boolean wonFirstRound(GameIntel intel){
-        if (intel.getRoundResults() == null || intel.getRoundResults().size() <= 1) {
+        if (intel.getRoundResults() == null || intel.getRoundResults().isEmpty()) {
             throw new IllegalArgumentException("A lista de resultados da rodada está vazia ou não tem elementos suficientes.");
         }
-        return intel.getRoundResults().get(1).equals(GameIntel.RoundResult.WON);
+        return intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
     }
+
 
     public boolean handStrong(GameIntel intel){
         var hasManilha = numberOfManilhas(intel)  >= 1;
