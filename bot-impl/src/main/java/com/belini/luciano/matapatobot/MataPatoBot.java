@@ -87,8 +87,39 @@ public class MataPatoBot implements BotServiceProvider{
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
-        if (intel.getCards().size() == 3) {
+        TrucoCard bestCard = setHighCard(intel);
+        TrucoCard averageCard = setMidCard(intel);
+        TrucoCard worstCard = setLowCard(intel);
+        boolean torna = intel.getOpponentCard().isPresent();
+        boolean hasZap = intel.getCards().stream().anyMatch(card -> card.isZap(vira));
+        boolean hasCopas = intel.getCards().stream().anyMatch(card -> card.isCopas(vira));
+        long countManilha = intel.getCards().stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
 
+
+        if (intel.getCards().size() == 3) {
+            if (hasZap && hasCopas) return CardToPlay.of(worstCard);
+
+            if (torna) {
+                if (drewFirst(intel) && (hasZap || hasCopas)) {
+                    if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) == 0) {
+                        return CardToPlay.of(worstCard);
+                    }
+                    if (averageCard.compareValueTo(intel.getOpponentCard().get(), vira) == 0) {
+                        return CardToPlay.of(averageCard);
+                    }
+                }
+
+                if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) return CardToPlay.of(worstCard);
+                if (averageCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0)
+                    return CardToPlay.of(averageCard);
+                if (bestCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) return CardToPlay.of(bestCard);
+                return CardToPlay.of(worstCard);
+            }
+            if (countManilha >= 1 && intel.getCards().stream().anyMatch(card -> card.relativeValue(vira) == 9)) {
+                return CardToPlay.of(averageCard);
+            }
         }
 
         return CardToPlay.of(intel.getCards().get(0));
@@ -235,5 +266,12 @@ public class MataPatoBot implements BotServiceProvider{
         }
 
         return midCard;
+    }
+    private boolean drewFirst(GameIntel intel){
+        TrucoCard vira =intel.getVira();
+        if(intel.getOpponentCard().isPresent()){
+            return intel.getCards().stream().anyMatch(card -> card.compareValueTo(intel.getOpponentCard().get(), vira) == 0);
+        }
+        return  false;
     }
 }
