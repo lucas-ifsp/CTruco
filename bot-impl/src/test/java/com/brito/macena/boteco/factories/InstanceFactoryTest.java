@@ -53,6 +53,20 @@ public class InstanceFactoryTest {
 
             assertTrue(analyzer instanceof Pattern);
         }
+
+        @Test
+        @DisplayName("Should return Pattern instance when leading by any margin")
+        void shouldReturnPatternWhenLeading() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.KING, CardSuit.CLUBS), 1)
+                    .botInfo(List.of(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)), 12)
+                    .opponentScore(5)
+                    .build();
+
+            Analyzer analyzer = InstanceFactory.createAnaliseInstance(intel);
+
+            assertTrue(analyzer instanceof Pattern);
+        }
     }
 
     @Nested
