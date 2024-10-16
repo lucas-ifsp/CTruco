@@ -23,6 +23,7 @@
 package com.Selin.Bonelli.zetruquero;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,14 +32,30 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel)
     {
-        //decidir jogar para 2 manilhas
-        //decidir jogar com zap
-        //decidir jogar com 1 manilha e duas cartas fortes
-        //Deve recusar mão de onze se tiver duas cartas fracas
-        //Deve recusar mão de onze com uma carta baixa e uma manilha fraca
-        //Deve aceitar mão de onze com duas manilhas fortes e uma carta alta
-        //Deve recusar mão de onze com duas cartas medianas e sem manilha
-        return false;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        if (strongCardInHand(cards, vira))
+        {
+            return true;
+        }
+
+        if (weakHand(cards, vira))
+        {
+            return false;
+        }
+
+        if (strongHand(cards, vira))
+        {
+            return true;
+        }
+
+        if(royaltyCardInHand(cards, vira))
+        {
+            return true;
+        }
+
+        return true;
     }
 
     @Override
@@ -47,8 +64,7 @@ public class Zetruquero implements BotServiceProvider
         int currentRound = intel.getRoundResults().size() + 1;
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
-
-        List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
+        List<GameIntel.RoundResult> RoundsList = intel.getRoundResults();
 
         if(strongHand(cards, vira) && manilhaInHand(cards, vira))
         {
@@ -60,12 +76,12 @@ public class Zetruquero implements BotServiceProvider
             return true;
         }
 
-        if (currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.LOST))
+        if (currentRound == 2 && RoundsList.contains(GameIntel.RoundResult.LOST))
         {
             return zapInHand(cards, vira);
         }
 
-        if (currentRound == 3 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        if (currentRound == 3 && RoundsList.contains(GameIntel.RoundResult.WON))
         {
             return strongHand(cards, vira);
         }
@@ -76,66 +92,72 @@ public class Zetruquero implements BotServiceProvider
     @Override
     public CardToPlay chooseCard(GameIntel intel)
     {
-        Boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
         int currentRound = intel.getRoundResults().size() + 1;
+        Boolean isFirst = intel.getOpponentCard().isEmpty();
         TrucoCard vira = intel.getVira();
         List<TrucoCard> cards = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        List<GameIntel.RoundResult> RoundsList = intel.getRoundResults();
 
-        List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
+        CardToPlay cardToDiscart = CardToPlay.of(weakerCardtoUse(cards, vira));
+        CardToPlay strongCard = CardToPlay.of(strongestCardtoUse(cards, vira));
 
-        if(isFirstToPlay && zapInHand(cards, vira))
+        if(isFirst && zapInHand(cards, vira))
         {
-            return CardToPlay.of(weakerCardtoUse(cards, vira));
+            return cardToDiscart;
         }
 
-        if(!manilhaInHand(cards, vira) && isFirstToPlay)
+        if(isFirst && weakHand(cards, vira))
         {
-            return CardToPlay.of(strongestCardtoUse(cards, vira));
+            return strongCard;
         }
 
-        if (currentRound == 1 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        if(manilhaInHand(cards, vira) && isFirst)
         {
-            return CardToPlay.of(strongestCardtoUse(cards, vira));
+            return cardToDiscart;
         }
 
-        if (currentRound == 3 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        if(isFirst)
         {
-            return CardToPlay.of(strongestCardtoUse(cards, vira));
+            return strongCard;
         }
 
-        if(twoStrongestManilhas(cards, vira) && currentRound == 1)
+        if (currentRound == 1)
         {
-            return CardToPlay.of(weakerCardtoUse(cards, vira));
+            return strongCard;
+        }
+
+        if (currentRound == 3 && !RoundsList.isEmpty() && RoundsList.get(0).equals(GameIntel.RoundResult.WON))
+        {
+            return strongCard;
+        }
+
+        if(twoStrongestManilhas(cards, vira))
+        {
+            return cardToDiscart;
         }
 
         if(isStrongerThanAll(opponentCard.get(), cards, vira))
         {
-            return CardToPlay.of(weakerCardtoUse(cards, vira));
+            return cardToDiscart;
         }
 
-        if (currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        if (currentRound == 2 && !RoundsList.isEmpty() && RoundsList.get(0).equals(GameIntel.RoundResult.WON))
         {
-            return CardToPlay.of(weakerCardtoUse(cards, vira));
+            return cardToDiscart;
         }
 
-        if (manilhaInHand(cards, vira) && currentRound == 2 && currentRoundList.contains(GameIntel.RoundResult.WON))
+        if (manilhaInHand(cards, vira) && currentRound == 2 && !RoundsList.isEmpty() && RoundsList.get(0).equals(GameIntel.RoundResult.WON))
         {
-            return CardToPlay.of(weakerCardtoUse(cards, vira));
+            return cardToDiscart;
         }
 
-        if (twoStrongestManilhas(cards,vira))
-        {
-            return CardToPlay.of(getWeakCardThatWin(opponentCard.get(), cards, vira));
-
-        }
-
-        if(!isFirstToPlay)
+        if(twoStrongestManilhas(cards,vira))
         {
             return CardToPlay.of(getWeakCardThatWin(opponentCard.get(), cards, vira));
         }
 
-        return CardToPlay.of(weakerCardtoUse(cards, vira));
+        return cardToDiscart;
     }
 
     @Override
@@ -143,15 +165,17 @@ public class Zetruquero implements BotServiceProvider
     {
         int currentRound = intel.getRoundResults().size() + 1;
         List<GameIntel.RoundResult> currentRoundList = intel.getRoundResults();
-
+        Boolean isFirst = intel.getOpponentCard().isEmpty();
         TrucoCard vira = intel.getVira();
-        Optional<TrucoCard> opponentCards = intel.getOpponentCard();
         List<TrucoCard> cards = intel.getCards();
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
-        if(isStrongerThanAll(opponentCard.get(), cards, vira))
+        if (!isFirst)
         {
-            return -1;
+            if(isStrongerThanAll(opponentCard.get(), cards, vira))
+            {
+                return -1;
+            }
         }
 
         if(strongHand(cards, vira) && manilhaInHand(cards, vira))
@@ -185,19 +209,27 @@ public class Zetruquero implements BotServiceProvider
     public Boolean strongCardInHand(List<TrucoCard> cards, TrucoCard vira)
     {
         boolean hasManilha =  manilhaInHand(cards, vira);
+
         boolean twoStrongestManilhas =  twoStrongestManilhas(cards, vira);
-        boolean zap =  zapInHand(cards, vira);
+
+        boolean hasZap =  zapInHand(cards, vira);
 
         boolean superStrongHand =  manilhaInHand(cards, vira) & strongHand(cards, vira);
 
-        if(zap)
+        if(hasZap)
+        {
             return true;
+        }
 
         if (hasManilha || twoStrongestManilhas)
+        {
             return true;
+        }
 
         if(superStrongHand)
+        {
             return true;
+        }
 
         return false;
     }
@@ -207,7 +239,10 @@ public class Zetruquero implements BotServiceProvider
         TrucoCard wekeastCard = cards.get(0);
         for (TrucoCard card : cards)
         {
-            if (card.compareValueTo(wekeastCard, vira) < 0) wekeastCard = card;
+            if (card.compareValueTo(wekeastCard, vira) < 0)
+            {
+                wekeastCard = card;
+            }
         }
 
         return wekeastCard;
@@ -218,7 +253,10 @@ public class Zetruquero implements BotServiceProvider
 
         for (TrucoCard card : cards)
         {
-            if (card.compareValueTo(strongestCard, vira) > 0) strongestCard = card;
+            if (card.compareValueTo(strongestCard, vira) > 0)
+            {
+                strongestCard = card;
+            }
         }
 
         return strongestCard;
@@ -227,8 +265,10 @@ public class Zetruquero implements BotServiceProvider
     static TrucoCard getWeakCardThatWin(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
         TrucoCard weakCardThatWin = null;
 
-        for (TrucoCard card : cards) {
-            if (card.compareValueTo(opponentCard, vira) > 0) {
+        for (TrucoCard card : cards)
+        {
+            if (card.compareValueTo(opponentCard, vira) > 0)
+            {
                 if (weakCardThatWin == null || card.compareValueTo(weakCardThatWin, vira) < 0) {
                     weakCardThatWin = card;
                 }
@@ -239,11 +279,14 @@ public class Zetruquero implements BotServiceProvider
     }
 
     static boolean isStrongerThanAll(TrucoCard opponentCard, List<TrucoCard> cards, TrucoCard vira) {
-        for (TrucoCard card : cards) {
-            if (card.compareValueTo(opponentCard, vira) >= 0) {
+        for (TrucoCard card : cards)
+        {
+            if (card.compareValueTo(opponentCard, vira) >= 0)
+            {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -265,6 +308,7 @@ public class Zetruquero implements BotServiceProvider
     public Boolean twoStrongestManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         boolean hasCopasManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isCopas(vira));
+
         boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
 
         return hasCopasManilha && hasZap;
@@ -273,6 +317,7 @@ public class Zetruquero implements BotServiceProvider
     public Boolean twoweakerManilhas(List<TrucoCard> cards, TrucoCard vira)
     {
         boolean hasEspadilhaManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isEspadilha(vira));
+
         boolean hasOurosManilha = cards.stream().anyMatch(card -> card.isManilha(vira) && card.isOuros(vira));
 
         return hasEspadilhaManilha && hasOurosManilha;
@@ -282,19 +327,32 @@ public class Zetruquero implements BotServiceProvider
     {
         boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
 
-        return !strongCardInHand(cards, vira) && !hasZap && royaltyCardInHand(cards, vira);
+        return !strongHand(cards, vira) && !hasZap && !royaltyCardInHand(cards, vira);
     }
 
     public Boolean strongHand(List<TrucoCard> cards, TrucoCard vira)
     {
         boolean hasZap = cards.stream().anyMatch(card -> card.isZap(vira));
 
-        return strongCardInHand(cards, vira) || hasZap;
+        boolean hasRoyalty = royaltyCardInHand(cards, vira);
+
+        boolean hasStrongThanKing = cards.stream().anyMatch(card ->
+                card.getRank() == CardRank.KING
+                || card.getRank() == CardRank.ACE
+                || card.getRank() == CardRank.THREE
+                || card.getRank() == CardRank.TWO);
+
+        if (hasZap || (hasStrongThanKing && hasRoyalty) || (hasRoyalty && manilhaInHand(cards, vira)))
+        {
+            return true;
+        }
+
+        return false;
     }
 
-
     @Override
-    public String getName() {
+    public String getName()
+    {
         return BotServiceProvider.super.getName();
     }
 }
