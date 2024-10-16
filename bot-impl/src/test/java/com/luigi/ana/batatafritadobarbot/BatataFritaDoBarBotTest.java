@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class BatataFritaDoBarBotTest {
     private BatataFritaDoBarBot batataFritaDoBarBot;
     private GameIntel.StepBuilder stepBuilder;
-    private GameIntel intel;
+
 
     @BeforeEach
     public void config() {
