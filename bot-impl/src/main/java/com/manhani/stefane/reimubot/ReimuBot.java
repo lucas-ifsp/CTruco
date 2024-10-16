@@ -46,9 +46,7 @@ public class ReimuBot implements BotServiceProvider {
         if(intel.getOpponentScore() >= 9 && handPoints <= 19) return false;
         if(handPoints >= 20) return true;
         if(handPoints < 19) return false;
-        if(distance <= -4) return true;
-
-        return false;
+        return distance <= -4;
     }
 
     @Override
@@ -60,10 +58,7 @@ public class ReimuBot implements BotServiceProvider {
         if(isSecondRound(intel) && wonFirstRound(intel) && hasThree(intel)){
             return true;
         }
-        if (isSecondRound(intel) && wonFirstRound(intel) && hasTwoTwos(intel)) {
-            return true;
-        }
-        return false;
+        return isSecondRound(intel) && wonFirstRound(intel) && hasTwoTwos(intel);
     }
 
     @Override
@@ -125,13 +120,7 @@ public class ReimuBot implements BotServiceProvider {
         return intel.getCards().size() == 2;
     }
     
-    private boolean isThirdRound(GameIntel intel){
-        return intel.getCards().size() == 1;
-    }
-    
-    private boolean opponentHasMaoDeOnze(GameIntel intel){
-        return intel.getOpponentScore() == 11;
-    }
+
     
     private TrucoCard getWeakestCard(GameIntel intel){
         return getWeakestCard(intel.getCards(), intel.getVira());
