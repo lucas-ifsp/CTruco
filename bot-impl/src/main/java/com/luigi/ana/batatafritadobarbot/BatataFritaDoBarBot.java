@@ -155,15 +155,6 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
 
     }
 
-    GameIntel.RoundResult getThirdRoundResult(GameIntel intel){
-        return intel.getRoundResults().get(1);
-    }
-
-    boolean isThirdRoundWinner(GameIntel intel){
-        return(GameIntel.RoundResult.WON).equals(getThirdRoundResult(intel));
-    }
-
-
 
     double getAverageCardValue(GameIntel intel) {
 

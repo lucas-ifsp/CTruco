@@ -656,44 +656,43 @@ public class BatataFritaDoBarBotTest {
 
     //27
     @Test
-    @DisplayName("Should return WON the last round")
-    void shouldReturnWonTheLastRound() {
+    @DisplayName("Should return WON the first round")
+    void shouldReturnWonTheFirstRound() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
-        TrucoCard opponentCard = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS)
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
         );
 
-        List<TrucoCard> openCards = List.of(vira, opponentCard);
+        List<TrucoCard> openCards = List.of(vira);
 
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.WON), openCards, vira, 1)
                 .botInfo(myCards, 1)
-                .opponentScore(1).opponentCard(opponentCard);
-        when(TrucoCard.of(CardRank.SEVEN,CardSuit.HEARTS).relativeValue(vira) > opponentCard.relativeValue(vira));
-        assertTrue(batataFritaDoBarBot.isThirdRoundWinner(stepBuilder.build()));
+                .opponentScore(1);
+        assertTrue(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
 
     }
 
     //28
     @Test
-    @DisplayName("Should return LOST the last round")
-    void shouldReturnLostTheLastRound() {
+    @DisplayName("Should return LOST first round")
+    void shouldReturnLostTheFirstRound() {
         TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
 
         List<TrucoCard> myCards = List.of(
-                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS)
+                TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
         );
 
-        List<TrucoCard> openCards = List.of(vira, TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS));
+        List<TrucoCard> openCards = List.of(vira);
 
         stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.WON), openCards, vira, 1)
+                .gameInfo(List.of(GameIntel.RoundResult.LOST), openCards, vira, 1)
                 .botInfo(myCards, 1)
                 .opponentScore(1);
-
-        assertFalse(batataFritaDoBarBot.isThirdRoundWinner(stepBuilder.build()));
+        assertFalse(batataFritaDoBarBot.isLastRoundWinner(stepBuilder.build()));
     }
 
     //29
