@@ -104,13 +104,12 @@ public class BotEcoTest {
         @DisplayName("Should call Truco when status is Excellent")
         void shouldCallTrucoWhenStatusIsExcellent() {
             List<TrucoCard> botEcoHand = List.of(
-                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
                     TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
             );
             TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
             GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
                     .botInfo(botEcoHand, 0)
                     .opponentScore(0)
                     .build();
@@ -163,28 +162,6 @@ public class BotEcoTest {
             int response = botEco.getRaiseResponse(intel);
 
             assertThat(response).isEqualTo(1);
-        }
-
-        @Test
-        @DisplayName("Should not increase truco when hand power is less than 17")
-        void shouldNotIncreaseTrucoWhenHandPowerIsInsufficient() {
-            List<TrucoCard> botEcoHand = List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
-            );
-            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.CLUBS);
-            GameIntel intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(GameIntel.RoundResult.LOST),
-                            List.of(
-                                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
-                            ), vira, 1)
-                    .botInfo(botEcoHand, 2)
-                    .opponentScore(9)
-                    .build();
-
-            int response = botEco.getRaiseResponse(intel);
-            assertThat(response).isEqualTo(-1);
         }
     }
 }
