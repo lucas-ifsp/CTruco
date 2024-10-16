@@ -137,7 +137,7 @@ public class TrucoMarreco implements BotServiceProvider {
         }
 
         if (intel.getRoundResults().contains(GameIntel.RoundResult.DREW) && hasZap(intel)) {
-            return 1; // Aceita o truco
+            return 1;
         }
 
 

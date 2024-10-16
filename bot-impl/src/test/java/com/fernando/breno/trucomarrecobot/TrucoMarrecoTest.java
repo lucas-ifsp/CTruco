@@ -337,6 +337,18 @@ class TrucoMarrecoTest {
             assertThat(result).isPositive();
         }
 
+        @Test
+        @DisplayName("Testa recusar aumento tiver  carta  fraca")
+        void refuseIfYouAndHaveWeakCards() {
+            hand = List.of(TrucoCard.of(FOUR,HEARTS), TrucoCard.of(ACE, SPADES));
+            vira = TrucoCard.of(ACE, SPADES);
+            result = List.of(GameIntel.RoundResult.LOST);
+           openCards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 3).botInfo(hand, 3).opponentScore(1);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isZero();
+        }
+
 
     }
 }
