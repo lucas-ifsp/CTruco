@@ -139,5 +139,24 @@ public class InstanceFactoryTest {
 
             assertThat(caller).isInstanceOf(SneakyTrucoCaller.class);
         }
+
+        @Test
+        @DisplayName("should create PassiveTrucoCaller when score distance is greater than or equal to -4")
+        void shouldCreatePassiveTrucoCallerWhenScoreDistanceIsGreaterThanOrEqualToMinusFour() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS);
+
+            GameIntel step = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botHand, 3)
+                    .opponentScore(5)
+                    .build();
+            TrucoCaller caller = InstanceFactory.createTrucoCallerInstance(step);
+
+            assertThat(caller).isInstanceOf(PassiveTrucoCaller.class);
+        }
     }
 }
