@@ -361,7 +361,17 @@ class TrucoMarrecoTest {
             assertThat(res).isZero();
         }
 
-
+        @Test
+        @DisplayName("Testa que aceito após perder a primeira rodada, mas tem casal maio")
+        void  testsRaisingAfterLosingTheFirstRoundButHavingBiggerCouple() {
+            hand = List.of(TrucoCard.of(THREE,HEARTS), TrucoCard.of(THREE, CLUBS));
+            vira = TrucoCard.of(TWO, SPADES);
+            result = List.of(GameIntel.RoundResult.LOST);
+            openCards = List.of();
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(result, openCards, vira, 1).botInfo(hand, 3).opponentScore(3);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isPositive();
+        }
 
 
     }
