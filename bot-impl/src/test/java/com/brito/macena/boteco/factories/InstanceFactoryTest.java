@@ -1,7 +1,10 @@
 package com.brito.macena.boteco.factories;
 
+import com.brito.macena.boteco.intel.analyze.Pattern;
+import com.brito.macena.boteco.intel.analyze.Trucador;
 import com.brito.macena.boteco.intel.profiles.Agressive;
 import com.brito.macena.boteco.intel.profiles.Passive;
+import com.brito.macena.boteco.interfaces.Analyzer;
 import com.brito.macena.boteco.interfaces.ProfileBot;
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
@@ -15,9 +18,28 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Instance Factory Tests")
 public class InstanceFactoryTest {
+
+    @Nested
+    @DisplayName("AnalyzerBot Creation Tests")
+    class CreateAnaliseBotTests {
+        @Test
+        @DisplayName("Should return Trucador instance when losing by more than 6 points")
+        void shouldReturnTrucadorWhenLosingByMoreThanSixPoints() {
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), TrucoCard.of(CardRank.ACE, CardSuit.SPADES), 1)
+                    .botInfo(List.of(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)), 0)
+                    .opponentScore(10)
+                    .build();
+
+            Analyzer analyzer = InstanceFactory.createAnaliseInstance(intel);
+
+            assertTrue(analyzer instanceof Trucador);
+        }
+    }
 
     @Nested
     @DisplayName("ProfileBot Creation Tests")
