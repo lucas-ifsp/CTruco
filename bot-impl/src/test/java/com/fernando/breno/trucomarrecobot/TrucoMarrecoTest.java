@@ -292,6 +292,39 @@ class TrucoMarrecoTest {
 
         }
 
+        @Test
+        @DisplayName("Teste aceita o aumento se  tiver zap e  mão e forte")
+        void testSeTiverZapMaostrong() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.WON),openCards,vira,1).
+                    botInfo(hand,2).opponentScore(5);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isPositive();
+
+        }
+
+        @Test
+        @DisplayName("Teste aceita  aumento se tem zap e esta empatado")
+        void testcountTheeHand() {
+            hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+            result= List.of();
+
+
+            stepBuilder = GameIntel.StepBuilder.with().gameInfo(List.of(GameIntel.RoundResult.DREW),openCards,vira,1).
+                    botInfo(hand,2).opponentScore(5);
+            int res = trucoMarreco.getRaiseResponse(stepBuilder.build());
+            assertThat(res).isOne();
+
+        }
+
+
 
 
     }
