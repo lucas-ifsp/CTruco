@@ -1,0 +1,264 @@
+[33mcommit 893d77fa78dbe0ccf0e80552559cecca3272f9d4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 19:22:46 2024 -0300
+
+    feat: implement return if the hand contains ace method
+
+[33mcommit 625a592a11d13a21e65393c8163f88a67d35dc24[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 19:20:40 2024 -0300
+
+    feat: add return if the hand constains ace method
+
+[33mcommit 1c188dfb3c325b739e291eb51424a6a21ffae105[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 19:19:47 2024 -0300
+
+    test: return if the hand contains ace
+
+[33mcommit cbb52bc0aece5754917b0e943a747eb7b844ea52[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mariadne[m[33m)[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 19:02:57 2024 -0300
+
+    feat: implement hasSixPointAdvantage method
+
+[33mcommit 0f02af3d6ef4a002e1dd1a7a8a23a729de359fb1[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 19:01:04 2024 -0300
+
+    feat: add hasSixPointAdvantage
+
+[33mcommit 33ca3ed23c266d7032734af921110a21e0656ffa[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Thu Oct 3 18:58:58 2024 -0300
+
+    test: return if there is at least a six point advantage
+
+[33mcommit c73eb29c162717ff8483039498e083c56ff5610f[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Mon Sep 30 16:54:03 2024 -0300
+
+    feat: implement hasThreePointAdvantage method
+
+[33mcommit 1214f93505215eb125a1c5a02679e7c99a2d0934[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Mon Sep 30 16:47:39 2024 -0300
+
+    feat: add hasThreePointAdvantage method
+
+[33mcommit c10bbf382461f6018223452e71bf2b193ddb7469[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Mon Sep 30 16:46:51 2024 -0300
+
+    test: return if there is at least a three point advantage
+
+[33mcommit d32c2c9b02bb163bcb8d25f35f84f3a8de354e56[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 22:01:11 2024 -0300
+
+    refactor: add conditional checks in methods
+
+[33mcommit 17fd1b9484733af53e03855a34033748023cfc85[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:51:30 2024 -0300
+
+    feat: implement numberOfTwoCards method
+
+[33mcommit e7f265c76db8c575230b69b72ea94e94db1b19d2[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:44:45 2024 -0300
+
+    add numberOfTwoCards method
+
+[33mcommit b9fb5d2fca09603428fb8c30023a2557b0940224[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:42:49 2024 -0300
+
+    test: return the number of two cards in the hand
+
+[33mcommit e22a2e3040d030338e09a68de9c6bc6a0076de49[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:38:54 2024 -0300
+
+    feat: implement hasTwo method
+
+[33mcommit 58bbdd881c496698d1e4929f1ae3ccfc0dc09ad3[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:37:58 2024 -0300
+
+    feat: add hasTwo method
+
+[33mcommit bc75e3c9a8093933fa58fffb2dcdde590a60a612[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 21:35:50 2024 -0300
+
+    test: return if the hand constains two
+
+[33mcommit 28103c3078b344cd1772cf64e496f6c59204aabe[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:21:36 2024 -0300
+
+    feat: implement numberOfThreeCards method
+
+[33mcommit 2e0848db872b0eca1fc31bad4f3af74b4abd38e1[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:16:26 2024 -0300
+
+    feat: add numberOfThreeCards method
+
+[33mcommit 3fba4402ccb6cda6625b438e25f1b974ccb5a8b0[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:14:22 2024 -0300
+
+    test: return the number of three cards in the hand
+
+[33mcommit 01036c4bfca59dc6ef41357a85d5f24cbfc27aee[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:10:28 2024 -0300
+
+    feat: implement hasThree method
+
+[33mcommit 8c9143972ece27a0d3bafae410d81e049065b6a1[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:09:17 2024 -0300
+
+    feat: add hasThree method
+
+[33mcommit a3477eacc5638b518a0e8d9aab1c68c5e7a6df4f[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 21:07:37 2024 -0300
+
+    test: return if the hand contains three
+
+[33mcommit 07fcbdac6380a6031e2117b76025b1ae8526dc3d[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 19:44:03 2024 -0300
+
+    feat: implement listOfManilhas method
+
+[33mcommit 0e1b9f47e835d4cc27bb69f9d06a215e854dcec6[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 18:58:14 2024 -0300
+
+    feat: add listOfManilhas method
+
+[33mcommit 28385b1fb0340515cb2557b2cd0fe838260f0382[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 18:56:32 2024 -0300
+
+    test: return which manilhas have in hand
+
+[33mcommit 636bc6fe26de4dbecdba0e8500246ed81518c5af[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 17:24:36 2024 -0300
+
+    feat: implement numberOfManilhas method
+
+[33mcommit e49773332a4fb3872d7944929c53c5a3835886e0[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 17:06:23 2024 -0300
+
+    feat: add numberOfManilhas method
+
+[33mcommit eb20125247e451bb1653f842199bf04f765af99c[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 29 17:01:36 2024 -0300
+
+    test: return the number of manilhas in the hand
+
+[33mcommit cced9208a64627a8da5cb42820a72f17cbe32c4c[m[33m ([m[1;31morigin/ariadne[m[33m)[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 15:28:33 2024 -0300
+
+    feat: implement hasManilha logic to check for manilhas in the hand
+
+[33mcommit 17c9ecf1a6922942a0d33849eb761810ba06bf91[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 14:48:03 2024 -0300
+
+    feat: add hasManilha method
+
+[33mcommit 51a5bd21e6d938f720bdf3ff60522ad9904b5daf[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 14:40:34 2024 -0300
+
+    test: return if the hand constains manilhas
+
+[33mcommit 8511bf29cfc36eae64009500d7ccf3acde614a6b[m
+Author: Ariadne <ariadnederezende@gmail.com>
+Date:   Sun Sep 29 11:07:43 2024 -0300
+
+    test: starting test class
+
+[33mcommit 1142f332eb72fd64a532a8c67329cb4b1c3eba48[m
+Author: fictorl <fictorlps@gmail.com>
+Date:   Sun Sep 22 13:34:11 2024 -0300
+
+    chore: configure bot package following readme instructions
+
+[33mcommit 5dca0a65ff3989496d7a19ad01343dadad82797a[m
+Merge: 262d66af d898384e
+Author: lucas-ifsp <lucas.ruas@gmail.com>
+Date:   Wed May 15 08:29:51 2024 -0300
+
+    fix: solve merge conflict in module-info
+
+[33mcommit 262d66afb8857a47b6c266b15b2bcd514d95a509[m
+Author: lucas-ifsp <lucas.ruas@gmail.com>
+Date:   Wed May 15 08:27:47 2024 -0300
+
+    fix: organize new bots
+
+[33mcommit d898384e6e8015e2ff779eec01343eebe2bfd210[m
+Merge: 04eab574 2b573058
+Author: Lucas Oliveira <lucas.ruas@gmail.com>
+Date:   Wed May 15 08:24:48 2024 -0300
+
+    Merge pull request #70 from antonioacampos/master
+    
+    PR Rei do Zap
+
+[33mcommit 2b573058874f18e93a7eb747e32c58f49d93a089[m
+Merge: 24bf6259 04eab574
+Author: Lucas Oliveira <lucas.ruas@gmail.com>
+Date:   Wed May 15 08:24:25 2024 -0300
+
+    Merge branch 'master' into master
+
+[33mcommit 04eab57498cf261fdf78d9157df40382bdca5ac2[m
+Merge: 39d5e096 a491338f
+Author: Lucas Oliveira <lucas.ruas@gmail.com>
+Date:   Tue May 14 14:49:19 2024 -0300
+
+    Merge pull request #69 from lhjundi/master
+    
+    Update RoundState.java
+
+[33mcommit a491338fc62b15198d6a2e3d3750ebca0cc2901b[m
+Author: Lucas Jundi Hikazudani <lhjundi@proton.me>
+Date:   Tue May 14 14:36:47 2024 -0300
+
+    Update RoundState.java
+    
+    readicionado o método raisehandByMyCards da interface RoundState
+
+[33mcommit 39d5e096b302579aeb49c38eb8702a9ffca915a5[m
+Merge: 23af3e41 4c0ca1b8
+Author: Lucas Oliveira <lucas.ruas@gmail.com>
+Date:   Tue May 14 11:47:29 2024 -0300
+
+    Merge pull request #58 from akira-erick/master
+    
+    Beep bot request
+
+[33mcommit 23af3e414442c989ba2c156eb0429247b273d376[m
+Merge: de771171 9e6b8d28
+Author: Lucas Oliveira <lucas.ruas@gmail.com>
+Date:   Tue May 14 11:47:06 2024 -0300
+
+    Merge pull request #66 from caio-vitor13/master
+    
+    Caio e Bernardo entrega Zeusbot
+
+[33mcommit 9e6b8d28a5527fa51b1d4f316e772822350f018a[m
+Merge
