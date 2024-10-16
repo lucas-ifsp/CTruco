@@ -12,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("MyHand Tests")
 public class MyHandTest {
     @Test
     @DisplayName("Should return the best card when the hand has 3 cards")
