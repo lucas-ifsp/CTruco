@@ -65,6 +65,27 @@ public class TrucoResponderTest {
 
             assertEquals(-1, response);
         }
+
+        @Test
+        @DisplayName("Should increase when the state is GOOD and the bot has won the first round")
+        void shouldIncreaseWhenStatusIsGoodAndWonFirstRound() {
+            List<TrucoCard> botHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(GameIntel.RoundResult.WON), List.of(), vira, 1)
+                    .botInfo(botHand, 0)
+                    .opponentScore(7)
+                    .build();
+
+            AggressiveTrucoResponder trucoResponder = new AggressiveTrucoResponder();
+            int response = trucoResponder.getRaiseResponse(intel, Status.GOOD);
+
+            assertEquals(1, response);
+        }
     }
 
     @Nested
