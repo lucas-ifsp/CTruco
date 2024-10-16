@@ -1,6 +1,7 @@
 package com.belini.luciano.matapatobot;
 import com.bueno.spi.model.*;
 import org.assertj.core.api.Assertions;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -142,6 +143,27 @@ class MataPatoBotTest {
             TrucoCard opponentCard = TrucoCard.of(KING, HEARTS);
 
             TrucoCard expected = TrucoCard.of(ACE, HEARTS);
+
+            when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
+            when(intel.getVira()).thenReturn(vira);
+            when(intel.getOpponentCard()).thenReturn(Optional.ofNullable(opponentCard));
+
+            assertThat(mataPatoBot.KillingOpponentCard(intel)).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("If has manilha and bad cards should kill with manilha")
+        void IfHasManilhaAndBadCardsKillWithManilha(){
+            GameIntel intel = mock(GameIntel.class);
+
+            TrucoCard card1 = TrucoCard.of(TWO, CardSuit.CLUBS);
+            TrucoCard card2 = TrucoCard.of(SIX, CardSuit.HEARTS);
+            TrucoCard card3 = TrucoCard.of(SEVEN, CardSuit.DIAMONDS);
+
+            TrucoCard vira = TrucoCard.of(ACE, DIAMONDS);
+            TrucoCard opponentCard = TrucoCard.of(TWO, HEARTS);
+
+            TrucoCard expected = TrucoCard.of(TWO, CLUBS);
 
             when(intel.getCards()).thenReturn(Arrays.asList(card1, card2, card3));
             when(intel.getVira()).thenReturn(vira);
