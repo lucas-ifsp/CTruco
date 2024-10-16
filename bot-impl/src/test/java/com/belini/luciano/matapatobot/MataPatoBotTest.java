@@ -438,5 +438,22 @@ class MataPatoBotTest {
             int response = mataPatoBot.getRaiseResponse(intel);
             assertThat(response).isEqualTo(-1);
         }
+
+        @Test
+        @DisplayName("CheckIfRunSecondRound")
+        public void checkIfRunSecondRound() {
+            GameIntel intel = mock(GameIntel.class);
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+            when(intel.getVira()).thenReturn(vira);
+            TrucoCard card1 = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+            TrucoCard card2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard card3 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            when(intel.getRoundResults()).thenReturn(List.of());
+            when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
+
+            int response = mataPatoBot.getRaiseResponse(intel);
+            assertThat(response).isEqualTo(-1);
+        }
     }
 }
