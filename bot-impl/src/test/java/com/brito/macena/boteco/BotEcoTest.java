@@ -102,7 +102,24 @@ public class BotEcoTest {
     @Nested
     @DisplayName("Decide if raises tests")
     class DecideIfRaisesTests {
+        @Test
+        @DisplayName("Should not call Truco when status is MEDIUM")
+        void shouldNotCallTrucoWhenStatusIsMedium() {
+            List<TrucoCard> botEcoHand = List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            );
+            TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(botEcoHand, 0)
+                    .opponentScore(0)
+                    .build();
 
+            boolean shouldRaise = botEco.decideIfRaises(intel);
+            assertFalse(shouldRaise);
+        }
     }
 
     @Nested
