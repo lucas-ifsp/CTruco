@@ -1,6 +1,5 @@
 package com.bueno.persistence.repositories;
 
-import com.bueno.domain.usecases.tournament.dtos.MatchDTO;
 import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.persistence.dao.TournamentDao;
@@ -40,7 +39,6 @@ public class TournamentRepositoryMongoImpl implements TournamentRepository {
 
     @Override
     public void update(TournamentDTO dto) {
-        //TODO - a as partidas ficam com o next null aqui
         tournamentDao.deleteTournamentEntityByUuid(dto.uuid());
         if (tournamentDao.findTournamentEntityByUuid(dto.uuid()).isPresent()) {
             throw new EntityExistsException("Objeto não deletado");
