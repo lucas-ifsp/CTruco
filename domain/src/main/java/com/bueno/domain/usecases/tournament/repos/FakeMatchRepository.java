@@ -34,13 +34,18 @@ public class FakeMatchRepository implements MatchRepository {
     }
 
     @Override
-    public void deleteAll() {
-        matches.clear();
+    public void update(MatchDTO matchDTO) {
+
     }
 
     @Override
-    public void deleteByUuid(UUID uuid) {
+    public void updateAll(List<MatchDTO> matchDTOS) {
 
+    }
+
+    @Override
+    public void deleteAll() {
+        matches.clear();
     }
 
     @Override
@@ -48,8 +53,4 @@ public class FakeMatchRepository implements MatchRepository {
         return List.of();
     }
 
-    @Override
-    public void deleteByUuidList(List<UUID> uuidList) {
-
-    }
 }

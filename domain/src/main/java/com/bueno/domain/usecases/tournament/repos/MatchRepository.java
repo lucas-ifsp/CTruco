@@ -20,9 +20,10 @@ public interface MatchRepository {
 
     void saveAll(List<MatchDTO> dtos);
 
+    void update(MatchDTO matchDTO);
+
+    void updateAll(List<MatchDTO> matchDTOS);
+
     void deleteAll();
 
-    void deleteByUuid(UUID uuid);
-
-    void deleteByUuidList(List<UUID> dtos);
 }

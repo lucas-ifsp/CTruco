@@ -66,17 +66,21 @@ public class MatchesRepositoryMongoImpl implements MatchRepository {
     }
 
     @Override
-    public void deleteAll() {
-        matchDao.deleteAll();
-    }
-
-    public void deleteByUuid(UUID uuid) {
-        matchDao.deleteMatchEntityByUuid(uuid);
+    public void update(MatchDTO matchDTO) {
+        matchDao.deleteMatchEntityByUuid(matchDTO.uuid());
+        matchDao.save(MatchEntity.from(matchDTO));
     }
 
     @Override
-    public void deleteByUuidList(List<UUID> uuidList) {
+    public void updateAll(List<MatchDTO> matchDTOS) {
+        List<UUID> uuidList = matchDTOS.stream().map(MatchDTO::uuid).toList();
         uuidList.forEach(matchDao::deleteMatchEntityByUuid);
+        matchDao.saveAll(matchDTOS.stream().map(MatchEntity::from).toList());
+    }
+
+    @Override
+    public void deleteAll() {
+        matchDao.deleteAll();
     }
 
     private Optional<MatchDTO> toDtoFromEntity(MatchEntity entity) {

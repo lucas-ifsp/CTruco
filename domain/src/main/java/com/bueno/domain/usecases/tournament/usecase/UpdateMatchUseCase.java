@@ -16,13 +16,10 @@ public class UpdateMatchUseCase {
     }
 
     public void updateAll(List<MatchDTO> matchDTOS) {
-        List<UUID> uuidList = matchDTOS.stream().map(MatchDTO::uuid).toList();
-        matchRepository.deleteByUuidList(uuidList);
-        matchRepository.saveAll(matchDTOS);
+        matchRepository.updateAll(matchDTOS);
     }
 
     public void update(MatchDTO matchDTO) {
-        matchRepository.deleteByUuid(matchDTO.uuid());
-        matchRepository.save(matchDTO);
+        matchRepository.update(matchDTO);
     }
 }
