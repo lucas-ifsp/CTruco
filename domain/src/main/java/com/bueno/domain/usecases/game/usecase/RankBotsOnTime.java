@@ -14,10 +14,10 @@ public class RankBotsOnTime {
         this.rankBotsUseCase = rankBotsUseCase;
         this.rankBotsRepository = rankBotsRepository;
     }
-
-    @Scheduled(fixedRate = 1_800_000)
-    public void updateRankTable() {
-        rankBotsUseCase.rankAll();
-        rankBotsRepository.refreshTable(rankBotsUseCase.getRank());
-    }
+    // TODO - descomentar quando estiver em uma versão estável
+//    @Scheduled(fixedRate = 1_800_000)
+//    public void updateRankTable() {
+//        rankBotsUseCase.rankAll();
+//        rankBotsRepository.refreshTable(rankBotsUseCase.getRank());
+//    }
 }

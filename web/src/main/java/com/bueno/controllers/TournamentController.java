@@ -44,6 +44,8 @@ public class TournamentController {
 
     @PostMapping
     public ResponseEntity<?> createTournament(@RequestBody TournamentRequestDTO request) {
+        tournamentRepository.deleteAll();
+        matchRepository.deleteAll();
         TournamentDTO dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times());
         List<MatchDTO> matchesDTO = getMatchUseCase.byTournamentUuid(dto.uuid());
 
@@ -81,9 +83,9 @@ public class TournamentController {
                 .build();
     }
 
-    @GetMapping("match/{uuid}")
-    public ResponseEntity<?> getOneMatch(@PathVariable UUID uuid) {
-        MatchDTO matchDTO = matchRepository.findById(uuid).orElseThrow();
+    @GetMapping("{tournamentUuid}/match/{chosenMatchNumber}")
+    public ResponseEntity<?> getOneMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber) {
+        MatchDTO matchDTO = matchRepository.findById(tournamentUuid).orElseThrow();
 
         return new ResponseBuilder(HttpStatus.OK)
                 .addEntry(new ResponseEntry("payload", matchDTO))
@@ -91,7 +93,6 @@ public class TournamentController {
                 .build();
     }
 
-    // TODO - Resolver problema de persistencia
     @PostMapping("{tournamentUuid}/match/{chosenMatchNumber}/{numberOfSimulations}")
     public ResponseEntity<?> playMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber, @PathVariable int numberOfSimulations) {
         if (tournamentUuid == null) return new ResponseBuilder(HttpStatus.BAD_REQUEST)
@@ -119,6 +120,4 @@ public class TournamentController {
                 .build();
 
     }
-
-
 }
