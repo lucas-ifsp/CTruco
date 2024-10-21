@@ -70,19 +70,21 @@ public class Match implements Comparable {
         if (next == null) return false;
         if (winnerName == null) return false;
 
-        // if the matchNumber is an even number the match winner need to be the player 2 from the next match
-        if (matchNumber % 2 == 0) {
+        if (shouldBePlayerTwo()) {
             if (next.p2Name != null) return false;
 
             next.p2Name = winnerName;
             return true;
-
         }
 
         if (next.p1Name != null) return false;
 
         next.p1Name = winnerName;
         return true;
+    }
+
+    private boolean shouldBePlayerTwo() {
+        return matchNumber % 2 == 0;
     }
 
     public void setAvailableState() {
@@ -145,6 +147,12 @@ public class Match implements Comparable {
         return winnerName;
     }
 
+    public String getLoserName() {
+        if (p1Name == null || p2Name == null || winnerName == null) return null;
+
+        return (p1Name.equals(winnerName) ? p2Name : p1Name);
+    }
+
     public long getP1Score() {
         return p1Score;
     }
@@ -156,15 +164,15 @@ public class Match implements Comparable {
     @Override
     public String toString() {
         return "MatchInfo{" +
-                "uuid= " + id +
-                ", number= " + matchNumber +
-                ", p1Name='" + p1Name + '\'' +
-                ", p2Name='" + p2Name + '\'' +
-                ", available=" + isAvailable +
-                ", winnerName='" + winnerName + '\'' +
-                ", p1Score=" + p1Score +
-                ", p2Score=" + p2Score +
-                ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
+               "uuid= " + id +
+               ", number= " + matchNumber +
+               ", p1Name='" + p1Name + '\'' +
+               ", p2Name='" + p2Name + '\'' +
+               ", available=" + isAvailable +
+               ", winnerName='" + winnerName + '\'' +
+               ", p1Score=" + p1Score +
+               ", p2Score=" + p2Score +
+               ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
     }
 
     @Override

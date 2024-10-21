@@ -3,6 +3,7 @@ package com.bueno.domain.entities.tournament;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 
 import java.util.*;
 
@@ -52,7 +53,7 @@ public class Tournament {
 
     // TODO - mudar p/ programação declarativa
     public void insertMatches() {
-        for (int i = 0; i < size - 1; i++)
+        for (int i = 0; i < size; i++)
             matches.add(new Match(UUID.randomUUID(),
                     i + 1));
     }
@@ -60,12 +61,10 @@ public class Tournament {
     // TODO - mudar p/ programação declarativa
     public void insertParticipants() {
         int participantsIndex = 0;
-        for (int i = 0; i < size - 1; i++) {
-            if (i < size / 2) {
-                matches.get(i).setP1Name(participantNames.get(participantsIndex));
-                matches.get(i).setP2Name(participantNames.get(participantsIndex + 1));
-                participantsIndex = participantsIndex + 2;
-            }
+        for (int i = 0; i < size / 2; i++) {
+            matches.get(i).setP1Name(participantNames.get(participantsIndex));
+            matches.get(i).setP2Name(participantNames.get(participantsIndex + 1));
+            participantsIndex = participantsIndex + 2;
         }
     }
 
@@ -79,12 +78,30 @@ public class Tournament {
     }
 
     public void refreshMatches(Map<UUID, Match> cacheMatches) {
-        matches.forEach(m -> {
-                    m.setAvailableState();
-                    boolean nextMatchChanged = m.setWinnerToNextBracket();
-                    addToCache(m, cacheMatches, nextMatchChanged);
-                }
-        );
+        final int firstSemiFinalIndex = size - 4;
+        final int secondSemiFinalIndex = size - 3;
+        Match semiFinal1 = matches.get(firstSemiFinalIndex);
+        Match semiFinal2 = matches.get(secondSemiFinalIndex);
+        String semiFinalLoser1 = semiFinal1.getLoserName();
+        String semiFinalLoser2 = semiFinal2.getLoserName();
+        matches.forEach(m -> updateTournamentSetting(cacheMatches, m, semiFinalLoser1, semiFinalLoser2));
+    }
+
+    private void updateTournamentSetting(Map<UUID, Match> cacheMatches,
+                                         Match m,
+                                         String semiFinalLoser1,
+                                         String semiFinalLoser2) {
+        if (isThirdPlaceMatch(m)) {
+            m.setP1Name(semiFinalLoser1);
+            m.setP2Name(semiFinalLoser2);
+        }
+        m.setAvailableState();
+        boolean nextMatchChanged = m.setWinnerToNextBracket();
+        addToCache(m, cacheMatches, nextMatchChanged);
+    }
+
+    private boolean isThirdPlaceMatch(Match m) {
+        return m.getMatchNumber() == size;
     }
 
     public void setAvailableOnes() {
@@ -128,9 +145,9 @@ public class Tournament {
     @Override
     public String toString() {
         return "Tournament{" +
-                "tournamentUUID=" + tournamentUUID +
-                ", size=" + size +
-                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-                '}';
+               "tournamentUUID=" + tournamentUUID +
+               ", size=" + size +
+               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+               '}';
     }
 }

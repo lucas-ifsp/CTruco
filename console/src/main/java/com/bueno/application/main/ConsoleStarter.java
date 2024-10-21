@@ -5,8 +5,6 @@ import com.bueno.application.main.commands.ExecuteMenu;
 import com.bueno.application.withbots.features.ConsoleTournament;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
-import com.bueno.domain.usecases.tournament.converter.MatchConverter;
-import com.bueno.domain.usecases.tournament.converter.TournamentConverter;
 import com.bueno.domain.usecases.tournament.repos.FakeMatchRepository;
 import com.bueno.domain.usecases.tournament.repos.FakeTournamentRepository;
 import com.bueno.domain.usecases.tournament.repos.MatchRepository;

@@ -21,7 +21,6 @@
 package com.bueno;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
-import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
@@ -30,7 +29,6 @@ import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import com.bueno.domain.usecases.user.RegisterUserUseCase;
 import com.bueno.domain.usecases.user.dtos.RegisterUserRequestDto;
 import com.bueno.persistence.DataBaseBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
