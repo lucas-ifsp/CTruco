@@ -4,7 +4,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
+import com.local.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

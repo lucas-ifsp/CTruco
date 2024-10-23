@@ -20,6 +20,16 @@
 
 package com.bueno.domain.usecases.game.dtos;
 
-import java.time.LocalDateTime;
 
-public record GameResultUsernamesDto (LocalDateTime endingTime, String player1, String player2, String winner){ }
+import java.util.UUID;
+
+public record GameResultUsernamesDto(UUID gameId,
+                                     String endingDate,
+                                     String startingDate,
+                                     Long matchDuration,
+                                     int p1Score,
+                                     int p2Score,
+                                     String p1Name,
+                                     String p2Name,
+                                     String winner) {
+}

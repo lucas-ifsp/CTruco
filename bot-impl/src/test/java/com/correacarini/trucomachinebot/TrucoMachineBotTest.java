@@ -22,7 +22,7 @@
 package com.correacarini.trucomachinebot;
 
 import com.bueno.spi.model.*;
-import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
+import com.local.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

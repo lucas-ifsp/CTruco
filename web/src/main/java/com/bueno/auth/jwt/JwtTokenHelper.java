@@ -54,7 +54,7 @@ public class JwtTokenHelper {
         this.jwtProperties = jwtProperties;
     }
 
-    public String createAccessToken(ApplicationUser user, String issuer){
+    public String createAccessToken(ApplicationUser user, String issuer) {
         return Jwts.builder()
                 .setSubject(user.getUuid().toString())
                 .claim("userId", user.getUuid())
@@ -70,7 +70,7 @@ public class JwtTokenHelper {
         return new Date(currentTimeMillis() + jwtProperties.getTokenExpirationAfterMinutes() * MILLIS_OF_MINUTES);
     }
 
-    public Cookie createRefreshTokenCookie(ApplicationUser user, String issuer){
+    public Cookie createRefreshTokenCookie(ApplicationUser user, String issuer) {
         final String token = Jwts.builder()
                 .setSubject(user.getUuid().toString())
                 .setIssuedAt(new Date())
@@ -107,7 +107,7 @@ public class JwtTokenHelper {
         return Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith("Bearer ");
     }
 
-    public Claims extractClaims(String token){
+    public Claims extractClaims(String token) {
         final Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()

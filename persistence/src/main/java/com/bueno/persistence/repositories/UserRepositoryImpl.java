@@ -22,42 +22,94 @@ package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
-import com.bueno.persistence.dao.UserDao;
-import com.bueno.persistence.dto.UserEntity;
+import com.bueno.persistence.ConnectionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private final UserDao dao;
-
-    public UserRepositoryImpl(UserDao dao) {
-        this.dao = dao;
+    public UserRepositoryImpl() {
     }
 
     @Override
-    public void save(ApplicationUserDto user) {
-        dao.save(UserEntity.from(user));
+    public void save(ApplicationUserDto dto) {
+        String sql = """
+                INSERT INTO app_user(uuid,username,email,password)
+                        VALUES ( ? , ? , ? , ?);
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setObject(1, dto.uuid());
+            preparedStatement.setString(2, dto.username());
+            preparedStatement.setString(3, dto.email());
+            preparedStatement.setString(4, dto.password());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the user: " + dto.username());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Optional<ApplicationUserDto> findByUsername(String username) {
-        final UserEntity dto = dao.getByUsername(username);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        try {
+            return getByAttribute("username", username);
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<ApplicationUserDto> findByEmail(String email) {
-        final UserEntity dto = dao.getByEmail(email);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        try {
+            return getByAttribute("email", email);
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<ApplicationUserDto> findByUuid(UUID uuid) {
-        final UserEntity dto = dao.getByUuid(uuid);
-        return Optional.ofNullable(UserEntity.toApplicationUser(dto));
+        try {
+            return getByAttribute("uuid", uuid);
+        } catch (SQLException e) {
+            System.err.println(e.getClass() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    private <T> Optional<ApplicationUserDto> getByAttribute(String name, T value) throws SQLException {
+        String sql = "SELECT * FROM app_user WHERE " + name + " = ? ;";
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setObject(1, value);
+            ResultSet res = preparedStatement.executeQuery();
+            return resultSetToApplicationUserDto(res);
+        }
+    }
+
+    private Optional<ApplicationUserDto> resultSetToApplicationUserDto(ResultSet res) throws SQLException {
+        if (!res.isClosed()) {
+            if (res.next()) {
+                return Optional.of(
+                        new ApplicationUserDto(
+                                res.getObject("uuid", UUID.class),
+                                res.getString("username"),
+                                res.getString("password"),
+                                res.getString("email")
+                        ));
+            }
+        }
+        return Optional.empty();
     }
 }

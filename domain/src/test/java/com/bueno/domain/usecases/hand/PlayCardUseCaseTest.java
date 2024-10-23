@@ -26,6 +26,9 @@ import com.bueno.domain.entities.deck.Rank;
 import com.bueno.domain.entities.deck.Suit;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
@@ -60,6 +63,9 @@ class PlayCardUseCaseTest {
     @Mock private Player player1;
     @Mock private Player player2;
     @Mock private Deck deck;
+
+    @Mock private RemoteBotRepository remoteRepository;
+    @Mock private RemoteBotApi remoteBotApi;
     private Game game;
     private GameRepository repo;
 
@@ -81,9 +87,11 @@ class PlayCardUseCaseTest {
         lenient().when(player2.getUuid()).thenReturn(p2Uuid);
         lenient().when(player2.getUsername()).thenReturn(p2Uuid.toString());
 
+        lenient().when(remoteRepository.findAll()).thenReturn(List.of());
+
         repo = new GameRepositoryInMemoryImpl();
         game = new Game(player1, player2, deck);
-        sut = new PlayCardUseCase(repo);
+        sut = new PlayCardUseCase(repo, remoteRepository, remoteBotApi,new BotManagerService(remoteRepository,remoteBotApi));
     }
 
     @AfterEach

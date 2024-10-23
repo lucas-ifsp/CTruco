@@ -21,6 +21,7 @@
 package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +29,18 @@ import java.util.Objects;
 
 @Service
 public class SaveGameResultUseCase {
-    private final GameResultRepository repo;
+    private final GameRepository gameRepository;
+    private final GameResultRepository gameResultRepository;
 
-    public SaveGameResultUseCase(GameResultRepository repo) {
-        this.repo = repo;
+    public SaveGameResultUseCase(GameRepository gameRepository, GameResultRepository gameResultRepository) {
+        this.gameRepository = gameRepository;
+        this.gameResultRepository = gameResultRepository;
     }
+
 
     public void save(GameResultDto result){
         Objects.requireNonNull(result, "Result must not be null");
-        repo.save(result);
+        gameResultRepository.save(result);
+//        gameRepository.delete(result.gameUuid());
     }
 }

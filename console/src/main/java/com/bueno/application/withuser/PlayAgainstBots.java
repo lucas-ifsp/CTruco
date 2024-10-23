@@ -21,6 +21,7 @@
 package com.bueno.application.withuser;
 
 import com.bueno.application.withuser.commands.*;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
@@ -30,9 +31,11 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
+import com.bueno.persistence.repositories.UserRepositoryImpl;
+import com.remote.RemoteBotApiAdapter;
 
 import java.util.*;
-import java.util.logging.LogManager;
 
 import static com.bueno.application.withuser.commands.CardModeReader.CardMode.OPEN;
 import static com.bueno.application.withuser.commands.MaoDeOnzeResponseReader.MaoDeOnzeChoice.ACCEPT;
@@ -48,46 +51,48 @@ public class PlayAgainstBots {
     private IntelDto lastIntel;
     private UUID userUUID;
 
-    public static void main(String[] args) {
-        LogManager.getLogManager().reset();
-        final var cli = new PlayAgainstBots();
-        cli.createGame();
-        cli.play();
-    }
+//    public static void main(String[] args) {
+//        LogManager.getLogManager().reset();
+//        final var cli = new PlayAgainstBots();
+//        cli.createGame();
+//        cli.play();
+//    }
 
     public void gameCLIStarter() {
         createGame();
         play();
     }
 
-    public PlayAgainstBots() {
+    public PlayAgainstBots(BotManagerService providerService) {
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        gameUseCase = new CreateGameUseCase(gameRepo);
-        playCardUseCase = new PlayCardUseCase(gameRepo);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
+        final var remoteBotRepo = new RemoteBotRepositoryImpl();
+        final var remoteBotApi = new RemoteBotApiAdapter();
+        gameUseCase = new CreateGameUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);
+        playCardUseCase = new PlayCardUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, remoteBotRepo, remoteBotApi, providerService);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
     }
 
-    private void play(){
-        while (!lastIntel.isGameDone()){
+    private void play() {
+        while (!lastIntel.isGameDone()) {
             handleMaoDeOnzeResponse();
-            if(isCurrentHandDone(lastIntel)) continue;
+            if (isCurrentHandDone(lastIntel)) continue;
             handleRaiseRequest();
-            if(isCurrentHandDone(lastIntel)) continue;
+            if (isCurrentHandDone(lastIntel)) continue;
             handleCardPlaying();
-            if(isCurrentHandDone(lastIntel)) continue;
+            if (isCurrentHandDone(lastIntel)) continue;
             handleRaiseResponse();
         }
     }
 
     private boolean isCurrentHandDone(IntelDto intel) {
         final String event = intel.event();
-        if(event == null) return false;
+        if (event == null) return false;
         return event.equals("NEW_HAND");
     }
 
-    private void createGame(){
+    private void createGame() {
         final var gameSettingsReader = new GameSettingsReader();
         final var settings = gameSettingsReader.execute();
         userUUID = settings.userUuid();
@@ -96,12 +101,12 @@ public class PlayAgainstBots {
         missingIntel.add(lastIntel);
     }
 
-    private void handleCardPlaying(){
+    private void handleCardPlaying() {
         final Set<String> allowedActions = Set.of("PLAY");
         final Set<String> notAllowedActions = Set.of();
 
         updateIntel();
-        if(canNotPerform(allowedActions, notAllowedActions)) return;
+        if (canNotPerform(allowedActions, notAllowedActions)) return;
 
         final var ownedCards = handleIntelUseCase.ownedCards(userUUID).cards();
         final var cardReader = new CardReader(this, ownedCards);
@@ -110,74 +115,75 @@ public class PlayAgainstBots {
         final var mode = lastIntel.roundsPlayed() == 0 ? OPEN : cardModeReader.execute();
 
         final var requestModel = new PlayCardDto(userUUID, card);
-        if(mode == OPEN) playCardUseCase.playCard(requestModel);
+        if (mode == OPEN) playCardUseCase.playCard(requestModel);
         else playCardUseCase.discard(requestModel);
     }
 
     private void updateIntel() {
         var responseModel = handleIntelUseCase.findIntelSince(userUUID, lastIntel.timestamp());
         missingIntel.addAll(responseModel.intelSinceBaseTimestamp());
-        if(missingIntel.isEmpty()) missingIntel.add(lastIntel);
+        if (missingIntel.isEmpty()) missingIntel.add(lastIntel);
         else lastIntel = missingIntel.get(missingIntel.size() - 1);
     }
 
     private boolean canNotPerform(Set<String> allowedActions, Set<String> notAllowedActions) {
         final UUID possibleUuid = lastIntel.currentPlayerUuid();
-        if(possibleUuid == null) return true;
+        if (possibleUuid == null) return true;
         final boolean isCurrentPlayer = possibleUuid.equals(userUUID);
         final boolean isPerformingAllowedAction = lastIntel.possibleActions().containsAll(allowedActions);
         final boolean isNotPerformingAnyNotAllowed = Collections.disjoint(lastIntel.possibleActions(), notAllowedActions);
         return !isCurrentPlayer || !isPerformingAllowedAction || !isNotPerformingAnyNotAllowed;
     }
 
-    private void handleRaiseRequest(){
+    private void handleRaiseRequest() {
         final Set<String> allowedActions = Set.of("RAISE");
         final Set<String> notAllowedActions = Set.of("QUIT");
 
         updateIntel();
-        if(canNotPerform(allowedActions, notAllowedActions)) return;
+        if (canNotPerform(allowedActions, notAllowedActions)) return;
 
         var requestReader = new RaiseRequestReader(this, nextScore(lastIntel.handPoints()));
-        if(requestReader.execute() == REQUEST) pointsProposalUseCase.raise(userUUID);
+        if (requestReader.execute() == REQUEST) pointsProposalUseCase.raise(userUUID);
     }
 
-    private int nextScore(int score){
+    private int nextScore(int score) {
         return score == 1 ? 3 : score + 3;
     }
 
-    private void handleRaiseResponse(){
+    private void handleRaiseResponse() {
         final Set<String> allowedActions = Set.of("ACCEPT", "QUIT");
         final Set<String> notAllowedActions = Set.of();
 
         updateIntel();
-        if(canNotPerform(allowedActions, notAllowedActions)) return;
+        if (canNotPerform(allowedActions, notAllowedActions)) return;
 
-        var responseReader = new RaiseResponseReader(this,  nextScore(lastIntel.handPoints()));
-        switch (responseReader.execute()){
+        var responseReader = new RaiseResponseReader(this, nextScore(lastIntel.handPoints()));
+        switch (responseReader.execute()) {
             case QUIT -> pointsProposalUseCase.quit(userUUID);
             case ACCEPT -> pointsProposalUseCase.accept(userUUID);
             case RAISE -> pointsProposalUseCase.raise(userUUID);
         }
     }
 
-    private void handleMaoDeOnzeResponse(){
+    private void handleMaoDeOnzeResponse() {
         updateIntel();
-        if(!lastIntel.isMaoDeOnze()) return;
+        if (!lastIntel.isMaoDeOnze()) return;
 
         var responseReader = new MaoDeOnzeResponseReader(this);
-        if(responseReader.execute() == ACCEPT) {
-            pointsProposalUseCase.accept(userUUID);}
+        if (responseReader.execute() == ACCEPT) {
+            pointsProposalUseCase.accept(userUUID);
+        }
         pointsProposalUseCase.quit(userUUID);
     }
 
-    public void printGameIntel(int delayInMilliseconds){
-        if(missingIntel.size() == 1) delayInMilliseconds = 0;
+    public void printGameIntel(int delayInMilliseconds) {
+        if (missingIntel.size() == 1) delayInMilliseconds = 0;
         final List<CardDto> ownedCards = handleIntelUseCase.ownedCards(userUUID).cards();
-        var intelPrinter  = new IntelPrinter(userUUID, ownedCards, missingIntel, delayInMilliseconds);
+        var intelPrinter = new IntelPrinter(userUUID, ownedCards, missingIntel, delayInMilliseconds);
         intelPrinter.execute();
     }
 
-    public String getOpponentUsername(){
+    public String getOpponentUsername() {
         return lastIntel.currentOpponentUsername();
     }
 }

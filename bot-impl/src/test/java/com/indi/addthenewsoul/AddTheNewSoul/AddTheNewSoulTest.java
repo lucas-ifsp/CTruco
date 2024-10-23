@@ -24,7 +24,7 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.indi.impl.addthenewsoul.AddTheNewSoul;
+import com.local.indi.impl.addthenewsoul.AddTheNewSoul;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

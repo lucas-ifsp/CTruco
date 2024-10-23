@@ -22,17 +22,21 @@ package com.bueno.domain.usecases.hand;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.usecases.game.converter.GameResultConverter;
+import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
+import com.bueno.domain.usecases.game.usecase.SaveGameResultUseCase;
 import com.bueno.domain.usecases.hand.converter.HandResultConverter;
 import com.bueno.domain.usecases.intel.converters.IntelConverter;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
 
 class ResultHandler {
 
+    private final GameRepository gameRepository;
     private final GameResultRepository gameResultRepository;
     private final HandResultRepository handResultRepository;
 
-    ResultHandler(GameResultRepository gameResultRepository, HandResultRepository handResultRepository) {
+    ResultHandler(GameRepository gameRepository, GameResultRepository gameResultRepository, HandResultRepository handResultRepository) {
+        this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
     }
@@ -44,8 +48,8 @@ class ResultHandler {
         });
 
         if (game.isDone()) {
-            if (gameResultRepository != null)
-                gameResultRepository.save(GameResultConverter.toDto(game));
+//            SaveGameResultUseCase usecase = new SaveGameResultUseCase(gameRepository, gameResultRepository);
+//            usecase.save(GameResultConverter.toDto(game));
             return IntelConverter.toDto(game.getIntel());
         }
         return null;

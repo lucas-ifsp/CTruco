@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
+//TODO - fazer um criar rank utilizando @Scheduled 5hrs
 @Component
 public class RemoveInactiveTask {
 
