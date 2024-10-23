@@ -14,13 +14,9 @@ public class ArrebentaBot implements BotServiceProvider {
         int cardsValue = cards.stream().mapToInt(card -> card.relativeValue(vira)).sum();
 
         if ( intel.getOpponentScore() >= 9 && intel.getOpponentScore() < 11){
-            if(cardsValue >= 22 || hasCasal(intel) || hasThrees(intel) || hasTwos(intel)) { return true; }
-            return false;
+            return cardsValue >= 22 || hasCasal(intel) || hasThrees(intel) || hasTwos(intel);
         }
-        if((cardsValue < 15) && (intel.getOpponentScore() < 11)){
-            return false;
-        }
-        return true;
+        return (cardsValue >= 15) || (intel.getOpponentScore() >= 11);
     }
 
     @Override
@@ -145,19 +141,13 @@ public class ArrebentaBot implements BotServiceProvider {
        return 0;
    }
 
-    @Override
-    public String getName() {
-        return BotServiceProvider.super.getName();
-    }
-
     private boolean hasCasal(GameIntel intel) {
         List<TrucoCard> manilhas = intel.getCards()
                 .stream()
                 .filter(card -> card.isManilha(intel.getVira()))
                 .toList();
 
-        if(manilhas.size()>= 2){ return true; }
-        return false;
+        return manilhas.size() >= 2;
     }
 
     private boolean hasThrees(GameIntel intel) {
@@ -166,8 +156,7 @@ public class ArrebentaBot implements BotServiceProvider {
                 .filter(card -> card.getRank().value() == 10)
                 .toList();
 
-        if(threes.size()>= 2){ return true; }
-        return false;
+        return threes.size() >= 2;
     }
 
     private boolean hasTwos(GameIntel intel) {
@@ -176,8 +165,7 @@ public class ArrebentaBot implements BotServiceProvider {
                 .filter(card -> card.getRank().value() == 9)
                 .toList();
 
-        if(twos.size()>= 2){ return true; }
-        return false;
+        return twos.size() >= 2;
     }
 
     private TrucoCard higherCard(GameIntel intel) {

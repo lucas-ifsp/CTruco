@@ -45,8 +45,6 @@ public class SabotaBot implements BotServiceProvider {
             return false;
         }
 
-
-
         // se ganhou a primeira rodada e tem manilha forte: truco
         if (roundResults.get(0) == GameIntel.RoundResult.WON) {
             if ( (!(getManilhasCard(intel).isEmpty())) && hasStrongManilha(intel)){

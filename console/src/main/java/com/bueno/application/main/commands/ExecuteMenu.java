@@ -44,7 +44,8 @@ public class ExecuteMenu implements Command<Void> {
         System.out.println("Simulate Bot vs Bot .............[2]");
         System.out.println("Evaluate a Bot...................[3]");
         System.out.println("Rank all Bots....................[4]");
-        System.out.println("exit.............................[0]");
+        System.out.println("Exit.............................[0]");
+        System.out.print("Choose a menu option: ");
     }
 
     private void menuSwitch(String option) {

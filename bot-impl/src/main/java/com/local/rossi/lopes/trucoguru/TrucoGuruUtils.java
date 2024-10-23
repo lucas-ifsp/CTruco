@@ -60,13 +60,11 @@ public class TrucoGuruUtils {
     }
 
     static Boolean hasCasalMaior(List<TrucoCard> cards, TrucoCard vira) {
-        Boolean hasCasalMaior = cards.stream().anyMatch(card -> card.isZap(vira)) && cards.stream().anyMatch(card -> card.isCopas(vira));
-        return hasCasalMaior;
+        return cards.stream().anyMatch(card -> card.isZap(vira)) && cards.stream().anyMatch(card -> card.isCopas(vira));
     }
 
     static Boolean hasCasalMenor(List<TrucoCard> cards, TrucoCard vira) {
-        Boolean hasCasalMenor = cards.stream().anyMatch(card -> card.isOuros(vira)) && cards.stream().anyMatch(card -> card.isEspadilha(vira));
-        return hasCasalMenor;
+        return cards.stream().anyMatch(card -> card.isOuros(vira)) && cards.stream().anyMatch(card -> card.isEspadilha(vira));
     }
 
     static Boolean hasDoubleManilhas(List<TrucoCard> cards, TrucoCard vira){
@@ -77,8 +75,7 @@ public class TrucoGuruUtils {
             if (card.isEspadilha(vira)) numberOfManilhas += 1;
             if (card.isOuros(vira)) numberOfManilhas += 1;
         }
-        Boolean hasDoubleManilhas = numberOfManilhas > 1;
-        return hasDoubleManilhas;
+        return numberOfManilhas > 1;
     }
 
     static TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {

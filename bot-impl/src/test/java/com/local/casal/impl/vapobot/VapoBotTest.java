@@ -38,7 +38,7 @@ class VapoBotTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
             );
 
-            List<TrucoCard> openCards = Arrays.asList();
+            List<TrucoCard> openCards = List.of();
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -59,7 +59,7 @@ class VapoBotTest {
                     TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)
             );
 
-            List<TrucoCard> openCards = Arrays.asList();
+            List<TrucoCard> openCards = List.of();
 
             stepBuilder = GameIntel.StepBuilder.with()
                     .gameInfo(List.of(GameIntel.RoundResult.DREW), openCards, vira, 1)
@@ -631,7 +631,7 @@ class VapoBotTest {
                     .opponentScore(1)
                     .opponentCard(TrucoCard.of(CardRank.KING, CardSuit.SPADES));
 
-            assertEquals(false, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+            assertFalse(vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
 
         @Test
@@ -649,7 +649,7 @@ class VapoBotTest {
                     .opponentScore(1)
                     .opponentCard(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
 
-            assertEquals(true, vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
+            assertTrue(vapoBot.checkIfOpponentCardIsBad(stepBuilder.build()));
         }
 
         @Test
