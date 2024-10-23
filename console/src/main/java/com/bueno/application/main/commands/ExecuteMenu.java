@@ -8,8 +8,6 @@ import com.bueno.application.withuser.PlayAgainstBots;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
-import com.remote.RemoteBotApiAdapter;
 
 import java.util.Scanner;
 import java.util.logging.LogManager;
