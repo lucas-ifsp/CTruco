@@ -65,38 +65,39 @@ public class PedroHenriqueBot implements BotServiceProvider {
     }
 
     private boolean decideIfRaisesSecondRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        int botScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
 
-        if (botScore >= 10) {
-            return false;
-        }
         if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && highCards >= 1) {
             return true;
         }
-        if (manilhas >= 1 || highCards >= 1) {
+        if (manilhas >= 1 || highCards >= 2) {
             return true;
         }
         if (opponentScore >= 10) {
             return true;
+        }
+        if (botScore >= 10) {
+            return false;
         }
 
         return decideToBluff(intel, handStrengthAvg);
     }
 
     private boolean decideIfRaisesThirdRound(GameIntel intel, int manilhas, int highCards, double handStrengthAvg) {
-        int botScore = intel.getScore();
         int opponentScore = intel.getOpponentScore();
+        int botScore = intel.getScore();
 
-        if (botScore >= 10) {
-            return false;
-        }
         if (highCards >= 1) {
             return true;
         }
         if (opponentScore >= 10) {
             return true;
         }
+        if (botScore >= 10) {
+            return false;
+        }
+
         return decideToBluff(intel, handStrengthAvg);
     }
 
@@ -115,29 +116,22 @@ public class PedroHenriqueBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         int manilhas = countManilhas(intel);
         int highCards = countHighCards(intel);
+        double handStrengthAvg = handStrengthAverage(intel);
 
         incrementOpponentRaiseCount();
 
-        double handStrengthAvg = handStrengthAverage(intel);
-        if (countHighCards(intel) == 0 && countManilhas(intel) == 0)
-            return -1;
-
-        if (countManilhas(intel) == 1)
-            return 0;
-
         if (manilhas >= 2 || handStrengthAvg >= 10) {
             return 1;
+        } else if (manilhas >= 1 || handStrengthAvg >= 7) {
+            return 0;
         }
 
-        return 1;
+        return -1;
     }
 
     private CardToPlay chooseCardFirstRound(GameIntel intel) {
         List<TrucoCard> sortedCards = sortCardsByStrength(intel.getCards(), intel.getVira());
 
-        if (handStrengthAverage(intel) >= 8) {
-            return CardToPlay.of(sortedCards.get(0));
-        }
         if (intel.getOpponentCard().isEmpty()) {
             return CardToPlay.of(sortedCards.get(1));
         } else {
