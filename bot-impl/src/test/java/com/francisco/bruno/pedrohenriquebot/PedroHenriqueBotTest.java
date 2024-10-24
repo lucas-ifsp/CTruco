@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
@@ -137,7 +138,6 @@ class PedroHenriqueBotTest {
 
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
-
     }
 
     @Nested
@@ -148,7 +148,7 @@ class PedroHenriqueBotTest {
         @DisplayName("First Round")
         class FirstRound {
             @Test
-            @DisplayName("Should use intermediate Card when first to play")
+            @DisplayName("Should use intermediate card when first to play")
             void shouldUseIntermediateCardWhenFirstToPlay() {
                 TrucoCard vira = TrucoCard.of(ACE, SPADES);
                 List<TrucoCard> botCards = Arrays.asList(
@@ -189,7 +189,7 @@ class PedroHenriqueBotTest {
                 TrucoCard expectedCard = expectedCardOptional
                         .orElseGet(() -> botCards.stream()
                                 .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                                .orElseThrow(() -> new IllegalStateException("Sem cartas disponíveis")));
+                                .orElseThrow(() -> new IllegalStateException("No cards available")));
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
@@ -219,8 +219,8 @@ class PedroHenriqueBotTest {
             }
 
             @Test
-            @DisplayName("Should play Strongest Card when strong hand")
-            void shouldPlayStrongestCardWhenStrongHand() {
+            @DisplayName("Should play second strongest card when strong hand")
+            void shouldPlaySecondStrongestCardWhenStartingFirstRound() {
                 TrucoCard vira = TrucoCard.of(FOUR, HEARTS);
                 List<TrucoCard> botCards = Arrays.asList(
                         TrucoCard.of(ACE, SPADES),
@@ -229,18 +229,21 @@ class PedroHenriqueBotTest {
                 );
 
                 intel = GameIntel.StepBuilder.with()
-                        .gameInfo(List.of(),Collections.singletonList(vira), vira, 1)
+                        .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                         .botInfo(botCards, 0)
                         .opponentScore(0);
                 CardToPlay chosenCard = sut.chooseCard(intel.build());
 
-                TrucoCard expectedCard = botCards.stream()
-                        .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                        .orElse(botCards.get(0));
+                List<TrucoCard> sortedCards = botCards.stream()
+                        .sorted((card1, card2) -> Integer.compare(card2.relativeValue(vira), card1.relativeValue(vira)))
+                        .collect(Collectors.toList());
+
+                TrucoCard expectedCard = sortedCards.get(1);
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
         }
+
         @Nested
         @DisplayName("Second Round")
         class SecondRound {
@@ -311,8 +314,6 @@ class PedroHenriqueBotTest {
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
-
-
         }
 
         @Nested
@@ -336,14 +337,12 @@ class PedroHenriqueBotTest {
 
                 assertEquals(CardToPlay.of(expectedCard), chosenCard);
             }
-
         }
-
     }
 
     @Nested
     @DisplayName("Testing decideIfRaises")
-    class decideIfRaises {
+    class DecideIfRaisesTest {
 
         @Nested
         @DisplayName("First Round")
@@ -459,8 +458,8 @@ class PedroHenriqueBotTest {
             }
 
             @Test
-            @DisplayName("Should aise with manilha and high card")
-            void shouldAiseWithManilhaAndHighCard() {
+            @DisplayName("Should raise with manilha and high card")
+            void shouldRaiseWithManilhaAndHighCard() {
                 TrucoCard vira = TrucoCard.of(ACE, SPADES);
                 List<TrucoCard> botCards = Arrays.asList(
                         TrucoCard.of(ACE, SPADES),
@@ -480,8 +479,8 @@ class PedroHenriqueBotTest {
         @DisplayName("Second Round")
         class SecondRound {
             @Test
-            @DisplayName("Should Raise if won forst Round with high cards")
-            void shouldRaiseIfWonForstRoundWithHighCards() {
+            @DisplayName("Should raise if won first round with high cards")
+            void shouldRaiseIfWonFirstRoundWithHighCards() {
                 TrucoCard vira = TrucoCard.of(ACE, SPADES);
                 List<TrucoCard> botCards = Arrays.asList(
                         TrucoCard.of(TWO, HEARTS),
@@ -502,7 +501,7 @@ class PedroHenriqueBotTest {
                 TrucoCard vira = TrucoCard.of(QUEEN, HEARTS);
                 List<TrucoCard> botCards = Arrays.asList(
                         TrucoCard.of(KING, SPADES),
-                        TrucoCard.of(ACE, CLUBS)
+                        TrucoCard.of(QUEEN, CLUBS)
                 );
 
                 intel = GameIntel.StepBuilder.with()
@@ -514,11 +513,11 @@ class PedroHenriqueBotTest {
             }
             @Test
             @DisplayName("Should raise if have manilha or high cards")
-            void shouldRaiseSecondRoundWithManilhaOrHighCards() {
+            void shouldRaiseSecondRoundWithManilhaOrTwoHighCards() {
                 TrucoCard vira = TrucoCard.of(KING, CLUBS);
                 List<TrucoCard> botCards = Arrays.asList(
-                        TrucoCard.of(TWO, HEARTS),
-                        TrucoCard.of(QUEEN, SPADES)
+                        TrucoCard.of(ACE, SPADES),
+                        TrucoCard.of(TWO, HEARTS)
                 );
 
                 intel = GameIntel.StepBuilder.with()
@@ -534,7 +533,7 @@ class PedroHenriqueBotTest {
         @DisplayName("Third Round")
         class ThirdRound {
             @Test
-            @DisplayName("Should Raise with high cards")
+            @DisplayName("Should raise with high cards")
             void shouldRaiseWithHighCards() {
                 TrucoCard vira = TrucoCard.of(KING, HEARTS);
                 List<TrucoCard> botCards = Collections.singletonList(
@@ -554,7 +553,7 @@ class PedroHenriqueBotTest {
             void shouldNotRaiseIfFarWinning() {
                 TrucoCard vira = TrucoCard.of(SEVEN, DIAMONDS);
                 List<TrucoCard> botCards = Collections.singletonList(
-                        TrucoCard.of(ACE, HEARTS)
+                        TrucoCard.of(FIVE, HEARTS)
                 );
 
                 intel = GameIntel.StepBuilder.with()
@@ -564,13 +563,12 @@ class PedroHenriqueBotTest {
 
                 assertFalse(sut.decideIfRaises(intel.build()));
             }
-
         }
     }
 
     @Nested
     @DisplayName("Testing getRaiseResponse")
-    class getRaiseResponse {
+    class GetRaiseResponseTest {
         @Test
         @DisplayName("Accept raise with strong hand in first round")
         void acceptRaiseStrongHandFirstRound() {
@@ -581,12 +579,12 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(THREE, DIAMONDS)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(5);
 
             int response = sut.getRaiseResponse(intel.build());
-            assertEquals(1, response);
+            assertEquals(0, response);
         }
 
         @Test
@@ -599,7 +597,7 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(SIX, SPADES)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(5);
 
@@ -617,12 +615,12 @@ class PedroHenriqueBotTest {
                     TrucoCard.of(SIX, SPADES)
             );
             intel = GameIntel.StepBuilder.with()
-                    .gameInfo(List.of(), Collections.singletonList(vira), vira,1)
+                    .gameInfo(List.of(), Collections.singletonList(vira), vira, 1)
                     .botInfo(botCards, 0)
                     .opponentScore(7);
 
             int response = sut.getRaiseResponse(intel.build());
-            assertEquals(0, response); // Accept
+            assertEquals(0, response);
         }
 
         @Test
