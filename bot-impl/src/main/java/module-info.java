@@ -10,6 +10,7 @@ import com.castro.calicchio.jogasafebot.JogaSafeBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
+import com.daniel.mateus.theroverbot.TheRover;
 import com.francisco.bruno.pedrohenriquebot.PedroHenriqueBot;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
@@ -114,7 +115,7 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
-  
+    exports com.daniel.mateus.theroverbot;  
     exports com.belini.luciano.matapatobot;
     exports com.brito.macena.boteco;
     exports com.Selin.Bonelli.zetruquero;
@@ -177,7 +178,8 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-
+            ReiDoZap,
+            TheRover;
             PedroHenriqueBot,
             MataPatoBot,
             BotEco,
