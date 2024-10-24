@@ -39,7 +39,7 @@ public class ThirdRoundStrategy implements BotServiceProvider {
     private void setCards(GameIntel intel){
         this.vira = intel.getVira();
         this.roundCards = intel.getCards();
-        this.defaultFunctions = new DefaultFunctions(roundCards, vira);
+        this.defaultFunctions = new DefaultFunctions(vira);
         this.ordendedCards = defaultFunctions.sortCards(roundCards);
     }
 
@@ -92,10 +92,10 @@ public class ThirdRoundStrategy implements BotServiceProvider {
                 if (defaultFunctions.isPowerfull(ordendedCards)) return true;
                 Random random = new Random();
                 int numero = random.nextInt(100);
-                if (numero > 0 && numero <= 30 && defaultFunctions.isMedium(ordendedCards)) return true;
+                return numero > 0 && numero <= 30 && defaultFunctions.isMedium(ordendedCards);
             } else {
                 TrucoCard lastCardPlayed = intel.getOpenCards().get(intel.getOpenCards().size()-1);
-                if (lastCardPlayed.isManilha(vira)) return true;
+                return lastCardPlayed.isManilha(vira);
             }
         }
         return false;

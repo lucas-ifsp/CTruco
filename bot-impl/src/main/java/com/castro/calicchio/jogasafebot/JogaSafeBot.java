@@ -155,6 +155,7 @@ public class JogaSafeBot implements BotServiceProvider{
 
         return !cards.isEmpty();
     }
+
     public boolean hasStrongCards(GameIntel intel){
         cards = intel.getCards();
         vira = intel.getVira();

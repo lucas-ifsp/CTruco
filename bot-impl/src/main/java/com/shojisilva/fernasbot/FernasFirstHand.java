@@ -51,8 +51,7 @@ public class FernasFirstHand implements FernasStrategy {
         Optional<TrucoCard> opponentCard = intel.getOpponentCard();
 
         if (opponentCard.isPresent()){
-            Optional<TrucoCard> minimumCardToWin = getMinimumCardToWin(intel);
-            return minimumCardToWin.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(cards.get(0)));
+            return getMinimumCardToWin(intel).map(CardToPlay::of).orElseGet(() -> CardToPlay.of(cards.get(0)));
         }
 
         if (hasCasalMaior(intel) || hasCasalPreto(intel) || hasPausOuros(intel) || hasCopasEspadilha(intel)){
@@ -76,9 +75,7 @@ public class FernasFirstHand implements FernasStrategy {
     }
 
     public boolean hasThreeManilhas(GameIntel intel){
-        return intel
-                .getCards()
-                .stream()
+        return intel.getCards().stream()
                 .filter(c -> c.isManilha(intel.getVira()))
                 .toList()
                 .size() == 3;

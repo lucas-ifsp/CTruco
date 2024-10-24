@@ -3,6 +3,7 @@ package com.felipe.fabiano.truccard;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static com.felipe.fabiano.truccard.TrucoUtils.*;
 
 public class ThirdRoundState implements GameRound {
@@ -11,7 +12,7 @@ public class ThirdRoundState implements GameRound {
         //if (wonFirstRound(intel) && manilhaCounter(intel)==1) return true;
         //return hasStrongManilha(intel);
         if (manilhaCounter(intel)>=1) return true;
-        return wonFirstRound(intel) && strongCardsCounter(intel) >= 1;
+        return firstRoundMatches(intel, round -> round == WON) && strongCardsCounter(intel) >= 1;
     }
 
     @Override

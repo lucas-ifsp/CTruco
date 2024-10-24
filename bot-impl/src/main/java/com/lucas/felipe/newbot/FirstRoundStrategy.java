@@ -39,7 +39,7 @@ public class FirstRoundStrategy implements BotServiceProvider {
     private void setCards(GameIntel intel){
         this.vira = intel.getVira();
         this.roundCards = intel.getCards();
-        this.defaultFunctions = new DefaultFunctions(roundCards, vira);
+        this.defaultFunctions = new DefaultFunctions(vira);
         this.ordendedCards = defaultFunctions.sortCards(roundCards);
     }
 

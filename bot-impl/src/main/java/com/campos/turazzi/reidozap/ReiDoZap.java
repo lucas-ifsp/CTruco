@@ -45,6 +45,7 @@ public class ReiDoZap implements BotServiceProvider {
 
         return zap;
     }
+
     private boolean analyzeCardStrengths(GameIntel intel) {
         updateBotCards(intel);
         int strongCards = countStrongCards();

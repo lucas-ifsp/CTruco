@@ -1,4 +1,5 @@
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
+import com.belini.luciano.matapatobot.MataPatoBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
 import com.brenoduda.cafeconlechebot.CafeConLecheBot;
 import com.bruno.tiago.jeckiechanbot.JackieChanBot;
@@ -10,6 +11,7 @@ import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
 import com.daniel.mateus.theroverbot.TheRover;
+import com.francisco.bruno.pedrohenriquebot.PedroHenriqueBot;
 import com.gabriel.kayky.coisaruim.CoisaRuim;
 import com.garcia.orlandi.slayerbot.SlayerBot;
 import com.erick.itaipavabot.ItaipavaBot;
@@ -17,7 +19,9 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
+import com.kayky.waleska.kwtruco.KwTruco;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
+import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -51,6 +55,14 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 
+import com.brito.macena.boteco.BotEco;
+import com.adriann.emanuel.armageddon.Armageddon;
+import com.Selin.Bonelli.zetruquero.Zetruquero;
+import com.manhani.stefane.reimubot.ReimuBot;
+import com.adivic.octopus.Octopus;
+import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
+import com.bianca.joaopedro.lgtbot.Lgtbot;
+
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
@@ -74,6 +86,7 @@ module bot.impl {
     exports com.silvabrufato.impl.silvabrufatobot;
     exports com.everton.ronaldo.arrebentabot;
     exports com.yuri.impl;
+    exports com.francisco.bruno.pedrohenriquebot;
     exports com.gatti.casaque.caipirasbot;
     exports com.gustavo.contiero.lazybot;
     exports com.fabio.bruno.minepowerbot;
@@ -102,7 +115,17 @@ module bot.impl {
     exports com.bernardo.caio.zeusbot;
     exports com.motta.impl.beepbot;
     exports com.campos.turazzi.reidozap;
-    exports com.daniel.mateus.theroverbot;
+    exports com.daniel.mateus.theroverbot;  
+    exports com.belini.luciano.matapatobot;
+    exports com.brito.macena.boteco;
+    exports com.Selin.Bonelli.zetruquero;
+    exports com.luigi.ana.batatafritadobarbot;
+    exports com.manhani.stefane.reimubot;
+    exports com.adivic.octopus;
+    exports com.eduardo.vinicius.camaleaotruqueiro;
+    exports com.bianca.joaopedro.lgtbot;
+    exports com.adriann.emanuel.armageddon;
+    exports com.kayky.waleska.kwtruco;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -142,7 +165,6 @@ module bot.impl {
             SlayerBot,
             TeitasBot,
             MalasiaBot,
-
             FernasBot,
             NewBot,
             AtrasaBot,
@@ -158,4 +180,16 @@ module bot.impl {
             Zeusbot,
             ReiDoZap,
             TheRover;
+            PedroHenriqueBot,
+            MataPatoBot,
+            BotEco,
+            Armageddon,
+            Zetruquero,
+            BatataFritaDoBarBot,
+            ReimuBot,
+            Octopus,
+            CamaleaoTruqueiro,
+            ReiDoZap,
+            Lgtbot,
+            KwTruco;
 }

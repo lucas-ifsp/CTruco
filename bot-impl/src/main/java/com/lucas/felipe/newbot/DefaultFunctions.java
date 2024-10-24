@@ -29,11 +29,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DefaultFunctions {
-    private List<TrucoCard> roundCards;
     private TrucoCard vira;
 
-    public DefaultFunctions(List<TrucoCard> roundCards, TrucoCard vira) {
-        this.roundCards = roundCards;
+    public DefaultFunctions(TrucoCard vira) {
         this.vira = vira;
     }
 
@@ -68,7 +66,7 @@ public class DefaultFunctions {
     }
 
     public boolean maoDeOnzeResponse(List<TrucoCard> ordendedCards, GameIntel intel) {
-        DefaultFunctions defaultFunctions = new DefaultFunctions(intel.getCards(), intel.getVira());
+        DefaultFunctions defaultFunctions = new DefaultFunctions(intel.getVira());
         int opponentScore = intel.getOpponentScore();
         boolean isPowerfull = defaultFunctions.isPowerfull(ordendedCards);
         boolean isMedium = defaultFunctions.isMedium(ordendedCards);

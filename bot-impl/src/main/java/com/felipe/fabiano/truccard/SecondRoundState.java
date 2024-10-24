@@ -3,17 +3,19 @@ package com.felipe.fabiano.truccard;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.DREW;
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 import static com.felipe.fabiano.truccard.TrucoUtils.*;
 
 public class SecondRoundState implements GameRound {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (manilhaCounter(intel)>=2) return true;
-        if (wonFirstRound(intel)) {
+        if (firstRoundMatches(intel, round -> round == WON)) {
             if (strongCardsCounter(intel, 6)==0) return true;
             return manilhaCounter(intel) >= 1 && strongCardsCounter(intel, 6) >= 2;
         }
-        if (drewFirstRound(intel)) {
+        if (firstRoundMatches(intel, round -> round == DREW)) {
             if (isPlayingSecond(intel) && pickStrongestCard(intel).relativeValue(intel.getVira())>intel.getOpenCards().get(0).relativeValue(intel.getVira())) return true;
             return hasStrongManilha(intel);
         }
@@ -39,7 +41,7 @@ public class SecondRoundState implements GameRound {
     public CardToPlay chooseCard(GameIntel intel) {
         if (isPlayingSecond(intel)) return CardToPlay.of(optimalCardPick(intel, false).orElse(pickStrongestCard(intel)));
 
-        if (wonFirstRound(intel)) return CardToPlay.of(pickWeakestCard(intel));
+        if (firstRoundMatches(intel, round -> round == WON)) return CardToPlay.of(pickWeakestCard(intel));
 
         return CardToPlay.of(pickStrongestCard(intel));
     }
