@@ -55,7 +55,7 @@ public class Akkosocorrompido implements BotServiceProvider {
         //can raise
         else {
             if (intel.getCards().size() == 1)
-                return Akkosocorrompido.randomBooleanByIntSeed((int) (Math.random()*10));
+                return randomBooleanByIntSeed((int) (Math.random()*10));
 
             if (intel.getCards().size() == 2)
                 return intel.getCards().get(0).compareValueTo(intel.getVira(), TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)) > 0

@@ -38,6 +38,7 @@ public class CasinhaDeCabloco implements BotServiceProvider {
             default -> new ThirdRound(intel);
         };
     }
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return gameState(intel).getMaoDeOnzeResponse(intel);

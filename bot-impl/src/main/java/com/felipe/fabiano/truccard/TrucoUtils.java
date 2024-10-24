@@ -2,29 +2,40 @@ package com.felipe.fabiano.truccard;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.GameIntel.RoundResult;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class TrucoUtils {
+
+    static Stream<TrucoCard> cards(GameIntel intel) {
+        return intel.getCards().stream();
+    }
+
     public static int manilhaCounter(GameIntel intel) {
-        return (int) intel.getCards().stream()
+        return (int) cards(intel)
                 .filter(card -> card.isManilha(intel.getVira()))
                 .count();
     }
 
+    private static Comparator<TrucoCard> relativelyCompare(TrucoCard vira) {
+        return Comparator.comparingInt(card -> card.relativeValue(vira));
+    }
+
     public static TrucoCard pickStrongestCard(GameIntel intel) {
-        return intel.getCards().stream()
-                .max(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
+        return cards(intel)
+                .max(relativelyCompare(intel.getVira()))
                 .orElseThrow(() -> new NoSuchElementException("No cards available to play."));
     }
 
     public static TrucoCard pickWeakestCard(GameIntel intel) {
-        return intel.getCards().stream()
-                .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
+        return cards(intel)
+                .min(relativelyCompare(intel.getVira()))
                 .orElseThrow(() -> new NoSuchElementException("No cards available to play."));
     }
 
@@ -35,66 +46,39 @@ public class TrucoUtils {
         TrucoCard enemyCard = enemyCardOpt.get();
         TrucoCard vira = intel.getVira();
 
-        if (canDraw) return intel.getCards().stream()
-                .filter(card -> card.relativeValue(vira) >= enemyCard.relativeValue(vira))
-                .min(Comparator.comparingInt(card -> card.relativeValue(vira)));
+        if (canDraw) return cards(intel)
+                .filter(card -> card.compareValueTo(enemyCard, vira) >= 0)
+                .min(relativelyCompare(vira));
 
-        return intel.getCards().stream()
-                .filter(card -> card.relativeValue(vira) > enemyCard.relativeValue(vira))
-                .min(Comparator.comparingInt(card -> card.relativeValue(vira)));
+        return cards(intel)
+                .filter(card -> card.compareValueTo(enemyCard, vira) > 0)
+                .min(relativelyCompare(vira));
     }
 
     public static Optional<TrucoCard> strongestNonManilha(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-        List<TrucoCard> cards = intel.getCards();
-
-        TrucoCard highestNonManilha = null;
-
-        for (TrucoCard card : cards) {
-            if (!card.isManilha(vira)) {
-                if (highestNonManilha == null || card.compareValueTo(highestNonManilha, vira) > 0) {
-                    highestNonManilha = card;
-                }
-            }
-        }
-
-        if (highestNonManilha != null) {
-            return Optional.of(highestNonManilha);
-        }
-
-        return Optional.empty();
+        return cards(intel)
+                .filter(card -> !card.isManilha(intel.getVira()))
+                .max(relativelyCompare(intel.getVira()));
     }
 
     public static int strongCardsCounter(GameIntel intel) {
-        return (int) intel.getCards().stream()
-                .filter(card -> card.relativeValue(intel.getVira()) >= 8)
-                .count();
+        return strongCardsCounter(intel, 8);
     }
 
     public static int strongCardsCounter(GameIntel intel, int value) {
-        return (int) intel.getCards().stream()
+        return (int) cards(intel)
                 .filter(card -> card.relativeValue(intel.getVira()) > value)
                 .count();
     }
 
-    public static boolean hasZap(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()));
-    }
-
-    public static boolean hasCopas(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isCopas(intel.getVira()));
-    }
-
-    public static boolean hasEspadilha(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isEspadilha(intel.getVira()));
-    }
-
-    public static boolean hasOuros(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isOuros(intel.getVira()));
+    public static boolean isSpecificManilha(GameIntel intel, Predicate<TrucoCard> predicate) {
+        return cards(intel).anyMatch(predicate);
     }
 
     public static boolean hasStrongManilha(GameIntel intel) {
-        return hasEspadilha(intel) || hasCopas(intel) || hasZap(intel);
+        return isSpecificManilha(intel, card -> card.isEspadilha(intel.getVira()))
+                || isSpecificManilha(intel, card -> card.isCopas(intel.getVira()))
+                || isSpecificManilha(intel, card -> card.isZap(intel.getVira()));
     }
 
     public static CardToPlay playRemainingCard(GameIntel intel) {
@@ -105,22 +89,9 @@ public class TrucoUtils {
         return intel.getOpponentCard().isPresent();
     }
 
-    public static boolean wonFirstRound(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty()) return false;
-
-        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
-    }
-
-    public static boolean drewFirstRound(GameIntel intel) {
-        if (intel.getRoundResults().isEmpty()) return false;
-
-        return intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW;
-    }
-
-    public static boolean hasStrongHand(GameIntel intel, double averageThreshold, int highCardThreshold) {
-        int numOfTrumpCards = manilhaCounter(intel);
-        int strongCardsCount = strongCardsCounter(intel, highCardThreshold);
-
-        return numOfTrumpCards > 0 || strongCardsCount >= 2;
+    public static boolean firstRoundMatches(GameIntel intel, Predicate<RoundResult> predicate ) {
+        return intel.getRoundResults().stream()
+                .limit(1)
+                .anyMatch(predicate);
     }
 }

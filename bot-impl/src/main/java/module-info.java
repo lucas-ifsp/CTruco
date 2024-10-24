@@ -18,6 +18,7 @@ import com.hermespiassi.casados.marrecobot.MarrecoBot;
 import com.hideki.araujo.wrkncacnterbot.WrkncacnterBot;
 import com.indi.impl.addthenewsoul.AddTheNewSoul;
 import com.joao.alexandre.jormungandrbot.JormungandrBot;
+import com.kayky.waleska.kwtruco.KwTruco;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
@@ -53,7 +54,6 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 
-import com.belini.luciano.matapatobot.MataPatoBot;
 import com.brito.macena.boteco.BotEco;
 import com.adriann.emanuel.armageddon.Armageddon;
 import com.Selin.Bonelli.zetruquero.Zetruquero;
@@ -124,6 +124,7 @@ module bot.impl {
     exports com.eduardo.vinicius.camaleaotruqueiro;
     exports com.bianca.joaopedro.lgtbot;
     exports com.adriann.emanuel.armageddon;
+    exports com.kayky.waleska.kwtruco;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -151,7 +152,6 @@ module bot.impl {
             CaipirasBot,
             LazyBot,
             PauladaSecaBot,
-            PedroHenriqueBot,
             MinePowerBot,
             JormungandrBot,
             Akkosocorrompido,
@@ -177,7 +177,8 @@ module bot.impl {
             CasinhaDeCabloco,
             BeepBot,
             Zeusbot,
-            
+
+            PedroHenriqueBot,
             MataPatoBot,
             BotEco,
             Armageddon,
@@ -187,5 +188,6 @@ module bot.impl {
             Octopus,
             CamaleaoTruqueiro,
             ReiDoZap,
-            Lgtbot;
+            Lgtbot,
+            KwTruco;
 }

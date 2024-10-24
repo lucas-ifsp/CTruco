@@ -43,16 +43,15 @@ public interface FernasStrategy {
     }
 
     default Optional<TrucoCard> getMinimumCardToWin(GameIntel intel){
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        return opponentCard.flatMap(trucoCard -> getCurrentCards(intel)
+        return intel.getOpponentCard()
+                .flatMap(trucoCard -> getCurrentCards(intel)
                 .stream()
                 .filter(c -> c.compareValueTo(trucoCard, intel.getVira()) > 0)
                 .findFirst());
     }
 
     default int getHandValue(GameIntel intel){
-        return intel
-                .getCards()
+        return intel.getCards()
                 .stream()
                 .mapToInt(card -> card.relativeValue(intel.getVira()))
                 .sum();

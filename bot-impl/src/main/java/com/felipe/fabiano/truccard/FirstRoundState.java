@@ -38,17 +38,24 @@ public class FirstRoundState implements GameRound {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (strongCardsCounter(intel, 10) >= 2) return CardToPlay.of(pickWeakestCard(intel));
+        if (strongCardsCounter(intel, 10) >= 2)
+            return CardToPlay.of(pickWeakestCard(intel));
 
         if (isPlayingSecond(intel)) {
-            if (manilhaCounter(intel)>0) return CardToPlay.of(optimalCardPick(intel, true).orElse(pickWeakestCard(intel)));
+            if (manilhaCounter(intel)>0)
+                return CardToPlay.of(optimalCardPick(intel, true).orElse(pickWeakestCard(intel)));
             return CardToPlay.of(optimalCardPick(intel, false).orElse(pickWeakestCard(intel)));
         }
 
-        if (hasOuros(intel)) return CardToPlay.of(intel.getCards().stream()
-                .findAny().filter(card -> card.isOuros(intel.getVira())).orElse(pickStrongestCard(intel)));
+        if (cards(intel).anyMatch(card1 -> card1.isOuros(intel.getVira())))
+            return CardToPlay.of(intel.getCards().stream()
+                .findAny()
+                    .filter(card -> card.isOuros(intel.getVira()))
+                    .orElse(pickStrongestCard(intel)));
 
-        if (manilhaCounter(intel)>=1) return CardToPlay.of(strongestNonManilha(intel).orElse(pickStrongestCard(intel)));
+        if (manilhaCounter(intel)>=1)
+            return CardToPlay.of(strongestNonManilha(intel)
+                    .orElse(pickStrongestCard(intel)));
 
         return CardToPlay.of(pickStrongestCard(intel));
     }
