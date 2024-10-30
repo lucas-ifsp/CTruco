@@ -1,25 +1,4 @@
-/*
- *  Copyright (C) 2023 Mateus Vieira and Stefhani Alkin - IFSP/SCL
- *  Contact: vieira <dot> mateus <at> aluno <dot> ifsp <dot> edu <dot> br
- *  Contact: s <dot> alkin <at> aluno <dot> ifsp <dot> edu <dot> br
- *
- *  This file is part of CTruco (Truco game for didactic purpose).
- *
- *  CTruco is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CTruco is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
- */
-
-package com.meima.skoltable;
+package com.aah.refactor.me;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.GameIntel;
@@ -36,13 +15,16 @@ import static com.bueno.spi.model.CardSuit.HIDDEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SkolTableBotTest {
+import static com.bueno.spi.model.CardRank.ACE;
+import static com.bueno.spi.model.CardSuit.DIAMONDS;
 
-    private SkolTable skolTable;
+public class RefactorMePleaseBotTest{
+
+    private RefactorMePleaseBot refactorMePleaseBot;
 
     @BeforeEach
     public void setUp() {
-        skolTable = new SkolTable();
+        refactorMePleaseBot = new RefactorMePleaseBot();
     }
 
 
@@ -64,7 +46,7 @@ class SkolTableBotTest {
                 .opponentCard(opponentCard);
 
 
-        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FOUR, HEARTS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -80,7 +62,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
 
-        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FOUR, HEARTS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -99,7 +81,7 @@ class SkolTableBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(TrucoCard.of(TWO, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(TWO, CLUBS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -115,7 +97,7 @@ class SkolTableBotTest {
                 .gameInfo(rounds, openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isNegative();
     }
 
     @Test
@@ -132,7 +114,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
 
-        assertEquals(-1, skolTable.getRaiseResponse(stepBuilder.build()));
+        assertEquals(-1, refactorMePleaseBot.getRaiseResponse(stepBuilder.build()));
     }
 
     @Test
@@ -148,7 +130,7 @@ class SkolTableBotTest {
                 .gameInfo(rounds, openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isZero();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
@@ -164,7 +146,7 @@ class SkolTableBotTest {
                 .gameInfo(rounds, openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isPositive();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isPositive();
     }
 
     @Test
@@ -179,7 +161,7 @@ class SkolTableBotTest {
                 .gameInfo(List.of(), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isPositive();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isPositive();
     }
 
     @Test
@@ -195,7 +177,7 @@ class SkolTableBotTest {
                 .gameInfo(rounds, opponentCard, vira, 1)
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(strongHandBuilder.build())).isZero();
+        assertThat(refactorMePleaseBot.getRaiseResponse(strongHandBuilder.build())).isZero();
     }
 
     @Test
@@ -210,7 +192,7 @@ class SkolTableBotTest {
                 .gameInfo(List.of(), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isNegative();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isNegative();
     }
 
     @Test
@@ -227,7 +209,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -248,7 +230,7 @@ class SkolTableBotTest {
                 .botInfo(powerRank3Hand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
     @Test
@@ -265,7 +247,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 11)
                 .opponentScore(10);
 
-        assertTrue(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
+        assertTrue(refactorMePleaseBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     @Test
@@ -282,7 +264,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 11)
                 .opponentScore(10);
 
-        assertFalse(skolTable.getMaoDeOnzeResponse(stepBuilder.build()));
+        assertFalse(refactorMePleaseBot.getMaoDeOnzeResponse(stepBuilder.build()));
     }
 
     @Test
@@ -299,7 +281,7 @@ class SkolTableBotTest {
                 .botInfo(botCards, 0)
                 .opponentScore(0);
 
-        assertThat(skolTable.getRaiseResponse(stepBuilder.build())).isZero();
+        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isZero();
     }
 
     @Test
@@ -315,7 +297,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -331,7 +313,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertEquals(TrucoCard.of(FOUR, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FOUR, CLUBS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -349,7 +331,7 @@ class SkolTableBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FIVE, DIAMONDS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -367,7 +349,7 @@ class SkolTableBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(TrucoCard.of(FIVE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FIVE, DIAMONDS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -383,7 +365,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertFalse(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertFalse(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -399,7 +381,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -415,7 +397,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -431,7 +413,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(strongHandBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(strongHandBuilder.build()));
     }
 
     @Test
@@ -449,7 +431,7 @@ class SkolTableBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(FOUR, HEARTS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -465,7 +447,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertEquals(TrucoCard.of(ACE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(ACE, DIAMONDS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -481,7 +463,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertNotEquals(TrucoCard.of(FOUR, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertNotEquals(TrucoCard.of(FOUR, CLUBS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -497,7 +479,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertEquals(TrucoCard.of(SIX, SPADES), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(SIX, SPADES), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
 
@@ -514,7 +496,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 0)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(stepBuilder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(stepBuilder.build()));
     }
 
     @Test
@@ -532,7 +514,7 @@ class SkolTableBotTest {
                 .opponentScore(0)
                 .opponentCard(opponentCard);
 
-        assertEquals(TrucoCard.of(THREE, CLUBS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(THREE, CLUBS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
     @Test
@@ -547,7 +529,7 @@ class SkolTableBotTest {
                 .botInfo(hand, 11)
                 .opponentScore(0);
 
-        assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+        assertFalse(refactorMePleaseBot.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
 
@@ -563,7 +545,7 @@ class SkolTableBotTest {
                 .botInfo(hand, 0)
                 .opponentScore(11);
 
-        assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+        assertFalse(refactorMePleaseBot.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
     @Test
@@ -578,7 +560,7 @@ class SkolTableBotTest {
                 .botInfo(hand, 10)
                 .opponentScore(0);
 
-        assertTrue(skolTable.decideIfRaises(builder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -593,7 +575,7 @@ class SkolTableBotTest {
                 .botInfo(hand, 10)
                 .opponentScore(10);
 
-        assertTrue(skolTable.decideIfRaises(builder.build()));
+        assertTrue(refactorMePleaseBot.decideIfRaises(builder.build()));
     }
 
     @Test
@@ -608,7 +590,7 @@ class SkolTableBotTest {
                 .botInfo(hand, 0)
                 .opponentScore(0);
 
-        assertFalse(skolTable.decideIfRaises(powerRank3HandBuilder.build()));
+        assertFalse(refactorMePleaseBot.decideIfRaises(powerRank3HandBuilder.build()));
     }
 
     @Test
@@ -623,7 +605,7 @@ class SkolTableBotTest {
                 .botInfo(botCardsWithWeakHand, 11)
                 .opponentScore(8);
 
-        assertFalse(skolTable.decideIfRaises(weakHandBuilder.build()));
+        assertFalse(refactorMePleaseBot.decideIfRaises(weakHandBuilder.build()));
     }
 
     @Test
@@ -637,7 +619,7 @@ class SkolTableBotTest {
                 .gameInfo(List.of(), openCards1, vira, 1)
                 .botInfo(botCards1, 0)
                 .opponentScore(0);
-        assertEquals(TrucoCard.of(FOUR, HEARTS), skolTable.chooseCard(stepBuilder1.build()).content());
+        assertEquals(TrucoCard.of(FOUR, HEARTS), refactorMePleaseBot.chooseCard(stepBuilder1.build()).content());
     }
 
     @Test
@@ -650,7 +632,7 @@ class SkolTableBotTest {
                 .gameInfo(List.of(), openCards2, vira, 1)
                 .botInfo(botCards2, 0)
                 .opponentScore(0);
-        assertEquals(TrucoCard.of(THREE, SPADES), skolTable.chooseCard(stepBuilder2.build()).content());
+        assertEquals(TrucoCard.of(THREE, SPADES), refactorMePleaseBot.chooseCard(stepBuilder2.build()).content());
     }
 
     @Test
@@ -663,7 +645,7 @@ class SkolTableBotTest {
                 .gameInfo(List.of(), openCards3, vira, 1)
                 .botInfo(botCards3, 0)
                 .opponentScore(0);
-        assertEquals(TrucoCard.of(TWO, SPADES), skolTable.chooseCard(stepBuilder3.build()).content());
+        assertEquals(TrucoCard.of(TWO, SPADES), refactorMePleaseBot.chooseCard(stepBuilder3.build()).content());
     }
 
     @Test
@@ -679,7 +661,7 @@ class SkolTableBotTest {
                 .botInfo(strongHand, 9)
                 .opponentScore(0);
 
-        assertEquals(TrucoCard.of(ACE, DIAMONDS), skolTable.chooseCard(stepBuilder.build()).content());
+        assertEquals(TrucoCard.of(ACE, DIAMONDS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
     }
 
 

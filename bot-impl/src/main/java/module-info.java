@@ -28,7 +28,7 @@ import com.soares.gibim.chatgptbot.ChatGptBot;
 import com.pedrocagiovane.pauladasecabot.PauladaSecaBot;
 import com.renato.DarthVader.DarthVader;
 import com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot;
-import com.meima.skoltable.SkolTable;
+import com.aah.refactor.me.RefactorMePleaseBot;
 import com.murilos.aline.teconomarrecobot.TecoNoMarrecoBot;
 import com.peixe.aguliari.perdenuncabot.PerdeNuncaBot;
 import com.rossi.lopes.trucoguru.TrucoGuru;
@@ -62,6 +62,7 @@ import com.manhani.stefane.reimubot.ReimuBot;
 import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
+import com.fernando.breno.trucomarrecobot.TrucoMarreco;
 
 module bot.impl {
     requires bot.spi;
@@ -78,7 +79,7 @@ module bot.impl {
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.pedrocagiovane.pauladasecabot;
     exports com.brenoduda.cafeconlechebot;
-    exports com.meima.skoltable;
+    exports com.aah.refactor.me;
     exports com.rossi.lopes.trucoguru;
     exports com.almeida.strapasson.veiodobar;
     exports com.tatayrapha.leonardabot;
@@ -126,6 +127,7 @@ module bot.impl {
     exports com.bianca.joaopedro.lgtbot;
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
+    exports com.fernando.breno.trucomarrecobot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -145,7 +147,7 @@ module bot.impl {
             TrucoMachineBot,
             BotMadeInDescalvado,
             TrucoGuru,
-            SkolTable,
+            RefactorMePleaseBot,
             UncleBobBot,
             CafeConLecheBot,
             VapoBot,
@@ -179,7 +181,7 @@ module bot.impl {
             BeepBot,
             Zeusbot,
             ReiDoZap,
-            TheRover;
+            TheRover,
             PedroHenriqueBot,
             MataPatoBot,
             BotEco,
@@ -189,7 +191,7 @@ module bot.impl {
             ReimuBot,
             Octopus,
             CamaleaoTruqueiro,
-            ReiDoZap,
             Lgtbot,
-            KwTruco;
+            KwTruco,
+            TrucoMarreco;
 }

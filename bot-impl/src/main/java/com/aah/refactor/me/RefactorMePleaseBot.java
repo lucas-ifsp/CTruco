@@ -1,25 +1,4 @@
-/*
- *  Copyright (C) 2023 Mateus Vieira and Stefhani Alkin - IFSP/SCL
- *  Contact: vieira <dot> mateus <at> aluno <dot> ifsp <dot> edu <dot> br
- *  Contact: s <dot> alkin <at> aluno <dot> ifsp <dot> edu <dot> br
- *
- *  This file is part of CTruco (Truco game for didactic purpose).
- *
- *  CTruco is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CTruco is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
- */
-
-package com.meima.skoltable;
+package com.aah.refactor.me;
 
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
@@ -30,7 +9,8 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.Comparator;
 import java.util.List;
 
-public class SkolTable implements BotServiceProvider {
+public class RefactorMePleaseBot implements BotServiceProvider {
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
@@ -66,18 +46,18 @@ public class SkolTable implements BotServiceProvider {
             return (handPowerRank == 4 || handPowerRank == 3);
         }
 
-        if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+        if (rounds.get(0).equals(GameIntel.RoundResult.WON)) {
             int handPowerRank = getPowerRankSecondRound(hand, vira);
             return (handPowerRank < 3);
         }
 
-        if(rounds.get(0).equals(GameIntel.RoundResult.DREW)){
+        if (rounds.get(0).equals(GameIntel.RoundResult.DREW)) {
             int handPowerRank = getPowerRankSecondRound(hand, vira);
             return (handPowerRank > 3);
         }
 
-        if(rounds.get(0).equals(GameIntel.RoundResult.LOST)){
-            if(hasCopasAndZap(hand, vira)){
+        if (rounds.get(0).equals(GameIntel.RoundResult.LOST)) {
+            if (hasCopasAndZap(hand, vira)) {
                 return true;
             }
 
@@ -172,8 +152,8 @@ public class SkolTable implements BotServiceProvider {
 
         if (isPair(intel)) return 0;
 
-        if(!isFirstRound){
-            if(rounds.get(0).equals(GameIntel.RoundResult.WON)){
+        if (!isFirstRound) {
+            if (rounds.get(0).equals(GameIntel.RoundResult.WON)) {
                 handPowerRank = getPowerRankSecondRound(hand, vira);
                 return switch (handPowerRank) {
                     case 4 -> 1;
@@ -204,9 +184,9 @@ public class SkolTable implements BotServiceProvider {
         return cards.stream().min(Comparator.comparingInt(card -> card.relativeValue(vira))).get();
     }
 
-    private int getHandPower(List<TrucoCard> hand, TrucoCard vira){
+    private int getHandPower(List<TrucoCard> hand, TrucoCard vira) {
         int power = 0;
-        for (TrucoCard card: hand) {
+        for (TrucoCard card : hand) {
             power += card.relativeValue(vira);
         }
         return power;
@@ -232,9 +212,9 @@ public class SkolTable implements BotServiceProvider {
 
         if (power >= 21 && power <= 25) {
             return 4;
-        } else if (power >= 16&& power <= 20) {
+        } else if (power >= 16 && power <= 20) {
             return 3;
-        } else if (power >= 11&& power <= 15) {
+        } else if (power >= 11 && power <= 15) {
             return 2;
         } else {
             return 1;
@@ -249,7 +229,7 @@ public class SkolTable implements BotServiceProvider {
         return pairCount == 2;
     }
 
-    public boolean hasCopasAndZap(List<TrucoCard> hand ,TrucoCard vira) {
+    public boolean hasCopasAndZap(List<TrucoCard> hand, TrucoCard vira) {
         boolean hasCopas = false;
         boolean hasZap = false;
 

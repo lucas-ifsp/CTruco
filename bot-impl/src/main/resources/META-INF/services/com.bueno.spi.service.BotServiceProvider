@@ -31,7 +31,7 @@ com.newton.dolensi.sabotabot.SabotaBot
 com.casal.impl.vapobot.VapoBot
 com.brenoduda.cafeconlechebot.CafeConLecheBot
 com.zampieri.rissatti.impl.UncleBobBot.UncleBobBot
-com.meima.skoltable.SkolTable
+com.aah.refactor.me.RefactorMePleaseBot
 com.rossi.lopes.trucoguru.TrucoGuru
 com.peixe.aguliari.perdenuncabot.PerdeNuncaBot
 com.almeida.strapasson.veiodobar.VeioDoBarBot
@@ -66,7 +66,6 @@ com.alanIan.casinhadecabloco.CasinhaDeCabloco
 com.bernardo.caio.zeusbot.Zeusbot
 com.motta.impl.beepbot.BeepBot
 com.campos.turazzi.reidozap.ReiDoZap
-
 com.brito.macena.boteco.BotEco
 com.adriann.emanuel.armageddon.Armageddon
 com.Selin.Bonelli.zetruquero.Zetruquero
@@ -78,3 +77,5 @@ com.bianca.joaopedro.lgtbot.Lgtbot
 com.belini.luciano.matapatobot.MataPatoBot
 com.francisco.bruno.pedrohenriquebot.PedroHenriqueBot
 com.kayky.waleska.kwtruco.KwTruco
+com.daniel.mateus.theroverbot.TheRover
+com.fernando.breno.trucomarrecobot.TrucoMarreco
