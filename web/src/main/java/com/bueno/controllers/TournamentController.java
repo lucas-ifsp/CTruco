@@ -69,8 +69,15 @@ public class TournamentController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<?> getTournamentByUuid(@PathVariable UUID uuid) {
-        TournamentDTO dto = tournamentRepository.findTournamentById(uuid).orElseThrow();
+        Optional<TournamentDTO> dtoOpt = tournamentRepository.findTournamentById(uuid);
+
+        if (dtoOpt.isEmpty()) return new ResponseBuilder(HttpStatus.BAD_REQUEST)
+                .addEntry(new ResponseEntry("error", "tournament doesn't exist"))
+                .addTimestamp()
+                .build();
+
         List<MatchDTO> matchesDTO = matchRepository.findMatchesByTournamentId(uuid);
+        TournamentDTO dto = dtoOpt.get();
 
         TournamentResponseDTO response = new TournamentResponseDTO(dto.uuid(),
                 dto.participantsNames(),
