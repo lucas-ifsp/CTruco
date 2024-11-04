@@ -1,7 +1,3 @@
-package com.luigivanzella.triathlonBot;
-
-import com.bueno.spi.service.BotServiceProvider;
-
 
 /*
  *  Copyright (C) 2024 Luigi A. L. Vanzella
