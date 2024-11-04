@@ -7,6 +7,7 @@ import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
+import com.caua.felipe.cfbot.CFBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
@@ -64,6 +65,8 @@ import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
 
+
+
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
@@ -75,6 +78,7 @@ module bot.impl {
     exports com.newton.dolensi.sabotabot;
     exports com.cremonezzi.impl.carlsenbot;
     exports com.caueisa.destroyerbot;
+    exports com.caua.felipe.cfbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.pedrocagiovane.pauladasecabot;
@@ -193,5 +197,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
+            CFBot,
             TrucoMarreco;
 }
