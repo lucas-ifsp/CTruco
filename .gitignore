@@ -13,6 +13,10 @@ target/
 .springBeans
 .sts4-cache
 
+### Project Security ###
+web/src/main/resources/application.properties
+persistence/src/main/java/com/bueno/persistence/ConnectionFactory.java
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
