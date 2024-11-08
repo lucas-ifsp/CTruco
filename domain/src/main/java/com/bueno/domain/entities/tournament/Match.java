@@ -53,8 +53,15 @@ public class Match implements Comparable {
                      BotManagerService botManagerService,
                      int times) {
         final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi, botManagerService);
-        PlayWithBotsResultsDto results = useCase.playWithBots(UUID.randomUUID(), p1Name, UUID.randomUUID(), p2Name, times);
-        long p1Wins = results.info().stream().filter(info -> info.name().equals(p1Name)).count();
+        PlayWithBotsResultsDto results = useCase.playWithBots(UUID.randomUUID(), p1Name, UUID.randomUUID(), p2Name, times / 2);
+        PlayWithBotsResultsDto resultsChangingTheFirstPlayer = useCase.playWithBots(UUID.randomUUID(), p2Name, UUID.randomUUID(), p1Name, times / 2);
+        long p1Wins = results.info()
+                              .stream()
+                              .filter(info -> info.name().equals(p1Name)).count()
+                      +
+                      resultsChangingTheFirstPlayer.info()
+                              .stream()
+                              .filter(info -> info.name().equals(p1Name)).count();
         long p2Wins = times - p1Wins;
         timeToExecute = results.timeToExecute();
         p1Score = p1Wins;
