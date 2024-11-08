@@ -20,6 +20,7 @@ public class PlayMatchInParallelUseCase {
     public void execute(UUID tournamentUuid, int chosenMatchNumber, int numberOfSimulations) {
         playTournamentMatchesUseCase.playOne(tournamentUuid, chosenMatchNumber, numberOfSimulations);
         refreshUseCase.refresh(tournamentUuid);
+        System.out.println("Refreshed BD");
     }
 
 }
