@@ -115,7 +115,7 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No such element"));
 
-        if(hasEspadilha(intel)) return intel.getCards().stream()
+        if(hasOuros(intel)) return intel.getCards().stream()
                 .filter(e -> e.isOuros(intel.getVira()))
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No such element"));
