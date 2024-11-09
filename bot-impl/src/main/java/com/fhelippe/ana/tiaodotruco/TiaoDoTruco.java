@@ -103,22 +103,22 @@ public class TiaoDoTruco implements BotServiceProvider {
         if(hasZap(intel)) return intel.getCards().stream()
                 .filter(e -> e.isZap(intel.getVira()))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NullPointerException("No such element"));
 
         if(hasCopas(intel)) return intel.getCards().stream()
                 .filter(e -> e.isCopas(intel.getVira()))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NullPointerException("No such element"));
 
         if(hasEspadilha(intel)) return intel.getCards().stream()
                 .filter(e -> e.isEspadilha(intel.getVira()))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NullPointerException("No such element"));
 
         if(hasEspadilha(intel)) return intel.getCards().stream()
                 .filter(e -> e.isOuros(intel.getVira()))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NullPointerException("No such element"));
 
         return intel.getCards().stream()
                 .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
