@@ -37,6 +37,7 @@ public class TiaoDoTruco implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard weakestCard = getWeakestCard(intel);
         TrucoCard strongestCard = getStrongestCard(intel);
+        TrucoCard midCard = getMidCard(intel);
 
         if (hasZap(intel) && hasCopas(intel)) {
             return weakestCard != null ? CardToPlay.of(weakestCard) : null;
@@ -154,6 +155,15 @@ public class TiaoDoTruco implements BotServiceProvider {
         return intel.getCards().stream()
                 .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
                 .orElseThrow(() -> new NullPointerException("There is no Cards"));
+    }
+
+    public TrucoCard getMidCard(GameIntel intel) {
+        if(intel.getRoundResults().size() < 3) return getStrongestCard(intel);
+
+        return intel.getCards().stream()
+                .filter(e -> !e.equals(getStrongestCard(intel)) && !e.equals(getWeakestCard(intel)) )
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("get mid card Exception"));
     }
 
     public boolean wonFirstRound(GameIntel intel) {
