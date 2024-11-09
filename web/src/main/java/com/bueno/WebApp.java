@@ -65,7 +65,7 @@ public class WebApp {
             final UUID defaultUuid = registerUserUseCase.create(defaultUser).uuid();
             final UUID user1Uuid = registerUserUseCase.create(user1).uuid();
             final UUID user2Uuid = registerUserUseCase.create(user2).uuid();
-            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(), defaultUuid, "Remote Bot", "http://localhost", "8030");
+            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(), defaultUuid, "Remote Bot", "http://localhost", "8030", "https://github.com/gcontiero11/CTruco");
             botRepository.save(remoteBot);
             for (int i = 0; i < 30; i++) {
                 gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),

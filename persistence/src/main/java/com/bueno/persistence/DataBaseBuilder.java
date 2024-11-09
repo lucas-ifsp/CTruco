@@ -50,7 +50,7 @@ public class DataBaseBuilder {
                     username TEXT NOT NULL,
                     email TEXT NOT NULL,
                     password TEXT NOT NULL,
-                    CONSTRAINT uuid_pk PRIMARY KEY (uuid),
+                    CONSTRAINT user_uuid_pk PRIMARY KEY (uuid),
                     CONSTRAINT username_uk UNIQUE (username),
                     CONSTRAINT email_uk UNIQUE (email)
                 );
@@ -65,9 +65,11 @@ public class DataBaseBuilder {
                     name TEXT NOT NULL,
                     url TEXT NOT NULL,
                     port TEXT NOT NULL,
-                    PRIMARY KEY (uuid),
+                    repository_url TEXT NOT NULL,
+                    CONSTRAINT remote_bot_uuid_pk PRIMARY KEY (uuid),
                     CONSTRAINT user_id_fk FOREIGN KEY (user_uuid) REFERENCES APP_USER(uuid),
-                    CONSTRAINT name_uk UNIQUE (name)
+                    CONSTRAINT name_uk UNIQUE (name),
+                    CONSTRAINT url_port_uk UNIQUE (url,port)
                 );
                 """;
     }

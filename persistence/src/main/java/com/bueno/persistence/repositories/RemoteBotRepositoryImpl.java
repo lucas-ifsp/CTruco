@@ -72,8 +72,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     @Override
     public void save(RemoteBotDto dto) {
         String sql = """
-                INSERT INTO remote_bot(uuid,user_uuid,name,url,port)
-                        VALUES (? , ? , ? , ? , ?);
+                INSERT INTO remote_bot(uuid,user_uuid,name,url,port,repository_url)
+                        VALUES (? , ? , ? , ? , ? , ?);
                 """;
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
             preparedStatement.setObject(1, dto.uuid());
@@ -81,6 +81,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             preparedStatement.setString(3, dto.name());
             preparedStatement.setString(4, dto.url());
             preparedStatement.setString(5, dto.port());
+            preparedStatement.setString(6, dto.repositoryUrl());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -103,14 +104,15 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     public void update(RemoteBotDto dto) {
         String sql = """
                 UPDATE remote_bot
-                SET name = ?, url = ?, port = ?
+                SET name = ?, url = ?, port = ? , repository_url = ?
                 WHERE uuid = ?;
                 """;
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
             preparedStatement.setString(1, dto.name());
             preparedStatement.setString(2, dto.url());
             preparedStatement.setString(3, dto.port());
-            preparedStatement.setObject(4, dto.uuid());
+            preparedStatement.setString(4, dto.repositoryUrl());
+            preparedStatement.setObject(5, dto.uuid());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -138,7 +140,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
                 res.getObject("user_uuid", UUID.class),
                 res.getString("name"),
                 res.getString("url"),
-                res.getString("port"));
+                res.getString("port"),
+                res.getString("repository_url"));
     }
 
     private <T> Optional<RemoteBotDto> getByAttribute(String name, T value) throws SQLException {

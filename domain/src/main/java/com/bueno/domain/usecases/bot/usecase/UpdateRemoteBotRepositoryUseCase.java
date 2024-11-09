@@ -42,7 +42,8 @@ public class UpdateRemoteBotRepositoryUseCase {
                 requestDto.userId(),
                 requestDto.name(),
                 requestDto.url(),
-                requestDto.port());
+                requestDto.port(),
+                requestDto.repositoryUrl());
         botRepository.update(newDto);
         return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port());
     }

@@ -44,7 +44,8 @@ public class AddBotRemoteBotRepositoryUseCase {
                 dtoRequest.userId(),
                 dtoRequest.name(),
                 dtoRequest.url(),
-                dtoRequest.port());
+                dtoRequest.port(),
+                dtoRequest.repositoryUrl());
         if (remoteBotRepository.existByName(dto.name())) {
             throw new EntityAlreadyExistsException("Trying to add a bot with same name or port of one already registered");
         }
