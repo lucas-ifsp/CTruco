@@ -6,6 +6,8 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Optional;
+
 public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
@@ -37,7 +39,10 @@ public class TiaoDoTruco implements BotServiceProvider {
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard weakestCard = getWeakestCard(intel);
         TrucoCard strongestCard = getStrongestCard(intel);
-        TrucoCard midCard = getMidCard(intel);
+
+        if (canKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
+
+        if ( getMidCard(intel).isPresent() && canKill(intel, getMidCard(intel).get()) ) return CardToPlay.of(getMidCard(intel).get());
 
         if (hasZap(intel) && hasCopas(intel)) {
             return weakestCard != null ? CardToPlay.of(weakestCard) : null;
@@ -157,18 +162,22 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .orElseThrow(() -> new NullPointerException("There is no Cards"));
     }
 
-    public TrucoCard getMidCard(GameIntel intel) {
-        if(intel.getRoundResults().size() < 3) return getStrongestCard(intel);
-
+    public Optional<TrucoCard> getMidCard(GameIntel intel) {
         return intel.getCards().stream()
                 .filter(e -> !e.equals(getStrongestCard(intel)) && !e.equals(getWeakestCard(intel)) )
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("get mid card Exception"));
+                .findFirst();
     }
 
     public boolean wonFirstRound(GameIntel intel) {
         if(intel.getRoundResults().isEmpty()) return false;
 
         return intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
+    }
+
+    public boolean canKill(GameIntel intel, TrucoCard card) {
+        if(intel.getOpponentCard().isPresent())
+            return card.compareValueTo(intel.getOpponentCard().get(), intel.getVira()) > 0;
+
+        return false;
     }
 }
