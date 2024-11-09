@@ -34,7 +34,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(wonFirstRound(intel) && hasZap(intel)) return true;
 
-        if(wonFirstRound(intel) && hasCopas(intel) && ) return true;
+        if(wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return true;
 
         if(handStrength(intel) > 25 && intel.getOpponentScore() < 4) return true;
 
