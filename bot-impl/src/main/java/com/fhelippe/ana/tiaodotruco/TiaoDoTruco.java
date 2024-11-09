@@ -3,6 +3,7 @@ package com.fhelippe.ana.tiaodotruco;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class TiaoDoTruco implements BotServiceProvider {
@@ -15,7 +16,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(intel.getOpponentScore() < 5 && handStrength(intel) > 18 && hasManilha(intel)) return true;
 
-        return handStrength(intel) > 35;
+        return handStrength(intel) > 35 && hasManilha(intel);
     }
 
     @Override
@@ -60,6 +61,18 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .anyMatch(e -> e.isCopas(intel.getVira()));
     }
 
+    public boolean hasEspadilha(GameIntel intel) {
+        return intel.getCards()
+                .stream()
+                .anyMatch(e -> e.isEspadilha(intel.getVira()));
+    }
+
+    public boolean hasOuros(GameIntel intel) {
+        return intel.getCards()
+                .stream()
+                .anyMatch(e -> e.isOuros(intel.getVira()));
+    }
+
     public double handStrength(GameIntel intel) {
         return intel.getCards().stream()
                 .mapToDouble(e -> {
@@ -84,5 +97,37 @@ public class TiaoDoTruco implements BotServiceProvider {
                     };
                 })
                 .sum();
+    }
+
+    public TrucoCard getStrongestCard(GameIntel intel) {
+        if(hasZap(intel)) return intel.getCards().stream()
+                .filter(e -> e.isZap(intel.getVira()))
+                .findFirst()
+                .get();
+
+        if(hasCopas(intel)) return intel.getCards().stream()
+                .filter(e -> e.isCopas(intel.getVira()))
+                .findFirst()
+                .get();
+
+        if(hasEspadilha(intel)) return intel.getCards().stream()
+                .filter(e -> e.isEspadilha(intel.getVira()))
+                .findFirst()
+                .get();
+
+        if(hasEspadilha(intel)) return intel.getCards().stream()
+                .filter(e -> e.isOuros(intel.getVira()))
+                .findFirst()
+                .get();
+
+        return intel.getCards().stream()
+                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
+                .orElseThrow( () -> new NullPointerException("There is no Cards") );
+    }
+
+    public TrucoCard getWeakestCard(GameIntel intel) {
+        return intel.getCards().stream()
+                .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
+                .orElseThrow(() -> new NullPointerException("There is no Cards"));
     }
 }
