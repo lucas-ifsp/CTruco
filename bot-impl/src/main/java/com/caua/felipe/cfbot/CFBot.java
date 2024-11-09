@@ -11,8 +11,18 @@ public class CFBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        List<TrucoCard> myCards = intel.getCards();
+        myCards.sort((card1, card2) -> card1.compareValueTo(card2, intel.getVira()));
+        TrucoCard vira = intel.getVira();
+
+        if(isBiggestCoupleOrBlack(intel, myCards)) return 1;
+        if (toTwoOrThree(intel, myCards) && myCards.stream().anyMatch(card -> card.isManilha(vira))) return 1;
+        if (whatRound(intel) == 3 && myCards.stream().anyMatch(card -> card.isZap(intel.getVira()))) return 1;
+        if (whatRound(intel) == 3 && toTwoOrThree(intel, myCards)) return 0;
+
+        return -1;
     }
+
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -20,6 +30,7 @@ public class CFBot implements BotServiceProvider {
 
         if (isBiggestCoupleOrBlack(intel, myCards)) return true;
         if (toTwoOrThree(intel, myCards) && myCards.stream().anyMatch(card -> card.isZap(intel.getVira()))) return true;
+        if (toTwoOrThree(intel, myCards) && myCards.stream().anyMatch(card -> card.isCopas(intel.getVira()))) return true;
 
         return false;
     }
@@ -29,8 +40,12 @@ public class CFBot implements BotServiceProvider {
         List<TrucoCard> myCards = intel.getCards();
 
         if (isBiggestCoupleOrBlack(intel, myCards)) return true;
-        if (intel.getOpponentScore() > 7) return false;
-        return toTwoOrThree(intel, myCards);
+        if (toTwoOrThree(intel, myCards) && myCards.stream().anyMatch(card -> card.isManilha(intel.getVira()))) return true;
+        if (myCards.stream().filter(card -> card.getRank().value() < 7).count() > 1) return false;
+        if (intel.getOpponentScore() > 8) return false;
+        if (myCards.stream().anyMatch(card -> card.isManilha(intel.getVira())) &&
+                myCards.stream().anyMatch(card -> card.relativeValue(intel.getVira()) > 6)) return true;
+        return false;
     }
 
 
@@ -43,12 +58,6 @@ public class CFBot implements BotServiceProvider {
 
         TrucoCard cardMenor = cards.get(0);
         TrucoCard cardMaior = cards.get(cards.size() - 1);
-
-
-
-        for (TrucoCard card : cards){
-            if (card.compareValueTo(cardMenor, intel.getVira()) <  0) cardMenor = card;
-        }
 
         if (whatRound(intel) == 1 && intel.getOpponentCard().isEmpty()){
             return CardToPlay.of(cardMenor);
@@ -97,12 +106,10 @@ public class CFBot implements BotServiceProvider {
     public int whatRound(GameIntel gameIntel){
         List<TrucoCard> cards = gameIntel.getCards();
 
+
         if (cards.size() == 3) return 1;
         if (cards.size() == 2) return 2;
         return 3;
     }
-
-
-
 
 }
