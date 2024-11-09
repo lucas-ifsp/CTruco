@@ -3,10 +3,7 @@ package com.fhelippe.ana.tiaodotruco;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-
-import javax.smartcardio.Card;
 
 public class TiaoDoTruco implements BotServiceProvider {
 
@@ -33,64 +30,17 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-
-        //Lógica simples para teste
-        //Depois implementar lógica por rodada : verificar o estado da mão, e fazer a lógica por ela e pelo estado do jogo
-        TrucoCard weakestCard = getWeakCard(intel);
-        TrucoCard strongestCard = getStrongestCard(intel);
-
-        if (hasZap(intel) && hasCopas(intel)) {
-            return weakestCard != null ? CardToPlay.of(weakestCard) : null;
-        }
-
-        if (hasZap(intel)) {
-            return weakestCard != null ? CardToPlay.of(weakestCard) : null;
-        }
-
-        if (handStrength(intel) > 35) {
-            return strongestCard != null ? CardToPlay.of(strongestCard) : null;
-        }
-
-        return weakestCard != null ? CardToPlay.of(weakestCard) : null;
+        return null;
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(hasZap(intel) && hasCopas(intel)) return 1;
-
-        if(intel.getOpponentScore() < 4 && handStrength(intel) > 26) return 1;
-
-        if(intel.getOpponentScore() < 5 && handStrength(intel) > 18 && hasManilha(intel)) return 1;
-
-        return handStrength(intel) > 35? 1: 0;
+        return 0;
     }
 
     ///////////////////////////////////////////////
     //Non Required methods
     ///////////////////////////////////////////////
-
-   private TrucoCard getWeakCard(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-
-        return intel.getCards().stream()
-                .min((card1, card2) -> {
-                    int valueComparison = card1.compareValueTo(card2, vira);
-                    return Integer.compare(valueComparison, 0);
-                })
-                .orElse(null);
-    }
-
-   private TrucoCard getStrongestCard(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
-
-
-        return intel.getCards().stream()
-                .max((card1, card2) -> {
-                    int valueComparison = card1.compareValueTo(card2, vira);
-                    return Integer.compare(valueComparison, 0);
-                })
-                .orElse(null);
-    }
 
     public boolean hasManilha(GameIntel intel) {
         return intel.getCards()
@@ -109,7 +59,6 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .stream()
                 .anyMatch(e -> e.isCopas(intel.getVira()));
     }
-
 
     public double handStrength(GameIntel intel) {
         return intel.getCards().stream()
