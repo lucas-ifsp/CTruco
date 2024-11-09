@@ -38,7 +38,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(handStrength(intel) > 25 && intel.getOpponentScore() < 4) return true;
 
-        return handStrength(intel) > 35 && hasManilha(intel);
+        return handStrength(intel) > 30 && hasManilha(intel);
     }
 
     @Override
@@ -71,6 +71,8 @@ public class TiaoDoTruco implements BotServiceProvider {
         if(wonFirstRound(intel) && canKill(intel, getWeakestCard(intel))) return 1;
 
         if(handStrength(intel) > 27 && hasZap(intel) ) return 1;
+
+        if(wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return 1;
 
         if(hasZap(intel)) return 1;
 
@@ -116,12 +118,6 @@ public class TiaoDoTruco implements BotServiceProvider {
     public double handStrength(GameIntel intel) {
         return intel.getCards().stream()
                 .mapToDouble(e -> {
-                    double strenght = 0;
-                    if( e.isZap(intel.getVira()) ) return 20;
-                    if( e.isCopas(intel.getVira()) ) return 15;
-                    if( e.isEspadilha(intel.getVira()) ) return 13;
-                    if( e.isOuros(intel.getVira()) ) return 12;
-
                     return switch (e.getRank()) {
                         case THREE -> CardRank.THREE.value();
                         case TWO -> CardRank.TWO.value();
