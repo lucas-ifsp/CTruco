@@ -24,9 +24,13 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(hasCopas(intel) && hasZap(intel)) return true;
 
+        if(wonFirstRound(intel) && hasZap(intel)) return true;
+
+        if(wonFirstRound(intel) && hasCopas(intel)) return true;
+
         if(handStrength(intel) > 25 && intel.getOpponentScore() < 4) return true;
 
-        return handStrength(intel) > 35;
+        return handStrength(intel) > 35 && hasManilha(intel);
     }
 
     @Override
@@ -51,7 +55,13 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(handStrength(intel) > 27 && hasZap(intel) ) return 1;
+
+        if(hasZap(intel)) return 1;
+
+        if(handStrength(intel) > 25 && hasManilha(intel)) return 0;
+
+        return -1;
     }
 
     ///////////////////////////////////////////////
@@ -144,5 +154,11 @@ public class TiaoDoTruco implements BotServiceProvider {
         return intel.getCards().stream()
                 .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
                 .orElseThrow(() -> new NullPointerException("There is no Cards"));
+    }
+
+    public boolean wonFirstRound(GameIntel intel) {
+        if(intel.getRoundResults().isEmpty()) return false;
+
+        return intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
     }
 }
