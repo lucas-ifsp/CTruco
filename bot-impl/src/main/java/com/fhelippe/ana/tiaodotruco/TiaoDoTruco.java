@@ -7,28 +7,75 @@ import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        return handStrength(intel) > 27;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        if(wonFirstRound(intel)) {
+          if(hasManilha(intel) || handStrength(intel) > 20) return true;
+
+          if(handStrength(intel) > 25) return true;
+        };
+
+        if(!intel.getRoundResults().isEmpty()) {
+            if(hasZap(intel) && hasCopas(intel)) return true;
+        }
 
         return handStrength(intel) > 27 && hasManilha(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        CardToPlay weakestCard = CardToPlay.of(getWeakestCard(intel));
+        CardToPlay strongestCard = CardToPlay.of(getStrongestCard(intel));
+
+        if(intel.getRoundResults().isEmpty()){
+            // #primeira mao
+            //se caso houver copas e zap, joga a carta mais fraca
+            if(hasCopas(intel) && hasZap(intel)) return weakestCard;
+            //se caso nao houver manilha joga a mais forte
+            if(!hasManilha(intel)) return weakestCard;
+        }
+
+        if(intel.getRoundResults().size() == 1) {
+            // #segunda mao
+            if (wonFirstRound(intel)) {
+                if (hasZap(intel)) return CardToPlay.discard(getWeakestCard(intel));
+
+                if (handStrength(intel) < 7) return strongestCard;
+            }
+            //nao fez a primeira joga a mais forte
+            return strongestCard;
+            //caso fez a primeira e tem zap, descarta a mais fraca encoberta
+            //caso fez a primeira e a mão ta fraca joga a mais forte
+        }
 
         return CardToPlay.of(getStrongestCard(intel));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(hasZap(intel) && hasEspadilha(intel)) return 1;
+
+        if(hasZap(intel) && hasEspadilha(intel)) return 1;
+
+        if(intel.getRoundResults().isEmpty()) {
+            if(hasManilha(intel) && hasBiggerThanTwo(intel).size() > 1) return 1;
+
+            if(hasBiggerThanTwo(intel).size() > 1) return 0;
+        }
+
+        if(intel.getRoundResults().size() == 1) {
+            if(wonFirstRound(intel) && (hasManilha(intel) || hasBiggerThanTwo(intel).size() > 1)) return 1;
+        }
 
         return -1;
     }
@@ -54,6 +101,19 @@ public class TiaoDoTruco implements BotServiceProvider {
         TrucoCard responseCard = getWeakestCard(intel);
 
         return responseCard;
+    }
+
+    private Set<TrucoCard> hasBiggerThanTwo(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(e -> e.getRank().value() > 9)
+                .collect(Collectors.toSet());
+    }
+
+    public int countManilha(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(e -> e.isManilha(intel.getVira()))
+                .collect(Collectors.toSet())
+                .size();
     }
 
     public boolean hasManilha(GameIntel intel) {
