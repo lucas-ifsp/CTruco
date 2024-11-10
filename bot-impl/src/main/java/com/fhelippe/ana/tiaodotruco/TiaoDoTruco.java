@@ -18,7 +18,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(intel.getOpponentScore() < 5 && handStrength(intel) > 18 && hasManilha(intel)) return true;
 
-        return handStrength(intel) > 35 && hasManilha(intel);
+        return handStrength(intel) > 25 && hasManilha(intel);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(handStrength(intel) > 25 && intel.getOpponentScore() < 4) return true;
 
-        return handStrength(intel) > 30 && hasManilha(intel);
+        return handStrength(intel) > 27 && hasManilha(intel);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TiaoDoTruco implements BotServiceProvider {
             return weakestCard != null ? CardToPlay.of(weakestCard) : null;
         }
 
-        if (handStrength(intel) > 35) {
+        if (handStrength(intel) > 25) {
             return strongestCard != null ? CardToPlay.of(strongestCard) : null;
         }
 
@@ -70,7 +70,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(wonFirstRound(intel) && canKill(intel, getWeakestCard(intel))) return 1;
 
-        if(handStrength(intel) > 27 && hasZap(intel) ) return 1;
+        if(handStrength(intel) > 25 && hasZap(intel) ) return 1;
 
         if(wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return 1;
 
@@ -117,21 +117,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     public double handStrength(GameIntel intel) {
         return intel.getCards().stream()
-                .mapToDouble(e -> {
-                    return switch (e.getRank()) {
-                        case THREE -> CardRank.THREE.value();
-                        case TWO -> CardRank.TWO.value();
-                        case ACE -> CardRank.ACE.value();
-                        case KING -> CardRank.KING.value();
-                        case JACK -> CardRank.JACK.value();
-                        case QUEEN -> CardRank.QUEEN.value();
-                        case SEVEN -> CardRank.SEVEN.value();
-                        case SIX -> CardRank.SIX.value();
-                        case FIVE -> CardRank.FIVE.value();
-                        case FOUR -> CardRank.FOUR.value();
-                        default -> 0;
-                    };
-                })
+                .mapToDouble(e -> e.relativeValue(intel.getVira()))
                 .sum();
     }
 
