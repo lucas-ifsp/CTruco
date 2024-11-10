@@ -199,6 +199,12 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .orElseThrow( () -> new NullPointerException("There is no Cards") );
     }
 
+    public Optional<TrucoCard> getStrongestCardWithoutManilha(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(e -> !e.isManilha(intel.getVira()))
+                .max( (card1, card2) -> card1.compareValueTo(card2, intel.getVira()) );
+    }
+
     public TrucoCard getWeakestCard(GameIntel intel) {
         return intel.getCards().stream()
                 .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
