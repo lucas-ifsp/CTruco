@@ -43,99 +43,82 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getOpponentCard().isPresent()) {
-            return CardToPlay.of(chooseResponseCard(intel));
-        } else if (intel.getRoundResults().isEmpty()) {
-            return playFirstRound(intel);
-        } else if (intel.getRoundResults().size() == 1) {
-            return playSecondRound(intel);
-        } else {
-            return CardToPlay.of(getStrongestCard(intel));
-        }
+        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(chooseResponseCard(intel));
+
+        int roundsPlayed = intel.getRoundResults().size();
+
+        if (roundsPlayed == 0) return playFirstRound(intel);
+
+        else if (roundsPlayed == 1) return playSecondRound(intel);
+
+        else return CardToPlay.of(getStrongestCard(intel));
+
     }
 
-    private CardToPlay playFirstRound(GameIntel intel) {
-        if (intel.getOpponentCard().isPresent()) {
-            return CardToPlay.of(chooseResponseCard(intel));
-        }
-        if (handStrength(intel) <= 9 && hasManilha(intel)) {
-            return CardToPlay.of(getManilhaCard(intel));
-        }
+    private CardToPlay playFirstRound(GameIntel intel){
+
+        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(chooseResponseCard(intel));
+
+        double strength = handStrength(intel);
+
+        if (strength <= 10) return CardToPlay.of(getStrongestCard(intel));
 
         Optional<TrucoCard> midCard = getMidCard(intel);
-        return midCard.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(getStrongestCard(intel)));
 
+        return midCard.map(CardToPlay::of)
+                .orElse(CardToPlay.of(getStrongestCard(intel)));
     }
-
 
     private CardToPlay playSecondRound(GameIntel intel) {
-        if (intel.getOpponentCard().isPresent()) {
-            return CardToPlay.of(chooseResponseCard(intel));
-        }
-
         boolean wonFirstRound = wonFirstRound(intel);
+        if (wonFirstRound) return CardToPlay.of(getWeakestCard(intel));
 
-        if (wonFirstRound) {
-            return CardToPlay.of(getWeakestCard(intel));
-        }
+        double strength = handStrength(intel);
+        if (strength > 14 || (strength <= 14 && hasManilha(intel))) return CardToPlay.of(getStrongestCard(intel));
 
-        if (!wonFirstRound && handStrength(intel) > 14) {
-            return CardToPlay.of(getStrongestCard(intel));
-        }
-
-        if (handStrength(intel) <= 14 && hasManilha(intel)) {
-            return CardToPlay.of(getManilhaCard(intel));
-        }
-
-        Optional<TrucoCard> midCard = getMidCard(intel);
-        return midCard.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(getStrongestCard(intel)));
-
+        return getMidCard(intel).map(CardToPlay::of)
+                .orElse(CardToPlay.of(getStrongestCard(intel)));
     }
 
-
     private TrucoCard chooseResponseCard(GameIntel intel) {
-        Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
-        if (opponentCardOpt.isPresent()) {
-            TrucoCard opponentCard = opponentCardOpt.get();
-            int opponentCardValue = opponentCard.relativeValue(intel.getVira());
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        int opponentCardValue = opponentCard.relativeValue(intel.getVira());
 
-            TrucoCard responseCard = getWeakestCard(intel);
+        TrucoCard responseCard = getWeakestCard(intel);
+        int bestCardValue = Integer.MAX_VALUE;
 
-            int bestCardValue = Integer.MAX_VALUE;
+        int highestOpenCardValue = intel.getOpenCards().stream()
+                .mapToInt(card -> card.relativeValue(intel.getVira()))
+                .max()
+                .orElse(-1);
 
-            for (TrucoCard card : intel.getCards()) {
-                int cardValue = card.relativeValue(intel.getVira());
+        for (TrucoCard card : intel.getCards()) {
+            int cardValue = card.relativeValue(intel.getVira());
 
-                if (cardValue > opponentCardValue && cardValue < bestCardValue) {
-                    bestCardValue = cardValue;
-                    responseCard = card;
-                }
+            if (cardValue > opponentCardValue && cardValue > highestOpenCardValue && cardValue < bestCardValue) {
+                bestCardValue = cardValue;
+                responseCard = card;
             }
-
-            if (responseCard == getWeakestCard(intel)) {
-                Optional<TrucoCard> midCard = getMidCard(intel);
-                if (midCard.isPresent()) {
-                    return midCard.get();
-                }
-            }
-            return responseCard;
         }
 
-        return getWeakestCard(intel);
+        if (responseCard == getWeakestCard(intel)) {
+            return getMidCard(intel).orElse(getWeakestCard(intel));
+        }
+
+        return responseCard;
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        double strength = handStrength(intel);
 
-        if(wonFirstRound(intel) && canKill(intel, getWeakestCard(intel))) return 1;
+        if (wonFirstRound(intel) && canKill(intel, getWeakestCard(intel))) return 1;
 
-        if(handStrength(intel) > 25 && hasZap(intel) ) return 1;
+        if (strength > 27 && (hasZap(intel) || hasCopas(intel))) return 1;
 
-        if(wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return 1;
+        if (wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return 1;
 
-        if(hasZap(intel)) return 1;
-
-        if(handStrength(intel) > 25 && hasManilha(intel)) return 0;
+        if (strength >= 22 && strength <= 26 && hasManilha(intel)) return 1;
 
         return -1;
     }
