@@ -74,7 +74,13 @@ public class TiaoDoTruco implements BotServiceProvider {
         }
 
         if(intel.getRoundResults().size() == 1) {
-            if(wonFirstRound(intel) && (hasManilha(intel) || hasBiggerThanTwo(intel).size() > 1)) return 1;
+            if( wonFirstRound(intel) && (hasManilha(intel) || hasBiggerThanTwo(intel).size() > 1) ) return 1;
+        }
+
+        if(wonFirstRound(intel) && intel.getOpponentCard().isPresent()) {
+            if( canKill(intel, intel.getCards().get(0)) ) return 1;
+
+            else return -1;
         }
 
         return -1;
