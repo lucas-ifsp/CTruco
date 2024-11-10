@@ -12,46 +12,19 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if(hasZap(intel) && hasCopas(intel)) return true;
-
-        if(intel.getOpponentScore() < 4 && handStrength(intel) > 26) return true;
-
-        if(intel.getOpponentScore() < 5 && handStrength(intel) > 18 && hasManilha(intel)) return true;
-
-        return handStrength(intel) > 25 && hasManilha(intel);
+        return false;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        TrucoCard weakestCard = getWeakestCard(intel);
-        TrucoCard strongestCard = getStrongestCard(intel);
-
-        if(wonFirstRound(intel) && canKill(intel, weakestCard)) return true;
-
-        if(wonFirstRound(intel) && canKill(intel, strongestCard)) return true;
-
-        if(hasCopas(intel) && hasZap(intel)) return true;
-
-        if(wonFirstRound(intel) && hasZap(intel)) return true;
-
-        if(wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return true;
-
-        if(handStrength(intel) > 25 && intel.getOpponentScore() < 4) return true;
 
         return handStrength(intel) > 27 && hasManilha(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(chooseResponseCard(intel));
 
-        int roundsPlayed = intel.getRoundResults().size();
-
-        if (roundsPlayed == 0) return playFirstRound(intel);
-
-        else if (roundsPlayed == 1) return playSecondRound(intel);
-
-        else return CardToPlay.of(getStrongestCard(intel));
+        return CardToPlay.of(getStrongestCard(intel));
 
     }
 
@@ -110,15 +83,6 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        double strength = handStrength(intel);
-
-        if (wonFirstRound(intel) && canKill(intel, getWeakestCard(intel))) return 1;
-
-        if (strength > 27 && (hasZap(intel) || hasCopas(intel))) return 1;
-
-        if (wonFirstRound(intel) && hasCopas(intel) && isZapAlreadyUsed(intel)) return 1;
-
-        if (strength >= 22 && strength <= 26 && hasManilha(intel)) return 1;
 
         return -1;
     }
