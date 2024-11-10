@@ -43,26 +43,85 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        TrucoCard weakestCard = getWeakestCard(intel);
-        TrucoCard strongestCard = getStrongestCard(intel);
+        if (intel.getOpponentCard().isPresent()) {
+            return CardToPlay.of(chooseResponseCard(intel));
+        } else if (intel.getRoundResults().isEmpty()) {
+            return playFirstRound(intel);
+        } else if (intel.getRoundResults().size() == 1) {
+            return playSecondRound(intel);
+        } else {
+            return CardToPlay.of(getStrongestCard(intel));
+        }
+    }
 
-        if (canKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
-
-        if ( getMidCard(intel).isPresent() && canKill(intel, getMidCard(intel).get()) ) return CardToPlay.of(getMidCard(intel).get());
-
-        if (hasZap(intel) && hasCopas(intel)) {
-            return weakestCard != null ? CardToPlay.of(weakestCard) : null;
+    private CardToPlay playFirstRound(GameIntel intel) {
+        if (intel.getOpponentCard().isPresent()) {
+            return CardToPlay.of(chooseResponseCard(intel));
+        }
+        if (handStrength(intel) <= 9 && hasManilha(intel)) {
+            return CardToPlay.of(getManilhaCard(intel));
         }
 
-        if (hasZap(intel)) {
-            return weakestCard != null ? CardToPlay.of(weakestCard) : null;
+        Optional<TrucoCard> midCard = getMidCard(intel);
+        return midCard.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(getStrongestCard(intel)));
+
+    }
+
+
+    private CardToPlay playSecondRound(GameIntel intel) {
+        if (intel.getOpponentCard().isPresent()) {
+            return CardToPlay.of(chooseResponseCard(intel));
         }
 
-        if (handStrength(intel) > 25) {
-            return strongestCard != null ? CardToPlay.of(strongestCard) : null;
+        boolean wonFirstRound = wonFirstRound(intel);
+
+        if (wonFirstRound) {
+            return CardToPlay.of(getWeakestCard(intel));
         }
 
-        return weakestCard != null ? CardToPlay.of(weakestCard) : null;
+        if (!wonFirstRound && handStrength(intel) > 14) {
+            return CardToPlay.of(getStrongestCard(intel));
+        }
+
+        if (handStrength(intel) <= 14 && hasManilha(intel)) {
+            return CardToPlay.of(getManilhaCard(intel));
+        }
+
+        Optional<TrucoCard> midCard = getMidCard(intel);
+        return midCard.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(getStrongestCard(intel)));
+
+    }
+
+
+    private TrucoCard chooseResponseCard(GameIntel intel) {
+        Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
+        if (opponentCardOpt.isPresent()) {
+            TrucoCard opponentCard = opponentCardOpt.get();
+            int opponentCardValue = opponentCard.relativeValue(intel.getVira());
+
+            TrucoCard responseCard = getWeakestCard(intel);
+
+            int bestCardValue = Integer.MAX_VALUE;
+
+            for (TrucoCard card : intel.getCards()) {
+                int cardValue = card.relativeValue(intel.getVira());
+
+                if (cardValue > opponentCardValue && cardValue < bestCardValue) {
+                    bestCardValue = cardValue;
+                    responseCard = card;
+                }
+            }
+
+            if (responseCard == getWeakestCard(intel)) {
+                Optional<TrucoCard> midCard = getMidCard(intel);
+                if (midCard.isPresent()) {
+                    return midCard.get();
+                }
+            }
+            return responseCard;
+        }
+
+        return getWeakestCard(intel);
     }
 
     @Override
@@ -84,6 +143,8 @@ public class TiaoDoTruco implements BotServiceProvider {
     ///////////////////////////////////////////////
     //Non Required methods
     ///////////////////////////////////////////////
+
+
 
     public boolean hasManilha(GameIntel intel) {
         return intel.getCards()
@@ -119,6 +180,14 @@ public class TiaoDoTruco implements BotServiceProvider {
         return intel.getCards().stream()
                 .mapToDouble(e -> e.relativeValue(intel.getVira()))
                 .sum();
+    }
+
+    private TrucoCard getManilhaCard(GameIntel intel) {
+        return intel.getCards()
+                .stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No manilha card found"));
     }
 
     public TrucoCard getStrongestCard(GameIntel intel) {
@@ -182,4 +251,5 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         return maybeZap.isPresent();
     }
+
 }
