@@ -5,7 +5,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class GreatCardAndStrongManilha implements BotServiceProvider {
+import java.util.Optional;
+
+public class BaseStrategy implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(intel.getOpponentScore() < 8) return true;
@@ -16,17 +18,19 @@ public class GreatCardAndStrongManilha implements BotServiceProvider {
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         TrucoCard weakestCard = TiaoDoTruco.getWeakestCard(intel);
-        TrucoCard midCard = TiaoDoTruco.getMidCard(intel);
+        Optional<TrucoCard> midCard = TiaoDoTruco.getMidCard(intel);
         TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);
 
-        return firstRoundWon(intel) && getCardStrength(intel) > 7;
+        return firstRoundWon(intel) && getCardStrength(intel) > 7 && intel.getOpponentScore() < 9;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         TrucoCard weakestCard = TiaoDoTruco.getWeakestCard(intel);
-        TrucoCard midCard = TiaoDoTruco.getMidCard(intel);
+        Optional<TrucoCard> midCard= TiaoDoTruco.getMidCard(intel);
         TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);
+
+        if(TiaoDoTruco.cardCanKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
 
         if(TiaoDoTruco.hasZap(intel ) || TiaoDoTruco.hasCopas(intel)) return CardToPlay.of(weakestCard);
 
@@ -35,9 +39,9 @@ public class GreatCardAndStrongManilha implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(TiaoDoTruco.canKill(intel)) return 1;
+        if(TiaoDoTruco.canKill(intel) && intel.getHandPoints() <= 3 && intel.getOpponentScore() < 9) return 1;
 
-        if(firstRoundWon(intel) && intel.getRoundResults().size() == 1) return 0;
+        if(firstRoundWon(intel) && intel.getRoundResults().size() > 1) return 0;
 
         return -1;
     }

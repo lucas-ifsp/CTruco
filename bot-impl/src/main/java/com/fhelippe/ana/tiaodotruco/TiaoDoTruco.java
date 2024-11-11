@@ -1,241 +1,156 @@
 package com.fhelippe.ana.tiaodotruco;
 
-import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TiaoDoTruco implements BotServiceProvider {
+    BotServiceProvider strategy;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return handStrength(intel) > 27;
+        strategy = selectStrategy(intel);
+
+        return strategy.getMaoDeOnzeResponse(intel);
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if(wonFirstRound(intel)) {
-          if(hasManilha(intel) || handStrength(intel) > 20) return true;
+        strategy = selectStrategy(intel);
 
-          if(handStrength(intel) > 25) return true;
-        };
-
-        if(!intel.getRoundResults().isEmpty()) {
-            if(hasZap(intel) && hasCopas(intel)) return true;
-        }
-
-        return handStrength(intel) > 27 && hasManilha(intel);
+        return strategy.decideIfRaises(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        CardToPlay weakestCard = CardToPlay.of(getWeakestCard(intel));
-        CardToPlay strongestCard = CardToPlay.of(getStrongestCard(intel));
+        strategy = selectStrategy(intel);
 
-        if(intel.getRoundResults().isEmpty()){
-            // #primeira mao
-            //se caso houver copas e zap, joga a carta mais fraca
-            if(hasCopas(intel) && hasZap(intel)) return weakestCard;
-            //se caso nao houver manilha joga a mais forte
-            if(!hasManilha(intel)) return weakestCard;
-        }
-
-        if(intel.getRoundResults().size() == 1) {
-            // #segunda mao
-            if (wonFirstRound(intel)) {
-                if (hasZap(intel)) return CardToPlay.discard(getWeakestCard(intel));
-
-                if (handStrength(intel) < 7) return strongestCard;
-            }
-            //nao fez a primeira joga a mais forte
-            return strongestCard;
-            //caso fez a primeira e tem zap, descarta a mais fraca encoberta
-            //caso fez a primeira e a mão ta fraca joga a mais forte
-        }
-
-        return CardToPlay.of(getStrongestCard(intel));
+        return strategy.chooseCard(intel);
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(hasZap(intel) && hasEspadilha(intel)) return 1;
+        strategy = selectStrategy(intel);
 
-        if(hasZap(intel) && hasEspadilha(intel)) return 1;
-
-        if(intel.getRoundResults().isEmpty()) {
-            if(hasManilha(intel) && hasBiggerThanTwo(intel).size() > 1) return 1;
-
-            if(hasBiggerThanTwo(intel).size() > 1) return 0;
-        }
-
-        if(intel.getRoundResults().size() == 1) {
-            if( wonFirstRound(intel) && (hasManilha(intel) || hasBiggerThanTwo(intel).size() > 1) ) return 1;
-        }
-
-        if(wonFirstRound(intel)) {
-            if(intel.getOpponentCard().isPresent()){
-                if( canKill(intel, intel.getCards().get(0)) ) return 1;
-
-                else return -1;
-            }
-
-            if(handStrength(intel) > 9) return 0;
-        }
-
-        return -1;
+        return strategy.getRaiseResponse(intel);
     }
 
     ///////////////////////////////////////////////
     //Non Required methods
-    ///////////////////////////////////////////////
+    ///////////////////////////////////////////strategy////
 
-    private CardToPlay playFirstRound(GameIntel intel){
-        Optional<TrucoCard> midCard = getMidCard(intel);
+    private BotServiceProvider selectStrategy(GameIntel intel) {
+        if(hasZap(intel) && hasCopas(intel)) strategy = new ZapCopas();
 
-        return midCard.map(CardToPlay::of)
-                .orElse(CardToPlay.of(getStrongestCard(intel)));
+        if(hasTwoManilha(intel) && hasGreatCard(intel)) new TwoManilhaAndStrongCard();
+
+        if(getHandAverage(intel) <= 4) return new WeakyHand();
+
+        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) strategy = new BaseStrategy();
+        // Acontece demais então é a base strategy ^
+
+        //estrategia para veificar se tem 3 ou 2 e outra carta forte
+        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
+        //estrategia mao de ferro
+
+        else strategy = new BaseStrategy();
+
+        return strategy;
     }
 
-    private CardToPlay playSecondRound(GameIntel intel) {
-
-        return getMidCard(intel).map(CardToPlay::of)
-                .orElse(CardToPlay.of(getStrongestCard(intel)));
-    }
-
-    private TrucoCard chooseResponseCard(GameIntel intel) {
-        TrucoCard responseCard = getWeakestCard(intel);
-
-        return responseCard;
-    }
-
-    private Set<TrucoCard> hasBiggerThanTwo(GameIntel intel) {
+    static protected boolean hasManilha(GameIntel intel) {
         return intel.getCards().stream()
-                .filter(e -> e.getRank().value() > 9)
-                .collect(Collectors.toSet());
-    }
-
-    public int countManilha(GameIntel intel) {
-        return intel.getCards().stream()
-                .filter(e -> e.isManilha(intel.getVira()))
-                .collect(Collectors.toSet())
-                .size();
-    }
-
-    public boolean hasManilha(GameIntel intel) {
-        return intel.getCards()
-                .stream()
                 .anyMatch(e -> e.isManilha(intel.getVira()));
     }
 
-    public boolean hasZap(GameIntel intel) {
-        return intel.getCards()
-                .stream()
+    private boolean hasThree(GameIntel intel) {
+        return intel.getCards().stream()
+                .anyMatch(e -> e.getRank().value() == 10);
+    }
+
+    private boolean hasTwo(GameIntel intel) {
+        return intel.getCards().stream()
+                .anyMatch(e -> e.getRank().value() == 9);
+    }
+
+    static protected boolean hasWonFirstHand(GameIntel intel) {
+        return !intel.getRoundResults().isEmpty() && GameIntel.RoundResult.WON.equals(intel.getRoundResults().get(0));
+    }
+
+
+
+    static protected boolean cardCanKill(GameIntel intel, TrucoCard card) {
+        if(intel.getOpponentCard().isEmpty()) return false;
+
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        return card.compareValueTo(opponentCard, intel.getVira()) > 1 ||
+                (hasWonFirstHand(intel) && card.compareValueTo(opponentCard, intel.getVira()) == 0);
+    }
+
+    static protected double getHandAverage(GameIntel intel) {
+        return intel.getCards().stream()
+                .mapToInt(e -> e.relativeValue(intel.getVira()))
+                .average()
+                .orElse(0);
+    }
+
+    static protected boolean firstRoundWon(GameIntel intel) {
+        if(intel.getRoundResults().isEmpty()) return false;
+
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
+    }
+
+    static protected boolean hasTwoManilha(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(e -> e.isManilha(intel.getVira()))
+                .count() > 2;
+    }
+
+    static protected boolean canKill(GameIntel intel) {
+        if(intel.getOpponentCard().isEmpty()) return false;
+
+        TrucoCard opponentCard = intel.getOpponentCard().get();
+        return intel.getCards().stream()
+                .anyMatch(e -> e.compareValueTo(opponentCard, intel.getVira()) > 0);
+    }
+
+    static protected TrucoCard getStrongestCard(GameIntel intel) {
+        return intel.getCards().stream()
+                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
+                .orElseThrow(() -> new IllegalArgumentException("No such element on ZapCopas getStrongestCard"));
+    }
+
+    static protected Optional<TrucoCard> getMidCard(GameIntel intel) {
+        TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);
+        TrucoCard weakestCard = TiaoDoTruco.getWeakestCard(intel);
+
+        return intel.getCards().stream()
+                .filter(e -> !e.equals(strongestCard) && !e.equals(weakestCard))
+                .findFirst();
+    }
+
+    static protected TrucoCard getWeakestCard(GameIntel intel) {
+        return intel.getCards().stream()
+                .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
+                .orElseThrow(() -> new IllegalArgumentException("No such element on ZapCopas getWeakestCard"));
+    }
+
+    static protected boolean hasGreatCard(GameIntel intel) {
+        return intel.getCards().stream()
+                .anyMatch(e -> e.getRank().value() == 10 || e.getRank().value() == 9
+                || e.getRank().value() == 8);
+    }
+
+    static protected boolean hasZap(GameIntel intel) {
+        return intel.getCards().stream()
                 .anyMatch(e -> e.isZap(intel.getVira()));
     }
 
-    public boolean hasCopas(GameIntel intel) {
-        return intel.getCards()
-                .stream()
+    static protected boolean hasCopas(GameIntel intel) {
+        return intel.getCards().stream()
                 .anyMatch(e -> e.isCopas(intel.getVira()));
     }
-
-    public boolean hasEspadilha(GameIntel intel) {
-        return intel.getCards()
-                .stream()
-                .anyMatch(e -> e.isEspadilha(intel.getVira()));
-    }
-
-    public boolean hasOuros(GameIntel intel) {
-        return intel.getCards()
-                .stream()
-                .anyMatch(e -> e.isOuros(intel.getVira()));
-    }
-
-    public double handStrength(GameIntel intel) {
-        return intel.getCards().stream()
-                .mapToDouble(e -> e.relativeValue(intel.getVira()))
-                .sum();
-    }
-
-    private TrucoCard getManilhaCard(GameIntel intel) {
-        return intel.getCards()
-                .stream()
-                .filter(card -> card.isManilha(intel.getVira()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No manilha card found"));
-    }
-
-    public TrucoCard getStrongestCard(GameIntel intel) {
-        if(hasZap(intel)) return intel.getCards().stream()
-                .filter(e -> e.isZap(intel.getVira()))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No such element"));
-
-        if(hasCopas(intel)) return intel.getCards().stream()
-                .filter(e -> e.isCopas(intel.getVira()))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No such element"));
-
-        if(hasEspadilha(intel)) return intel.getCards().stream()
-                .filter(e -> e.isEspadilha(intel.getVira()))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No such element"));
-
-        if(hasOuros(intel)) return intel.getCards().stream()
-                .filter(e -> e.isOuros(intel.getVira()))
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No such element"));
-
-        return intel.getCards().stream()
-                .max((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
-                .orElseThrow( () -> new NullPointerException("There is no Cards") );
-    }
-
-    public Optional<TrucoCard> getStrongestCardWithoutManilha(GameIntel intel) {
-        return intel.getCards().stream()
-                .filter(e -> !e.isManilha(intel.getVira()))
-                .max( (card1, card2) -> card1.compareValueTo(card2, intel.getVira()) );
-    }
-
-    public TrucoCard getWeakestCard(GameIntel intel) {
-        return intel.getCards().stream()
-                .min((card1, card2) -> card1.compareValueTo(card2, intel.getVira()))
-                .orElseThrow(() -> new NullPointerException("There is no Cards"));
-    }
-
-    public Optional<TrucoCard> getMidCard(GameIntel intel) {
-        return intel.getCards().stream()
-                .filter(e -> !e.equals(getStrongestCard(intel)) && !e.equals(getWeakestCard(intel)) )
-                .findFirst();
-    }
-
-    public boolean wonFirstRound(GameIntel intel) {
-        if(intel.getRoundResults().isEmpty()) return false;
-
-        return intel.getRoundResults().get(0).equals(GameIntel.RoundResult.WON);
-    }
-
-    public boolean canKill(GameIntel intel, TrucoCard card) {
-        if(intel.getOpponentCard().isPresent()) {
-            TrucoCard opponentCard = intel.getOpponentCard().get();
-            return card.compareValueTo(opponentCard, intel.getVira()) > 0;
-        }
-
-        return false;
-    }
-
-    public boolean isZapAlreadyUsed(GameIntel intel) {
-        Optional<TrucoCard> maybeZap= intel.getOpenCards()
-                .stream()
-                .filter(e -> e.isZap(intel.getVira()))
-                .findFirst();
-
-        return maybeZap.isPresent();
-    }
-
 }
