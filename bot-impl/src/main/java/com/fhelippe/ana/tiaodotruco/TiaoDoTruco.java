@@ -44,13 +44,14 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     private BotServiceProvider selectStrategy(GameIntel intel) {
         if(hasZap(intel) && hasCopas(intel)) strategy = new ZapCopas();
-//
-//        if(hasCasalPreto(intel)) strategy = new BlackCouple();
-//
+
+        if(hasCasalPreto(intel)) strategy = new BlackCouple();
+
 //        if(hasTwoManilha(intel) && hasGreatCard(intel)) strategy = new TwoManilhaAndStrongCard();
 //
 //        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
-//
+
+        if(getHandStrength(intel) > )
 //        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
 //
 //        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
@@ -73,9 +74,19 @@ public class TiaoDoTruco implements BotServiceProvider {
     }
 
     private int getHandStrength(GameIntel intel) {
-        return intel.getCards().stream()
+         int value = intel.getCards().stream()
                 .mapToInt(e -> e.getRank().value())
                 .sum();
+
+         if(TiaoDoTruco.hasZap(intel)) value += 10;
+
+         if(TiaoDoTruco.hasCopas(intel)) value += 10;
+
+         if(TiaoDoTruco.hasEspadilha(intel)) value += 8;
+
+         if(TiaoDoTruco.hasOuros(intel)) value += 5;
+
+         return value;
     }
 
     static protected boolean hasManilha(GameIntel intel) {
@@ -173,5 +184,15 @@ public class TiaoDoTruco implements BotServiceProvider {
     static protected boolean hasCopas(GameIntel intel) {
         return intel.getCards().stream()
                 .anyMatch(e -> e.isCopas(intel.getVira()));
+    }
+
+    static protected boolean hasEspadilha(GameIntel intel) {
+        return intel.getCards().stream()
+                .anyMatch(e -> e.isEspadilha(intel.getVira()));
+    }
+
+    static protected boolean hasOuros(GameIntel intel) {
+        return intel.getCards().stream()
+                .anyMatch(e -> e.isOuros(intel.getVira()));
     }
 }
