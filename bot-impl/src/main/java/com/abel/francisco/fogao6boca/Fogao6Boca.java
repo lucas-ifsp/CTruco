@@ -20,7 +20,7 @@ public class Fogao6Boca implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(casalMaior(intel)) return true;
         if(manilhas(intel) >= 2) return true;
-        return verifyHandStrengh(intel) > 7;
+        return verifyElevenHandStrengh(intel) > 1;
     }
 
     @Override
@@ -87,6 +87,13 @@ public class Fogao6Boca implements BotServiceProvider {
         }
         return soma/intel.getCards().size();
 
+    }
+
+    private double verifyElevenHandStrengh(GameIntel intel){
+        List<TrucoCard> possibleCards = new ArrayList<>();
+        for(TrucoCard card : intel.getCards())
+            if(card.relativeValue(intel.getVira()) > 6) possibleCards.add(card);
+        return possibleCards.size();
     }
 
     private int manilhas(GameIntel intel){
