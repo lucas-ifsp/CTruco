@@ -1,3 +1,4 @@
+import com.aislan.deyvin.DeyvinBot;
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.belini.luciano.matapatobot.MataPatoBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
@@ -128,6 +129,7 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.aislan.deyvin;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -193,5 +195,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
-            TrucoMarreco;
+            TrucoMarreco,
+            DeyvinBot;
 }
