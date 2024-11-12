@@ -20,7 +20,7 @@ public class Fogao6Boca implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return verifyHandStrengh(intel) > 6;
     }
 
     @Override
@@ -30,7 +30,9 @@ public class Fogao6Boca implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
+            if(verifyHandStrengh(intel) > 6) return 0;
+        return -1;
     }
 
     private CardToPlay firstGameRound(GameIntel intel){
@@ -60,6 +62,15 @@ public class Fogao6Boca implements BotServiceProvider {
             return CardToPlay.of(cards.get(cards.size()-1));
         }
         return CardToPlay.of(cards.get(0));
+    }
+
+    private double verifyHandStrengh(GameIntel intel){
+        double soma = 0;
+        for(TrucoCard card : intel.getCards()){
+            soma += card.relativeValue(intel.getVira());
+        }
+        return soma/intel.getCards().size();
+
     }
 
 }
