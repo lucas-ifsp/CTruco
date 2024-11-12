@@ -1,54 +1,53 @@
 package com.abel.francisco.fogao6boca;
 
 import com.brito.macena.boteco.utils.Game;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class Fogao6Boca implements BotServiceProvider {
 
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
-    }
-
-    @Override
-    public boolean decideIfRaises(GameIntel intel) {
+        if(casalMaior(intel)) return true;
+        if(manilhas(intel) >= 2) return true;
         return verifyHandStrengh(intel) > 7;
     }
 
     @Override
+    public boolean decideIfRaises(GameIntel intel) {
+        if(casalMaior(intel)) return true;
+        if(manilhas(intel) >= 2) return true;
+        return verifyHandStrengh(intel) > 6;
+    }
+
+    @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        List<TrucoCard> botCards = sortedCardStrengh(intel.getCards(),intel.getVira());
-        if(intel.getCards().size() == 3)
-            return firstGameRound(intel, botCards);
-        if(intel.getCards().size() == 2)
-            return secondGameRound(intel, botCards);
-        return firstGameRound(intel,botCards);
+        return gameRound(intel);
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
+        if(casalMaior(intel)) return 1;
+        if(manilhas(intel) >= 2) return 1;
+        if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == WON)
             if(verifyHandStrengh(intel) > 6) return 0;
         return -1;
     }
 
-    private CardToPlay firstGameRound(GameIntel intel, List<TrucoCard> botCards){
-        return decideCardToPlay(botCards, intel.getOpponentCard(), intel.getVira());
-    }
 
-    private CardToPlay secondGameRound(GameIntel intel, List<TrucoCard> botCards){
-        if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
-            return CardToPlay.of(botCards.get(botCards.size()-1));
-        return decideCardToPlay(botCards, intel.getOpponentCard(), intel.getVira());
+    private CardToPlay gameRound(GameIntel intel){
+        List<TrucoCard> botCards = sortedCardStrengh(intel.getCards(),intel.getVira());
+        return decideCardToPlay(botCards, intel.getOpponentCard(), intel.getVira(), intel);
     }
 
     private List<TrucoCard> sortedCardStrengh(List<TrucoCard> cards, TrucoCard vira){
@@ -57,7 +56,7 @@ public class Fogao6Boca implements BotServiceProvider {
         return sortedCards;
     }
 
-    private CardToPlay decideCardToPlay(List<TrucoCard> cards, Optional<TrucoCard> oponentCard, TrucoCard vira){
+    private CardToPlay decideCardToPlay(List<TrucoCard> cards, Optional<TrucoCard> oponentCard, TrucoCard vira, GameIntel intel){
         if(oponentCard.isPresent()){
             List<TrucoCard> possibleCards = new ArrayList<>();
             for(TrucoCard card : cards){
@@ -72,16 +71,49 @@ public class Fogao6Boca implements BotServiceProvider {
             }
             return CardToPlay.of(cards.get(cards.size()-1));
         }
+        if(intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == WON){
+            return CardToPlay.of(cards.get(cards.size()-1));
+        }
         return CardToPlay.of(cards.get(0));
     }
 
     private double verifyHandStrengh(GameIntel intel){
-
         double soma = 0;
         for(TrucoCard card : intel.getCards()){
             soma += card.relativeValue(intel.getVira());
         }
         return soma/intel.getCards().size();
+
     }
 
+    private int manilhas(GameIntel intel){
+        List<TrucoCard> cards = intel.getCards();
+        int qtdManilhas = 0;
+        for(TrucoCard card : cards){
+            if(card.isManilha(intel.getVira())){
+                qtdManilhas++;
+            }
+        }
+        return qtdManilhas;
+    }
+
+
+    public boolean casalMaior(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        boolean zap = false;
+        for(TrucoCard card : cards){
+            if(card.isZap(intel.getVira())){
+                zap = true;
+                break;
+            }
+        }
+        boolean copas = false;
+        for(TrucoCard card : cards){
+            if(card.isCopas(intel.getVira())){
+                copas = true;
+                break;
+            }
+        }
+        return zap && copas;
+    }
 }
