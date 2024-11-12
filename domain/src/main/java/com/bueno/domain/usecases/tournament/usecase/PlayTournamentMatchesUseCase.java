@@ -26,13 +26,16 @@ public class PlayTournamentMatchesUseCase {
     private final GetMatchUseCase getMatchUseCase;
     private final UpdateTournamentUseCase updateTournamentUseCase;
     private final UpdateMatchUseCase updateMatchUseCase;
+    private final RefreshTournamentUseCase refreshUseCase;
 
     public PlayTournamentMatchesUseCase(TournamentRepository tournamentRepository,
                                         RemoteBotRepository remoteBotRepository,
                                         RemoteBotApi api,
                                         BotManagerService botManagerService,
                                         GetMatchUseCase getMatchUseCase,
-                                        UpdateTournamentUseCase updateTournamentUseCase, UpdateMatchUseCase updateMatchUseCase) {
+                                        UpdateTournamentUseCase updateTournamentUseCase,
+                                        UpdateMatchUseCase updateMatchUseCase,
+                                        RefreshTournamentUseCase refreshUseCase) {
         this.tournamentRepository = tournamentRepository;
         this.remoteBotRepository = remoteBotRepository;
         this.api = api;
@@ -40,6 +43,7 @@ public class PlayTournamentMatchesUseCase {
         this.getMatchUseCase = getMatchUseCase;
         this.updateTournamentUseCase = updateTournamentUseCase;
         this.updateMatchUseCase = updateMatchUseCase;
+        this.refreshUseCase = refreshUseCase;
     }
 
 //    public TournamentDTO playAll(TournamentDTO dto) {
@@ -77,6 +81,8 @@ public class PlayTournamentMatchesUseCase {
         TournamentDTO updatedDto = TournamentConverter.toDTO(tournament);
         updateTournamentUseCase.updateFromDTO(updatedDto);
         updateMatchUseCase.updateAll(tournament.getMatches().stream().map(MatchConverter::toDTO).toList());
+        if (updatedDto != null)
+            refreshUseCase.refresh(updatedDto.uuid());
     }
 
     private Tournament playChosenMatch(TournamentDTO dto, UUID chosenMatchId, int numberOfSimulations) {
