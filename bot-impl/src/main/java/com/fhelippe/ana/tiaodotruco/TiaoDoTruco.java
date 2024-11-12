@@ -45,20 +45,38 @@ public class TiaoDoTruco implements BotServiceProvider {
     private BotServiceProvider selectStrategy(GameIntel intel) {
         if(hasZap(intel) && hasCopas(intel)) strategy = new ZapCopas();
 
-        if(hasTwoManilha(intel) && hasGreatCard(intel)) new TwoManilhaAndStrongCard();
+        if(hasCasalPreto(intel)) strategy = new BlackCouple();
 
-        if(getHandAverage(intel) <= 4) return new WeakyHand();
+        if(hasTwoManilha(intel) && hasGreatCard(intel)) strategy = new TwoManilhaAndStrongCard();
 
-        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) strategy = new BaseStrategy();
+        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
+
+        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
+
+        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) new BaseStrategy();
         // Acontece demais então é a base strategy ^
 
         //estrategia para veificar se tem 3 ou 2 e outra carta forte
         if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
-        //estrategia mao de ferro
 
         else strategy = new BaseStrategy();
 
         return strategy;
+    }
+
+    static boolean lostFirstRoundWithManilha(GameIntel intel) {
+        if(intel.getRoundResults().isEmpty()) return false;
+
+        TrucoCard card1 = intel.getOpenCards().get(1);
+        TrucoCard card2 = intel.getOpenCards().get(2);
+
+        return card1.isManilha(intel.getVira()) && card2.isManilha(intel.getVira()) && !TiaoDoTruco.hasWonFirstHand(intel);
+    }
+
+    private int getHandStrength(GameIntel intel) {
+        return intel.getCards().stream()
+                .mapToInt(e -> e.getRank().value())
+                .sum();
     }
 
     static protected boolean hasManilha(GameIntel intel) {
@@ -66,12 +84,18 @@ public class TiaoDoTruco implements BotServiceProvider {
                 .anyMatch(e -> e.isManilha(intel.getVira()));
     }
 
-    private boolean hasThree(GameIntel intel) {
+    static protected boolean hasCasalPreto(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(e -> e.isZap(intel.getVira()) || e.isEspadilha(intel.getVira()))
+                .count() == 2;
+    }
+
+    static protected boolean hasThree(GameIntel intel) {
         return intel.getCards().stream()
                 .anyMatch(e -> e.getRank().value() == 10);
     }
 
-    private boolean hasTwo(GameIntel intel) {
+    static protected boolean hasTwo(GameIntel intel) {
         return intel.getCards().stream()
                 .anyMatch(e -> e.getRank().value() == 9);
     }
@@ -79,8 +103,6 @@ public class TiaoDoTruco implements BotServiceProvider {
     static protected boolean hasWonFirstHand(GameIntel intel) {
         return !intel.getRoundResults().isEmpty() && GameIntel.RoundResult.WON.equals(intel.getRoundResults().get(0));
     }
-
-
 
     static protected boolean cardCanKill(GameIntel intel, TrucoCard card) {
         if(intel.getOpponentCard().isEmpty()) return false;

@@ -10,6 +10,7 @@ import java.util.Optional;
 public class ZapCopas implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+
         return true;
     }
 

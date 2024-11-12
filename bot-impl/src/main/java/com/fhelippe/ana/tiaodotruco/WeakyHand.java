@@ -26,15 +26,15 @@ public class WeakyHand implements BotServiceProvider {
 
         if(TiaoDoTruco.cardCanKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
 
-        if(midCard.isPresent()) return CardToPlay.of(midCard.get());
-
         if(TiaoDoTruco.cardCanKill(intel, strongestCard)) return CardToPlay.of(strongestCard);
+
+        if(midCard.isPresent()) return CardToPlay.of(midCard.get());
 
         return CardToPlay.of(weakestCard);
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        return -1;
     }
 }

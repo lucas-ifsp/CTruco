@@ -37,6 +37,16 @@ public class TwoManilhaAndStrongCard implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(TiaoDoTruco.hasWonFirstHand(intel)) return 1;
+
+        //caso seja o segundo round e o oponente que torna
+        if(!intel.getRoundResults().isEmpty() && intel.getOpponentCard().isPresent()) {
+            if(TiaoDoTruco.canKill(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) return 1;
+
+            if(TiaoDoTruco.canKill(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW) return 0;
+            return -1;
+        }
+
         return 0;
     }
 }
