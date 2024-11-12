@@ -1,5 +1,6 @@
 package com.abel.francisco.fogao6boca;
 
+import com.brito.macena.boteco.utils.Game;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -20,12 +21,17 @@ public class Fogao6Boca implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return verifyHandStrengh(intel) > 6;
+        return verifyHandStrengh(intel) > 7;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return firstGameRound(intel);
+        List<TrucoCard> botCards = sortedCardStrengh(intel.getCards(),intel.getVira());
+        if(intel.getCards().size() == 3)
+            return firstGameRound(intel, botCards);
+        if(intel.getCards().size() == 2)
+            return secondGameRound(intel, botCards);
+        return firstGameRound(intel,botCards);
     }
 
     @Override
@@ -35,8 +41,13 @@ public class Fogao6Boca implements BotServiceProvider {
         return -1;
     }
 
-    private CardToPlay firstGameRound(GameIntel intel){
-        List<TrucoCard> botCards = sortedCardStrengh(intel.getCards(),intel.getVira());
+    private CardToPlay firstGameRound(GameIntel intel, List<TrucoCard> botCards){
+        return decideCardToPlay(botCards, intel.getOpponentCard(), intel.getVira());
+    }
+
+    private CardToPlay secondGameRound(GameIntel intel, List<TrucoCard> botCards){
+        if(intel.getRoundResults().get(0) == GameIntel.RoundResult.WON)
+            return CardToPlay.of(botCards.get(botCards.size()-1));
         return decideCardToPlay(botCards, intel.getOpponentCard(), intel.getVira());
     }
 
@@ -65,12 +76,12 @@ public class Fogao6Boca implements BotServiceProvider {
     }
 
     private double verifyHandStrengh(GameIntel intel){
+
         double soma = 0;
         for(TrucoCard card : intel.getCards()){
             soma += card.relativeValue(intel.getVira());
         }
         return soma/intel.getCards().size();
-
     }
 
 }
