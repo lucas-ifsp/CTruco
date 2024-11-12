@@ -17,9 +17,11 @@ public class DeyvinBot implements BotServiceProvider {
         CardSuit suit = suits[randomSuit.nextInt(suits.length-1)];
 
         if(myCards.stream().anyMatch(trucoCard -> trucoCard.isManilha(vira))) return true;
+
         if(intel.getScore() > intel.getOpponentScore() + 5)
             if(myCards.stream().min(TrucoCard::relativeValue).equals(TrucoCard.of(CardRank.JACK,suit)) &&
                     myCards.stream().anyMatch(trucoCard -> trucoCard.equals(TrucoCard.of(CardRank.THREE,suit)))) return true;
+
         if(myCards.stream().allMatch(trucoCard -> trucoCard.equals(TrucoCard.of(CardRank.THREE,suit)))) return true;
 
         return false;
