@@ -51,7 +51,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 //
 //        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
 
-        if(getHandStrength(intel) > )
+        if(getHandStrength(intel) < 10) strategy = new WeakyHand();
 //        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
 //
 //        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
@@ -64,6 +64,26 @@ public class TiaoDoTruco implements BotServiceProvider {
         return strategy;
     }
 
+    //valores sem contabilizar manilha:
+    //mao forte: 20 - 30
+    //mao media: 10 - 20
+    //mao fraca: 0 - 10
+    private int getHandStrength(GameIntel intel) {
+        int value = intel.getCards().stream()
+                .mapToInt(e -> e.getRank().value())
+                .sum();
+
+        if(TiaoDoTruco.hasZap(intel)) value += 10;
+
+        if(TiaoDoTruco.hasCopas(intel)) value += 10;
+
+        if(TiaoDoTruco.hasEspadilha(intel)) value += 8;
+
+        if(TiaoDoTruco.hasOuros(intel)) value += 5;
+
+        return value;
+    }
+
     static boolean lostFirstRoundWithManilha(GameIntel intel) {
         if(intel.getRoundResults().isEmpty()) return false;
 
@@ -71,22 +91,6 @@ public class TiaoDoTruco implements BotServiceProvider {
         TrucoCard card2 = intel.getOpenCards().get(2);
 
         return card1.isManilha(intel.getVira()) && card2.isManilha(intel.getVira()) && !TiaoDoTruco.hasWonFirstHand(intel);
-    }
-
-    private int getHandStrength(GameIntel intel) {
-         int value = intel.getCards().stream()
-                .mapToInt(e -> e.getRank().value())
-                .sum();
-
-         if(TiaoDoTruco.hasZap(intel)) value += 10;
-
-         if(TiaoDoTruco.hasCopas(intel)) value += 10;
-
-         if(TiaoDoTruco.hasEspadilha(intel)) value += 8;
-
-         if(TiaoDoTruco.hasOuros(intel)) value += 5;
-
-         return value;
     }
 
     static protected boolean hasManilha(GameIntel intel) {

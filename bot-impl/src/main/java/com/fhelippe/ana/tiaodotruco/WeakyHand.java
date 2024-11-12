@@ -1,13 +1,12 @@
 package com.fhelippe.ana.tiaodotruco;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Optional;
 
 public class WeakyHand implements BotServiceProvider {
+    private boolean trucar;
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -15,7 +14,7 @@ public class WeakyHand implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        return trucar;
     }
 
     @Override
@@ -27,8 +26,6 @@ public class WeakyHand implements BotServiceProvider {
         if(TiaoDoTruco.cardCanKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
 
         if(TiaoDoTruco.cardCanKill(intel, strongestCard)) return CardToPlay.of(strongestCard);
-
-        if(midCard.isPresent()) return CardToPlay.of(midCard.get());
 
         return CardToPlay.of(weakestCard);
     }
