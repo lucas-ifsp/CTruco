@@ -27,6 +27,9 @@ public class Fogao6Boca implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         if(casalMaior(intel)) return true;
         if(manilhas(intel) >= 2) return true;
+        if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() > 1) {
+            if (intel.getRoundResults().get(0) == WON || intel.getRoundResults().get(1) == WON) return true;
+        }
         return verifyHandStrengh(intel) > 6;
     }
 
