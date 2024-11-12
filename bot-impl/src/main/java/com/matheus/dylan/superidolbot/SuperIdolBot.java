@@ -39,6 +39,18 @@ public class SuperIdolBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int manilhas = countManilhas(intel);
+        int strongCards = countStrongCard(intel);
+
+        if (intel.getOpponentScore() == 11) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() >= 9) {
+            if (manilhas >= 2) return true;
+            if (manilhas > 0 && strongCards > 0) return true;
+            if (strongCards == 3) return true;
+        }
         return totalHandValue(intel) > GOOD_HAND_STRENGTH_THRESHOLD;
     }
 
