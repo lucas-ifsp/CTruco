@@ -23,14 +23,14 @@ public class CreateTournamentUseCase {
         this.saveMatchUseCase = saveMatchUseCase;
     }
 
-    public TournamentDTO createTournament(List<String> bots, int size, int times) {
+    public TournamentDTO createTournament(List<String> bots, int size, int times, int finalAndThirdPlaceMatchesTimes) {
         List<String> participants = new ArrayList<>(bots);
         Collections.shuffle(participants);
-        return create(participants, size, times);
+        return create(participants, size, times, finalAndThirdPlaceMatchesTimes);
     }
 
-    private TournamentDTO create(List<String> participants, int size, int times) {
-        Tournament tournament = new Tournament(participants, size, times);
+    private TournamentDTO create(List<String> participants, int size, int times, int finalAndThirdPlaceMatchTimes) {
+        Tournament tournament = new Tournament(participants, size, times, finalAndThirdPlaceMatchTimes);
         tournament.insertMatches();
         tournament.insertParticipants();
         tournament.setNextMatches();

@@ -51,7 +51,7 @@ public class TournamentController {
     public ResponseEntity<?> createTournament(@RequestBody TournamentRequestDTO request) {
         tournamentRepository.deleteAll();
         matchRepository.deleteAll();
-        TournamentDTO dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times());
+        TournamentDTO dto = tournamentProvider.createTournament(request.participants(), request.participants().size(), request.times(), request.finalAndThirdPlaceMatchTimes());
         List<MatchDTO> matchesDTO = getMatchUseCase.byTournamentUuid(dto.uuid());
 
         TournamentResponseDTO response = new TournamentResponseDTO(dto.uuid(),
@@ -59,6 +59,7 @@ public class TournamentController {
                 matchesDTO,
                 dto.size(),
                 dto.times(),
+                dto.finalAndThirdPlaceMatchTimes(),
                 dto.winnerName());
 
         return new ResponseBuilder(HttpStatus.CREATED)
@@ -84,6 +85,7 @@ public class TournamentController {
                 matchesDTO,
                 dto.size(),
                 dto.times(),
+                dto.finalAndThirdPlaceMatchTimes(),
                 dto.winnerName()
         );
 
@@ -104,15 +106,15 @@ public class TournamentController {
                 .build();
     }
 
-    @GetMapping("{tournamentUuid}/match/{chosenMatchNumber}")
-    public ResponseEntity<?> getOneMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber) {
-        MatchDTO matchDTO = matchRepository.findById(tournamentUuid).orElseThrow();
-
-        return new ResponseBuilder(HttpStatus.OK)
-                .addEntry(new ResponseEntry("payload", matchDTO))
-                .addTimestamp()
-                .build();
-    }
+//    @GetMapping("{tournamentUuid}/match/{chosenMatchNumber}")
+//    public ResponseEntity<?> getOneMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber) {
+//        MatchDTO matchDTO = matchRepository.findById(tournamentUuid).orElseThrow();
+//
+//        return new ResponseBuilder(HttpStatus.OK)
+//                .addEntry(new ResponseEntry("payload", matchDTO))
+//                .addTimestamp()
+//                .build();
+//    }
 
     @PostMapping("{tournamentUuid}/match/{chosenMatchNumber}/{numberOfSimulations}")
     public ResponseEntity<?> playMatch(@PathVariable UUID tournamentUuid, @PathVariable int chosenMatchNumber, @PathVariable int numberOfSimulations) {
@@ -120,12 +122,16 @@ public class TournamentController {
                 .addEntry(new ResponseEntry("payload", "invalid tournament uuid"))
                 .addTimestamp()
                 .build();
-
+        if (numberOfSimulationsIsEven(numberOfSimulations)) numberOfSimulations = numberOfSimulations + 1;
         playMatchInParallelUseCase.execute(tournamentUuid, chosenMatchNumber, numberOfSimulations);
 
         return new ResponseBuilder(HttpStatus.OK)
                 .addEntry(new ResponseEntry("Success", "The server is playing the match"))
                 .addTimestamp()
                 .build();
+    }
+
+    private boolean numberOfSimulationsIsEven(int numberOfSimulations) {
+        return numberOfSimulations % 2 == 0;
     }
 }

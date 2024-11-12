@@ -19,6 +19,7 @@ public class TournamentEntity {
     private List<UUID> matchUUIDs;
     private int size;
     private int times;
+    private int finalAndThirdPlaceMatchTimes;
     private String winnerName;
 
     public static TournamentEntity from(TournamentDTO dto) {
@@ -28,6 +29,7 @@ public class TournamentEntity {
                 .matchUUIDs(dto.matchUUIDs())
                 .size(dto.size())
                 .times(dto.times())
+                .finalAndThirdPlaceMatchTimes(dto.finalAndThirdPlaceMatchTimes())
                 .winnerName(dto.winnerName())
                 .build();
     }
@@ -38,6 +40,7 @@ public class TournamentEntity {
                 matchUUIDs,
                 size,
                 times,
+                finalAndThirdPlaceMatchTimes,
                 winnerName);
     }
 }

@@ -3,7 +3,6 @@ package com.bueno.domain.entities.tournament;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
-import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 
 import java.util.*;
 
@@ -12,22 +11,25 @@ public class Tournament {
     private final int size;
     private final List<String> participantNames;
     private final int times;
+    private final int finalAndThirdPlaceMatchTimes;
     private final List<Match> matches;
 
-    public Tournament(List<String> participantNames, int size, int times) {
+    public Tournament(List<String> participantNames, int size, int times, int finalAndThirdPlaceMatchTimes) {
         this.times = times;
+        this.finalAndThirdPlaceMatchTimes = finalAndThirdPlaceMatchTimes;
         this.tournamentUUID = UUID.randomUUID();
         this.size = size;
         this.participantNames = participantNames;
         this.matches = new ArrayList<>();
     }
 
-    public Tournament(UUID tournamentUUID, List<String> participantNames, List<Match> matches, int size, int times) {
+    public Tournament(UUID tournamentUUID, List<String> participantNames, List<Match> matches, int size, int times, int finalAndThirdPlaceMatchTimes) {
         this.tournamentUUID = tournamentUUID;
         this.size = size;
         this.matches = matches.stream().sorted().toList();
         this.participantNames = participantNames;
         this.times = times;
+        this.finalAndThirdPlaceMatchTimes = times;
     }
 
     public void playAllAvailable(RemoteBotApi api, RemoteBotRepository repository, BotManagerService botManagerService) {
@@ -140,6 +142,10 @@ public class Tournament {
 
     public List<String> getParticipantNames() {
         return participantNames;
+    }
+
+    public int getFinalAndThirdPlaceMatchTimes() {
+        return finalAndThirdPlaceMatchTimes;
     }
 
     @Override

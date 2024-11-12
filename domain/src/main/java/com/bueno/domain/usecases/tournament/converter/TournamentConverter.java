@@ -23,12 +23,12 @@ public class TournamentConverter {
                 return new TournamentDTO(tournament.getTournamentUUID(),
                         tournament.getParticipantNames(),
                         matchList.stream().map(MatchDTO::uuid).toList(),
-                        tournament.getSize(), tournament.getTimes(), tournamentWinner);
+                        tournament.getSize(), tournament.getTimes(), tournament.getFinalAndThirdPlaceMatchTimes(), tournamentWinner);
             }
             return new TournamentDTO(tournament.getTournamentUUID(),
                     tournament.getParticipantNames(),
                     matchList.stream().map(MatchDTO::uuid).toList(),
-                    tournament.getSize(), tournament.getTimes(), null);
+                    tournament.getSize(), tournament.getTimes(), tournament.getFinalAndThirdPlaceMatchTimes(), null);
         } else {
             //TODO - trocar isso dps
             return null;
@@ -47,6 +47,6 @@ public class TournamentConverter {
                 .toList();
 
 
-        return new Tournament(dto.uuid(), dto.participantsNames(), matches, dto.size(), dto.times());
+        return new Tournament(dto.uuid(), dto.participantsNames(), matches, dto.size(), dto.times(), dto.finalAndThirdPlaceMatchTimes());
     }
 }

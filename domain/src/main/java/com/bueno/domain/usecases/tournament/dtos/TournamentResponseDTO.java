@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record TournamentResponseDTO(UUID uuid, List<String> participantsNames, List<MatchDTO> matchesDTO, int size,
-                                    int times,
+                                    int times, int finalAndThirdPlaceMatchTimes,
                                     String winnerName) {
 }
