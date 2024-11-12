@@ -2,6 +2,7 @@ package com.aislan.deyvin;
 
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
+import com.contiero.lemes.atrasabot.services.utils.MyCards;
 
 import javax.smartcardio.Card;
 import java.util.List;
@@ -29,12 +30,38 @@ public class DeyvinBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        List<TrucoCard> myCards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        if(myCards.stream().allMatch(trucoCard -> trucoCard.isManilha(vira))) return true;
+        if(intel.getRoundResults().contains(GameIntel.RoundResult.WON) && myCards.stream().anyMatch(trucoCard -> trucoCard.isManilha(vira))) return true;
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> myCards = intel.getCards();
+        myCards.sort(TrucoCard::relativeValue);
+        TrucoCard bestCard = myCards.get(myCards.size()-1);
+
+
+        if(isFirstRound(intel)){
+            return CardToPlay.of(myCards.get(0));
+        }
+        if(isSecondRound(intel)){
+            if(intel.getRoundResults().contains(GameIntel.RoundResult.WON)) return CardToPlay.discard(myCards.get(0));
+            else return CardToPlay.of(myCards.get(myCards.indexOf(bestCard)));
+        }
+        return CardToPlay.of(myCards.get(myCards.indexOf(bestCard)));
+    }
+
+    private boolean isFirstRound(GameIntel intel){
+        return intel.getRoundResults().isEmpty();
+    }
+    private boolean isSecondRound(GameIntel intel){
+        return intel.getRoundResults().size() == 1;
+    }
+    private boolean isLastRound(GameIntel intel){
+        return intel.getRoundResults().size() == 2;
     }
 
     @Override
