@@ -44,22 +44,21 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     private BotServiceProvider selectStrategy(GameIntel intel) {
         if(hasZap(intel) && hasCopas(intel)) strategy = new ZapCopas();
-
-        if(hasCasalPreto(intel)) strategy = new BlackCouple();
-
-        if(hasTwoManilha(intel) && hasGreatCard(intel)) strategy = new TwoManilhaAndStrongCard();
-
-        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
-
-        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
-
-        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) new BaseStrategy();
-        // Acontece demais então é a base strategy ^
+//
+//        if(hasCasalPreto(intel)) strategy = new BlackCouple();
+//
+//        if(hasTwoManilha(intel) && hasGreatCard(intel)) strategy = new TwoManilhaAndStrongCard();
+//
+//        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
+//
+//        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
+//
+//        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
+//
+//        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) new BaseStrategy();
 
         //estrategia para veificar se tem 3 ou 2 e outra carta forte
-        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
-
-        else strategy = new BaseStrategy();
+        strategy = new BaseStrategy();
 
         return strategy;
     }
