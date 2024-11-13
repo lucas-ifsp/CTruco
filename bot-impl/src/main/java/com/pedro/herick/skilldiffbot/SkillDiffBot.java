@@ -2,9 +2,12 @@ package com.pedro.herick.skilldiffbot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class SkillDiffBot implements BotServiceProvider {
+import java.util.List;
+
+public class SkillDiffBot extends BotUtils implements BotServiceProvider {
     private static final int REFUSE = -1;
     private static final int ACCEPT = 0;
     private static final int RAISE = 1;
@@ -16,8 +19,19 @@ public class SkillDiffBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) ||
-                card.isCopas(intel.getVira()));
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        int manilhas = getManilhaCount(cards, vira);
+        int strongCards = getStrongCardsCount(cards, vira);
+
+        if (intel.getOpponentScore() >= 9) {
+            return manilhas >= 1 || strongCards >= 2;
+        }
+
+        if (manilhas >= 2) return true;
+        return manilhas == 1 && strongCards >= 1;
+
     }
 
     @Override

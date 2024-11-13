@@ -1,5 +1,6 @@
 package com.pedro.herick.skilldiffbot;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
@@ -31,8 +32,13 @@ abstract class BotUtils {
                 .orElse(cards.get(0));
     }
 
-    protected boolean hasZapOrCopas(List<TrucoCard> cards, TrucoCard vira) {
-        return cards.stream().anyMatch(card -> card.isZap(vira) || card.isCopas(vira));
+    protected int getStrongCardsCount(List<TrucoCard> cards, TrucoCard vira) {
+        return (int) cards.stream()
+                .filter(card -> !card.isManilha(vira))
+                .filter(card -> card.getRank() == CardRank.THREE ||
+                        card.getRank() == CardRank.TWO ||
+                        card.getRank() == CardRank.ACE)
+                .count();
     }
 
     protected int getManilhaCount(List<TrucoCard> cards, TrucoCard vira) {
