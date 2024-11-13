@@ -6,7 +6,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.Optional;
 
 public class WeakyHand implements BotServiceProvider {
-    private boolean trucar = false;
+    private boolean trucar;
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
