@@ -17,7 +17,6 @@ public class SecondRoundStrategy extends BotUtils implements Strategy {
     private static final double LOSING_THRESHOLD = 0.5;
     private static final double WINNING_THRESHOLD = 0.7;
 
-
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if (wonFirstRound(intel)) {
@@ -35,6 +34,8 @@ public class SecondRoundStrategy extends BotUtils implements Strategy {
         if (wonFirstRound(intel)) {
             return CardToPlay.of(getWorstCard(cards, vira));
         }
+
+        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(getBestCardComparedToOpponent(intel));
 
         return CardToPlay.of(getBestCard(cards, vira));
     }
