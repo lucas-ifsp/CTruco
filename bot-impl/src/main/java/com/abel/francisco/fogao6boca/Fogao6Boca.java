@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
 
 public class Fogao6Boca implements BotServiceProvider {
@@ -49,7 +50,7 @@ public class Fogao6Boca implements BotServiceProvider {
         if(qtdThree(intel) == 3) return 0;
         if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == WON)
             if(verifyHandStrengh(intel) > 7) return 0;
-        return -1;
+        return bluffVerify(intel);
     }
 
 
@@ -99,6 +100,20 @@ public class Fogao6Boca implements BotServiceProvider {
         for(TrucoCard card : intel.getCards())
             if(card.relativeValue(intel.getVira()) > 6) possibleCards.add(card);
         return possibleCards.size();
+    }
+
+    private int bluffVerify(GameIntel intel){
+        if(intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == LOST){
+            for(TrucoCard card : intel.getCards()){
+                if(card.compareValueTo(intel.getOpenCards().get(1),intel.getVira()) > 0 && card.compareValueTo(intel.getOpenCards().get(2),intel.getVira()) > 0) return 0;
+            }
+            return -1;
+        }
+        if(intel.getRoundResults().isEmpty() && verifyHandStrengh(intel) > 6){
+            return 0;
+        }
+        return -1;
+
     }
 
     private int qtdManilhas(GameIntel intel){
