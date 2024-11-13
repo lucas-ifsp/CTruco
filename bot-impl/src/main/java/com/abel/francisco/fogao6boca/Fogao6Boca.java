@@ -80,6 +80,9 @@ public class Fogao6Boca implements BotServiceProvider {
             }
             return CardToPlay.of(cards.get(cards.size()-1));
         }
+
+        if(intel.getRoundResults().isEmpty() && qtdManilhas(intel) >= 2) return CardToPlay.of(cards.get(cards.size()-1));
+
         if(intel.getRoundResults().size() == 1 && intel.getRoundResults().get(0) == WON){
             return CardToPlay.of(cards.get(cards.size()-1));
         }
@@ -124,20 +127,10 @@ public class Fogao6Boca implements BotServiceProvider {
 
     private boolean casalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
-        boolean zap = false;
-        for(TrucoCard card : cards){
-            if(card.isZap(intel.getVira())){
-                zap = true;
-                break;
-            }
-        }
-        boolean copas = false;
-        for(TrucoCard card : cards){
-            if(card.isCopas(intel.getVira())){
-                copas = true;
-                break;
-            }
-        }
+
+        boolean zap = cards.stream().anyMatch(card -> card.isZap(intel.getVira()));
+        boolean copas = cards.stream().anyMatch(card -> card.isCopas(intel.getVira()));
+
         return zap && copas;
     }
 
