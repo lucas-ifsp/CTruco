@@ -4,18 +4,26 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class FirstRoundStrategy implements RoundStrategy {
     private final GameIntel gameIntel;
     private final TrucoCard vira;
+    private final List<TrucoCard> myCards;
+    private final int handPower;
 
     public FirstRoundStrategy(GameIntel gameIntel) {
         this.gameIntel = gameIntel;
         this.vira = gameIntel.getVira();
+        this.myCards = new ArrayList<>(gameIntel.getCards());
+        this.handPower = HandUtils.getHandPower(gameIntel, vira);
+
+        myCards.sort((c1, c2) -> c2.compareValueTo(c1, this.vira));
     }
 
     @Override
     public boolean getMaoDeOnzeResponse() {
-        final int handPower = HandUtils.getHandPower(gameIntel, vira);
         final int pointsDifference = gameIntel.getScore() - gameIntel.getOpponentScore();
 
         if (handPower > 22) return true;
@@ -25,7 +33,7 @@ public final class FirstRoundStrategy implements RoundStrategy {
 
     @Override
     public boolean decideIfRaises() {
-        return false;
+        return handPower >= 35;
     }
 
     @Override
