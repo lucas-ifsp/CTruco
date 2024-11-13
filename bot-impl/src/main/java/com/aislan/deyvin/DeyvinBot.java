@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2024 Aislan Pepi Rodrigues
+ *  Contact: aislan <dot> pepi <at> aluno <dot> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
+
 package com.aislan.deyvin;
 
 import com.bueno.spi.model.*;
@@ -26,10 +46,14 @@ public class DeyvinBot implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         List<TrucoCard> myCards = intel.getCards();
         TrucoCard vira = intel.getVira();
-        if(intel.getRoundResults().contains(GameIntel.RoundResult.WON)){
-            if(myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(vira))) return true;
-            if(myCards.stream().allMatch(trucoCard -> trucoCard.isManilha(vira))) return true;
+        if(isSecondRound(intel) && isWinnerInFirstRound(intel)) {
+            if (myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(vira))) return true;
         }
+        if(myCards.stream().anyMatch(trucoCard -> trucoCard.isManilha(vira))){
+            if(hasCasalMaior(intel)) return true;
+            if(isLastRound(intel) && isWinnerInFirstRound(intel)) return true;
+        }
+
         return false;
     }
 
@@ -57,14 +81,13 @@ public class DeyvinBot implements BotServiceProvider {
         }
 
         if(isSecondRound(intel)){
-            if(intel.getRoundResults().contains(GameIntel.RoundResult.WON)) {
+            if(isWinnerInFirstRound(intel)) {
                 if (myCards.stream().allMatch(trucoCard -> trucoCard.isManilha(vira)))
                     return CardToPlay.of(bestCard);
                 if (bestCard.isZap(vira)) return CardToPlay.of(bestCard);
                 else return CardToPlay.discard(worstCard);
             }
-            if(intel.getRoundResults().contains(GameIntel.RoundResult.LOST)) return CardToPlay.of(bestCard);
-            if(intel.getRoundResults().contains(GameIntel.RoundResult.DREW)) return CardToPlay.of(bestCard);
+            if(!isWinnerInFirstRound(intel)) return CardToPlay.of(bestCard);
         }
 
         return CardToPlay.of(bestCard);
@@ -108,5 +131,20 @@ public class DeyvinBot implements BotServiceProvider {
     }
     private boolean isSecondRound(GameIntel intel){
         return intel.getRoundResults().size() == 1;
+    }
+
+    private boolean isLastRound(GameIntel intel){
+        return intel.getRoundResults().size() == 2;
+    }
+
+    private boolean hasCasalMaior(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> myCards = intel.getCards();
+        return (myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(vira))
+                && myCards.stream().anyMatch(trucoCard -> trucoCard.isCopas(vira)));
+    }
+
+    private boolean isWinnerInFirstRound(GameIntel intel){
+        return intel.getRoundResults().contains(GameIntel.RoundResult.WON);
     }
 }
