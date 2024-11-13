@@ -49,7 +49,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(getHandStrength(intel) > 30) strategy = new StrengthHandWithManilha();
 
-//        if(getHandStrength(intel) > 20) strategy = new StrengthHand();
+        if(getHandStrength(intel) > 20) strategy = new StrengthHand();
 
         if(getHandStrength(intel) > 10) strategy = new BaseStrategy();
 
