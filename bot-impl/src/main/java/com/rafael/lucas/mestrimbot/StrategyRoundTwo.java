@@ -26,17 +26,17 @@ final class StrategyRoundTwo extends Strategy {
                 return CardToPlay.of(cards.get(1));
             }
         } else {
-            return CardToPlay.of(cards.get(0)); // Fallback para o caso de apenas 1 carta
+            return CardToPlay.of(cards.get(0));
         }
     }
 
     @Override
     int getRaiseResponse() {
-        return getHandStrength(cards, vira) >= 22 ? 0 : -1;
+        return getHandStrength(cards, vira) >= 22 ? 1 : -1;
     }
 
     @Override
     boolean decideIfRaises() {
-        return getHandStrength(cards, vira) >= 23 || (haveManilhas(cards, vira) && isStrongCard(cards.get(0), vira));
+        return getHandStrength(cards, vira) >= 23 || haveManilhas(cards, vira);
     }
 }

@@ -22,7 +22,7 @@ final class StrategyRoundOne extends Strategy {
         if (cards.size() > 1) {
             return CardToPlay.of(cards.get(1));
         } else {
-            return CardToPlay.of(cards.get(0)); // Fallback para garantir que uma carta válida seja retornada
+            return CardToPlay.of(cards.get(0));
         }
     }
 
@@ -33,6 +33,6 @@ final class StrategyRoundOne extends Strategy {
 
     @Override
     boolean decideIfRaises() {
-        return getHandStrength(cards, vira) >= 22 || haveManilhas(cards, vira);
+        return getHandStrength(cards, vira) >= 21 || haveManilhas(cards, vira);
     }
 }

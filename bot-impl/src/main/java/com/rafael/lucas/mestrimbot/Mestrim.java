@@ -25,3 +25,5 @@ public class Mestrim implements BotServiceProvider {
         return Strategy.of(intel).getRaiseResponse();
     }
 }
+
+

@@ -1,6 +1,5 @@
 package com.rafael.lucas.mestrimbot;
 
-import com.rafael.lucas.mestrimbot.StrategyRoundOne;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
@@ -9,6 +8,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.List;
 
 abstract sealed class Strategy permits StrategyRoundOne, StrategyRoundTwo, StrategyRoundThree {
+
     static Strategy of(GameIntel intel) {
         int currentRound = intel.getRoundResults().size();
         if (currentRound == 0) return new StrategyRoundOne(intel);
@@ -42,6 +42,7 @@ abstract sealed class Strategy permits StrategyRoundOne, StrategyRoundTwo, Strat
 
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         List<TrucoCard> cards = sortCards(intel.getCards(), intel.getVira());
-        return getHandStrength(cards, intel.getVira()) >= 24;
+        int strength = getHandStrength(cards, intel.getVira());
+        return strength >= 21 || (haveManilhas(cards, intel.getVira()) && strength >= 18);
     }
 }
