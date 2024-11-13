@@ -9,28 +9,28 @@ public final class ClojureBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         final RoundStrategy strategy = Playing.buildStrategy(intel);
 
-        return strategy.getMaoDeOnzeResponse(intel);
+        return strategy.getMaoDeOnzeResponse();
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         final RoundStrategy strategy = Playing.buildStrategy(intel);
 
-        return strategy.decideIfRaises(intel);
+        return strategy.decideIfRaises();
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         final RoundStrategy strategy = Playing.buildStrategy(intel);
 
-        return strategy.chooseCard(intel);
+        return strategy.chooseCard();
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
         final RoundStrategy strategy = Playing.buildStrategy(intel);
 
-        return strategy.getRaiseResponse(intel);
+        return strategy.getRaiseResponse();
     }
 
     @Override

@@ -9,9 +9,9 @@ public final class Playing {
         final int roundsPlayed = intel.getRoundResults().size();
 
         return switch (roundsPlayed) {
-            case 0 -> new FirstRoundStrategy();
-            case 1 -> new SecondRoundStrategy();
-            case 3 -> new ThirdRoundStrategy();
+            case 0 -> new FirstRoundStrategy(intel);
+            case 1 -> new SecondRoundStrategy(intel);
+            case 3 -> new ThirdRoundStrategy(intel);
             default -> throw new IllegalStateException("Unexpected value: " + roundsPlayed);
         };
     }

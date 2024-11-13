@@ -4,23 +4,29 @@ import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
 public final class SecondRoundStrategy implements RoundStrategy {
+    private final GameIntel gameIntel;
+
+    public SecondRoundStrategy(GameIntel gameIntel) {
+        this.gameIntel = gameIntel;
+    }
+
     @Override
-    public boolean getMaoDeOnzeResponse(GameIntel intel) {
+    public boolean getMaoDeOnzeResponse() {
         return false;
     }
 
     @Override
-    public boolean decideIfRaises(GameIntel intel) {
+    public boolean decideIfRaises() {
         return false;
     }
 
     @Override
-    public CardToPlay chooseCard(GameIntel intel) {
+    public CardToPlay chooseCard() {
         return null;
     }
 
     @Override
-    public int getRaiseResponse(GameIntel intel) {
+    public int getRaiseResponse() {
         return 0;
     }
 }
