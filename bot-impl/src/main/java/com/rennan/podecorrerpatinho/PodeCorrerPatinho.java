@@ -1,149 +1,108 @@
 package com.rennan.podecorrerpatinho;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
-import java.util.Random;
+
+import static com.rennan.podecorrerpatinho.PCPUtils.*;
 
 public class PodeCorrerPatinho implements BotServiceProvider {
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        if (intel.getOpponentScore() < 11) {
-            if (PCPUtils.hasCasalMaior(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCasalPreto(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCasalMenor(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCasalVermelho(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasZapOuros(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCopasEspadilha(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasManilha(intel.getVira(), intel.getCards()) && PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
-        } else {
+        int strength = handStrength(intel.getVira(), intel.getCards());
+        int numManilhas = countManilhas(intel.getVira(), intel.getCards());
+
+        if (hasCasalMaior(intel.getVira(), intel.getCards()) || numManilhas >= 2 || strength > 20) {
             return true;
         }
-        return false;
+
+        return strength > 18;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int strength = handStrength(vira, hand);
+        int numManilhas = countManilhas(vira, hand);
 
-        int roundNumber = intel.getRoundResults().size() + 1;
-        List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
-
-        if (roundNumber == 1){
-            return false;
-        }else if (roundNumber == 2){
-            if (roundsResults.get(0).equals(GameIntel.RoundResult.WON)){
-                if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return false;
-
-                if (PCPUtils.zapCopasAndEspadaAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasOuros(intel.getVira(),intel.getCards())) return true;
-
-                if (PCPUtils.zapAndCopasAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasEspada(intel.getVira(), intel.getCards())) return true;
-
-                if (PCPUtils.zapAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasCopas(intel.getVira(), intel.getCards())) return true;
-            } else if (roundsResults.get(0).equals(GameIntel.RoundResult.DREW)){
-                if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
-                if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return true;
-
-            }
-        } else if (roundNumber == 3) {
-            if (intel.getOpponentCard().isPresent()){
-                TrucoCard enemyCard = intel.getOpponentCard().get();
-                if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) >
-                        enemyCard.relativeValue(intel.getVira())) return true;
-            }
-            if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return true;
-
-            // Roleta russa :P
-            if (new Random().nextInt(500) == 77 && intel.getHandPoints() < 3) {
-                return true;
-            }
+        if (countManilhas(vira, hand) >= 2 || hasCasalMaior(vira, hand)) {
+            return true;
         }
 
+        if (strength > 25) {
+            return true;
+        }
+        
         return false;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        int roundNumber = intel.getRoundResults().size() + 1;
-        List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
-        List<TrucoCard> myHand = intel.getCards();
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
-        // Primeira é caminhão de boi >:(
-        if (roundNumber == 1){
-            if (intel.getOpponentCard().isPresent()){
-                TrucoCard enemyCard = intel.getOpponentCard().get();
-                if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) >
-                        enemyCard.relativeValue(intel.getVira())){
-                    for (TrucoCard myCard : myHand) {
-                        if (myCard.relativeValue(intel.getVira()) > enemyCard.relativeValue(intel.getVira())) {
-                            return CardToPlay.of(myCard);
-                        }
-                    }
+        int roundNumber = roundResults.size() + 1;
 
-                    return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), myHand));
-                }
-            }
-            return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), myHand));
-        } else if (roundNumber == 2) {
-            if (roundsResults.get(0).equals(GameIntel.RoundResult.WON)){
-                if (PCPUtils.hasZap(intel.getVira(), intel.getCards())){
-                    return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), intel.getCards()));
-                }
-                if (PCPUtils.zapCopasAndEspadaAlreadyPlayed(intel.getVira(), intel.getOpenCards()) && PCPUtils.hasOuros(intel.getVira(),intel.getCards())){
-                    return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), intel.getCards()));
-                }
-                if (PCPUtils.zapAndCopasAlreadyPlayed(intel.getVira(), intel.getOpenCards()) && PCPUtils.hasEspada(intel.getVira(), intel.getCards())){
-                    return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), intel.getCards()));
-                }
-                if (PCPUtils.zapAlreadyPlayed(intel.getVira(), intel.getOpenCards()) && PCPUtils.hasCopas(intel.getVira(), intel.getCards())){
-                    return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), intel.getCards()));
-                }
-            }
-            if (roundsResults.get(0).equals(GameIntel.RoundResult.DREW) || roundsResults.get(0).equals(GameIntel.RoundResult.LOST)){
-                return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), intel.getCards()));
+        // Primeira rodada: Cauteloso, se perdeu, joga a carta mais forte
+        if (roundNumber == 1) {
+            if (roundResults.size() > 0 && roundResults.get(roundResults.size() - 1) == GameIntel.RoundResult.LOST) {
+                return CardToPlay.of(getStrongest(vira, hand));
+            } else {
+                return CardToPlay.of(getWeakest(vira, hand));
             }
         }
-        return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), intel.getCards()));
+
+        // Segunda rodada: Se perdeu, jogue mais forte. Se ganhou, jogue mais cauteloso.
+        if (roundNumber == 2) {
+            if (roundResults.get(roundResults.size() - 1) == GameIntel.RoundResult.LOST) {
+                return CardToPlay.of(getStrongest(vira, hand));
+            } else {
+                return CardToPlay.of(getWeakest(vira, hand));
+            }
+        }
+
+        // Terceira rodada: Se já estiver ganhando, maximize o uso de manilhas e cartas fortes.
+        if (roundNumber == 3) {
+            if (roundResults.get(roundResults.size() - 1) == GameIntel.RoundResult.LOST) {
+                return CardToPlay.of(getStrongest(vira, hand));
+            } else {
+                return CardToPlay.of(getWeakest(vira, hand));
+            }
+        }
+
+        // Caso o round número não tenha sido encontrado, retorna a carta mais forte por padrão
+        return CardToPlay.of(getStrongest(vira, hand));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        int roundNumber = intel.getRoundResults().size() + 1;
-        List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        int numManilhas = countManilhas(intel.getVira(), intel.getCards());
+        int strength = handStrength(intel.getVira(), intel.getCards());
+        int roundNumber = roundResults.size() + 1;
 
         if (roundNumber == 1) {
-            if (PCPUtils.hasCasalMaior(intel.getVira(), intel.getCards())) return 1;
-            if (PCPUtils.hasCasalPreto(intel.getVira(), intel.getCards())) return 1;
-        } else if (roundNumber == 2) {
-            if (roundsResults.get(0).equals(GameIntel.RoundResult.WON) ||
-                    roundsResults.get(0).equals(GameIntel.RoundResult.DREW)) {
-                if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return 1;
-                if (PCPUtils.zapCopasAndEspadaAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasOuros(intel.getVira(), intel.getCards())) return 1;
-                if (PCPUtils.zapAndCopasAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasEspada(intel.getVira(), intel.getCards())) return 1;
-                if (PCPUtils.zapAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasCopas(intel.getVira(), intel.getCards())) return 1;
-                if (PCPUtils.hasManilha(intel.getVira(), intel.getCards())) return 0;
-                if (PCPUtils.hasThree(intel.getVira(), intel.getCards()) && new Random().nextInt(4) == 1) return 0;
+            if (numManilhas >= 2 || strength > 20) {
+                return 1;
             }
-
-        } else if (roundNumber == 3) {
-            if (intel.getOpponentCard().isPresent()){
-                TrucoCard enemyCard = intel.getOpponentCard().get();
-                if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) >
-                        enemyCard.relativeValue(intel.getVira())) return 1;
-            }
-            if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return 1;
-            if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return 0;
         }
-        return -1;
+
+        if (roundNumber == 2) {
+            if (numManilhas > 0 || strength > 15) {
+                return 1;
+            }
+        }
+
+        if (roundNumber == 3) {
+            if (numManilhas >= 1 || strength > 25) {
+                return 1;
+            }
+        }
+
+        return 0;
     }
 }
