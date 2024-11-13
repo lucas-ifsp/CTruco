@@ -2,6 +2,8 @@ package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
+import com.bueno.domain.usecases.utils.exceptions.InvalidRequestException;
 import com.bueno.persistence.ConnectionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -85,7 +87,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
+            throw new InvalidRequestException(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
         }
     }
 
@@ -96,7 +98,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             preparedStatement.setObject(1, dto.uuid());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name());
+            throw new EntityNotFoundException(e.getClass() + ": " + e.getMessage() + "System couldn't delete the RemoteBot: " + dto.name());
         }
     }
 
@@ -116,7 +118,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
+            throw new InvalidRequestException(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
         }
     }
 

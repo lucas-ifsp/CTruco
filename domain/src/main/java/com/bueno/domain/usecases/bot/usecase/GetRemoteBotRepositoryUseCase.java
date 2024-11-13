@@ -26,7 +26,7 @@ public class GetRemoteBotRepositoryUseCase {
     public List<RemoteBotResponseModel> getAll() {
         List<RemoteBotDto> botDtoList = remoteBotRepository.findAll();
         return botDtoList.stream()
-                .map(bot -> new RemoteBotResponseModel(bot.name(), getUserDtoByRemoteBotDto(bot).username(), bot.url(), bot.port())).toList();
+                .map(bot -> new RemoteBotResponseModel(bot.name(), getUserDtoByRemoteBotDto(bot).username(), bot.url(), bot.port(), bot.repositoryUrl())).toList();
     }
 
     public RemoteBotResponseModel getByName(String botName) {
@@ -34,7 +34,7 @@ public class GetRemoteBotRepositoryUseCase {
 
         RemoteBotDto dto = remoteBotRepository.findByName(botName).orElseThrow(() -> new EntityNotFoundException(botName + " not found"));
         ApplicationUserDto userDto = getUserDtoByRemoteBotDto(dto);
-        return new RemoteBotResponseModel(dto.name(), userDto.username(), dto.url(), dto.port());
+        return new RemoteBotResponseModel(dto.name(), userDto.username(), dto.url(), dto.port(),dto.repositoryUrl());
     }
 
     public List<RemoteBotResponseModel> getByUserId(UUID userId) {
@@ -42,7 +42,7 @@ public class GetRemoteBotRepositoryUseCase {
 
         ApplicationUserDto userDto = userRepository.findByUuid(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         List<RemoteBotDto> bots = remoteBotRepository.findByUserId(userId);
-        return bots.stream().map(bot -> new RemoteBotResponseModel(bot.name(), userDto.username(), bot.url(), bot.port())).toList();
+        return bots.stream().map(bot -> new RemoteBotResponseModel(bot.name(), userDto.username(), bot.url(), bot.port(),bot.repositoryUrl())).toList();
     }
 
     private ApplicationUserDto getUserDtoByRemoteBotDto(RemoteBotDto dto) {

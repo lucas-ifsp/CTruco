@@ -52,6 +52,6 @@ public class AddBotRemoteBotRepositoryUseCase {
         ApplicationUserDto userDto = userRepository.findByUuid(dto.user())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         remoteBotRepository.save(dto);
-        return new RemoteBotResponseModel(dto.name(), userDto.username(), dto.url(), dto.port());
+        return new RemoteBotResponseModel(dto.name(), userDto.username(), dto.url(), dto.port(), dto.repositoryUrl());
     }
 }

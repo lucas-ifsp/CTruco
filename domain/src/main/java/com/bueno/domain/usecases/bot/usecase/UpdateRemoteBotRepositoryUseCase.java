@@ -45,7 +45,7 @@ public class UpdateRemoteBotRepositoryUseCase {
                 requestDto.port(),
                 requestDto.repositoryUrl());
         botRepository.update(newDto);
-        return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port());
+        return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port(), newDto.repositoryUrl());
     }
 
     private boolean isSameUser(UUID botOwner, UUID requester) {

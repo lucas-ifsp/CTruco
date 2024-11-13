@@ -69,7 +69,8 @@ public class DataBaseBuilder {
                     CONSTRAINT remote_bot_uuid_pk PRIMARY KEY (uuid),
                     CONSTRAINT user_id_fk FOREIGN KEY (user_uuid) REFERENCES APP_USER(uuid),
                     CONSTRAINT name_uk UNIQUE (name),
-                    CONSTRAINT url_port_uk UNIQUE (url,port)
+                    CONSTRAINT url_port_uk UNIQUE (url,port),
+                    CONSTRAINT remote_bot_repository_url_uk UNIQUE (repository_url)
                 );
                 """;
     }
