@@ -22,6 +22,7 @@ import com.joao.alexandre.jormungandrbot.JormungandrBot;
 import com.kayky.waleska.kwtruco.KwTruco;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
+import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -128,6 +129,7 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.pedro.herick.skilldiffbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -193,5 +195,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
-            TrucoMarreco;
+            TrucoMarreco,
+            SkillDiffBot;
 }
