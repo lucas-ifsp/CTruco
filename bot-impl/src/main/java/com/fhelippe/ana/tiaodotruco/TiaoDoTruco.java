@@ -47,11 +47,13 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(hasCasalPreto(intel)) strategy = new BlackCouple();
 
-        if(getHandStrength(intel) > 40) strategy = new StrengthHandWithManilha();
+        if(getHandStrength(intel) > 30) strategy = new StrengthHandWithManilha();
 
-        if(getHandStrength(intel) < 10) strategy = new WeakyHand();
+//        if(getHandStrength(intel) > 20) strategy = new StrengthHand();
 
-        strategy = new BaseStrategy();
+        if(getHandStrength(intel) > 10) strategy = new BaseStrategy();
+
+        else strategy = new WeakyHand();
 
         return strategy;
     }
