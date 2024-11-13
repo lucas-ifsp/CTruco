@@ -128,6 +128,7 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.lucassantos;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -193,5 +194,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
-            TrucoMarreco;
+            TrucoMarreco,
+            TiaoDoCorote;
 }
