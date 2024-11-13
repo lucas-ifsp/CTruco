@@ -15,6 +15,6 @@ public class ThirdRoundStrategy extends BotUtils implements Strategy {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return CardToPlay.of(getBestCard(intel.getCards(), intel.getVira()));
+        return CardToPlay.of(getStrongestCard(intel.getCards(), intel.getVira()));
     }
 }

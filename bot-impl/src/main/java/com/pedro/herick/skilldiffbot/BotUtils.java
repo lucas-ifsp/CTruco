@@ -6,13 +6,7 @@ import com.bueno.spi.model.TrucoCard;
 import java.util.List;
 
 abstract class BotUtils {
-    protected TrucoCard getBestCard(List<TrucoCard> cards, TrucoCard vira) {
-        return cards.stream()
-                .max((c1, c2) -> c1.compareValueTo(c2, vira))
-                .orElse(cards.get(0));
-    }
-
-    protected TrucoCard getBestCardComparedToOpponent(GameIntel intel) {
+    protected TrucoCard getWeakestCardToWin(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
         if (intel.getOpponentCard().isEmpty()) return null;
@@ -22,17 +16,27 @@ abstract class BotUtils {
         return cards.stream()
                 .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
                 .min((c1, c2) -> c1.compareValueTo(c2, vira))
-                .orElse(getWorstCard(cards, vira));
+                .orElse(getWeakestCard(cards, vira));
     }
 
-    protected TrucoCard getWorstCard(List<TrucoCard> cards, TrucoCard vira) {
+    protected TrucoCard getStrongestCard(List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream()
+                .max((c1, c2) -> c1.compareValueTo(c2, vira))
+                .orElse(cards.get(0));
+    }
+
+    protected TrucoCard getWeakestCard(List<TrucoCard> cards, TrucoCard vira) {
         return cards.stream()
                 .min((c1, c2) -> c1.compareValueTo(c2, vira))
                 .orElse(cards.get(0));
     }
 
-    protected boolean hasManilha(List<TrucoCard> cards, TrucoCard vira) {
-        return getBestCard(cards, vira).isManilha(vira);
+    protected boolean hasZapOrCopas(List<TrucoCard> cards, TrucoCard vira) {
+        return cards.stream().anyMatch(card -> card.isZap(vira) || card.isCopas(vira));
+    }
+
+    protected int getManilhaCount(List<TrucoCard> cards, TrucoCard vira) {
+        return (int) cards.stream().filter(card -> card.isManilha(vira)).count();
     }
     
     protected boolean wonFirstRound(GameIntel intel) {

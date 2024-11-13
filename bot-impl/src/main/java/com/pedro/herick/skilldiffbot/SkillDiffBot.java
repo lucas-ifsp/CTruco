@@ -16,19 +16,20 @@ public class SkillDiffBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        // alterar depois para incluir lógica de 3 ou duas manilhas
         return intel.getCards().stream().anyMatch(card -> card.isZap(intel.getVira()) ||
                 card.isCopas(intel.getVira()));
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return strategyForTheRound(intel.getRoundResults().size()).decideIfRaises(intel);
+        int currentRound = intel.getRoundResults().size();
+        return strategyForTheRound(currentRound).decideIfRaises(intel);
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return strategyForTheRound(intel.getRoundResults().size()).chooseCard(intel);
+        int currentRound = intel.getRoundResults().size();
+        return strategyForTheRound(currentRound).chooseCard(intel);
     }
 
     @Override

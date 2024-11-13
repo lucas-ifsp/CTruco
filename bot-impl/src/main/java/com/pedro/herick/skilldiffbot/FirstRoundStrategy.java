@@ -16,9 +16,9 @@ class FirstRoundStrategy extends BotUtils implements Strategy {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        if (hasManilha(cards, vira)) {
-            List<TrucoCard> cardsWithoutZap = cards.stream().filter(c -> c.isZap(vira)).toList();
-            return evaluator.evaluateHand(cardsWithoutZap, vira) > RAISE_THRESHOLD_WITH_MANILHA;
+        if (getManilhaCount(cards, vira) >= 1) {
+            List<TrucoCard> cardsWithoutManilha = cards.stream().filter(c -> c.isManilha(vira)).toList();
+            return evaluator.evaluateHand(cardsWithoutManilha, vira) > RAISE_THRESHOLD_WITH_MANILHA;
         }
 
         return evaluator.evaluateHand(intel.getCards(), intel.getVira()) > RAISE_BASE_THRESHOLD;
@@ -29,12 +29,12 @@ class FirstRoundStrategy extends BotUtils implements Strategy {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        if (hasManilha(cards, vira) && evaluator.evaluateHand(cards, vira) > RAISE_BASE_THRESHOLD) {
-            return CardToPlay.of(getWorstCard(cards, vira));
+        if (getManilhaCount(cards, vira) >= 1 && evaluator.evaluateHand(cards, vira) > RAISE_BASE_THRESHOLD) {
+            return CardToPlay.of(getWeakestCard(cards, vira));
         }
 
-        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(getBestCardComparedToOpponent(intel));
+        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(getWeakestCardToWin(intel));
 
-        return CardToPlay.of(getBestCard(cards, vira));
+        return CardToPlay.of(getStrongestCard(cards, vira));
     }
 }

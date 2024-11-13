@@ -32,11 +32,11 @@ public class SecondRoundStrategy extends BotUtils implements Strategy {
         TrucoCard vira = intel.getVira();
 
         if (wonFirstRound(intel)) {
-            return CardToPlay.of(getWorstCard(cards, vira));
+            return CardToPlay.of(getWeakestCard(cards, vira));
         }
 
-        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(getBestCardComparedToOpponent(intel));
+        if (intel.getOpponentCard().isPresent()) return CardToPlay.of(getWeakestCardToWin(intel));
 
-        return CardToPlay.of(getBestCard(cards, vira));
+        return CardToPlay.of(getStrongestCard(cards, vira));
     }
 }
