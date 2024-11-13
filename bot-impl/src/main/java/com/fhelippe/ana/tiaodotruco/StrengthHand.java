@@ -35,7 +35,11 @@ public class StrengthHand implements BotServiceProvider {
         }
 
         if(TiaoDoTruco.hasWonFirstHand(intel) || intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW
-                && TiaoDoTruco.hasThree(intel)) trucar = true;
+                && TiaoDoTruco.hasThree(intel))
+        {
+            trucar = true;
+            return CardToPlay.of(strongestCard);
+        }
 
         return CardToPlay.of(weakestCard);
     }
