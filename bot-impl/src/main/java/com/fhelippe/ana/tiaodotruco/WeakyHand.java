@@ -32,6 +32,7 @@ public class WeakyHand implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+
         return -1;
     }
 }

@@ -51,7 +51,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(getHandStrength(intel) > 20) strategy = new StrengthHand();
 
-        if(getHandStrength(intel) > 10) strategy = new BaseStrategy();
+        if(getHandStrength(intel) > 10) strategy = new MiddleHand();
 
         else strategy = new WeakyHand();
 
@@ -62,7 +62,7 @@ public class TiaoDoTruco implements BotServiceProvider {
     //mao forte: 20 - 30
     //mao media: 10 - 20
     //mao fraca: 0 - 10
-    private int getHandStrength(GameIntel intel) {
+    static protected int getHandStrength(GameIntel intel) {
         int value = intel.getCards().stream()
                 .mapToInt(e -> e.getRank().value())
                 .sum();

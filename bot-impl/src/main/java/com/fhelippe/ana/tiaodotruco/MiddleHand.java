@@ -67,8 +67,15 @@ public class MiddleHand implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(TiaoDoTruco.hasWonFirstHand(intel)) { //se ganhou a primeira
-            if(TiaoDoTruco.hasThree(intel) || TiaoDoTruco.hasTwo(intel)) { //se caso tem carta boa e o oponente nao vai abrir muita vantagem
+
+        if(TiaoDoTruco.hasWonFirstHand(intel) && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW) { //se ganhou a primeira
+            try{
+                if(TiaoDoTruco.canKill(intel)) return 1;
+            } catch (IllegalArgumentException e) {
+                System.err.println(e + " Acessando uma propriedade inexistente em middle hand");
+            }
+
+            if(TiaoDoTruco.hasThree(intel) || TiaoDoTruco.getHandStrength(intel) > 10) { //se caso tem carta boa e o oponente nao vai abrir muita vantagem
                 return 0;
             }
         }
