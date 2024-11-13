@@ -38,7 +38,13 @@ public final class FirstRoundStrategy implements RoundStrategy {
 
     @Override
     public CardToPlay chooseCard() {
-        return null;
+        final List<TrucoCard> playedCards = gameIntel.getOpenCards();
+
+        if (playedCards.isEmpty()) {
+            return CardToPlay.of(myCards.get(2));
+        }
+
+        return HandUtils.getLessCardToWin(myCards, playedCards.get(0), vira);
     }
 
     @Override
