@@ -3,7 +3,9 @@ package com.gusmao.matos.clojurebot;
 import com.bueno.spi.model.CardToPlay;
 
 public interface RoundStrategy {
-    boolean getMaoDeOnzeResponse();
+    default boolean getMaoDeOnzeResponse() {
+        return false;
+    }
 
     boolean decideIfRaises();
 
