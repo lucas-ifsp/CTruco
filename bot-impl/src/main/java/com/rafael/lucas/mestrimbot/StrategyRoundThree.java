@@ -3,6 +3,7 @@ package com.rafael.lucas.mestrimbot;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.sun.jdi.event.BreakpointEvent;
 
 import java.util.List;
 
@@ -24,10 +25,19 @@ final class StrategyRoundThree extends Strategy {
 
     @Override
     int getRaiseResponse() {
-        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && intel.getRoundResults().get(1) == GameIntel.RoundResult.LOST) {
-            return getCardValue(cards.get(0), vira) >= 10 ? 1 : -1;
+
+        if (!cards.isEmpty()) {
+            if (intel.getRoundResults().size() > 1) {
+                GameIntel.RoundResult firstRoundResult = intel.getRoundResults().get(0);
+                GameIntel.RoundResult secondRoundResult = intel.getRoundResults().get(1);
+
+                if (firstRoundResult == GameIntel.RoundResult.WON && secondRoundResult == GameIntel.RoundResult.LOST) {
+                    return getCardValue(cards.get(0), vira) >= 10 ? 1 : -1;
+                }
+            }
+            return getCardValue(cards.get(0), vira) >= 8 ? 0 : -1;
         }
-        return getCardValue(cards.get(0), vira) >= 8 ? 0 : -1;
+        return -1;
     }
 
     @Override

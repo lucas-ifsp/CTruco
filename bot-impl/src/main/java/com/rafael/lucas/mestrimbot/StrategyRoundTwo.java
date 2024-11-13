@@ -19,10 +19,14 @@ final class StrategyRoundTwo extends Strategy {
 
     @Override
     CardToPlay chooseCard() {
-        if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
-            return CardToPlay.of(cards.get(cards.size() - 1));
+        if (cards.size() > 1 && intel.getRoundResults().size() > 0) {
+            if (intel.getRoundResults().get(0) == GameIntel.RoundResult.WON) {
+                return CardToPlay.of(cards.get(cards.size() - 1));
+            } else {
+                return CardToPlay.of(cards.get(1));
+            }
         } else {
-            return CardToPlay.of(cards.get(1));
+            return CardToPlay.of(cards.get(0)); // Fallback para o caso de apenas 1 carta
         }
     }
 

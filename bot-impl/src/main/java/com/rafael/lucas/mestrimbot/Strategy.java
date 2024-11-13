@@ -1,8 +1,6 @@
 package com.rafael.lucas.mestrimbot;
 
 import com.rafael.lucas.mestrimbot.StrategyRoundOne;
-import com.rafael.lucas.mestrimbot.StrategyRoundThree;
-import com.rafael.lucas.mestrimbot.StrategyRoundTwo;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;

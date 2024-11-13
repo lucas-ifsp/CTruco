@@ -63,11 +63,13 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.rafael.lucas.mestrimbot.Mestrim;
 
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
+    requires jdk.jdi;
 
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;

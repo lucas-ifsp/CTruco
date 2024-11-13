@@ -19,7 +19,11 @@ final class StrategyRoundOne extends Strategy {
 
     @Override
     CardToPlay chooseCard() {
-        return CardToPlay.of(cards.get(1));
+        if (cards.size() > 1) {
+            return CardToPlay.of(cards.get(1));
+        } else {
+            return CardToPlay.of(cards.get(0)); // Fallback para garantir que uma carta válida seja retornada
+        }
     }
 
     @Override
