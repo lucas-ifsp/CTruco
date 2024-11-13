@@ -11,11 +11,6 @@ public final class SecondRoundStrategy implements RoundStrategy {
     }
 
     @Override
-    public boolean getMaoDeOnzeResponse() {
-        return false;
-    }
-
-    @Override
     public boolean decideIfRaises() {
         return false;
     }
