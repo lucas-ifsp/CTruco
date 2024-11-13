@@ -2,9 +2,8 @@ package com.gusmao.matos.clojurebot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.service.BotServiceProvider;
 
-public final class ClojureBot implements BotServiceProvider {
+public final class ThirdRoundStrategy implements RoundStrategy {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -23,10 +22,5 @@ public final class ClojureBot implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         return 0;
-    }
-
-    @Override
-    public String getName() {
-        return "The Devil \uD83D\uDE08";
     }
 }
