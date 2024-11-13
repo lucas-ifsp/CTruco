@@ -72,6 +72,8 @@ public class BaseStrategy implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        if(TiaoDoTruco.hasWonFirstHand(intel) && TiaoDoTruco.canKill(intel)) return 1;
+
         if(TiaoDoTruco.hasWonFirstHand(intel) && hasManilha(intel) && intel.getOpponentScore() < 8) return 1;
 
         if(TiaoDoTruco.hasWonFirstHand(intel)) return 0;

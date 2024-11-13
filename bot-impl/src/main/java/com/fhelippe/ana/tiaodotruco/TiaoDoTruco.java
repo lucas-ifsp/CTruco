@@ -47,18 +47,10 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(hasCasalPreto(intel)) strategy = new BlackCouple();
 
-//        if(hasTwoManilha(intel) && hasGreatCard(intel)) strategy = new TwoManilhaAndStrongCard();
-//
-//        if(getHandStrength(intel) > 27 && !hasManilha(intel)) strategy = new ThreeGoodCards();
+        if(getHandStrength(intel) > 40) strategy = new StrengthHandWithManilha();
 
         if(getHandStrength(intel) < 10) strategy = new WeakyHand();
-//        if(getHandAverage(intel) <= 4) strategy = new WeakyHand();
-//
-//        if(hasThree(intel) && hasTwo(intel) && hasManilha(intel)) return new ThreeComaTwoAndManilha();
-//
-//        if((hasZap(intel) || hasCopas(intel)) && hasGreatCard(intel)) new BaseStrategy();
 
-        //estrategia para veificar se tem 3 ou 2 e outra carta forte
         strategy = new BaseStrategy();
 
         return strategy;
