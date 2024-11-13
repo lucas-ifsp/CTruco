@@ -1,7 +1,6 @@
 package com.abel.francisco.fogao6boca;
 
-import com.brito.macena.boteco.utils.Game;
-import com.bueno.spi.model.CardSuit;
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -19,18 +18,22 @@ public class Fogao6Boca implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         if(casalMaior(intel)) return true;
-        if(manilhas(intel) >= 2) return true;
+        if(qtdManilhas(intel) >= 2) return true;
+        if(qtdManilhas(intel) == 1 && qtdThree(intel) == 2) return true;
+        if(qtdThree(intel) == 3) return true;
         return verifyElevenHandStrengh(intel) > 1;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
         if(casalMaior(intel)) return true;
-        if(manilhas(intel) >= 2) return true;
+        if(qtdManilhas(intel) >= 2) return true;
+        if(qtdManilhas(intel) == 1 && qtdThree(intel) == 2) return true;
+        if(qtdThree(intel) == 3) return true;
         if (!intel.getRoundResults().isEmpty() && intel.getRoundResults().size() > 1) {
             if (intel.getRoundResults().get(0) == WON || intel.getRoundResults().get(1) == WON) return true;
         }
-        return verifyHandStrengh(intel) > 6;
+        return verifyHandStrengh(intel) > 7;
     }
 
     @Override
@@ -41,9 +44,11 @@ public class Fogao6Boca implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         if(casalMaior(intel)) return 1;
-        if(manilhas(intel) >= 2) return 1;
+        if(qtdManilhas(intel) >= 2) return 1;
+        if(qtdManilhas(intel) == 1 && qtdThree(intel) == 2) return 0;
+        if(qtdThree(intel) == 3) return 0;
         if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == WON)
-            if(verifyHandStrengh(intel) > 6) return 0;
+            if(verifyHandStrengh(intel) > 7) return 0;
         return -1;
     }
 
@@ -96,19 +101,13 @@ public class Fogao6Boca implements BotServiceProvider {
         return possibleCards.size();
     }
 
-    private int manilhas(GameIntel intel){
-        List<TrucoCard> cards = intel.getCards();
-        int qtdManilhas = 0;
-        for(TrucoCard card : cards){
-            if(card.isManilha(intel.getVira())){
-                qtdManilhas++;
-            }
-        }
-        return qtdManilhas;
+    private int qtdManilhas(GameIntel intel){
+        return (int) intel.getCards().stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
     }
 
-
-    public boolean casalMaior(GameIntel intel) {
+    private boolean casalMaior(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         boolean zap = false;
         for(TrucoCard card : cards){
@@ -125,5 +124,11 @@ public class Fogao6Boca implements BotServiceProvider {
             }
         }
         return zap && copas;
+    }
+
+    private int qtdThree(GameIntel intel){
+        return (int) intel.getCards().stream()
+                .filter(card -> card.getRank().equals(CardRank.THREE))
+                .count();
     }
 }
