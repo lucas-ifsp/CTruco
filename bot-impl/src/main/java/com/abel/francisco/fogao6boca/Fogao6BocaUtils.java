@@ -4,12 +4,12 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
-import com.bueno.spi.service.BotServiceProvider;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import static com.bueno.spi.model.GameIntel.RoundResult.LOST;
 import static com.bueno.spi.model.GameIntel.RoundResult.WON;
@@ -20,8 +20,8 @@ public class Fogao6BocaUtils {
         if(oponentCard.isPresent()){
             List<TrucoCard> possibleCards = new ArrayList<>();
             possibleCards.addAll(cards.stream()
-                            .filter(card -> card.compareValueTo(oponentCard.get(), vira) > 0)
-                            .toList());
+                    .filter(card -> card.compareValueTo(oponentCard.get(), vira) > 0)
+                    .toList());
             if(!possibleCards.isEmpty()) return CardToPlay.of(possibleCards.get(possibleCards.size()-1));
 
             return cards.stream()
