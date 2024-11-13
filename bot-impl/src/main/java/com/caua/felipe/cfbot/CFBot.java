@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CFBot implements BotServiceProvider {
-
-
     @Override
     public int getRaiseResponse(GameIntel intel) {
         List<TrucoCard> myCards = intel.getCards();
@@ -98,13 +96,8 @@ public class CFBot implements BotServiceProvider {
                 .sorted(Comparator.comparingInt(card -> card.compareValueTo(opponentCard.get(), vira)))
                 .toList();
 
-        boolean botWonPreviousRound = intel.getRoundResults().stream()
-                .anyMatch(result -> result == GameIntel.RoundResult.WON);
-
         if (winningCards.isEmpty()) return lowCard(cards);
         return CardToPlay.of(winningCards.get(0));
-
-
     }
 
     public boolean isManilhaClubs(GameIntel gameIntel, List<TrucoCard> myCards) {
@@ -143,5 +136,4 @@ public class CFBot implements BotServiceProvider {
         if (cards.size() == 2) return 2;
         return 3;
     }
-
 }
