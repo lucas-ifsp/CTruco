@@ -5,7 +5,7 @@ import com.bueno.spi.model.GameIntel;
 
 public class ThirdRoundStrategy extends BotUtils implements Strategy {
     private final HandEvaluator evaluator = new HandEvaluator();
-    private static final double CONSERVATIVE_THRESHOLD = 0.8;
+    private static final double CONSERVATIVE_THRESHOLD = 0.5;
 
 
     @Override

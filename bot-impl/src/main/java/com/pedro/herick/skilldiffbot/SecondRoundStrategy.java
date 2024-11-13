@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SecondRoundStrategy extends BotUtils implements Strategy {
     private final HandEvaluator evaluator = new HandEvaluator();
-    private static final double LOSING_THRESHOLD = 0.5;
-    private static final double WINNING_THRESHOLD = 0.7;
+    private static final double LOSING_THRESHOLD = 0.4;
+    private static final double WINNING_THRESHOLD = 0.6;
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {

@@ -9,7 +9,7 @@ import java.util.List;
 class FirstRoundStrategy extends BotUtils implements Strategy {
     private final HandEvaluator evaluator = new HandEvaluator();
     private static final double RAISE_BASE_THRESHOLD = 0.5;
-    private static final double RAISE_THRESHOLD_WITH_MANILHA = 0.8;
+    private static final double RAISE_THRESHOLD_WITH_MANILHA = 0.6;
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
