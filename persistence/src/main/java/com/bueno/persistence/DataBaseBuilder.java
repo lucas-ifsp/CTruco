@@ -66,6 +66,7 @@ public class DataBaseBuilder {
                     url TEXT NOT NULL,
                     port TEXT NOT NULL,
                     repository_url TEXT NOT NULL,
+                    authorized BOOLEAN DEFAULT FALSE,
                     CONSTRAINT remote_bot_uuid_pk PRIMARY KEY (uuid),
                     CONSTRAINT user_id_fk FOREIGN KEY (user_uuid) REFERENCES APP_USER(uuid),
                     CONSTRAINT name_uk UNIQUE (name),

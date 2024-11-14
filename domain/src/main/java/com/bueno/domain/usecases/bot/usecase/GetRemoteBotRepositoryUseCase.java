@@ -42,7 +42,7 @@ public class GetRemoteBotRepositoryUseCase {
 
         ApplicationUserDto userDto = userRepository.findByUuid(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         List<RemoteBotDto> bots = remoteBotRepository.findByUserId(userId);
-        return bots.stream().map(bot -> new RemoteBotResponseModel(bot.name(), userDto.username(), bot.url(), bot.port(),bot.repositoryUrl())).toList();
+        return bots.stream().filter(RemoteBotDto::authorized).map(bot -> new RemoteBotResponseModel(bot.name(), userDto.username(), bot.url(), bot.port(),bot.repositoryUrl())).toList();
     }
 
     private ApplicationUserDto getUserDtoByRemoteBotDto(RemoteBotDto dto) {

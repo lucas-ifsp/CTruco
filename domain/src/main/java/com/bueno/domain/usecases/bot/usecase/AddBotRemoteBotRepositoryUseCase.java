@@ -3,6 +3,7 @@ package com.bueno.domain.usecases.bot.usecase;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotResponseModel;
+import com.bueno.domain.usecases.bot.dtos.TransientRemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
@@ -40,12 +41,13 @@ public class AddBotRemoteBotRepositoryUseCase {
             throw new InvalidRequestException("porta inválida");
 
 
-        RemoteBotDto dto = new RemoteBotDto(UUID.randomUUID(),
+        TransientRemoteBotDto dto = new TransientRemoteBotDto(UUID.randomUUID(),
                 dtoRequest.userId(),
                 dtoRequest.name(),
                 dtoRequest.url(),
                 dtoRequest.port(),
                 dtoRequest.repositoryUrl());
+
         if (remoteBotRepository.existByName(dto.name())) {
             throw new EntityAlreadyExistsException("Trying to add a bot with same name of one already registered");
         }

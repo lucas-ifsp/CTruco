@@ -3,6 +3,7 @@ package com.bueno.domain.usecases.bot.usecase;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotRequestModel;
 import com.bueno.domain.usecases.bot.dtos.RemoteBotResponseModel;
+import com.bueno.domain.usecases.bot.dtos.TransientRemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
@@ -38,12 +39,13 @@ public class UpdateRemoteBotRepositoryUseCase {
                 .findByUuid(requestDto.userId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found, userId might be wrong"));
 
-        RemoteBotDto newDto = new RemoteBotDto(bot.uuid(),
+        TransientRemoteBotDto newDto = new TransientRemoteBotDto(bot.uuid(),
                 requestDto.userId(),
                 requestDto.name(),
                 requestDto.url(),
                 requestDto.port(),
                 requestDto.repositoryUrl());
+        botRepository.disableBot(newDto.uuid());
         botRepository.update(newDto);
         return new RemoteBotResponseModel(newDto.name(), userOfNewBot.username(), newDto.url(), newDto.port(), newDto.repositoryUrl());
     }

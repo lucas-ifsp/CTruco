@@ -1,6 +1,7 @@
 package com.bueno.persistence.repositories;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.TransientRemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.InvalidRequestException;
@@ -72,7 +73,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     }
 
     @Override
-    public void save(RemoteBotDto dto) {
+    public void save(TransientRemoteBotDto dto) {
         String sql = """
                 INSERT INTO remote_bot(uuid,user_uuid,name,url,port,repository_url)
                         VALUES (? , ? , ? , ? , ? , ?);
@@ -92,7 +93,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     }
 
     @Override
-    public void delete(RemoteBotDto dto) {
+    public void delete(TransientRemoteBotDto dto) {
         String sql = "DELETE FROM remote_bot WHERE uuid = ? ;";
         try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
             preparedStatement.setObject(1, dto.uuid());
@@ -103,7 +104,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     }
 
     @Override
-    public void update(RemoteBotDto dto) {
+    public void update(TransientRemoteBotDto dto) {
         String sql = """
                 UPDATE remote_bot
                 SET name = ?, url = ?, port = ? , repository_url = ?
@@ -119,6 +120,38 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
 
         } catch (SQLException e) {
             throw new InvalidRequestException(e.getClass() + ": " + e.getMessage() + "System couldn't save the RemoteBot.");
+        }
+    }
+
+    @Override
+    public void authorizeByUuid(UUID uuid) {
+        String sql = """
+                UPDATE remote_bot
+                SET authorized = TRUE
+                WHERE uuid = ?;
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setObject(1, uuid);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidRequestException(e.getClass() + ": " + e.getMessage() + "System couldn't authorize the RemoteBot.");
+        }
+    }
+
+    @Override
+    public void disableBot(UUID uuid) {
+        String sql = """
+                UPDATE remote_bot
+                SET authorized = FALSE
+                WHERE uuid = ?;
+                """;
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+            preparedStatement.setObject(1, uuid);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new InvalidRequestException(e.getClass() + ": " + e.getMessage() + "System couldn't disable the RemoteBot.");
         }
     }
 
@@ -143,7 +176,8 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
                 res.getString("name"),
                 res.getString("url"),
                 res.getString("port"),
-                res.getString("repository_url"));
+                res.getString("repository_url"),
+                res.getBoolean("authorized"));
     }
 
     private <T> Optional<RemoteBotDto> getByAttribute(String name, T value) throws SQLException {

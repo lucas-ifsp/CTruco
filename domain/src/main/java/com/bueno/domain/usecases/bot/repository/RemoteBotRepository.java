@@ -1,6 +1,7 @@
 package com.bueno.domain.usecases.bot.repository;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.TransientRemoteBotDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,11 +16,15 @@ public interface RemoteBotRepository {
 
     List<RemoteBotDto> findByUserId(UUID userId);
 
-    void save(RemoteBotDto dto);
+    void save(TransientRemoteBotDto dto);
 
-    void delete(RemoteBotDto dto);
+    void delete(TransientRemoteBotDto dto);
 
-    void update(RemoteBotDto dto);
+    void update(TransientRemoteBotDto dto);
+
+    void authorizeByUuid(UUID uuid);
+
+    void disableBot(UUID uuid);
 
     boolean existByName(String botName);
 }

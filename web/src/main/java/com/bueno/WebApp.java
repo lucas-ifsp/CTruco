@@ -21,6 +21,7 @@
 package com.bueno;
 
 import com.bueno.domain.usecases.bot.dtos.RemoteBotDto;
+import com.bueno.domain.usecases.bot.dtos.TransientRemoteBotDto;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.GameResultDto;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
@@ -65,8 +66,9 @@ public class WebApp {
             final UUID defaultUuid = registerUserUseCase.create(defaultUser).uuid();
             final UUID user1Uuid = registerUserUseCase.create(user1).uuid();
             final UUID user2Uuid = registerUserUseCase.create(user2).uuid();
-            final RemoteBotDto remoteBot = new RemoteBotDto(UUID.randomUUID(), defaultUuid, "Remote Bot", "http://localhost", "8030", "https://github.com/gcontiero11/CTruco");
+            final TransientRemoteBotDto remoteBot = new TransientRemoteBotDto(UUID.randomUUID(), defaultUuid, "Remote Bot", "http://localhost", "8030", "https://github.com/gcontiero11/CTruco");
             botRepository.save(remoteBot);
+            botRepository.authorizeByUuid(remoteBot.uuid());
             for (int i = 0; i < 30; i++) {
                 gameResultRepository.save(new GameResultDto(UUID.randomUUID(), LocalDateTime.now().minusMinutes(5),
                         LocalDateTime.now(), defaultUuid, defaultUuid, 12, user1Uuid, 3));
