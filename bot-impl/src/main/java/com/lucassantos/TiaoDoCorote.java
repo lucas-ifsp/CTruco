@@ -33,21 +33,21 @@ public class TiaoDoCorote implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return true; // Agora sempre aceita mão de onze
+        return true; // sempre aceita mão de onze
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        // Se for mão de 11, não pede truco
+        // nao pede truco na mao de 11
         if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
 
-        // Se não for primeira rodada, não pede truco
+        // não pede truco na se nn for 1 rodada
         if (!intel.getRoundResults().isEmpty()) return false;
 
-        // Se já pediu truco nesta mão, não pede novamente
+        // se já pediu truco nesta mão, não pede dnv
         if (alreadyRaisedThisHand) return false;
 
-        // Se o oponente jogou uma manilha e não tenho manilha, não peço truco
+        // se o oponente jogou uma manilha e não tenho manilha, não pedir truco
         if (intel.getOpponentCard().isPresent()) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
             if (opponentCard.isManilha(intel.getVira())) {
@@ -66,10 +66,10 @@ public class TiaoDoCorote implements BotServiceProvider {
         List<TrucoCard> myCards = intel.getCards();
         List<GameIntel.RoundResult> results = intel.getRoundResults();
 
-        // Se for a primeira rodada
+        // se for a primeira rodada
         if (results.isEmpty()) {
             if (intel.getOpponentCard().isPresent()) {
-                // Oponente jogou primeiro, tento matar com a menor carta possível
+                // Ooonente jogou primeiro, tentar matar com a menor carta possível
                 TrucoCard opponentCard = intel.getOpponentCard().get();
                 return CardToPlay.of(findSmallestWinningCard(myCards, opponentCard, intel.getVira()));
             } else {
@@ -78,13 +78,13 @@ public class TiaoDoCorote implements BotServiceProvider {
             }
         }
 
-        // Se for a segunda rodada
+        // se for a segunda rodada
         if (results.size() == 1) {
             if (results.get(0) == GameIntel.RoundResult.WON) {
-                // Se ganhei a primeira, jogo a menor carta
+                // se ganhei a primeira, jogo a menor carta
                 return CardToPlay.of(findLowestCard(myCards, intel.getVira()));
             } else {
-                // Se perdi a primeira, tento matar com a menor carta possível
+                // se perdi a primeira, tento matar com a menor carta possível
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     return CardToPlay.of(findSmallestWinningCard(myCards, opponentCard, intel.getVira()));
@@ -94,7 +94,7 @@ public class TiaoDoCorote implements BotServiceProvider {
             }
         }
 
-        // Se for a terceira rodada, jogo a única carta que sobrou
+        // se for a terceira rodada, jogo a única carta que sobrou
         return CardToPlay.of(myCards.get(0));
     }
 
