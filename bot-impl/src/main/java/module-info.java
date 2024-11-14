@@ -129,7 +129,10 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+
     exports com.matheus.dylan.superidolbot;
+    exports com.luigivanzella.triathlonBot;
+
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -196,5 +199,7 @@ module bot.impl {
             Lgtbot,
             KwTruco,
             TrucoMarreco,
-            SuperIdolBot;
+
+            SuperIdolBot,
+            TriathlonBot;
 }
