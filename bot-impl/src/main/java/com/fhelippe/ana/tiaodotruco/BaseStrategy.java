@@ -28,7 +28,7 @@ public class BaseStrategy implements BotServiceProvider {
         if(TiaoDoTruco.firstRoundWon(intel)) {
             if(!TiaoDoTruco.canKill(intel) && intel.getOpponentScore() > 7) return false;
 
-            if(!TiaoDoTruco.canKill(intel) && handStrength(intel) < 14) return false;
+            return TiaoDoTruco.canKill(intel) || !(handStrength(intel) < 14);
         }
 
         return true;
