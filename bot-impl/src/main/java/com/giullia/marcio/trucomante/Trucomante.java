@@ -31,7 +31,6 @@ import com.bueno.spi.service.BotServiceProvider;
 import java.util.*;
 
 public class Trucomante implements BotServiceProvider {
-    private HandStrength handStrength;
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -44,18 +43,23 @@ public class Trucomante implements BotServiceProvider {
     public boolean decideIfRaises(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
-        //decidindo pedir truco no segundo round
         if(intel.getRoundResults().size() == 1){
-            if(containsBiggestCouple(intel)) return true;
+            if(isHandStrong(intel)) return true;
+            if(containsTwoManilhasOrMore(intel)) return true;
+            if(containsOneManilha(intel)) return true;
             if(roundResults.get(0) == GameIntel.RoundResult.WON){
                 if(containsZap(intel))
                     return true;
                 if(containsOneManilha(intel))
                     return true;
-                return isHandStrong(intel);
+                if(containsThree(intel) || containsTwo(intel) || containsAce(intel))
+                    return true;
+            }
+            if(roundResults.get(0) == GameIntel.RoundResult.LOST){
+                if(isHandStrong(intel)) return true;
             }
         }
-        //decidindo pedir truco no terceiro round
+
         if(intel.getRoundResults().size() == 2){
             if(containsZap(intel))
                 return true;
@@ -91,25 +95,30 @@ public class Trucomante implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-        //correndo sempre no 2 round
-        //caso: ganhar a primeira, perder a segunda e empatar a 3
+
         if(roundResults.isEmpty()){
-            if(handStrength == HandStrength.STRONG && containsBiggestCouple(intel)){
+            if(containsBiggestCouple(intel)){
                 return 1;
             }
-            if(handStrength == HandStrength.STRONG && containsTwoManilhas(intel) && containsZap(intel)){
+            if(containsTwoManilhasOrMore(intel)){
                 return 1;
             }
+            if(isHandStrong(intel))
+                return 0;
         }
         if(roundResults.size() == 1){
             if(containsBiggestCouple(intel))
                 return 1;
-            if(containsTwoManilhas(intel) && (roundResults.get(0) == GameIntel.RoundResult.WON
+            if(containsTwoManilhasOrMore(intel) && (roundResults.get(0) == GameIntel.RoundResult.WON
                     || roundResults.get(0) == GameIntel.RoundResult.DREW))
                 return 1;
-            if(containsTwoManilhas(intel) && roundResults.get(0) == GameIntel.RoundResult.LOST)
+            if(containsTwoManilhasOrMore(intel) && roundResults.get(0) == GameIntel.RoundResult.LOST)
                 return 0;
-            if(isHandStrong(intel) && roundResults.get(0) == GameIntel.RoundResult.WON) // antes tava containsOneManilha
+            if(containsOneManilha(intel))
+                return 0;
+            if(isHandStrong(intel))
+                return 0;
+            if(containsThree(intel) || containsTwo(intel))
                 return 0;
 
         }
@@ -117,7 +126,9 @@ public class Trucomante implements BotServiceProvider {
             if(containsZap(intel))
                 return 1;
             if(containsOneManilha(intel) || containsThree(intel))
-                return 0; //testar com 1
+                return 1;
+            if(containsTwo(intel) || containsAce(intel))
+                return 0;
         }
         return -1;
     }
@@ -130,71 +141,19 @@ public class Trucomante implements BotServiceProvider {
         TrucoCard strongest = myCards.get(2);
 
         if(isHandStrong(intel)){
-            this.handStrength = HandStrength.STRONG;
             if(containsBiggestCouple(intel))
                 return CardToPlay.of(weakest);
-            if(containsOneManilha(intel))
-                return CardToPlay.of(middle);//testar jogando strongest aqui(a manilha)
-            return CardToPlay.of(strongest);
-        }
-        return CardToPlay.of(middle);
-    }
-
-    public CardToPlay startSecondRound(GameIntel intel){
-        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
-        if(isFirstRoundDrew(intel))
-            return CardToPlay.of(myCards.get(1));
-        return CardToPlay.of(myCards.get(0));
-    }
-
-    public CardToPlay secondRoundResponse(GameIntel intel){
-        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-        TrucoCard vira = intel.getVira();
-
-        TrucoCard weakest = myCards.get(0);
-        TrucoCard strongest = myCards.get(1);
-
-        if(isFirstRoundDrew(intel))
-            return CardToPlay.of(strongest);
-
-        if(opponentCard.isPresent()){
-            if(opponentCard.get().relativeValue(vira) > strongest.relativeValue(vira))
-                return CardToPlay.of(weakest);
-            if(opponentCard.get().relativeValue(vira) < weakest.relativeValue(vira))
-                return CardToPlay.of(weakest);
-        }
-        return CardToPlay.of(strongest);
-    }
-
-    public CardToPlay firstRoundResponse(GameIntel intel){
-        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
-        TrucoCard vira = intel.getVira();
-        Optional<TrucoCard> opponentCards = intel.getOpponentCard();
-
-        TrucoCard weakest = myCards.get(0);
-        TrucoCard middle = myCards.get(1);
-        TrucoCard strongest = myCards.get(2);
-
-        if(opponentCards.isPresent()){
-            if(opponentCards.get().relativeValue(vira) < weakest.relativeValue(vira))
-                return CardToPlay.of(weakest);
-            if(opponentCards.get().relativeValue(vira) < middle.relativeValue(vira))
+            if(containsTwoManilhasOrMore(intel))
                 return CardToPlay.of(middle);
+            if(containsOneManilha(intel))
+                return CardToPlay.of(middle);
+            return CardToPlay.of(strongest);
         }
         return CardToPlay.of(strongest);
     }
 
-    public CardToPlay lastRoundDiscard(GameIntel intel){
-        return CardToPlay.of(intel.getCards().get(0));
-    }
-
-    private List<TrucoCard> sortHandByRelativeValue(List<TrucoCard> cards, TrucoCard vira) {
-        List<TrucoCard> myCards = cards;
-        myCards = myCards.stream()
-                .sorted(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                .toList();
-        return myCards;
+    private boolean isHandStrong(GameIntel intel) {
+        return getPowerfulCardsQuantity(intel) > 1;
     }
 
     private int getPowerfulCardsQuantity(GameIntel intel) {
@@ -221,7 +180,78 @@ public class Trucomante implements BotServiceProvider {
         return intel.getVira().getRank() == CardRank.TWO;
     }
 
-    private boolean containsTwoManilhas(GameIntel intel) {
+
+    public CardToPlay startSecondRound(GameIntel intel){
+        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        if(isFirstRoundDrew(intel))
+            return CardToPlay.of(myCards.get(1));
+        if(roundResults.get(0) == GameIntel.RoundResult.WON){
+            return CardToPlay.of(myCards.get(0));
+        }
+        return CardToPlay.of(myCards.get(1));
+    }
+
+    public CardToPlay secondRoundResponse(GameIntel intel){
+        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        TrucoCard vira = intel.getVira();
+
+        TrucoCard weakest = myCards.get(0);
+        TrucoCard strongest = myCards.get(1);
+
+        if(isFirstRoundDrew(intel))
+            return CardToPlay.of(strongest);
+
+        if(opponentCard.isPresent()){
+            if(opponentCard.get().relativeValue(vira) > strongest.relativeValue(vira))
+                return CardToPlay.of(weakest);
+            if(opponentCard.get().relativeValue(vira) < weakest.relativeValue(vira))
+                return CardToPlay.of(weakest);
+        }
+        return CardToPlay.of(strongest);
+    }
+
+    private boolean isFirstRoundDrew(GameIntel intel) {
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
+        return roundResults.get(0) == GameIntel.RoundResult.DREW;
+    }
+
+    public CardToPlay firstRoundResponse(GameIntel intel){
+        List<TrucoCard> myCards = sortHandByRelativeValue(intel.getCards(), intel.getVira());
+        TrucoCard vira = intel.getVira();
+        Optional<TrucoCard> opponentCards = intel.getOpponentCard();
+
+        TrucoCard weakest = myCards.get(0);
+        TrucoCard middle = myCards.get(1);
+        TrucoCard strongest = myCards.get(2);
+
+        if(opponentCards.isPresent()){
+            if(opponentCards.get().relativeValue(vira) < weakest.relativeValue(vira))
+                return CardToPlay.of(weakest);
+            if(opponentCards.get().relativeValue(vira) < middle.relativeValue(vira))
+                return CardToPlay.of(middle);
+            if(opponentCards.get().relativeValue(vira) < strongest.relativeValue(vira))
+                return CardToPlay.of(strongest);
+        }
+        return CardToPlay.of(weakest);
+    }
+
+    public CardToPlay lastRoundDiscard(GameIntel intel){
+        return CardToPlay.of(intel.getCards().get(0));
+    }
+
+    private List<TrucoCard> sortHandByRelativeValue(List<TrucoCard> cards, TrucoCard vira) {
+        List<TrucoCard> myCards = cards;
+        myCards = myCards.stream()
+                .sorted(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .toList();
+        return myCards;
+    }
+
+
+
+    private boolean containsTwoManilhasOrMore(GameIntel intel) {
         List<TrucoCard> cards = intel.getCards();
         TrucoCard vira = intel.getVira();
         
@@ -230,23 +260,21 @@ public class Trucomante implements BotServiceProvider {
         return numberOfManilhas > 1;
     }
 
-    private boolean isFirstRoundDrew(GameIntel intel) {
-        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
-        return roundResults.get(0) == GameIntel.RoundResult.DREW;
-    }
-
     private boolean containsOneManilha(GameIntel intel) {
         return intel.getCards().stream().filter(c -> c.isManilha(intel.getVira())).count() == 1;
     }
 
     private boolean containsThree(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(c -> c.relativeValue(intel.getVira()) ==10);
+        return intel.getCards().stream().anyMatch(c -> c.relativeValue(intel.getVira()) == 10);
     }
 
     private boolean containsTwo(GameIntel intel) {
-        return intel.getCards().stream().anyMatch(c -> c.relativeValue(intel.getVira()) ==9);
+        return intel.getCards().stream().anyMatch(c -> c.relativeValue(intel.getVira()) == 9);
     }
 
+    private boolean containsAce(GameIntel intel) {
+        return intel.getCards().stream().anyMatch(c -> c.relativeValue(intel.getVira()) == 8);
+    }
 
     private boolean containsZap(GameIntel intel) {
         return intel.getCards().stream().anyMatch(c -> c.isZap(intel.getVira()));
@@ -259,10 +287,6 @@ public class Trucomante implements BotServiceProvider {
         int containsBiggestCouple = (int) cards.stream().filter(c -> c.isZap(vira) || c.isCopas(vira)).count();
 
         return containsBiggestCouple == 2;
-    }
-
-    private boolean isHandStrong(GameIntel intel) {
-        return getPowerfulCardsQuantity(intel) > 1;
     }
 
 }
