@@ -57,7 +57,6 @@ import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
 import com.giullia.marcio.trucomante.Trucomante;
-
 import com.brito.macena.boteco.BotEco;
 import com.adriann.emanuel.armageddon.Armageddon;
 import com.Selin.Bonelli.zetruquero.Zetruquero;
@@ -66,6 +65,7 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.gusmao.matos.clojurebot.ClojureBot;
 import com.rafael.lucas.mestrimbot.Mestrim;
 import com.rennan.podecorrerpatinho.PodeCorrerPatinho;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
@@ -138,7 +138,8 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
-
+  
+    exports com.gusmao.matos.clojurebot;
     exports com.aislan.deyvin;  
     exports com.rafael.lucas.mestrimbot;
     exports com.rennan.podecorrerpatinho;
@@ -214,6 +215,7 @@ module bot.impl {
             KwTruco,
             TrucoMarreco,
 
+            ClojureBot,
             DeyvinBot,
             Mestrim,
             PodeCorrerPatinho,
