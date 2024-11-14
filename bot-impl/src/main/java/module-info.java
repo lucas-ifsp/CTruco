@@ -1,3 +1,4 @@
+import com.aislan.deyvin.DeyvinBot;
 import com.almeida.strapasson.veiodobar.VeioDoBarBot;
 import com.belini.luciano.matapatobot.MataPatoBot;
 import com.bonelli.noli.paulistabot.PaulistaBot;
@@ -135,7 +136,8 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
-  
+
+    exports com.aislan.deyvin;  
     exports com.rafael.lucas.mestrimbot;
     exports com.rennan.podecorrerpatinho;
     exports com.abel.francisco.fogao6boca;
@@ -209,6 +211,7 @@ module bot.impl {
             KwTruco,
             TrucoMarreco,
 
+            DeyvinBot,
             Mestrim,
             PodeCorrerPatinho,
             Fogao6Boca,
