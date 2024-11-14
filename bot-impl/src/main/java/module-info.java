@@ -7,6 +7,7 @@ import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.casal.impl.vapobot.VapoBot;
 import com.castro.calicchio.jogasafebot.JogaSafeBot;
+import com.caua.felipe.cfbot.CFBot;
 import com.caueisa.destroyerbot.DestroyerBot;
 import com.correacarini.impl.trucomachinebot.TrucoMachineBot;
 import com.cremonezzi.impl.carlsenbot.Carlsen;
@@ -64,7 +65,8 @@ import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
 import com.rennan.podecorrerpatinho.PodeCorrerPatinho;
-
+import com.abel.francisco.fogao6boca.Fogao6Boca;
+import com.matheus.dylan.superidolbot.SuperIdolBot;
 
 module bot.impl {
     requires bot.spi;
@@ -77,6 +79,7 @@ module bot.impl {
     exports com.newton.dolensi.sabotabot;
     exports com.cremonezzi.impl.carlsenbot;
     exports com.caueisa.destroyerbot;
+    exports com.caua.felipe.cfbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.pedrocagiovane.pauladasecabot;
@@ -130,7 +133,12 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+
     exports com.rennan.podecorrerpatinho;
+    exports com.abel.francisco.fogao6boca;
+    exports com.matheus.dylan.superidolbot;
+    exports com.luigivanzella.triathlonBot;
+    exports com.caua.felipe.cfbot.CFBot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -197,5 +205,10 @@ module bot.impl {
             Lgtbot,
             KwTruco,
             TrucoMarreco,
-            PodeCorrerPatinho;
+
+            PodeCorrerPatinho,
+            Fogao6Boca,
+            CFBot,
+            SuperIdolBot,
+            TriathlonBot;
 }
