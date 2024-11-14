@@ -27,33 +27,31 @@ import java.util.List;
 public class DeyvinBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        TrucoCard vira = intel.getVira();
+
         List<TrucoCard> myCards = intel.getCards();
         myCards.sort(TrucoCard::relativeValue);
-
         TrucoCard worstCard = myCards.get(myCards.indexOf(myCards.get(0)));
 
-        if(myCards.stream().anyMatch(trucoCard -> trucoCard.isManilha(vira))) return true;
+        if(countManilhas(intel) >= 2) return true;
+        if(hasCasalMaior(intel)) return true;
+        if(myCards.stream().allMatch(trucoCard -> isGreaterThan(CardRank.ACE,trucoCard,intel))) return true;
 
-        if(getDiffPoints(intel) >= 6)
-            if(isGreaterThan(CardRank.QUEEN,worstCard,intel) && myCards.stream().anyMatch(trucoCard -> isGreaterThan(CardRank.THREE,trucoCard,intel))) return true;
-        if(myCards.stream().anyMatch(trucoCard -> isGreaterThan(CardRank.THREE,trucoCard,intel)))
-            return true;
-        return false;
+        if(getDiffPoints(intel) > 6)
+            if(isGreaterThan(CardRank.QUEEN,worstCard,intel) && myCards.stream().anyMatch(trucoCard -> isGreaterThan(CardRank.TWO,trucoCard,intel)))
+                return true;
+
+        return intel.getOpponentScore() == 11;
     }
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        List<TrucoCard> myCards = intel.getCards();
-        TrucoCard vira = intel.getVira();
-        if(isSecondRound(intel) && isWinnerInFirstRound(intel)) {
-            if (myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(vira))) return true;
-        }
-        if(myCards.stream().anyMatch(trucoCard -> trucoCard.isManilha(vira))){
-            if(hasCasalMaior(intel)) return true;
-            if(isLastRound(intel) && isWinnerInFirstRound(intel)) return true;
-        }
 
+        if(isLastRound(intel) && isWinnerInFirstRound(intel)) {
+            if(hasZap(intel)) return true;
+        }
+        if(isSecondRound(intel) && isWinnerInFirstRound(intel)) {
+            return hasCasalMaior(intel);
+        }
         return false;
     }
 
@@ -62,7 +60,6 @@ public class DeyvinBot implements BotServiceProvider {
 
         List<TrucoCard> myCards = intel.getCards();
         myCards.sort(TrucoCard::relativeValue);
-
         TrucoCard bestCard;
         if(myCards.size() > 1)
             bestCard = myCards.get(myCards.indexOf(myCards.get(myCards.size() - 1)));
@@ -70,7 +67,6 @@ public class DeyvinBot implements BotServiceProvider {
             bestCard = myCards.get(myCards.indexOf(myCards.get(0)));
 
         TrucoCard worstCard = myCards.get(myCards.indexOf(myCards.get(0)));
-
         TrucoCard vira = intel.getVira();
 
         if(isFirstRound(intel)){
@@ -82,10 +78,9 @@ public class DeyvinBot implements BotServiceProvider {
 
         if(isSecondRound(intel)){
             if(isWinnerInFirstRound(intel)) {
-                if (myCards.stream().allMatch(trucoCard -> trucoCard.isManilha(vira)))
+                if (countManilhas(intel) >= 2)
                     return CardToPlay.of(bestCard);
-                if (bestCard.isZap(vira)) return CardToPlay.of(bestCard);
-                else return CardToPlay.discard(worstCard);
+                return CardToPlay.discard(worstCard);
             }
             if(!isWinnerInFirstRound(intel)) return CardToPlay.of(bestCard);
         }
@@ -99,15 +94,16 @@ public class DeyvinBot implements BotServiceProvider {
         List<TrucoCard> myCards = intel.getCards();
         myCards.sort(TrucoCard::relativeValue);
 
-        TrucoCard vira = intel.getVira();
-
         if(isWinning(intel))
-            if(getDiffPoints(intel) >= 6)
+            if(getDiffPoints(intel) >= 6 && myCards.stream()
+                    .allMatch(trucoCard -> isGreaterThan(CardRank.JACK,trucoCard,intel)))
                 return 0;
 
-        if(myCards.stream().allMatch(trucoCard -> trucoCard.isManilha(vira))) return 1;
+        if(countManilhas(intel) >= 2) return 1;
 
-        if(myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(vira)))
+        if(myCards.stream().allMatch(trucoCard -> isGreaterThan(CardRank.ACE,trucoCard,intel))) return 0;
+
+        if(hasZap(intel))
             if (myCards.stream().allMatch(trucoCard -> isGreaterThan(CardRank.TWO,trucoCard,intel))) return 1;
 
         return -1;
@@ -146,5 +142,15 @@ public class DeyvinBot implements BotServiceProvider {
 
     private boolean isWinnerInFirstRound(GameIntel intel){
         return intel.getRoundResults().contains(GameIntel.RoundResult.WON);
+    }
+
+    private long countManilhas(GameIntel intel){
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream().filter(trucoCard -> trucoCard.isManilha(intel.getVira())).count();
+    }
+
+    private boolean hasZap(GameIntel intel){
+        List<TrucoCard> myCards = intel.getCards();
+        return myCards.stream().anyMatch(trucoCard -> trucoCard.isZap(intel.getVira()));
     }
 }
