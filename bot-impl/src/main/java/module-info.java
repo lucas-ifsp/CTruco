@@ -63,12 +63,14 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.lucassantos.TiaoDoCorote;
 
 module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
 
+    exports com.lucassantos;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -128,6 +130,7 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -193,5 +196,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
-            TrucoMarreco;
+            TrucoMarreco,
+            TiaoDoCorote;
 }
