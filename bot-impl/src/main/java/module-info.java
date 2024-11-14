@@ -63,6 +63,7 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.matheus.dylan.superidolbot.SuperIdolBot;
 
 module bot.impl {
     requires bot.spi;
@@ -128,7 +129,10 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+
+    exports com.matheus.dylan.superidolbot;
     exports com.luigivanzella.triathlonBot;
+
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
@@ -195,5 +199,7 @@ module bot.impl {
             Lgtbot,
             KwTruco,
             TrucoMarreco,
+
+            SuperIdolBot,
             TriathlonBot;
 }
