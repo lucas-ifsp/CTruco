@@ -26,16 +26,17 @@ public class BaseStrategy implements BotServiceProvider {
         if(intel.getRoundResults().isEmpty()) return false;
 
         if(TiaoDoTruco.firstRoundWon(intel)) {
-            if(!TiaoDoTruco.canKill(intel) && intel.getOpponentScore() > 5) return false;
+            if(!TiaoDoTruco.canKill(intel) && intel.getOpponentScore() > 7) return false;
 
             if(!TiaoDoTruco.canKill(intel) && handStrength(intel) < 14) return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        trucar = false;
         TrucoCard weakestCard = TiaoDoTruco.getWeakestCard(intel);
         Optional<TrucoCard> midCard = TiaoDoTruco.getMidCard(intel);
         TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);

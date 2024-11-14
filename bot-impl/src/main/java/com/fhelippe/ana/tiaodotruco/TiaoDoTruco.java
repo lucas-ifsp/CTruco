@@ -26,6 +26,8 @@ public class TiaoDoTruco implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        intel.getCards().get(0);
+
         strategy = selectStrategy(intel);
 
         return strategy.chooseCard(intel);
@@ -51,7 +53,7 @@ public class TiaoDoTruco implements BotServiceProvider {
 
         if(getHandStrength(intel) > 20) strategy = new StrengthHand();
 
-        if(getHandStrength(intel) > 10) strategy = new MiddleHand();
+        if(getHandStrength(intel) > 10) strategy = new BaseStrategy();
 
         else strategy = new WeakyHand();
 

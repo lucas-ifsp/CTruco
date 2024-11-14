@@ -23,6 +23,7 @@ public class ZapCopas implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        trucar = false;
         TrucoCard weakestCard = TiaoDoTruco.getWeakestCard(intel);
         Optional<TrucoCard> midCard = TiaoDoTruco.getMidCard(intel);
         TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);
