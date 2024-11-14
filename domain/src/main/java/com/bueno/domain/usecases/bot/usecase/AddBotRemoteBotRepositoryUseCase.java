@@ -30,15 +30,19 @@ public class AddBotRemoteBotRepositoryUseCase {
         Objects.requireNonNull(dtoRequest.name(), "name is null");
         Objects.requireNonNull(dtoRequest.url(), "url is null");
         Objects.requireNonNull(dtoRequest.port(), "port is null");
+        Objects.requireNonNull(dtoRequest.repositoryUrl(), "repository url is null");
 
         if (dtoRequest.name().trim().length() < 4)
-            throw new InvalidRequestException("nome inválido");
+            throw new InvalidRequestException("invalid name");
 
         if (dtoRequest.url().trim().length() < 4)
-            throw new InvalidRequestException("url inválida");
+            throw new InvalidRequestException("invalid url");
 
         if (dtoRequest.port().trim().length() != 4)
-            throw new InvalidRequestException("porta inválida");
+            throw new InvalidRequestException("invalid port");
+
+        if (dtoRequest.repositoryUrl().trim().isEmpty())
+            throw new InvalidRequestException("invalid repository url");
 
 
         TransientRemoteBotDto dto = new TransientRemoteBotDto(UUID.randomUUID(),
