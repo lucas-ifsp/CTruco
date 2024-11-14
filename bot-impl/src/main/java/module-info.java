@@ -24,6 +24,7 @@ import com.joao.alexandre.jormungandrbot.JormungandrBot;
 import com.kayky.waleska.kwtruco.KwTruco;
 import com.lucasmurilo.m.lazarinipodenciano.Akkosocorrompido;
 import com.luigi.ana.batatafritadobarbot.BatataFritaDoBarBot;
+import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.newton.dolensi.sabotabot.SabotaBot;
 import com.soares.gibim.chatgptbot.ChatGptBot;
@@ -140,6 +141,7 @@ module bot.impl {
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
 
+    exports com.pedro.herick.skilldiffbot;
     exports com.fhelippe.ana.tiaodotruco;
     exports com.gusmao.matos.clojurebot;
     exports com.aislan.deyvin;  
@@ -225,5 +227,6 @@ module bot.impl {
             Fogao6Boca,
             CFBot,
             SuperIdolBot,
-            TriathlonBot;
+            TriathlonBot,
+            SkillDiffBot;
 }
