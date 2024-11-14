@@ -33,7 +33,7 @@ public final class FirstRoundStrategy implements RoundStrategy {
 
     @Override
     public boolean decideIfRaises() {
-        return handPower >= 35;
+        return handPower >= 34;
     }
 
     @Override
@@ -49,8 +49,8 @@ public final class FirstRoundStrategy implements RoundStrategy {
 
     @Override
     public int getRaiseResponse() {
-        if (handPower >= 35) return 1;
-        if (handPower > 27) return 0;
+        if (handPower >= 34) return 1;
+        if (handPower > 26) return 0;
 
         return -1;
     }

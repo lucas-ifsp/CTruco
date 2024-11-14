@@ -11,7 +11,7 @@ public final class Playing {
         return switch (roundsPlayed) {
             case 0 -> new FirstRoundStrategy(intel);
             case 1 -> new SecondRoundStrategy(intel);
-            case 3 -> new ThirdRoundStrategy(intel);
+            case 2 -> new ThirdRoundStrategy(intel);
             default -> throw new IllegalStateException("Unexpected value: " + roundsPlayed);
         };
     }

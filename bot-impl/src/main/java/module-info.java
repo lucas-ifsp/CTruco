@@ -195,6 +195,6 @@ module bot.impl {
             CamaleaoTruqueiro,
             Lgtbot,
             KwTruco,
-            TrucoMarreco,
-            ClojureBot;
+            ClojureBot,
+            TrucoMarreco;
 }
