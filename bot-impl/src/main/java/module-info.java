@@ -56,6 +56,7 @@ import com.luna.jundi.jokerBot.JokerBot;
 import com.alanIan.casinhadecabloco.CasinhaDeCabloco;
 import com.bernardo.caio.zeusbot.Zeusbot;
 import com.campos.turazzi.reidozap.ReiDoZap;
+import com.giullia.marcio.trucomante.Trucomante;
 
 import com.brito.macena.boteco.BotEco;
 import com.adriann.emanuel.armageddon.Armageddon;
@@ -77,6 +78,7 @@ module bot.impl {
     requires jdk.jdi;
 
     exports com.bueno.impl.dummybot;
+    exports com.giullia.marcio.trucomante;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
     exports com.newton.dolensi.sabotabot;
@@ -147,6 +149,7 @@ module bot.impl {
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
+            Trucomante,
             AddTheNewSoul,
             WrkncacnterBot,
             MarrecoBot,
