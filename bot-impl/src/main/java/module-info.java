@@ -66,6 +66,7 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.lucassantos.TiaoDoCorote;
 import com.fhelippe.ana.tiaodotruco.TiaoDoTruco;
 import com.gusmao.matos.clojurebot.ClojureBot;
 import com.rafael.lucas.mestrimbot.Mestrim;
@@ -140,6 +141,8 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.lucassantos;
+
 
     exports com.pedro.herick.skilldiffbot;
     exports com.fhelippe.ana.tiaodotruco;
@@ -218,7 +221,8 @@ module bot.impl {
             Lgtbot,
             KwTruco,
             TrucoMarreco,
-
+            
+            TiaoDoCorote,
             TiaoDoTruco,
             ClojureBot,
             DeyvinBot,
