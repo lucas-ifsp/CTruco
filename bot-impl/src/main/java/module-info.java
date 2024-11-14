@@ -70,7 +70,6 @@ module bot.impl {
     requires java.compiler;
     requires java.smartcardio;
 
-    exports com.lucassantos;
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
     exports com.hermespiassi.casados.marrecobot;
@@ -130,6 +129,7 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.lucassantos;
 
 
     provides com.bueno.spi.service.BotServiceProvider with

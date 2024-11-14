@@ -1,24 +1,3 @@
-/*
- *  Copyright (C) 2023 Lucas Matheus dos Santos
- *  Contact: matheus <dot> lucas1 <at> ifsp <dot> edu <dot> br
- *
- *  This file is part of CTruco (Truco game for didactic purpose).
- *
- *  CTruco is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CTruco is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
- */
-
-
 package com.lucassantos;
 
 import com.bueno.spi.model.CardToPlay;
@@ -38,16 +17,16 @@ public class TiaoDoCorote implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        // nao pede truco na mao de 11
+        // Se for mão de 11, não pede truco
         if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
 
-        // não pede truco na se nn for 1 rodada
+        // Se não for primeira rodada, não pede truco
         if (!intel.getRoundResults().isEmpty()) return false;
 
-        // se já pediu truco nesta mão, não pede dnv
+        // Se já pediu truco nesta mão, não pede novamente
         if (alreadyRaisedThisHand) return false;
 
-        // se o oponente jogou uma manilha e não tenho manilha, não pedir truco
+        // Se o oponente jogou uma manilha e não tenho manilha, não peço truco
         if (intel.getOpponentCard().isPresent()) {
             TrucoCard opponentCard = intel.getOpponentCard().get();
             if (opponentCard.isManilha(intel.getVira())) {
@@ -66,10 +45,10 @@ public class TiaoDoCorote implements BotServiceProvider {
         List<TrucoCard> myCards = intel.getCards();
         List<GameIntel.RoundResult> results = intel.getRoundResults();
 
-        // se for a primeira rodada
+        // Se for a primeira rodada
         if (results.isEmpty()) {
             if (intel.getOpponentCard().isPresent()) {
-                // Ooonente jogou primeiro, tentar matar com a menor carta possível
+                // Oponente jogou primeiro, tento matar com a menor carta possível
                 TrucoCard opponentCard = intel.getOpponentCard().get();
                 return CardToPlay.of(findSmallestWinningCard(myCards, opponentCard, intel.getVira()));
             } else {
@@ -78,13 +57,13 @@ public class TiaoDoCorote implements BotServiceProvider {
             }
         }
 
-        // se for a segunda rodada
+        // Se for a segunda rodada
         if (results.size() == 1) {
             if (results.get(0) == GameIntel.RoundResult.WON) {
-                // se ganhei a primeira, jogo a menor carta
+                // Se ganhei a primeira, jogo a menor carta
                 return CardToPlay.of(findLowestCard(myCards, intel.getVira()));
             } else {
-                // se perdi a primeira, tento matar com a menor carta possível
+                // Se perdi a primeira, tento matar com a menor carta possível
                 if (intel.getOpponentCard().isPresent()) {
                     TrucoCard opponentCard = intel.getOpponentCard().get();
                     return CardToPlay.of(findSmallestWinningCard(myCards, opponentCard, intel.getVira()));
@@ -94,7 +73,7 @@ public class TiaoDoCorote implements BotServiceProvider {
             }
         }
 
-        // se for a terceira rodada, jogo a única carta que sobrou
+        // Se for a terceira rodada, jogo a única carta que sobrou
         return CardToPlay.of(myCards.get(0));
     }
 
@@ -113,12 +92,11 @@ public class TiaoDoCorote implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
-        //aceita sempre o trucokkkkk
+        return 0; // Por enquanto apenas aceita
     }
 
     @Override
     public String getName() {
-        return "Tião do Corote";
+        return "Tião do Coroté";
     }
 }
