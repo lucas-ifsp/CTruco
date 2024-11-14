@@ -64,6 +64,7 @@ import com.adivic.octopus.Octopus;
 import com.eduardo.vinicius.camaleaotruqueiro.CamaleaoTruqueiro;
 import com.bianca.joaopedro.lgtbot.Lgtbot;
 import com.fernando.breno.trucomarrecobot.TrucoMarreco;
+import com.rafael.lucas.mestrimbot.Mestrim;
 import com.rennan.podecorrerpatinho.PodeCorrerPatinho;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.matheus.dylan.superidolbot.SuperIdolBot;
@@ -72,6 +73,7 @@ module bot.impl {
     requires bot.spi;
     requires java.compiler;
     requires java.smartcardio;
+    requires jdk.jdi;
 
     exports com.bueno.impl.dummybot;
     exports com.indi.impl.addthenewsoul;
@@ -133,7 +135,8 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
-
+  
+    exports com.rafael.lucas.mestrimbot;
     exports com.rennan.podecorrerpatinho;
     exports com.abel.francisco.fogao6boca;
     exports com.matheus.dylan.superidolbot;
@@ -206,6 +209,7 @@ module bot.impl {
             KwTruco,
             TrucoMarreco,
 
+            Mestrim,
             PodeCorrerPatinho,
             Fogao6Boca,
             CFBot,
