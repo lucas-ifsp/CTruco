@@ -38,10 +38,14 @@ public class StrengthHandWithManilha implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        if(TiaoDoTruco.hasManilha(intel) && ( TiaoDoTruco.hasThree(intel) || TiaoDoTruco.hasTwo(intel) ) && !intel.getRoundResults().isEmpty()) return 1;
+        if(!intel.getRoundResults().isEmpty()){
+            if(TiaoDoTruco.hasManilha(intel) && (TiaoDoTruco.hasThree(intel) || TiaoDoTruco.hasTwo(intel)) ) return 1;
 
-        if(!TiaoDoTruco.hasWonFirstHand(intel) && !TiaoDoTruco.canKill(intel)) return -1;
+            if(TiaoDoTruco.hasManilha(intel) && TiaoDoTruco.hasWonFirstHand(intel) ) return 0;
+        }
 
-        return 0;
+        if(TiaoDoTruco.hasZap(intel) && (TiaoDoTruco.hasTwo(intel) || TiaoDoTruco.hasTwo(intel))) return 0;
+
+        return -1;
     }
 }
