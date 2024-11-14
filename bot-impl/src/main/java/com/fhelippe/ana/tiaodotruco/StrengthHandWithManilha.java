@@ -26,7 +26,12 @@ public class StrengthHandWithManilha implements BotServiceProvider {
         Optional<TrucoCard> midCard = TiaoDoTruco.getMidCard(intel);
         TrucoCard strongestCard = TiaoDoTruco.getStrongestCard(intel);
 
-        if(TiaoDoTruco.cardCanKill(intel, weakestCard)) return CardToPlay.of(weakestCard);
+        if(TiaoDoTruco.cardCanKill(intel, weakestCard)) return CardToPlay.of(weakestCard); // se caso a menor carta puder matar, joga ela
+
+        if(!TiaoDoTruco.cardCanKill(intel, weakestCard) && !TiaoDoTruco.cardCanKill(intel, strongestCard))  { //se caso não houver cartas para matar, sacrifica a menor
+            if(TiaoDoTruco.hasThree(intel))return CardToPlay.discard(weakestCard);
+            return CardToPlay.of(weakestCard);
+        }
 
         return CardToPlay.of(midCard.orElse(strongestCard));
     }
