@@ -18,7 +18,6 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
-com.giullia.marcio.trucomante.Trucomante
 com.garcia.orlandi.slayerbot.SlayerBot
 com.bueno.impl.dummybot.DummyBot
 com.hideki.araujo.wrkncacnterbot.WrkncacnterBot
@@ -81,6 +80,7 @@ com.kayky.waleska.kwtruco.KwTruco
 com.daniel.mateus.theroverbot.TheRover
 com.fernando.breno.trucomarrecobot.TrucoMarreco
 
+com.giullia.marcio.trucomante.Trucomante
 com.fhelippe.ana.tiaodotruco.TiaoDoTruco
 com.gusmao.matos.clojurebot.ClojureBot
 com.aislan.deyvin.DeyvinBot

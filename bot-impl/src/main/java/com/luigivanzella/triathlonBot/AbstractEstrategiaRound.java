@@ -23,6 +23,7 @@ package com.luigivanzella.triathlonBot;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 public abstract class AbstractEstrategiaRound implements EstrategiaRound {
@@ -37,7 +38,7 @@ public abstract class AbstractEstrategiaRound implements EstrategiaRound {
 
     protected TrucoCard getLowestCard(GameIntel intel) {
         return intel.getCards().stream()
-                .min((card1, card2) -> Integer.compare(card1.relativeValue(intel.getVira()), card2.relativeValue(intel.getVira())))
+                .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
                 .orElseThrow();
     }
 

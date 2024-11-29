@@ -72,6 +72,7 @@ import com.rafael.lucas.mestrimbot.Mestrim;
 import com.rennan.podecorrerpatinho.PodeCorrerPatinho;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.matheus.dylan.superidolbot.SuperIdolBot;
+import com.luigivanzella.triathlonBot.TriathlonBot;
 
 module bot.impl {
     requires bot.spi;
@@ -86,7 +87,6 @@ module bot.impl {
     exports com.newton.dolensi.sabotabot;
     exports com.cremonezzi.impl.carlsenbot;
     exports com.caueisa.destroyerbot;
-    exports com.caua.felipe.cfbot;
     exports com.bonelli.noli.paulistabot;
     exports com.hideki.araujo.wrkncacnterbot;
     exports com.pedrocagiovane.pauladasecabot;
@@ -150,11 +150,10 @@ module bot.impl {
     exports com.abel.francisco.fogao6boca;
     exports com.matheus.dylan.superidolbot;
     exports com.luigivanzella.triathlonBot;
-    exports com.caua.felipe.cfbot.CFBot;
+    exports com.caua.felipe.cfbot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             ArrebentaBot,
-            Trucomante,
             AddTheNewSoul,
             WrkncacnterBot,
             MarrecoBot,
@@ -228,5 +227,6 @@ module bot.impl {
             CFBot,
             SuperIdolBot,
             TriathlonBot,
+            Trucomante,
             SkillDiffBot;
 }

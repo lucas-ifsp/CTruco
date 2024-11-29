@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2024 Rennan Marcile Lazarini - IFSP/SCL
  *  Contact: lazarini <dot> rennan <at> aluno <dot> ifsp <dot> edu <dot> br
- *  
+ *
  *  This file is part of CTruco (Truco game for didactic purpose).
  *
  *  CTruco is free software: you can redistribute it and/or modify
@@ -27,7 +27,6 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 public class PodeCorrerPatinho implements BotServiceProvider {
     @Override
@@ -39,11 +38,10 @@ public class PodeCorrerPatinho implements BotServiceProvider {
             if (PCPUtils.hasCasalVermelho(intel.getVira(), intel.getCards())) return true;
             if (PCPUtils.hasZapOuros(intel.getVira(), intel.getCards())) return true;
             if (PCPUtils.hasCopasEspadilha(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasManilha(intel.getVira(), intel.getCards()) && PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
+            return PCPUtils.hasManilha(intel.getVira(), intel.getCards()) && PCPUtils.hasZap(intel.getVira(), intel.getCards());
         } else {
             return true;
         }
-        return false;
     }
 
     @Override
@@ -53,29 +51,29 @@ public class PodeCorrerPatinho implements BotServiceProvider {
         int roundNumber = intel.getRoundResults().size() + 1;
         List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
 
-        if (roundNumber == 1){
+        if (roundNumber == 1) {
             return false;
-        } else if (roundNumber == 2){
-            if (!(roundsResults.isEmpty())){
+        } else if (roundNumber == 2) {
+            if (!(roundsResults.isEmpty())) {
                 // >:(
                 if (roundsResults.get(0).equals(GameIntel.RoundResult.WON)) return true;
                 if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return false;
 
                 if (PCPUtils.zapCopasAndEspadaAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasOuros(intel.getVira(),intel.getCards())) return true;
+                        && PCPUtils.hasOuros(intel.getVira(), intel.getCards())) return true;
 
                 if (PCPUtils.zapAndCopasAlreadyPlayed(intel.getVira(), intel.getOpenCards())
                         && PCPUtils.hasEspada(intel.getVira(), intel.getCards())) return true;
 
                 if (PCPUtils.zapAlreadyPlayed(intel.getVira(), intel.getOpenCards())
                         && PCPUtils.hasCopas(intel.getVira(), intel.getCards())) return true;
-            } else if (!roundsResults.isEmpty() && roundsResults.get(0).equals(GameIntel.RoundResult.DREW)){
+            } else if (!roundsResults.isEmpty() && roundsResults.get(0).equals(GameIntel.RoundResult.DREW)) {
                 if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
                 if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return true;
             }
         } else if (roundNumber == 3) {
             Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-            if (opponentCard.isPresent()){
+            if (opponentCard.isPresent()) {
                 TrucoCard enemyCard = opponentCard.get();
                 if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) >
                         enemyCard.relativeValue(intel.getVira())) return true;
@@ -88,69 +86,69 @@ public class PodeCorrerPatinho implements BotServiceProvider {
     }
 
     @Override
-public CardToPlay chooseCard(GameIntel intel) {
-    int roundNumber = intel.getRoundResults().size() + 1;
-    List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
-    List<TrucoCard> myHand = intel.getCards();
+    public CardToPlay chooseCard(GameIntel intel) {
+        int roundNumber = intel.getRoundResults().size() + 1;
+        List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
+        List<TrucoCard> myHand = intel.getCards();
 
-    if (roundNumber == 1) {
-        return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), myHand));
-    } else if (roundNumber == 2) {
-        if (!roundsResults.isEmpty() && roundsResults.get(0).equals(GameIntel.RoundResult.WON)) {
+        if (roundNumber == 1) {
             return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), myHand));
+        } else if (roundNumber == 2) {
+            if (!roundsResults.isEmpty() && roundsResults.get(0).equals(GameIntel.RoundResult.WON)) {
+                return CardToPlay.of(PCPUtils.getWeakest(intel.getVira(), myHand));
+            }
+            return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), myHand));
+        } else {
+            return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), myHand));
         }
-        return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), myHand));
-    } else {
-        return CardToPlay.of(PCPUtils.getStrongest(intel.getVira(), myHand));
     }
-}
 
-@Override
-public int getRaiseResponse(GameIntel intel) {
- int roundNumber = intel.getRoundResults().size() + 1;
- List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
- List<TrucoCard> myHand = intel.getCards();
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        int roundNumber = intel.getRoundResults().size() + 1;
+        List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
+        List<TrucoCard> myHand = intel.getCards();
 
- if (myHand == null || myHand.isEmpty()) {
-     return -1;
- }
+        if (myHand == null || myHand.isEmpty()) {
+            return -1;
+        }
 
- boolean hasZap = PCPUtils.hasZap(intel.getVira(), myHand);
- boolean hasManilha = PCPUtils.hasManilha(intel.getVira(), myHand);
- int strongCardsCount = (int) myHand.stream()
-         .filter(card -> card.relativeValue(intel.getVira()) >= 10)
-         .count();
+        boolean hasZap = PCPUtils.hasZap(intel.getVira(), myHand);
+        boolean hasManilha = PCPUtils.hasManilha(intel.getVira(), myHand);
+        int strongCardsCount = (int) myHand.stream()
+                .filter(card -> card.relativeValue(intel.getVira()) >= 10)
+                .count();
 
- if (strongCardsCount >= 2) {
-     return 1;
- } else if (hasZap || hasManilha) {
-     return 1;
- }
+        if (strongCardsCount >= 2) {
+            return 1;
+        } else if (hasZap || hasManilha) {
+            return 1;
+        }
 
- if (roundNumber == 1) {
-     if (PCPUtils.hasEspada(intel.getVira(), myHand) || PCPUtils.hasOuros(intel.getVira(), myHand)) {
-         return 0;
-     }
- } else if (roundNumber == 2) {
-     if (!roundsResults.isEmpty() && 
-         (roundsResults.get(0).equals(GameIntel.RoundResult.WON) || 
-          roundsResults.get(0).equals(GameIntel.RoundResult.DREW))) {
-         if (PCPUtils.hasEspada(intel.getVira(), myHand) || PCPUtils.hasOuros(intel.getVira(), myHand)) {
-             return 0;
-         }
-     }
- } else if (roundNumber == 3) {
-     Optional<TrucoCard> opponentCard = intel.getOpponentCard();
-     if (opponentCard.isPresent()) {
-         TrucoCard enemyCard = opponentCard.get();
-         if (!myHand.isEmpty() && 
-             PCPUtils.getStrongest(intel.getVira(), myHand).relativeValue(intel.getVira()) >
-             enemyCard.relativeValue(intel.getVira())) {
-             return 0;
-         }
-     }
- }
+        if (roundNumber == 1) {
+            if (PCPUtils.hasEspada(intel.getVira(), myHand) || PCPUtils.hasOuros(intel.getVira(), myHand)) {
+                return 0;
+            }
+        } else if (roundNumber == 2) {
+            if (!roundsResults.isEmpty() &&
+                    (roundsResults.get(0).equals(GameIntel.RoundResult.WON) ||
+                            roundsResults.get(0).equals(GameIntel.RoundResult.DREW))) {
+                if (PCPUtils.hasEspada(intel.getVira(), myHand) || PCPUtils.hasOuros(intel.getVira(), myHand)) {
+                    return 0;
+                }
+            }
+        } else if (roundNumber == 3) {
+            Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+            if (opponentCard.isPresent()) {
+                TrucoCard enemyCard = opponentCard.get();
+                if (!myHand.isEmpty() &&
+                        PCPUtils.getStrongest(intel.getVira(), myHand).relativeValue(intel.getVira()) >
+                                enemyCard.relativeValue(intel.getVira())) {
+                    return 0;
+                }
+            }
+        }
 
- return -1;
-}
+        return -1;
+    }
 }

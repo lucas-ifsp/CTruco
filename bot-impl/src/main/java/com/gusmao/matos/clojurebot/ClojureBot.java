@@ -5,10 +5,10 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
 
 public final class ClojureBot implements BotServiceProvider {
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         final RoundStrategy strategy = Playing.buildStrategy(intel);
-
         return strategy.getMaoDeOnzeResponse();
     }
 

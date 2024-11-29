@@ -39,10 +39,7 @@ public class Lgtbot implements BotServiceProvider{
         if (intel.getOpponentScore() < 11 && strongCardsCount >= 2)
             return true;
 
-        if (intel.getOpponentScore() == 11)
-            return true;
-
-        return false;
+        return intel.getOpponentScore() == 11;
     }
 
     @Override
@@ -62,17 +59,15 @@ public class Lgtbot implements BotServiceProvider{
         if (opponentScore == 11)
             return true;
 
-        if (opponentScore != 11) {
-            if (round == 1) {
-                if (strongCardsPlusManilhaCount >= 2)
-                    return true;
+        if (round == 1) {
+            if (strongCardsPlusManilhaCount >= 2)
+                return true;
+        }
+        if (round == 2) {
+            if (didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 1) {
+                return true;
             }
-            if (round == 2) {
-                if (didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 1) {
-                    return true;
-                }
-                return !didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 2;
-            }
+            return !didIWinFirstRound(intel) && strongCardsPlusManilhaCount >= 2;
         }
         return false;
     }
@@ -125,10 +120,7 @@ public class Lgtbot implements BotServiceProvider{
                     TrucoCard opponentCard = opponentCardOpt.get();
                     Optional<TrucoCard> winningCardOpt = findLowestWinningCard(opponentCard, myCards, intel.getVira());
 
-                    if (winningCardOpt.isPresent())
-                        return CardToPlay.of(winningCardOpt.get());
-                    else
-                        return CardToPlay.of(theWeakestCard);
+                    return winningCardOpt.map(CardToPlay::of).orElseGet(() -> CardToPlay.of(theWeakestCard));
                 }
             }
         }
@@ -173,9 +165,7 @@ public class Lgtbot implements BotServiceProvider{
         List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
         if (!roundResults.isEmpty()) {
-            if (roundResults.get(0) == GameIntel.RoundResult.WON) {
-                return true;
-            }
+            return roundResults.get(0) == GameIntel.RoundResult.WON;
         }
         return false;
     }

@@ -1024,12 +1024,6 @@ public class ZeTruqueroTests
         );
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
 
-        GameIntel intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(vira), vira, 0)
-                .botInfo(botCards, 0)
-                .opponentScore(0)
-                .build();
-
         TrucoCard weakerCard = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
         assertThat(zetruquero.weakerCardtoUse(botCards, vira)).isEqualTo(weakerCard);
     }
