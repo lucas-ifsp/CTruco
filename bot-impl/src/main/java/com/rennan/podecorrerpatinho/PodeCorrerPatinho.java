@@ -25,12 +25,16 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 public class PodeCorrerPatinho implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int strongCardsCount = (int) intel.getCards().stream()
+                .filter(card -> card.relativeValue(intel.getVira()) >= 10)
+                .count();
         if (intel.getOpponentScore() < 11) {
             if (PCPUtils.hasCasalMaior(intel.getVira(), intel.getCards())) return true;
             if (PCPUtils.hasCasalPreto(intel.getVira(), intel.getCards())) return true;
@@ -46,7 +50,11 @@ public class PodeCorrerPatinho implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        if (intel.getScore() == 11 || intel.getOpponentScore() == 11) return false;
+        int strongCardsCount = (int) intel.getCards().stream()
+                .filter(card -> card.relativeValue(intel.getVira()) >= 10)
+                .count();
+        if (intel.getScore() == 11 || intel.getOpponentScore() == 11)
+            return false;
 
         int roundNumber = intel.getRoundResults().size() + 1;
         List<GameIntel.RoundResult> roundsResults = intel.getRoundResults();
@@ -56,30 +64,40 @@ public class PodeCorrerPatinho implements BotServiceProvider {
         } else if (roundNumber == 2) {
             if (!(roundsResults.isEmpty())) {
                 // >:(
-                if (roundsResults.get(0).equals(GameIntel.RoundResult.WON)) return true;
-                if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return false;
+                if (roundsResults.get(0).equals(GameIntel.RoundResult.WON) && strongCardsCount >= 1)
+                    return true;
+                if (PCPUtils.hasZap(intel.getVira(), intel.getCards()))
+                    return false;
 
                 if (PCPUtils.zapCopasAndEspadaAlreadyPlayed(intel.getVira(), intel.getOpenCards())
                         && PCPUtils.hasOuros(intel.getVira(), intel.getCards())) return true;
 
+
                 if (PCPUtils.zapAndCopasAlreadyPlayed(intel.getVira(), intel.getOpenCards())
-                        && PCPUtils.hasEspada(intel.getVira(), intel.getCards())) return true;
+                        && PCPUtils.hasEspada(intel.getVira(), intel.getCards()) || strongCardsCount > 1)
+                    return true;
 
                 if (PCPUtils.zapAlreadyPlayed(intel.getVira(), intel.getOpenCards())
                         && PCPUtils.hasCopas(intel.getVira(), intel.getCards())) return true;
             } else if (!roundsResults.isEmpty() && roundsResults.get(0).equals(GameIntel.RoundResult.DREW)) {
                 if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
                 if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return true;
+
             }
         } else if (roundNumber == 3) {
             Optional<TrucoCard> opponentCard = intel.getOpponentCard();
             if (opponentCard.isPresent()) {
                 TrucoCard enemyCard = opponentCard.get();
-                if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) >
-                        enemyCard.relativeValue(intel.getVira())) return true;
+                if (PCPUtils.getStrongest(intel.getVira(), intel.getCards()).relativeValue(intel.getVira()) > enemyCard
+                        .relativeValue(intel.getVira()))
+                    return true;
             }
-            if (PCPUtils.hasZap(intel.getVira(), intel.getCards())) return true;
-            if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3) return true;
+            if (PCPUtils.hasZap(intel.getVira(), intel.getCards()))
+                return true;
+            if (PCPUtils.hasCopas(intel.getVira(), intel.getCards()) && intel.getHandPoints() < 3)
+                return true;
+            if (roundsResults.get(0).equals(GameIntel.RoundResult.WON) && strongCardsCount == 1)
+                return true;
         }
 
         return false;
