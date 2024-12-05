@@ -7,22 +7,12 @@ public interface RoundStrategy {
     static RoundStrategy of(GameIntel intel) {
         int roundNumber = intel.getRoundResults().size() + 1;
 
-        RoundStrategy roundStrategy;
-        switch (roundNumber) {
-            case 1:
-                roundStrategy = new FirstRoundStrategy(intel);
-                break;
-            case 2:
-                roundStrategy = new SecondRoundStrategy(intel);
-                break;
-            case 3:
-                roundStrategy = new ThirdRoundStrategy(intel);
-                break;
-            default:
-                throw new IllegalStateException("Illegal number of rounds to play: " + roundNumber);
-        }
-
-        return roundStrategy;
+        return switch (roundNumber) {
+            case 1 -> new FirstRoundStrategy(intel);
+            case 2 -> new SecondRoundStrategy(intel);
+            case 3 -> new ThirdRoundStrategy(intel);
+            default -> throw new IllegalStateException("Illegal number of rounds to play: " + roundNumber);
+        };
     }
 
     boolean getMaoDeOnzeResponse(GameIntel intel);

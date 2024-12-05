@@ -95,6 +95,7 @@ public class Octopus implements BotServiceProvider {
     public boolean checkIfWeAreFirstToPlay(GameIntel intel){
         return intel.getOpponentCard().isEmpty();
     }
+
     public List<TrucoCard> caseOneWhenNoneOfTheCardsAreStrong(GameIntel intel){
         List<TrucoCard> playSequence = sortCards(intel);
         Collections.reverse(playSequence);

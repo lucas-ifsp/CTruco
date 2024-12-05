@@ -57,7 +57,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
         if (opponentScore >= 10) {
             return true;
         }
-        if (botScore >= 10 && botScore > opponentScore) {
+        if (botScore >= 10) {
             return false;
         }
 
@@ -122,7 +122,7 @@ public class PedroHenriqueBot implements BotServiceProvider {
 
         if (manilhas >= 2 || handStrengthAvg >= 10) {
             return 1;
-        } else if (manilhas >= 1 || handStrengthAvg >= 7) {
+        } else if (manilhas == 1 || handStrengthAvg >= 7) {
             return 0;
         }
 

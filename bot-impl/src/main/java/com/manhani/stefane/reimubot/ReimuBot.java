@@ -94,6 +94,7 @@ public class ReimuBot implements BotServiceProvider {
     private boolean canDefeatOpponentCard(GameIntel intel) {
         return canDefeatOpponentCard(intel.getCards(), intel.getVira(), intel.getOpponentCard().get());
     }
+
     private boolean canDefeatOpponentCard(List<TrucoCard> cards, TrucoCard vira, TrucoCard opponentCard){
         return cards.stream().anyMatch(c-> c.compareValueTo(opponentCard,vira) > 0);
     }

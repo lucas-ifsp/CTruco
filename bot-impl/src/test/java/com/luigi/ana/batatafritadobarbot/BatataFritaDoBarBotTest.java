@@ -32,7 +32,6 @@ public class BatataFritaDoBarBotTest {
 
         TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS);
 
-
         List<TrucoCard> myCards = List.of(
                 TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
@@ -535,11 +534,7 @@ public class BatataFritaDoBarBotTest {
                 .botInfo(List.of(), 2)
                 .opponentScore(9);
 
-
-
-
         int diference= stepBuilder.build().getOpponentScore() - stepBuilder.build().getScore();
-
 
         assertEquals(7, diference);
     }

@@ -85,7 +85,6 @@ public class Zetruquero implements BotServiceProvider
         {
             return strongHand(cards, vira);
         }
-
         return false;
     }
 

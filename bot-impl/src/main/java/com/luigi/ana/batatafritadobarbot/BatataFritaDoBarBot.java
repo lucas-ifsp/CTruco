@@ -94,12 +94,7 @@ public class BatataFritaDoBarBot implements BotServiceProvider {
                             .findFirst()
                             .orElseGet(() -> getHighestNormalCard(intel)));
 
-                if (hasZap(intel) || hasCopas(intel))
-                    return CardToPlay.of( getHighestNormalCard(intel));
-
-                else{
-                    return CardToPlay.of(getHighestNormalCard(intel));
-                }
+                return CardToPlay.of( getHighestNormalCard(intel));
             }
 
         }else{

@@ -75,8 +75,7 @@ public class MataPatoBot implements BotServiceProvider{
             }
         if (intel.getCards().size() == 2){
             if (intel.getRoundResults().get(0).equals(GameIntel.RoundResult.DREW) ){
-                if(intel.getCards().stream().anyMatch(card -> card.isCopas(vira) ||  card.isZap(vira) ))
-                return true;
+                return intel.getCards().stream().anyMatch(card -> card.isCopas(vira) || card.isZap(vira));
             }
         }
 
