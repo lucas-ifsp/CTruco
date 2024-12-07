@@ -74,6 +74,7 @@ import com.rennan.podecorrerpatinho.PodeCorrerPatinho;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.matheus.dylan.superidolbot.SuperIdolBot;
 import com.luigivanzella.triathlonBot.TriathlonBot;
+import com.ghenrique.moedordecana.MoedorDeCana;
 
 module bot.impl {
     requires bot.spi;
@@ -141,13 +142,14 @@ module bot.impl {
     exports com.adriann.emanuel.armageddon;
     exports com.kayky.waleska.kwtruco;
     exports com.fernando.breno.trucomarrecobot;
+    exports com.ghenrique.moedordecana;
     exports com.lucassantos;
 
 
     exports com.pedro.herick.skilldiffbot;
     exports com.fhelippe.ana.tiaodotruco;
     exports com.gusmao.matos.clojurebot;
-    exports com.aislan.deyvin;  
+    exports com.aislan.deyvin;
     exports com.rafael.lucas.mestrimbot;
     exports com.rennan.podecorrerpatinho;
     exports com.abel.francisco.fogao6boca;
@@ -220,7 +222,8 @@ module bot.impl {
             Lgtbot,
             KwTruco,
             TrucoMarreco,
-            
+            MoedorDeCana,
+
             TiaoDoCorote,
             TiaoDoTruco,
             ClojureBot,
