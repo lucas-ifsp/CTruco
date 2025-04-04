@@ -56,10 +56,10 @@ public final class Card {
     }
 
     public int compareValueTo(Card otherCard, Card vira){
-        return this.computeCardValue(vira) - otherCard.computeCardValue(vira);
+        return this.getRelativeValue(vira) - otherCard.getRelativeValue(vira);
     }
 
-    private int computeCardValue(Card vira) {
+    public int getRelativeValue(Card vira) {
         if (isManilha(vira))
             return switch (suit) {
                 case DIAMONDS -> 10;
@@ -68,8 +68,14 @@ public final class Card {
                 case CLUBS -> 13;
                 case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
             };
-        if(rank.value() > vira.rank.value()) return rank.value() - 1;
+        if(manilhaPositionInfluencesInCardValue(vira)) return rank.value() - 1;
         return rank.value();
+    }
+
+    private boolean manilhaPositionInfluencesInCardValue(Card vira) {
+        final boolean manilhaRankWasLowerThanCardRank = rank.value() > vira.rank.value();
+        final boolean manilhaIsThree = vira.rank == Rank.THREE;
+        return manilhaRankWasLowerThanCardRank || manilhaIsThree;
     }
 
     public boolean isManilha(Card vira){

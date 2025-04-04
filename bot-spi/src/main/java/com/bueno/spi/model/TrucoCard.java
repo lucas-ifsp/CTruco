@@ -28,7 +28,7 @@ import java.util.Objects;
  * considered a manilha (zap, copas, espadilha or ouros) based on such vira. Objects of this class are final,
  * cached, and must be created using the static constructors  {@link #of(CardRank rank, CardSuit suit)} or
  * {@link #closed()}.
- * */
+ */
 public final class TrucoCard {
 
     private static final TrucoCard[] cache = new TrucoCard[41];
@@ -50,7 +50,7 @@ public final class TrucoCard {
      * @param rank a card rank represented by the CardRank enum, must be non-null
      * @param suit a card suit represented by the CardSuit enum, must be non-null
      * @return a TrucoCard representing the given {@code rank} and {@code suit}
-     * @throws NullPointerException if {@code rank} or/and {@code suit} is/are null
+     * @throws NullPointerException     if {@code rank} or/and {@code suit} is/are null
      * @throws IllegalArgumentException if rank or suit is HIDDEN and the other parameter is not HIDDEN
      */
     public static TrucoCard of(CardRank rank, CardSuit suit) {
@@ -108,7 +108,7 @@ public final class TrucoCard {
      * </p>
      *
      * @param otherCard TrucoCard to be compared to the reference, must be non-null
-     * @param vira TrucoCard representing the current vira, must be non-null
+     * @param vira      TrucoCard representing the current vira, must be non-null
      * @return returns a positive number if the TrucoCard represented by the object is greater than the
      * {@code otherCard}, a negative number if the object card is lower, and 0 if both cards have the same
      * relative value. The returned value is the difference between the values of the compared cards.
@@ -133,6 +133,7 @@ public final class TrucoCard {
      */
     public int relativeValue(TrucoCard vira) {
         Objects.requireNonNull(vira, "Vira card must not be null.");
+
         if (isManilha(vira))
             return switch (suit) {
                 case DIAMONDS -> 10;
@@ -141,8 +142,14 @@ public final class TrucoCard {
                 case CLUBS -> 13;
                 case HIDDEN -> throw new IllegalStateException("Closed card can not be manilha!");
             };
-        if(rank.value() > vira.rank.value()) return rank.value() - 1;
+        if (manilhaPositionInfluencesInCardValue(vira)) return rank.value() - 1;
         return rank.value();
+    }
+
+    private boolean manilhaPositionInfluencesInCardValue(TrucoCard vira) {
+        final boolean manilhaRankWasLowerThanCardRank = rank.value() > vira.rank.value();
+        final boolean manilhaIsThree = vira.rank == CardRank.THREE;
+        return manilhaRankWasLowerThanCardRank || manilhaIsThree;
     }
 
     /**

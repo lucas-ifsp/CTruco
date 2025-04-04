@@ -30,6 +30,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class CardTest {
 
@@ -137,6 +138,14 @@ class CardTest {
     @DisplayName("Should same cards be equals")
     void shouldSameCardsBeEquals() {
         assertThat(Card.of(Rank.TWO, Suit.DIAMONDS)).isEqualTo(Card.of(Rank.TWO, Suit.DIAMONDS));
+    }
+
+    @Test
+    @DisplayName("Should reduce the value of 5 to 3 when vira is 3 and manilha is four")
+    void shouldReduceTheValueOf5To3WhenViraIs3AndManilhaIsFour() {
+        Card vira = Card.of(Rank.THREE, Suit.CLUBS);
+        Card diamonds = Card.of(Rank.FOUR, Suit.DIAMONDS);
+        assertThat(diamonds.compareValueTo(vira, vira)).isPositive();
     }
 
     @Test
