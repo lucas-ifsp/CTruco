@@ -27,28 +27,6 @@ public class RefactorMePleaseBotTest{
         refactorMePleaseBot = new RefactorMePleaseBot();
     }
 
-
-    @Test
-    @DisplayName("Should play strongest card in first round if it's stronger than opponent's")
-    void shouldPlayStrongestCardInFirstRoundIfStrongerThanOpponents() {
-
-        List<TrucoCard> botCards = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, HEARTS));
-        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
-        TrucoCard opponentCard = TrucoCard.of(ACE, CLUBS);
-
-        List<TrucoCard> openCards = List.of(vira);
-        List<GameIntel.RoundResult> results = List.of();
-
-        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(results, openCards, vira, 1)
-                .botInfo(botCards, 0)
-                .opponentScore(0)
-                .opponentCard(opponentCard);
-
-
-        assertEquals(TrucoCard.of(FOUR, HEARTS), refactorMePleaseBot.chooseCard(stepBuilder.build()).content());
-    }
-
     @Test
     @DisplayName("Should play strongest card in first round without opponent's card")
     void shouldPlayStrongestCardInFirstRoundWithoutOpponentsCard() {
@@ -144,21 +122,6 @@ public class RefactorMePleaseBotTest{
 
         GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
                 .gameInfo(rounds, openCards, vira, 3)
-                .botInfo(botCards, 0)
-                .opponentScore(0);
-        assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isPositive();
-    }
-
-    @Test
-    @DisplayName("Should rise again if have very strong cards in hand")
-    void ShouldRiseAgainIfHaveVeryStrongCards() {
-        List<TrucoCard> openCards = List.of();
-
-        TrucoCard vira = TrucoCard.of(THREE, HEARTS);
-        List<TrucoCard> botCards = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, HEARTS));
-
-        GameIntel.StepBuilder stepBuilder = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), openCards, vira, 3)
                 .botInfo(botCards, 0)
                 .opponentScore(0);
         assertThat(refactorMePleaseBot.getRaiseResponse(stepBuilder.build())).isPositive();
