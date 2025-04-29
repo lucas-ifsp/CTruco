@@ -4,29 +4,27 @@ import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.UUID;
 
 public class Tournament {
     private final UUID tournamentUUID;
     private final int size;
     private final List<String> participantNames;
     private final int times;
-    private final List<Match> matches;
+    private List<Match> matches;
+    private String winnerName;
 
     public Tournament(List<String> participantNames, int size, int times) {
         this.times = times;
         this.tournamentUUID = UUID.randomUUID();
         this.size = size;
         this.participantNames = participantNames;
-        this.matches = new ArrayList<>();
     }
 
-    public Tournament(UUID tournamentUUID, List<String> participantNames, List<Match> matches, int size, int times) {
+    public Tournament(UUID tournamentUUID, List<String> participantNames, int size, int times) {
         this.tournamentUUID = tournamentUUID;
         this.size = size;
-        this.matches = matches.stream().sorted().toList();
         this.participantNames = participantNames;
         this.times = times;
     }
@@ -44,70 +42,28 @@ public class Tournament {
         matches.stream()
                 .filter(match -> match.getId().equals(matchUuid))
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, times),
+                .ifPresentOrElse(match -> {
+                            match.play(repository, api, botManagerService, times);
+                            if (match.getWinnerName() != null && match.getNext() == null) {
+                                winnerName = match.getWinnerName();
+                            }
+                        },
                         () -> System.out.println("No match found"));
     }
 
     public void setAvailableMatches() {
-        matches.forEach(Match::setAvailableState);
-    }
-
-    // TODO - mudar p/ programação declarativa
-    public void insertMatches() {
-        for (int i = 0; i < size - 1; i++)
-            matches.add(new Match(UUID.randomUUID(),
-                    i + 1,
-                    null,
-                    null,
-                    false,
-                    null,
-                    0,
-                    0,
-                    null));
-    }
-
-    // TODO - mudar p/ programação declarativa
-    public void insertParticipants() {
-        int participantsIndex = 0;
-        for (int i = 0; i < size - 1; i++) {
-            if (i < size / 2) {
-                matches.get(i).setP1Name(participantNames.get(participantsIndex));
-                matches.get(i).setP2Name(participantNames.get(participantsIndex + 1));
-                participantsIndex = participantsIndex + 2;
+        for (Match match : matches) {
+            if (match.isAvailable() && match.getWinnerName() != null) {
+                match.setAvailable(false);
+            }
+            if (match.getP1Name() != null && match.getP2Name() != null && match.getWinnerName() == null) {
+                match.setAvailable(true);
             }
         }
     }
 
-    // TODO - mudar p/ programação declarativa
-    public void setNextMatches() {
-        int next = size / 2 - 1;
-        for (int i = 0; i < size - 1; i++) {
-            if (i % 2 == 0) next++;
-            if (i == size - 2) return;
-            matches.get(i).setNext(matches.get(next));
-        }
-    }
-
-    public Map<UUID, Match> refreshMatches() {
-        //TODO - somente os objetos next contidos dentro de uma match estão sendo mudados
-        // o ideal era que todos os objetos com o mesmo uuid mudassem juntos
-        Map<UUID, Match> cacheMatches = matches.stream().collect(Collectors.toMap(Match::getId, Function.identity()));
-        matches.forEach(m -> {
-                    m.setAvailableState();
-                    m.setWinnerToNextBracket();
-                    addToCache(m, cacheMatches);
-                }
-        );
-        return cacheMatches;
-    }
-
-    private void addToCache(Match match, Map<UUID, Match> cacheMatches) {
-        if (cacheMatches.containsKey(match.getId())) {
-            if (match.getNext() == null) return;
-            addToCache(match.getNext(), cacheMatches);
-        } else {
-            cacheMatches.put(match.getId(), match);
-        }
+    public UUID getTournamentUUID() {
+        return tournamentUUID;
     }
 
     public int getSize() {
@@ -118,28 +74,25 @@ public class Tournament {
         return matches;
     }
 
-    public List<Match> getAvailableMatches() {
-        return matches.stream().filter(Match::isAvailable).toList();
+    public List<String> getParticipantNames() {
+        return participantNames;
+    }
+
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
     }
 
     public int getTimes() {
         return times;
     }
 
-    public UUID getTournamentUUID() {
-        return tournamentUUID;
-    }
-
-    public List<String> getParticipantNames() {
-        return participantNames;
-    }
-
     @Override
     public String toString() {
         return "Tournament{" +
-               "tournamentUUID=" + tournamentUUID +
-               ", size=" + size +
-               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-               '}';
+                "tournamentUUID=" + tournamentUUID +
+                ", size=" + size +
+                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+                ", winnerName=" + winnerName +
+                '}';
     }
 }
