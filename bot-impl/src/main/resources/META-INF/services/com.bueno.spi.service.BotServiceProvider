@@ -18,6 +18,7 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
+<<<<<<< HEAD
 com.bueno.impl.dummybot.DummyBot
 com.petrilli.sandro.malasiabot.MalasiaBot
 com.aah.refactor.me.RefactorMePleaseBot
@@ -27,3 +28,28 @@ com.carvalho.candido.tomegapbot.GapBot
 com.brito.macena.boteco.BotEco
 com.ghenrique.moedordecana.MoedorDeCana
 com.abel.francisco.fogao6boca.Fogao6Boca
+=======
+com.local.bueno.impl.dummybot.DummyBot
+com.local.hideki.araujo.wrkncacnterbot.WrkncacnterBot
+com.local.caueisa.destroyerbot.DestroyerBot
+com.local.bonelli.noli.paulistabot.PaulistaBot
+com.local.cremonezzi.impl.carlsenbot.Carlsen
+com.local.hermespiassi.casados.marrecobot.MarrecoBot
+com.local.indi.impl.addthenewsoul.AddTheNewSoul
+com.local.newton.dolensi.sabotabot.SabotaBot
+com.local.casal.impl.vapobot.VapoBot
+com.local.brenoduda.cafeconlechebot.CafeConLecheBot
+com.local.zampieri.rissatti.impl.UncleBobBot.UncleBobBot
+com.local.meima.skoltable.SkolTable
+com.local.rossi.lopes.trucoguru.TrucoGuru
+com.local.peixe.aguliari.perdenuncabot.PerdeNuncaBot
+com.local.almeida.strapasson.veiodobar.VeioDoBarBot
+com.local.tatayrapha.leonardabot.LeonardaBot
+com.local.murilos.aline.teconomarrecobot.TecoNoMarrecoBot
+com.local.everton.ronaldo.arrebentabot.ArrebentaBot
+com.local.silvabrufato.impl.silvabrufatobot.SilvaBrufatoBot
+com.local.yuri.impl.BotMadeInDescalvado
+com.local.correacarini.impl.trucomachinebot.TrucoMachineBot
+com.local.gatti.casaque.caipirasbot.CaipirasBot
+com.local.gustavo.contiero.lazybot.LazyBot
+>>>>>>> 21432f8a (feat: creating remote bot caller)

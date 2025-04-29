@@ -21,7 +21,7 @@
 package com.bueno.application.withuser.commands;
 
 import com.bueno.application.utils.Command;
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.google.common.primitives.Ints;
 
@@ -42,7 +42,7 @@ public class GameSettingsReader implements Command<CreateDetachedDto> {
     }
 
     private String readBotName() {
-        final var botNames = BotProviders.availableBots();
+        final var botNames = BotProviderService.providersNames();
         Integer botId;
         while (true){
             System.out.println("Oponente(s): ");

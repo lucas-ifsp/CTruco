@@ -22,6 +22,7 @@ package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
@@ -33,7 +34,6 @@ import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.domain.usecases.user.dtos.ApplicationUserDto;
 import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.IllegalGameEnrolmentException;
-import com.bueno.spi.service.BotServiceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +75,7 @@ public class CreateGameUseCase {
     }
 
     private boolean hasNoBotServiceWith(String botName) {
-        return !BotServiceManager.providersNames().contains(botName);
+        return !Objects.requireNonNull(BotProviderService.providersNames()).contains(botName);
     }
 
     public IntelDto createDetached(CreateDetachedDto request){
