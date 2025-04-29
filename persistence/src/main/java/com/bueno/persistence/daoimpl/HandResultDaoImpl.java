@@ -29,9 +29,9 @@ public class HandResultDaoImpl implements HandResultDao {
                 points_proposal,
                 vira
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """;
-        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) {
+        try (PreparedStatement preparedStatement = ConnectionFactory.createPreparedStatement(sql)) { // TODO - Testar todos os endpoints SPRING
             preparedStatement.setLong(1, hand.getId());
             preparedStatement.setString(2, hand.getCard1Round1());
             preparedStatement.setString(3, hand.getCard2Round1());
@@ -39,14 +39,14 @@ public class HandResultDaoImpl implements HandResultDao {
             preparedStatement.setString(5, hand.getCard2Round2());
             preparedStatement.setString(6, hand.getCard1Round3());
             preparedStatement.setString(7, hand.getCard2Round3());
-            preparedStatement.setString(8, hand.getGameUuid().toString());
+            preparedStatement.setObject(8, hand.getGameUuid());
             preparedStatement.setString(9, hand.getHandType());
-            preparedStatement.setString(10, hand.getHandWinner().toString());
+            preparedStatement.setObject(10, hand.getHandWinner());
             preparedStatement.setInt(11, hand.getPoints());
             preparedStatement.setInt(12, hand.getPointsProposal());
-            preparedStatement.setString(13, hand.getRound1Winner().toString());
-            preparedStatement.setString(14, hand.getRound2Winner().toString());
-            preparedStatement.setString(15, hand.getRound3Winner().toString());
+            preparedStatement.setObject(13, hand.getRound1Winner());
+            preparedStatement.setObject(14, hand.getRound2Winner());
+            preparedStatement.setObject(15, hand.getRound3Winner());
             preparedStatement.setString(16, hand.getVira());
             preparedStatement.executeUpdate();
         }

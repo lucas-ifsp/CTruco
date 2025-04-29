@@ -22,7 +22,7 @@ public class EvaluateBotsUseCase {
     private final RemoteBotApi botApi;
     private final BotManagerService providerService;
 
-    // TODO usar o construtor apenas para injeção de dependência. Pensar em outra forma de passar o botToEvaliate name. Provavelmente no método que faz a avaliação.
+    // TODO usar o construtor apenas para injeção de dependência. Pensar em outra forma de passar o botToEvaluate name. Provavelmente no método que faz a avaliação.
     public EvaluateBotsUseCase(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, String botToEvaluateName, BotManagerService providerService) {
         this.botToEvaluateName = botToEvaluateName;
         this.remoteBotRepository = remoteBotRepository;

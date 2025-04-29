@@ -37,20 +37,20 @@ public class PlayWithBots {
 
     private final RemoteBotRepository repository;
     private final RemoteBotApi botApi;
+    private final BotManagerService providerService;
 
     private String bot1Name;
     private String bot2Name;
     private int times;
 
-    public PlayWithBots(RemoteBotRepository repository, RemoteBotApi botApi) {
+    public PlayWithBots(RemoteBotRepository repository, RemoteBotApi botApi, BotManagerService providerService) {
         this.repository = repository;
         this.botApi = botApi;
+        this.providerService = providerService;
     }
 
     public void playWithBotsConsole() {
-
-        BotManagerService botManagerService = new BotManagerService(repository, botApi);
-        final var botNames = botManagerService.providersNames();
+        final var botNames = providerService.providersNames();
 
         printAvailableBots(botNames);
 
@@ -64,7 +64,7 @@ public class PlayWithBots {
         bot2Name = botNames.get(bot2 - 1);
 
         final long start = System.currentTimeMillis();
-        final var results = playBotsStarter(botManagerService);
+        final var results = playBotsStarter(providerService);
         final long end = System.currentTimeMillis();
         printResult(times, (end - start), results);
     }

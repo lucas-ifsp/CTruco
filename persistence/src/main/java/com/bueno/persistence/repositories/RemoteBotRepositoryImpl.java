@@ -18,6 +18,7 @@ public class RemoteBotRepositoryImpl implements RemoteBotRepository {
     private final RemoteBotDao dao;
     private final UserRepository userRepositoryImpl;
 
+
     public RemoteBotRepositoryImpl(RemoteBotDao dao, UserRepository userRepositoryImpl) {
         this.dao = dao;
         this.userRepositoryImpl = userRepositoryImpl;

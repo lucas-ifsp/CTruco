@@ -84,7 +84,7 @@ public class CreateGameUseCase {
         return create(userPlayer, botPlayer);
     }
 
-    private boolean hasNoBotServiceWith(String botName) {// TODO - COISA AQUI
+    private boolean hasNoBotServiceWith(String botName) {
         return !Objects.requireNonNull(botManagerService.providersNames()).contains(botName);
     }
 

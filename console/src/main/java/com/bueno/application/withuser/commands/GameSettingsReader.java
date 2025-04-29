@@ -24,6 +24,7 @@ import com.bueno.application.utils.Command;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
+import com.bueno.domain.usecases.user.UserRepository;
 import com.bueno.persistence.daoimpl.RemoteBotDaoImpl;
 import com.bueno.persistence.daoimpl.UserDaoImpl;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
@@ -48,7 +49,8 @@ public class GameSettingsReader implements Command<CreateDetachedDto> {
     }
 
     private String readBotName() {
-        final RemoteBotRepository repository = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(),new UserRepositoryImpl(new UserDaoImpl()));// TODO - mudar essa coisa feia
+        UserRepository userRepository = new UserRepositoryImpl(new UserDaoImpl());
+        final RemoteBotRepository repository = new RemoteBotRepositoryImpl(new RemoteBotDaoImpl(), userRepository);
         final RemoteBotApiAdapter botApi = new RemoteBotApiAdapter();
         final BotManagerService botManagerService = new BotManagerService(repository, botApi);
         final var botNames = botManagerService.providersNames();

@@ -18,10 +18,10 @@ public class EvaluateBot {
     private final RemoteBotApi botApi;
     private final BotManagerService providerService;
 
-    public EvaluateBot(RemoteBotRepository repository, RemoteBotApi botApi) {
+    public EvaluateBot(RemoteBotRepository repository, RemoteBotApi botApi, BotManagerService providerService) {
         this.repository = repository;
         this.botApi = botApi;
-        this.providerService = new BotManagerService(repository, botApi);
+        this.providerService = providerService;
     }
 
     public void againstAll() {

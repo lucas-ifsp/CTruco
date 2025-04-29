@@ -5,6 +5,7 @@ import com.bueno.application.withbots.features.EvaluateBot;
 import com.bueno.application.withbots.features.PlayWithBots;
 import com.bueno.application.withbots.features.RankBots;
 import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
@@ -17,10 +18,12 @@ public class ExecuteMenu implements Command<Void> {
 
     private final RemoteBotRepository repository;
     private final RemoteBotApi botApi;
+    private final BotManagerService providerService;
 
     public ExecuteMenu(RemoteBotRepository repository, RemoteBotApi botApi) {
         this.repository = repository;
         this.botApi = botApi;
+        providerService = new BotManagerService(repository,botApi);
     }
 
     @Override
@@ -47,15 +50,15 @@ public class ExecuteMenu implements Command<Void> {
             case "0" ->{}
             case "1" -> {
                 LogManager.getLogManager().reset();
-                final var cli = new PlayAgainstBots();
+                final var cli = new PlayAgainstBots(providerService);
                 cli.gameCLIStarter();
             }
             case "2" ->{
-                final var playBots = new PlayWithBots(repository, botApi);
+                final var playBots = new PlayWithBots(repository, botApi,providerService);
                 playBots.playWithBotsConsole();
             }
             case "3" ->{
-                final var evaluateBot = new EvaluateBot(repository,botApi);
+                final var evaluateBot = new EvaluateBot(repository,botApi,providerService);
                 evaluateBot.againstAll();
             }
             case"4"->{
