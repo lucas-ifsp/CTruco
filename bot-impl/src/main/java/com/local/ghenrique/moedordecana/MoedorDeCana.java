@@ -1,10 +1,10 @@
-package com.ghenrique.moedordecana;
+package com.local.ghenrique.moedordecana;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
 
-import static com.ghenrique.moedordecana.TrucoTools.*;
+import static com.local.ghenrique.moedordecana.TrucoTools.*;
 
 public class MoedorDeCana implements BotServiceProvider {
 

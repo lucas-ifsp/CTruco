@@ -1,10 +1,10 @@
-package com.ghenrique.moedordecana;
+package com.local.ghenrique.moedordecana;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 
 
-import static com.ghenrique.moedordecana.TrucoTools.playLastCard;
+import static com.local.ghenrique.moedordecana.TrucoTools.playLastCard;
 
 public class ThirdRound implements SuperGameStrategy {
 

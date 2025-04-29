@@ -1,4 +1,4 @@
-package com.ghenrique.moedordecana;
+package com.local.ghenrique.moedordecana;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
