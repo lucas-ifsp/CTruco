@@ -16,6 +16,10 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
+    requires java.net.http;
+    requires com.google.gson;
+    requires spring.webflux;
+    requires reactor.core;
     exports com.bueno.impl.dummybot;
     exports com.aah.refactor.me;
     exports com.contiero.lemes.atrasabot;
