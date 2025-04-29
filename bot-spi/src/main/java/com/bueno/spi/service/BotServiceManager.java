@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 public class BotServiceManager {
 
     public static Stream<BotServiceProvider> providers() {
+        //        List<BotServiceProvider> bots = new ArrayList<>(spiProviders.toList());
         return ServiceLoader.load(BotServiceProvider.class).stream().map(ServiceLoader.Provider::get);
     }
 
