@@ -19,7 +19,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
+<<<<<<<< HEAD:bot-impl/src/main/java/com/brito/macena/boteco/interfaces/TrucoResponder.java
 package com.brito.macena.boteco.interfaces;
+========
+package com.local.luigivanzella.triathlonBot;
+>>>>>>>> fe692dea (refact: bringing all bots into the local/ package):bot-impl/src/main/java/com/local/luigivanzella/triathlonBot/EstrategiaRound.java
 
 import com.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;

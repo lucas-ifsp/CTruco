@@ -1,5 +1,5 @@
 
-import com.carvalho.candido.tomegapbot.GapBot;
+import com.candido.tomegapbot.GapBot;
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.contiero.lemes.atrasabot.AtrasaBot;

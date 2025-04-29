@@ -19,7 +19,11 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
+<<<<<<<< HEAD:bot-impl/src/main/java/com/brito/macena/boteco/intel/trucoCaller/AggressiveTrucoCaller.java
 package com.brito.macena.boteco.intel.trucoCaller;
+========
+package com.local.gabriel.kayky.coisaruim;
+>>>>>>>> fe692dea (refact: bringing all bots into the local/ package):bot-impl/src/main/java/com/local/gabriel/kayky/coisaruim/GameStrategy.java
 
 import com.brito.macena.boteco.interfaces.TrucoCaller;
 import com.brito.macena.boteco.utils.Status;
