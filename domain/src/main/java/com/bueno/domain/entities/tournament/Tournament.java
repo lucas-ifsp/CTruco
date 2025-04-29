@@ -38,11 +38,11 @@ public class Tournament {
 
     }
 
-    public void playByMatchUuid(UUID matchUuid, RemoteBotApi api, BotManagerService botManagerService, RemoteBotRepository repository) {
+    public void playByMatchUuid(UUID matchUuid, RemoteBotApi api, BotManagerService botManagerService, RemoteBotRepository repository, int numberOfSimulations) {
         matches.stream()
                 .filter(match -> match.getId().equals(matchUuid))
                 .findFirst()
-                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, times),
+                .ifPresentOrElse(match -> match.play(repository, api, botManagerService, numberOfSimulations),
                         () -> System.out.println("No match found"));
     }
 
@@ -51,6 +51,7 @@ public class Tournament {
     }
 
     // TODO - mudar p/ programação declarativa
+    // TODO - colocar 8 partidas
     public void insertMatches() {
         for (int i = 0; i < size - 1; i++)
             matches.add(new Match(UUID.randomUUID(),
@@ -79,9 +80,8 @@ public class Tournament {
     // TODO - mudar p/ programação declarativa
     public void setNextMatches() {
         int next = size / 2 - 1;
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size - 2; i++) {
             if (i % 2 == 0) next++;
-            if (i == size - 2) return;
             matches.get(i).setNext(matches.get(next));
         }
     }
@@ -136,9 +136,9 @@ public class Tournament {
     @Override
     public String toString() {
         return "Tournament{" +
-               "tournamentUUID=" + tournamentUUID +
-               ", size=" + size +
-               ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
-               '}';
+                "tournamentUUID=" + tournamentUUID +
+                ", size=" + size +
+                ", matches=" + (matches == null ? " null" : matches.stream().map(match -> "\n\t" + match.toString()).toList()) +
+                '}';
     }
 }
