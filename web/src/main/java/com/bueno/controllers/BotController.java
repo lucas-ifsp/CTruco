@@ -3,6 +3,7 @@ package com.bueno.controllers;
 import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
 import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.game.dtos.RankBotsResponse;
 import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
 import com.bueno.domain.usecases.game.usecase.RankBotsUseCase;
 import org.springframework.http.ResponseEntity;
@@ -49,19 +50,23 @@ public class BotController {
     @PostMapping("/rank")
     private ResponseEntity<?> RankBots() {
         try {
-            if (rankUseCase.isRanking() && !rankUseCase.hasRank())
-                return ResponseEntity.ok("Ranking...");
-            else {
-                if (rankUseCase.isRanking() && rankUseCase.hasRank()) {
-                    return ResponseEntity.ok(rankUseCase.getRank());
-                } else {
-                    rankUseCase.rankAll();
-                    return ResponseEntity.ok("Ranking...");
-                }
-            }
+            var response = rankBotsResponseFactory();
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
+
+    private RankBotsResponse rankBotsResponseFactory() {
+        if (rankUseCase.isRanking())
+            return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Ranking... " + rankUseCase.getProcessingTime() + "ms");
+        if (rankUseCase.hasRank()) {
+//            rankUseCase.setHasRank(false);
+            return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Rank finished");
+        }
+        rankUseCase.rankAll();
+        return new RankBotsResponse(rankUseCase.isRanking(), rankUseCase.getRank(), "Starting to rank");
+
     }
 
 }

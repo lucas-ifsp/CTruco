@@ -5,7 +5,7 @@ import com.bueno.application.utils.Command;
 import java.util.Map;
 
 public class BotRankPrinter implements Command<Void> {
-    Map<String,Long> botRankMap;
+    Map<String, Long> botRankMap;
 
     public BotRankPrinter(Map<String, Long> botRank) {
         this.botRankMap = botRank;
@@ -15,9 +15,9 @@ public class BotRankPrinter implements Command<Void> {
     public Void execute() {
         System.out.println("Rank Of Bots");
         int rank = 0;
-        for (var set : botRankMap.entrySet()) {
+        for (var bot : botRankMap.entrySet()) {
             rank++;
-            System.out.println("["+rank+"] "+set.getKey());
+            System.out.println("[" + rank + "] " + bot.getKey());
         }
         return null;
     }
