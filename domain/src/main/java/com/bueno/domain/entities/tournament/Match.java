@@ -56,18 +56,23 @@ public class Match implements Comparable {
         isAvailable = false;
     }
 
-    public void setWinnerToNextBracket() {
-        if (next == null) return;
-        if (winnerName == null) return;
+    public boolean setWinnerToNextBracket() {
+        if (next == null) return false;
+        if (winnerName == null) return false;
 
+        // if the matchNumber is an even number the match winner need to be the player 2 from the next match
         if (matchNumber % 2 == 0) {
-            if (next.p2Name == null)
-                next.p2Name = winnerName;
-            return;
+            if (next.p2Name != null) return false;
+
+            next.p2Name = winnerName;
+            return true;
+
         }
 
-        if (next.p1Name == null)
-            next.p1Name = winnerName;
+        if (next.p1Name != null) return false;
+
+        next.p1Name = winnerName;
+        return true;
     }
 
     public void setAvailableState() {
