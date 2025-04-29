@@ -22,7 +22,9 @@ package com.bueno.domain.usecases.game.usecase;
 
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
@@ -36,6 +38,7 @@ import com.bueno.domain.usecases.utils.exceptions.EntityNotFoundException;
 import com.bueno.domain.usecases.utils.exceptions.IllegalGameEnrolmentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ObjectError;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -45,15 +48,20 @@ public class CreateGameUseCase {
 
     private final GameRepository gameRepo;
     private final UserRepository userRepo;
+    private final RemoteBotRepository botRepository;
+    private final RemoteBotApi remoteBotApi;
 
     @Autowired
-    public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo) {
+    public CreateGameUseCase(GameRepository gameRepo, UserRepository userRepo,
+                             RemoteBotRepository botRepository, RemoteBotApi remoteBotApi) {
         this.gameRepo = Objects.requireNonNull(gameRepo);
         this.userRepo = userRepo;
+        this.botRepository = Objects.requireNonNull(botRepository);
+        this.remoteBotApi = Objects.requireNonNull(remoteBotApi);
     }
 
-    public CreateGameUseCase(GameRepository gameRepo) {
-        this(gameRepo, null);
+    public CreateGameUseCase(GameRepository gameRepo, RemoteBotRepository botRepository,RemoteBotApi remoteBotApi ) {
+        this(gameRepo, null, botRepository, remoteBotApi);
     }
 
     public IntelDto createForUserAndBot(CreateForUserAndBotDto request){
@@ -75,7 +83,8 @@ public class CreateGameUseCase {
     }
 
     private boolean hasNoBotServiceWith(String botName) {
-        return !Objects.requireNonNull(BotProviderService.providersNames()).contains(botName);
+        BotManagerService botManagerService = new BotManagerService(botRepository, remoteBotApi);
+        return !Objects.requireNonNull(botManagerService.providersNames()).contains(botName);
     }
 
     public IntelDto createDetached(CreateDetachedDto request){

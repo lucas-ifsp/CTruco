@@ -24,7 +24,9 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.bot.usecase.BotUseCase;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
@@ -48,18 +50,22 @@ public class PointsProposalUseCase {
     private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
 
-    public PointsProposalUseCase(GameRepository gameRepository) {
-        this(gameRepository, null, null);
+    public PointsProposalUseCase(GameRepository gameRepository,
+                                 RemoteBotRepository remoteBotRepository,
+                                 RemoteBotApi remoteBotApi) {
+        this(gameRepository, remoteBotRepository, remoteBotApi, null, null);
     }
 
     @Autowired
     public PointsProposalUseCase(GameRepository gameRepository,
+                                 RemoteBotRepository remoteBotRepository,
+                                 RemoteBotApi remoteBotApi,
                                  GameResultRepository gameResultRepository,
                                  HandResultRepository handResultRepository) {
         this.gameRepository = Objects.requireNonNull( gameRepository);
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
-        this.botUseCase = new BotUseCase(gameRepository, gameResultRepository, handResultRepository);
+        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository);
     }
 
     public IntelDto raise(UUID playerUuid){

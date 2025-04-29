@@ -5,11 +5,23 @@ import com.bueno.application.withbots.features.EvaluateBot;
 import com.bueno.application.withbots.features.PlayWithBots;
 import com.bueno.application.withbots.features.RankBots;
 import com.bueno.application.withuser.PlayAgainstBots;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.remote.RemoteBotApiAdapter;
 
 import java.util.Scanner;
 import java.util.logging.LogManager;
 
 public class ExecuteMenu implements Command<Void> {
+
+    private final RemoteBotRepository repository;
+    private final RemoteBotApi botApi;
+
+    public ExecuteMenu() {
+        repository = new RemoteBotRepositoryFileImpl();
+        botApi = new RemoteBotApiAdapter();
+    }
 
     @Override
     public Void execute() {
@@ -39,7 +51,7 @@ public class ExecuteMenu implements Command<Void> {
                 cli.gameCLIStarter();
             }
             case "2" ->{
-                final var playBots = new PlayWithBots();
+                final var playBots = new PlayWithBots(repository, botApi);
                 playBots.playWithBotsConsole();
             }
             case "3" ->{

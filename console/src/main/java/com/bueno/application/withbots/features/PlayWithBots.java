@@ -21,9 +21,13 @@
 package com.bueno.application.withbots.features;
 
 import com.bueno.application.withbots.commands.*;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
+import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.remote.RemoteBotApiAdapter;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,13 +36,23 @@ public class PlayWithBots {
 
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
+
+    private final RemoteBotRepository repository;
+    private final RemoteBotApi botApi;
+
     private String bot1Name;
     private String bot2Name;
     private int times;
 
+    public PlayWithBots(RemoteBotRepository repository, RemoteBotApi botApi) {
+        this.repository = repository;
+        this.botApi = botApi;
+    }
 
     public void playWithBotsConsole() {
-        final var botNames = BotProviderService.providersNames();
+
+        BotManagerService botManagerService = new BotManagerService(repository, botApi);
+        final var botNames = botManagerService.providersNames();
 
         printAvailableBots(botNames);
 
@@ -63,8 +77,8 @@ public class PlayWithBots {
     }
 
     private List<PlayWithBotsDto> playBotsStarter() {
-        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, bot2Name);
-        return useCase.playWithBots(times);
+        final var useCase = new PlayWithBotsUseCase(repository, botApi);
+        return useCase.playWithBots(uuidBot1, bot1Name, bot2Name, times);
     }
 
     private void printAvailableBots(List<String> botNames) {

@@ -21,9 +21,12 @@
 package com.bueno.application.withuser.commands;
 
 import com.bueno.application.utils.Command;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
+import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
 import com.google.common.primitives.Ints;
+import com.remote.RemoteBotApiAdapter;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -42,7 +45,10 @@ public class GameSettingsReader implements Command<CreateDetachedDto> {
     }
 
     private String readBotName() {
-        final var botNames = BotProviderService.providersNames();
+        final RemoteBotRepository repository = new RemoteBotRepositoryFileImpl();
+        final RemoteBotApiAdapter botApi = new RemoteBotApiAdapter();
+        final BotManagerService botManagerService = new BotManagerService(repository, botApi);
+        final var botNames = botManagerService.providersNames();
         Integer botId;
         while (true){
             System.out.println("Oponente(s): ");

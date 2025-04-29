@@ -4,16 +4,31 @@ import com.bueno.application.withbots.commands.BotsAvailablePrinter;
 import com.bueno.application.withbots.commands.BotOptionReader;
 import com.bueno.application.withbots.commands.EvaluateBotsPrinter;
 import com.bueno.application.withbots.commands.WaitingMessagePrinter;
-import com.bueno.domain.usecases.bot.providers.service.BotProviderService;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.EvaluateResultsDto;
 import com.bueno.domain.usecases.game.usecase.EvaluateBotsUseCase;
+import com.bueno.persistence.repositories.RemoteBotRepositoryFileImpl;
+import com.remote.RemoteBotApiAdapter;
 
 import java.util.List;
 
 public class EvaluateBot {
 
+    private final RemoteBotRepository repository;
+    private final RemoteBotApi botApi;
+
+    public EvaluateBot() {
+        repository = new RemoteBotRepositoryFileImpl();
+        botApi = new RemoteBotApiAdapter();
+    }
+
     public void againstAll() {
-        final var botNames = BotProviderService.providersNames();
+        RemoteBotRepository repository = new RemoteBotRepositoryFileImpl();
+        RemoteBotApi botApi = new RemoteBotApiAdapter();
+        BotManagerService providerService = new BotManagerService(repository, botApi);
+        final var botNames = providerService.providersNames();
 
         printAvailableBots(botNames);
         String botToEvaluateName = botNames.get(scanBotOption(botNames) - 1);
@@ -24,7 +39,7 @@ public class EvaluateBot {
     }
 
     private EvaluateResultsDto getEvaluateResultsDto(String botToEvaluateName, List<String> botNames) {
-        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(botToEvaluateName);
+        EvaluateBotsUseCase useCase = new EvaluateBotsUseCase(repository, botApi, botToEvaluateName);
         return useCase.getResults(botNames);
     }
 

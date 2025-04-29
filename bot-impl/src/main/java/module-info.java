@@ -1,9 +1,7 @@
 
-import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
-import com.aah.refactor.me.RefactorMePleaseBot;
 import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.felipe.fabiano.truccard.Truccard;
 import com.brito.macena.boteco.BotEco;
@@ -16,12 +14,13 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
+    requires domain;
+
     requires java.net.http;
     requires com.google.gson;
     requires spring.webflux;
     requires reactor.core;
-    exports com.bueno.impl.dummybot;
-    exports com.aah.refactor.me;
+    exports com.local.bueno.impl.dummybot;
     exports com.contiero.lemes.atrasabot;
     exports com.felipe.fabiano.truccard;
     exports com.carvalho.candido.tomegapbot;
@@ -32,7 +31,6 @@ module bot.impl {
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
-            RefactorMePleaseBot,
             MalasiaBot,
             AtrasaBot,
             Truccard,
