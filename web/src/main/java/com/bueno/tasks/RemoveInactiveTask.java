@@ -41,7 +41,7 @@ public class RemoveInactiveTask {
         this.removeGameUseCase = removeGameUseCase;
     }
 
-    @Scheduled(fixedRate = 30_000)
+    //@Scheduled(fixedRate = 30_000)
     public void reportCurrentTime() {
         final List<UUID> removedGames = removeGameUseCase.byInactivityAfter(5);
         removedGames.forEach(gameUuid -> log.info("Removed game {} due to inactivity.", gameUuid));
