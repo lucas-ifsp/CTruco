@@ -21,19 +21,20 @@
 
 package com.brito.macena.boteco.factories;
 
-import com.brito.macena.boteco.intel.analyze.Pattern;
-import com.brito.macena.boteco.intel.analyze.Trucador;
-import com.brito.macena.boteco.intel.profiles.Agressive;
-import com.brito.macena.boteco.intel.profiles.Passive;
-import com.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
-import com.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
-import com.brito.macena.boteco.intel.trucoResponder.PassiveTrucoResponder;
-import com.brito.macena.boteco.intel.trucoResponder.SneakyTrucoResponder;
-import com.brito.macena.boteco.interfaces.Analyzer;
-import com.brito.macena.boteco.interfaces.ProfileBot;
-import com.brito.macena.boteco.interfaces.TrucoCaller;
-import com.brito.macena.boteco.interfaces.TrucoResponder;
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.factories.InstanceFactory;
+import com.local.brito.macena.boteco.intel.analyze.Pattern;
+import com.local.brito.macena.boteco.intel.analyze.Trucador;
+import com.local.brito.macena.boteco.intel.profiles.Agressive;
+import com.local.brito.macena.boteco.intel.profiles.Passive;
+import com.local.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
+import com.local.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
+import com.local.brito.macena.boteco.intel.trucoResponder.PassiveTrucoResponder;
+import com.local.brito.macena.boteco.intel.trucoResponder.SneakyTrucoResponder;
+import com.local.brito.macena.boteco.interfaces.Analyzer;
+import com.local.brito.macena.boteco.interfaces.ProfileBot;
+import com.local.brito.macena.boteco.interfaces.TrucoCaller;
+import com.local.brito.macena.boteco.interfaces.TrucoResponder;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;

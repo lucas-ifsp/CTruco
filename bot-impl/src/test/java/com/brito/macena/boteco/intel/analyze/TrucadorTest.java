@@ -21,7 +21,8 @@
 
 package com.brito.macena.boteco.intel.analyze;
 
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.intel.analyze.Trucador;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;

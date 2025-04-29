@@ -19,11 +19,8 @@
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-<<<<<<<< HEAD:bot-impl/src/main/java/com/brito/macena/boteco/utils/Status.java
-package com.brito.macena.boteco.utils;
-========
-package com.local.luna.jundi.jokerBot.exceptions;
->>>>>>>> fe692dea (refact: bringing all bots into the local/ package):bot-impl/src/main/java/com/local/luna/jundi/jokerBot/exceptions/WithoutCardsToPlayException.java
+package com.local.brito.macena.boteco.utils;
+
 
 public enum Status {
     BAD, MEDIUM, GOOD, EXCELLENT

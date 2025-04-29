@@ -21,11 +21,12 @@
 
 package com.brito.macena.boteco.intel.analyze;
 
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.local.brito.macena.boteco.intel.analyze.Pattern;
 import org.junit.jupiter.api.*;
 
 import java.util.List;

@@ -19,7 +19,7 @@ package com.local.brito.macena.boteco.interfaces;/*
  *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
  */
 
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
 
 public interface TrucoResponder {

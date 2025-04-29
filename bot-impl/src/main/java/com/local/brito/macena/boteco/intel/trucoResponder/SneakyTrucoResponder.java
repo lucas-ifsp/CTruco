@@ -21,8 +21,8 @@
 
 package com.local.brito.macena.boteco.intel.trucoResponder;
 
-import com.brito.macena.boteco.interfaces.TrucoResponder;
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.interfaces.TrucoResponder;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.local.brito.macena.boteco.factories.InstanceFactory;

@@ -21,8 +21,9 @@
 
 package com.brito.macena.boteco.intel.profiles;
 
-import com.brito.macena.boteco.interfaces.ProfileBot;
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.intel.profiles.Passive;
+import com.local.brito.macena.boteco.interfaces.ProfileBot;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
