@@ -23,6 +23,7 @@ public class MatchConverter {
                 match.getWinnerName(),
                 match.getP1Score(),
                 match.getP2Score(),
+                match.getTimeToExecute(),
                 (match.getNext() == null ? null : match.getNext().getId()));
     }
 
@@ -39,6 +40,7 @@ public class MatchConverter {
                                 dto.winnerName(),
                                 dto.p1Score(),
                                 dto.p2Score(),
+                                dto.timeToExecute(),
                                 fromDTO(matchDTO, allMatches)))
                 .orElseGet(() ->
                         new Match(dto.uuid(),
@@ -49,6 +51,7 @@ public class MatchConverter {
                                 dto.winnerName(),
                                 dto.p1Score(),
                                 dto.p2Score(),
+                                dto.timeToExecute(),
                                 null));
         return match;
     }

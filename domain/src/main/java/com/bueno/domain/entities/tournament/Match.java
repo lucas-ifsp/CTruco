@@ -6,6 +6,7 @@ import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
 
+import java.security.Timestamp;
 import java.util.UUID;
 
 
@@ -18,6 +19,7 @@ public class Match implements Comparable {
     private String winnerName;
     private long p1Score;
     private long p2Score;
+    private long timeToExecute;
     private Match next;
 
     public Match(UUID id, int matchNumber,
@@ -27,6 +29,7 @@ public class Match implements Comparable {
                  String winnerName,
                  long p1Score,
                  long p2Score,
+                 long timeToExecute,
                  Match next) {
         this.id = id;
         this.matchNumber = matchNumber;
@@ -36,7 +39,13 @@ public class Match implements Comparable {
         this.winnerName = winnerName;
         this.p1Score = p1Score;
         this.p2Score = p2Score;
+        this.timeToExecute = timeToExecute;
         this.next = next;
+    }
+
+    public Match(UUID id, int matchNumber) {
+        this.id = id;
+        this.matchNumber = matchNumber;
     }
 
     public void play(RemoteBotRepository repository,
@@ -47,6 +56,7 @@ public class Match implements Comparable {
         PlayWithBotsResultsDto results = useCase.playWithBots(UUID.randomUUID(), p1Name, UUID.randomUUID(), p2Name, times);
         long p1Wins = results.info().stream().filter(info -> info.name().equals(p1Name)).count();
         long p2Wins = times - p1Wins;
+        timeToExecute = results.timeToExecute();
         p1Score = p1Wins;
         p2Score = p2Wins;
         if (p1Wins > times / 2) {
@@ -123,6 +133,10 @@ public class Match implements Comparable {
         return p2Name;
     }
 
+    public long getTimeToExecute() {
+        return timeToExecute;
+    }
+
     public boolean getIsAvailable() {
         return isAvailable;
     }
@@ -142,15 +156,15 @@ public class Match implements Comparable {
     @Override
     public String toString() {
         return "MatchInfo{" +
-               "uuid= " + id +
-               ", number= " + matchNumber +
-               ", p1Name='" + p1Name + '\'' +
-               ", p2Name='" + p2Name + '\'' +
-               ", available=" + isAvailable +
-               ", winnerName='" + winnerName + '\'' +
-               ", p1Score=" + p1Score +
-               ", p2Score=" + p2Score +
-               ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
+                "uuid= " + id +
+                ", number= " + matchNumber +
+                ", p1Name='" + p1Name + '\'' +
+                ", p2Name='" + p2Name + '\'' +
+                ", available=" + isAvailable +
+                ", winnerName='" + winnerName + '\'' +
+                ", p1Score=" + p1Score +
+                ", p2Score=" + p2Score +
+                ", nextMatch=" + (next == null ? ("null") : (next.id.toString()));
     }
 
     @Override
