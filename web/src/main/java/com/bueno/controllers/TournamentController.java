@@ -26,12 +26,16 @@ public class TournamentController {
     private final PlayTournamentMatchesUseCase playTournamentMatchesUseCase;
     private final GetTournamentUseCase getTournamentUseCase;
     private final GetMatchUseCase getMatchUseCase;
+    private final PlayMatchInParallelUseCase playMatchInParallelUseCase;
 
     public TournamentController(@Qualifier("matchesRepositoryMongoImpl") MatchRepository matchRepository,
                                 @Qualifier("tournamentRepositoryMongoImpl") TournamentRepository tournamentRepository,
                                 CreateTournamentUseCase tournamentProvider,
                                 RefreshTournamentUseCase refreshUseCase,
-                                PlayTournamentMatchesUseCase playTournamentMatchesUseCase, GetTournamentUseCase getTournamentUseCase, GetMatchUseCase getMatchUseCase) {
+                                PlayTournamentMatchesUseCase playTournamentMatchesUseCase,
+                                GetTournamentUseCase getTournamentUseCase,
+                                GetMatchUseCase getMatchUseCase,
+                                PlayMatchInParallelUseCase playMatchInParallelUseCase) {
         this.matchRepository = matchRepository;
         this.tournamentRepository = tournamentRepository;
         this.tournamentProvider = tournamentProvider;
@@ -39,6 +43,7 @@ public class TournamentController {
         this.playTournamentMatchesUseCase = playTournamentMatchesUseCase;
         this.getTournamentUseCase = getTournamentUseCase;
         this.getMatchUseCase = getMatchUseCase;
+        this.playMatchInParallelUseCase = playMatchInParallelUseCase;
     }
 
 
@@ -65,9 +70,18 @@ public class TournamentController {
     @GetMapping("/{uuid}")
     public ResponseEntity<?> getTournamentByUuid(@PathVariable UUID uuid) {
         TournamentDTO dto = tournamentRepository.findTournamentById(uuid).orElseThrow();
+        List<MatchDTO> matchesDTO = matchRepository.findMatchesByTournamentId(uuid);
+
+        TournamentResponseDTO response = new TournamentResponseDTO(dto.uuid(),
+                dto.participantsNames(),
+                matchesDTO,
+                dto.size(),
+                dto.times(),
+                dto.winnerName()
+        );
 
         return new ResponseBuilder(HttpStatus.OK)
-                .addEntry(new ResponseEntry("payload", dto))
+                .addEntry(new ResponseEntry("payload", response))
                 .addTimestamp()
                 .build();
     }
@@ -100,24 +114,11 @@ public class TournamentController {
                 .addTimestamp()
                 .build();
 
-        playTournamentMatchesUseCase.playOne(tournamentUuid, chosenMatchNumber, numberOfSimulations);
-        refreshUseCase.refresh(tournamentUuid);
-
-        TournamentDTO dto = getTournamentUseCase.byUuid(tournamentUuid);
-        List<MatchDTO> matchesDTO = getMatchUseCase.byTournamentUuid(dto.uuid());
-
-        TournamentResponseDTO response = new TournamentResponseDTO(dto.uuid(),
-                dto.participantsNames(),
-                matchesDTO,
-                dto.size(),
-                dto.times(),
-                dto.winnerName());
-
+        playMatchInParallelUseCase.execute(tournamentUuid, chosenMatchNumber, numberOfSimulations);
 
         return new ResponseBuilder(HttpStatus.OK)
-                .addEntry(new ResponseEntry("payload", response))
+                .addEntry(new ResponseEntry("Success", "The server is playing the match"))
                 .addTimestamp()
                 .build();
-
     }
 }

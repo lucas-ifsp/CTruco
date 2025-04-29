@@ -39,6 +39,7 @@ public class SimulationService {
                 .parallel()
                 .filter(Objects::nonNull)
                 .toList();
+
     }
 
     private PlayWithBotsDto simulate(UUID evaluatedUuid, String evaluateName, UUID challengedUuid, String challengedName) {
@@ -64,7 +65,9 @@ public class SimulationService {
     private Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> executeGameCall() {
         return gameCall -> {
             try {
-                return gameCall.call();
+                PlayWithBotsDto gameResult = gameCall.call();
+                System.out.println("Winner: " + gameResult.name());
+                return gameResult;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
