@@ -6,6 +6,8 @@ import com.bueno.domain.usecases.tournament.dtos.TournamentDTO;
 import com.bueno.domain.usecases.tournament.repos.TournamentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -19,8 +21,10 @@ public class CreateTournamentUseCase {
         this.tournamentConverter = tournamentConverter;
     }
 
-    public TournamentDTO createTournament(List<String> participantNames, int size) {
-        Tournament tournament = new Tournament(participantNames, size);
+    public TournamentDTO createTournament(List<String> bots, int size) {
+        List<String> participants = new ArrayList<>(bots);
+        Collections.shuffle(participants);
+        Tournament tournament = new Tournament(participants, size);
         tournamentRepository.save(tournamentConverter.toDTO(tournament));
         return tournamentConverter.toDTO(tournament);
     }
