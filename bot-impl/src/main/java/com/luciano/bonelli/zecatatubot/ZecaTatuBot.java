@@ -3,6 +3,7 @@ package com.luciano.bonelli.zecatatubot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class ZecaTatuBot implements BotServiceProvider {
@@ -43,12 +44,11 @@ public class ZecaTatuBot implements BotServiceProvider {
         return handSValue;
     }
 
-    public TrucoCard getHighCard(GameIntel intel){
+    public TrucoCard getHighCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
-        this.highCard = intel.getCards().get(0);
-        for (TrucoCard card : intel.getCards()) {
-            if(card.relativeValue(vira) > highCard.relativeValue(vira)) highCard = card;
-        }
+        this.highCard = intel.getCards().stream()
+                .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .orElse(null);
         return highCard;
     }
 
