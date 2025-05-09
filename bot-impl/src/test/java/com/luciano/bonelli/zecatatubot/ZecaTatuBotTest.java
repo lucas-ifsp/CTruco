@@ -93,6 +93,17 @@ class ZecaTatuBotTest {
         assertThat(zecaTatuBot.getHighCard(intel).getRank()).isEqualTo((CardRank.TWO));
     }
 
+    @Test
+    @DisplayName("ShouldTellLowestCardInHand")
+    public void LowestCard() {
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
+        assertThat(zecaTatuBot.getLowestCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+    }
+
 
 }
 
