@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 class ZecaTatuBotTest {
     private ZecaTatuBot zecaTatuBot;
-    private GameIntel.StepBuilder stepBuilder;
     private GameIntel intel;
 
     @BeforeEach
@@ -71,5 +70,17 @@ class ZecaTatuBotTest {
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
         assertThat(zecaTatuBot.handValue(intel)).isEqualTo(23);
     }
+
+    @Test
+    @DisplayName("ShouldTellHighestCardInHand")
+    public void HighestCard() {
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
+        assertThat(zecaTatuBot.highCard(intel)).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+    }
+
 }
 
