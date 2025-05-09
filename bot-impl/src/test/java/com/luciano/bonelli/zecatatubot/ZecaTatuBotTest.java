@@ -54,15 +54,12 @@ class ZecaTatuBotTest {
     @Test
     @DisplayName("CountHowManyManilhasInHand")
     public void countManilhas() {
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
-        when(intel.getVira()).thenReturn(vira);
-        TrucoCard card1 = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
-        TrucoCard card2 = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
-        TrucoCard card3 = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
-
-        when(intel.getCards()).thenReturn(List.of(card1, card2, card3));
-        long countManilha = zecaTatuBot.countManilha(intel);
-        assertThat(countManilha).isEqualTo(2);
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
+        assertThat(zecaTatuBot.countManilha(intel)).isEqualTo(2);
     }
 }
 
