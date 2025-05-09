@@ -76,11 +76,23 @@ class ZecaTatuBotTest {
     public void HighestCard() {
         when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
         when(intel.getCards()).thenReturn(List.of(
-                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
         assertThat(zecaTatuBot.getHighCard(intel)).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
     }
+
+    @Test
+    @DisplayName("ShouldTellHighestCardInHandWith2equalsCard")
+    public void HighestCardWith2Equals() {
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
+        assertThat(zecaTatuBot.getHighCard(intel).getRank()).isEqualTo((CardRank.TWO));
+    }
+
 
 }
 
