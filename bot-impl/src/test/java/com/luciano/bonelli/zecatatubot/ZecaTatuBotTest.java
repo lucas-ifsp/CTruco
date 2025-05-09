@@ -101,7 +101,7 @@ class ZecaTatuBotTest {
                 TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
                 TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)));
-        assertThat(zecaTatuBot.getLowestCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+        assertThat(zecaTatuBot.getLowCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
     }
 
 
