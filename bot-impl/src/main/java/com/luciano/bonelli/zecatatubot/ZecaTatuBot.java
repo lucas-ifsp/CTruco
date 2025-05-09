@@ -24,4 +24,10 @@ public class ZecaTatuBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+    public long countManilha (GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(card -> card.isManilha(intel.getVira()))
+                .count();
+    }
 }
