@@ -64,11 +64,12 @@ class ZecaTatuBotTest {
     @Test
     @DisplayName("ShoulCountHandValue")
     public void handValueManilha() {
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
         when(intel.getCards()).thenReturn(List.of(
                 TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
                 TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
-        assertThat(zecaTatuBot.handValue(intel)).isEqualTo(16);
+        assertThat(zecaTatuBot.handValue(intel)).isEqualTo(23);
     }
 }
 
