@@ -104,6 +104,19 @@ class ZecaTatuBotTest {
         assertThat(zecaTatuBot.getLowCard(intel)).isEqualTo(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
     }
 
+    @Test
+    @DisplayName("ShouldTellMidCardInHand")
+    public void MidCard() {
+        when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS)));
+        assertThat(zecaTatuBot.getMidCard(intel)).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+    }
+
+
+
 
 }
 
