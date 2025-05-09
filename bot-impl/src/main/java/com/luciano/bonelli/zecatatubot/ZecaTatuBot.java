@@ -52,14 +52,14 @@ public class ZecaTatuBot implements BotServiceProvider {
         return highCard;
     }
 
-    public TrucoCard getLowCard(GameIntel intel){
+    public TrucoCard getLowCard(GameIntel intel) {
         TrucoCard vira = intel.getVira();
-        this.lowCard = intel.getCards().get(0);
-        for (TrucoCard card : intel.getCards()) {
-            if(card.relativeValue(vira) < lowCard.relativeValue(vira)) lowCard = card;
-        }
+        this.lowCard = intel.getCards().stream()
+                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .orElse(null);
         return lowCard;
     }
+
 
     public TrucoCard getMidCard(GameIntel intel){
         TrucoCard midCard = intel.getCards().get(0);
