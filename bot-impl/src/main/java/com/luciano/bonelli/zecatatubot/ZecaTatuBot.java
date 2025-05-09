@@ -3,6 +3,8 @@ package com.luciano.bonelli.zecatatubot;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.Objects;
+
 public class ZecaTatuBot implements BotServiceProvider {
     private TrucoCard highCard;
     private TrucoCard lowCard;
@@ -47,7 +49,6 @@ public class ZecaTatuBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards()) {
             if(card.relativeValue(vira) > highCard.relativeValue(vira)) highCard = card;
         }
-
         return highCard;
     }
 
@@ -57,8 +58,15 @@ public class ZecaTatuBot implements BotServiceProvider {
         for (TrucoCard card : intel.getCards()) {
             if(card.relativeValue(vira) < lowCard.relativeValue(vira)) lowCard = card;
         }
-
         return lowCard;
+    }
+
+    public TrucoCard getMidCard(GameIntel intel){
+        TrucoCard midCard = intel.getCards().get(0);
+        for (TrucoCard card : intel.getCards()) {
+            if(!Objects.equals(highCard, card) && !Objects.equals(lowCard, card)) midCard = card;
+        }
+        return midCard;
     }
 
 }
