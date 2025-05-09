@@ -4,6 +4,8 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class ZecaTatuBot implements BotServiceProvider {
+    private TrucoCard highCard;
+
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
@@ -36,5 +38,15 @@ public class ZecaTatuBot implements BotServiceProvider {
             handSValue += card.relativeValue(intel.getVira());
         }
         return handSValue;
+    }
+
+    public TrucoCard getHighCard(GameIntel intel){
+        TrucoCard vira = intel.getVira();
+        this.highCard = intel.getCards().get(0);
+        for (TrucoCard card : intel.getCards()) {
+            if(card.relativeValue(vira) > highCard.relativeValue(vira)) highCard = card;
+        }
+
+        return highCard;
     }
 }

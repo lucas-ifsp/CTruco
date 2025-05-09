@@ -79,7 +79,7 @@ class ZecaTatuBotTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
                 TrucoCard.of(CardRank.SIX, CardSuit.SPADES)));
-        assertThat(zecaTatuBot.highCard(intel)).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
+        assertThat(zecaTatuBot.getHighCard(intel)).isEqualTo(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS));
     }
 
 }
