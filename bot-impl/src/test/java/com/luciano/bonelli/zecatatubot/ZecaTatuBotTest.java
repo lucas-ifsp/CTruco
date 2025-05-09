@@ -61,5 +61,14 @@ class ZecaTatuBotTest {
                 TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
         assertThat(zecaTatuBot.countManilha(intel)).isEqualTo(2);
     }
+    @Test
+    @DisplayName("ShoulCountHandValue")
+    public void handValueManilha() {
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)));
+        assertThat(zecaTatuBot.handValue(intel)).isEqualTo(16);
+    }
 }
 
