@@ -1,7 +1,6 @@
 package com.luciano.bonelli.zecatatubot;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 public class ZecaTatuBot implements BotServiceProvider {
@@ -29,5 +28,13 @@ public class ZecaTatuBot implements BotServiceProvider {
         return intel.getCards().stream()
                 .filter(card -> card.isManilha(intel.getVira()))
                 .count();
+    }
+
+    public int handValue(GameIntel intel){
+        int handSValue = 0;
+        for (TrucoCard card : intel.getCards()){
+            handSValue += card.relativeValue(intel.getVira());
+        }
+        return handSValue;
     }
 }
