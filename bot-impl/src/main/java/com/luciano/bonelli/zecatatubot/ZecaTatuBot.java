@@ -12,6 +12,10 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        int opponentScore = intel.getOpponentScore();
+        if(opponentScore <= 2){
+            return handValue(intel) >= 15;
+        }
         return false;
     }
 
