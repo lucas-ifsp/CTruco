@@ -30,6 +30,18 @@ class ZecaTatuBotTest {
     @DisplayName("Test getMaoDeOnzeResponse method")
     class GetMaoDeOnzeResponseTest {
 
+        @Test
+        @DisplayName("Opponent has 2 points or less")
+        void whenOpponentScoreIsLessOrEqual2() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)));
+            when(intel.getOpponentScore()).thenReturn(2);
+            boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isTrue();
+        }
     }
 
     @Nested
