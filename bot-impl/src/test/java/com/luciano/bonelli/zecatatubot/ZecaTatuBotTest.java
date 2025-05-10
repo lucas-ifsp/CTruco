@@ -42,6 +42,19 @@ class ZecaTatuBotTest {
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+
+        @Test
+        @DisplayName("Opponent has 2 points or less and we have bad hand")
+        void whenOpponentScoreIsLessOrEqual2AndWeHaveBadHand() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.SPADES));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
+            when(intel.getOpponentScore()).thenReturn(1);
+            boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isFalse();
+        }
     }
 
     @Nested
