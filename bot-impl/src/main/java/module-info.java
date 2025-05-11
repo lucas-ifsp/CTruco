@@ -1,6 +1,7 @@
 
 import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
+import com.fernandoAloneBot.MeuBot;
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
 import com.aah.refactor.me.RefactorMePleaseBot;
@@ -25,6 +26,7 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+    exports com.fernandoAloneBot;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
@@ -36,5 +38,6 @@ module bot.impl {
             BotEco,
             MoedorDeCana,
             Fogao6Boca,
+            MeuBot,
             SkillDiffBot;
 }
