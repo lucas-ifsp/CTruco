@@ -60,6 +60,16 @@ public class MeuBot implements BotServiceProvider {
         return hasZap && hasCopas;
     }
 
+    private boolean hasMaoDeTres(GameIntel intel) {
+        int boas = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value()  >= 10) {
+                boas++;
+            }
+        }
+        return boas == 3;
+    }
+
 
 
     @Override
