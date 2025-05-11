@@ -69,7 +69,7 @@ public class MeuBot implements BotServiceProvider {
         return false;
     }
 
-    private boolean c(GameIntel intel) {
+    private boolean hasMaoDeTresManilhas(GameIntel intel) {
         int boas = 0;
         for (TrucoCard card : intel.getCards()) {
             if (card.getRank().value()  >= 10) {
