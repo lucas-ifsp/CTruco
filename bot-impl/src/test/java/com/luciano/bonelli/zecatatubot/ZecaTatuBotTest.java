@@ -59,12 +59,12 @@ class ZecaTatuBotTest {
         @Test
         @DisplayName("Opponent has 4 points or less")
         void whenOpponentScoreIsLessOrEqual4() {
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
             when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS)));
-            when(intel.getOpponentScore()).thenReturn(4);
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS)));
+            when(intel.getOpponentScore()).thenReturn(3);
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
