@@ -43,6 +43,24 @@ public class MeuBot implements BotServiceProvider {
     }
 
 
+    private boolean hasCasalMaior(GameIntel intel) {
+        TrucoCard cardVira = intel.getVira();
+        boolean hasZap = false;
+        boolean hasCopas = false;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(cardVira)) {
+                hasZap = true;
+            }
+            if (card.isCopas(cardVira)) {
+                hasCopas = true;
+            }
+        }
+
+        return hasZap && hasCopas;
+    }
+
+
 
     @Override
     public String getName() {
