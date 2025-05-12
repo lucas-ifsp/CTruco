@@ -69,6 +69,19 @@ class ZecaTatuBotTest {
             assertThat(response).isTrue();
         }
 
+        @Test
+        @DisplayName("Opponent has more than 4 points")
+        void whenOpponentScoreIsGreaterThan4() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)));
+            when(intel.getOpponentScore()).thenReturn(5);
+            boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isFalse();
+        }
+
     }
 
     @Nested
@@ -81,6 +94,7 @@ class ZecaTatuBotTest {
     @Nested
     @DisplayName("Test chooseCard method")
     class ChooseCardTest {
+
 
     }
 
