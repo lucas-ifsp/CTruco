@@ -1,9 +1,6 @@
 package com.luciano.bonelli.zecatatubot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -94,7 +91,20 @@ class ZecaTatuBotTest {
     @Nested
     @DisplayName("Test chooseCard method")
     class ChooseCardTest {
+        @Test
+        @DisplayName("Should play highest card in the first round")
+        public void playHighestCardInFirstRound() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)));
 
+            CardToPlay result = zecaTatuBot.chooseCard(intel);
+
+
+            assertThat(result).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+        }
 
     }
 
