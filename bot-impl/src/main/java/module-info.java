@@ -31,6 +31,7 @@ module bot.impl {
     exports com.local.ghenrique.moedordecana;
     exports com.local.pedro.herick.skilldiffbot;
     exports com.local.abel.francisco.fogao6boca;
+    exports com.remote;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
