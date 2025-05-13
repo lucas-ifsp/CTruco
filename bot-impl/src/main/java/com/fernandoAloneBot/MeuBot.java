@@ -101,6 +101,17 @@ public class MeuBot implements BotServiceProvider {
         return contador == 2 && cardVira.isManilha(cardVira);
     }
 
+    private boolean hasMaoFraca(GameIntel intel) {
+        int count = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if ( card.getRank().value()<= 10) {
+                count++;
+            }
+        }
+        return count == 3;
+    }
+
+
 
 
 
