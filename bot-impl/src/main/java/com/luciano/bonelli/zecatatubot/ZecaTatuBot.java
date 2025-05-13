@@ -29,7 +29,8 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        TrucoCard cardToPlay = getHighCard(intel);
+        return CardToPlay.of(cardToPlay);
     }
 
     @Override
