@@ -23,7 +23,18 @@ public class MeuBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+
+        if (hasCasalMaior(intel)) {
+            return 1; // Reaumentar
+        } else if (hasZap(intel)) {
+            return 0; // Aceitar
+        } else {
+            return -1; // Fugir
+        }
+
+
+
+
     }
 
 
@@ -78,6 +89,18 @@ public class MeuBot implements BotServiceProvider {
         }
         return boas == 3;
     }
+
+    private boolean hasMaoEquilibrada(GameIntel intel) {
+        int contador = 0;
+        TrucoCard cardVira = intel.getVira();
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() > 1 && card.getRank().value() <=3) { // Considera dama ou mais
+                contador++;
+            }
+        }
+        return contador == 2 && cardVira.isManilha(cardVira);
+    }
+
 
 
 
