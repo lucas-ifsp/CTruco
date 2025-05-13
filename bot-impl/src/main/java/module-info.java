@@ -16,6 +16,7 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
+    exports com.breno.trucoJC.botBlessed;
     exports com.bueno.impl.dummybot;
     exports com.aah.refactor.me;
     exports com.contiero.lemes.atrasabot;
@@ -27,6 +28,7 @@ module bot.impl {
     exports com.abel.francisco.fogao6boca;
 
     provides com.bueno.spi.service.BotServiceProvider with
+            BotBlessed,
             DummyBot,
             RefactorMePleaseBot,
             MalasiaBot,

@@ -1,10 +1,9 @@
-package com.breno.trucoJC;
+package com.breno.trucoJC.botBlessed;
 
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
-public class botBlessed implements BotServiceProvider {
+public class BotBlessed implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         return false;
