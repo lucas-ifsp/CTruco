@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,4 +25,18 @@ public class DegolaBotTest {
 
         assertEquals(-1, response);
     }
+
+    @Test
+    public void testDecideIfRaises() {
+        GameIntel intel = mock(GameIntel.class);
+
+        when(intel.getOpponentCard()).thenReturn(Optional.empty());
+
+        FirstRound strategy = new FirstRound();
+        boolean result = strategy.decideIfRaises(intel);
+
+
+        assertFalse(result);
+    }
 }
+
