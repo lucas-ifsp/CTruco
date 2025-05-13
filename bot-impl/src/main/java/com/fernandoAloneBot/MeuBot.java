@@ -111,6 +111,36 @@ public class MeuBot implements BotServiceProvider {
         return count == 3;
     }
 
+// métodos GameIntel
+    public boolean ganhouPrimeiraRodada(GameIntel intel) {
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
+    }
+
+    public boolean ganhouSegundaRodada(GameIntel intel) {
+        return intel.getRoundResults().get(1) == GameIntel.RoundResult.WON;
+    }
+    public boolean perdeuPrimeiraRodada(GameIntel intel) {
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST;
+    }
+    public boolean empatouPrimeiraRodada(GameIntel intel) {
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW;
+    }
+
+    public boolean maoValePontos(GameIntel intel) {
+        return intel.getHandPoints() >= 6;
+    }
+    public boolean pedirTruco(GameIntel intel) {
+        return hasMaoDeTresManilhas(intel) || hasCasalMaior(intel);
+    }
+
+    public boolean isMaoDeOnze(GameIntel intel) {
+        return intel.getScore() == 11;
+    }
+
+
+
+
+
 
 
 
