@@ -99,6 +99,6 @@ public class BotBlessed implements BotServiceProvider {
     }
 
     @Override
-    public String getName() { return "BotBlessedByJC";
-    }
+    public String getName() { return "BotBlessedByJC"; }
+
 }
