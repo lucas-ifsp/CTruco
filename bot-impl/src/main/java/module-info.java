@@ -9,6 +9,7 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.brito.macena.boteco.BotEco;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.ghenrique.moedordecana.MoedorDeCana;
+import com.breno.trucoJC.botBlessed.BotBlessed;
 
 module bot.impl {
     requires bot.spi;
@@ -16,7 +17,6 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
-    exports com.breno.trucoJC.botBlessed;
     exports com.bueno.impl.dummybot;
     exports com.aah.refactor.me;
     exports com.contiero.lemes.atrasabot;
@@ -26,6 +26,7 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+    exports com.breno.trucoJC.botBlessed;
 
     provides com.bueno.spi.service.BotServiceProvider with
             BotBlessed,
