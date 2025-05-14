@@ -159,6 +159,11 @@ public class MeuBot implements BotServiceProvider {
         return hasMaoFraca(intel) && perdeuPrimeiraRodada(intel);
     }
 
+    public boolean blefar(GameIntel intel) {
+        return hasMaoEquilibrada(intel) && !isMaoDeOnze(intel);
+    }
+
+
 
 
 
