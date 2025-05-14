@@ -11,6 +11,43 @@ import java.util.Optional;
 public class MeuBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
+        TrucoCard cardVira = intel.getVira();
+        List<TrucoCard> cards = intel.getCards();
+
+        if(intel.getOpponentScore() == 11 && intel.getScore() == 11){
+            return true;
+        }
+
+        if (hasCasalMaior(intel)) {
+            return true;
+        }
+
+        if(hasDuasManilhas(intel)){
+            return true;
+        }
+
+        if(hasMaoDeTresManilhas(intel)){
+            return true;
+        }
+
+        if(hasMaoEquilibrada(intel)){
+            return true;
+        }
+
+        if(manilhaCount(cards, cardVira) >= 2){
+            return true;
+        }
+
+        if(hasMaoFraca(intel)){
+            return false;
+        }
+
+        if(ganhouPrimeiraRodada(intel)){
+            if(manilhaCount(cards,cardVira) > 1  || hasZap(intel) || hasDuasManilhas(intel) || hasCasalMaior(intel)){
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -112,7 +149,7 @@ public class MeuBot implements BotServiceProvider {
         int contador = 0;
         TrucoCard cardVira = intel.getVira();
         for (TrucoCard card : intel.getCards()) {
-            if (card.getRank().value() > 1 && card.getRank().value() <=3) { // Considera dama ou mais
+            if (card.getRank().value() > 7 && card.getRank().value() <=10) {//refatorar
                 contador++;
             }
         }
@@ -122,7 +159,7 @@ public class MeuBot implements BotServiceProvider {
     private boolean hasMaoFraca(GameIntel intel) {
         int count = 0;
         for (TrucoCard card : intel.getCards()) {
-            if ( card.getRank().value()<= 10) {
+            if ( card.getRank().value()<= 7) {
                 count++;
             }
         }
