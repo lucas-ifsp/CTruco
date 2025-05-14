@@ -236,6 +236,17 @@ public class MeuBot implements BotServiceProvider {
         return contador;
     }
 
+    private TrucoCard maiorCartaDaMao(GameIntel intel) {
+        TrucoCard maior = null;
+        for (TrucoCard card : intel.getCards()) {
+            if (maior == null || card.relativeValue(intel.getVira()) > maior.relativeValue(intel.getVira())) {
+                maior = card;
+            }
+        }
+        return maior;
+    }
+
+
 
 
 
