@@ -1,5 +1,6 @@
 package com.grupo.firsts;
 
+import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.service.BotServiceProvider;
@@ -8,7 +9,7 @@ public class PeNaCova implements BotServiceProvider {
   @Override
   public boolean getMaoDeOnzeResponse(GameIntel intel) {
     long highCards = intel.getCards().stream()
-        .filter(card->card.getRank().ordinal()>=10).count();
+        .filter(card->card.getRank() == CardRank.JACK || card.getRank() == CardRank.QUEEN || card.isManilha(intel.getVira())).count();
     return highCards>=2;
   }
 
