@@ -155,6 +155,11 @@ public class MeuBot implements BotServiceProvider {
         return intel.getScore() == 11;
     }
 
+    public boolean deveCorrer(GameIntel intel) {
+        return hasMaoFraca(intel) && perdeuPrimeiraRodada(intel);
+    }
+
+
 
 
 
