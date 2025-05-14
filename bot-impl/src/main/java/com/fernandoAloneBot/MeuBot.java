@@ -172,7 +172,21 @@ public class MeuBot implements BotServiceProvider {
     }
 
     public boolean aceitarMaoDeOnze(GameIntel intel) {
-        return isMaoDeOnze(intel) && hasMaoDeTresManilhas(intel);
+        boolean euTenhoOnze = intel.getScore() == 11;
+        boolean adversarioTemOnze = intel.getOpponentScore() == 11;
+        boolean minhaMaoEhForte = hasMaoDeTresManilhas(intel) || hasCasalMaior(intel) || hasZap(intel);
+
+        if (euTenhoOnze && adversarioTemOnze) {
+            // Ambos têm 11 pontos: joga, mesmo se mão for fraca
+            return true;
+        }
+
+        if (euTenhoOnze && !adversarioTemOnze) {
+            // Só o bot tem 11 pontos: joga apenas se a mão for forte
+            return minhaMaoEhForte;
+        }
+
+        return false;
     }
 
 
