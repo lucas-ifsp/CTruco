@@ -81,7 +81,21 @@ public class BotBlessed implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+
+        boolean hasStrongCard = hand.stream().anyMatch(c -> c.isManilha(vira) || c.isZap(vira));
+        long threes = hand.stream().filter(c -> c.getRank() == CardRank.THREE).count();
+
+        if (hasStrongCard || threes >= 2) {
+            return 1;
+        }
+
+        if (intel.getOpponentScore() >= 11 && intel.getScore() < 5) {
+            return -1;
+        }
+
+        return -1;
     }
 
     @Override
