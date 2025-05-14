@@ -25,6 +25,7 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+    exports com.grupo.firsts;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
@@ -36,5 +37,6 @@ module bot.impl {
             BotEco,
             MoedorDeCana,
             Fogao6Boca,
-            SkillDiffBot;
+            SkillDiffBot,
+            PeNaCova;
 }
