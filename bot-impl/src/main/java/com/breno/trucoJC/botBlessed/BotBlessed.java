@@ -3,6 +3,9 @@ package com.breno.trucoJC.botBlessed;
 import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
+import java.util.Optional;
+
 public class BotBlessed implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -49,7 +52,31 @@ public class BotBlessed implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> hand = intel.getCards();
+        TrucoCard vira = intel.getVira();
+        int round = intel.getRoundResults().size();
+        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+
+        List<TrucoCard> sortedHand = hand.stream().sorted((c1, c2) -> c2.compareValueTo(c1, vira)).toList();
+        TrucoCard strongest = sortedHand.get(0);
+        TrucoCard weakest = sortedHand.get(sortedHand.size() - 1);
+
+        if (round == 0) {
+            if (opponentCard.isPresent()) {
+                TrucoCard opponentPlay = opponentCard.get();
+                if (opponentPlay.isManilha(vira)) {
+                    boolean hasStrongerManilha = hand.stream().anyMatch(c -> c.isManilha(vira) && c.compareValueTo(opponentPlay, vira) > 0);
+                    return hasStrongerManilha ? CardToPlay.of(strongest) : CardToPlay.of(weakest);
+                }
+            }
+            return CardToPlay.of(strongest);
+        }
+
+        if (round == 1) {
+            return CardToPlay.of(weakest);
+        }
+
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override
