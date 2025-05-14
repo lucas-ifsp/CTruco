@@ -28,7 +28,8 @@ class PeNaCovaTest {
       "TWO, HEARTS, FIVE, SPADES, SIX, DIAMONDS, false",
       "KING, HEARTS, ACE, SPADES, THREE, DIAMONDS,true",
       "SEVEN, HEARTS, SIX, SPADES, JACK, DIAMONDS, false",
-      "QUEEN, HEARTS, KING, SPADES, JACK, DIAMONDS, true"
+      "QUEEN, HEARTS, KING, SPADES, JACK, DIAMONDS, true",
+      "THREE, HEARTS, FOUR, SPADES, TWO, DIAMONDS, false"
 
   })
   @DisplayName("Should determine if the bot accepts Mão de Onze")
@@ -52,7 +53,7 @@ class PeNaCovaTest {
                 TrucoCard.of(rank2,suit2),
                 TrucoCard.of(rank3,suit3)
             ),
-            5
+            10
         )
         .opponentScore(3)
         .build();//Opponent score
