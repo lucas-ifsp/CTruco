@@ -14,22 +14,23 @@ public class BotBlessed implements BotServiceProvider {
         int opponentScore = intel.getOpponentScore();
         int playerScore = intel.getScore();
 
-        boolean hasThree = hand.stream().anyMatch(c -> c.getRank() == CardRank.THREE);
-        boolean hasManilha = hand.stream().anyMatch(c -> c.isManilha(vira));
-        long threeCount = hand.stream().filter(c -> c.getRank() == CardRank.THREE).count();
+        long manilhaCount = hand.stream().filter(c -> c.isManilha(vira)).count();
         boolean hasZap = hand.stream().anyMatch(c -> c.isZap(vira));
+        boolean hasCopas = hand.stream().anyMatch(c -> c.isCopas(vira));
+        boolean hasThree = hand.stream().anyMatch(c -> c.getRank() == CardRank.THREE);
+        boolean hasStrongManilha = hand.stream().anyMatch(c -> c.isManilha(vira) && !c.isZap(vira) && !c.isCopas(vira));
 
-        if (playerScore == 11 || opponentScore == 11) {
-            // Responder agressivamente se o jogador tiver uma manilha, Zap, ou 2 ou mais 3s
-            if (Math.abs(playerScore - opponentScore) <= 5 && (hasManilha || hasZap || threeCount >= 2)) {
-                return true;
-            }
+        boolean scoreDiffOk = Math.abs(playerScore - opponentScore) <= 5;
+        boolean isMaoDeOnze = playerScore == 11 || opponentScore == 11;
 
-            // Resposta conservadora, se o bot estiver em desvantagem ou tiver poucas chances de vencer
-            if (opponentScore >= 11 && playerScore < 5) {
-                return false;
-            }
-        }
+        if (!isMaoDeOnze) return false;
+
+        if (scoreDiffOk && hasStrongManilha && hasThree) return true;
+
+        if (manilhaCount >= 2) return true;
+
+        if ((hasZap || hasCopas) && hasThree) return true;
+
         return false;
     }
 
