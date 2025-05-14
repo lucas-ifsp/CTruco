@@ -33,7 +33,9 @@ class PeNaCovaTest {
       "KING, HEARTS, FIVE, SPADES, SIX, DIAMONDS, false",
       "JACK, HEARTS, QUEEN, SPADES, KING, DIAMONDS, true",
       "JACK, HEARTS, FIVE, SPADES, SIX, DIAMONDS, false",
-      "JACK, HEARTS, ACE, SPADES, TWO, DIAMONDS, true"
+      "JACK, HEARTS, ACE, SPADES, TWO, DIAMONDS, true",
+      "QUEEN, HEARTS, QUEEN, SPADES, FOUR, DIAMONDS, true"
+
 
   })
   @DisplayName("Should determine if the bot accepts Mão de Onze")
