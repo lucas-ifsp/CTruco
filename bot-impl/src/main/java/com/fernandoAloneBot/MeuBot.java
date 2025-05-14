@@ -167,6 +167,11 @@ public class MeuBot implements BotServiceProvider {
         return hasDuasManilhas(intel) || hasCasalMaior(intel);
     }
 
+    public boolean pedirNove(GameIntel intel) {
+        return intel.getScore() >= 9 && hasMaoDeTresManilhas(intel);
+    }
+
+
 
 
 
