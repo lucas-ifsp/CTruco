@@ -7,7 +7,9 @@ import com.bueno.spi.service.BotServiceProvider;
 public class PeNaCova implements BotServiceProvider {
   @Override
   public boolean getMaoDeOnzeResponse(GameIntel intel) {
-    return false;
+    long highCards = intel.getCards().stream()
+        .filter(card->card.getRank().ordinal()>=10).count();
+    return highCards>=2;
   }
 
   @Override
