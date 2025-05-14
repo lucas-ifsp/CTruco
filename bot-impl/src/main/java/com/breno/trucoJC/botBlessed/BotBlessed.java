@@ -32,6 +32,18 @@ public class BotBlessed implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        boolean hasManilha = intel.getCards().stream().anyMatch(c -> c.isManilha(intel.getVira()));
+        boolean hasZap = intel.getCards().stream().anyMatch(c -> c.isZap(intel.getVira()));
+        long threes = intel.getCards().stream().filter(c -> c.getRank() == CardRank.THREE).count();
+
+        if (hasManilha || hasZap || threes >= 2) {
+            return true;
+        }
+
+        if (intel.getOpponentScore() >= 11 && intel.getScore() < 5) {
+            return false;
+        }
+
         return false;
     }
 
