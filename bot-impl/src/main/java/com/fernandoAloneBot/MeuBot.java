@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -245,6 +246,26 @@ public class MeuBot implements BotServiceProvider {
         }
         return maior;
     }
+
+    private List<TrucoCard> manilhasNaMaoQueGanhamDoAdversario(GameIntel intel) {
+        List<TrucoCard> vencedoras = new ArrayList<>();
+        Optional<TrucoCard> cartaOponenteOpt = intel.getOpponentCard();
+
+        if (cartaOponenteOpt.isEmpty()) return vencedoras;
+
+        TrucoCard cartaOponente = cartaOponenteOpt.get();
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard minhaCarta : intel.getCards()) {
+            if (minhaCarta.isManilha(vira) &&
+                    minhaCarta.relativeValue(vira) > cartaOponente.relativeValue(vira)) {
+                vencedoras.add(minhaCarta);
+            }
+        }
+
+        return vencedoras;
+    }
+
 
 
 
