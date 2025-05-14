@@ -9,7 +9,13 @@ public class PeNaCova implements BotServiceProvider {
   @Override
   public boolean getMaoDeOnzeResponse(GameIntel intel) {
     long highCards = intel.getCards().stream()
-        .filter(card->card.getRank() == CardRank.JACK || card.getRank() == CardRank.QUEEN || card.isManilha(intel.getVira())).count();
+        .filter(
+            card->card.getRank() == CardRank.JACK
+                || card.getRank() == CardRank.QUEEN
+                || card.getRank() == CardRank.KING
+                || card.getRank() == CardRank.ACE
+                || card.isManilha(intel.getVira()))
+        .count();
     return highCards>=2;
   }
 
