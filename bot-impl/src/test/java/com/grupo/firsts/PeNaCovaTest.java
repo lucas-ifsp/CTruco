@@ -25,7 +25,9 @@ class PeNaCovaTest {
   @ParameterizedTest
   @CsvSource({
       "JACK, HEARTS, QUEEN, SPADES, FIVE, DIAMONDS, true",
-      "TWO, HEARTS, FIVE, SPADES, SIX, DIAMONDS, false"
+      "TWO, HEARTS, FIVE, SPADES, SIX, DIAMONDS, false",
+      "KING, HEARTS, ACE, SPADES, THREE, DIAMONDS,true",
+
   })
   @DisplayName("Should determine if the bot accepts Mão de Onze")
   void shouldAcceptMaoDeOnze(
