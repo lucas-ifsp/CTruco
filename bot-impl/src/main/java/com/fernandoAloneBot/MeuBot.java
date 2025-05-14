@@ -43,37 +43,6 @@ public class MeuBot implements BotServiceProvider {
 
 
 
-
-    // Verifica se o jogador tem duas manilhas
-    private boolean hasDuasManilhas(GameIntel intel) {
-        TrucoCard cardVira = intel.getVira();
-        int contador = 0;
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isManilha(cardVira)) {
-                contador++;
-            }
-        }
-        return contador >= 2;
-    }
-
-
-    private boolean hasCasalMaior(GameIntel intel) {
-        TrucoCard cardVira = intel.getVira();
-        boolean hasZap = false;
-        boolean hasCopas = false;
-
-        for (TrucoCard card : intel.getCards()) {
-            if (card.isZap(cardVira)) {
-                hasZap = true;
-            }
-            if (card.isCopas(cardVira)) {
-                hasCopas = true;
-            }
-        }
-
-        return hasZap && hasCopas;
-    }
-
     private int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
         int manilhaCount = 0;
         for (TrucoCard card : cards) {
@@ -83,6 +52,8 @@ public class MeuBot implements BotServiceProvider {
         }
         return manilhaCount;
     }
+
+    // métodos GameIntel
 
     // Verifica se tem o Zap
     private Boolean hasZap(GameIntel intel){
@@ -101,6 +72,40 @@ public class MeuBot implements BotServiceProvider {
             }
         }
         return boas == 3;
+    }
+
+
+
+
+    // Verifica se o jogador tem duas manilhas
+    private boolean hasDuasManilhas(GameIntel intel) {
+        TrucoCard cardVira = intel.getVira();
+        int contador = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isManilha(cardVira)) {
+                contador++;
+            }
+        }
+        return contador >= 2;
+    }
+
+
+
+    private boolean hasCasalMaior(GameIntel intel) {
+        TrucoCard cardVira = intel.getVira();
+        boolean hasZap = false;
+        boolean hasCopas = false;
+
+        for (TrucoCard card : intel.getCards()) {
+            if (card.isZap(cardVira)) {
+                hasZap = true;
+            }
+            if (card.isCopas(cardVira)) {
+                hasCopas = true;
+            }
+        }
+
+        return hasZap && hasCopas;
     }
 
     private boolean hasMaoEquilibrada(GameIntel intel) {
@@ -124,7 +129,7 @@ public class MeuBot implements BotServiceProvider {
         return count == 3;
     }
 
-// métodos GameIntel
+
     public boolean ganhouPrimeiraRodada(GameIntel intel) {
         return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
     }
