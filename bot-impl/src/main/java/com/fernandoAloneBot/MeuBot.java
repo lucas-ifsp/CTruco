@@ -5,6 +5,9 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import java.util.List;
+import java.util.Optional;
+
 public class MeuBot implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
@@ -69,6 +72,16 @@ public class MeuBot implements BotServiceProvider {
         }
 
         return hasZap && hasCopas;
+    }
+
+    private int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
+        int manilhaCount = 0;
+        for (TrucoCard card : cards) {
+            if (card.isManilha(vira)) {
+                manilhaCount++;
+            }
+        }
+        return manilhaCount;
     }
 
     // Verifica se tem o Zap
@@ -136,6 +149,9 @@ public class MeuBot implements BotServiceProvider {
     public boolean isMaoDeOnze(GameIntel intel) {
         return intel.getScore() == 11;
     }
+
+
+
 
 
 
