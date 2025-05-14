@@ -163,6 +163,11 @@ public class MeuBot implements BotServiceProvider {
         return hasMaoEquilibrada(intel) && !isMaoDeOnze(intel);
     }
 
+    public boolean aceitarTruco(GameIntel intel) {
+        return hasDuasManilhas(intel) || hasCasalMaior(intel);
+    }
+
+
 
 
 
