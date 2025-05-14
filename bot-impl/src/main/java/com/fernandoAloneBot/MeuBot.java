@@ -42,10 +42,10 @@ public class MeuBot implements BotServiceProvider {
             return false;
         }
 
-        if(ganhouPrimeiraRodada(intel)){
-            if(manilhaCount(cards,cardVira) > 1  || hasZap(intel) || hasDuasManilhas(intel) || hasCasalMaior(intel)){
-                return true;
-            }
+
+
+        if(contaRankCartas(intel) == 3 || hasMaoEquilibrada(intel) ){
+            return true;
         }
 
         return false;
@@ -149,7 +149,7 @@ public class MeuBot implements BotServiceProvider {
         int contador = 0;
         TrucoCard cardVira = intel.getVira();
         for (TrucoCard card : intel.getCards()) {
-            if (card.getRank().value() > 7 && card.getRank().value() <=10) {//refatorar
+            if (card.getRank().value() >1 && card.getRank().value() <=3) {//refatorar
                 contador++;
             }
         }
@@ -229,7 +229,7 @@ public class MeuBot implements BotServiceProvider {
     private int contaRankCartas(GameIntel intel){
         Integer contador = 0;
         for(TrucoCard card : intel.getCards()){
-            if(card.getRank().value() == 10){
+            if(card.getRank().value() >= 10){
                 contador += 1;
             }
         }
