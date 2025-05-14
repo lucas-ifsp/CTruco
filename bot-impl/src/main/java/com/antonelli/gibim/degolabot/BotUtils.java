@@ -4,6 +4,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -58,4 +59,15 @@ public class BotUtils {
                 .filter(c -> !c.isManilha(intel.getVira()))
                 .max(Comparator.comparingInt(c -> c.relativeValue(intel.getVira())));
     }
+
+    public static boolean didWinFirstRound(GameIntel intel) {
+        List<GameIntel.RoundResult> resultados = intel.getRoundResults();
+
+
+        if (resultados.isEmpty()) return false;
+
+        return resultados.get(0) == GameIntel.RoundResult.WON;
+    }
+
+
 }
