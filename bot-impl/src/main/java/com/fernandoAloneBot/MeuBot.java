@@ -226,6 +226,16 @@ public class MeuBot implements BotServiceProvider {
         return false;
     }
 
+    private int contaRankCartas(GameIntel intel){
+        Integer contador = 0;
+        for(TrucoCard card : intel.getCards()){
+            if(card.getRank().value() == 10){
+                contador += 1;
+            }
+        }
+        return contador;
+    }
+
 
 
 
