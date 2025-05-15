@@ -103,7 +103,7 @@ class ZecaTatuBotTest {
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
-        
+
         @Test
         @DisplayName("Opponent has 10 points or less and we have 2 manilhas")
         void whenOpponentScoreIsLessOrEqual10With2Manilhas() {
