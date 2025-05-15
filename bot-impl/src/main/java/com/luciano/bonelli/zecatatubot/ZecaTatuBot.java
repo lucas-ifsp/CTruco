@@ -12,15 +12,20 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        int opponentScore = intel.getOpponentScore();
-        if(opponentScore <= 2){
-            return handValue(intel) >= 15;
-        }
-        else if(opponentScore <= 4){
-            return handValue(intel) >= 19;
-        }
-        return false;
+        int score = intel.getOpponentScore();
+        int hand = handValue(intel);
+        long manilhas = countManilha(intel);
+
+        return switch (score) {
+            case 0, 1, 2 -> hand >= 14;
+            case 3, 4     -> hand >= 17;
+            case 5, 6     -> hand >= 20;
+            case 7, 8     -> hand >= 24;
+            case 9, 10    -> hand >= 27 || manilhas >= 2;
+            default       -> false;
+        };
     }
+
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
