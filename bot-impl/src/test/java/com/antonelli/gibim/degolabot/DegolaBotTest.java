@@ -52,15 +52,15 @@ public class DegolaBotTest {
     @Test
     @DisplayName("If only have bad cards then discard the one with lower value")
     void ifOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS); // define a vira
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
         List<TrucoCard> botCards = Arrays.asList(
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
                 TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS) // a mais fraca
+                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
         );
 
-        List<TrucoCard> openCards = Collections.singletonList(vira); // apenas vira aberta
+        List<TrucoCard> openCards = Collections.singletonList(vira);
 
         intel = GameIntel.StepBuilder.with()
                 .gameInfo(List.of(), openCards, vira, 1)
