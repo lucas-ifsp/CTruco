@@ -28,7 +28,7 @@ import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.List;
 
-public class SkillDiffBot extends BotUtils implements BotServiceProvider {
+public abstract class SkillDiffBot extends BotUtils implements BotServiceProvider {
     private static final int REFUSE = -1;
     private static final int ACCEPT = 0;
     private static final int RAISE = 1;
