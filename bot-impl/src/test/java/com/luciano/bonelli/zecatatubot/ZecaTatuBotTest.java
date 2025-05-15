@@ -73,8 +73,21 @@ class ZecaTatuBotTest {
             when(intel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)));
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
             when(intel.getOpponentScore()).thenReturn(5);
+            boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isTrue();
+        }
+
+        @Test
+        @DisplayName("Opponent has 8 points or less")
+        void whenOpponentScoreIsLessOrEqual8() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)));
+            when(intel.getOpponentScore()).thenReturn(8);
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
