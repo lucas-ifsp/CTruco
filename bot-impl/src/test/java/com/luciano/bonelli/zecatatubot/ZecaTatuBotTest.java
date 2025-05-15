@@ -91,6 +91,18 @@ class ZecaTatuBotTest {
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
         }
+        @Test
+        @DisplayName("Opponent has 10 points or less")
+        void whenOpponentScoreIsLessOrEqual10() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS)));
+            when(intel.getOpponentScore()).thenReturn(10);
+            boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
+            assertThat(response).isTrue();
+        }
 
     }
 
