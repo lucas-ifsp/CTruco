@@ -140,6 +140,16 @@ class ZecaTatuBotTest {
             assertThat(zecaTatuBot.roundCheck(intel)).isEqualTo("Round 1");
         }
 
+        @Test
+        @DisplayName("Should return 'Round 2' when 2 cards in hand")
+        void whenTwoCards() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+            ));
+            assertThat(zecaTatuBot.roundCheck(intel)).isEqualTo("Round 2");
+        }
+
     }
 
 
