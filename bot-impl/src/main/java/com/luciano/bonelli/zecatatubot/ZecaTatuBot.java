@@ -59,7 +59,7 @@ public class ZecaTatuBot implements BotServiceProvider {
 
         return switch (cardCount) {
             case 3 -> "Round 1";
-
+            case 2 -> "Round 2";
             default -> "No cards";
         };
     }
