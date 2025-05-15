@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.antonelli.gibim.degolabot.BotUtils;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class FirstRound implements Strategy {
@@ -58,94 +59,132 @@ public class FirstRound implements Strategy {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
         boolean isSecond = BotUtils.isPlayingSecond(intel);
-        List<TrucoCard> cartas = intel.getCards();
-
-        long boas = BotUtils.countStrongCards(intel, 8);
-        long manilhas = BotUtils.countManilha(intel);
-        long ruins = cartas.stream().filter(c -> c.relativeValue(intel.getVira()) <= 4).count();
-        long medias = cartas.stream().filter(c -> c.relativeValue(intel.getVira()) > 4 && c.relativeValue(intel.getVira()) < 8).count();
 
         if (!isSecond) {
-            if (ruins == 3) return CardToPlay.of(BotUtils.selectWeakestCard(intel));
-            if (medias >= 1 && boas == 0 && manilhas == 0) return CardToPlay.of(BotUtils.selectStrongestCard(intel));
-            if (boas >= 1 && manilhas == 0) return CardToPlay.of(BotUtils.selectStrongestCard(intel));
-            if (manilhas == 1 && boas >= 1) {
-                return CardToPlay.of(
-                        cartas.stream()
-                                .filter(c -> c.relativeValue(intel.getVira()) > 2)
-                                .findFirst()
-                                .orElse(BotUtils.selectStrongestCard(intel))
-                );
-            }
-            if (manilhas == 1 && ruins == 2) return CardToPlay.of(BotUtils.cards(intel)
-                    .filter(c -> c.isManilha(intel.getVira()))
-                    .findFirst().orElse(BotUtils.selectStrongestCard(intel)));
+            return playAsFirst(intel);
         } else {
-            TrucoCard adversario = intel.getOpponentCard().get();
+            return playAsSecond(intel);
+        }
+    }
 
-            if (ruins == 3) {
-                TrucoCard matadora = cartas.stream()
-                        .filter(c -> c.compareValueTo(adversario, intel.getVira()) > 0)
-                        .min((a, b) -> Integer.compare(a.relativeValue(intel.getVira()), b.relativeValue(intel.getVira())))
-                        .orElse(null);
+    private CardToPlay playAsFirst(GameIntel intel) {
+        if (hasOnlyWeakCards(intel)) return CardToPlay.of(BotUtils.selectWeakestCard(intel));
 
+        if (hasOnlyMediumCards(intel)) return CardToPlay.of(BotUtils.selectStrongestCard(intel));
+
+        if (hasOnlyStrongCards(intel)) return CardToPlay.of(BotUtils.selectStrongestCard(intel));
+
+        if (hasManilhaAndStrongCard(intel)) {
+            return CardToPlay.of(selectCardGreaterThanTwo(intel));
+        }
+
+        if (hasManilhaAndTwoWeakCards(intel)) {
+            return CardToPlay.of(selectManilha(intel));
+        }
+
+        return CardToPlay.of(BotUtils.selectStrongestCard(intel));
+    }
+    private boolean hasOnlyWeakCards(GameIntel intel) {
+        return countRuins(intel.getCards(), intel) == 3;
+    }
+
+    private boolean hasOnlyMediumCards(GameIntel intel) {
+        long medias = countMedias(intel.getCards(), intel);
+        return medias >= 1 && BotUtils.countStrongCards(intel, 8) == 0 && BotUtils.countManilha(intel) == 0;
+    }
+
+    private boolean hasOnlyStrongCards(GameIntel intel) {
+        return BotUtils.countStrongCards(intel, 8) >= 1 && BotUtils.countManilha(intel) == 0;
+    }
+
+    private boolean hasManilhaAndStrongCard(GameIntel intel) {
+        return BotUtils.countManilha(intel) == 1 && BotUtils.countStrongCards(intel, 8) >= 1;
+    }
+
+    private boolean hasManilhaAndTwoWeakCards(GameIntel intel) {
+        return BotUtils.countManilha(intel) == 1 && countRuins(intel.getCards(), intel) == 2;
+    }
+
+    private TrucoCard selectCardGreaterThanTwo(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(c -> c.relativeValue(intel.getVira()) > 2)
+                .findFirst()
+                .orElse(BotUtils.selectStrongestCard(intel));
+    }
+
+    private TrucoCard selectManilha(GameIntel intel) {
+        return intel.getCards().stream()
+                .filter(c -> c.isManilha(intel.getVira()))
+                .findFirst()
+                .orElse(BotUtils.selectStrongestCard(intel));
+    }
+
+
+    private CardToPlay playAsSecond(GameIntel intel) {
+        List<TrucoCard> cards = intel.getCards();
+        TrucoCard adversario = intel.getOpponentCard().get();
+        long boas = BotUtils.countStrongCards(intel, 8);
+        long manilhas = BotUtils.countManilha(intel);
+        long ruins = countRuins(cards, intel);
+        long medias = countMedias(cards, intel);
+
+        if (ruins == 3 || medias >= 1 || boas >= 3) {
+            TrucoCard matadora = findWeakestWinningCard(cards, adversario, intel);
+            return CardToPlay.of(matadora != null ? matadora : BotUtils.selectWeakestCard(intel));
+        }
+
+        if (manilhas >= 1) {
+            if (boas >= 1) {
+                TrucoCard matadora = findWeakestWinningCard(cards, adversario, intel);
                 if (matadora != null) return CardToPlay.of(matadora);
-                return CardToPlay.of(BotUtils.selectWeakestCard(intel));
+
+                TrucoCard amarradora = findTyingCard(cards, adversario, intel);
+                if (amarradora != null) return CardToPlay.of(amarradora);
+
+                return CardToPlay.of(findManilha(cards, intel));
             }
 
-            if (medias >= 1) {
-                TrucoCard matadora = cartas.stream()
-                        .filter(c -> c.compareValueTo(adversario, intel.getVira()) > 0)
-                        .min((a, b) -> Integer.compare(a.relativeValue(intel.getVira()), b.relativeValue(intel.getVira())))
-                        .orElse(null);
+            if (ruins >= 1) {
+                TrucoCard amarradora = findTyingCard(cards, adversario, intel);
+                if (amarradora != null) return CardToPlay.of(amarradora);
 
-                if (matadora != null) return CardToPlay.of(matadora);
-                return CardToPlay.of(BotUtils.selectWeakestCard(intel));
-            }
-
-            if (boas >= 3) {
-                TrucoCard matadora = cartas.stream()
-                        .filter(c -> c.compareValueTo(adversario, intel.getVira()) > 0)
-                        .min((a, b) -> Integer.compare(a.relativeValue(intel.getVira()), b.relativeValue(intel.getVira())))
-                        .orElse(null);
-
-                if (matadora != null) return CardToPlay.of(matadora);
-                return CardToPlay.of(BotUtils.selectWeakestCard(intel));
-            }
-
-            if (manilhas >= 1) {
-                if (boas >= 1) {
-                    TrucoCard matadora = cartas.stream()
-                            .filter(c -> c.compareValueTo(adversario, intel.getVira()) > 0)
-                            .min((a, b) -> Integer.compare(a.relativeValue(intel.getVira()), b.relativeValue(intel.getVira())))
-                            .orElse(null);
-                    if (matadora != null) return CardToPlay.of(matadora);
-
-                    TrucoCard amarradora = cartas.stream()
-                            .filter(c -> c.compareValueTo(adversario, intel.getVira()) == 0)
-                            .findFirst()
-                            .orElse(null);
-                    if (amarradora != null) return CardToPlay.of(amarradora);
-
-                    return CardToPlay.of(cartas.stream()
-                            .filter(c -> c.isManilha(intel.getVira()))
-                            .findFirst().orElse(BotUtils.selectStrongestCard(intel)));
-                }
-
-                if (ruins >= 1) {
-                    TrucoCard amarradora = cartas.stream()
-                            .filter(c -> c.compareValueTo(adversario, intel.getVira()) == 0)
-                            .findFirst()
-                            .orElse(null);
-                    if (amarradora != null) return CardToPlay.of(amarradora);
-
-                    return CardToPlay.of(cartas.stream()
-                            .filter(c -> c.isManilha(intel.getVira()))
-                            .findFirst().orElse(BotUtils.selectStrongestCard(intel)));
-                }
+                return CardToPlay.of(findManilha(cards, intel));
             }
         }
 
         return CardToPlay.of(BotUtils.selectStrongestCard(intel));
+    }
+
+
+    private long countRuins(List<TrucoCard> cards, GameIntel intel) {
+        return cards.stream().filter(c -> c.relativeValue(intel.getVira()) <= 4).count();
+    }
+
+    private long countMedias(List<TrucoCard> cards, GameIntel intel) {
+        return cards.stream().filter(c -> {
+            int value = c.relativeValue(intel.getVira());
+            return value > 4 && value < 8;
+        }).count();
+    }
+
+    private TrucoCard findWeakestWinningCard(List<TrucoCard> cards, TrucoCard adversario, GameIntel intel) {
+        return cards.stream()
+                .filter(c -> c.compareValueTo(adversario, intel.getVira()) > 0)
+                .min(Comparator.comparingInt(c -> c.relativeValue(intel.getVira())))
+                .orElse(null);
+    }
+
+    private TrucoCard findTyingCard(List<TrucoCard> cards, TrucoCard adversario, GameIntel intel) {
+        return cards.stream()
+                .filter(c -> c.compareValueTo(adversario, intel.getVira()) == 0)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private TrucoCard findManilha(List<TrucoCard> cards, GameIntel intel) {
+        return cards.stream()
+                .filter(c -> c.isManilha(intel.getVira()))
+                .findFirst()
+                .orElse(BotUtils.selectStrongestCard(intel));
     }
 }
