@@ -22,6 +22,9 @@ public class ZecaTatuBot implements BotServiceProvider {
         else if(opponentScore <= 6){
             return handValue(intel) >= 20;
         }
+        else if(opponentScore <= 8){
+            return handValue(intel) >= 24;
+        }
         return false;
     }
 

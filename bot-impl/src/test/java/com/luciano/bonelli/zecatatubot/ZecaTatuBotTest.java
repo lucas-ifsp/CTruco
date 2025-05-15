@@ -86,7 +86,7 @@ class ZecaTatuBotTest {
             when(intel.getCards()).thenReturn(List.of(
                     TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS)));
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)));
             when(intel.getOpponentScore()).thenReturn(8);
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
             assertThat(response).isTrue();
