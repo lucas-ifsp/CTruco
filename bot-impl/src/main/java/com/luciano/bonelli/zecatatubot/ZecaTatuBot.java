@@ -54,7 +54,13 @@ public class ZecaTatuBot implements BotServiceProvider {
     }
 
     public String roundCheck(GameIntel intel) {
-        return null;
+        List<TrucoCard> cards = intel.getCards();
+        int cardCount = cards.size();
+
+        return switch (cardCount) {
+            case 3 -> "Round 1";
+            default -> "No cards";
+        };
     }
 
 
