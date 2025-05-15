@@ -67,16 +67,16 @@ class ZecaTatuBotTest {
         }
 
         @Test
-        @DisplayName("Opponent has more than 4 points")
-        void whenOpponentScoreIsGreaterThan4() {
+        @DisplayName("Opponent has 6 points or less")
+        void whenOpponentScoreIsLessOrEqual6() {
             when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
             when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)));
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)));
             when(intel.getOpponentScore()).thenReturn(5);
             boolean response = zecaTatuBot.getMaoDeOnzeResponse(intel);
-            assertThat(response).isFalse();
+            assertThat(response).isTrue();
         }
 
     }
@@ -99,10 +99,7 @@ class ZecaTatuBotTest {
                     TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
                     TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
                     TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)));
-
             CardToPlay result = zecaTatuBot.chooseCard(intel);
-
-
             assertThat(result).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
         }
 
