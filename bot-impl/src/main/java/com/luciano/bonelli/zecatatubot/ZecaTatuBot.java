@@ -4,6 +4,7 @@ import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 public class ZecaTatuBot implements BotServiceProvider {
@@ -51,6 +52,11 @@ public class ZecaTatuBot implements BotServiceProvider {
     public int getRaiseResponse(GameIntel intel) {
         return 0;
     }
+
+    public String roundCheck(GameIntel intel) {
+        return null;
+    }
+
 
     public long countManilha (GameIntel intel) {
         return intel.getCards().stream()
