@@ -30,7 +30,7 @@ public class ZecaTatuBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
-        boolean isFirstRound = intel.getRoundResults().isEmpty() || !intel.getOpponentCard().isPresent();
+        boolean isFirstRound = intel.getRoundResults().isEmpty() || intel.getOpponentCard().isEmpty();
 
 
         if (isFirstRound) {
