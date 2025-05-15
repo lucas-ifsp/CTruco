@@ -125,6 +125,23 @@ class ZecaTatuBotTest {
 
     }
 
+    @Nested
+    @DisplayName("Test roundCheck method")
+    class RoundCheckTest {
+
+        @Test
+        @DisplayName("Should return 'Round 1' when 3 cards in hand")
+        void whenThreeCards() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+            ));
+            assertThat(zecaTatuBot.roundCheck(intel)).isEqualTo("Round 1");
+        }
+
+    }
+
 
     @Nested
     @DisplayName("Test chooseCard method")
