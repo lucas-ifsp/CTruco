@@ -14,13 +14,13 @@ public class ZecaTatuBot implements BotServiceProvider {
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
         int opponentScore = intel.getOpponentScore();
         if(opponentScore <= 2){
-            return handValue(intel) >= 15;
+            return handValue(intel) >= 14;
         }
         else if(opponentScore <= 4){
-            return handValue(intel) >= 19;
+            return handValue(intel) >= 17;
         }
         else if(opponentScore <= 6){
-            return handValue(intel) >= 23;
+            return handValue(intel) >= 20;
         }
         return false;
     }
