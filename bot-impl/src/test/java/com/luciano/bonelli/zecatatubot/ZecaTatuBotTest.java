@@ -158,6 +158,14 @@ class ZecaTatuBotTest {
             ));
             assertThat(zecaTatuBot.roundCheck(intel)).isEqualTo("Round 3");
         }
+
+        @Test
+        @DisplayName("Should return 'No cards' when 0 cards in hand")
+        void whenNoCards() {
+            when(intel.getCards()).thenReturn(List.of());
+            assertThat(zecaTatuBot.roundCheck(intel)).isEqualTo("No cards");
+        }
+
     }
 
 
