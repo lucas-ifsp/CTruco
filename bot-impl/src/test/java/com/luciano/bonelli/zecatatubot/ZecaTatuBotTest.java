@@ -214,6 +214,18 @@ class ZecaTatuBotTest {
             assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(0);
         }
 
+        @Test
+        @DisplayName("Should return -1 when 3 cards and no manilha and low hand value")
+        void threeCardsNoManilhaLowValue() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+            ));
+            assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(-1);
+        }
+        
     }
 
 
