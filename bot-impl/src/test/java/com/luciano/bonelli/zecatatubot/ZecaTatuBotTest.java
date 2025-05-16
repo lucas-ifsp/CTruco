@@ -133,6 +133,18 @@ class ZecaTatuBotTest {
             boolean result = zecaTatuBot.decideIfRaises(intel);
             assertThat(result).isTrue();
         }
+        @Test
+        @DisplayName("Second round after first round was a draw")
+        void whenSecondRoundAndFirstRoundWasDraw() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+
+            boolean result = zecaTatuBot.decideIfRaises(intel);
+            assertThat(result).isTrue();
+        }
     }
 
     @Nested
