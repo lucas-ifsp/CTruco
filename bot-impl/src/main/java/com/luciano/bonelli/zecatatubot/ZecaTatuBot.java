@@ -66,6 +66,15 @@ public class ZecaTatuBot implements BotServiceProvider {
                 return 0;
             }
         }
+        else if (intel.getCards().size() == 1){
+            if (handValue(intel) >= 12){
+                return 1;
+            }
+            if (handValue(intel) >= 9){
+                return 0;
+            }
+        }
+
         return -1;
     }
 
