@@ -157,6 +157,18 @@ class ZecaTatuBotTest {
             boolean result = zecaTatuBot.decideIfRaises(intel);
             assertThat(result).isTrue();
         }
+        @Test
+        @DisplayName("Second round with handValue > 16")
+        void whenSecondRoundAndHandValueAbove16() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+            boolean result = zecaTatuBot.decideIfRaises(intel);
+            assertThat(result).isTrue();
+        }
+
     }
 
     @Nested
