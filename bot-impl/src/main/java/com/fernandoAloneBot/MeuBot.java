@@ -39,10 +39,6 @@ public class MeuBot implements BotServiceProvider {
             return true;
         }
 
-        if(hasMaoFraca(intel)){
-            return false;
-        }
-
 
 
         if(contaRankCartas(intel) == 3 || hasMaoEquilibrada(intel) ){
@@ -60,27 +56,71 @@ public class MeuBot implements BotServiceProvider {
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
 
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> cartas = intel.getCards();
+        Optional<TrucoCard> cartaOponente = intel.getOpponentCard();
+
+        int manilhas = manilhaCount(cartas, vira);
+
+
+
+        if (cartaOponente.isPresent()) {
+            // se tiver casal maior ou duas manilhas na primeira rodada, joga carta fraca
+            if ((hasCasalMaior(intel) || hasDuasManilhas(intel)) && intel.getRoundResults().isEmpty()) {
+                return CardToPlay.of(maoFraca(intel));
+            }
+
+            // tenta amarrar se tiver zap seco e for a primeira rodada ---
+            if (manilhas == 1 && hasZap(intel) && intel.getRoundResults().isEmpty()) {
+                for (TrucoCard carta : intel.getCards()) {
+                    if (!carta.isManilha(vira) && carta.getRank() == cartaOponente.get().getRank()) {
+                        return CardToPlay.of(carta); // Amarra com a mesma carta (sem ser manilha)
+                    }
+                }
+            }
+
+            // tenta matar a manilha com uma manilha mais forte
+            List<TrucoCard> minhasManilhas = manilhasNaMaoQueGanhamDoAdversario(intel);
+
+            if (!minhasManilhas.isEmpty()) {
+                return CardToPlay.of(cartasMaisFortesQueAdversari(intel));
+            } else {
+                return CardToPlay.of(maoFraca(intel));
+            }
+
+
+
+        }
+
+        // joga se tiver manilha
+        if (manilhas>0){
+
+            // se tiver amarrado joga maior manilha
+            if(!intel.getRoundResults().isEmpty() && intel.getRoundResults().get(0) == GameIntel.RoundResult.DREW){
+                return CardToPlay.of(cartasMaisFortesQueAdversari(intel));
+            }
+            //se tiver casal maior joga nada na primeira
+            if (hasCasalMaior(intel) && intel.getRoundResults().isEmpty()){
+                return CardToPlay.of(maoFraca(intel));
+            }
+
+            if(hasDuasManilhas(intel)&& intel.getRoundResults().isEmpty()){
+                return CardToPlay.of(maoFraca(intel));
+            }
+        }
 
 
 
 
 
-        return null;
+        return CardToPlay.of(maiorCartaDaMao(intel));
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
 
 
-        if (hasCasalMaior(intel)) {
-            return 1; // Reaumentar
-        } else if (hasZap(intel)) {
-            return 0; // Aceitar
-        } else {
-            return -1; // Fugir
-        }
-
-
+        return 0;
 
 
     }
@@ -181,6 +221,58 @@ public class MeuBot implements BotServiceProvider {
 
         return weakest;
     }
+    // Auxiliar para pegar as cartas que vencem a do adversário
+    private TrucoCard cartasMaisFortesQueAdversari(GameIntel intel) {
+        TrucoCard maisForte = null;
+        TrucoCard vira = intel.getVira();
+
+        for (TrucoCard carta : intel.getCards()) {
+            if (maisForte == null || carta.relativeValue(vira) > maisForte.relativeValue(vira)) {
+                maisForte = carta;
+            }
+        }
+
+        return maisForte;
+    }
+
+    private List<TrucoCard> cartasMaisFortesQueAdversarioo(GameIntel intel) {
+        List<TrucoCard> cartasFortes = new ArrayList<>();
+
+        // Primeiro, verifica se o oponente já jogou uma carta
+        if (intel.getOpponentCard().isEmpty()) {
+            return cartasFortes; // retorna lista vazia se não tem carta do oponente
+        }
+
+        TrucoCard cartaOponente = intel.getOpponentCard().get();
+        int valorCartaOponente = cartaOponente.getRank().value();
+
+        for (TrucoCard carta : intel.getCards()) {
+            if (carta.getRank().value() > valorCartaOponente) {
+                cartasFortes.add(carta);
+            }
+        }
+        return cartasFortes;
+    }
+
+
+    private TrucoCard matarCarta(GameIntel intel) {
+        List<TrucoCard> cartasMaisFortes = cartasMaisFortesQueAdversarioo(intel);
+        TrucoCard cartaParaJogar;
+        TrucoCard vira = intel.getVira();
+
+        if (!cartasMaisFortes.isEmpty()) {
+            cartaParaJogar = cartasMaisFortes.get(0);
+            for (TrucoCard carta : cartasMaisFortes) {
+                if (carta.relativeValue(vira) < cartaParaJogar.relativeValue(vira)) {
+                    cartaParaJogar = carta;
+                }
+            }
+        } else {
+            cartaParaJogar = maoFraca(intel);
+        }
+
+        return cartaParaJogar;
+    }
 
 
 
@@ -210,8 +302,16 @@ public class MeuBot implements BotServiceProvider {
     }
 
     public boolean deveCorrer(GameIntel intel) {
-        return hasMaoFraca(intel) && perdeuPrimeiraRodada(intel);
+        int fracas = 0;
+        for (TrucoCard card : intel.getCards()) {
+            if (card.getRank().value() <= 10) {
+                fracas++;
+            }
+        }
+
+        return fracas == 2 && perdeuPrimeiraRodada(intel);
     }
+
 
     public boolean blefar(GameIntel intel) {
         return hasMaoEquilibrada(intel) && !isMaoDeOnze(intel);
