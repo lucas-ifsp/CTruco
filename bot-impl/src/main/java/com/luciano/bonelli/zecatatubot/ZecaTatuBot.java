@@ -58,6 +58,14 @@ public class ZecaTatuBot implements BotServiceProvider {
                 return 0;
             }
         }
+        else if (intel.getCards().size() == 2) {
+            if (countManilha(intel) == 2) {
+                return 1;
+            }
+            if (countManilha(intel) >= 1 || handValue(intel) >= 17) {
+                return 0;
+            }
+        }
         return -1;
     }
 

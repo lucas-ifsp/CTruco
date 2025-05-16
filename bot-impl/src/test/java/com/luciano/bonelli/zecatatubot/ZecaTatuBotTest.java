@@ -237,7 +237,7 @@ class ZecaTatuBotTest {
             assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(1);
         }
 
-      
+
     }
 
 
