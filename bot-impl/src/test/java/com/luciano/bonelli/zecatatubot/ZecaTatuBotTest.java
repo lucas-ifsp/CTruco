@@ -187,8 +187,21 @@ class ZecaTatuBotTest {
     }
 
     @Nested
-    @DisplayName("Test getRaiseResponse method")
+    @DisplayName("getRaiseResponse")
     class GetRaiseResponseTest {
+
+        @Test
+        @DisplayName("Should return 1 when 3 cards and 2 manilhas")
+        void threeCardsTwoManilhas() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            ));
+            assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(1);
+        }
+
     }
 
     @Test
