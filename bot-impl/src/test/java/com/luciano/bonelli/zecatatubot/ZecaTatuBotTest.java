@@ -225,7 +225,19 @@ class ZecaTatuBotTest {
             ));
             assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(-1);
         }
-        
+
+        @Test
+        @DisplayName("Should return 1 when 2 cards and both are manilhas")
+        void twoCardsTwoManilhas() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+            ));
+            assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(1);
+        }
+
+      
     }
 
 
