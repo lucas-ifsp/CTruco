@@ -129,4 +129,9 @@ public class ZecaTatuBot implements BotServiceProvider {
                 .orElse(null);
     }
 
+    private boolean wonFirstRound(GameIntel intel){
+        if(intel.getRoundResults().isEmpty()) return false;
+        return intel.getRoundResults().get(0) == GameIntel.RoundResult.WON;
+    }
+
 }
