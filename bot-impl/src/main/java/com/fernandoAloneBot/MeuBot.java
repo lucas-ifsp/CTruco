@@ -59,11 +59,18 @@ public class MeuBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+
+
+
+
+
+
         return null;
     }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+
 
         if (hasCasalMaior(intel)) {
             return 1; // Reaumentar
@@ -91,7 +98,7 @@ public class MeuBot implements BotServiceProvider {
         return manilhaCount;
     }
 
-    // métodos GameIntel
+
 
     // Verifica se tem o Zap
     private Boolean hasZap(GameIntel intel){
@@ -157,15 +164,24 @@ public class MeuBot implements BotServiceProvider {
         return contador == 2 && cardVira.isManilha(cardVira);
     }
 
-    private boolean hasMaoFraca(GameIntel intel) {
-        int count = 0;
+
+    private TrucoCard maoFraca(GameIntel intel) {
+        TrucoCard weakest = null;
+        int menorValor = Integer.MAX_VALUE;
+        TrucoCard vira = intel.getVira();
+
         for (TrucoCard card : intel.getCards()) {
-            if ( card.getRank().value()<= 7) {
-                count++;
+            int valor = card.isManilha(vira) ? card.relativeValue(vira) : card.getRank().value();
+
+            if (valor < menorValor) {
+                menorValor = valor;
+                weakest = card;
             }
         }
-        return count == 3;
+
+        return weakest;
     }
+
 
 
     public boolean ganhouPrimeiraRodada(GameIntel intel) {
