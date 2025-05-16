@@ -344,6 +344,15 @@ class ZecaTatuBotTest {
         assertThat(result).isTrue();
     }
 
+    @Test
+    @DisplayName("Returns true when first round was drew")
+    void shouldReturnTrueIfFirstRoundWasDrew() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.DREW));
+        boolean result = zecaTatuBot.drewFirstRound(intel);
+        assertThat(result).isTrue();
+    }
+
+
 
 }
 
