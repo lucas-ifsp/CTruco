@@ -192,6 +192,18 @@ class ZecaTatuBotTest {
             assertThat(result).isTrue();
         }
 
+        @Test
+        @DisplayName("Second round, lost first, only one manilha and handValue <= 16")
+        void whenSecondRoundLostFirstWithOneManilhaAndLowHandValue() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+            boolean result = zecaTatuBot.decideIfRaises(intel);
+            assertThat(result).isFalse();
+        }
+
     }
 
     @Nested
