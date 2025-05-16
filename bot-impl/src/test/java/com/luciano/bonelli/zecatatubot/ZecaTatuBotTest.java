@@ -122,7 +122,17 @@ class ZecaTatuBotTest {
     @Nested
     @DisplayName("Test decideIfRaises method")
     class DecideIfRaisesTest {
-
+        @Test
+        @DisplayName("First round with hand value < 10")
+        void whenFirstRoundAndHandValueLessThan10() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                    TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
+            boolean result = zecaTatuBot.decideIfRaises(intel);
+            assertThat(result).isTrue();
+        }
     }
 
     @Nested
