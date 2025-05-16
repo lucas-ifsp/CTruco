@@ -50,7 +50,13 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        if (intel.getCards().size() == 3) {
+            if (countManilha(intel) >= 2 ){
+                return 1;
+            }
+        }
+
+        return -1;
     }
 
     public String roundCheck(GameIntel intel) {
