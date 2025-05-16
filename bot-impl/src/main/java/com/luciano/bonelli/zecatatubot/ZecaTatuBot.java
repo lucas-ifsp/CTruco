@@ -33,12 +33,15 @@ public class ZecaTatuBot implements BotServiceProvider {
         String round = roundCheck(intel);
         if (round.equals("Round 1")) {
             return handValue(intel) < 10;
-        } else if (round.equals("Round 2")) {
+        }
+        if (round.equals("Round 2")) {
             if (drewFirstRound(intel)) return true;
             if (!wonFirstRound(intel) && countManilha(intel) == 2) return true;
-            return wonFirstRound(intel) && handValue(intel) > 16;
+            if (handValue(intel) > 16) return true;
         }
-
+        if (round.equals("Round 3")) {
+            return countManilha(intel) >= 1;
+        }
         return false;
     }
 
