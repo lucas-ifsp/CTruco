@@ -247,6 +247,17 @@ class ZecaTatuBotTest {
             ));
             assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(0);
         }
+
+        @Test
+        @DisplayName("Should return 0 when 2 cards and handValue >= 17")
+        void twoCardsHighValueNoManilha() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.HEARTS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.THREE, CardSuit.CLUBS), // forte
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)   // forte
+            ));
+            assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(0);
+        }
         
     }
 
