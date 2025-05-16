@@ -34,6 +34,9 @@ public class ZecaTatuBot implements BotServiceProvider {
         if (round.equals("Round 1")) {
             return handValue(intel) < 10;
         }
+        if (round.equals("Round 2") && drewFirstRound(intel)) {
+            return true;
+        }
         return false;
     }
 
