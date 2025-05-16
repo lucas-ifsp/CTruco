@@ -202,7 +202,20 @@ class ZecaTatuBotTest {
             assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(1);
         }
 
+        @Test
+        @DisplayName("Should return 0 when 3 cards, 1 manilha and handValue >= 24")
+        void threeCardsOneManilhaHighValue() {
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.THREE, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            ));
+            assertThat(zecaTatuBot.getRaiseResponse(intel)).isEqualTo(0);
+        }
+
     }
+
 
     @Test
     @DisplayName("CountHowManyManilhasInHand")
