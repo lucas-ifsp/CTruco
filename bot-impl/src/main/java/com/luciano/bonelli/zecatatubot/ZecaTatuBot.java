@@ -30,8 +30,13 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
+        String round = roundCheck(intel);
+        if (round.equals("Round 1")) {
+            return handValue(intel) < 10;
+        }
         return false;
     }
+
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
