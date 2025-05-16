@@ -336,7 +336,13 @@ class ZecaTatuBotTest {
         assertThat(zecaTatuBot.getMidCard(intel)).isEqualTo(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
     }
 
-
+    @Test
+    @DisplayName("Returns true when first round was won")
+    void shouldReturnTrueIfFirstRoundWasWon() {
+        when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+        boolean result = zecaTatuBot.wonFirstRound(intel);
+        assertThat(result).isTrue();
+    }
 
 
 }
