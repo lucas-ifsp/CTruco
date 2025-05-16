@@ -54,8 +54,10 @@ public class ZecaTatuBot implements BotServiceProvider {
             if (countManilha(intel) >= 2 ){
                 return 1;
             }
+            if (countManilha(intel) >= 1 && handValue(intel) >= 24) {
+                return 0;
+            }
         }
-
         return -1;
     }
 
