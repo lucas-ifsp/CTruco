@@ -282,6 +282,37 @@ class ZecaTatuBotTest {
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
         }
 
+        @Test
+        @DisplayName("Round 2 and won first round - should discard low card")
+        void whenRound2AndWonFirstRound() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
+
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.isDiscard()).isTrue();
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
+        }
+
+        @Test
+        @DisplayName("Round 2 and lost or drew first round - should play high card")
+        void whenRound2AndLostOrDrewFirstRound() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
+            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
+
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.isDiscard()).isFalse();
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
+        }
+
+
     }
 
     @Nested
