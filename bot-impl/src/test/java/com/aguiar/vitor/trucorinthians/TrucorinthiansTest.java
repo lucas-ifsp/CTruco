@@ -129,8 +129,8 @@ class TrucorinthiansTest {
 
         List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
 
-        TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
-        TrucoCard media = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard fraca = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard media = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
         TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
 
         GameIntel intel = GameIntel.StepBuilder.with()
