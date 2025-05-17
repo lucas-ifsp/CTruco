@@ -77,4 +77,26 @@ class TrucorinthiansTest {
 
         assertThat(result.content()).isEqualTo(empata);
     }
+
+    @DisplayName("Should play weakest card if cannot win or draw when responding in first round")
+    @Test
+    void shouldPlayWeakestCardIfCannotWinOrDrawWhenFirstRoundAsSecondPlayer() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        TrucoCard media = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+        TrucoCard alta = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(List.of(media, fraca, alta), 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result.content()).isEqualTo(fraca);
+    }
 }
