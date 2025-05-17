@@ -142,4 +142,29 @@ class TrucorinthiansTest {
 
         assertThat(result.content()).isEqualTo(fraca);
     }
+
+    @DisplayName("Should play smallest non-losing card after winning first when responding in second round")
+    @Test
+    void shouldPlaySmallestCardThatDoesNotLoseWhenSecondAfterWinnigFirstAsSecondPlayer() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard empata = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard vence = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(vence, empata, fraca), 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+        
+        assertThat(result.content()).isEqualTo(empata);
+    }
 }
