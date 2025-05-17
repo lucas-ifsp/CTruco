@@ -9,28 +9,23 @@ import java.util.Optional;
 public class BotBlessed implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        List<TrucoCard> hand = intel.getCards();
-        TrucoCard vira = intel.getVira();
         int opponentScore = intel.getOpponentScore();
         int playerScore = intel.getScore();
 
-        long manilhaCount = hand.stream().filter(c -> c.isManilha(vira)).count();
-        boolean hasZap = hand.stream().anyMatch(c -> c.isZap(vira));
-        boolean hasCopas = hand.stream().anyMatch(c -> c.isCopas(vira));
-        boolean hasThree = hand.stream().anyMatch(c -> c.getRank() == CardRank.THREE);
-        boolean hasStrongManilha = hand.stream().anyMatch(c -> c.isManilha(vira) && !c.isZap(vira) && !c.isCopas(vira));
+        long manilhaCount = intel.getCards().stream().filter(c -> c.isManilha(intel.getVira())).count();
+        boolean hasZap = intel.getCards().stream().anyMatch(c -> c.isZap(intel.getVira()));
+        boolean hasCopas = intel.getCards().stream().anyMatch(c -> c.isCopas(intel.getVira()));
+        boolean hasThree = intel.getCards().stream().anyMatch(c -> c.getRank() == CardRank.THREE);
+        long threes = intel.getCards().stream().filter(c -> c.getRank() == CardRank.THREE).count();
 
-        boolean scoreDiffOk = Math.abs(playerScore - opponentScore) <= 5;
         boolean isMaoDeOnze = playerScore == 11 || opponentScore == 11;
 
-        if (!isMaoDeOnze) return false;
-
-        if (scoreDiffOk && hasStrongManilha && hasThree) return true;
-
-        if (manilhaCount >= 2) return true;
-
-        if ((hasZap || hasCopas) && hasThree) return true;
-
+        if (isMaoDeOnze) {
+            if (manilhaCount >= 2) return true;
+            if ((hasZap || hasCopas) && hasThree) return true;
+            if (manilhaCount >= 1 && hasThree) return true;
+            if (threes >= 2) return true;
+        }
         return false;
     }
 
