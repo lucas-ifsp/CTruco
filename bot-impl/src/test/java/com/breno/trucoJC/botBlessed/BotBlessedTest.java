@@ -125,6 +125,7 @@ class BotBlessedTest {
     }
 
     private static TrucoCard zap(TrucoCard vira) {
-        return TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+        CardRank manilhaRank = vira.getRank().next();
+        return TrucoCard.of(manilhaRank, CardSuit.CLUBS);
     }
 }
