@@ -57,12 +57,12 @@ class BotBlessedTest {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("decideIfRaisesTestCases")
     @DisplayName("Testes para decideIfRaises")
-    void testDecideIfRaises(String description, int playerScore, int opponentScore, List<TrucoCard> hand, TrucoCard vira, boolean expected) {
+    void testDecideIfRaises(String description, List<TrucoCard> hand, TrucoCard vira, boolean expected) {
         GameIntel intel = GameIntel.StepBuilder
                 .with()
                 .gameInfo(List.of(), List.of(vira), vira, 3)
-                .botInfo(hand, playerScore)
-                .opponentScore(opponentScore)
+                .botInfo(hand, 0)
+                .opponentScore(0)
                 .build();
 
         boolean result = botBlessed.decideIfRaises(intel);
@@ -73,65 +73,45 @@ class BotBlessedTest {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
         return Stream.of(
-                new Object[]{"Você com manilha e oponente com 0 pontos → Deve aceitar o aumento",
-                        0, 0,
-                        List.of(manilha(vira), card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX)),
+                new Object[]{"DUAS MANILHAS → Deve aceitar o aumento",
+                        List.of(manilha(vira), card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.FIVE)),
                         vira, true},
 
-                new Object[]{"Você com 2 ou mais 3's e oponente com 10 pontos → Deve aceitar o aumento",
-                        10, 10,
+                new Object[]{"DOIS OU MAIS TRÊS → Deve aceitar o aumento",
                         List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.SEVEN)),
                         vira, true},
 
-                new Object[]{"Você com um Zap e oponente com 9 pontos → Deve aceitar o aumento",
-                        9, 9,
+                new Object[]{"UM ZAP → Deve aceitar o aumento",
                         List.of(zap(vira), card(CardSuit.HEARTS, CardRank.SEVEN), card(CardSuit.CLUBS, CardRank.FOUR)),
                         vira, true},
 
-                new Object[]{"Você com cartas fracas (não manilhas ou 3's) e oponente com 11 pontos → Não deve aceitar o aumento",
-                        5, 11,
-                        List.of(card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.SEVEN)),
+                new Object[]{"CARTAS FRACAS → Não deve aceitar o aumento",
+                        List.of(card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.SEVEN)),
                         vira, false},
 
-                new Object[]{"Você com 9 pontos e oponente com 11 pontos, sem manilhas ou 3's → Não deve aceitar o aumento",
-                        9, 11,
-                        List.of(card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.SEVEN)),
+                new Object[]{"CARTAS FRACAS → Não deve aceitar o aumento",
+                        List.of(card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.SPADES, CardRank.TWO), card(CardSuit.HEARTS, CardRank.SIX)),
                         vira, false},
 
-                new Object[]{"Você com 0 pontos e oponente com 11 pontos, sem cartas fortes → Não deve aceitar o aumento",
-                        0, 11,
-                        List.of(card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.SPADES, CardRank.FIVE), card(CardSuit.HEARTS, CardRank.SIX)),
-                        vira, false},
-
-                new Object[]{"Você com manilha e oponente com 10 pontos → Deve aceitar o aumento",
-                        10, 10,
+                new Object[]{"UMA MANILHA → Deve aceitar o aumento",
                         List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.SEVEN), card(CardSuit.CLUBS, CardRank.FOUR)),
                         vira, true},
 
-                new Object[]{"Você com 3's e oponente com 9 pontos → Deve aceitar o aumento",
-                        9, 9,
+                new Object[]{"DOIS TRÊS → Deve aceitar o aumento",
                         List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.FOUR)),
                         vira, true},
 
-                new Object[]{"Você com 0 pontos e oponente com 6 pontos, sem manilhas ou 3's → Não deve aceitar o aumento",
-                        0, 6,
-                        List.of(card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.SEVEN)),
-                        vira, false},
-
-                new Object[]{"Você com 5 pontos e oponente com 5 pontos, sem cartas fortes → Não deve aceitar o aumento",
-                        5, 5,
-                        List.of(card(CardSuit.CLUBS, CardRank.SEVEN), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.FIVE)),
-                        vira, false},
-
-                new Object[]{"Você com 7 pontos e oponente com 10 pontos, com 1 manilha e 3 → Deve aceitar o aumento",
-                        7, 10,
+                new Object[]{"MANILHA e 3 → Deve aceitar o aumento",
                         List.of(manilha(vira), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.SIX)),
                         vira, true},
 
-                new Object[]{"Você com 0 pontos e oponente com 10 pontos, com Zap e 1 3 → Deve aceitar o aumento",
-                        0, 10,
+                new Object[]{"ZAP e 3 → Deve aceitar o aumento",
                         List.of(zap(vira), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.CLUBS, CardRank.SIX)),
-                        vira, true}
+                        vira, true},
+
+                new Object[]{"CARTAS MEDIANAS → Não deve aceitar o aumento",
+                        List.of(card(CardSuit.CLUBS, CardRank.ACE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.KING)),
+                        vira, false}
         );
     }
 
