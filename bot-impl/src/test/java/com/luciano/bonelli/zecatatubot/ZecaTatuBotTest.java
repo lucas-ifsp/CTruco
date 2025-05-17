@@ -173,8 +173,8 @@ class ZecaTatuBotTest {
         @DisplayName("Third round with at least one manilha")
         void whenThirdRoundAndHasManilha() {
             when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES)));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS));
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
             when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.DREW));
             boolean result = zecaTatuBot.decideIfRaises(intel);
             assertThat(result).isTrue();
@@ -189,7 +189,7 @@ class ZecaTatuBotTest {
                     TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)));
             when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS));
             boolean result = zecaTatuBot.decideIfRaises(intel);
-            assertThat(result).isTrue();
+            assertThat(result).isFalse();
         }
 
         @Test
