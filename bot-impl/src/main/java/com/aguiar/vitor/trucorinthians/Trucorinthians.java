@@ -48,6 +48,21 @@ public class Trucorinthians implements BotServiceProvider {
             return CardToPlay.of(weakest);
         }
 
+        if (round == 0 && !isFirstToPlay) {
+            TrucoCard opponentCard = intel.getOpponentCard().orElseThrow();
+
+            return hand.stream()
+                    .filter(card -> card.compareValueTo(opponentCard, vira) >= 0)
+                    .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                    .map(CardToPlay::of)
+                    .orElseGet(() -> {
+                        TrucoCard fallback = hand.stream()
+                                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                                .orElse(TrucoCard.closed());
+                        return CardToPlay.of(fallback);
+                    });
+        }
+
         return CardToPlay.of(hand.get(0));
     }
 }
