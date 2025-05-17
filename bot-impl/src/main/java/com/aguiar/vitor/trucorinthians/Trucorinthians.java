@@ -27,7 +27,18 @@ public class Trucorinthians implements BotServiceProvider {
             return CardToPlay.discard(TrucoCard.closed());
         }
 
+        return getStrategicCard(intel);
+    }
+
+    @Override
+    public int getRaiseResponse(GameIntel intel) {
+        return 0;
+    }
+
+    private CardToPlay getStrategicCard(GameIntel intel) {
+        List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
+
         int round = intel.getRoundResults().size();
         boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
 
@@ -35,15 +46,9 @@ public class Trucorinthians implements BotServiceProvider {
             TrucoCard weakest = hand.stream()
                     .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
                     .orElse(TrucoCard.closed());
-
             return CardToPlay.of(weakest);
         }
 
         return CardToPlay.of(hand.get(0));
-    }
-
-    @Override
-    public int getRaiseResponse(GameIntel intel) {
-        return 0;
     }
 }
