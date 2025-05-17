@@ -45,7 +45,7 @@ public class Trucorinthians implements BotServiceProvider {
             GameIntel.RoundResult firstResult = intel.getRoundResults().get(0);
             switch (firstResult) {
                 case WON:
-                    return isFirstToPlay ? getWeakest(hand, vira) : getStrongest(hand, vira);
+                    return isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
                 case LOST:
                     return getStrongest(hand, vira);
                 case DREW:
