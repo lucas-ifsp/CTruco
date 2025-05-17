@@ -99,4 +99,25 @@ class TrucorinthiansTest {
 
         assertThat(result.content()).isEqualTo(fraca);
     }
+
+    @Test
+    void shouldPlayStrongestCardWhenSecondRoundAfterLosingFirst() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.LOST);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+        TrucoCard media = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        TrucoCard manilha = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(fraca, manilha, media), 0)
+                .opponentScore(0)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result.content()).isEqualTo(manilha);
+    }
 }
