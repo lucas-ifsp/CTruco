@@ -38,7 +38,6 @@ public class Trucorinthians implements BotServiceProvider {
     private CardToPlay getStrategicCard(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
-
         int round = intel.getRoundResults().size();
         boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
 
