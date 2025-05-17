@@ -253,16 +253,33 @@ class ZecaTatuBotTest {
     @Nested
     @DisplayName("Test chooseCard method")
     class ChooseCardTest {
+
         @Test
-        @DisplayName("Should play highest card in the first round")
-        public void playHighestCardInFirstRound() {
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS));
+        @DisplayName("Round 1 with 2 or more manilhas - should discard low card")
+        void whenRound1AndTwoOrMoreManilhas() {
             when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS),
-                    TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)));
-            CardToPlay result = zecaTatuBot.chooseCard(intel);
-            assertThat(result).isEqualTo(CardToPlay.of(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS)));
+                    TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
+                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.isDiscard()).isTrue();
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
+        }
+
+        @Test
+        @DisplayName("Round 1 with handValue > 20 - should play high card")
+        void whenRound1AndHandValueAbove20() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.isDiscard()).isFalse();
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
         }
 
     }
