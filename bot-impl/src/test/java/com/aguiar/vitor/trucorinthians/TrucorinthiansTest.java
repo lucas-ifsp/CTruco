@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class TrucorinthiansTest {
 
@@ -58,7 +57,7 @@ class TrucorinthiansTest {
 
     @DisplayName("Should play smallest non-losing card when responding in first round")
     @Test
-    void shouldPlaySmallestCardThatDoesNotLoseWheFirstRoundAsSecondPlayer() {
+    void shouldPlaySmallestCardThatDoesNotLoseWhenFirstRoundAsSecondPlayer() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
         TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
