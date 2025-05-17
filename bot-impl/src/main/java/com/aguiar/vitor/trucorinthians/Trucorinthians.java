@@ -5,6 +5,7 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
+import javax.smartcardio.Card;
 import java.util.Comparator;
 import java.util.List;
 
@@ -41,10 +42,7 @@ public class Trucorinthians implements BotServiceProvider {
         }
 
         if (round == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            TrucoCard strongest = hand.stream()
-                    .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                    .orElse(TrucoCard.closed());
-            return CardToPlay.of(strongest);
+            return getStrongest(hand, vira);
         }
 
         return CardToPlay.of(hand.get(0));
@@ -65,5 +63,12 @@ public class Trucorinthians implements BotServiceProvider {
                 .orElseGet(() -> {
                     return getWeakest(hand, vira);
                 });
+    }
+
+    private CardToPlay getStrongest(List<TrucoCard> hand, TrucoCard vira) {
+        TrucoCard strongest = hand.stream()
+                .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .orElse(TrucoCard.closed());
+        return CardToPlay.of(strongest);
     }
 }
