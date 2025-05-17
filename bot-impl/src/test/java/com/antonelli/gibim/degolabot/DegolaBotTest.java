@@ -69,5 +69,24 @@ public class DegolaBotTest {
 
         assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
     }
+
+    @Test
+    public void testChooseCardDoesNotThrowException() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(3);
+
+        assertDoesNotThrow(() -> sut.chooseCard(intel.build()));
+    }
+
 }
 
