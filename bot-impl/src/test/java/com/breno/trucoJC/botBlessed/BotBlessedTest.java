@@ -20,7 +20,6 @@ class BotBlessedTest {
         botBlessed = new BotBlessed();
     }
 
-    // --- Testes para getMaoDeOnzeResponse ---
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("maoDeOnzeTestCases")
     @DisplayName("Testes para getMaoDeOnzeResponse")
@@ -39,20 +38,20 @@ class BotBlessedTest {
     private static Stream<Object[]> maoDeOnzeTestCases() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
-        return Stream.of(
-                new Object[]{"✅ 11x10 com dois 3 → Aceita", 11, 10, List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE)), vira, true},
-                new Object[]{"❌ 5x11 com uma manilha → Recusa", 5, 11, List.of(manilha(vira)), vira, false},
-                new Object[]{"✅ 9x10 com Zap e 3 → Aceita", 9, 10, List.of(zap(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, true},
-                new Object[]{"❌ 0x5 com uma manilha → Recusa", 0, 5, List.of(manilha(vira)), vira, false},
-                new Object[]{"✅ 11x11 com manilha e 3 → Aceita", 11, 11, List.of(manilha(vira), card(CardSuit.SPADES, CardRank.THREE)), vira, true},
-                new Object[]{"❌ 0x5 sem manilha ou 3 → Recusa", 0, 5, List.of(card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX)), vira, false},
-                new Object[]{"✅ 6x11 com Zap e 3 → Aceita", 6, 11, List.of(zap(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, true},
-                new Object[]{"✅ 9x5 com manilha e dois 3 → Aceita", 9, 5, List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.THREE), card(CardSuit.CLUBS, CardRank.THREE)), vira, true},
-                new Object[]{"✅ 10x9 com duas manilhas → Aceita", 10, 9, List.of(manilha(vira), manilha(vira)), vira, true},
-                new Object[]{"✅ 0x10 com duas manilhas → Aceita", 0, 10, List.of(manilha(vira), manilha(vira)), vira, true},
-                new Object[]{"❌ 7x9 com manilha e 3 → Recusa", 7, 9, List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, false},
-                new Object[]{"✅ 11x6 com manilha e 3 → Aceita", 11, 6, List.of(manilha(vira), card(CardSuit.SPADES, CardRank.THREE)), vira, true}
-        );
+            return Stream.of(
+                    new Object[]{"✅ 11x10 com dois 3 → Aceita", 11, 10, List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE)), vira, true},
+                    new Object[]{"✅ 5x11 com uma manilha → Recusa", 5, 11, List.of(manilha(vira)), vira, false},
+                    new Object[]{"✅ 9x11 com Zap e 3 → Aceita", 9, 11, List.of(zap(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, true},
+                    new Object[]{"✅ 0x11 com uma manilha → Recusa", 0, 11, List.of(manilha(vira)), vira, false},
+                    new Object[]{"✅ 11x11 com manilha e 3 → Aceita", 11, 11, List.of(manilha(vira), card(CardSuit.SPADES, CardRank.THREE)), vira, true},
+                    new Object[]{"❌ 0x5 sem manilha ou 3, mas não é mão de 11 → Recusa", 0, 5, List.of(card(CardSuit.CLUBS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX)), vira, false},
+                    new Object[]{"✅ 6x11 com Zap e 3 → Aceita", 6, 11, List.of(zap(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, true},
+                    new Object[]{"✅ 11x5 com manilha e dois 3 → Aceita", 11, 5, List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.THREE), card(CardSuit.CLUBS, CardRank.THREE)), vira, true},
+                    new Object[]{"✅ 11x9 com duas manilhas → Aceita", 11, 9, List.of(manilha(vira), manilha(vira)), vira, true},
+                    new Object[]{"✅ 0x11 com duas manilhas → Aceita", 0, 11, List.of(manilha(vira), manilha(vira)), vira, true},
+                    new Object[]{"✅ 11x7 com manilha e 3 → Aceita", 11, 7, List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.THREE)), vira, true},
+                    new Object[]{"✅ 11x6 com manilha e 3 → Aceita", 11, 6, List.of(manilha(vira), card(CardSuit.SPADES, CardRank.THREE)), vira, true}
+            );
     }
 
     @ParameterizedTest(name = "{index}: {0}")
