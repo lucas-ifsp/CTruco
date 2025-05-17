@@ -68,6 +68,16 @@ public class ZecaTatuBot implements BotServiceProvider {
                     if (cardToPlay == null) cardToPlay = getLowCard(intel);
                     return CardToPlay.of(cardToPlay);
                 }
+
+            case "Round 2":
+                if (wonFirstRound(intel)) {
+                    cardToPlay = getLowCard(intel);
+                    return CardToPlay.discard(cardToPlay);
+                } else {
+                    cardToPlay = getHighCard(intel);
+                    return CardToPlay.of(cardToPlay);
+                }
+
             default:
                 cardToPlay = intel.getCards().get(0); // fallback
                 return CardToPlay.of(cardToPlay);
