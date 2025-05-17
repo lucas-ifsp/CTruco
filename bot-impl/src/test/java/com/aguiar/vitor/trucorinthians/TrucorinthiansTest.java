@@ -100,6 +100,7 @@ class TrucorinthiansTest {
         assertThat(result.content()).isEqualTo(fraca);
     }
 
+    @DisplayName("Should play strongest card in second round after losing first")
     @Test
     void shouldPlayStrongestCardWhenSecondRoundAfterLosingFirst() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
@@ -119,5 +120,27 @@ class TrucorinthiansTest {
         CardToPlay result = sut.chooseCard(intel);
 
         assertThat(result.content()).isEqualTo(manilha);
+    }
+
+    @DisplayName("Should play weakest card when second round after winning first if starting round")
+    @Test
+    void shouldPlayWeakestCardWhenSecondRoundAfterWinningFirstAsFirstToPlay() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard media = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(media, manilha, fraca), 0)
+                .opponentScore(0)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result.content()).isEqualTo(fraca);
     }
 }
