@@ -88,7 +88,7 @@ public class Trucorinthians implements BotServiceProvider {
             case LOST:
                 return getStrongest(hand, vira);
             case DREW:
-                return getStrongest(hand, vira);
+                return isFirstToPlay ? getStrongest(hand, vira) : getStrongest(hand, vira);
         }
 
         return getStrongest(hand, vira);
