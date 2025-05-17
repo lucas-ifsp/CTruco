@@ -192,4 +192,26 @@ class TrucorinthiansTest {
 
         assertThat(result.content()).isEqualTo(manilha);
     }
+
+    @DisplayName("Should play strongest card when second round after draw as first to play")
+    @Test
+    void shouldPlayStrongestCardWhenSecondRoundAfterDrawAsFirstToPlay() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS);
+        TrucoCard media = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(fraca, media, manilha), 0)
+                .opponentScore(0)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result.content()).isEqualTo(manilha);
+    }
 }
