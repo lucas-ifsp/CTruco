@@ -49,18 +49,31 @@ public class ZecaTatuBot implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
+        String round = roundCheck(intel);
+        TrucoCard cardToPlay;
 
-        boolean isFirstRound = intel.getRoundResults().isEmpty() || intel.getOpponentCard().isEmpty();
-
-
-        if (isFirstRound) {
-            TrucoCard cardToPlay = getHighCard(intel);
-            return CardToPlay.of(cardToPlay);
+        switch (round) {
+            case "Round 1":
+                if (countManilha(intel) >= 2) {
+                    cardToPlay = getLowCard(intel);
+                    return CardToPlay.discard(cardToPlay);
+                } else if (handValue(intel) > 20) {
+                    cardToPlay = getHighCard(intel);
+                    return CardToPlay.of(cardToPlay);
+                } else if (handValue(intel) < 10) {
+                    cardToPlay = getLowCard(intel);
+                    return CardToPlay.discard(cardToPlay);
+                } else {
+                    cardToPlay = getMidCard(intel);
+                    if (cardToPlay == null) cardToPlay = getLowCard(intel);
+                    return CardToPlay.of(cardToPlay);
+                }
+            default:
+                cardToPlay = intel.getCards().get(0); // fallback
+                return CardToPlay.of(cardToPlay);
         }
-
-        TrucoCard cardToPlay = getLowCard(intel);
-        return CardToPlay.of(cardToPlay);
     }
+
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
