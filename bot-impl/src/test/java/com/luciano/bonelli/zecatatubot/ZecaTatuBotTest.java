@@ -312,6 +312,17 @@ class ZecaTatuBotTest {
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
         }
 
+        @Test
+        @DisplayName("Round 3 - should play first card in hand")
+        void whenRound3() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.isDiscard()).isFalse();
+            assertThat(cardToPlay.content()).isEqualTo(intel.getCards().get(0));
+        }
 
     }
 
