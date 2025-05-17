@@ -71,12 +71,50 @@ public class DegolaBotTest {
     }
 
     @Test
-    public void testChooseCardDoesNotThrowException() {
-        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+    public void testChooseCardReturnsValidCardToPlay() {
+        TrucoCard vira = TrucoCard.of(CardRank.JACK, CardSuit.HEARTS);
         List<TrucoCard> botCards = List.of(
-                TrucoCard.of(CardRank.SIX, CardSuit.SPADES),
-                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS),
-                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
+                TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(botCards).contains(result.content());
+    }
+
+    @Test
+    public void testChooseCardWithOnlyOneCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(1);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertEquals(botCards.get(0), result.content());
+    }
+
+    @Test
+    public void testChooseCardDoesNotThrowWithBadCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
         );
         List<TrucoCard> openCards = List.of(vira);
 
@@ -87,6 +125,8 @@ public class DegolaBotTest {
 
         assertDoesNotThrow(() -> sut.chooseCard(intel.build()));
     }
+
+
 
 }
 
