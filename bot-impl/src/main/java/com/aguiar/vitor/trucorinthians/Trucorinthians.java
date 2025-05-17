@@ -41,12 +41,16 @@ public class Trucorinthians implements BotServiceProvider {
             return isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
         }
 
-        if (round == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.LOST) {
-            return getStrongest(hand, vira);
-        }
-
-        if (round == 1 && intel.getRoundResults().get(0) == GameIntel.RoundResult.WON && isFirstToPlay) {
-            return getWeakest(hand, vira);
+        if (round == 1) {
+            GameIntel.RoundResult firstResult = intel.getRoundResults().get(0);
+            switch (firstResult) {
+                case WON:
+                    return isFirstToPlay ? getWeakest(hand, vira) : getStrongest(hand, vira);
+                case LOST:
+                    return getStrongest(hand, vira);
+                case DREW:
+                    break;
+            }
         }
 
         return CardToPlay.of(hand.get(0));
