@@ -25,29 +25,29 @@ public class SecondRound implements Strategy {
         boolean venceuPrimeira = BotUtils.didWinFirstRound(intel);
         boolean ehSegundo = BotUtils.isPlayingSecond(intel);
 
-        long fracas = cards.stream().filter(c -> c.relativeValue(vira) <= 4).count();
-        long medias = cards.stream().filter(c -> c.relativeValue(vira) > 4 && c.relativeValue(vira) < 8).count();
-        long boas = cards.stream().filter(c -> c.relativeValue(vira) >= 8 && !c.isManilha(vira)).count();
-        long manilhas = cards.stream().filter(c -> c.isManilha(vira)).count();
+        List<TrucoCard> fracas = cards.stream().filter(c -> c.relativeValue(vira) <= 4).toList();
+        List<TrucoCard> medias = cards.stream().filter(c -> c.relativeValue(vira) > 4 && c.relativeValue(vira) < 8).toList();
+        List<TrucoCard> boas = cards.stream().filter(c -> c.relativeValue(vira) >= 8 && !c.isManilha(vira)).toList();
+        List<TrucoCard> manilhas = cards.stream().filter(c -> c.isManilha(vira)).toList();
 
         if (venceuPrimeira) {
             if (!ehSegundo) {
-                if (manilhas >= 1) {
+                if (!manilhas.isEmpty()) {
                     return CardToPlay.of(cards.stream()
                             .filter(c -> !c.isManilha(vira))
                             .max((a, b) -> Integer.compare(a.relativeValue(vira), b.relativeValue(vira)))
-                            .orElse(cards.stream().findFirst().get()));
+                            .orElse(cards.get(0)));
                 }
-                if (boas > 0) {
-                    return CardToPlay.of(cards.stream()
-                            .filter(c -> !c.equals(cards.stream()
-                                    .max((a, b) -> Integer.compare(a.relativeValue(vira), b.relativeValue(vira))).get()))
-                            .findFirst()
-                            .orElse(cards.stream().findFirst().get()));
+                if (!medias.isEmpty()) {
+                    return CardToPlay.of(medias.get(0));
                 }
-                return CardToPlay.of(cards.stream()
-                        .min((a, b) -> Integer.compare(a.relativeValue(vira), b.relativeValue(vira)))
-                        .get());
+                if (!fracas.isEmpty()) {
+                    return CardToPlay.of(fracas.get(0));
+                }
+                if (!boas.isEmpty()) {
+                    return CardToPlay.of(boas.get(0));
+                }
+                return CardToPlay.of(cards.get(0));
             }
         } else {
             if (ehSegundo && intel.getOpponentCard().isPresent()) {
@@ -60,11 +60,8 @@ public class SecondRound implements Strategy {
 
                 if (matadora != null) return CardToPlay.of(matadora);
 
-                if (manilhas > 0) {
-                    return CardToPlay.of(cards.stream()
-                            .filter(c -> c.isManilha(vira))
-                            .findFirst()
-                            .orElse(cards.get(0)));
+                if (!manilhas.isEmpty()) {
+                    return CardToPlay.of(manilhas.get(0));
                 }
 
                 return CardToPlay.of(cards.stream()
