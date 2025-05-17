@@ -2,7 +2,10 @@ package com.aguiar.vitor.trucorinthians;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.List;
 
 public class Trucorinthians implements BotServiceProvider {
     @Override
@@ -17,7 +20,13 @@ public class Trucorinthians implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        return null;
+        List<TrucoCard> hand = intel.getCards();
+
+        if (hand.isEmpty()) {
+            return CardToPlay.discard(TrucoCard.closed());
+        }
+
+        return CardToPlay.of(hand.get(0));
     }
 
     @Override
