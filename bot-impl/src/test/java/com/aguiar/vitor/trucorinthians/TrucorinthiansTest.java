@@ -173,18 +173,23 @@ class TrucorinthiansTest {
     void shouldPlayStrongestCardInThirdRound() {
         TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
+        List<GameIntel.RoundResult> roundResults = List.of(
+                GameIntel.RoundResult.LOST,
+                GameIntel.RoundResult.WON
+        );
+
         TrucoCard fraca = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         TrucoCard media = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
         TrucoCard manilha = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
 
         GameIntel intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), List.of(), vira, 1)
+                .gameInfo(roundResults, List.of(), vira, 1)
                 .botInfo(List.of(fraca, manilha, media), 0)
                 .opponentScore(0)
                 .build();
 
         CardToPlay result = sut.chooseCard(intel);
-        
+
         assertThat(result.content()).isEqualTo(manilha);
     }
 }

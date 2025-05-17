@@ -53,6 +53,10 @@ public class Trucorinthians implements BotServiceProvider {
             }
         }
 
+        if (round == 2) {
+            return getStrongest(hand, vira);
+        }
+
         return CardToPlay.of(hand.get(0));
     }
 
