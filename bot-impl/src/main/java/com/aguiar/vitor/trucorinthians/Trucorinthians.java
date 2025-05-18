@@ -13,7 +13,10 @@ import java.util.Optional;
 public class Trucorinthians implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        TrucoCard vira = intel.getVira();
+
+        return intel.getCards().stream()
+                .anyMatch(card -> card.isManilha(vira));
     }
 
     @Override
