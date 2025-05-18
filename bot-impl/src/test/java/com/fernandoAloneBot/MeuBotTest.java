@@ -402,5 +402,28 @@ public class MeuBotTest {
 
     }
 
+    @Test
+    @DisplayName("Teste aceita o aumento se não tiver manilha mas a mão é forte")
+    void aceitaAumentoSemManilhaMaoForte() {
+        hand = List.of(
+                TrucoCard.of(ACE, SPADES),
+                TrucoCard.of(KING, HEARTS),
+                TrucoCard.of(THREE, SPADES)
+        );
+        vira = TrucoCard.of(SIX, HEARTS);
+        openCards = List.of(vira);
+
+        intel = createIntel(hand, vira, 5, 5, List.of(GameIntel.RoundResult.WON), openCards);
+
+        int res = meuBot.getRaiseResponse(intel);
+
+        assertThat(res).isPositive();
+    }
+
+
+
+
+
+
 
 }
