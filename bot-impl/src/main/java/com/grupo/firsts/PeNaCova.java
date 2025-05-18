@@ -86,6 +86,7 @@ public class PeNaCova implements BotServiceProvider {
     if (manilhas>=2) return 1;
     if (manilhas == 1 && highCards >= 1) return 1;
     if (highCards == 3) return 1;
+    if (highCards == 2) return 1;
     return 0;
   }
 }
