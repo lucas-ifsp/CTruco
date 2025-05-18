@@ -4,14 +4,21 @@ import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.CardToPlay;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PeNaCovaTest {
 
@@ -71,5 +78,47 @@ class PeNaCovaTest {
     assertThat(result).isEqualTo(expected);
   }
 
+  static Stream<Arguments> provideScenarios(){
+    return Stream.of(
+        Arguments.of(
+            List.of(
+              parseCard("FOUR","HEARTS"),
+              parseCard("KING","SPADES"),
+              parseCard("JACK","DIAMONDS")
+            ),
+            parseCard("FIVE", "CLUBS"),
+            List.of(parseCard("KING", "SPADES")),
+            parseCard("FOUR", "HEARTS")
+    ));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideScenarios")
+  void chooseCard_scenarios(
+      List<TrucoCard> hand,
+      TrucoCard vira,
+      List<TrucoCard> mesaRestante,
+      TrucoCard expectedCard
+  ) {
+    List<TrucoCard> openCards = new ArrayList<>();
+    openCards.add(vira);
+    openCards.addAll(mesaRestante);
+
+    List<GameIntel.RoundResult> roundResults = Collections.emptyList();
+
+    GameIntel intel = GameIntel.StepBuilder.with()
+        .gameInfo(roundResults, openCards, vira,1)
+        .botInfo(hand,0)
+        .opponentScore(0)
+        .build();
+
+    CardToPlay result = bot.chooseCard(intel);
+
+    assertEquals(expectedCard, result.content());
+  }
+
+  static TrucoCard parseCard(String rank, String suit){
+    return TrucoCard.of(CardRank.valueOf(rank), CardSuit.valueOf(suit));
+  }
 
 }
