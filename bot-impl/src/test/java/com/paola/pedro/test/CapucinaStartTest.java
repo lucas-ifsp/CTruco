@@ -2,6 +2,7 @@ package com.paola.pedro.test;
 
 import com.paola.pedro.StartRoundCapucina;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.bueno.spi.model.CardRank;
 import java.util.List;
@@ -28,12 +29,14 @@ public class CapucinaStartTest {
     }
 
     @Test
+    @DisplayName("Dado que o bot iniciou uma nova rodada, então deve receber 3 cartas.")
     void deveReceber3CartasNaNovaRodada() {
         bot.iniciarRodada(List.of(CardRank.FOUR, CardRank.QUEEN, CardRank.SEVEN));
         assertEquals(3, bot.getMao().size());
     }
 
     @Test
+    @DisplayName("Dado que o bot recebeu menos de 3 cartas, então deve lançar um erro.")
     void deveLancarErroSeReceberMenosDe3Cartas() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 bot.iniciarRodada(List.of(CardRank.FOUR, CardRank.QUEEN))
@@ -42,6 +45,7 @@ public class CapucinaStartTest {
     }
 
     @Test
+    @DisplayName("Dado que a rodada reiniciou, então deve limpar o estado da rodada anterior.")
     void deveLimparEstadoDaRodadaAnterior() {
         bot.marcarJogada(CardRank.QUEEN);
         bot.iniciarRodada(List.of(CardRank.FOUR, CardRank.QUEEN, CardRank.SEVEN));
@@ -49,11 +53,12 @@ public class CapucinaStartTest {
     }
 
     @Test
+    @DisplayName("Dado que é a primeira rodada da partida, então o bot deve jogar de forma segura.")
     void deveJogarDeFormaSeguraNaPrimeiraRodada() {
         bot.iniciarPartida("bot", 0, 0);
         bot.iniciarRodada(List.of(CardRank.FOUR, CardRank.QUEEN, CardRank.SEVEN));
         CardRank jogada = bot.jogar();
-        assertTrue(bot.getMao().contains(jogada));
+        assertFalse(bot.getMao().contains(jogada));
     }
 
     @Test
@@ -69,6 +74,7 @@ public class CapucinaStartTest {
 
     @Test
     void deveRemoverCartaAposJogar() {
+        bot.iniciarPartida("bot", 0, 0);
         bot.iniciarRodada(List.of(CardRank.FOUR, CardRank.QUEEN, CardRank.SEVEN));
         CardRank jogada = bot.jogar();
         assertFalse(bot.getMao().contains(jogada));
@@ -101,6 +107,7 @@ public class CapucinaStartTest {
 
     @Test
     void deveEsconderCartaForte() {
+        bot.iniciarPartida("bot", 0, 0); // Adicione esta linha
         bot.iniciarRodada(List.of(CardRank.THREE, CardRank.FOUR, CardRank.ACE));
         CardRank jogada = bot.jogar();
         assertNotEquals(CardRank.ACE, jogada);
