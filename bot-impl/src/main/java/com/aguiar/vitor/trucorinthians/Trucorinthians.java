@@ -30,6 +30,7 @@ public class Trucorinthians implements BotServiceProvider {
         TrucoCard vira = intel.getVira();
         List<TrucoCard> hand = intel.getCards();
 
+
         long manilhaCount = hand.stream()
                 .filter(card -> card.isManilha(vira))
                 .count();
@@ -41,6 +42,8 @@ public class Trucorinthians implements BotServiceProvider {
         return switch (round) {
             case 0 -> manilhaCount >= 2;
             case 1 -> manilhaCount == 1 && strongCount >= 2;
+            case 2-> hand.stream()
+                    .anyMatch(card -> card.relativeValue(vira) >= 8);
             default -> false;
         };
     }
