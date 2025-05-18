@@ -30,13 +30,6 @@ import com.bueno.spi.model.TrucoCard;
  * */
 public interface BotServiceProvider{
 
-    String getDescription();
-
-    String getAuthor();
-
-    String getVersion();
-
-    void start();
 
     /**
      * <p>Decides if the bot wants to play the "mão de onze". If it decides to play, the hand points will be
