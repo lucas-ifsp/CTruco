@@ -196,6 +196,31 @@ class TrucorinthiansTest {
 
             assertThat(result).isTrue();
         }
+
+        @Test
+        @DisplayName("Should not raise in third round if has no strong cards (force < 8)")
+        void shouldNotRaiseInThirdRoundIfHasNoStrongCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            List<GameIntel.RoundResult> roundResults = List.of(
+                    GameIntel.RoundResult.DREW,
+                    GameIntel.RoundResult.WON
+            );
+
+            TrucoCard fraca1 = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);       // força 1
+            TrucoCard fraca2 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);    // força 2
+            TrucoCard fraca3 = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);     // força 3
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, fraca2, fraca3), 9)
+                    .opponentScore(10)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isFalse();
+        }
     }
 
     @Nested
