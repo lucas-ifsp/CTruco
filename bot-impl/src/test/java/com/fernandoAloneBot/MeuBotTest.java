@@ -1,9 +1,6 @@
 package com.fernandoAloneBot;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardSuit;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import static com.bueno.spi.model.CardSuit.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MeuBotTest {
 
@@ -510,22 +508,33 @@ public class MeuBotTest {
 
 
 
-
-
-
-
     }
 
+     @Nested
+    @DisplayName("Escolher carta")
+    class chooseCard{
+         @Test
+         @DisplayName("Joga a menor carta que vence a do oponente quando não é manilha")
+         void jogaCartaQueMataOponenteQuandoNaoEhManilha() {
+             hand = List.of(TrucoCard.of(TWO, HEARTS), TrucoCard.of(KING, CLUBS), TrucoCard.of(TWO, CLUBS));
+
+             vira = TrucoCard.of(SEVEN, SPADES);
+
+             openCards = List.of(TrucoCard.of(ACE, DIAMONDS));
+
+             intel = createIntel(hand, vira, 3, 0, List.of(), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             System.out.println(cardToPlay.value());
+
+             //  DOIS DE COPAS, que é a menor Ace
+             assertEquals(TrucoCard.of(TWO, HEARTS), cardToPlay.value());
+         }
 
 
 
-
-
-
-
-
-
-
+     }
 
 
 }
