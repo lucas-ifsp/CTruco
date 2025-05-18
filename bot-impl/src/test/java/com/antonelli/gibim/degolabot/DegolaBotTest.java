@@ -3,6 +3,7 @@ package com.antonelli.gibim.degolabot;
 import com.bueno.spi.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -22,10 +23,10 @@ public class DegolaBotTest {
 
     @BeforeEach
     void setUp(){sut = new DegolaBot(); }
+
     @Test
     public void testGetRaiseResponse() {
         GameIntel intel = mock(GameIntel.class);
-
 
         when(intel.getOpponentScore()).thenReturn(5);
         when(intel.getCards()).thenReturn(mock(List.class));
@@ -48,27 +49,58 @@ public class DegolaBotTest {
 
         assertFalse(result);
     }
+    @Nested
+    @DisplayName("Testes ChooseCard")
+    class ChooseCardTests {
+        @Nested
+        @DisplayName("Testes caso seja a primeira rodada")
+        class FirstRoundTests {
+            @Nested
+            @DisplayName("Testes caso seja o primeiro a jogar")
+            class FirstPlayerPlays {
+                @Test
+                @DisplayName("If only have bad cards then discard the one with lower value")
+                    void ifOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
+                        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-    @Test
-    @DisplayName("If only have bad cards then discard the one with lower value")
-    void ifOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
-        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+                        List<TrucoCard> botCards = Arrays.asList(
+                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                        );
 
-        List<TrucoCard> botCards = Arrays.asList(
-                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
-        );
+                        List<TrucoCard> openCards = Collections.singletonList(vira);
 
-        List<TrucoCard> openCards = Collections.singletonList(vira);
+                        intel = GameIntel.StepBuilder.with()
+                                .gameInfo(List.of(), openCards, vira, 1)
+                                .botInfo(botCards, 0)
+                                .opponentScore(0);
 
-        intel = GameIntel.StepBuilder.with()
-                .gameInfo(List.of(), openCards, vira, 1)
-                .botInfo(botCards, 0)
-                .opponentScore(0);
+                        assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                }
+        @Nested
+        @DisplayName("Testes caso seja o segundo a jogar")
+        class SecondPlayerPlays {
 
-        assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+        }
+            }
+        }
     }
+    @Nested
+    @DisplayName("Testes getRaiseResponse")
+    class GetRaiseResponseTests {}
+    @Nested
+    @DisplayName("Testes DecideIfRises")
+    class DecideIfRaisesTests {
+        @Nested
+        @DisplayName("Se ganhar a primeira rodada")
+        class WonFirstRound{
+
+        }
+    }
+    @Nested
+    @DisplayName("Testes getMaoDeOnzeResponse")
+    class GetMaoDeOnzeResponseTests {}
 
     @Test
     public void testChooseCardReturnsValidCardToPlay() {
@@ -125,8 +157,5 @@ public class DegolaBotTest {
 
         assertDoesNotThrow(() -> sut.chooseCard(intel.build()));
     }
-
-
-
 }
 
