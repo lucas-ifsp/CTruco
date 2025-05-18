@@ -1,9 +1,6 @@
 package com.grupo.firsts;
 
-import com.bueno.spi.model.CardRank;
-import com.bueno.spi.model.CardToPlay;
-import com.bueno.spi.model.GameIntel;
-import com.bueno.spi.model.TrucoCard;
+import com.bueno.spi.model.*;
 import com.bueno.spi.service.BotServiceProvider;
 
 import java.util.Comparator;
@@ -31,12 +28,27 @@ public class PeNaCova implements BotServiceProvider {
   @Override
   public CardToPlay chooseCard(GameIntel intel) {
     List<TrucoCard> hand = intel.getCards();
+    List<TrucoCard> openCards = intel.getOpenCards();
 
-    TrucoCard worstCard = hand.stream()
-        .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
-        .orElse(hand.get(0));
-    return CardToPlay.of(worstCard);
+    final TrucoCard opponentCard = openCards.size() > 1 ? openCards.get(1) : null;
+    final TrucoCard vira = intel.getVira();
 
+    if(opponentCard == null){
+      TrucoCard bestCard = hand.stream()
+          .max(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
+          .orElse(hand.get(0));
+      return CardToPlay.of(bestCard);
+    } else {
+      return hand.stream()
+          .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+          .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+          .map(CardToPlay::of)
+          .orElseGet( () -> CardToPlay.of(
+              hand.stream()
+                  .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                  .orElse(hand.get(0))
+          ));
+    }
   }
 
   @Override
