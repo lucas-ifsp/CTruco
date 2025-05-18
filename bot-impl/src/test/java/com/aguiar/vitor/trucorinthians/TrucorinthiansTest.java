@@ -261,4 +261,30 @@ class TrucorinthiansTest {
 
         assertThat(result.content()).isEqualTo(forte);
     }
+
+    @DisplayName("Should prioritize winning over drawing when in second round, losing the score, and playing second")
+    @Test
+    void shouldPrioritizeWinningOverDrawingWhenSecondRoundIfLosingScoreAndPlayingSecond() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS);
+
+        TrucoCard empata = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard vence = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(empata, fraca, vence), 4)
+                .opponentScore(9)
+                .opponentCard(opponentCard)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result).isNotNull();
+        assertThat(result.content()).isEqualTo(vence);
+    }
 }
