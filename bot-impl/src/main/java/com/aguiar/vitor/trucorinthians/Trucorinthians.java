@@ -78,15 +78,23 @@ public class Trucorinthians implements BotServiceProvider {
     private CardToPlay getSecondRoundStrategy(GameIntel intel) {
         GameIntel.RoundResult firstResult = intel.getRoundResults().get(0);
         boolean isFirstToPlay = intel.getOpponentCard().isEmpty();
+        boolean isLosing = intel.getScore() < intel.getOpponentScore();
         TrucoCard opponentCard = intel.getOpponentCard().orElse(TrucoCard.closed());
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        return switch (firstResult) {
-            case WON -> isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
-            case LOST -> getStrongest(hand, vira);
-            case DREW -> isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+        switch (firstResult) {
+            case WON:
+                if (isLosing) {
+                    return isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard) ;
+                }
+                return isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+
+            case LOST: return getStrongest(hand, vira);
+            case DREW: return isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
         };
+
+        return getStrongest(hand, vira);
 
     }
 }
