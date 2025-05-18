@@ -194,6 +194,21 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
 
+        @Test
+        @DisplayName("Recusa mão de onze com cartas medianas e oponente com 10 pontos")
+        void testMaoDeOnzeMediumHandOpponentTen() {
+            hand = List.of(
+                    TrucoCard.of(FIVE, SPADES),
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(SIX, CLUBS)
+            );
+            vira = TrucoCard.of(THREE, DIAMONDS);
+
+            intel = createIntel(hand, vira, 11, 10, List.of());
+
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
 
 
 
