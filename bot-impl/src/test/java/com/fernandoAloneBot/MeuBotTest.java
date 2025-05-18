@@ -211,27 +211,37 @@ public class MeuBotTest {
 
 
 
+    }
+
+    @Nested
+    @DisplayName("decideIfRaises")
+    class DecideIfRaises {
+
+        @Test
+        @DisplayName("Recusa aumento ")
+        void testeDecidaSeAumentaComMaoFraca(){
+            hand = List.of(TrucoCard.of(FOUR, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(FOUR, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+
+            intel = createIntel(hand, vira, 6, 7, List.of(GameIntel.RoundResult.DREW));
+
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
+        @Test@DisplayName("Recusa aumento após perder rodada")
+        void testeSeDecideAumentarAposPerderRodada() {
+            hand = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+
+            intel = createIntel(hand, vira, 6, 7, List.of(GameIntel.RoundResult.LOST));
+
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
 
 
 
 
     }
+
 }
