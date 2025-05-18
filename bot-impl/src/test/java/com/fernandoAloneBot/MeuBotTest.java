@@ -292,6 +292,17 @@ public class MeuBotTest {
             Assertions.assertTrue(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Recusa aumento após perder a primeira rodada e partida empatada")
+        void recusaAumentoAposPerderPrimeiraRodadaComPartidaEmpatada() {
+            hand = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, CLUBS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(TrucoCard.of(THREE, DIAMONDS)); // carta da primeira rodada
+
+            intel = createIntel(hand, vira, 10, 10, List.of(GameIntel.RoundResult.LOST), openCards);
+
+            Assertions.assertFalse(meuBot.decideIfRaises(intel));
+        }
 
 
 
