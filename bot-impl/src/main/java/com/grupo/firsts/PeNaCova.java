@@ -22,7 +22,15 @@ public class PeNaCova implements BotServiceProvider {
 
   @Override
   public boolean decideIfRaises(GameIntel intel) {
+    List<TrucoCard> hand = intel.getCards();
+    TrucoCard vira = intel.getVira();
+
+    long manilhas = hand.stream().filter(card -> card.isManilha(vira)).count();
+
+    if(manilhas >= 2) return true;
+
     return false;
+
   }
 
   @Override
