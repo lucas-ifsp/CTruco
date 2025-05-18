@@ -5,7 +5,6 @@ import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
 
-import javax.smartcardio.Card;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,16 @@ import java.util.Optional;
 public class Trucorinthians implements BotServiceProvider {
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return hasManilha(intel.getCards(), intel.getVira());
+        int myScore = intel.getScore();
+        int opponentScore = intel.getOpponentScore();
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> hand = intel.getCards();
+
+        if (myScore == 11 && opponentScore == 11) {
+            return true;
+        }
+
+        return hasManilha(hand, vira);
     }
 
     @Override
