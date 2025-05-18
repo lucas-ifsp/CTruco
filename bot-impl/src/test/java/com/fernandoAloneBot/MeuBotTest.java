@@ -281,6 +281,18 @@ public class MeuBotTest {
             Assertions.assertTrue(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Aceita aumento com casal menor")
+        void aceitaAumentoComCasalMenor() {
+            hand = List.of(TrucoCard.of(FIVE, SPADES), TrucoCard.of(FIVE, HEARTS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 6, 8, List.of(GameIntel.RoundResult.LOST), openCards);
+            Assertions.assertTrue(meuBot.decideIfRaises(intel));
+        }
+
+
 
 
 
