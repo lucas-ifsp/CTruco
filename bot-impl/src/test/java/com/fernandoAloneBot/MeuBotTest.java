@@ -416,6 +416,29 @@ public class MeuBotTest {
             assertThat(res).isLessThanOrEqualTo(0);
         }
 
+        @Test
+        @DisplayName("Deve aumentar truco se força da mão >= 15 e diferença de pontos > 3")
+        void deveAumentarTrucoForcaMaiorOuIgual15EDiferencaMaiorQue3() {
+            hand = List.of(
+                    TrucoCard.of(ACE, SPADES),
+                    TrucoCard.of(TWO, HEARTS),
+                    TrucoCard.of(QUEEN, CLUBS)
+            );
+
+            vira = TrucoCard.of(ACE, HEARTS);
+
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 10, 5, List.of(), openCards); // diferença 5
+
+
+            int res = meuBot.getRaiseResponse(intel);
+
+            System.out.println("Resposta: " + res);
+
+            assertThat(res).isLessThanOrEqualTo(0);
+        }
+
 
 
 
