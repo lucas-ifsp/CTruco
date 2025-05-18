@@ -52,6 +52,7 @@ public class MeuBotTest {
     }
 
     private List<TrucoCard> hand;
+    private List<TrucoCard> openCards;
     private List<GameIntel.RoundResult> result;
 
     private TrucoCard vira;
@@ -167,10 +168,11 @@ public class MeuBotTest {
         @Test
         @DisplayName("Testa se aceita mão de onze se ganhou a primeira rodada e tem zap")
         void testMaoDeOnzeWonFirstRoundAndHasZap() {
-            hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES)
+            hand = List.of(TrucoCard.of(SIX, HEARTS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES)
             );
 
             vira = TrucoCard.of(FIVE, HEARTS);
+
 
             GameIntel intel = createIntel(hand, vira, 11, 8, List.of(GameIntel.RoundResult.WON));
 
@@ -233,6 +235,20 @@ public class MeuBotTest {
 
 
         }
+
+        @Test
+        @DisplayName("Aceita aumento com casal maior")
+        void testeAceitaAumentoCasalMaior() {
+            hand = List.of(TrucoCard.of(FIVE,CLUBS ), TrucoCard.of(FIVE, HEARTS));
+            vira = TrucoCard.of(FOUR, DIAMONDS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 6, 7, List.of(GameIntel.RoundResult.DREW),openCards);
+            Assertions.assertTrue(meuBot.decideIfRaises(intel));
+        }
+
+
+
 
 
 
