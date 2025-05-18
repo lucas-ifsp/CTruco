@@ -3,7 +3,11 @@ package com.grupo.firsts;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class PeNaCova implements BotServiceProvider {
   @Override
@@ -26,7 +30,13 @@ public class PeNaCova implements BotServiceProvider {
 
   @Override
   public CardToPlay chooseCard(GameIntel intel) {
-    return null;
+    List<TrucoCard> hand = intel.getCards();
+
+    TrucoCard worstCard = hand.stream()
+        .min(Comparator.comparingInt(card -> card.relativeValue(intel.getVira())))
+        .orElse(hand.get(0));
+    return CardToPlay.of(worstCard);
+
   }
 
   @Override
