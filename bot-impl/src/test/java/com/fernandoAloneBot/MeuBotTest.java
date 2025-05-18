@@ -131,6 +131,17 @@ public class MeuBotTest {
 
         }
 
+        @Test
+        @DisplayName("Testa se recusa mão de onze com uma manilha")
+        void testMaoDeOnzeOneManilha() {
+            hand = List.of(TrucoCard.of(SIX, SPADES),TrucoCard.of(FOUR, HEARTS),TrucoCard.of(FIVE, SPADES));
+
+            vira = TrucoCard.of(FIVE, HEARTS);
+            GameIntel intel = createIntel(hand, vira, 11, 6, List.of());
+
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
 
 
 
