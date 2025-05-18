@@ -55,7 +55,25 @@ public class Trucorinthians implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
-        return 0;
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> hand = intel.getCards();
+
+        long manilhaCount = hand.stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
+
+        if (manilhaCount >= 2) {
+            return 1;
+        }
+
+        boolean hasStrongCard = hand.stream()
+                .anyMatch(card -> card.relativeValue(vira) >= 8);
+
+        if (hasStrongCard) {
+            return 0;
+        }
+
+        return -1;
     }
 
     private boolean hasManilha(List<TrucoCard> hand, TrucoCard vira) {
