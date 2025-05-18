@@ -1,3 +1,23 @@
+/*
+ *  Copyright (C) 2025 Pedro Bonelli and Lucas Luciano
+ *  Contact: Pedro <dot> Bonelli<at> ifsp <dot> edu <dot> br
+ *  Contact: Lucas <dot> Luciano <at> ifsp <dot> edu <dot> br
+ *
+ *  This file is part of CTruco (Truco game for didactic purpose).
+ *
+ *  CTruco is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  CTruco is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
+ */
 package com.luciano.bonelli.zecatatubot;
 
 import com.bueno.spi.model.*;
@@ -45,49 +65,61 @@ public class ZecaTatuBot implements BotServiceProvider {
         return false;
     }
 
-
-
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        String round = roundCheck(intel);
-        TrucoCard cardToPlay;
+        TrucoCard vira = intel.getVira();
+        TrucoCard bestCard = getHighCard(intel);
+        TrucoCard averageCard = getMidCard(intel);
+        TrucoCard worstCard = getLowCard(intel);
+        boolean torna = intel.getOpponentCard().isPresent();
+        boolean hasZap = intel.getCards().stream().anyMatch(card -> card.isZap(vira));
+        boolean hasCopas = intel.getCards().stream().anyMatch(card -> card.isCopas(vira));
+        long countManilha = intel.getCards().stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
 
-        switch (round) {
-            case "Round 1":
-                if (countManilha(intel) >= 2) {
-                    cardToPlay = getLowCard(intel);
-                    return CardToPlay.discard(cardToPlay);
-                } else if (handValue(intel) > 20) {
-                    cardToPlay = getHighCard(intel);
-                    return CardToPlay.of(cardToPlay);
-                } else if (handValue(intel) < 10) {
-                    cardToPlay = getLowCard(intel);
-                    return CardToPlay.discard(cardToPlay);
-                } else {
-                    cardToPlay = getMidCard(intel);
-                    if (cardToPlay == null) cardToPlay = getLowCard(intel);
-                    return CardToPlay.of(cardToPlay);
+
+        if (intel.getCards().size() == 3) {
+            if (hasZap && hasCopas) return CardToPlay.of(worstCard);
+
+            if (torna) {
+                if (drewFirstRound(intel) && (hasZap || hasCopas)) {
+                    if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) == 0) {
+                        return CardToPlay.of(worstCard);
+                    }
+                    if (averageCard.compareValueTo(intel.getOpponentCard().get(), vira) == 0) {
+                        return CardToPlay.of(averageCard);
+                    }
                 }
 
-            case "Round 2":
-                if (wonFirstRound(intel)) {
-                    cardToPlay = getLowCard(intel);
-                    return CardToPlay.discard(cardToPlay);
-                } else {
-                    cardToPlay = getHighCard(intel);
-                    return CardToPlay.of(cardToPlay);
-                }
-
-            case "Round 3":
-                cardToPlay = intel.getCards().get(0);
-                return CardToPlay.of(cardToPlay);
-
-            default:
-                cardToPlay = intel.getCards().get(0); // fallback
-                return CardToPlay.of(cardToPlay);
+                if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) return CardToPlay.of(worstCard);
+                if (averageCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0)
+                    return CardToPlay.of(averageCard);
+                if (bestCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) return CardToPlay.of(bestCard);
+                return CardToPlay.of(worstCard);
+            }
+            if (countManilha >= 1 && intel.getCards().stream().anyMatch(card -> card.relativeValue(vira) == 9)) {
+                return CardToPlay.of(averageCard);
+            }
         }
-    }
+        else if (intel.getCards().size() == 2) {
+            if (torna) {
+                if (worstCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) {
+                    return CardToPlay.of(worstCard);
+                }
+                if (bestCard.compareValueTo(intel.getOpponentCard().get(), vira) > 0) {
+                    return CardToPlay.of(bestCard);
+                }
+                return CardToPlay.discard(worstCard);
+            }
+            if (countManilha >= 1) {
+                return CardToPlay.of(bestCard);
+            }
+            return CardToPlay.of(averageCard);
+        }
 
+        return CardToPlay.of(intel.getCards().get(0));
+    }
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
