@@ -42,6 +42,8 @@ public class MeuBotTest {
     }
 
 
+
+
     @Nested
     @DisplayName("Mão de onze")
     class GetMaoDeOnzeResponse {
@@ -52,6 +54,20 @@ public class MeuBotTest {
             GameIntel intel = createIntel(getDefaultHand(), getDefaultVira(), 10, 10, List.of());
             assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
+
+        @Test
+        @DisplayName("Aceita mão de onze se ambos têm 11 pontos")
+        void testMaoDeOnzeBothPlayersHave11() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(FOUR, SPADES),
+                    TrucoCard.of(FIVE, HEARTS),
+                    TrucoCard.of(THREE, CLUBS)
+            );
+
+            GameIntel intel = createIntel(hand, getDefaultVira(), 11, 11, List.of());
+            Assertions.assertTrue(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
 
 
 
