@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2024 Vitor A. de Jesus - IFSP/SCL
+ *  Copyright (C) 2025 Vitor A. de Jesus - IFSP/SCL
  *  Contact: vitor <dot> aguiar <at> ifsp <dot> edu <dot> br
  *
  *  This file is part of CTruco (Truco game for didactic purpose).
