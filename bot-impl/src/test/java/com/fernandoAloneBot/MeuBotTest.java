@@ -158,9 +158,9 @@ public class MeuBotTest {
         void testMaoDeOnzeOneManilhaOneStrongCard() {
 
             hand = List.of(
-                    TrucoCard.of(SIX, SPADES),      // Manilha
+                    TrucoCard.of(SIX, SPADES),
                     TrucoCard.of(FOUR, HEARTS),
-                    TrucoCard.of(THREE, SPADES)     // Carta forte
+                    TrucoCard.of(THREE, SPADES)
             );
             vira = TrucoCard.of(FIVE, HEARTS);
 
@@ -168,6 +168,20 @@ public class MeuBotTest {
 
             Assertions.assertTrue(meuBot.getMaoDeOnzeResponse(intel));
         }
+
+        @Test
+        @DisplayName("Testa se aceita mão de onze se ganhou a primeira rodada e tem zap")
+        void testMaoDeOnzeWonFirstRoundAndHasZap() {
+            hand = List.of(TrucoCard.of(SIX, CLUBS), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(THREE, SPADES)
+            );
+
+            vira = TrucoCard.of(FIVE, HEARTS);
+
+            GameIntel intel = createIntel(hand, vira, 11, 8, List.of(GameIntel.RoundResult.WON));
+
+            Assertions.assertTrue(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
 
 
 
