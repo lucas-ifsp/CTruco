@@ -337,6 +337,18 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Aceita aumento após vencer a primeira rodada com mão forte")
+        void aceitaAumentoAposGanharRodadaComMaoBoa() {
+            hand = List.of(TrucoCard.of(FIVE, SPADES), TrucoCard.of(THREE, HEARTS), TrucoCard.of(FIVE, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 7, 6, List.of(GameIntel.RoundResult.WON), openCards);
+            Assertions.assertTrue(meuBot.decideIfRaises(intel));
+        }
+
+
 
 
 
