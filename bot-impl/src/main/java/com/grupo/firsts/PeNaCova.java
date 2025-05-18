@@ -74,9 +74,17 @@ public class PeNaCova implements BotServiceProvider {
     TrucoCard vira = intel.getVira();
 
     long manilhas = hand.stream().filter(card -> card.isManilha(vira)).count();
+    long highCards = intel.getCards().stream()
+        .filter(
+            card->card.getRank() == CardRank.JACK
+                || card.getRank() == CardRank.QUEEN
+                || card.getRank() == CardRank.KING
+                || card.getRank() == CardRank.ACE
+                || card.isManilha(intel.getVira()))
+        .count();
 
     if (manilhas>=2) return 1;
-
+    if (manilhas == 1 && highCards >= 1) return 1;
     return 0;
   }
 }
