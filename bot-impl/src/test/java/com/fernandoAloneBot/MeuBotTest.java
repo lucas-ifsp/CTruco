@@ -21,13 +21,23 @@ public class MeuBotTest {
     void setUp() {
         meuBot = new MeuBot();
     }
-    private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore, List<GameIntel.RoundResult> roundResults) {
+
+    private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore,
+                                  List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards) {
         return GameIntel.StepBuilder.with()
-                .gameInfo(roundResults, List.of(vira), vira, 1)
+                .gameInfo(roundResults, openCards, vira, 1)
                 .botInfo(hand, myScore)
                 .opponentScore(opponentScore)
                 .build();
     }
+
+    // Versão simplificada, sem openCards
+    private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore,
+                                  List<GameIntel.RoundResult> roundResults) {
+        return createIntel(hand, vira, myScore, opponentScore, roundResults, List.of());
+    }
+
+
 
     private TrucoCard getDefaultVira() {
         return TrucoCard.of(FIVE, DIAMONDS);
@@ -42,7 +52,6 @@ public class MeuBotTest {
     }
 
     private List<TrucoCard> hand;
-    private List<TrucoCard> openCards;
     private List<GameIntel.RoundResult> result;
 
     private TrucoCard vira;
