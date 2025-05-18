@@ -8,6 +8,7 @@ import com.bueno.spi.service.BotServiceProvider;
 import javax.smartcardio.Card;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class Trucorinthians implements BotServiceProvider {
     @Override
@@ -37,42 +38,13 @@ public class Trucorinthians implements BotServiceProvider {
         List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
 
-        switch (round) {
-            case 0:
-                return isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
-            case 1:
-                return getSecondRoundStrategy(intel);
-            case 2:
-                return getStrongest(hand, vira);
-            default:
-                break;
-        }
+        return switch (round) {
+            case 0 -> isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+            case 1 -> getSecondRoundStrategy(intel);
+            case 2 -> getStrongest(hand, vira);
+            default -> CardToPlay.of(hand.get(0));
+        };
 
-        return CardToPlay.of(hand.get(0));
-    }
-
-    private CardToPlay getWeakest(List<TrucoCard> hand, TrucoCard vira) {
-        TrucoCard weakest = hand.stream()
-                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                .orElse(TrucoCard.closed());
-        return CardToPlay.of(weakest);
-    }
-
-    private CardToPlay getSmallestNonLosing(List<TrucoCard> hand, TrucoCard vira, TrucoCard opponentCard) {
-        return hand.stream()
-                .filter(card -> card.compareValueTo(opponentCard, vira) >= 0)
-                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                .map(CardToPlay::of)
-                .orElseGet(() -> {
-                    return getWeakest(hand, vira);
-                });
-    }
-
-    private CardToPlay getStrongest(List<TrucoCard> hand, TrucoCard vira) {
-        TrucoCard strongest = hand.stream()
-                .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
-                .orElse(TrucoCard.closed());
-        return CardToPlay.of(strongest);
     }
 
     private CardToPlay getSecondRoundStrategy(GameIntel intel) {
@@ -91,8 +63,42 @@ public class Trucorinthians implements BotServiceProvider {
                 yield isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
             }
             case LOST -> getStrongest(hand, vira);
-            case DREW -> isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+            case DREW -> {
+                if (isLosing) {
+                    yield isFirstToPlay ? getStrongest(hand, vira) : getSmallestWinning(hand, vira, opponentCard);
+                }
+                yield isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+            }
         };
+    }
 
+    private CardToPlay getWeakest(List<TrucoCard> hand, TrucoCard vira) {
+        TrucoCard weakest = hand.stream()
+                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .orElse(TrucoCard.closed());
+        return CardToPlay.of(weakest);
+    }
+
+    private CardToPlay getSmallestNonLosing(List<TrucoCard> hand, TrucoCard vira, TrucoCard opponentCard) {
+        return hand.stream()
+                .filter(card -> card.compareValueTo(opponentCard, vira) >= 0)
+                .min(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .map(CardToPlay::of)
+                .orElseGet(() -> getWeakest(hand, vira));
+    }
+
+    private CardToPlay getStrongest(List<TrucoCard> hand, TrucoCard vira) {
+        TrucoCard strongest = hand.stream()
+                .max(Comparator.comparingInt(card -> card.relativeValue(vira)))
+                .orElse(TrucoCard.closed());
+        return CardToPlay.of(strongest);
+    }
+
+    private CardToPlay getSmallestWinning(List<TrucoCard> hand, TrucoCard vira, TrucoCard opponentCard) {
+        Optional<TrucoCard> winning = hand.stream()
+                .filter(card -> card.compareValueTo(opponentCard, vira) > 0)
+                .min(Comparator.comparingInt(card -> card.relativeValue(vira)));
+
+        return winning.map(CardToPlay::of).orElseGet(() -> getSmallestNonLosing(hand, vira, opponentCard));
     }
 }
