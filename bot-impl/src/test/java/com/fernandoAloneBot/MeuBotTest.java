@@ -117,6 +117,20 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
 
+        @Test
+        @DisplayName("Deve retornar false se não houver manilha")
+        void testHasMaoEquilibradaFalsePorManilha() {
+            hand = List.of(TrucoCard.of(SIX, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FIVE, SPADES));
+            vira = TrucoCard.of(FIVE, HEARTS);
+            //openCards = List.of(vira);
+             vira = TrucoCard.of(SEVEN, DIAMONDS); // vira que não ativa manilha
+
+            GameIntel intel = createIntel(hand, vira, 10, 10, List.of());
+
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+
+        }
+
 
 
 
