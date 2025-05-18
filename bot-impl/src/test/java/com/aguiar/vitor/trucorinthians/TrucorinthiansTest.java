@@ -149,6 +149,28 @@ class TrucorinthiansTest {
 
             assertThat(result).isTrue();
         }
+
+        @Test
+        @DisplayName("Should not raise in second round if has only one manilha and weak cards")
+        void decideIfRaises_shouldNotRaiseInSecondRoundIfHasOnlyManilhaAndWeakCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard fraca1 = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(List.of(fraca1, manilha, fraca2), 2)
+                    .opponentScore(3)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isFalse();
+        }
     }
 
     @Nested
