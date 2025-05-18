@@ -29,12 +29,31 @@ public class MeuBotTest {
                 .build();
     }
 
+    private TrucoCard getDefaultVira() {
+        return TrucoCard.of(FIVE, DIAMONDS);
+    }
+
+    private List<TrucoCard> getDefaultHand() {
+        return List.of(
+                TrucoCard.of(FOUR, CLUBS),
+                TrucoCard.of(FIVE, CLUBS),
+                TrucoCard.of(SIX, CLUBS)
+        );
+    }
+
 
     @Nested
     @DisplayName("Mão de onze")
     class GetMaoDeOnzeResponse {
 
-     }
+        @Test
+        @DisplayName("Testa se recusa mão de onze sem manilhas")
+        void testaSeRecusaMaoDeOnzeSemManilhas() {
+            GameIntel intel = createIntel(getDefaultHand(), getDefaultVira(), 10, 10, List.of());
+            assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
+
 
 
 
