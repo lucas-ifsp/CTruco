@@ -552,4 +552,28 @@ class TrucorinthiansTest {
             }
         }
     }
+
+    @Nested
+    @DisplayName("getRaiseResponse Tests")
+    class GetRaiseResponseTest {
+        @Test
+        @DisplayName("Should re-raise if has two manilhas")
+        void shouldReRaiseIfHasTwoManilhas() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha1 = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard manilha2 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard fraca = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 3)
+                    .botInfo(List.of(manilha1, manilha2, fraca), 8)
+                    .opponentScore(9)
+                    .build();
+
+            int result = sut.getRaiseResponse(intel);
+
+            assertThat(result).isEqualTo(1);
+        }
+    }
 }
