@@ -78,6 +78,27 @@ public class DegolaBotTest {
 
                         assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+                @Test
+                @DisplayName("Se tiver apenas cartas médias, usar a de maior valor")
+                void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue(){
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+                    );
+
+                    List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(
+                            CardRank.ACE, CardSuit.DIAMONDS)
+                    );
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 0)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
+
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
+                }
         @Nested
         @DisplayName("Testes caso seja o segundo a jogar")
         class SecondPlayerPlays {
