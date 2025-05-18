@@ -424,6 +424,15 @@ class PeNaCovaTest {
             ),
             TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
             0
+        ),
+        Arguments.of(
+            List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.KING, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS)
+            ),
+            TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS),
+            1
         )
     );
   }
