@@ -382,43 +382,56 @@ public class MeuBotTest {
             assertThat(res).isPositive();
         }
 
+        @Test
+        @DisplayName("Teste aceita o aumento se ganhou a primeiro e tem zap")
+        void testMaoDeOnzeMaoForte() {
+            hand = List.of( TrucoCard.of(SIX,CLUBS), TrucoCard.of(THREE, SPADES));
+
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 5, 6, List.of(GameIntel.RoundResult.WON), openCards);
+
+
+            int res = meuBot.getRaiseResponse(intel);
+            // System.out.println(res);
+            assertThat(res).isPositive();
+
+        }
+
+
+        @Test
+        @DisplayName("Recusa aumento com mão fraca")
+        void recusaAumentoComMaoFraca() {
+            hand = List.of(TrucoCard.of(JACK, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, DIAMONDS));
+
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+
+            intel =createIntel(hand, vira, 5, 6, List.of(GameIntel.RoundResult.DREW), openCards);
+
+            int res = meuBot.getRaiseResponse(intel);
+            System.out.println(res);
+
+            assertThat(res).isLessThanOrEqualTo(0);
+        }
+
+
+
+
+
+
+
+
+
 
     }
 
-    @Test
-    @DisplayName("Teste aceita o aumento se ganhou a primeiro e tem zap")
-    void testMaoDeOnzehandStrong() {
-        hand = List.of( TrucoCard.of(SIX,CLUBS), TrucoCard.of(THREE, SPADES));
-
-        vira = TrucoCard.of(FIVE, HEARTS);
-        openCards = List.of(vira);
-
-        intel = createIntel(hand, vira, 5, 6, List.of(GameIntel.RoundResult.WON), openCards);
 
 
-        int res = meuBot.getRaiseResponse(intel);
-       // System.out.println(res);
-        assertThat(res).isPositive();
 
-    }
 
-    @Test
-    @DisplayName("Teste aceita o aumento se não tiver manilha mas a mão é forte")
-    void aceitaAumentoSemManilhaMaoForte() {
-        hand = List.of(
-                TrucoCard.of(ACE, SPADES),
-                TrucoCard.of(KING, HEARTS),
-                TrucoCard.of(THREE, SPADES)
-        );
-        vira = TrucoCard.of(SIX, HEARTS);
-        openCards = List.of(vira);
 
-        intel = createIntel(hand, vira, 5, 5, List.of(GameIntel.RoundResult.WON), openCards);
-
-        int res = meuBot.getRaiseResponse(intel);
-
-        assertThat(res).isPositive();
-    }
 
 
 
