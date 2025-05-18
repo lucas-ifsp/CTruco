@@ -58,7 +58,7 @@ public class Trucorinthians implements BotServiceProvider {
         return switch (firstResult) {
             case WON -> {
                 if (isLosing) {
-                    yield isFirstToPlay ? getStrongest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
+                    yield isFirstToPlay ? getStrongest(hand, vira) : getSmallestWinning(hand, vira, opponentCard);
                 }
                 yield isFirstToPlay ? getWeakest(hand, vira) : getSmallestNonLosing(hand, vira, opponentCard);
             }
