@@ -68,6 +68,21 @@ public class MeuBotTest {
             Assertions.assertTrue(meuBot.getMaoDeOnzeResponse(intel));
         }
 
+        @Test
+        @DisplayName("Recusa mão de onze com cartas fracas e oponente com 11 pontos")
+        void testMaoDeOnzeWithWeakHand() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(FOUR, SPADES),
+                    TrucoCard.of(FIVE, HEARTS),
+                    TrucoCard.of(THREE, CLUBS)
+            );
+
+            GameIntel intel = createIntel(hand, getDefaultVira(), 10, 11, List.of());
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
+
+
 
 
 
