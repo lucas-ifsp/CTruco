@@ -89,7 +89,18 @@ class PeNaCovaTest {
             parseCard("FIVE", "CLUBS"),
             List.of(parseCard("KING", "SPADES")),
             parseCard("FOUR", "HEARTS")
-    ));
+    ),
+        Arguments.of(
+            List.of(
+                parseCard("TWO","HEARTS"),
+                parseCard("THREE","SPADES"),
+                parseCard("FOUR","DIAMONDS")
+            ),
+            parseCard("ACE", "CLUBS"),
+            List.of(parseCard("THREE","SPADES")),
+            parseCard("FOUR", "HEARTS")
+        )
+        );
   }
 
   @ParameterizedTest
