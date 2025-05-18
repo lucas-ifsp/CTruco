@@ -41,6 +41,16 @@ public class MeuBotTest {
         );
     }
 
+    private List<TrucoCard> hand;
+    private List<TrucoCard> openCards;
+    private List<GameIntel.RoundResult> result;
+
+    private TrucoCard vira;
+
+    private GameIntel intel;
+
+    private GameIntel.StepBuilder stepBuilder;
+
 
 
 
