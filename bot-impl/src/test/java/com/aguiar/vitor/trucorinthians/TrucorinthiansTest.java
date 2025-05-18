@@ -127,6 +127,28 @@ class TrucorinthiansTest {
 
             assertThat(result).isFalse();
         }
+
+        @Test
+        @DisplayName("Should raise in second round if has one manilha and one strong card")
+        void decideIfRaises_shouldRaiseInSecondRoundIfHasManilhaAndStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard fraca = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+            TrucoCard forte = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.DREW);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 1)
+                    .botInfo(List.of(manilha, fraca, forte), 2)
+                    .opponentScore(3)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isTrue();
+        }
     }
 
     @Nested
