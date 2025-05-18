@@ -575,5 +575,26 @@ class TrucorinthiansTest {
 
             assertThat(result).isEqualTo(1);
         }
+
+        @Test
+        @DisplayName("Should accept raise if has one manilha or card with force ≥ 8")
+        void shouldAcceptIfHasOneManilhaOrStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+            TrucoCard fraca1 = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, manilha, fraca2), 9)
+                    .opponentScore(9)
+                    .build();
+
+            int result = sut.getRaiseResponse(intel);
+
+            assertThat(result).isEqualTo(0);
+        }
+
     }
 }
