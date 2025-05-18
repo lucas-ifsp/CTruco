@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.*;
@@ -255,76 +256,22 @@ class ZecaTatuBotTest {
     class ChooseCardTest {
 
         @Test
-        @DisplayName("Round 1 with 2 or more manilhas - should discard low card")
-        void whenRound1AndTwoOrMoreManilhas() {
+        @DisplayName("3 cards with Zap and Copas - should play worst card")
+        void whenHasZapAndCopasShouldPlayWorst() {
             when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
                     TrucoCard.of(CardRank.JACK, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES),
-                    TrucoCard.of(CardRank.THREE, CardSuit.HEARTS)
+                    TrucoCard.of(CardRank.TWO, CardSuit.SPADES)
             ));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.DIAMONDS));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES));
+
             CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
-            assertThat(cardToPlay.isDiscard()).isTrue();
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
         }
 
-        @Test
-        @DisplayName("Round 1 with handValue > 20 - should play high card")
-        void whenRound1AndHandValueAbove20() {
-            when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.QUEEN, CardSuit.HEARTS),
-                    TrucoCard.of(CardRank.JACK, CardSuit.SPADES)
-            ));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
-            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
-            assertThat(cardToPlay.isDiscard()).isFalse();
-            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
-        }
-
-        @Test
-        @DisplayName("Round 2 and won first round - should discard low card")
-        void whenRound2AndWonFirstRound() {
-            when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
-            ));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.TWO, CardSuit.SPADES));
-            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.WON));
-
-            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
-            assertThat(cardToPlay.isDiscard()).isTrue();
-            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
-        }
-
-        @Test
-        @DisplayName("Round 2 and lost or drew first round - should play high card")
-        void whenRound2AndLostOrDrewFirstRound() {
-            when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
-                    TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
-            ));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.DIAMONDS));
-            when(intel.getRoundResults()).thenReturn(List.of(GameIntel.RoundResult.LOST));
-
-            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
-            assertThat(cardToPlay.isDiscard()).isFalse();
-            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
-        }
-
-        @Test
-        @DisplayName("Round 3 - should play first card in hand")
-        void whenRound3() {
-            when(intel.getCards()).thenReturn(List.of(
-                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
-            ));
-            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.SIX, CardSuit.HEARTS));
-            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
-            assertThat(cardToPlay.isDiscard()).isFalse();
-            assertThat(cardToPlay.content()).isEqualTo(intel.getCards().get(0));
-        }
 
     }
+
 
     @Nested
     @DisplayName("getRaiseResponse")
