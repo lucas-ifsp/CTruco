@@ -236,7 +236,29 @@ class TrucorinthiansTest {
                 .build();
 
         CardToPlay result = sut.chooseCard(intel);
-        
+
         assertThat(result.content()).isEqualTo(empata);
+    }
+
+    @DisplayName("Should play strongest card if losing score when starting in second round")
+    @Test
+    void shouldPlayStrongestCardIfLosingScoreWhenSecondRoundAsFirstPlayer() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard media = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+        TrucoCard forte = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(fraca, media, forte), 4)
+                .opponentScore(8)
+                .build(); // primeiro a jogar
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result.content()).isEqualTo(forte);
     }
 }
