@@ -243,4 +243,32 @@ class PeNaCovaTest {
     return TrucoCard.of(CardRank.valueOf(rank), CardSuit.valueOf(suit));
   }
 
+  public static Stream<Arguments> providRaiseScenarios() {
+    return Stream.of(
+        Arguments.of(
+            List.of(
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.SIX, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+            ),
+            TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+            true
+        )
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("providRaiseScenarios")
+  void testDecideIfRaises(List<TrucoCard> hand, TrucoCard vira, boolean expected){
+    GameIntel intel = GameIntel.StepBuilder.with()
+        .gameInfo(List.of(), List.of(), vira,1)
+        .botInfo(hand,0)
+        .opponentScore(0)
+        .build();
+
+    assertEquals(expected, bot.decideIfRaises(intel));
+
+  }
+
+
 }
