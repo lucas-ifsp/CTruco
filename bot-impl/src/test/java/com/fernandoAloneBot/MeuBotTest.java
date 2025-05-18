@@ -81,6 +81,18 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
 
+        @Test
+        @DisplayName("Não aceita mão de onze com dois ases")
+        void testMaoDeOnzeWithTwoAces() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(ACE, CLUBS),
+                    TrucoCard.of(ACE, HEARTS),
+                    TrucoCard.of(FOUR, SPADES)
+            );
+
+            GameIntel intel = createIntel(hand, getDefaultVira(), 11, 10, List.of());
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+        }
 
 
 
