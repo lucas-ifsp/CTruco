@@ -26,7 +26,18 @@ public class Trucorinthians implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return false;
+        if (!intel.getRoundResults().isEmpty()) {
+            return false;
+        }
+
+        TrucoCard vira = intel.getVira();
+        List<TrucoCard> hand = intel.getCards();
+
+        long manilhaCount = hand.stream()
+                .filter(card -> card.isManilha(vira))
+                .count();
+
+        return manilhaCount >= 2;
     }
 
     @Override
