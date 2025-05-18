@@ -44,7 +44,6 @@ class CapucinaStrategiesTest {
 
     @Test
     void deveResponderComCartaSuperiorSeAdversarioJogouFraca() {
-        bot.iniciarPartida("bot", 0, 0); // Corrige o estado do bot
         bot.iniciarRodada(List.of(CardRank.SIX, CardRank.JACK, CardRank.THREE));
         bot.registrarCartaAdversario(CardRank.FOUR);
         CardRank jogada = bot.jogar();
@@ -57,14 +56,13 @@ class CapucinaStrategiesTest {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
         TrucoCard zap = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
 
-        bot.iniciarPartida("bot", 0, 0); // Corrige o estado do bot
         bot.iniciarRodada(List.of(
                 CardRank.FIVE,
                 CardRank.SEVEN,
                 zap.getRank()
         ));
         bot.registrarCartaAdversario(zap.getRank());
-        assertEquals(CardRank.FIVE, bot.jogar()); // Compara apenas o rank
+        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.jogar());
     }
 
     @Test

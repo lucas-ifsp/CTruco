@@ -10,6 +10,7 @@ import java.util.*;
 
 public class StartRoundCapucina implements BotServiceProvider {
 
+
     private static final int VALOR_CARTA_FORTE = 9;
 
     private boolean partidaIniciada = false;
@@ -27,7 +28,11 @@ public class StartRoundCapucina implements BotServiceProvider {
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {
-        return temCartasFortes(intel, 2) && intel.getScore() < 11;
+        long cartasFortes = intel.getCards().stream()
+                .filter(card -> card.relativeValue(intel.getVira()) >= 8)
+                .count();
+
+        return cartasFortes >= 2 && intel.getMyScore() < 11;
     }
 
     @Override
@@ -50,13 +55,17 @@ public class StartRoundCapucina implements BotServiceProvider {
         return false;
     }
 
+
     public void iniciarPartida(String jogadorInicial, int placarBot, int placarAdv) {
         this.partidaIniciada = true;
-        setPlacar(placarBot, placarAdv);
+        this.placarBot = placarBot;
+        this.placarAdversario = placarAdv;
     }
 
     public void iniciarRodada(List<CardRank> cartas) {
-        validarMao(cartas);
+        if (cartas == null || cartas.size() != 3) {
+            throw new IllegalArgumentException("Deve receber exatamente 3 cartas");
+        }
         mao.clear();
         mao.addAll(cartas);
         cartasJogadas.clear();
@@ -81,7 +90,7 @@ public class StartRoundCapucina implements BotServiceProvider {
     }
 
     public void processarJogadaInvalida(String jogada) {
-        // Método intencionalmente vazio
+        // Nenhuma ação por enquanto — apenas garante que não lança exceção
     }
 
     public void recusarTruco() {
@@ -104,9 +113,9 @@ public class StartRoundCapucina implements BotServiceProvider {
     }
 
     public boolean deveBlefar() {
-        return mao.stream().allMatch(this::isCartaFraca)
-                || blefeAceito
-                || (placarBot < placarAdversario);
+        boolean soCartasFracas = mao.stream().allMatch(c ->
+                EnumSet.of(CardRank.TWO, CardRank.THREE, CardRank.FOUR, CardRank.FIVE, CardRank.SIX).contains(c));
+        return soCartasFracas || blefeAceito || (placarBot < placarAdversario);
     }
 
     public void marcarBlefeAceito() {
@@ -141,38 +150,36 @@ public class StartRoundCapucina implements BotServiceProvider {
         if (rodada == 2 && venceuPrimeira != null) {
             return venceuPrimeira ? "seguro" : "agressivo";
         }
+
         if (rodada == 3 && Boolean.FALSE.equals(venceuPrimeira) && Boolean.TRUE.equals(venceuSegunda)) {
             return "pressionar";
         }
+
         return "normal";
     }
+
 
     public CardRank jogar() {
         if (!partidaIniciada || mao.isEmpty()) {
             throw new IllegalStateException("Estado do bot não iniciado");
         }
-        CardRank cartaParaJogar = "agressiva".equals(getEstrategia())
-                ? mao.stream().max(Comparator.comparingInt(CardRank::value)).orElse(mao.get(0))
-                : mao.stream().filter(c -> c.value() < VALOR_CARTA_FORTE)
-                .min(Comparator.comparingInt(CardRank::value)).orElse(mao.get(0));
+
+        CardRank cartaParaJogar;
+        if (!"agressiva".equals(getEstrategia())) {
+            cartaParaJogar = mao.stream()
+                    .filter(c -> c.value() < VALOR_CARTA_FORTE)
+                    .min(Comparator.comparingInt(CardRank::value))
+                    .orElse(mao.get(0));
+        } else {
+            cartaParaJogar = mao.stream()
+                    .max(Comparator.comparingInt(CardRank::value))
+                    .orElse(mao.get(0));
+        }
+
         marcarJogada(cartaParaJogar);
         return cartaParaJogar;
     }
 
 
-    private boolean temCartasFortes(GameIntel intel, int quantidade) {
-        return intel.getCards().stream()
-                .filter(card -> card.relativeValue(intel.getVira()) >= 8)
-                .count() >= quantidade;
-    }
 
-    private void validarMao(List<CardRank> cartas) {
-        if (cartas == null || cartas.size() != 3) {
-            throw new IllegalArgumentException("Deve receber exatamente 3 cartas");
-        }
-    }
-
-    private boolean isCartaFraca(CardRank c) {
-        return EnumSet.of(CardRank.TWO, CardRank.THREE, CardRank.FOUR, CardRank.FIVE, CardRank.SIX).contains(c);
-    }
 }

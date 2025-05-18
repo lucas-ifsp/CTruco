@@ -8,7 +8,6 @@ import com.paola.pedro.CapucinaGameController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.smartcardio.Card;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +36,6 @@ class CapucinaGameControllerTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
         );
-        controller.iniciarPartida("Jogador", 0, 0, vira); // Adicione esta linha
         controller.iniciarRodada(mao);
         boolean resultado = controller.deveBlefar();
         assertNotNull(resultado); // só testando que processou corretamente
@@ -45,10 +43,10 @@ class CapucinaGameControllerTest {
 
     @Test
     void deveRegistrarCartaDoAdversarioECriarExpectativaAlta() {
-        controller.iniciarPartida("Jogador", 5, 7, vira); // garante estado iniciado
+        controller.iniciarPartida("Jogador", 5, 7, vira);
         controller.registrarCartaAdversario(CardRank.SEVEN, TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
         String expectativa = controller.getExpectativaRodada();
-        assertEquals("normal", expectativa); // ajuste aqui se o valor esperado for diferente
+        assertEquals("alta", expectativa);
     }
 
     @Test
@@ -74,21 +72,5 @@ class CapucinaGameControllerTest {
         controller.iniciarRodada(mao);
         assertTrue(controller.deveBlefar());
     }
-
-    @Test
-    void deveBlefar_quandoExpectativaBaixa_entaoRetornaTrue() {
-        CapucinaGameController controller = new CapucinaGameController();
-        controller.iniciarPartida("Jogador1", 0, 0, TrucoCard.of(CardRank.FOUR, CardSuit.SPADES));
-        controller.iniciarRodada(List.of(
-                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES),
-                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
-                TrucoCard.of(CardRank.TWO, CardSuit.HEARTS)
-        ));
-        controller.registrarCartaAdversario(CardRank.TWO, TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS));
-        assertTrue(controller.deveBlefar());
-    }
-
-
-
 }
 

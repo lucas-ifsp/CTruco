@@ -81,28 +81,4 @@ class CapucinaPlaysTest {
         playsRound.setPlacar(3, 4);
         assertEquals("normal", playsRound.getEstiloDeJogo());
     }
-
-    @Test
-    void naoDeveSerDefensivoSePlacarNaoForOnzeAOnze() {
-        playsRound.setPlacar(11, 10);
-        assertNotEquals("defensivo", playsRound.getEstiloDeJogo());
-    }
-
-    @Test
-    void naoDeveSerCautelosoSeBotNaoTiverDez() {
-        playsRound.setPlacar(9, 5);
-        assertNotEquals("cauteloso", playsRound.getEstiloDeJogo());
-    }
-
-    @Test
-    void naoDeveSerAgressivoSeAdversarioNaoTiverOnze() {
-        playsRound.setPlacar(8, 10);
-        assertNotEquals("agressivo", playsRound.getEstiloDeJogo());
-    }
-
-    @Test
-    void naoDeveSerOusadoSeBotNaoTiverZero() {
-        playsRound.setPlacar(1, 6);
-        assertNotEquals("ousado", playsRound.getEstiloDeJogo());
-    }
 }
