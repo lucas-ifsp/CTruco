@@ -476,10 +476,20 @@ public class MeuBotTest {
             assertThat(res).isOne();
         }
 
+        @Test
+        @DisplayName("Responde recusa após perder a primeira mesmo com uma manilha")
+        void respondeRecusaAposPerderPrimeiraComManilha() {
+            hand = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(SIX, SPADES));
+            vira = TrucoCard.of(THREE, SPADES);
 
+            openCards = List.of(vira);
 
+            intel = createIntel(hand, vira, 2, 5, List.of(GameIntel.RoundResult.LOST), openCards);
 
+            int res = meuBot.getRaiseResponse(intel);
 
+            assertThat(res).isZero();
+        }
 
 
 
