@@ -77,10 +77,7 @@ public class MeuBotTest {
         @Test
         @DisplayName("Aceita mão de onze se ambos têm 11 pontos")
         void testMaoDeOnzeBothPlayersHave11() {
-            List<TrucoCard> hand = List.of(
-                    TrucoCard.of(FOUR, SPADES),
-                    TrucoCard.of(FIVE, HEARTS),
-                    TrucoCard.of(THREE, CLUBS)
+          hand = List.of(TrucoCard.of(FOUR, SPADES), TrucoCard.of(FIVE, HEARTS), TrucoCard.of(THREE, CLUBS)
             );
 
             GameIntel intel = createIntel(hand, getDefaultVira(), 11, 11, List.of());
@@ -90,10 +87,7 @@ public class MeuBotTest {
         @Test
         @DisplayName("Recusa mão de onze com cartas fracas e oponente com 11 pontos")
         void testMaoDeOnzeWithWeakHand() {
-            List<TrucoCard> hand = List.of(
-                    TrucoCard.of(FOUR, SPADES),
-                    TrucoCard.of(FIVE, HEARTS),
-                    TrucoCard.of(THREE, CLUBS)
+             hand = List.of(TrucoCard.of(FOUR, SPADES), TrucoCard.of(FIVE, HEARTS), TrucoCard.of(THREE, CLUBS)
             );
 
             GameIntel intel = createIntel(hand, getDefaultVira(), 10, 11, List.of());
@@ -103,11 +97,7 @@ public class MeuBotTest {
         @Test
         @DisplayName("Não aceita mão de onze com dois ases")
         void testMaoDeOnzeWithTwoAces() {
-            List<TrucoCard> hand = List.of(
-                    TrucoCard.of(ACE, CLUBS),
-                    TrucoCard.of(ACE, HEARTS),
-                    TrucoCard.of(FOUR, SPADES)
-            );
+             hand = List.of(TrucoCard.of(ACE, CLUBS), TrucoCard.of(ACE, HEARTS), TrucoCard.of(FOUR, SPADES));
 
             GameIntel intel = createIntel(hand, getDefaultVira(), 11, 10, List.of());
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
@@ -116,11 +106,7 @@ public class MeuBotTest {
         @Test
         @DisplayName("Aceita mão de onze com 2 cartas de 3")
         void testMaoDeOnzeWithAverageHand() {
-            List<TrucoCard> hand = List.of(
-                    TrucoCard.of(SEVEN, CLUBS),
-                    TrucoCard.of(THREE, HEARTS),
-                    TrucoCard.of(THREE, SPADES)
-            );
+             hand = List.of(TrucoCard.of(SEVEN, CLUBS), TrucoCard.of(THREE, HEARTS), TrucoCard.of(THREE, SPADES));
 
             GameIntel intel = createIntel(hand, getDefaultVira(), 11, 9, List.of());
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
