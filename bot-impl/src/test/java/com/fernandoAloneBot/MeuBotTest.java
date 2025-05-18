@@ -496,7 +496,6 @@ public class MeuBotTest {
 
             vira = TrucoCard.of(THREE, CLUBS);
 
-            result = List.of(GameIntel.RoundResult.LOST);
             openCards = List.of();
 
             intel = createIntel(hand, vira, 2, 5, List.of(GameIntel.RoundResult.LOST), openCards);
@@ -530,6 +529,26 @@ public class MeuBotTest {
 
              //  DOIS DE COPAS, que é a menor Ace
              assertEquals(TrucoCard.of(TWO, HEARTS), cardToPlay.value());
+         }
+
+
+         @Test
+         @DisplayName("Testa jogar a carta mais fraca quando não tem manilha")
+         void jogaCartaMaisFracaQuandoNaoTemManilha() {
+             hand = List.of(
+                     TrucoCard.of(FOUR, SPADES),
+                     TrucoCard.of(THREE, CLUBS)
+             );
+
+             vira = TrucoCard.of(ACE, SPADES);
+
+             openCards = List.of(TrucoCard.of(TWO, DIAMONDS)); // carta jogada pelo oponente
+
+             intel = createIntel(hand, vira, 1, 0, List.of(GameIntel.RoundResult.DREW), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, SPADES));
          }
 
 
