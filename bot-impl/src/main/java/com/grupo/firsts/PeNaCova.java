@@ -27,7 +27,15 @@ public class PeNaCova implements BotServiceProvider {
 
     long manilhas = hand.stream().filter(card -> card.isManilha(vira)).count();
 
+    long highCards = hand.stream()
+        .filter(card -> {
+          CardRank rank = card.getRank();
+          return rank == CardRank.ACE || rank == CardRank.KING ||
+              rank == CardRank.QUEEN || rank == CardRank.JACK;
+        }).count();
+
     if(manilhas >= 2) return true;
+    if (manilhas == 1 && highCards>=1 ) return true;
 
     return false;
 
