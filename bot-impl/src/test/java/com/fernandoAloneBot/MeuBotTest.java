@@ -348,6 +348,18 @@ public class MeuBotTest {
             Assertions.assertTrue(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Não aumenta se estiver com 11 pontos e mao fraca")
+        void naoAumentaComOnzePontosMaoFraca() {
+            hand = List.of(TrucoCard.of(KING, CLUBS), TrucoCard.of(QUEEN, HEARTS), TrucoCard.of(JACK, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 11, 10, List.of(), openCards);
+            Assertions.assertFalse(meuBot.decideIfRaises(intel));
+        }
+
+
 
 
 
