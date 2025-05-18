@@ -596,5 +596,24 @@ class TrucorinthiansTest {
             assertThat(result).isEqualTo(0);
         }
 
+        @Test
+        @DisplayName("Should refuse raise if has only weak cards (force < 8)")
+        void shouldRefuseIfHasOnlyWeakCards() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard fraca1 = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+            TrucoCard fraca3 = TrucoCard.of(CardRank.FOUR, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, fraca2, fraca3), 10)
+                    .opponentScore(9)
+                    .build();
+
+            int result = sut.getRaiseResponse(intel);
+
+            assertThat(result).isEqualTo(-1);
+        }
     }
 }
