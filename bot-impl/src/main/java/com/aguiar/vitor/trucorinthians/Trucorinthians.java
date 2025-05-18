@@ -69,7 +69,7 @@ public class Trucorinthians implements BotServiceProvider {
         boolean hasStrongCard = hand.stream()
                 .anyMatch(card -> card.relativeValue(vira) >= 8);
 
-        if (hasStrongCard) {
+        if (hasStrongCard || manilhaCount == 1) {
             return 0;
         }
 
