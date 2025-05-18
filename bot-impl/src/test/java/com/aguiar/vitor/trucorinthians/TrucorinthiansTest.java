@@ -21,6 +21,30 @@ class TrucorinthiansTest {
     }
 
     @Nested
+    @DisplayName("getMaoDeOnzeResponse Tests")
+    class GetMaoDeOnzeResponseTest {
+        @DisplayName("Should accept playing mão de onze if has at least one manilha")
+        @Test
+        void shouldAcceptIfHasManilha() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard fraca1 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, manilha, fraca2), 11)
+                    .opponentScore(10)
+                    .build();
+
+            boolean result = sut.getMaoDeOnzeResponse(intel);
+
+            assertThat(result).isTrue();
+        }
+    }
+
+    @Nested
     @DisplayName("chooseCard Tests")
     class ChooseCardTest {
 
