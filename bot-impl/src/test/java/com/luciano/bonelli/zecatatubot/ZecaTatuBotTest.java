@@ -301,6 +301,22 @@ class ZecaTatuBotTest {
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
         }
 
+        @Test
+        @DisplayName("3 cards, opponent played, best beats opponent - play best")
+        void bestCardBeatsOpponent() {
+            TrucoCard opponent = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            when(intel.getOpponentCard()).thenReturn(Optional.of(opponent));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS));
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.SPADES)
+            ));
+
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
+        }
+
        
     }
 
