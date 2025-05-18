@@ -98,9 +98,9 @@ class PeNaCovaTest {
             ),
             parseCard("ACE", "CLUBS"),
             List.of(parseCard("THREE","SPADES")),
-            parseCard("FOUR", "HEARTS")
-        )
-        );
+            parseCard("TWO", "HEARTS")
+        ));
+
   }
 
   @ParameterizedTest
