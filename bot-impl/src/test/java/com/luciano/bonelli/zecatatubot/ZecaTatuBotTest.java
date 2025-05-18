@@ -389,6 +389,19 @@ class ZecaTatuBotTest {
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getHighCard(intel));
         }
 
+        @Test
+        @DisplayName("2 cards, no manilha or opponent card - play average")
+        void twoCardsDefaultNoOpponent() {
+            when(intel.getCards()).thenReturn(List.of(
+                    TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            ));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS));
+
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
+        }
+
 
     }
 
