@@ -458,6 +458,23 @@ public class MeuBotTest {
             assertThat(res).isLessThanOrEqualTo(0);  // Aceita aumento, resposta positiva
         }
 
+        @Test
+        @DisplayName("Responde aceitando aumento se tem zap e está empatado")
+        void respondeAceitandoAumentoSeTemZapEEstaEmpatado() {
+            hand = List.of(
+                    TrucoCard.of(SIX, CLUBS),
+                    TrucoCard.of(TWO, HEARTS),
+                    TrucoCard.of(THREE, SPADES)
+            );
+            vira = TrucoCard.of(FIVE, HEARTS);
+            openCards = List.of(vira);
+           intel = createIntel(hand, vira, 10, 5, List.of(GameIntel.RoundResult.DREW), openCards);
+
+            int res = meuBot.getRaiseResponse(intel);
+            System.out.println(res);
+
+            assertThat(res).isOne();
+        }
 
 
 
