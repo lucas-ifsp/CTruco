@@ -107,6 +107,26 @@ class TrucorinthiansTest {
 
             assertThat(result).isTrue();
         }
+
+        @Test
+        @DisplayName("Should not raise if has less than two manilhas in first round")
+        void shouldNotRaiseIfHasLessThanTwoManilhasInFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
+            TrucoCard media = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+            TrucoCard fraca = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(manilha, media, fraca), 0)
+                    .opponentScore(0)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isFalse();
+        }
     }
 
     @Nested
