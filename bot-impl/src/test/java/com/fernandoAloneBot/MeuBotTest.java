@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.bueno.spi.model.CardRank.*;
 import static com.bueno.spi.model.CardSuit.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -360,12 +361,26 @@ public class MeuBotTest {
         }
 
 
+    }
+
+    @Nested
+    @DisplayName("Obter resposta de aumento")
+    class getRaiseResponse {
+
+        @Test
+        @DisplayName("Testa aceita aumento se tiver uma manilha ou mais")
+        void testaAceitaAumentoSeTemManilhaOuMais() {
+            hand = List.of(TrucoCard.of(TWO, HEARTS), TrucoCard.of(TWO, CLUBS), TrucoCard.of(QUEEN, CLUBS));
+            vira = TrucoCard.of(ACE, SPADES);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 5, 6, List.of(), openCards);
+
+            int res = meuBot.getRaiseResponse(intel);
 
 
-
-
-
-
+            assertThat(res).isPositive();
+        }
 
 
     }
