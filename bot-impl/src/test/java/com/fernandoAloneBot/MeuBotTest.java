@@ -1,5 +1,7 @@
 package com.fernandoAloneBot;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
 import org.junit.jupiter.api.*;
@@ -262,6 +264,24 @@ public class MeuBotTest {
 
             Assertions.assertTrue(meuBot.decideIfRaises(intel));
         }
+
+        @Test
+        @DisplayName("Não chama Truco se a força da mão for média")
+        void  naoChamaTrucoQuandoForMaoMedia(){
+            hand = List.of(
+                    TrucoCard.of(FIVE, CLUBS),
+                    TrucoCard.of(FOUR, HEARTS),
+                    TrucoCard.of(FOUR, SPADES)
+            );
+            vira = TrucoCard.of(THREE, HEARTS);
+            openCards = List.of(vira);
+
+            GameIntel intel = createIntel(hand, vira, 6, 8, List.of(), openCards);
+
+            Assertions.assertTrue(meuBot.decideIfRaises(intel));
+        }
+
+
 
 
 
