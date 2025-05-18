@@ -119,6 +119,16 @@ class PeNaCovaTest {
             parseCard("QUEEN", "HEARTS"),
             List.of(),
             parseCard("THREE", "HEARTS")
+        ),
+        Arguments.of(
+            List.of(
+                parseCard("ACE","SPADES"),
+                parseCard("KING","DIAMONDS"),
+                parseCard("THREE","HEARTS")
+            ),
+            parseCard("QUEEN", "HEARTS"),
+            List.of(),
+            parseCard("THREE", "HEARTS")
         )
         );
 
