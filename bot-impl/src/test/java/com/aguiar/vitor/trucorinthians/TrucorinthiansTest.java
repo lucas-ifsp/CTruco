@@ -284,7 +284,32 @@ class TrucorinthiansTest {
 
         CardToPlay result = sut.chooseCard(intel);
 
-        assertThat(result).isNotNull();
         assertThat(result.content()).isEqualTo(vence);
+    }
+
+    @DisplayName("Should play the weakest winning card in second round if won the first but is losing the score and playing second")
+    @Test
+    void shouldPlayWeakestWinningCardIfWonFirstButLosingScoreWhenSecondRoundAndPlayingSecond() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+        List<GameIntel.RoundResult> roundResults = List.of(GameIntel.RoundResult.WON);
+
+        TrucoCard opponentCard = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        TrucoCard vence1 = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
+        TrucoCard vence2 = TrucoCard.of(CardRank.THREE, CardSuit.CLUBS);
+        TrucoCard empata = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+
+        GameIntel intel = GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, List.of(), vira, 1)
+                .botInfo(List.of(vence1, vence2, empata), 6)
+                .opponentScore(9)
+                .opponentCard(opponentCard)
+                .build();
+
+        CardToPlay result = sut.chooseCard(intel);
+
+        assertThat(result).isNotNull();
+        assertThat(result.content()).isEqualTo(vence2);
     }
 }
