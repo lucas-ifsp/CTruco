@@ -304,6 +304,28 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Aceita aumento com duas manilhas na mão")
+        void aceitaAumentoComDuasManilhas() {
+            hand = List.of(TrucoCard.of(TWO, HEARTS), TrucoCard.of(TWO, CLUBS));
+            vira = TrucoCard.of(ACE, DIAMONDS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 5, 6, List.of(), openCards);
+            Assertions.assertTrue(meuBot.decideIfRaises(intel));
+        }
+
+        @Test
+        @DisplayName("Recusa aumento com cartas baixas")
+        void recusaAumentoComCartasBaixas() {
+            hand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(SIX, SPADES), TrucoCard.of(FIVE, HEARTS));
+            vira = TrucoCard.of(QUEEN, CLUBS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 5, 6, List.of(), openCards);
+            Assertions.assertFalse(meuBot.decideIfRaises(intel));
+        }
+
 
 
 
