@@ -402,7 +402,16 @@ class ZecaTatuBotTest {
             assertThat(cardToPlay.content()).isEqualTo(zecaTatuBot.getLowCard(intel));
         }
 
+        @Test
+        @DisplayName("1 card left - play it")
+        void oneCardLeft() {
+            TrucoCard lastCard = TrucoCard.of(CardRank.TWO, CardSuit.HEARTS);
+            when(intel.getCards()).thenReturn(List.of(lastCard));
+            when(intel.getVira()).thenReturn(TrucoCard.of(CardRank.THREE, CardSuit.CLUBS));
 
+            CardToPlay cardToPlay = zecaTatuBot.chooseCard(intel);
+            assertThat(cardToPlay.content()).isEqualTo(lastCard);
+        }
     }
 
 
