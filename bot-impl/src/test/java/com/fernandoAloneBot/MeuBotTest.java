@@ -326,6 +326,18 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Não aumenta se já perdeu a primeira rodada e não tem cartas fortes")
+        void naoAumentaSePerdeuRodadaNaoTemCartasFortes() {
+            hand = List.of(TrucoCard.of(SEVEN, CLUBS), TrucoCard.of(SIX, HEARTS), TrucoCard.of(SEVEN, DIAMONDS));
+            vira = TrucoCard.of(FOUR, HEARTS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 8, 8, List.of(GameIntel.RoundResult.LOST), openCards);
+            Assertions.assertFalse(meuBot.decideIfRaises(intel));
+        }
+
+
 
 
 
