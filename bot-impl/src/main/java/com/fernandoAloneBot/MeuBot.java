@@ -181,6 +181,32 @@ public class MeuBot implements BotServiceProvider {
 
     @Override
     public int getRaiseResponse(GameIntel intel) {
+        int manilhas = manilhaCount(intel.getCards(), intel.getVira());
+
+        if (hasCasalMaior(intel)) return 1;
+        if (!intel.getRoundResults().isEmpty() && hasZap(intel)) {
+            GameIntel.RoundResult primeira = intel.getRoundResults().get(0);
+            if (primeira == GameIntel.RoundResult.WON || primeira == GameIntel.RoundResult.DREW) return 1;
+        }
+
+
+
+        if (manilhas > 0 && contaRankCartas(intel) >= 1) return 0;
+        if (manilhas >= 1) return 0;
+        if (hasDuasManilhas(intel)) return 0;
+        if (hasMaoEquilibrada(intel)) return 0;
+        if (blefar(intel)) return 0;
+
+
+        // Mão fraca, corre (-1)
+
+        if (contaRankCartas(intel) == 0 && !hasDuasManilhas(intel)) return -1;
+
+
+
+
+
+
 
 
         return 0;
@@ -191,7 +217,7 @@ public class MeuBot implements BotServiceProvider {
 
 
 
-    private int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
+    int manilhaCount(List<TrucoCard> cards, TrucoCard vira){
         int manilhaCount = 0;
         for (TrucoCard card : cards) {
             if (card.isManilha(vira)) {
