@@ -62,6 +62,26 @@ class TrucorinthiansTest {
 
             assertThat(result).isFalse();
         }
+
+        @Test
+        @DisplayName("Should accept playing mão de onze if both players have 11 points")
+        void shouldAcceptIfBothHave11Points() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard fraca1 = TrucoCard.of(CardRank.TWO, CardSuit.DIAMONDS);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
+            TrucoCard fraca3 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, fraca2, fraca3), 11)
+                    .opponentScore(11)
+                    .build();
+
+            boolean result = sut.getMaoDeOnzeResponse(intel);
+
+            assertThat(result).isTrue();
+        }
     }
 
     @Nested
