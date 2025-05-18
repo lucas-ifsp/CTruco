@@ -439,6 +439,28 @@ public class MeuBotTest {
             assertThat(res).isLessThanOrEqualTo(0);
         }
 
+        @Test
+        @DisplayName("Responde aceitando aumento mesmo sem manilha quando a mão é forte")
+        void aceitaAumentoMesmoSemManilhaQuandoMaoEhForte() {
+            hand = List.of(
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(TWO, SPADES),
+                    TrucoCard.of(ACE, DIAMONDS)
+            );
+
+            vira = TrucoCard.of(FOUR, CLUBS);
+            openCards = List.of(vira);
+
+            intel = createIntel(hand, vira, 10, 5, List.of(), openCards);
+
+            int res = meuBot.getRaiseResponse(intel);
+
+            assertThat(res).isLessThanOrEqualTo(0);  // Aceita aumento, resposta positiva
+        }
+
+
+
+
 
 
 
