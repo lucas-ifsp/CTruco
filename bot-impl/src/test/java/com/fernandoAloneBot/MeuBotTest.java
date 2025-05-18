@@ -491,6 +491,23 @@ public class MeuBotTest {
             assertThat(res).isZero();
         }
 
+        @Test
+        @DisplayName("Responde aceita após perder a primeira rodada, mas ter casal maior")
+        void respondeAceitaAposPerderPrimeiraMasTerCasalMaior() {
+            hand = List.of(TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, CLUBS));
+
+            vira = TrucoCard.of(THREE, CLUBS);
+
+            result = List.of(GameIntel.RoundResult.LOST);
+            openCards = List.of();
+
+            intel = createIntel(hand, vira, 2, 5, List.of(GameIntel.RoundResult.LOST), openCards);
+
+
+            int res = meuBot.getRaiseResponse(intel);
+            assertThat(res).isPositive();
+        }
+
 
 
 
