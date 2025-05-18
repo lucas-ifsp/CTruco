@@ -130,7 +130,7 @@ class TrucorinthiansTest {
 
         @Test
         @DisplayName("Should raise in second round if has one manilha and one strong card")
-        void decideIfRaises_shouldRaiseInSecondRoundIfHasManilhaAndStrongCard() {
+        void shouldRaiseInSecondRoundIfHasManilhaAndStrongCard() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
             TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
@@ -152,7 +152,7 @@ class TrucorinthiansTest {
 
         @Test
         @DisplayName("Should not raise in second round if has only one manilha and weak cards")
-        void decideIfRaises_shouldNotRaiseInSecondRoundIfHasOnlyManilhaAndWeakCards() {
+        void shouldNotRaiseInSecondRoundIfHasOnlyManilhaAndWeakCards() {
             TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
 
             TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
@@ -170,6 +170,31 @@ class TrucorinthiansTest {
             boolean result = sut.decideIfRaises(intel);
 
             assertThat(result).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should raise in third round if has a card with force ≥ 8")
+        void shouldRaiseInThirdRoundIfHasVeryStrongCard() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            List<GameIntel.RoundResult> roundResults = List.of(
+                    GameIntel.RoundResult.LOST,
+                    GameIntel.RoundResult.WON
+            );
+
+            TrucoCard forte = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
+            TrucoCard fraca1 = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+            TrucoCard fraca2 = TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(roundResults, List.of(), vira, 3)
+                    .botInfo(List.of(fraca1, forte, fraca2), 10)
+                    .opponentScore(10)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isTrue();
         }
     }
 
