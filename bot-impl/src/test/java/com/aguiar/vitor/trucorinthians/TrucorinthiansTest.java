@@ -85,6 +85,31 @@ class TrucorinthiansTest {
     }
 
     @Nested
+    @DisplayName("decideIfRaises Tests")
+    class DecideIfRaisesTest {
+
+        @Test
+        @DisplayName("Should raise if has two manilhas in first round")
+        void shouldRaiseIfHasTwoManilhasInFirstRound() {
+            TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+
+            TrucoCard manilha1 = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+            TrucoCard manilha2 = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+            TrucoCard fraca = TrucoCard.of(CardRank.QUEEN, CardSuit.SPADES);
+
+            GameIntel intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), List.of(), vira, 1)
+                    .botInfo(List.of(manilha1, fraca, manilha2), 0)
+                    .opponentScore(0)
+                    .build();
+
+            boolean result = sut.decideIfRaises(intel);
+
+            assertThat(result).isTrue();
+        }
+    }
+
+    @Nested
     @DisplayName("chooseCard Tests")
     class ChooseCardTest {
 
