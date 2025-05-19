@@ -238,6 +238,29 @@ public class MeuBotTest {
 
         }
 
+        @Test
+        @DisplayName("Aceita jogar mão de onze com 3 cartas de 3")
+        void aceitaMaoDeOnzeComTresCartasDeTres() {
+            hand = List.of(
+                    TrucoCard.of(THREE, CLUBS),
+                    TrucoCard.of(THREE, HEARTS),
+                    TrucoCard.of(THREE, DIAMONDS)
+            );
+
+            vira = TrucoCard.of(ACE, DIAMONDS);
+
+            openCards = List.of(vira);
+
+
+            intel = createIntel(hand, vira, 11, 11, List.of(), openCards);
+
+
+            Assertions.assertTrue(meuBot.getMaoDeOnzeResponse(intel));
+        }
+
+
+
+
 
 
 
