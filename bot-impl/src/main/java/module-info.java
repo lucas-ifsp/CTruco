@@ -12,6 +12,7 @@ import com.carvalho.candido.tomegapbot.GapBot;
 import com.brito.macena.boteco.BotEco;
 import com.ghenrique.moedordecana.MoedorDeCana;
 import com.antonelli.gibim.degolabot.DegolaBot;
+
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 
 import com.fernandoAloneBot.MeuBot;
@@ -21,7 +22,6 @@ import com.breno.trucoJC.botBlessed.BotBlessed;
 import com.luciano.bonelli.zecatatubot.ZecaTatuBot;
 import com.paola.pedro.StartRoundCapucina;
 import com.aguiar.vitor.trucorinthians.Trucorinthians;
-
 
 module bot.impl {
     requires bot.spi;
@@ -40,6 +40,15 @@ module bot.impl {
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
     exports com.antonelli.gibim.degolabot;
+
+  
+    exports com.fernandoAloneBot;
+    exports com.breno.trucoJC.botBlessed;
+    exports com.igor_gabriel.botNovato;
+    exports com.paola.pedro;
+    exports com.luciano.bonelli.zecatatubot;
+    exports com.aguiar.vitor.trucorinthians;
+    exports com.grupo.firsts;
 
   
     exports com.fernandoAloneBot;
