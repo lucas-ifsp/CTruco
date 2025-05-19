@@ -47,33 +47,50 @@ public class BotBlessed implements BotServiceProvider {
 
     @Override
     public CardToPlay chooseCard(GameIntel intel) {
-        List<TrucoCard> hand = intel.getCards();
         TrucoCard vira = intel.getVira();
-        int round = intel.getRoundResults().size();
-        Optional<TrucoCard> opponentCard = intel.getOpponentCard();
+        List<TrucoCard> hand = intel.getCards();
+        Optional<TrucoCard> opponentCardOpt = intel.getOpponentCard();
+        List<GameIntel.RoundResult> roundResults = intel.getRoundResults();
 
-        List<TrucoCard> sortedHand = hand.stream().sorted((c1, c2) -> c2.compareValueTo(c1, vira)).toList();
-        TrucoCard strongest = sortedHand.get(0);
-        TrucoCard weakest = sortedHand.get(sortedHand.size() - 1);
 
-        if (round == 0) {
-            if (opponentCard.isPresent()) {
-                TrucoCard opponentPlay = opponentCard.get();
-                if (opponentPlay.isManilha(vira)) {
-                    boolean hasStrongerManilha = hand.stream().anyMatch(c -> c.isManilha(vira) && c.compareValueTo(opponentPlay, vira) > 0);
-                    return hasStrongerManilha ? CardToPlay.of(strongest) : CardToPlay.of(weakest);
+        List<TrucoCard> sortedHand = hand.stream()
+                .sorted((a, b) -> Integer.compare(b.relativeValue(vira), a.relativeValue(vira)))
+                .toList();
+
+        TrucoCard better = sortedHand.get(0);
+        TrucoCard pior = sortedHand.get(sortedHand.size() - 1);
+        int rodadaAtual = roundResults.size() + 1;
+
+        if (hand == null || hand.isEmpty()) {
+            if (rodadaAtual == 1) {
+                return CardToPlay.of(better);
+            } else {
+                return CardToPlay.discard(TrucoCard.closed());
+            }
+        }
+
+        if (opponentCardOpt.isEmpty()) {
+            if (rodadaAtual > 1 && !roundResults.isEmpty()) {
+                GameIntel.RoundResult ultima = roundResults.get(roundResults.size() - 1);
+                if (ultima == GameIntel.RoundResult.LOST) {
+                    return CardToPlay.discard(pior);
                 }
             }
-            return CardToPlay.of(strongest);
+            return CardToPlay.of(better);
         }
 
-        if (round == 1) {
-            return CardToPlay.of(weakest);
-        }
+        TrucoCard cartaOponente = opponentCardOpt.get();
 
-        return CardToPlay.of(hand.get(0));
+        if (better.compareValueTo(cartaOponente, vira) > 0) {
+            return CardToPlay.of(better);
+        } else {
+            if (rodadaAtual == 1) {
+                return CardToPlay.of(pior);
+            }
+            return CardToPlay.discard(pior);
+        }
     }
-
+    
     @Override
     public int getRaiseResponse(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
