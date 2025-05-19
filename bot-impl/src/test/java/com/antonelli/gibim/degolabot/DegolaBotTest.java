@@ -459,6 +459,23 @@ public class DegolaBotTest {
         assertThat(result.content()).isEqualTo(manilha);
     }
 
+    @Test
+    @DisplayName("Decide não aceitar truco se mão estiver ruim")
+    void testDeclineTrucoWithWeakHand() {
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentScore()).thenReturn(4);
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        ));
+
+        FirstRound strategy = new FirstRound();
+        int response = strategy.getRaiseResponse(intel);
+
+        assertEquals(-1, response);
+    }
+
 
 
 }
