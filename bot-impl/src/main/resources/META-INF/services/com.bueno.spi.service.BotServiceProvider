@@ -18,6 +18,7 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
+com.breno.trucoJC.botBlessed.BotBlessed
 com.bueno.impl.dummybot.DummyBot
 com.petrilli.sandro.malasiabot.MalasiaBot
 com.aah.refactor.me.RefactorMePleaseBot
