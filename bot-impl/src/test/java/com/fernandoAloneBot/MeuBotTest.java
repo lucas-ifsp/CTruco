@@ -551,6 +551,21 @@ public class MeuBotTest {
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, SPADES));
          }
 
+         @Test
+         @DisplayName("Testa jogar a carta mais forte quando não tem manilha")
+         void jogaCartaMaisForteQuandoNaoTemManilha() {
+             hand = List.of(TrucoCard.of(FOUR, SPADES), TrucoCard.of(THREE, CLUBS), TrucoCard.of(FOUR, CLUBS));
+
+             vira = TrucoCard.of(ACE, SPADES);
+
+             openCards = List.of(TrucoCard.of(TWO, DIAMONDS));
+
+             intel = createIntel(hand, vira, 1, 0, List.of(GameIntel.RoundResult.DREW), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
+         }
 
 
      }
