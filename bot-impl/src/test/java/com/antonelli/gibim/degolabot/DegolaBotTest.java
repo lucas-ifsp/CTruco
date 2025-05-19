@@ -320,7 +320,63 @@ public class DegolaBotTest {
 
         assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
     }
+    @Test
+    @DisplayName("Deve retornar carta válida mesmo com mão vazia (não deve lançar erro)")
+    void testChooseCardWithEmptyHand() {
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+        List<TrucoCard> botCards = Collections.emptyList();
+        List<TrucoCard> openCards = List.of(vira);
 
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        assertThrows(IllegalStateException.class, () -> sut.chooseCard(intel.build()));
+    }
+
+    @Test
+    @DisplayName("Deve retornar false em decideIfRaises quando mão do bot é fraca")
+    void testDecideIfRaisesWithWeakHand() {
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)));
+
+        FirstRound strategy = new FirstRound();
+
+        boolean result = strategy.decideIfRaises(intel);
+
+        assertFalse(result);
+    }
+
+    @Test
+    @DisplayName("Deve retornar true em decideIfRaises quando mão do bot é forte")
+    void testDecideIfRaisesWithStrongHand() {
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.ACE, CardSuit.HEARTS)));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.JACK, CardSuit.CLUBS)
+        ));
+
+        FirstRound strategy = new FirstRound();
+
+        boolean result = strategy.decideIfRaises(intel);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Deve lançar IllegalStateException ao solicitar estratégia para rodada inválida negativa")
+    void testGetStrategyForRoundThrowsOnNegativeRound() {
+        assertThrows(IllegalStateException.class, () -> sut.getStrategyForRound(-1));
+    }
+
+    @Test
+    @DisplayName("Deve lançar IllegalStateException ao solicitar estratégia para rodada inválida maior que 3")
+    void testGetStrategyForRoundThrowsOnRoundGreaterThan3() {
+        assertThrows(IllegalStateException.class, () -> sut.getStrategyForRound(4));
+    }
 
 
 }
