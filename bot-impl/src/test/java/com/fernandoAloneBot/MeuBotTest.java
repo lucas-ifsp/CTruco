@@ -643,6 +643,23 @@ public class MeuBotTest {
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, DIAMONDS));
          }
 
+         @Test
+         @DisplayName("Descarta menor carta quando não pode vencer manilha")
+         void descartaCartaSemChanceDeVencer() {
+             hand = List.of(TrucoCard.of(QUEEN, CLUBS), TrucoCard.of(SEVEN, SPADES), TrucoCard.of(TWO, DIAMONDS));
+             vira = TrucoCard.of(FOUR, HEARTS);
+
+             openCards = List.of(TrucoCard.of(FIVE, DIAMONDS));
+
+             TrucoCard opponentCard = TrucoCard.of(FIVE, DIAMONDS);
+
+             intel = createIntel(hand, vira, 2, 11, List.of(), openCards, opponentCard);
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN, SPADES));
+         }
+
+
 
 
 
