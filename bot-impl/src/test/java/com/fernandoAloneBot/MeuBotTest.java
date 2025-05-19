@@ -23,6 +23,7 @@ public class MeuBotTest {
         meuBot = new MeuBot();
     }
 
+    // Método original, sem opponentCard (sem quebrar testes antigos)
     private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore,
                                   List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards) {
         return GameIntel.StepBuilder.with()
@@ -32,7 +33,19 @@ public class MeuBotTest {
                 .build();
     }
 
-    // Versão simplificada, sem openCards
+    // Sobrecarga nova que aceita opponentCard — só usar quando precisar
+    private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore,
+                                  List<GameIntel.RoundResult> roundResults, List<TrucoCard> openCards,
+                                  TrucoCard opponentCard) {
+        return GameIntel.StepBuilder.with()
+                .gameInfo(roundResults, openCards, vira, 1)
+                .botInfo(hand, myScore)
+                .opponentScore(opponentScore)
+                .opponentCard(opponentCard)  // adiciona opponentCard aqui
+                .build();
+    }
+
+    // Sobrecarga simplificada, sem openCards (mantém testes antigos)
     private GameIntel createIntel(List<TrucoCard> hand, TrucoCard vira, int myScore, int opponentScore,
                                   List<GameIntel.RoundResult> roundResults) {
         return createIntel(hand, vira, myScore, opponentScore, roundResults, List.of());
@@ -53,8 +66,8 @@ public class MeuBotTest {
     }
 
     private List<TrucoCard> hand;
+
     private List<TrucoCard> openCards;
-    private List<GameIntel.RoundResult> result;
 
     private TrucoCard vira;
 
@@ -579,12 +592,21 @@ public class MeuBotTest {
              // Oponente jogou uma carta intermediária
              openCards = List.of(TrucoCard.of(FIVE, CLUBS));
 
+
              intel = createIntel(hand, vira, 1, 0, List.of(), openCards);
 
              CardToPlay cardToPlay = meuBot.chooseCard(intel);
 
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, CLUBS));
          }
+
+
+
+
+
+
+
+
 
 
 
