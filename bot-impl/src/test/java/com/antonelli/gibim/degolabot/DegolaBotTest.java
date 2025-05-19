@@ -31,6 +31,11 @@ public class DegolaBotTest {
         return GameIntel.StepBuilder.with().gameInfo(List.of(), openCards, vira, 1)
                 .botInfo(botCards, 0).opponentScore(0);
     }
+    private GameIntel.StepBuilder firstRoundSecondToPlay(
+            List<TrucoCard> botCards, List<TrucoCard> openCards, TrucoCard vira, TrucoCard opponentCard) {
+        return GameIntel.StepBuilder.with().gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0).opponentScore(0).opponentCard(opponentCard);
+    }
 
     @Nested
     @DisplayName("Testes do método chooseCard")
