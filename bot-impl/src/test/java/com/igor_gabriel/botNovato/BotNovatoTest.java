@@ -1,5 +1,7 @@
 package com.igor_gabriel.botNovato;
 
+import com.bueno.spi.model.CardRank;
+import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
 import com.bueno.spi.model.TrucoCard;
@@ -11,49 +13,64 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class BotNovatoTest {
 
     @Test
     void testGetMaoDeOnzeResponse_returnsTrueWhenStrengthAbove21() {
-        TrucoCard vira = new TrucoCard(Naipe.COPAS, Valor.QUATRO);
+        // Vira = 4 de Copas (FOUR, HEARTS) → manilha = FIVE
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
 
-        TrucoCard c1 = new TrucoCard(Naipe.PAUS, Valor.REI);   // valor alto
-        TrucoCard c2 = new TrucoCard(Naipe.ESPADAS, Valor.DOIS); // valor médio
+        // Mão: Rei de Paus (KING, CLUBS) + Dois de Espadas (TWO, SPADES)
+        TrucoCard c1 = TrucoCard.of(CardRank.KING, CardSuit.CLUBS);
+        TrucoCard c2 = TrucoCard.of(CardRank.TWO, CardSuit.SPADES);
         List<TrucoCard> mao = Arrays.asList(c1, c2);
 
-        GameIntel intel = new GameIntel(mao, vira);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(mao, 0)
+                .opponentScore(0)
+                .build();
 
         BotNovato bot = new BotNovato();
-        boolean response = bot.getMaoDeOnzeResponse(intel);
-        assertTrue(response);
+        assertTrue(bot.getMaoDeOnzeResponse(intel));
     }
 
     @Test
     void testGetMaoDeOnzeResponse_returnsFalseWhenStrengthBelowThreshold() {
-        TrucoCard vira = new TrucoCard(Naipe.COPAS, Valor.AS);
+        // Vira = Ás de Copas (ACE, HEARTS) → manilha = TWO
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.HEARTS);
 
-        TrucoCard c1 = new TrucoCard(Naipe.PAUS, Valor.DOIS);
-        TrucoCard c2 = new TrucoCard(Naipe.ESPADAS, Valor.TRES);
+        // Mão: Quatro de Paus (FOUR, CLUBS) + Cinco de Espadas (FIVE, SPADES)
+        TrucoCard c1 = TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS);
+        TrucoCard c2 = TrucoCard.of(CardRank.FIVE, CardSuit.SPADES);
         List<TrucoCard> mao = Arrays.asList(c1, c2);
 
-        GameIntel intel = new GameIntel(mao, vira);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(mao, 0)
+                .opponentScore(0)
+                .build();
 
         BotNovato bot = new BotNovato();
-        boolean response = bot.getMaoDeOnzeResponse(intel);
-        assertFalse(response);
+        assertFalse(bot.getMaoDeOnzeResponse(intel));
     }
 
     @Test
     void testDecideIfRaises_returnsTrueIfHasManilha() {
-        Valor viraValor = Valor.REI;
-        TrucoCard vira = new TrucoCard(Naipe.COPAS, viraValor); // manilhas: A, 2, 3, 4 após rei
-        Valor manilhaValor = Valor.AS; // supondo AS é manilha após REI
-
-        TrucoCard manilhaCard = new TrucoCard(Naipe.ESPADAS, manilhaValor);
+        // Vira = Rei de Copas (KING, HEARTS) → manilha = ACE
+        TrucoCard vira = TrucoCard.of(CardRank.KING, CardSuit.HEARTS);
+        // Cria carta de manilha (ACE, SPADES)
+        TrucoCard manilhaCard = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
         List<TrucoCard> mao = List.of(manilhaCard);
 
-        GameIntel intel = new GameIntel(mao, vira);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(mao, 0)
+                .opponentScore(0)
+                .build();
 
         BotNovato bot = new BotNovato();
         assertTrue(bot.decideIfRaises(intel));
@@ -61,12 +78,19 @@ class BotNovatoTest {
 
     @Test
     void testDecideIfRaises_returnsFalseIfNoManilha() {
-        TrucoCard vira = new TrucoCard(Naipe.COPAS, Valor.DEZ);
-        TrucoCard c1 = new TrucoCard(Naipe.PAUS, Valor.DOIS);
-        TrucoCard c2 = new TrucoCard(Naipe.ESPADAS, Valor.TRES);
+        // Vira = Dez de Copas (TEN, HEARTS) → manilha = QUEEN
+        TrucoCard vira = TrucoCard.of(CardRank.THREE, CardSuit.HEARTS);
+
+        TrucoCard c1 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
+        TrucoCard c2 = TrucoCard.of(CardRank.THREE, CardSuit.SPADES);
         List<TrucoCard> mao = Arrays.asList(c1, c2);
 
-        GameIntel intel = new GameIntel(mao, vira);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(mao, 0)
+                .opponentScore(0)
+                .build();
 
         BotNovato bot = new BotNovato();
         assertFalse(bot.decideIfRaises(intel));
@@ -74,23 +98,33 @@ class BotNovatoTest {
 
     @Test
     void testChooseCard_returnsFirstCard() {
-        TrucoCard c1 = new TrucoCard(Naipe.COPAS, Valor.CINCO);
-        TrucoCard c2 = new TrucoCard(Naipe.PAUS, Valor.NOVE);
+        TrucoCard c1 = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        TrucoCard c2 = TrucoCard.of(CardRank.TWO, CardSuit.CLUBS);
 
         List<TrucoCard> mao = Arrays.asList(c1, c2);
-        TrucoCard vira = new TrucoCard(Naipe.ESPADAS, Valor.SEIS);
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.SPADES);
 
-        GameIntel intel = new GameIntel(mao, vira);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), vira, 1)
+                .botInfo(mao, 0)
+                .opponentScore(0)
+                .build();
 
         BotNovato bot = new BotNovato();
         CardToPlay cardToPlay = bot.chooseCard(intel);
-
         assertEquals(CardToPlay.of(c1), cardToPlay);
     }
 
     @Test
     void testGetRaiseResponse_returnsMinusOne() {
-        GameIntel intel = new GameIntel(List.of(), null);
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(), null, 1)
+                .botInfo(List.of(), 0)
+                .opponentScore(0)
+                .build();
+
         BotNovato bot = new BotNovato();
         assertEquals(-1, bot.getRaiseResponse(intel));
     }
@@ -100,4 +134,5 @@ class BotNovatoTest {
         BotNovato bot = new BotNovato();
         assertEquals("BotNovato", bot.getName());
     }
+
 }
