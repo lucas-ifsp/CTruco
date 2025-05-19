@@ -475,6 +475,21 @@ public class DegolaBotTest {
 
         assertEquals(-1, response);
     }
+    @Test
+    @DisplayName("Decide não pedir truco se perder a primeira rodada")
+    void testDoNotRaiseIfLostFirstRound() {
+        GameIntel intel = mock(GameIntel.class);
+        when(intel.getOpponentCard()).thenReturn(Optional.of(TrucoCard.of(CardRank.KING, CardSuit.CLUBS)));
+        when(intel.getCards()).thenReturn(List.of(
+                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.SPADES)
+        ));
+
+        FirstRound strategy = new FirstRound();
+        boolean raise = strategy.decideIfRaises(intel);
+
+        assertFalse(raise);
+    }
 
 
 
