@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,6 +113,81 @@ class BotBlessedTest {
                 new Object[]{"CARTAS MEDIANAS → Não deve aceitar o aumento",
                         List.of(card(CardSuit.CLUBS, CardRank.ACE), card(CardSuit.SPADES, CardRank.SIX), card(CardSuit.HEARTS, CardRank.KING)),
                         vira, false}
+        );
+    }
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @MethodSource("chooseCardTestCases")
+    @DisplayName("Testes para chooseCard")
+    void testChooseCard(String description, List<TrucoCard> hand, Optional<TrucoCard> opponentCard,
+                        List<GameIntel.RoundResult> roundResults, TrucoCard vira, TrucoCard expectedCard) {
+
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(roundResults, List.of(vira), vira, 3)
+                .botInfo(hand, 0)
+                .opponentScore(0)
+                .opponentCard(opponentCard.orElse(null))
+                .build();
+
+        CardToPlay cardToPlay = botBlessed.chooseCard(intel);
+        TrucoCard chosenCard = cardToPlay.content();
+        assertThat(chosenCard).as(description).isEqualTo(expectedCard);
+    }
+
+    private static Stream<Object[]> chooseCardTestCases() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        TrucoCard manilha2 = TrucoCard.of(vira.getRank().next(), CardSuit.HEARTS); // Manilha com outro naipe
+
+        return Stream.of(
+                new Object[]{"1ª rodada: oponente jogou intermediária, você tem Zap e 3 → joga Zap",
+                        List.of(zap(vira), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.FIVE)),
+                        Optional.of(card(CardSuit.CLUBS, CardRank.SIX)),
+                        List.of(),
+                        vira,
+                        zap(vira)},
+
+                new Object[]{"1ª rodada: oponente jogou carta forte, você tem uma manilha e um 3 → joga manilha",
+                        List.of(card(CardSuit.SPADES, CardRank.THREE), manilha(vira), card(CardSuit.HEARTS, CardRank.SIX)),
+                        Optional.of(card(CardSuit.SPADES, CardRank.SEVEN)),
+                        List.of(),
+                        vira,
+                        manilha(vira)},
+
+                new Object[]{"2ª rodada: ganhou a 1ª, cartas fortes → joga a 2ª mais forte",
+                        List.of(zap(vira), manilha(vira), card(CardSuit.SPADES, CardRank.THREE)),
+                        Optional.empty(),
+                        List.of(GameIntel.RoundResult.WON),
+                        vira,
+                        zap(vira)},
+
+                new Object[]{"1ª rodada: oponente jogou um 3 e você tem manilha → joga a mais forte",
+                        List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.THREE)),
+                        Optional.of(card(CardSuit.SPADES, CardRank.THREE)),
+                        List.of(),
+                        vira,
+                        manilha(vira)},
+
+                new Object[]{"3ª rodada: ganhou as duas anteriores → joga a última carta",
+                        List.of(zap(vira)),
+                        Optional.empty(),
+                        List.of(GameIntel.RoundResult.WON, GameIntel.RoundResult.WON),
+                        vira,
+                        zap(vira)},
+
+                new Object[]{"1ª rodada: você joga forte e oponente responde fraca → joga forte de novo",
+                        List.of(zap(vira), card(CardSuit.HEARTS, CardRank.FIVE)),
+                        Optional.of(card(CardSuit.SPADES, CardRank.FIVE)),
+                        List.of(),
+                        vira,
+                        zap(vira)},
+
+                new Object[]{"3ª rodada: perdeu 1ª e 2ª, mas carta restante é mais forte → joga a mais forte",
+                        List.of(zap(vira)),
+                        Optional.of(card(CardSuit.CLUBS, CardRank.FIVE)),
+                        List.of(GameIntel.RoundResult.LOST, GameIntel.RoundResult.LOST),
+                        vira,
+                        zap(vira)}
         );
     }
 
