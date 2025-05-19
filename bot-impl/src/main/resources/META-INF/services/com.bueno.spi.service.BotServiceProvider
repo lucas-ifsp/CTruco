@@ -18,6 +18,7 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
+com.breno.trucoJC.botBlessed.BotBlessed
 com.bueno.impl.dummybot.DummyBot
 com.petrilli.sandro.malasiabot.MalasiaBot
 com.aah.refactor.me.RefactorMePleaseBot
@@ -27,4 +28,9 @@ com.carvalho.candido.tomegapbot.GapBot
 com.brito.macena.boteco.BotEco
 com.ghenrique.moedordecana.MoedorDeCana
 com.abel.francisco.fogao6boca.Fogao6Boca
+
 com.fernandoAloneBot.MeuBot
+com.paola.pedro.StartRoundCapucina
+com.luciano.bonelli.zecatatubot.ZecaTatuBot
+com.aguiar.vitor.trucorinthians.Trucorinthians
+com.grupo.firsts.PeNaCova
