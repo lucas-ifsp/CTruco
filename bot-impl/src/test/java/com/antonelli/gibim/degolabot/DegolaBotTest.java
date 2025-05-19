@@ -490,7 +490,26 @@ public class DegolaBotTest {
 
         assertFalse(raise);
     }
+    @Test
+    @DisplayName("Deve preferir jogar carta do mesmo naipe do vira quando possível")
+    void testChooseCardPrefersViraSuit() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.HEARTS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
 
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(1);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertEquals(CardSuit.HEARTS, result.content().getSuit());
+    }
 
 
 }
