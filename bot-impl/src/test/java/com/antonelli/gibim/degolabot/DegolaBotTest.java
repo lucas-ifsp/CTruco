@@ -26,6 +26,12 @@ public class DegolaBotTest {
         sut = new DegolaBot();
     }
 
+    private GameIntel.StepBuilder firstRoundFirstToPlay(
+            List<TrucoCard> botCards, List<TrucoCard> openCards, TrucoCard vira) {
+        return GameIntel.StepBuilder.with().gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0).opponentScore(0);
+    }
+
     @Nested
     @DisplayName("Testes do método chooseCard")
     class ChooseCardTests {
@@ -108,10 +114,7 @@ public class DegolaBotTest {
                     );
                     List<TrucoCard> openCards = Collections.singletonList(vira);
 
-                    intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(), openCards, vira, 1)
-                            .botInfo(botCards, 0)
-                            .opponentScore(0);
+                    intel = firstRoundFirstToPlay(botCards, openCards, vira);
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
@@ -127,10 +130,7 @@ public class DegolaBotTest {
                     );
                     List<TrucoCard> openCards = Collections.singletonList(vira);
 
-                    intel = GameIntel.StepBuilder.with()
-                            .gameInfo(List.of(), openCards, vira, 0)
-                            .botInfo(botCards, 0)
-                            .opponentScore(0);
+                    intel = firstRoundFirstToPlay(botCards, openCards, vira);
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
