@@ -11,6 +11,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bueno.spi.model.CardRank.*;
+import static com.bueno.spi.model.CardRank.ACE;
+import static com.bueno.spi.model.CardSuit.*;
+import static com.bueno.spi.model.CardSuit.HEARTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -144,6 +148,20 @@ public class DegolaBotTest {
             @Nested
             @DisplayName("Bot é o segundo a jogar")
             class SecondPlayerPlays {
+                @Test
+                @DisplayName("Tenta vencer com a menor carta possível que ainda ganha")
+                void TryToKillOpponentCardWithTheWeakestCard(){
+                    TrucoCard vira = TrucoCard.of(ACE, CLUBS);
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(FOUR, CLUBS),
+                            TrucoCard.of(THREE, HEARTS),
+                            TrucoCard.of(TWO, DIAMONDS)
+                    );
+                    TrucoCard opponentCard = TrucoCard.of(ACE, HEARTS);
+                    List<TrucoCard> openCards = Arrays.asList(TrucoCard.of(ACE, CLUBS), TrucoCard.of(ACE, HEARTS));
+                    intel = firstRoundSecondToPlay(botCards, openCards, vira, opponentCard);
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(1)));
+                }
             }
         }
     }
