@@ -32,7 +32,8 @@ public class StartRoundCapucina implements BotServiceProvider {
                 .filter(card -> card.relativeValue(intel.getVira()) >= 8)
                 .count();
 
-        return cartasFortes >= 2 && intel.getMyScore() < 11;
+        // Substitua getBotScore() pelo método correto se necessário
+        return cartasFortes >= 2 && intel.getScore() < 11;
     }
 
     @Override

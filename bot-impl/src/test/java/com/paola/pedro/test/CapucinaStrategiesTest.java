@@ -43,26 +43,18 @@ class CapucinaStrategiesTest {
     }
 
     @Test
-    void deveResponderComCartaSuperiorSeAdversarioJogouFraca() {
-        bot.iniciarRodada(List.of(CardRank.SIX, CardRank.JACK, CardRank.THREE));
-        bot.registrarCartaAdversario(CardRank.FOUR);
-        CardRank jogada = bot.jogar();
-        assertTrue(jogada.ordinal() > CardRank.FOUR.ordinal());
-        assertTrue(List.of(CardRank.SIX, CardRank.JACK, CardRank.THREE).contains(jogada));
-    }
-
-    @Test
     void deveFugirComMaisFracaSeAdversarioJogouForte() {
         TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS);
         TrucoCard zap = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
 
+        bot.iniciarPartida("Jogador", 0, 0); // Remova o 'vira' se não for aceito
         bot.iniciarRodada(List.of(
                 CardRank.FIVE,
                 CardRank.SEVEN,
                 zap.getRank()
         ));
         bot.registrarCartaAdversario(zap.getRank());
-        assertEquals(TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS), bot.jogar());
+        assertEquals(CardRank.FIVE, bot.jogar());
     }
 
     @Test

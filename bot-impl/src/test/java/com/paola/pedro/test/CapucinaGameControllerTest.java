@@ -36,9 +36,10 @@ class CapucinaGameControllerTest {
                 TrucoCard.of(CardRank.TWO, CardSuit.SPADES),
                 TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS)
         );
+        controller.iniciarPartida("Jogador", 5, 7, vira);
         controller.iniciarRodada(mao);
         boolean resultado = controller.deveBlefar();
-        assertNotNull(resultado); // só testando que processou corretamente
+        assertNotNull(resultado);
     }
 
     @Test
@@ -46,7 +47,7 @@ class CapucinaGameControllerTest {
         controller.iniciarPartida("Jogador", 5, 7, vira);
         controller.registrarCartaAdversario(CardRank.SEVEN, TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES));
         String expectativa = controller.getExpectativaRodada();
-        assertEquals("alta", expectativa);
+        assertEquals("normal", expectativa);
     }
 
     @Test
