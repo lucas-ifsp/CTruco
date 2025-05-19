@@ -9,7 +9,7 @@ public class BotNovato implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return handStrength(intel) > 21;
+        return handStrength(intel) > 11;
     }
 
     @Override
