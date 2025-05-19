@@ -237,6 +237,7 @@ public class MeuBotTest {
 
             Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
+
         @Test@DisplayName("Recusa aumento após perder rodada")
         void testeSeDecideAumentarAposPerderRodada() {
             hand = List.of(TrucoCard.of(ACE, SPADES), TrucoCard.of(FOUR, HEARTS), TrucoCard.of(FOUR, DIAMONDS));
@@ -722,6 +723,31 @@ public class MeuBotTest {
 
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN,DIAMONDS));
          }
+
+         @Test
+         @DisplayName("Joga a carta mais forte da mão")
+         void jogaCartaMaisForte() {
+             hand = List.of(
+                     TrucoCard.of(SEVEN, CLUBS),
+                     TrucoCard.of(KING, HEARTS),
+                     TrucoCard.of(ACE, SPADES)
+             );
+
+             vira = TrucoCard.of(THREE, DIAMONDS);
+
+             openCards = List.of();
+
+
+           //  TrucoCard opponentCard = null;
+
+             intel = createIntel(hand, vira, 2, 2, List.of(), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(ACE, SPADES));
+         }
+
 
 
 
