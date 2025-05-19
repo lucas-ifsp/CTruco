@@ -567,6 +567,28 @@ public class MeuBotTest {
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, CLUBS));
          }
 
+         @Test
+         @DisplayName("Joga a menor carta que vence a do oponente (sem manilha)")
+         void jogaMenorCartaQueMataOponenteSemManilha() {
+
+
+             hand = List.of(TrucoCard.of(FOUR, CLUBS), TrucoCard.of(SIX, CLUBS), TrucoCard.of(THREE, DIAMONDS));
+
+             vira = TrucoCard.of(ACE, HEARTS);
+
+             // Oponente jogou uma carta intermediária
+             openCards = List.of(TrucoCard.of(FIVE, CLUBS));
+
+             intel = createIntel(hand, vira, 1, 0, List.of(), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(FOUR, CLUBS));
+         }
+
+
+
+
 
      }
 
