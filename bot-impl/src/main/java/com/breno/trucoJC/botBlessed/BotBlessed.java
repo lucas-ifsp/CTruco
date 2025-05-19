@@ -94,17 +94,34 @@ public class BotBlessed implements BotServiceProvider {
     @Override
     public int getRaiseResponse(GameIntel intel) {
         List<TrucoCard> hand = intel.getCards();
-        TrucoCard vira = intel.getVira();
 
-        boolean hasStrongCard = hand.stream().anyMatch(c -> c.isManilha(vira) || c.isZap(vira));
         long threes = hand.stream().filter(c -> c.getRank() == CardRank.THREE).count();
+        long twos = hand.stream().filter(c -> c.getRank() == CardRank.TWO).count();
+        long manilhaCount = intel.getCards().stream().filter(c -> c.isManilha(intel.getVira())).count();
+        int opponentScore = intel.getOpponentScore();
+        int playerScore = intel.getScore();
+        boolean hasZap = intel.getCards().stream().anyMatch(c -> c.isZap(intel.getVira()));
+        boolean hasCopas = intel.getCards().stream().anyMatch(c -> c.isCopas(intel.getVira()));
 
-        if (hasStrongCard || threes >= 2) {
-            return 1;
+        long difPoints = playerScore - opponentScore;
+
+        if(difPoints <= 5 && difPoints >= 0) {
+            if(twos >= 1 && threes >= 1) {
+                return 0;
+            }
         }
 
-        if (intel.getOpponentScore() >= 11 && intel.getScore() < 5) {
-            return -1;
+        if (manilhaCount >= 1) {
+            if (threes >= 1) {
+                return 1;
+            }
+            if(manilhaCount == 1) return -1;
+            if(hasZap && hasCopas) return 1;
+        }
+        else{
+            if (threes >= 2) {
+                return 0;
+            }
         }
 
         return -1;
