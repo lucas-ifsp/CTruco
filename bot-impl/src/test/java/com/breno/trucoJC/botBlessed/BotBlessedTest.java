@@ -191,6 +191,92 @@ class BotBlessedTest {
         );
     }
 
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @MethodSource("getRaiseResponseTestCases")
+    @DisplayName("Testes para getRaiseResponse")
+    void testGetRaiseResponse(String description, List<TrucoCard> hand, int playerScore, int opponentScore, TrucoCard vira, int expected) {
+        GameIntel intel = GameIntel.StepBuilder
+                .with()
+                .gameInfo(List.of(), List.of(vira), vira, 3)
+                .botInfo(hand, playerScore)
+                .opponentScore(opponentScore)
+                .build();
+
+        int result = botBlessed.getRaiseResponse(intel);
+        assertThat(result).as(description).isEqualTo(expected);
+    }
+
+    private static Stream<Object[]> getRaiseResponseTestCases() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+
+        return Stream.of(
+                new Object[]{"Oponente pede aumento, tem manilha e 3's → aumenta (1)",
+                        List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.FIVE), card(CardSuit.HEARTS, CardRank.THREE), card(CardSuit.CLUBS, CardRank.THREE)), 5, 6, vira, 1},
+
+                new Object[]{"Oponente pede aumento, só 1 carta forte (manilha) → recusa (-1)",
+                        List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.SIX), card(CardSuit.CLUBS, CardRank.FIVE)), 4, 7, vira, -1},
+
+                new Object[]{"Oponente pede aumento, só cartas medianas e está em desvantagem → recusa (-1)",
+                        List.of(card(CardSuit.HEARTS, CardRank.SEVEN), card(CardSuit.CLUBS, CardRank.SIX), card(CardSuit.SPADES, CardRank.SEVEN)), 3, 6, vira, -1},
+
+                new Object[]{"Oponente pede aumento, 2 ou mais 3's → aceita (0)",
+                        List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.FOUR)), 2, 5, vira, 0},
+
+                new Object[]{"Oponente pede aumento, só uma carta fraca e está em desvantagem → recusa (-1)",
+                        List.of(card(CardSuit.CLUBS, CardRank.TWO), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.FOUR)), 1, 7, vira, -1},
+
+                new Object[]{"Oponente pede aumento, tem Zap e 3 → aumenta (1)",
+                        List.of(zap(vira), card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.HEARTS, CardRank.SIX)), 3, 4, vira, 1},
+
+                new Object[]{"Oponente pede aumento, só cartas medianas e placar empatado (10x10) → recusa (-1)",
+                        List.of(card(CardSuit.HEARTS, CardRank.SEVEN), card(CardSuit.CLUBS, CardRank.SIX), card(CardSuit.SPADES, CardRank.JACK)), 10, 10, vira, -1},
+
+                new Object[]{"Oponente pede aumento, casal (Zap + Copas) → aumenta (1)",
+                        List.of(zap(vira), card(CardSuit.HEARTS, CardRank.QUEEN), card(CardSuit.HEARTS, CardRank.FIVE)), 6, 6, vira, 1},
+
+                new Object[]{"Oponente pede aumento, só uma carta boa e placar favorável → recusa (-1)",
+                        List.of(manilha(vira), card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.HEARTS, CardRank.SIX)), 8, 5, vira, -1},
+
+                new Object[]{"Oponente pede aumento, 0 pontos e sem cartas fortes → recusa (-1)",
+                        List.of(card(CardSuit.CLUBS, CardRank.SIX), card(CardSuit.HEARTS, CardRank.FOUR), card(CardSuit.SPADES, CardRank.SEVEN)), 0, 4, vira, -1},
+
+                new Object[]{"Oponente pede aumento, 10 pontos, adversário 9, com 1 três e manilha → aumenta (1)",
+                        List.of(manilha(vira), card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.HEARTS, CardRank.SEVEN)), 10, 9, vira, 1},
+
+                new Object[]{"Oponente pede aumento, 8 pontos, adversário 10, sem manilhas nem 3's → recusa (-1)",
+                        List.of(card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.HEARTS, CardRank.SIX), card(CardSuit.SPADES, CardRank.KING)), 8, 10, vira, -1},
+
+                new Object[]{"Oponente pede aumento, tem manilha, placar muito desfavorável → recusa (-1)",
+                        List.of(manilha(vira), card(CardSuit.HEARTS, CardRank.SEVEN), card(CardSuit.CLUBS, CardRank.FOUR)), 2, 9, vira, -1},
+
+                new Object[]{"Oponente pede aumento, só cartas fracas, placar muito favorável → recusa (-1)",
+                        List.of(card(CardSuit.CLUBS, CardRank.TWO), card(CardSuit.HEARTS, CardRank.FOUR), card(CardSuit.SPADES, CardRank.FIVE)), 9, 3, vira, -1},
+
+                new Object[]{"Oponente pede aumento, tem Zap e 3, placar muito desfavorável → aumenta (1)",
+                        List.of(zap(vira), card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.HEARTS, CardRank.FOUR)), 3, 9, vira, 1},
+
+                new Object[]{"Oponente pede aumento, só cartas medianas, placar favorável → aceita (0)",
+                        List.of(card(CardSuit.CLUBS, CardRank.KING), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.TWO)), 8, 5, vira, 0},
+
+                new Object[]{"Oponente pede aumento, casal (Zap + Copas), placar empatado → aumenta (1)",
+                        List.of(zap(vira), card(CardSuit.HEARTS, CardRank.FIVE), card(CardSuit.CLUBS, CardRank.FIVE)), 6, 6, vira, 1},
+
+                new Object[]{"Oponente pede aumento, só uma manilha (não Zap), placar empatado → recusa (-1)",
+                        List.of(manilha(vira), card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.HEARTS, CardRank.SEVEN)), 10, 10, vira, -1},
+
+                new Object[]{"Oponente pede aumento, cartas ruins, placar empatado → recusa (-1)",
+                        List.of(card(CardSuit.CLUBS, CardRank.FOUR), card(CardSuit.HEARTS, CardRank.FIVE), card(CardSuit.SPADES, CardRank.SIX)), 10, 10, vira, -1},
+
+                new Object[]{"Oponente pede aumento, 3's na mão, placar muito alto para jogador → aceita (0)",
+                        List.of(card(CardSuit.CLUBS, CardRank.THREE), card(CardSuit.SPADES, CardRank.THREE), card(CardSuit.HEARTS, CardRank.SEVEN)), 12, 5, vira, 0},
+
+                new Object[]{"Oponente pede aumento, cartas fortes, placar muito baixo para jogador → aumenta (1)",
+                        List.of(manilha(vira), zap(vira), card(CardSuit.HEARTS, CardRank.FIVE)), 1, 8, vira, 1}
+        );
+    }
+
+
     private static TrucoCard card(CardSuit suit, CardRank rank) {
         return TrucoCard.of(rank, suit);
     }
