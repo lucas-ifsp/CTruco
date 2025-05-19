@@ -440,6 +440,24 @@ public class DegolaBotTest {
 
         assertThat(result.content()).isEqualTo(botCards.get(1));
     }
+    @Test
+    @DisplayName("Deve jogar a manilha se for o único jeito de ganhar")
+    void testPlayTrumpCardIfOnlyWayToWin() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.CLUBS);
+        TrucoCard manilha = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        TrucoCard opponentCard = TrucoCard.of(CardRank.KING, CardSuit.SPADES);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                manilha
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = firstRoundSecondToPlay(botCards, openCards, vira, opponentCard);
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(result.content()).isEqualTo(manilha);
+    }
 
 
 
