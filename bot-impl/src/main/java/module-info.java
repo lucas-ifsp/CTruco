@@ -9,6 +9,7 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.brito.macena.boteco.BotEco;
 import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.ghenrique.moedordecana.MoedorDeCana;
+import com.aguiar.vitor.trucorinthians.Trucorinthians;
 
 module bot.impl {
     requires bot.spi;
@@ -25,6 +26,7 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+    exports com.aguiar.vitor.trucorinthians;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
@@ -36,5 +38,6 @@ module bot.impl {
             BotEco,
             MoedorDeCana,
             Fogao6Boca,
-            SkillDiffBot;
+            SkillDiffBot,
+            Trucorinthians;
 }
