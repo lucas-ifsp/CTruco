@@ -30,7 +30,7 @@ public class DegolaBot implements BotServiceProvider {
         return getStrategyForRound(round).chooseCard(intel);
     }
 
-    private Strategy getStrategyForRound(int round) {
+    public Strategy getStrategyForRound(int round) {
         return switch (round) {
             case 1 -> new FirstRound();
             case 2 -> new SecondRound();
@@ -39,7 +39,7 @@ public class DegolaBot implements BotServiceProvider {
         };
     }
 
-    private int getRoundNumber(GameIntel intel) {
+    public int getRoundNumber(GameIntel intel) {
         int playedRounds = intel.getRoundResults().size();
         return playedRounds + 1;
     }

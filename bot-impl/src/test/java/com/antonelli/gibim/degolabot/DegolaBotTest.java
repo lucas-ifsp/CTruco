@@ -22,7 +22,9 @@ public class DegolaBotTest {
     GameIntel.StepBuilder intel;
 
     @BeforeEach
-    void setUp(){sut = new DegolaBot(); }
+    void setUp() {
+        sut = new DegolaBot();
+    }
 
     @Test
     public void testGetRaiseResponse() {
@@ -46,9 +48,9 @@ public class DegolaBotTest {
         FirstRound strategy = new FirstRound();
         boolean result = strategy.decideIfRaises(intel);
 
-
         assertFalse(result);
     }
+
     @Nested
     @DisplayName("Testes ChooseCard")
     class ChooseCardTests {
@@ -60,27 +62,28 @@ public class DegolaBotTest {
             class FirstPlayerPlays {
                 @Test
                 @DisplayName("If only have bad cards then discard the one with lower value")
-                    void ifOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
-                        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+                void ifOnlyHaveBadCardsThenDiscardTheOneWithLowerValue() {
+                    TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
-                        List<TrucoCard> botCards = Arrays.asList(
-                                TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
-                                TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
-                                TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
-                        );
+                    List<TrucoCard> botCards = Arrays.asList(
+                            TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                            TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                            TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+                    );
 
-                        List<TrucoCard> openCards = Collections.singletonList(vira);
+                    List<TrucoCard> openCards = Collections.singletonList(vira);
 
-                        intel = GameIntel.StepBuilder.with()
-                                .gameInfo(List.of(), openCards, vira, 1)
-                                .botInfo(botCards, 0)
-                                .opponentScore(0);
+                    intel = GameIntel.StepBuilder.with()
+                            .gameInfo(List.of(), openCards, vira, 1)
+                            .botInfo(botCards, 0)
+                            .opponentScore(0);
 
-                        assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
+                    assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(0)));
                 }
+
                 @Test
                 @DisplayName("Se tiver apenas cartas médias, usar a de maior valor")
-                void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue(){
+                void IfOnlyHaveMiddleCardsThenUseTheOneWithHighestValue() {
                     TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                     List<TrucoCard> botCards = Arrays.asList(
@@ -99,32 +102,70 @@ public class DegolaBotTest {
 
                     assertThat(sut.chooseCard(intel.build())).isEqualTo(CardToPlay.of(botCards.get(2)));
                 }
-        @Nested
-        @DisplayName("Testes caso seja o segundo a jogar")
-        class SecondPlayerPlays {
 
-        }
+                @Nested
+                @DisplayName("Testes caso seja o segundo a jogar")
+                class SecondPlayerPlays {
+
+                }
             }
         }
     }
+
+    @Nested
+    @DisplayName("Testes getStrategyForRound")
+    class GetStrategyForRoundTests {
+
+        @Test
+        @DisplayName("Deve retornar FirstRound quando rodada for 1")
+        void shouldReturnFirstRoundWhenRoundIs1() {
+            Strategy strategy = sut.getStrategyForRound(1);
+            assertThat(strategy).isInstanceOf(FirstRound.class);
+        }
+
+        @Test
+        @DisplayName("Deve retornar SecondRound quando rodada for 2")
+        void shouldReturnSecondRoundWhenRoundIs2() {
+            Strategy strategy = sut.getStrategyForRound(2);
+            assertThat(strategy).isInstanceOf(SecondRound.class);
+        }
+
+        @Test
+        @DisplayName("Deve retornar ThirdRound quando rodada for 3")
+        void shouldReturnThirdRoundWhenRoundIs3() {
+            Strategy strategy = sut.getStrategyForRound(3);
+            assertThat(strategy).isInstanceOf(ThirdRound.class);
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção se rodada não for 1, 2 ou 3")
+        void shouldThrowExceptionWhenRoundIsInvalid() {
+            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> sut.getStrategyForRound(0));
+            assertThat(exception.getMessage()).contains("Unexpected value");
+        }
+    }
+
     @Nested
     @DisplayName("Testes getRaiseResponse")
-    class GetRaiseResponseTests {}
+    class GetRaiseResponseTests {
+    }
+
     @Nested
     @DisplayName("Testes DecideIfRises")
     class DecideIfRaisesTests {
         @Nested
         @DisplayName("Se ganhar a primeira rodada")
-        class WonFirstRound{
+        class WonFirstRound {
 
         }
     }
+
     @Nested
     @DisplayName("Testes getMaoDeOnzeResponse")
     class GetMaoDeOnzeResponseTests {
         @Test
         @DisplayName("Should accept mao de onze if hand strengh is higher than 21")
-        void ShouldAcceptMaoDeOnzeIfHandStrengthIsHigherThan21(){
+        void ShouldAcceptMaoDeOnzeIfHandStrengthIsHigherThan21() {
             TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
             List<TrucoCard> botCards = Arrays.asList(
@@ -142,12 +183,13 @@ public class DegolaBotTest {
 
             assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
         }
+
         @Nested
         @DisplayName("Testing getMaoDeOnzeResponse")
         class getMaoDeOnzeResponseTest {
             @Test
             @DisplayName("Should refuse mao de onze if hand strengh is lower than 21")
-            void ShouldRefuseMaoDeOnzeIfHandStrengthIsLowerThan21(){
+            void ShouldRefuseMaoDeOnzeIfHandStrengthIsLowerThan21() {
                 TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
 
                 List<TrucoCard> botCards = Arrays.asList(
@@ -225,6 +267,4 @@ public class DegolaBotTest {
 
         assertDoesNotThrow(() -> sut.chooseCard(intel.build()));
     }
-
 }
-
