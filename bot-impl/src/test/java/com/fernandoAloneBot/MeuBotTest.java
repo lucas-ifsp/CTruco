@@ -372,6 +372,25 @@ public class MeuBotTest {
             Assertions.assertFalse(meuBot.decideIfRaises(intel));
         }
 
+        @Test
+        @DisplayName("Não aumenta com mão média e oponente com 11 pontos")
+        void naoAumentaComMaoMediaEOponenteComOnze() {
+            List<TrucoCard> hand = List.of(
+                    TrucoCard.of(ACE, CLUBS),
+                    TrucoCard.of(SEVEN, HEARTS),
+                    TrucoCard.of(QUEEN, DIAMONDS)
+            );
+
+            TrucoCard vira = TrucoCard.of(THREE, SPADES);
+
+            GameIntel intel = createIntel(hand, vira, 9, 11, List.of());
+
+            boolean res = meuBot.decideIfRaises(intel);
+
+            assertThat(res).isFalse(); // Situação arriscada
+        }
+
+
 
     }
 
