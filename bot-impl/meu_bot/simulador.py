@@ -34,3 +34,8 @@ class SimuladorPartidas:
                 self.resultados['vitorias_oponente'] += 1
 
         return self.resultados
+if __name__ == "__main__":
+    simulador = SimuladorPartidas(n_partidas=100)
+    resultados = simulador.simular()
+    print("Resultados da simulação:")
+    print(resultados)
