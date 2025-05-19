@@ -178,5 +178,52 @@ public class DegolaBotTest {
 
         assertDoesNotThrow(() -> sut.chooseCard(intel.build()));
     }
+
+    @Test
+    @DisplayName("Should accept mao de onze if hand strengh is higher than 21")
+    void ShouldAcceptMaoDeOnzeIfHandStrengthIsHigherThan21(){
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.KING, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.ACE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+
+        List<TrucoCard> openCards = Collections.singletonList(TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS));
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 11)
+                .opponentScore(0);
+
+        assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
+    }
+    @Nested
+    @DisplayName("Testing getMaoDeOnzeResponse")
+    class getMaoDeOnzeResponseTest {
+        @Test
+        @DisplayName("Should refuse mao de onze if hand strengh is lower than 21")
+        void ShouldRefuseMaoDeOnzeIfHandStrengthIsLowerThan21(){
+            TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS);
+
+            List<TrucoCard> botCards = Arrays.asList(
+                    TrucoCard.of(CardRank.FOUR, CardSuit.CLUBS),
+                    TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS),
+                    TrucoCard.of(CardRank.SIX, CardSuit.DIAMONDS)
+            );
+
+            List<TrucoCard> openCards = Arrays.asList(
+                    TrucoCard.of(CardRank.ACE, CardSuit.DIAMONDS), TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS)
+            );
+
+            intel = GameIntel.StepBuilder.with()
+                    .gameInfo(List.of(), openCards, vira, 1)
+                    .botInfo(botCards, 11)
+                    .opponentScore(0);
+
+            assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
+        }
+    }
 }
 

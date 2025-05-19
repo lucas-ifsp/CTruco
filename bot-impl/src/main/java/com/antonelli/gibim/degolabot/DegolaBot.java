@@ -2,9 +2,8 @@ package com.antonelli.gibim.degolabot;
 
 import com.bueno.spi.model.CardToPlay;
 import com.bueno.spi.model.GameIntel;
+import com.bueno.spi.model.TrucoCard;
 import com.bueno.spi.service.BotServiceProvider;
-
-import java.util.Optional;
 
 public class DegolaBot implements BotServiceProvider {
 
@@ -15,7 +14,11 @@ public class DegolaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        return false;
+        int soma = intel.getCards().stream()
+                .mapToInt(card -> card.relativeValue(intel.getVira()))
+                .sum();
+
+        return soma > 21;
     }
 
     @Override

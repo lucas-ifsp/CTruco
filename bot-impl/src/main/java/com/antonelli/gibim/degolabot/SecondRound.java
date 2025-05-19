@@ -25,9 +25,9 @@ public class SecondRound implements Strategy {
         boolean venceuPrimeira = BotUtils.didWinFirstRound(intel);
         boolean ehSegundo = BotUtils.isPlayingSecond(intel);
 
-        List<TrucoCard> fracas = cards.stream().filter(c -> c.relativeValue(vira) <= 4).toList();
-        List<TrucoCard> medias = cards.stream().filter(c -> c.relativeValue(vira) > 4 && c.relativeValue(vira) < 8).toList();
-        List<TrucoCard> boas = cards.stream().filter(c -> c.relativeValue(vira) >= 8 && !c.isManilha(vira)).toList();
+        List<TrucoCard> fracas = cards.stream().filter(c -> c.relativeValue(vira) <= 2).toList();
+        List<TrucoCard> medias = cards.stream().filter(c -> c.relativeValue(vira) > 3 && c.relativeValue(vira) < 5).toList();
+        List<TrucoCard> boas = cards.stream().filter(c -> c.relativeValue(vira) >= 6 && !c.isManilha(vira)).toList();
         List<TrucoCard> manilhas = cards.stream().filter(c -> c.isManilha(vira)).toList();
 
         if (venceuPrimeira) {
