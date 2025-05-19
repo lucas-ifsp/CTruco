@@ -9,7 +9,9 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.brito.macena.boteco.BotEco;
 import com.ghenrique.moedordecana.MoedorDeCana;
+
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
+import com.aguiar.vitor.trucorinthians.Trucorinthians;
 
 module bot.impl {
     requires bot.spi;
@@ -17,7 +19,6 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
-    exports com.grupo.firsts;
     exports com.abel.francisco.fogao6boca;
     exports com.bueno.impl.dummybot;
     exports com.aah.refactor.me;
@@ -27,17 +28,21 @@ module bot.impl {
     exports com.brito.macena.boteco;
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
+    exports com.abel.francisco.fogao6boca;
+    exports com.aguiar.vitor.trucorinthians;
+    exports com.grupo.firsts;
 
     provides com.bueno.spi.service.BotServiceProvider with
-        PeNaCova,
-        DummyBot,
-        RefactorMePleaseBot,
-        MalasiaBot,
-        AtrasaBot,
-        Truccard,
-        GapBot,
-        BotEco,
-        MoedorDeCana,
-        Fogao6Boca,
-        SkillDiffBot;
+            DummyBot,
+            RefactorMePleaseBot,
+            MalasiaBot,
+            AtrasaBot,
+            Truccard,
+            GapBot,
+            BotEco,
+            MoedorDeCana,
+            Fogao6Boca,
+            SkillDiffBot,
+            Trucorinthians,
+            PeNaCova;
 }
