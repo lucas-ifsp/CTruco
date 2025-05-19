@@ -511,5 +511,27 @@ public class DegolaBotTest {
         assertEquals(CardSuit.HEARTS, result.content().getSuit());
     }
 
+    @Test
+    @DisplayName("Deve recusar truco se pontuação do adversário for muito alta")
+    void testGetRaiseResponseRejectsHighOpponentScore() {
+        TrucoCard vira = TrucoCard.of(CardRank.ACE, CardSuit.SPADES);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(9);
+
+        FirstRound strategy = new FirstRound();
+        int response = strategy.getRaiseResponse(intel.build());
+
+        assertEquals(-1, response);
+    }
+
 
 }
