@@ -261,4 +261,66 @@ public class DegolaBotTest {
             assertFalse(sut.getMaoDeOnzeResponse(intel.build()));
         }
     }
+
+    @Test
+    @DisplayName("Deve retornar uma carta válida com outras cartas e vira diferente")
+    void testChooseCardReturnsValidCardWithDifferentValues() {
+        TrucoCard vira = TrucoCard.of(CardRank.SIX, CardSuit.CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.SPADES)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 2)
+                .botInfo(botCards, 0)
+                .opponentScore(2);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(botCards).contains(result.content());
+    }
+
+    @Test
+    @DisplayName("Deve retornar a única carta disponível diferente da base")
+    void testChooseCardWithOnlyOneCardDifferent() {
+        TrucoCard vira = TrucoCard.of(CardRank.FIVE, CardSuit.HEARTS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.TWO, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(0);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertEquals(botCards.get(0), result.content());
+    }
+
+    @Test
+    @DisplayName("Aceita mão de onze se a força da mão for maior que 25 (valores alterados)")
+    void ShouldAcceptMaoDeOnzeIfHandStrengthIsHigherThan25() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> botCards = Arrays.asList(
+                TrucoCard.of(CardRank.ACE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.KING, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = Collections.singletonList(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 26)
+                .opponentScore(0);
+
+        assertTrue(sut.getMaoDeOnzeResponse(intel.build()));
+    }
+
+
+
 }
