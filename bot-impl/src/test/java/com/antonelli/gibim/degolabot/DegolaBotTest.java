@@ -424,6 +424,22 @@ public class DegolaBotTest {
 
         assertThat(botCards).contains(result.content());
     }
+    @Test
+    @DisplayName("Deve descartar carta mais fraca quando só tiver uma carta forte")
+    void testChooseCardWithOneStrongCard() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.HEARTS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.THREE, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.SEVEN, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = firstRoundFirstToPlay(botCards, openCards, vira);
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(result.content()).isEqualTo(botCards.get(1));
+    }
 
 
 
