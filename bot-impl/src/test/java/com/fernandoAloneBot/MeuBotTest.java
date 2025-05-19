@@ -702,6 +702,28 @@ public class MeuBotTest {
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, HEARTS));
          }
 
+         @Test
+         @DisplayName("Joga carta para empatar quando tiver manilha e oponente jogou carta que não é manilha")
+         void jogaCartaParaEmpatarComManilhaContraCartaNormal() {
+             hand = List.of(
+                     TrucoCard.of(TWO, HEARTS),
+                     TrucoCard.of(FIVE, CLUBS),
+                     TrucoCard.of(SEVEN, DIAMONDS)
+             );
+
+             vira = TrucoCard.of(THREE, SPADES);
+
+             TrucoCard opponentCard = TrucoCard.of(SIX, DIAMONDS);
+
+             openCards = List.of(opponentCard);
+             intel = createIntel(hand, vira, 2, 2, List.of(), openCards, opponentCard);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(SEVEN,DIAMONDS));
+         }
+
+
 
 
 
