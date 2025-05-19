@@ -11,6 +11,8 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.brito.macena.boteco.BotEco;
 import com.ghenrique.moedordecana.MoedorDeCana;
+import com.antonelli.gibim.degolabot.DegolaBot;
+
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 
 import com.fernandoAloneBot.MeuBot;
@@ -37,6 +39,16 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+    exports com.antonelli.gibim.degolabot;
+
+  
+    exports com.fernandoAloneBot;
+    exports com.breno.trucoJC.botBlessed;
+    exports com.igor_gabriel.botNovato;
+    exports com.paola.pedro;
+    exports com.luciano.bonelli.zecatatubot;
+    exports com.aguiar.vitor.trucorinthians;
+    exports com.grupo.firsts;
 
   
     exports com.fernandoAloneBot;
@@ -58,7 +70,7 @@ module bot.impl {
             MoedorDeCana,
             Fogao6Boca,
             SkillDiffBot,
-
+            DegolaBot,
             MeuBot,
             BotBlessed,
             BotNovato,
