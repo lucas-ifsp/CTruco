@@ -14,12 +14,10 @@ public class DegolaBot implements BotServiceProvider {
 
     @Override
     public boolean getMaoDeOnzeResponse(GameIntel intel) {
-        int soma = intel.getCards().stream()
-                .mapToInt(card -> card.relativeValue(intel.getVira()))
-                .sum();
-
+        int soma = BotUtils.handStrength(intel);
         return soma > 21;
     }
+
 
     @Override
     public boolean decideIfRaises(GameIntel intel) {

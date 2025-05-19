@@ -129,5 +129,12 @@ public class BotUtils {
                 .orElse(null);
     }
 
+    public static int handStrength(GameIntel intel) {
+        int handStrength = 0;
+        for (TrucoCard card : intel.getCards()) {
+            handStrength += card.relativeValue(intel.getVira());
+        }
+        return handStrength;
+    }
 
 }
