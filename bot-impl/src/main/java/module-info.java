@@ -3,13 +3,25 @@ import com.bueno.impl.dummybot.DummyBot;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 import com.petrilli.sandro.malasiabot.MalasiaBot;
+import com.abel.francisco.fogao6boca.Fogao6Boca;
+import com.bueno.impl.dummybot.DummyBot;
 import com.aah.refactor.me.RefactorMePleaseBot;
 import com.contiero.lemes.atrasabot.AtrasaBot;
 import com.felipe.fabiano.truccard.Truccard;
+import com.carvalho.candido.tomegapbot.GapBot;
 import com.brito.macena.boteco.BotEco;
-import com.abel.francisco.fogao6boca.Fogao6Boca;
 import com.ghenrique.moedordecana.MoedorDeCana;
 import com.antonelli.gibim.degolabot.DegolaBot;
+import com.pedro.herick.skilldiffbot.SkillDiffBot;
+
+import com.fernandoAloneBot.MeuBot;
+import com.grupo.firsts.PeNaCova;
+import com.igor_gabriel.botNovato.BotNovato;
+import com.breno.trucoJC.botBlessed.BotBlessed;
+import com.luciano.bonelli.zecatatubot.ZecaTatuBot;
+import com.paola.pedro.StartRoundCapucina;
+import com.aguiar.vitor.trucorinthians.Trucorinthians;
+
 
 module bot.impl {
     requires bot.spi;
@@ -17,6 +29,7 @@ module bot.impl {
     requires java.smartcardio;
     requires jdk.jdi;
 
+    exports com.abel.francisco.fogao6boca;
     exports com.bueno.impl.dummybot;
     exports com.aah.refactor.me;
     exports com.contiero.lemes.atrasabot;
@@ -27,6 +40,15 @@ module bot.impl {
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
     exports com.antonelli.gibim.degolabot;
+
+  
+    exports com.fernandoAloneBot;
+    exports com.breno.trucoJC.botBlessed;
+    exports com.igor_gabriel.botNovato;
+    exports com.paola.pedro;
+    exports com.luciano.bonelli.zecatatubot;
+    exports com.aguiar.vitor.trucorinthians;
+    exports com.grupo.firsts;
 
     provides com.bueno.spi.service.BotServiceProvider with
             DummyBot,
@@ -39,6 +61,12 @@ module bot.impl {
             MoedorDeCana,
             Fogao6Boca,
             SkillDiffBot,
-            DegolaBot;
-
+            DegolaBot,
+            MeuBot,
+            BotBlessed,
+            BotNovato,
+            StartRoundCapucina,
+            ZecaTatuBot,
+            Trucorinthians,
+            PeNaCova;
 }
