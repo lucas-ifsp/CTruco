@@ -86,7 +86,7 @@ public class MeuBotTest {
         @DisplayName("Testa se recusa mão de onze sem manilhas")
         void testaSeRecusaMaoDeOnzeSemManilhas() {
             GameIntel intel = createIntel(getDefaultHand(), getDefaultVira(), 10, 10, List.of());
-            assertFalse(meuBot.getMaoDeOnzeResponse(intel));
+            Assertions.assertFalse(meuBot.getMaoDeOnzeResponse(intel));
         }
 
         @Test
@@ -623,6 +623,26 @@ public class MeuBotTest {
 
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(TWO, SPADES));
          }
+
+         @Test
+         @DisplayName("Testa  descartar manilha menor")
+         void jogaDescartaManilhaMenor() {
+             hand = List.of(
+                     TrucoCard.of(THREE, DIAMONDS),
+                     TrucoCard.of(THREE, SPADES),
+                     TrucoCard.of(THREE, CLUBS)
+             );
+             vira = TrucoCard.of(TWO, SPADES);
+
+              openCards = List.of();
+
+             intel = createIntel(hand, vira, 5, 6, List.of(), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, DIAMONDS));
+         }
+
 
 
 
