@@ -383,5 +383,26 @@ public class DegolaBotTest {
         assertThrows(IllegalStateException.class, () -> sut.getStrategyForRound(4));
     }
 
+    @Test
+    @DisplayName("Deve retornar uma carta válida com três cartas baixas diferentes")
+    void testChooseCardWithThreeLowCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.SEVEN, CardSuit.CLUBS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS),
+                TrucoCard.of(CardRank.FIVE, CardSuit.SPADES),
+                TrucoCard.of(CardRank.SIX, CardSuit.CLUBS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(1);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(botCards).contains(result.content());
+    }
+
 
 }
