@@ -13,6 +13,7 @@ import com.brito.macena.boteco.BotEco;
 import com.ghenrique.moedordecana.MoedorDeCana;
 import com.pedro.herick.skilldiffbot.SkillDiffBot;
 
+import com.fernandoAloneBot.MeuBot;
 import com.grupo.firsts.PeNaCova;
 import com.igor_gabriel.botNovato.BotNovato;
 import com.breno.trucoJC.botBlessed.BotBlessed;
@@ -36,7 +37,9 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
+
   
+    exports com.fernandoAloneBot;
     exports com.breno.trucoJC.botBlessed;
     exports com.igor_gabriel.botNovato;
     exports com.paola.pedro;
@@ -56,6 +59,7 @@ module bot.impl {
             Fogao6Boca,
             SkillDiffBot,
 
+            MeuBot,
             BotBlessed,
             BotNovato,
             StartRoundCapucina,
