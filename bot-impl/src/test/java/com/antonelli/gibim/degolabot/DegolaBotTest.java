@@ -404,5 +404,27 @@ public class DegolaBotTest {
         assertThat(botCards).contains(result.content());
     }
 
+    @Test
+    @DisplayName("Deve retornar uma carta válida com três cartas médias diferentes")
+    void testChooseCardWithThreeMediumCards() {
+        TrucoCard vira = TrucoCard.of(CardRank.FOUR, CardSuit.HEARTS);
+        List<TrucoCard> botCards = List.of(
+                TrucoCard.of(CardRank.SEVEN, CardSuit.SPADES),
+                TrucoCard.of(CardRank.QUEEN, CardSuit.CLUBS),
+                TrucoCard.of(CardRank.JACK, CardSuit.DIAMONDS)
+        );
+        List<TrucoCard> openCards = List.of(vira);
+
+        intel = GameIntel.StepBuilder.with()
+                .gameInfo(List.of(), openCards, vira, 1)
+                .botInfo(botCards, 0)
+                .opponentScore(1);
+
+        CardToPlay result = sut.chooseCard(intel.build());
+
+        assertThat(botCards).contains(result.content());
+    }
+
+
 
 }
