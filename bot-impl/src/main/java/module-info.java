@@ -12,6 +12,7 @@ import com.felipe.fabiano.truccard.Truccard;
 import com.carvalho.candido.tomegapbot.GapBot;
 import com.brito.macena.boteco.BotEco;
 import com.ghenrique.moedordecana.MoedorDeCana;
+import com.igor_gabriel.botNovato.BotNovato;
 
 import com.luciano.bonelli.zecatatubot.ZecaTatuBot;
 import com.paola.pedro.StartRoundCapucina;
@@ -34,8 +35,10 @@ module bot.impl {
     exports com.ghenrique.moedordecana;
     exports com.pedro.herick.skilldiffbot;
     exports com.abel.francisco.fogao6boca;
-    exports com.paola.pedro;
 
+  
+    exports com.igor_gabriel.botNovato;
+    exports com.paola.pedro;
     exports com.luciano.bonelli.zecatatubot;
     exports com.aguiar.vitor.trucorinthians;
     exports com.grupo.firsts;
@@ -52,6 +55,7 @@ module bot.impl {
             Fogao6Boca,
             SkillDiffBot,
 
+            BotNovato,
             StartRoundCapucina,
             ZecaTatuBot,
             Trucorinthians,
