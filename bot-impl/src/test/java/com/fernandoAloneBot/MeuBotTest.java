@@ -681,6 +681,28 @@ public class MeuBotTest {
              assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, SPADES));
          }
 
+         @Test
+         @DisplayName("Joga a carta mais forte na primeira rodada")
+         void jogaCartaMaisForteNaPrimeiraRodada() {
+             hand = List.of(
+                     TrucoCard.of(SEVEN, CLUBS),
+                     TrucoCard.of(ACE, DIAMONDS),
+                     TrucoCard.of(THREE, HEARTS)
+             );
+
+             vira = TrucoCard.of(FOUR, CLUBS);
+
+             openCards = List.of();
+
+
+             intel = createIntel(hand, vira, 0, 0, List.of(), openCards);
+
+             CardToPlay cardToPlay = meuBot.chooseCard(intel);
+
+             assertThat(cardToPlay.value()).isEqualTo(TrucoCard.of(THREE, HEARTS));
+         }
+
+
 
 
 
