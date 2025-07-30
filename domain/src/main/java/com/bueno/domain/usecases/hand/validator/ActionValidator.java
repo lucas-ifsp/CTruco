@@ -46,7 +46,7 @@ public class ActionValidator extends Validator<UUID> {
         if(uuid == null) throw new NullPointerException("UUID is null.");
         final var game = gameRepository.findByPlayerUuid(uuid).map(GameConverter::fromDto)
                 .orElseThrow(() -> new GameNotFoundException("User with UUID " + uuid + " is not in an active game."));
-        if(game.isDone()) throw new GameNotFoundException("Game is over. Start a new game.");
+//        if(game.isDone()) throw new GameNotFoundException("Game is over. Start a new game.");//TODO Definir comportamento do mongodb quando um jogo ativo já acabou
 
         final var requester = getRequester(uuid, Objects.requireNonNull(game));
         final var currentHand = game.currentHand();

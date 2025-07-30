@@ -22,6 +22,7 @@ package com.bueno.application.controller;
 
 import com.bueno.application.model.CardImage;
 import com.bueno.application.utils.TimelineBuilder;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
 import com.bueno.domain.usecases.game.usecase.CreateGameUseCase;
 import com.bueno.domain.usecases.game.dtos.CreateDetachedDto;
 import com.bueno.domain.usecases.game.dtos.PlayerDto;
@@ -32,6 +33,9 @@ import com.bueno.domain.usecases.hand.dtos.PlayCardDto;
 import com.bueno.domain.usecases.intel.HandleIntelUseCase;
 import com.bueno.domain.usecases.intel.dtos.CardDto;
 import com.bueno.domain.usecases.intel.dtos.IntelDto;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
+import com.bueno.persistence.repositories.UserRepositoryImpl;
+import com.remote.RemoteBotApiAdapter;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -51,32 +55,57 @@ import java.util.function.Predicate;
 
 public class GameTableController {
 
-    @FXML private Label lbPlayerNameValue;
-    @FXML private Label lbPlayerScoreValue;
-    @FXML private Label lbOpponentNameValue;
-    @FXML private Label lbOpponentScoreValue;
-    @FXML private Label lbHandPointsValue;
-    @FXML private Label lb1st;
-    @FXML private Label lb1stValue;
-    @FXML private Label lb2nd;
-    @FXML private Label lb2ndValue;
-    @FXML private Label lb3rd;
-    @FXML private Label lb3rdValue;
-    @FXML private Label lbMessage;
+    @FXML
+    private Label lbPlayerNameValue;
+    @FXML
+    private Label lbPlayerScoreValue;
+    @FXML
+    private Label lbOpponentNameValue;
+    @FXML
+    private Label lbOpponentScoreValue;
+    @FXML
+    private Label lbHandPointsValue;
+    @FXML
+    private Label lb1st;
+    @FXML
+    private Label lb1stValue;
+    @FXML
+    private Label lb2nd;
+    @FXML
+    private Label lb2ndValue;
+    @FXML
+    private Label lb3rd;
+    @FXML
+    private Label lb3rdValue;
+    @FXML
+    private Label lbMessage;
 
-    @FXML private ImageView cardDeck;
-    @FXML private ImageView cardVira;
-    @FXML private ImageView cardOpponentCenter;
-    @FXML private ImageView cardOpponentRight;
-    @FXML private ImageView cardOpponentLeft;
-    @FXML private ImageView cardOwnedCenter;
-    @FXML private ImageView cardOwnedRight;
-    @FXML private ImageView cardOwnedLeft;
-    @FXML private ImageView lastCard;
-    @FXML private ImageView firstCard;
-    @FXML private Button btnAccept;
-    @FXML private Button btnQuit;
-    @FXML private Button btnRaise;
+    @FXML
+    private ImageView cardDeck;
+    @FXML
+    private ImageView cardVira;
+    @FXML
+    private ImageView cardOpponentCenter;
+    @FXML
+    private ImageView cardOpponentRight;
+    @FXML
+    private ImageView cardOpponentLeft;
+    @FXML
+    private ImageView cardOwnedCenter;
+    @FXML
+    private ImageView cardOwnedRight;
+    @FXML
+    private ImageView cardOwnedLeft;
+    @FXML
+    private ImageView lastCard;
+    @FXML
+    private ImageView firstCard;
+    @FXML
+    private Button btnAccept;
+    @FXML
+    private Button btnQuit;
+    @FXML
+    private Button btnRaise;
 
     private String username;
     private String botName;
@@ -97,9 +126,12 @@ public class GameTableController {
 
     public GameTableController() {
         final var gameRepo = new GameRepositoryInMemoryImpl();
-        gameUseCase = new CreateGameUseCase(gameRepo);
-        playCardUseCase = new PlayCardUseCase(gameRepo);
-        pointsProposalUseCase = new PointsProposalUseCase(gameRepo);
+        final var botRepo = new RemoteBotRepositoryImpl();
+        final var botApi = new RemoteBotApiAdapter();
+        final var botManagerService = new BotManagerService(botRepo, botApi);
+        gameUseCase = new CreateGameUseCase(gameRepo, botRepo, botApi, botManagerService);
+        playCardUseCase = new PlayCardUseCase(gameRepo, botRepo, botApi, botManagerService);
+        pointsProposalUseCase = new PointsProposalUseCase(gameRepo, botRepo, botApi, botManagerService);
         handleIntelUseCase = new HandleIntelUseCase(gameRepo);
         missingIntel = new ArrayList<>();
         isAnimating = new AtomicBoolean(false);
@@ -154,7 +186,7 @@ public class GameTableController {
         final var card = CardImage.of(intel.vira());
         userCards = getPlayerCards(intel, userUUID);
 
-        if(userCards.isEmpty()) return;
+        if (userCards.isEmpty()) return;
 
         cardVira.setImage(card.getImage());
         cardOwnedLeft.setImage(CardImage.of(userCards.get(0)).getImage());
@@ -169,12 +201,12 @@ public class GameTableController {
                 .findAny().orElse(null);
     }
 
-    private void configureButtons(IntelDto intel){
+    private void configureButtons(IntelDto intel) {
         final Predicate<String> shouldDisable = a -> !intel.possibleActions().contains(a) || !isUserNextPlayer(intel);
         final var baseScore = intel.handPointsProposal() == null ?
                 intel.handPoints() : intel.handPointsProposal();
-        if(baseScore != 0 && baseScore != 12)
-            btnRaise.setText("Pedir " + scoreToString(baseScore == 1? 3 : baseScore + 3) + "!");
+        if (baseScore != 0 && baseScore != 12)
+            btnRaise.setText("Pedir " + scoreToString(baseScore == 1 ? 3 : baseScore + 3) + "!");
 
         btnAccept.setDisable(shouldDisable.test("ACCEPT"));
         btnQuit.setDisable(shouldDisable.test("QUIT"));
@@ -235,7 +267,7 @@ public class GameTableController {
         handleCardPlaying(mouseEvent, cardOwnedRight, 2);
     }
 
-    private void handleCardPlaying(MouseEvent event, ImageView cardImageView, int cardIndex){
+    private void handleCardPlaying(MouseEvent event, ImageView cardImageView, int cardIndex) {
         if (canPerform("PLAY") && !CardImage.isMissing(cardImageView.getImage())) {
             final var card = userCards.get(cardIndex);
             if (event.getButton() == MouseButton.PRIMARY) playCard(card, cardImageView);
@@ -280,7 +312,7 @@ public class GameTableController {
         isAnimating = new AtomicBoolean(true);
         while (!missingIntel.isEmpty()) {
             final var intel = missingIntel.remove(0);
-            final var event = intel.event() != null? intel.event() : "";
+            final var event = intel.event() != null ? intel.event() : "";
             //System.out.println(intel);
 
             if (hasHandScoreChange(intel)) builder.append(0.5, () -> updateHandScore(intel));
@@ -305,7 +337,7 @@ public class GameTableController {
 
     private boolean hasHandScoreChange(IntelDto intel) {
         final var event = intel.event();
-        if(event == null) return false;
+        if (event == null) return false;
         return event.equals("RAISE") || event.equals("ACCEPT") || event.equals("ACCEPT_HAND");
     }
 
@@ -381,8 +413,8 @@ public class GameTableController {
             lastUserPlayedCardPosition = 1;
             builder.append(1.5, () -> organizeNewHand(intel));
         }
-        if (intel.isGameDone()){
-            final String message = "Game Over - Você " + (getPlayerScore(intel, userUUID) == 12? "Venceu!" : "Perdeu.");
+        if (intel.isGameDone()) {
+            final String message = "Game Over - Você " + (getPlayerScore(intel, userUUID) == 12 ? "Venceu!" : "Perdeu.");
             builder.append(0.5, this::resetCardImages);
             builder.append(0.25, () -> showMessage(message));
             builder.append(this::setRoundLabelsInvisible);
@@ -396,7 +428,7 @@ public class GameTableController {
         final var cardsPlayed = intel.openCards().size();
         final var isSecondCardOfRound = cardsPlayed % 2 == 1;
         final var event = intel.event();
-        if(event == null) return false;
+        if (event == null) return false;
         return event.equals("PLAY") && cardsPlayed > 1 && isSecondCardOfRound;
     }
 
@@ -408,7 +440,7 @@ public class GameTableController {
     private boolean isNewRound(IntelDto intel) {
         final var isFirstHand = getPlayerScore(intel, userUUID) == 0 && getPlayerScore(intel, botUUID) == 0;
         final var event = intel.event();
-        if(event == null) return false;
+        if (event == null) return false;
         return event.equals("HAND_START") && !isFirstHand;
     }
 
@@ -458,8 +490,8 @@ public class GameTableController {
         handleScoreChange("RAISE", () -> pointsProposalUseCase.raise(userUUID));
     }
 
-    private void handleScoreChange(String action, Runnable request){
-        if(canPerform(action)) {
+    private void handleScoreChange(String action, Runnable request) {
+        if (canPerform(action)) {
             request.run();
             updateIntel();
             updateView();

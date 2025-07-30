@@ -18,12 +18,12 @@
 #  along with CTruco.  If not, see <https://www.gnu.org/licenses/>
 #
 
-com.bueno.impl.dummybot.DummyBot
-com.petrilli.sandro.malasiabot.MalasiaBot
-com.aah.refactor.me.RefactorMePleaseBot
-com.contiero.lemes.atrasabot.AtrasaBot
-com.felipe.fabiano.truccard.Truccard
-com.carvalho.candido.tomegapbot.GapBot
-com.brito.macena.boteco.BotEco
-com.ghenrique.moedordecana.MoedorDeCana
-com.abel.francisco.fogao6boca.Fogao6Boca
+com.local.bueno.impl.dummybot.DummyBot
+com.local.petrilli.sandro.malasiabot.MalasiaBot
+com.local.aah.refactor.me.RefactorMePleaseBot
+com.local.contiero.lemes.atrasabot.AtrasaBot
+com.local.felipe.fabiano.truccard.Truccard
+com.local.carvalho.candido.tomegapbot.GapBot
+com.local.brito.macena.boteco.BotEco
+com.local.ghenrique.moedordecana.MoedorDeCana
+com.local.abel.francisco.fogao6boca.Fogao6Boca

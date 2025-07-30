@@ -1,6 +1,9 @@
 package com.bueno.domain.usecases.game.service;
 
-import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.bot.usecase.BotUseCase;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.dtos.CreateForBotsDto;
 import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
@@ -16,38 +19,50 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class SimulationService {
-   private final UUID uuidBot1;
-   private final String bot1Name;
-   private final UUID uuidBot2;
-   private final String bot2Name;
+    private final RemoteBotRepository remoteBotRepository;
+    private final RemoteBotApi remoteBotApi;
+    private final BotManagerService botManagerService;
 
-    public SimulationService(UUID uuidBotToEvaluate, String botToEvaluateName, String challengedBotName) {
-        this.uuidBot1 = uuidBotToEvaluate;
-        this.bot1Name = botToEvaluateName;
-        this.uuidBot2 = UUID.randomUUID();;
-        this.bot2Name = challengedBotName;
+    public SimulationService(RemoteBotRepository remoteBotRepository, RemoteBotApi botApi, BotManagerService providerService) {
+        this.remoteBotRepository = remoteBotRepository;
+        this.remoteBotApi = botApi;
+        this.botManagerService = providerService;
     }
 
-    public List<PlayWithBotsDto> runInParallel(int times) {
-        final Callable<PlayWithBotsDto> gameWaitingForBeCreatedAndPlayed = this::simulate;
+    public List<PlayWithBotsDto> runInParallel(UUID uuidBotToEvaluate,
+                                               String botToEvaluateName,
+                                               UUID challengedBotuuid,
+                                               String challengedBotName,
+                                               int times) {
+        final Callable<PlayWithBotsDto> gameWaitingForBeCreatedAndPlayed =
+                () -> simulate(uuidBotToEvaluate, botToEvaluateName, challengedBotuuid, challengedBotName);
+
         return Stream.generate(() -> gameWaitingForBeCreatedAndPlayed)
                 .limit(times)
-                .parallel()
                 .map(executeGameCall())
+                .parallel()
                 .filter(Objects::nonNull)
                 .toList();
+
     }
 
-    private PlayWithBotsDto simulate(){
+    private PlayWithBotsDto simulate(UUID evaluatedUuid,
+                                     String evaluateName,
+                                     UUID challengedUuid,
+                                     String challengedName) {
         GameRepository gameRepository = new GameRepoDisposableImpl();
-        final var requestModel = new CreateForBotsDto(uuidBot1, bot1Name, uuidBot2, bot2Name);
-        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository);
+
+        final var requestModel = new CreateForBotsDto(evaluatedUuid, evaluateName, challengedUuid, challengedName);
+        final CreateGameUseCase createGameUseCase = new CreateGameUseCase(gameRepository,
+                remoteBotRepository,
+                remoteBotApi,
+                botManagerService);
         createGameUseCase.createForBots(requestModel);
         final var game = gameRepository.findByPlayerUuid(requestModel.bot1Uuid()).map(GameConverter::fromDto).orElseThrow();
-        final var botUseCase = new BotUseCase(gameRepository);
+        final var botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, botManagerService, evaluateName, challengedName);
 
         //Plays the game
-        final var intel = botUseCase.playWhenNecessary(game);
+        final var intel = botUseCase.playWhenNecessary(game, botManagerService);
 
         final var winnerUUID = intel.gameWinner().orElseThrow();
         final var winnerName = winnerUUID.equals(requestModel.bot1Uuid()) ?
@@ -57,12 +72,13 @@ public class SimulationService {
     }
 
 
-    private Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> executeGameCall(){
+    private Function<Callable<PlayWithBotsDto>, PlayWithBotsDto> executeGameCall() {
         return gameCall -> {
             try {
-                return gameCall.call();
-            }
-            catch (Exception e) {
+                PlayWithBotsDto gameResult = gameCall.call();
+                System.out.println("Winner: " + gameResult.name());
+                return gameResult;
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }

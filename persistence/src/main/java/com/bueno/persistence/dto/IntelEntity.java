@@ -63,7 +63,7 @@ public class IntelEntity {
     private String eventPlayerUsername;
     private Set<String> possibleActions;
 
-    public static IntelEntity from(IntelDto dto){
+    public static IntelEntity from(IntelDto dto) {
         final List<String> winnerNames = dto.roundWinnersUsernames().stream()
                 .map(optional -> optional.orElse(null)).toList();
         final List<UUID> winnerUuids = dto.roundWinnersUuid().stream()
@@ -96,8 +96,8 @@ public class IntelEntity {
                 .build();
     }
 
-    public IntelDto toDto(){
-        final Function<String, CardDto> toCardDto = card -> card != null?
+    public IntelDto toDto() {
+        final Function<String, CardDto> toCardDto = card -> card != null ?
                 new CardDto(card.substring(0, 1), card.substring(1, 2)) : null;
         return new IntelDto(
                 timestamp,

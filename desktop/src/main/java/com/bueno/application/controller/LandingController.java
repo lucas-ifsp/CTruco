@@ -21,7 +21,13 @@
 package com.bueno.application.controller;
 
 import com.bueno.application.view.GameTableWindow;
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.user.UserRepository;
+import com.bueno.persistence.repositories.RemoteBotRepositoryImpl;
+import com.bueno.persistence.repositories.UserRepositoryImpl;
+import com.remote.RemoteBotApiAdapter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,14 +42,19 @@ import java.util.List;
 public class LandingController implements ChangeListener<Boolean> {
 
     public static final boolean ON_FOCUS = true;
-    @FXML private TextField txtPlayer;
-    @FXML private ComboBox<String> cbBot;
+    @FXML
+    private TextField txtPlayer;
+    @FXML
+    private ComboBox<String> cbBot;
 
     public String txtDefaultStyle;
 
     @FXML
-    private void initialize(){
-        final List<String> bots = BotProviders.availableBots();
+    private void initialize() {
+        RemoteBotRepository botRepository = new RemoteBotRepositoryImpl();
+        RemoteBotApi botApi = new RemoteBotApiAdapter();
+        BotManagerService botManagerService = new BotManagerService(botRepository, botApi);
+        final List<String> bots = botManagerService.providersNames();
         cbBot.setItems(FXCollections.observableList(bots));
         cbBot.getSelectionModel().select(0);
         txtPlayer.focusedProperty().addListener(this);
@@ -63,12 +74,12 @@ public class LandingController implements ChangeListener<Boolean> {
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-        if(oldValue == null || newValue == oldValue) return;
-        if(newValue == ON_FOCUS) {
+        if (oldValue == null || newValue == oldValue) return;
+        if (newValue == ON_FOCUS) {
             txtPlayer.setStyle(txtDefaultStyle);
             return;
         }
-        if(isNotValid(txtPlayer.getText().trim()))
+        if (isNotValid(txtPlayer.getText().trim()))
             txtPlayer.setStyle("-fx-background-color: #ecd3d5;");
     }
 

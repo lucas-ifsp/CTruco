@@ -1,0 +1,2 @@
+bot1;email1@gmail.com;http://localhost;8080
+bot2;email2@gmail.com;http://localhost;8000

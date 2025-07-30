@@ -21,10 +21,16 @@
 package com.bueno.persistence.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public interface GameResultQR {
-    LocalDateTime getEnding();
-    String getPlayer1();
-    String getPlayer2();
-    String getWinner();
+public record GameResultQR(
+        UUID gameId,
+        LocalDateTime ending,
+        LocalDateTime start,
+        int p1Score,
+        int p2Score,
+        String p1Name,
+        String p2Name,
+        String winner
+) {
 }

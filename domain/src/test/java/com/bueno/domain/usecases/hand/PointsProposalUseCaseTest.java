@@ -23,6 +23,9 @@ package com.bueno.domain.usecases.hand;
 import com.bueno.domain.entities.deck.Deck;
 import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.player.Player;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameRepositoryInMemoryImpl;
@@ -50,6 +53,9 @@ class PointsProposalUseCaseTest {
 
     private PointsProposalUseCase sut;
     private GameRepository repo;
+    @Mock private BotManagerService botManager;
+    @Mock private RemoteBotRepository remoteBotRepository;
+    @Mock private RemoteBotApi api;
     @Mock private Player player1;
     @Mock private Player player2;
     private UUID p1Uuid;
@@ -74,7 +80,7 @@ class PointsProposalUseCaseTest {
 
         repo = new GameRepositoryInMemoryImpl();
         game = new Game(player1, player2, new Deck());
-        sut = new PointsProposalUseCase(repo);
+        sut = new PointsProposalUseCase(repo,remoteBotRepository,api,botManager);
     }
 
     @AfterEach

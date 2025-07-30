@@ -45,29 +45,33 @@ public class RemoveGameUseCase {
         this.gameResultRepo = gameResultRepo;
     }
 
-    public List<UUID> byInactivityAfter(int minutes){
+    public List<UUID> byInactivityAfter(int minutes) {
+        final boolean isFromInactivity = true;
         final List<UUID> gamesToRemove = gameRepo.findAllInactiveAfter(minutes)
                 .stream()
                 .map(this::inactivePlayerUuid)
                 .toList();
-        gamesToRemove.forEach(this::byUserUuid);
+        gamesToRemove.forEach(game -> byUserUuid(game, isFromInactivity));
         return gamesToRemove;
     }
 
-    public UUID inactivePlayerUuid(GameDto game){
+    public UUID inactivePlayerUuid(GameDto game) {
         final HandDto currentHand = game.hands().get(game.hands().size() - 1);
-        return currentHand.currentPlayer().uuid();
+        UUID uuid = currentHand.currentPlayer().uuid();
+        return uuid;
     }
 
-    public void byUserUuid(UUID userUuid) {
+    public void byUserUuid(UUID userUuid, boolean isFromInactive) {
         final UUID uuid = Objects.requireNonNull(userUuid, "User UUID must not be null.");
         final GameDto game = gameRepo.findByPlayerUuid(Objects.requireNonNull(uuid))
                 .orElseThrow(() -> new NoSuchElementException("The is no active game for user UUID: " + userUuid));
         gameRepo.delete(game.gameUuid());
-        gameResultRepo.save(createGameResultFrom(game, userUuid));
+        if (isFromInactive)
+            gameResultRepo.save(createGameResultFromAbandon(game, userUuid));
+        else gameResultRepo.save(createGameResultFromDto(game));
     }
 
-    private GameResultDto createGameResultFrom(GameDto game, UUID quitterUuid){
+    private GameResultDto createGameResultFromAbandon(GameDto game, UUID quitterUuid) {
         final UUID player1uuid = game.player1().uuid().equals(quitterUuid)
                 ? game.player1().uuid() : game.player2().uuid();
         final UUID player2uuid = game.player1().uuid().equals(quitterUuid)
@@ -75,6 +79,24 @@ public class RemoveGameUseCase {
         final UUID winnerUuid = player1uuid.equals(quitterUuid) ? player2uuid : player1uuid;
         final int player1Score = player1uuid.equals(winnerUuid) ? 12 : 0;
         final int player2Score = player2uuid.equals(winnerUuid) ? 12 : 0;
+
+        return new GameResultDto(
+                game.gameUuid(),
+                game.timestamp(),
+                LocalDateTime.now(),
+                winnerUuid,
+                player1uuid,
+                player1Score,
+                player2uuid,
+                player2Score);
+    }
+
+    private GameResultDto createGameResultFromDto(GameDto game) {
+        final UUID player1uuid = game.player1().uuid();
+        final UUID player2uuid = game.player2().uuid();
+        final UUID winnerUuid = game.player1().score() == 12 ? player1uuid : player2uuid;
+        final int player1Score = game.player1().score();
+        final int player2Score = game.player2().score();
 
         return new GameResultDto(
                 game.gameUuid(),

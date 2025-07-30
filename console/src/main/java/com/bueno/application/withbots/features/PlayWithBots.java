@@ -21,9 +21,11 @@
 package com.bueno.application.withbots.features;
 
 import com.bueno.application.withbots.commands.*;
-import com.bueno.domain.usecases.bot.providers.BotProviders;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.game.dtos.PlayWithBotsResultsDto;
 import com.bueno.domain.usecases.game.usecase.PlayWithBotsUseCase;
-import com.bueno.domain.usecases.game.dtos.PlayWithBotsDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,13 +34,23 @@ public class PlayWithBots {
 
     private static final UUID uuidBot1 = UUID.randomUUID();
     private static final UUID uuidBot2 = UUID.randomUUID();
+
+    private final RemoteBotRepository repository;
+    private final RemoteBotApi botApi;
+    private final BotManagerService providerService;
+
     private String bot1Name;
     private String bot2Name;
     private int times;
 
+    public PlayWithBots(RemoteBotRepository repository, RemoteBotApi botApi, BotManagerService providerService) {
+        this.repository = repository;
+        this.botApi = botApi;
+        this.providerService = providerService;
+    }
 
     public void playWithBotsConsole() {
-        final var botNames = BotProviders.availableBots();
+        final var botNames = providerService.providersNames();
 
         printAvailableBots(botNames);
 
@@ -51,10 +63,9 @@ public class PlayWithBots {
         bot1Name = botNames.get(bot1 - 1);
         bot2Name = botNames.get(bot2 - 1);
 
-        final long start = System.currentTimeMillis();
-        final var results = playBotsStarter();
-        final long end = System.currentTimeMillis();
-        printResult(times, (end - start), results);
+        final PlayWithBotsResultsDto results = playBotsStarter(providerService);
+
+        printResult(results);
     }
 
     private int scanNumberOfSimulations() {
@@ -62,9 +73,9 @@ public class PlayWithBots {
         return scanSimulations.execute();
     }
 
-    private List<PlayWithBotsDto> playBotsStarter() {
-        final var useCase = new PlayWithBotsUseCase(uuidBot1, bot1Name, bot2Name);
-        return useCase.playWithBots(times);
+    private PlayWithBotsResultsDto playBotsStarter(BotManagerService botManagerService) {
+        final PlayWithBotsUseCase useCase = new PlayWithBotsUseCase(repository, botApi, botManagerService);
+        return useCase.playWithBots(uuidBot1, bot1Name, uuidBot2, bot2Name, times);
     }
 
     private void printAvailableBots(List<String> botNames) {
@@ -77,8 +88,8 @@ public class PlayWithBots {
         return scanOptions.execute();
     }
 
-    private void printResult(int numberOfGames, long computingTime, List<PlayWithBotsDto> results) {
-        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(numberOfGames, computingTime, results);
+    private void printResult(PlayWithBotsResultsDto result) {
+        PlayWithBotsPrinter printer = new PlayWithBotsPrinter(result.times(), result.timeToExecute(), result.info());
         printer.execute();
     }
 

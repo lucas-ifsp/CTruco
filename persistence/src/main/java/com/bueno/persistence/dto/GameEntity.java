@@ -26,9 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +36,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document
 public class GameEntity {
-    @Id
     private UUID id;
     private LocalDateTime timestamp;
     private UUID player1;
@@ -49,7 +45,7 @@ public class GameEntity {
     private UUID lastToPlay;
     private List<HandEntity> hands;
 
-    public static GameEntity from(GameDto dto){
+    public static GameEntity from(GameDto dto) {
         return GameEntity.builder()
                 .id(dto.gameUuid())
                 .timestamp(dto.timestamp())
@@ -61,7 +57,7 @@ public class GameEntity {
                 .build();
     }
 
-    public GameDto toDto(Map<UUID, PlayerDto> players){
+    public GameDto toDto(Map<UUID, PlayerDto> players) {
         return new GameDto(
                 id,
                 timestamp,

@@ -24,7 +24,10 @@ import com.bueno.domain.entities.game.Game;
 import com.bueno.domain.entities.hand.Hand;
 import com.bueno.domain.entities.intel.PossibleAction;
 import com.bueno.domain.entities.player.Player;
-import com.bueno.domain.usecases.bot.BotUseCase;
+import com.bueno.domain.usecases.bot.providers.BotManagerService;
+import com.bueno.domain.usecases.bot.providers.RemoteBotApi;
+import com.bueno.domain.usecases.bot.repository.RemoteBotRepository;
+import com.bueno.domain.usecases.bot.usecase.BotUseCase;
 import com.bueno.domain.usecases.game.converter.GameConverter;
 import com.bueno.domain.usecases.game.repos.GameRepository;
 import com.bueno.domain.usecases.game.repos.GameResultRepository;
@@ -47,22 +50,28 @@ public class PointsProposalUseCase {
     private final GameResultRepository gameResultRepository;
     private final HandResultRepository handResultRepository;
     private final BotUseCase botUseCase;
+    private final BotManagerService botManagerService;
 
-    public PointsProposalUseCase(GameRepository gameRepository) {
-        this(gameRepository, null, null);
+    public PointsProposalUseCase(GameRepository gameRepository,
+                                 RemoteBotRepository remoteBotRepository,
+                                 RemoteBotApi remoteBotApi, BotManagerService botManagerService) {
+        this(gameRepository, remoteBotRepository, remoteBotApi, null, null, botManagerService);
     }
 
     @Autowired
     public PointsProposalUseCase(GameRepository gameRepository,
+                                 RemoteBotRepository remoteBotRepository,
+                                 RemoteBotApi remoteBotApi,
                                  GameResultRepository gameResultRepository,
-                                 HandResultRepository handResultRepository) {
-        this.gameRepository = Objects.requireNonNull( gameRepository);
+                                 HandResultRepository handResultRepository, BotManagerService botManagerService) {
+        this.gameRepository = Objects.requireNonNull(gameRepository);
         this.gameResultRepository = gameResultRepository;
         this.handResultRepository = handResultRepository;
-        this.botUseCase = new BotUseCase(gameRepository, gameResultRepository, handResultRepository);
+        this.botManagerService = botManagerService;
+        this.botUseCase = new BotUseCase(gameRepository, remoteBotRepository, remoteBotApi, gameResultRepository, handResultRepository, botManagerService);
     }
 
-    public IntelDto raise(UUID playerUuid){
+    public IntelDto raise(UUID playerUuid) {
         validateInput(playerUuid, PossibleAction.RAISE);
 
         Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
@@ -71,13 +80,13 @@ public class PointsProposalUseCase {
 
         hand.raise(player);
         gameRepository.update(GameConverter.toDto(game));
-        botUseCase.playWhenNecessary(game);
+        botUseCase.playWhenNecessary(game, botManagerService);
 
         game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 
-    public IntelDto accept(UUID playerUuid){
+    public IntelDto accept(UUID playerUuid) {
         validateInput(playerUuid, PossibleAction.ACCEPT);
 
         Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
@@ -86,13 +95,13 @@ public class PointsProposalUseCase {
 
         hand.accept(player);
         gameRepository.update(GameConverter.toDto(game));
-        botUseCase.playWhenNecessary(game);
+        botUseCase.playWhenNecessary(game, botManagerService);
 
         game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());
     }
 
-    public IntelDto quit(UUID playerUuid){
+    public IntelDto quit(UUID playerUuid) {
         validateInput(playerUuid, PossibleAction.QUIT);
 
         Game game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
@@ -101,13 +110,13 @@ public class PointsProposalUseCase {
 
         hand.quit(player);
 
-        final ResultHandler resultHandler = new ResultHandler(gameResultRepository, handResultRepository);
+        final ResultHandler resultHandler = new ResultHandler(gameRepository, gameResultRepository, handResultRepository);
         final IntelDto gameResult = resultHandler.handle(game);
 
         gameRepository.update(GameConverter.toDto(game));
-        if(gameResult != null) return gameResult;
+        if (gameResult != null) return gameResult;
 
-        botUseCase.playWhenNecessary(game);
+        botUseCase.playWhenNecessary(game, botManagerService);
 
         game = gameRepository.findByPlayerUuid(playerUuid).map(GameConverter::fromDto).orElseThrow();
         return IntelConverter.toDto(game.getIntel());

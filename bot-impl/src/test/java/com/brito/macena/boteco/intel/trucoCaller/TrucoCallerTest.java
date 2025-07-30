@@ -21,8 +21,11 @@
 
 package com.brito.macena.boteco.intel.trucoCaller;
 
-import com.brito.macena.boteco.utils.MyHand;
-import com.brito.macena.boteco.utils.Status;
+import com.local.brito.macena.boteco.intel.trucoCaller.AggressiveTrucoCaller;
+import com.local.brito.macena.boteco.intel.trucoCaller.PassiveTrucoCaller;
+import com.local.brito.macena.boteco.intel.trucoCaller.SneakyTrucoCaller;
+import com.local.brito.macena.boteco.utils.MyHand;
+import com.local.brito.macena.boteco.utils.Status;
 import com.bueno.spi.model.CardRank;
 import com.bueno.spi.model.CardSuit;
 import com.bueno.spi.model.GameIntel;
