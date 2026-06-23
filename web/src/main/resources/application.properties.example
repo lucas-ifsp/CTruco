@@ -1,0 +1,28 @@
+# =============================================================================
+# TEMPLATE de configuracao. Copie este arquivo para "application.properties"
+# e preencha os valores. O application.properties real NAO e versionado
+# (esta no .gitignore) - trate-o como um .env.
+#
+# Em producao (Render), prefira definir estes valores como VARIAVEIS DE
+# AMBIENTE no painel, em vez de deixa-los em arquivo.
+# =============================================================================
+
+# --- PostgreSQL ---
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ctruco}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:CHANGE_ME}
+
+# --- JPA / Hibernate ---
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL9Dialect
+
+# --- MongoDB ---
+spring.data.mongodb.uri=${SPRING_DATA_MONGODB_URI:mongodb://rootuser:rootpass@localhost:27017/ctruco?authSource=admin}
+spring.data.mongodb.uuid-representation=standard
+
+# --- JWT (use um segredo longo e aleatorio; NUNCA reutilize o que ja vazou) ---
+application.jwt.secretKey=***REMOVED***
+application.jwt.tokenPrefix=Bearer
+application.jwt.tokenExpirationAfterMinutes=3
+application.jwt.refreshTokenExpirationAfterDays=14

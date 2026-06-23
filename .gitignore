@@ -14,8 +14,9 @@ target/
 .sts4-cache
 
 ### Project Security ###
+# Tratado como .env: contem segredos e NAO deve ser versionado.
+# Use application.properties.example como modelo.
 web/src/main/resources/application.properties
-persistence/src/main/java/com/bueno/persistence/ConnectionFactory.java
 
 ### IntelliJ IDEA ###
 .idea
