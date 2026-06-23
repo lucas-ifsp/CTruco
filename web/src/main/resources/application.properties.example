@@ -22,7 +22,7 @@ spring.data.mongodb.uri=${SPRING_DATA_MONGODB_URI:mongodb://rootuser:rootpass@lo
 spring.data.mongodb.uuid-representation=standard
 
 # --- JWT (use um segredo longo e aleatorio; NUNCA reutilize o que ja vazou) ---
-application.jwt.secretKey=***REMOVED***
+application.jwt.secretKey=${APPLICATION_JWT_SECRETKEY:CHANGE_ME_USE_A_LONG_RANDOM_SECRET}
 application.jwt.tokenPrefix=Bearer
 application.jwt.tokenExpirationAfterMinutes=3
 application.jwt.refreshTokenExpirationAfterDays=14
